@@ -1,0 +1,7 @@
+{
+  "extends": "./node_modules/gts/",
+  "rules": {
+    "curly": "error",
+    "quotes": "off"
+  }
+}

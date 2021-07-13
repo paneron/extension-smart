@@ -1,595 +1,662 @@
-import { XYPosition } from "react-flow-renderer";
-import { functionCollection } from "../../ui/util/function";
-import { DataAttribute } from "../model/data/dataattribute";
-import { Dataclass } from "../model/data/dataclass";
-import { Enum, EnumValue } from "../model/data/enum";
-import { Registry } from "../model/data/registry";
-import { EndEvent } from "../model/event/endevent";
-import { SignalCatchEvent } from "../model/event/signalcatchevent";
-import { StartEvent } from "../model/event/startevent";
-import { TimerEvent } from "../model/event/timerevent";
-import { Edge } from "../model/flow/edge";
-import { Subprocess, SubprocessComponent } from "../model/flow/subprocess";
-import { EGate } from "../model/gate/egate";
-import { GraphNode } from "../model/graphnode";
-import { Model } from "../model/model";
-import { Approval } from "../model/process/approval";
-import { Process } from "../model/process/process";
-import { Provision } from "../model/support/provision";
-import { Reference } from "../model/support/reference";
-import { Role } from "../model/support/role";
-import { DATATYPE } from "./IDRegistry";
+import { XYPosition } from 'react-flow-renderer';
+import { functionCollection } from '../../ui/util/function';
+import { DataAttribute } from '../model/data/dataattribute';
+import { Dataclass } from '../model/data/dataclass';
+import { Enum, EnumValue } from '../model/data/enum';
+import { Registry } from '../model/data/registry';
+import { EndEvent } from '../model/event/endevent';
+import { SignalCatchEvent } from '../model/event/signalcatchevent';
+import { StartEvent } from '../model/event/startevent';
+import { TimerEvent } from '../model/event/timerevent';
+import { Edge } from '../model/flow/edge';
+import { Subprocess, SubprocessComponent } from '../model/flow/subprocess';
+import { EGate } from '../model/gate/egate';
+import { GraphNode } from '../model/graphnode';
+import { Model } from '../model/model';
+import { Approval } from '../model/process/approval';
+import { Process } from '../model/process/process';
+import { Provision } from '../model/support/provision';
+import { Reference } from '../model/support/reference';
+import { Role } from '../model/support/role';
+import { DATATYPE } from './IDRegistry';
 
-function addProcess(model:Model):Process {
-  let p = new Process(model.idreg.findUniqueID("Process"), "")    
-  model.hps.push(p)
-  model.idreg.addID(p.id, p)
-  return p
+function addProcess(model: Model): Process {
+  const p = new Process(model.idreg.findUniqueID('Process'), '');
+  model.hps.push(p);
+  model.idreg.addID(p.id, p);
+  return p;
 }
 
-function findProcess(model:Model, page:Subprocess):Process|null {
-  let sm = functionCollection.getStateMan()  
-  let p = model.idreg.getObject(sm.state.addingexisting)  
-  sm.state.addingexisting = ""
+function findProcess(model: Model, page: Subprocess): Process | null {
+  const sm = functionCollection.getStateMan();
+  const p = model.idreg.getObject(sm.state.addingexisting);
+  sm.state.addingexisting = '';
   if (p != null && p instanceof Process) {
-    p.pages.add(page)    
-    return p
+    p.pages.add(page);
+    return p;
   }
-  return null
+  return null;
 }
 
-function addApproval(model:Model):Approval {
-  let p = new Approval(model.idreg.findUniqueID("Approval"), "")
-  model.aps.push(p)
-  model.idreg.addID(p.id, p)
-  return p
+function addApproval(model: Model): Approval {
+  const p = new Approval(model.idreg.findUniqueID('Approval'), '');
+  model.aps.push(p);
+  model.idreg.addID(p.id, p);
+  return p;
 }
 
-function addEnd(model:Model):EndEvent {
-  let e = new EndEvent(model.idreg.findUniqueID("EndEvent"), "")
-  model.evs.push(e)
-  model.idreg.addID(e.id, e)
-  return e
+function addEnd(model: Model): EndEvent {
+  const e = new EndEvent(model.idreg.findUniqueID('EndEvent'), '');
+  model.evs.push(e);
+  model.idreg.addID(e.id, e);
+  return e;
 }
 
-function addTimer(model:Model):TimerEvent {
-  let e = new TimerEvent(model.idreg.findUniqueID("TimerEvent"), "")
-  model.evs.push(e)
-  model.idreg.addID(e.id, e)
-  return e
+function addTimer(model: Model): TimerEvent {
+  const e = new TimerEvent(model.idreg.findUniqueID('TimerEvent'), '');
+  model.evs.push(e);
+  model.idreg.addID(e.id, e);
+  return e;
 }
 
-function addSignalCatch(model:Model):SignalCatchEvent {
-  let e = new SignalCatchEvent(model.idreg.findUniqueID("SignalCatchEvent"), "")
-  model.evs.push(e)
-  model.idreg.addID(e.id, e)
-  return e
+function addSignalCatch(model: Model): SignalCatchEvent {
+  const e = new SignalCatchEvent(
+    model.idreg.findUniqueID('SignalCatchEvent'),
+    ''
+  );
+  model.evs.push(e);
+  model.idreg.addID(e.id, e);
+  return e;
 }
 
-function addEGate(model:Model):EGate {
-  let e = new EGate(model.idreg.findUniqueID("EGate"), "")
-  model.gates.push(e)
-  model.idreg.addID(e.id, e)
-  return e
+function addEGate(model: Model): EGate {
+  const e = new EGate(model.idreg.findUniqueID('EGate'), '');
+  model.gates.push(e);
+  model.idreg.addID(e.id, e);
+  return e;
 }
 
-export function createNewModel():Model {
-  let m = new Model()
-  return m
+export function createNewModel(): Model {
+  const m = new Model();
+  return m;
 }
 
-export function addComponent(type:string, model:Model, page:Subprocess, pos:XYPosition):GraphNode|null {  
-  let ret:GraphNode|null = null
-  if (type == "process") ret = addProcess(model)  
-  if (type == "approval") ret = addApproval(model)
-  if (type == "end") ret = addEnd(model)
-  if (type == "timer") ret = addTimer(model)
-  if (type == "signalcatch") ret = addSignalCatch(model)
-  if (type == "egate") ret = addEGate(model)
-  if (type == "custom") ret = findProcess(model, page)
-  if (type == "import") {
-    ret = loadImport()
-    functionCollection.getStateMan().state.modelWrapper.readDocu()
+export function addComponent(
+  type: string,
+  model: Model,
+  page: Subprocess,
+  pos: XYPosition
+): GraphNode | null {
+  let ret: GraphNode | null = null;
+  if (type == 'process') {
+    ret = addProcess(model);
+  }
+  if (type == 'approval') {
+    ret = addApproval(model);
+  }
+  if (type == 'end') {
+    ret = addEnd(model);
+  }
+  if (type == 'timer') {
+    ret = addTimer(model);
+  }
+  if (type == 'signalcatch') {
+    ret = addSignalCatch(model);
+  }
+  if (type == 'egate') {
+    ret = addEGate(model);
+  }
+  if (type == 'custom') {
+    ret = findProcess(model, page);
+  }
+  if (type == 'import') {
+    ret = loadImport();
+    functionCollection.getStateMan().state.modelWrapper.readDocu();
   }
   if (ret != null) {
-    let nc = new SubprocessComponent(ret.id, "")
-    nc.element = ret
-    nc.x = pos.x
-    nc.y = pos.y
-    page.map.set(ret.id, nc)
-    page.childs.push(nc)
+    const nc = new SubprocessComponent(ret.id, '');
+    nc.element = ret;
+    nc.x = pos.x;
+    nc.y = pos.y;
+    page.map.set(ret.id, nc);
+    page.childs.push(nc);
   }
-  
-  return null
+
+  return null;
 }
 
-function loadImport():Process|null {
-  let sm = functionCollection.getStateMan()
-  let imodel = sm.state.imodel
-  let type = sm.state.importing
-  let ns = sm.state.namespace  
-  let prefix = ns+"#"  
-  if (type == "*") {
-    let id = prefix+"*"    
-    return addRootProcessToModel(id, prefix)    
+function loadImport(): Process | null {
+  const sm = functionCollection.getStateMan();
+  const imodel = sm.state.imodel;
+  const type = sm.state.importing;
+  const ns = sm.state.namespace;
+  const prefix = ns + '#';
+  if (type == '*') {
+    const id = prefix + '*';
+    return addRootProcessToModel(id, prefix);
   } else {
-    let op = imodel.idreg.ids.get(type)    
-    let id = prefix+type
-    if (op != null && op instanceof Process) {      
-      return addProcessIfNotFound(id, prefix, op)
+    const op = imodel.idreg.ids.get(type);
+    const id = prefix + type;
+    if (op != null && op instanceof Process) {
+      return addProcessIfNotFound(id, prefix, op);
     }
   }
-  console.error("Error import object", type, imodel, ns)  
-  return null
+  console.error('Error import object', type, imodel, ns);
+  return null;
 }
 
-function addRootProcessToModel(id:string, prefix:string):Process {
-  let sm = functionCollection.getStateMan()
-  let imodel = sm.state.imodel
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addRootProcessToModel(id: string, prefix: string): Process {
+  const sm = functionCollection.getStateMan();
+  const imodel = sm.state.imodel;
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
 
-  let p = new Process(id, "")
-  p.name = imodel.meta.title
+  const p = new Process(id, '');
+  p.name = imodel.meta.title;
   if (imodel.root != null) {
-    p.page = addPageIfNotFound(prefix+imodel.root.id, prefix, imodel.root)
+    p.page = addPageIfNotFound(prefix + imodel.root.id, prefix, imodel.root);
   }
-  
+
   if (idreg.ids.has(id)) {
-    console.error("Error adding imported process", p)    
+    console.error('Error adding imported process', p);
   }
-  idreg.addID(id, p)
-  model.hps.push(p)
-  return p
+  idreg.addID(id, p);
+  model.hps.push(p);
+  return p;
 }
 
-function addRoleIfNotFound(id:string, role:Role):Role {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addRoleIfNotFound(id: string, role: Role): Role {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.ids.has(id)) {
-    let r = new Role(id, "")
-    r.name = role.name
-    model.roles.push(r)
-    idreg.addID(id, r)
-    return r
+    const r = new Role(id, '');
+    r.name = role.name;
+    model.roles.push(r);
+    idreg.addID(id, r);
+    return r;
   }
-  let r = idreg.ids.get(id)
+  const r = idreg.ids.get(id);
   if (r != undefined && r instanceof Role) {
-    return r
+    return r;
   }
-  console.error("Error find object", role)
-  return role
+  console.error('Error find object', role);
+  return role;
 }
 
-function addProcessIfNotFound(id:string, prefix:string, process:Process):Process {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addProcessIfNotFound(
+  id: string,
+  prefix: string,
+  process: Process
+): Process {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.ids.has(id)) {
-    let p = new Process(id, "")
-    p.name = process.name
-    if (process.actor != null) {      
-      p.actor = addRoleIfNotFound(prefix+process.actor.id, process.actor)
+    const p = new Process(id, '');
+    p.name = process.name;
+    if (process.actor != null) {
+      p.actor = addRoleIfNotFound(prefix + process.actor.id, process.actor);
     } else {
-      p.actortext = ""
+      p.actortext = '';
     }
-    p.modality = process.modality
-    process.input.map((d) => {
-      p.input.push(addRegistryIfNotFound(prefix+d.id, prefix, d))
-    })
-    process.output.map((d) => {
-      p.output.push(addRegistryIfNotFound(prefix+d.id, prefix, d))
-    })
-    process.provision.map((pro) => {
-      p.provision.push(addProvisionIfNotFound(prefix+pro.id, prefix, pro))
-    })
+    p.modality = process.modality;
+    process.input.map(d => {
+      p.input.push(addRegistryIfNotFound(prefix + d.id, prefix, d));
+    });
+    process.output.map(d => {
+      p.output.push(addRegistryIfNotFound(prefix + d.id, prefix, d));
+    });
+    process.provision.map(pro => {
+      p.provision.push(addProvisionIfNotFound(prefix + pro.id, prefix, pro));
+    });
     if (process.page != null) {
-      p.page = addPageIfNotFound(prefix+process.page.id, prefix, process.page)
+      p.page = addPageIfNotFound(
+        prefix + process.page.id,
+        prefix,
+        process.page
+      );
     }
-    model.hps.push(p)
-    idreg.addID(id, p)
-    return p    
+    model.hps.push(p);
+    idreg.addID(id, p);
+    return p;
   }
-  let p = idreg.ids.get(id)
+  const p = idreg.ids.get(id);
   if (p != undefined && p instanceof Process) {
-    return p
+    return p;
   }
-  console.error("Error find object", process)
-  return process  
+  console.error('Error find object', process);
+  return process;
 }
 
-function addApprovalIfNotFound(id:string, prefix:string, approval:Approval):Approval {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addApprovalIfNotFound(
+  id: string,
+  prefix: string,
+  approval: Approval
+): Approval {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.ids.has(id)) {
-    let p = new Approval(id, "")
-    p.name = approval.name
-    p.modality = approval.modality
+    const p = new Approval(id, '');
+    p.name = approval.name;
+    p.modality = approval.modality;
     if (approval.actor != null) {
-      p.actor = addRoleIfNotFound(prefix+approval.actor.id, approval.actor)
+      p.actor = addRoleIfNotFound(prefix + approval.actor.id, approval.actor);
     }
     if (approval.approver != null) {
-      p.approver = addRoleIfNotFound(prefix+approval.approver.id, approval.approver)
+      p.approver = addRoleIfNotFound(
+        prefix + approval.approver.id,
+        approval.approver
+      );
     }
-    approval.records.map((d) => {
-      p.records.push(addRegistryIfNotFound(prefix+d.id, prefix, d))
-    })
-    approval.ref.map((r) => {
-      p.ref.push(addReferenceIfNotFound(prefix+r.id, r))
-    })
-    model.aps.push(p)
-    idreg.addID(id, p)
-    return p    
+    approval.records.map(d => {
+      p.records.push(addRegistryIfNotFound(prefix + d.id, prefix, d));
+    });
+    approval.ref.map(r => {
+      p.ref.push(addReferenceIfNotFound(prefix + r.id, r));
+    });
+    model.aps.push(p);
+    idreg.addID(id, p);
+    return p;
   }
-  let p = idreg.ids.get(id)
+  const p = idreg.ids.get(id);
   if (p != undefined && p instanceof Approval) {
-    return p
+    return p;
   }
-  console.error("Error find object", approval)
-  return approval  
+  console.error('Error find object', approval);
+  return approval;
 }
 
-function addRegistryIfNotFound(id:string, prefix:string, registry:Registry):Registry {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addRegistryIfNotFound(
+  id: string,
+  prefix: string,
+  registry: Registry
+): Registry {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.ids.has(id)) {
-    let r = new Registry(id, "")
+    const r = new Registry(id, '');
     // Cloning Registry
-    r.title = registry.title
+    r.title = registry.title;
     if (registry.data != null) {
-      r.data = addDataclassIfNotFound(prefix+registry.data.id, prefix, registry.data)
-      r.data.mother = r
+      r.data = addDataclassIfNotFound(
+        prefix + registry.data.id,
+        prefix,
+        registry.data
+      );
+      r.data.mother = r;
     }
-    model.regs.push(r)
-    idreg.addID(id, r)
-    return r
+    model.regs.push(r);
+    idreg.addID(id, r);
+    return r;
   }
-  let r = idreg.ids.get(id)
+  const r = idreg.ids.get(id);
   if (r != undefined && r instanceof Registry) {
-    return r
+    return r;
   }
-  console.error("Error find object", registry)
-  return registry
+  console.error('Error find object', registry);
+  return registry;
 }
 
-function addDataclassIfNotFound(id:string, prefix:string, dc:Dataclass):Dataclass {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addDataclassIfNotFound(
+  id: string,
+  prefix: string,
+  dc: Dataclass
+): Dataclass {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.ids.has(id)) {
-    let r = new Dataclass(id, "")
+    const r = new Dataclass(id, '');
     // Cloning Dataclass
-    dc.attributes.map((a) => {
-      let na = new DataAttribute(prefix+a.id, "")
-      na.cardinality = a.cardinality
-      na.definition = a.definition
-      na.modality = a.modality
-      a.ref.map((r) => {
-        na.ref.push(addReferenceIfNotFound(prefix+r.id, r))
-      })
-      a.satisfy.map((s) => {
-        na.satisfy.push(prefix+s)
-      })
+    dc.attributes.map(a => {
+      const na = new DataAttribute(prefix + a.id, '');
+      na.cardinality = a.cardinality;
+      na.definition = a.definition;
+      na.modality = a.modality;
+      a.ref.map(r => {
+        na.ref.push(addReferenceIfNotFound(prefix + r.id, r));
+      });
+      a.satisfy.map(s => {
+        na.satisfy.push(prefix + s);
+      });
       if (DATATYPE.indexOf(a.type) != -1) {
-        na.type = a.type
+        na.type = a.type;
       } else {
-        let u = a.type.indexOf("(")
-        let v = a.type.indexOf(")")
-        if (u != -1 && v!= -1) {
-          let type = a.type.substr(u+1, v-u-1)
-          let nextdc = sm.state.imodel.idreg.ids.get(type)          
+        const u = a.type.indexOf('(');
+        const v = a.type.indexOf(')');
+        if (u != -1 && v != -1) {
+          const type = a.type.substr(u + 1, v - u - 1);
+          const nextdc = sm.state.imodel.idreg.ids.get(type);
           if (nextdc != undefined && nextdc instanceof Dataclass) {
-            let ret = addDataclassIfNotFound(prefix+type, prefix, nextdc)
-            na.type = "reference("+ret.id+")"
-            if (!r.rdcs.has(ret)) 
-              r.rdcs.add(ret)
+            const ret = addDataclassIfNotFound(prefix + type, prefix, nextdc);
+            na.type = 'reference(' + ret.id + ')';
+            if (!r.rdcs.has(ret)) {
+              r.rdcs.add(ret);
+            }
           }
         } else {
-          let nextdc = sm.state.imodel.idreg.ids.get(a.type)
+          const nextdc = sm.state.imodel.idreg.ids.get(a.type);
           if (nextdc != undefined && nextdc instanceof Dataclass) {
-            let ret = addDataclassIfNotFound(prefix+a.type, prefix, nextdc)
-            na.type = ret.id
-            if (!r.rdcs.has(ret)) 
-              r.rdcs.add(ret)
+            const ret = addDataclassIfNotFound(prefix + a.type, prefix, nextdc);
+            na.type = ret.id;
+            if (!r.rdcs.has(ret)) {
+              r.rdcs.add(ret);
+            }
           } else if (nextdc != undefined && nextdc instanceof Enum) {
-            let ret = addEnumIfNotFound(prefix+nextdc.id, nextdc)
-            na.type = ret.id
+            const ret = addEnumIfNotFound(prefix + nextdc.id, nextdc);
+            na.type = ret.id;
           }
         }
       }
-      na.mother.push(r)
-      r.attributes.push(na)
-    })
-    model.dcs.push(r)
-    idreg.addID(id, r)
-    return r
+      na.mother.push(r);
+      r.attributes.push(na);
+    });
+    model.dcs.push(r);
+    idreg.addID(id, r);
+    return r;
   }
-  let r = idreg.ids.get(id)
+  const r = idreg.ids.get(id);
   if (r != undefined && r instanceof Dataclass) {
-    return r
+    return r;
   }
-  console.error("Error find object", dc)
-  return dc  
+  console.error('Error find object', dc);
+  return dc;
 }
 
-function addEnumIfNotFound(id:string, en:Enum):Enum {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addEnumIfNotFound(id: string, en: Enum): Enum {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.reqs.has(id)) {
-    let r = new Enum(id, "")
+    const r = new Enum(id, '');
     // Cloning Enum
-    en.values.forEach((v)=> {
-      let ev = new EnumValue(v.id, "")
-      ev.value = v.value
-      r.values.push(ev)
-    })
+    en.values.forEach(v => {
+      const ev = new EnumValue(v.id, '');
+      ev.value = v.value;
+      r.values.push(ev);
+    });
 
-    model.enums.push(r)
-    idreg.addID(id, r)
-    return r
+    model.enums.push(r);
+    idreg.addID(id, r);
+    return r;
   }
-  let r = idreg.ids.get(id)
+  const r = idreg.ids.get(id);
   if (r != undefined && r instanceof Enum) {
-    return r
+    return r;
   }
-  console.error("Error find object", en)
-  return en
+  console.error('Error find object', en);
+  return en;
 }
 
-function addProvisionIfNotFound(id:string, prefix:string, provision:Provision):Provision {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addProvisionIfNotFound(
+  id: string,
+  prefix: string,
+  provision: Provision
+): Provision {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.reqs.has(id)) {
-    let p = new Provision(id, "")
+    const p = new Provision(id, '');
     // Cloning Provision
-    provision.subject.forEach((v, k)=>{
-      p.subject.set(k, v)
-    })
-    p.modality = provision.modality
-    p.condition = provision.condition
-    provision.ref.map((r) => {
-      p.ref.push(addReferenceIfNotFound(prefix+r.id, r))
-    })
-    model.provisions.push(p)
-    idreg.addProvision(id,p)
-    return p
+    provision.subject.forEach((v, k) => {
+      p.subject.set(k, v);
+    });
+    p.modality = provision.modality;
+    p.condition = provision.condition;
+    provision.ref.map(r => {
+      p.ref.push(addReferenceIfNotFound(prefix + r.id, r));
+    });
+    model.provisions.push(p);
+    idreg.addProvision(id, p);
+    return p;
   }
-  let r = idreg.getProvision(id)
+  const r = idreg.getProvision(id);
   if (r != undefined && r instanceof Provision) {
-    return r
+    return r;
   }
-  console.error("Error find object", provision)
-  return provision
+  console.error('Error find object', provision);
+  return provision;
 }
 
-function addReferenceIfNotFound(id:string, ref:Reference):Reference {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addReferenceIfNotFound(id: string, ref: Reference): Reference {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.refs.has(id)) {
-    let r = new Reference(id, "")
+    const r = new Reference(id, '');
     // Cloning Reference
-    r.document = ref.document
-    r.clause = ref.clause
-    model.refs.push(r)
-    idreg.addReference(id, r)
-    return r
+    r.document = ref.document;
+    r.clause = ref.clause;
+    model.refs.push(r);
+    idreg.addReference(id, r);
+    return r;
   }
-  let r = idreg.getReference(id)
+  const r = idreg.getReference(id);
   if (r != undefined && r instanceof Reference) {
-    return r
+    return r;
   }
-  console.error("Error find object", ref)
-  return ref
+  console.error('Error find object', ref);
+  return ref;
 }
 
-function addPageIfNotFound(id:string, prefix:string, page:Subprocess):Subprocess {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addPageIfNotFound(
+  id: string,
+  prefix: string,
+  page: Subprocess
+): Subprocess {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.reqs.has(id)) {
-    let p = new Subprocess(id, "")
+    const p = new Subprocess(id, '');
     // Cloning Subprocess
-    page.childs.map((c) => {
+    page.childs.map(c => {
       if (c.element != null && c.element instanceof GraphNode) {
-        let id = prefix + c.element.id
-        let nc = new SubprocessComponent(id, "")
-        nc.element = addGraphNodeIfNotFound(id, prefix, c.element)
-        nc.x = c.x
-        nc.y = c.y
-        p.childs.push(nc)
-        p.map.set(id, nc)
+        const id = prefix + c.element.id;
+        const nc = new SubprocessComponent(id, '');
+        nc.element = addGraphNodeIfNotFound(id, prefix, c.element);
+        nc.x = c.x;
+        nc.y = c.y;
+        p.childs.push(nc);
+        p.map.set(id, nc);
       }
-    })
-    page.edges.map((e) => {
-      let ne = new Edge(prefix+e.id, "")
-      ne.description = e.description
+    });
+    page.edges.map(e => {
+      const ne = new Edge(prefix + e.id, '');
+      ne.description = e.description;
       if (e.from != null && e.from.element != null) {
-        let id = prefix+e.from.element.id
-        let ret = p.map.get(id)
+        const id = prefix + e.from.element.id;
+        const ret = p.map.get(id);
         if (ret != null && ret instanceof SubprocessComponent) {
-          ne.from = ret
+          ne.from = ret;
         }
       }
       if (e.to != null && e.to.element != null) {
-        let id = prefix+e.to.element.id        
-        let ret = p.map.get(id)
+        const id = prefix + e.to.element.id;
+        const ret = p.map.get(id);
         if (ret != null && ret instanceof SubprocessComponent) {
-          ne.to = ret
+          ne.to = ret;
         }
-      }      
+      }
       if (ne.from != null) {
-        ne.from.child.push(ne)
+        ne.from.child.push(ne);
       } else {
-        console.error("Edge elements not found!", ne)
+        console.error('Edge elements not found!', ne);
       }
-      idreg.addID(ne.id, ne)
-      p.edges.push(ne)
-    })
-    page.data.map((c) => {
+      idreg.addID(ne.id, ne);
+      p.edges.push(ne);
+    });
+    page.data.map(c => {
       if (c.element != null && c.element instanceof Registry) {
-        let id = prefix + c.element.id
-        let nc = new SubprocessComponent(id, "")
-        nc.element = addRegistryIfNotFound(id, prefix, c.element)
-        nc.x = c.x
-        nc.y = c.y
-        p.data.push(nc)
-        p.map.set(id, nc)
+        const id = prefix + c.element.id;
+        const nc = new SubprocessComponent(id, '');
+        nc.element = addRegistryIfNotFound(id, prefix, c.element);
+        nc.x = c.x;
+        nc.y = c.y;
+        p.data.push(nc);
+        p.map.set(id, nc);
       } else if (c.element != null && c.element instanceof Dataclass) {
-        let id = prefix + c.element.id
-        let nc = new SubprocessComponent(id, "")
-        nc.element = addDataclassIfNotFound(id, prefix, c.element)
-        nc.x = c.x
-        nc.y = c.y
-        p.data.push(nc)
-        p.map.set(id, nc)
+        const id = prefix + c.element.id;
+        const nc = new SubprocessComponent(id, '');
+        nc.element = addDataclassIfNotFound(id, prefix, c.element);
+        nc.x = c.x;
+        nc.y = c.y;
+        p.data.push(nc);
+        p.map.set(id, nc);
       }
-    })
+    });
     if (page.start != null && page.start.element != null) {
-      let start = p.map.get(prefix+page.start.element.id)
+      const start = p.map.get(prefix + page.start.element.id);
       if (start != undefined) {
-        p.start = start
+        p.start = start;
       }
     }
-    model.pages.push(p)
-    idreg.addID(id,p)
-    return p
+    model.pages.push(p);
+    idreg.addID(id, p);
+    return p;
   }
-  let r = idreg.ids.get(id)
+  const r = idreg.ids.get(id);
   if (r != undefined && r instanceof Subprocess) {
-    return r
+    return r;
   }
-  console.error("Error find object", page)
-  return page
+  console.error('Error find object', page);
+  return page;
 }
 
-function addEGateIfNotFound(id:string, g:EGate):EGate {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addEGateIfNotFound(id: string, g: EGate): EGate {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.ids.has(id)) {
-    let r = new EGate(id, "")
+    const r = new EGate(id, '');
     // Cloning EGate
-    r.label = g.label
-    model.gates.push(r)
-    idreg.addID(id, r)
-    return r
+    r.label = g.label;
+    model.gates.push(r);
+    idreg.addID(id, r);
+    return r;
   }
-  let r = idreg.ids.get(id)
+  const r = idreg.ids.get(id);
   if (r != undefined && r instanceof EGate) {
-    return r
+    return r;
   }
-  console.error("Error find object", g)
-  return g
+  console.error('Error find object', g);
+  return g;
 }
 
-function addStartEventIfNotFound(id:string, e:StartEvent):StartEvent {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addStartEventIfNotFound(id: string, e: StartEvent): StartEvent {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.ids.has(id)) {
-    let r = new StartEvent(id, "")
-    // Cloning Start Event    
-    model.evs.push(r)
-    idreg.addID(id, r)
-    return r
+    const r = new StartEvent(id, '');
+    // Cloning Start Event
+    model.evs.push(r);
+    idreg.addID(id, r);
+    return r;
   }
-  let r = idreg.ids.get(id)
+  const r = idreg.ids.get(id);
   if (r != undefined && r instanceof StartEvent) {
-    return r
+    return r;
   }
-  console.error("Error find object", e)
-  return e
+  console.error('Error find object', e);
+  return e;
 }
 
-function addEndEventIfNotFound(id:string, e:EndEvent):EndEvent {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addEndEventIfNotFound(id: string, e: EndEvent): EndEvent {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.ids.has(id)) {
-    let r = new EndEvent(id, "")
-    // Cloning End Event    
-    model.evs.push(r)
-    idreg.addID(id, r)
-    return r
+    const r = new EndEvent(id, '');
+    // Cloning End Event
+    model.evs.push(r);
+    idreg.addID(id, r);
+    return r;
   }
-  let r = idreg.ids.get(id)
+  const r = idreg.ids.get(id);
   if (r != undefined && r instanceof EndEvent) {
-    return r
+    return r;
   }
-  console.error("Error find object", e)
-  return e
+  console.error('Error find object', e);
+  return e;
 }
 
-function addSCEventIfNotFound(id:string, prefix:string, e:SignalCatchEvent):SignalCatchEvent {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addSCEventIfNotFound(
+  id: string,
+  prefix: string,
+  e: SignalCatchEvent
+): SignalCatchEvent {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.ids.has(id)) {
-    let r = new SignalCatchEvent(id, "")
-    r.signal = prefix + e.signal    
+    const r = new SignalCatchEvent(id, '');
+    r.signal = prefix + e.signal;
     // Cloning Signal Catch Event
-    model.evs.push(r)
-    idreg.addID(id, r)
-    return r
+    model.evs.push(r);
+    idreg.addID(id, r);
+    return r;
   }
-  let r = idreg.ids.get(id)
+  const r = idreg.ids.get(id);
   if (r != undefined && r instanceof SignalCatchEvent) {
-    return r
+    return r;
   }
-  console.error("Error find object", e)
-  return e
+  console.error('Error find object', e);
+  return e;
 }
 
-function addTimerEventIfNotFound(id:string, e:TimerEvent):TimerEvent {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
+function addTimerEventIfNotFound(id: string, e: TimerEvent): TimerEvent {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
   if (!idreg.ids.has(id)) {
-    let r = new TimerEvent(id, "")
+    const r = new TimerEvent(id, '');
     // Cloning Timer Event
-    r.type = e.type
-    r.para = e.para
-    model.evs.push(r)
-    idreg.addID(id, r)
-    return r
+    r.type = e.type;
+    r.para = e.para;
+    model.evs.push(r);
+    idreg.addID(id, r);
+    return r;
   }
-  let r = idreg.ids.get(id)
+  const r = idreg.ids.get(id);
   if (r != undefined && r instanceof TimerEvent) {
-    return r
+    return r;
   }
-  console.error("Error find object", e)
-  return e
+  console.error('Error find object', e);
+  return e;
 }
 
-function addGraphNodeIfNotFound(id:string, prefix:string, x:GraphNode):GraphNode {
-  let sm = functionCollection.getStateMan()
-  let model = sm.state.modelWrapper.model
-  let idreg = model.idreg
-  let ret = idreg.ids.get(id)
+function addGraphNodeIfNotFound(
+  id: string,
+  prefix: string,
+  x: GraphNode
+): GraphNode {
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = model.idreg;
+  const ret = idreg.ids.get(id);
   if (ret != undefined && ret instanceof GraphNode) {
-    return ret
+    return ret;
   }
   if (x instanceof Process) {
-    return addProcessIfNotFound(id, prefix, x)
+    return addProcessIfNotFound(id, prefix, x);
   } else if (x instanceof Approval) {
-    return addApprovalIfNotFound(id, prefix, x)
+    return addApprovalIfNotFound(id, prefix, x);
   } else if (x instanceof EGate) {
-    return addEGateIfNotFound(id, x)
+    return addEGateIfNotFound(id, x);
   } else if (x instanceof StartEvent) {
-    return addStartEventIfNotFound(id, x)
+    return addStartEventIfNotFound(id, x);
   } else if (x instanceof EndEvent) {
-    return addEndEventIfNotFound(id, x)
+    return addEndEventIfNotFound(id, x);
   } else if (x instanceof TimerEvent) {
-    return addTimerEventIfNotFound(id, x)
+    return addTimerEventIfNotFound(id, x);
   } else if (x instanceof SignalCatchEvent) {
-    return addSCEventIfNotFound(id, prefix, x)
+    return addSCEventIfNotFound(id, prefix, x);
   }
-  console.error("Graph node type not found", x)
-  return new Process("", "")
+  console.error('Graph node type not found', x);
+  return new Process('', '');
 }

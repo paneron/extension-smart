@@ -6,35 +6,33 @@ import { ModelViewStateMan } from '../model/mapperstate';
 import { MapperFunctions } from '../util/helperfunctions';
 import { MappingDescribe } from '../util/mapperdescribe';
 
-const MapperInfoPane:React.FC<ModelViewStateMan> = (sm:ModelViewStateMan) => {
-  
-  const selected = useStoreState((store) => store.selectedElements);      
+const MapperInfoPane: React.FC<ModelViewStateMan> = (sm: ModelViewStateMan) => {
+  const selected = useStoreState(store => store.selectedElements);
 
-  const css:CSSProperties = {
-    display: sm.state.infovisible?"inline":"none"
-  }
+  const css: CSSProperties = {
+    display: sm.state.infovisible ? 'inline' : 'none',
+  };
 
-  const updateSelection = ( selected:Elements<any>|null) => {
+  const updateSelection = (selected: Elements<any> | null) => {
     if (selected != null && selected.length > 0) {
-      let s = selected[0]
-      if (s.data instanceof NodeData) {        
-        let data = MapperFunctions.getObjectByID(sm, s.data.represent)
+      const s = selected[0];
+      if (s.data instanceof NodeData) {
+        const data = MapperFunctions.getObjectByID(sm, s.data.represent);
         if (data != undefined) {
-          return MappingDescribe(data)
+          return MappingDescribe(data);
         }
       }
     }
-    return "Nothing is selected"
-  }
+    return 'Nothing is selected';
+  };
 
   return (
     <SideBar style={css}>
       <h1> Information of selected node </h1>
       <div> {updateSelection(selected)} </div>
     </SideBar>
-  )
-  
-}
+  );
+};
 
 const SideBar = styled.aside`
   position: absolute;
@@ -46,7 +44,7 @@ const SideBar = styled.aside`
   border-style: solid;
   font-size: 12px;
   overflow-y: auto;
-  z-index:100;
-`
+  z-index: 100;
+`;
 
-export default MapperInfoPane
+export default MapperInfoPane;

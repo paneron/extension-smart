@@ -1,75 +1,85 @@
-import * as tokenizer from '../../util/tokenizer'
-import { SubprocessComponent } from './subprocess'
+import * as tokenizer from '../../util/tokenizer';
+import { SubprocessComponent } from './subprocess';
 
-export class Edge {  
-  id: string = ""
-  from: SubprocessComponent | null = null
-  to: SubprocessComponent | null = null
+export class Edge {
+  id = '';
+  from: SubprocessComponent | null = null;
+  to: SubprocessComponent | null = null;
 
-  fromtext:string = ""
-  totext:string = ""
-  description:string = ""
-  condition:string = ""
+  fromtext = '';
+  totext = '';
+  description = '';
+  condition = '';
 
-  isDone:boolean = false
+  isDone = false;
 
-  constructor(id:string, data:string) {
-    this.id = id
-    let t:Array<string> = tokenizer.tokenizePackage(data)
-    let i:number  = 0
+  constructor(id: string, data: string) {
+    this.id = id;
+    const t: Array<string> = tokenizer.tokenizePackage(data);
+    let i = 0;
     while (i < t.length) {
-      let command:string = t[i++]
+      const command: string = t[i++];
       if (i < t.length) {
-        if (command == "from") {
-          this.fromtext = t[i++]
-        } else if (command == "description") {
-          this.description = tokenizer.removePackage(t[i++])
-        } else if (command == "condition") {
-          this.condition = tokenizer.removePackage(t[i++])
-        } else if (command == "to") {
-          this.totext = t[i++]
+        if (command == 'from') {
+          this.fromtext = t[i++];
+        } else if (command == 'description') {
+          this.description = tokenizer.removePackage(t[i++]);
+        } else if (command == 'condition') {
+          this.condition = tokenizer.removePackage(t[i++]);
+        } else if (command == 'to') {
+          this.totext = t[i++];
         } else {
-          console.error('Parsing error: process flow. ID ' + id + ': Unknown keyword ' + command)
+          console.error(
+            'Parsing error: process flow. ID ' +
+              id +
+              ': Unknown keyword ' +
+              command
+          );
         }
       } else {
-        console.error('Parsing error: process flow. ID ' + id + ': Expecting value for ' + command)
+        console.error(
+          'Parsing error: process flow. ID ' +
+            id +
+            ': Expecting value for ' +
+            command
+        );
       }
     }
   }
 
   resolve(idreg: Map<string, SubprocessComponent>): void {
-    let x = idreg.get(this.fromtext)
+    let x = idreg.get(this.fromtext);
     if (x != undefined) {
-      this.from = x
+      this.from = x;
     } else {
-      console.error("Error in resolving IDs in from for egde " + this.id)
+      console.error('Error in resolving IDs in from for egde ' + this.id);
     }
-    x = idreg.get(this.totext)
+    x = idreg.get(this.totext);
     if (x != undefined) {
-      this.to = x
+      this.to = x;
     } else {
-      console.error("Error in resolving IDs in to for egde " + this.id)
+      console.error('Error in resolving IDs in to for egde ' + this.id);
     }
     if (this.from != null) {
-      this.from.child.push(this)
+      this.from.child.push(this);
     }
   }
 
-  toModel():string {
-    let out: string = "    " + this.id + " {\n"
+  toModel(): string {
+    let out: string = '    ' + this.id + ' {\n';
     if (this.from != null && this.from.element != null) {
-		  out += "      from " + this.from.element.id + "\n"
+      out += '      from ' + this.from.element.id + '\n';
     }
     if (this.to != null && this.to.element != null) {
-		  out += "      to " + this.to.element.id + "\n"
+      out += '      to ' + this.to.element.id + '\n';
     }
-		if (this.description != "") {
-			out += "      description \"" + this.description + "\"\n"
-		}
-    if (this.condition != "") {
-			out += "      condition \"" + this.condition + "\"\n"
-		}
-		out += "    }\n"
-		return out
-	}
+    if (this.description != '') {
+      out += '      description "' + this.description + '"\n';
+    }
+    if (this.condition != '') {
+      out += '      condition "' + this.condition + '"\n';
+    }
+    out += '    }\n';
+    return out;
+  }
 }

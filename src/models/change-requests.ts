@@ -1,56 +1,65 @@
 import { Revision } from './revisions';
 
-
 /* Generic */
 
-
-export type RevisionInCR<T> = Omit<Revision<T>, 'changeRequestID' | 'author'> & {
-  createdObjectID?: number | string
-  createdRevisionID?: string
+export type RevisionInCR<T> = Omit<
+  Revision<T>,
+  'changeRequestID' | 'author'
+> & {
+  createdObjectID?: number | string;
+  createdRevisionID?: string;
 };
 
-
-interface _ChangeRequest<SubmitterMeta extends object, RegistryMeta extends { stage: string }> {
-  id: string
+interface _ChangeRequest<
+  SubmitterMeta extends object,
+  RegistryMeta extends { stage: string }
+> {
+  id: string;
   /* 6 hexadecimal characters */
 
   revisions: {
     [objectType: string]: {
-      [objectID: string]: RevisionInCR<any>
-    }
-  }
+      [objectID: string]: RevisionInCR<any>;
+    };
+  };
   /* Changes contained in this CR.
      Must not change once stage is past Draft.
      Object ID must uniquely */
 
-  reviewerNotes?: string
+  reviewerNotes?: string;
 
-  timeCreated: Date
-  timeSubmitted?: Date // Submitted CRs cannot be edited
-  timeResolved?: Date // Submitted CRs cannot be reviewed or edited
+  timeCreated: Date;
+  timeSubmitted?: Date; // Submitted CRs cannot be edited
+  timeResolved?: Date; // Submitted CRs cannot be reviewed or edited
 
   author: {
-    name: string
-    email: string
-  }
+    name: string;
+    email: string;
+  };
 
   meta: {
-    submitter: SubmitterMeta
-    registry: RegistryMeta
-  }
+    submitter: SubmitterMeta;
+    registry: RegistryMeta;
+  };
 }
-
 
 /* Specific */
 
 export type LCStageInPreparation = 'Draft';
-export type LCStageInReview = 'Proposal' | 'Evaluation' | 'Validation' | 'Extended procedure';
+export type LCStageInReview =
+  | 'Proposal'
+  | 'Evaluation'
+  | 'Validation'
+  | 'Extended procedure';
 export type LCStageArchived = 'Resolved' | 'Withdrawn' | 'Rejected';
-export type LCStage = LCStageInPreparation | LCStageInReview | LCStageArchived | 'Test';
+export type LCStage =
+  | LCStageInPreparation
+  | LCStageInReview
+  | LCStageArchived
+  | 'Test';
 
-export const LIFECYCLE_STAGES_IN_PREPARATION: readonly LCStageInPreparation[] = [
-  'Draft',
-] as const;
+export const LIFECYCLE_STAGES_IN_PREPARATION: readonly LCStageInPreparation[] =
+  ['Draft'] as const;
 
 export const LIFECYCLE_STAGES_IN_REVIEW: readonly LCStageInReview[] = [
   'Proposal',
@@ -82,15 +91,15 @@ export const LIFECYCLE_STAGES: readonly LCStage[] = [
 ] as const;
 
 export interface RegistryMeta {
-  stage: typeof LIFECYCLE_STAGES[number]
+  stage: typeof LIFECYCLE_STAGES[number];
 }
 
 export interface SubmitterMeta {
   primaryPerson: {
-    name: string
-    affiliation: string
-    email: string
-  }
+    name: string;
+    affiliation: string;
+    email: string;
+  };
 }
 
-export interface ChangeRequest extends _ChangeRequest<SubmitterMeta, RegistryMeta> {}
+export type ChangeRequest = _ChangeRequest<SubmitterMeta, RegistryMeta>;

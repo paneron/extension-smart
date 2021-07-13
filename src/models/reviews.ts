@@ -1,17 +1,17 @@
 export interface Review {
-  timeRequested: Date
+  timeRequested: Date;
 
-  id: string
+  id: string;
   // Based on objectType, objectID and revisionID
 
-  objectType: string
-  objectID: string
-  revisionID: string
+  objectType: string;
+  objectID: string;
+  revisionID: string;
 
-  notes?: string
-  metadata?: object
+  notes?: string;
+  metadata?: object;
 
-  approved?: boolean
-  reviewerName?: string
-  timeCompleted?: Date
+  approved?: boolean;
+  reviewerName?: string;
+  timeCompleted?: Date;
 }

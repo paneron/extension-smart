@@ -12,7 +12,10 @@
     "requiredHostAppVersion": "^1.0.0-beta2"
   },
   "scripts": {
-    "build": "rm -r compiled dist; mkdir compiled dist; tsc --outDir compiled; babel compiled --out-dir dist; cp package.json dist/; rsync -a --include '*/' --include '*.d.ts' --include '*.js.map' --exclude '*' compiled/ dist/"
+    "build": "rm -r compiled dist; mkdir compiled dist; tsc --outDir compiled; babel compiled --out-dir dist; cp package.json dist/; rsync -a --include '*/' --include '*.d.ts' --include '*.js.map' --exclude '*' compiled/ dist/",
+    "lint": "gts lint",
+    "lint-clean": "gts clean",
+    "lint-fix": "gts fix"
   },
   "files": [
     "README.adoc",
@@ -45,7 +48,8 @@
     "react": "16.11.0",
     "react-flow-renderer": "^9.6.0",
     "react-mathjax2": "^0.0.2",
-    "typescript": "^4.1.3"
+    "typescript": "^4.1.3",
+    "gts": "^3.1.0"
   },
   "license": "MIT"
 }

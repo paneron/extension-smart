@@ -1,9 +1,9 @@
-import { RefObject } from "react"
+import { RefObject } from 'react';
 
 export class MappingProfile {
-  ref:RefObject<HTMLDivElement>
+  ref: RefObject<HTMLDivElement>;
 
-  constructor(ref:RefObject<HTMLDivElement>) {
-    this.ref = ref
+  constructor(ref: RefObject<HTMLDivElement>) {
+    this.ref = ref;
   }
 }

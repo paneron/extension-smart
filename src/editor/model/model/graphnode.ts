@@ -1,17 +1,15 @@
-import { Subprocess } from "./flow/subprocess"
+import { Subprocess } from './flow/subprocess';
 
 export abstract class GraphNode {
+  id = '';
 
-  id:string = ""  
+  isAdded = false;
 
-  isAdded:boolean = false
+  pages = new Set<Subprocess>();
 
-  pages = new Set<Subprocess>()
+  parent: Array<GraphNode> = [];
 
-  parent:Array<GraphNode> = []
-
-  constructor(id:string) {
-    this.id = id
-  }  
-  
+  constructor(id: string) {
+    this.id = id;
+  }
 }

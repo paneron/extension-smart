@@ -1,69 +1,69 @@
 export class XMLElement {
-  tag:string
-  attributes = new Map<string, string>()
-  private childs:Array<XMLElement|string> = []
+  tag: string;
+  attributes = new Map<string, string>();
+  private childs: Array<XMLElement | string> = [];
 
-  map = new Map<string, Array<XMLElement>>()
+  map = new Map<string, Array<XMLElement>>();
 
-  constructor(tag:string) {
-    this.tag = tag
+  constructor(tag: string) {
+    this.tag = tag;
   }
 
-  addChild(c:XMLElement|string) {
-    this.childs.push(c)
+  addChild(c: XMLElement | string) {
+    this.childs.push(c);
     if (c instanceof XMLElement) {
-      let array = this.map.get(c.tag)
+      let array = this.map.get(c.tag);
       if (array == undefined) {
-        array = []
-        this.map.set(c.tag, array)
+        array = [];
+        this.map.set(c.tag, array);
       }
-      array.push(c)
+      array.push(c);
     }
   }
 
   getChilds() {
-    return this.childs
+    return this.childs;
   }
 
-  getChildByTagName(x:string):Array<XMLElement> {
-    let array = this.map.get(x)
+  getChildByTagName(x: string): Array<XMLElement> {
+    const array = this.map.get(x);
     if (array == undefined) {
-      return []
+      return [];
     }
-    return array
+    return array;
   }
 
-  getElementValue(name:string):string {
-    let array = this.map.get(name)
+  getElementValue(name: string): string {
+    const array = this.map.get(name);
     if (array == undefined) {
-      return ""
+      return '';
     }
-    return array[0].toString()
+    return array[0].toString();
   }
 
-  getElementValueByPath(path:Array<string>):string {
-    let c:XMLElement = this
-    path.forEach((x) => {
-      let childs = c.getChildByTagName(x)
+  getElementValueByPath(path: Array<string>): string {
+    let c: XMLElement = this;
+    path.forEach(x => {
+      const childs = c.getChildByTagName(x);
       if (childs.length == 0) {
-        return ""
+        return '';
       } else {
-        c = childs[0]
+        c = childs[0];
         return;
       }
-    })
-    return c.toString()
+    });
+    return c.toString();
   }
 
-  toString():string {
-    let out = ""
-    this.childs.forEach((c) => {
+  toString(): string {
+    let out = '';
+    this.childs.forEach(c => {
       if (c instanceof XMLElement) {
-        out += " " + c.toString().trim()
+        out += ' ' + c.toString().trim();
       } else {
-        out += " " + c.trim()
+        out += ' ' + c.trim();
       }
-    })
-    return out.trim()
+    });
+    return out.trim();
   }
 }

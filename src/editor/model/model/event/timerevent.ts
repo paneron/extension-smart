@@ -1,41 +1,51 @@
-import { EventNode } from './event'
-import * as tokenizer from '../../util/tokenizer'
+import { EventNode } from './event';
+import * as tokenizer from '../../util/tokenizer';
 
 export class TimerEvent extends EventNode {
-  type:string = ""
-  para:string = ""
+  type = '';
+  para = '';
 
-  constructor(id:string, data:string) {
-    super(id)
-    if (data != "") {
-      let t:Array<string> = tokenizer.tokenizePackage(data)
-      let i:number  = 0
+  constructor(id: string, data: string) {
+    super(id);
+    if (data != '') {
+      const t: Array<string> = tokenizer.tokenizePackage(data);
+      let i = 0;
       while (i < t.length) {
-        let command:string = t[i++]
+        const command: string = t[i++];
         if (i < t.length) {
-          if (command == "type") {
-            this.type = t[i++]
-          } else if (command == "para") {
-            this.para = tokenizer.removePackage(t[i++])
+          if (command == 'type') {
+            this.type = t[i++];
+          } else if (command == 'para') {
+            this.para = tokenizer.removePackage(t[i++]);
           } else {
-            console.error('Parsing error: Timer Event. ID ' + id + ': Unknown keyword ' + command)
+            console.error(
+              'Parsing error: Timer Event. ID ' +
+                id +
+                ': Unknown keyword ' +
+                command
+            );
           }
         } else {
-          console.error('Parsing error: Timer Event. ID ' + id + ': Expecting value for ' + command)
+          console.error(
+            'Parsing error: Timer Event. ID ' +
+              id +
+              ': Expecting value for ' +
+              command
+          );
         }
       }
     }
   }
 
-  toModel():string {
-		let out:string = "timer_event " + this.id + " {\n"
-		if (this.type != "") {
-			out += "  type " + this.type + "\n"
-		}
-    if (this.para != "") {
-      out += "  para \"" + this.para + "\"\n"
+  toModel(): string {
+    let out: string = 'timer_event ' + this.id + ' {\n';
+    if (this.type != '') {
+      out += '  type ' + this.type + '\n';
     }
-		out += "}\n"
-		return out
-	}
+    if (this.para != '') {
+      out += '  para "' + this.para + '"\n';
+    }
+    out += '}\n';
+    return out;
+  }
 }

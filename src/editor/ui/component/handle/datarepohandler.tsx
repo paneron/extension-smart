@@ -1,284 +1,325 @@
-import React, { CSSProperties } from "react"
-import { Dataclass } from "../../../model/model/data/dataclass"
-import { Enum } from "../../../model/model/data/enum"
-import { Registry } from "../../../model/model/data/registry"
-import { Model } from "../../../model/model/model"
-import { BOOLEANOPTIONS, BOOLEANTYPE, DATETIMETYPE, EMPTYTYPE, ROLETYPE, STRINGTYPE } from "../../../model/util/IDRegistry"
-import { DocumentItem, DocumentStore } from "../../../repository/document"
-import { IAddItem, IList, IListItem, IUpdateItem } from "../../interface/fieldinterface"
-import { functionCollection } from "../../util/function"
-import NormalComboBox from "../unit/combobox"
-import DataTimeTextField from "../unit/datetimefield"
-import { ReferenceSelector } from "../unit/referenceselect"
-import NormalTextField from "../unit/textfield"
+import React, { CSSProperties } from 'react';
+import { Dataclass } from '../../../model/model/data/dataclass';
+import { Enum } from '../../../model/model/data/enum';
+import { Registry } from '../../../model/model/data/registry';
+import { Model } from '../../../model/model/model';
+import {
+  BOOLEANOPTIONS,
+  BOOLEANTYPE,
+  DATETIMETYPE,
+  EMPTYTYPE,
+  ROLETYPE,
+  STRINGTYPE,
+} from '../../../model/util/IDRegistry';
+import { DocumentItem, DocumentStore } from '../../../repository/document';
+import {
+  IAddItem,
+  IList,
+  IListItem,
+  IUpdateItem,
+} from '../../interface/fieldinterface';
+import { functionCollection } from '../../util/function';
+import NormalComboBox from '../unit/combobox';
+import DataTimeTextField from '../unit/datetimefield';
+import { ReferenceSelector } from '../unit/referenceselect';
+import NormalTextField from '../unit/textfield';
 
-const containercss:CSSProperties = {  
-  border: "1px solid black", 
-  width: "90%",  
-}
+const containercss: CSSProperties = {
+  border: '1px solid black',
+  width: '90%',
+};
 
 export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
+  filterName = 'Document filter';
+  itemName = 'Documents';
+  private model: Model;
+  private store: DocumentStore;
+  private reg: Registry | null;
+  private setAddMode: (b: boolean) => void;
+  private updating: DocumentItem | null;
+  private data: DocumentItem;
+  private setData: (x: DocumentItem) => void;
+  private forceUpdate: () => void;
+  private setUpdateMode: (b: boolean) => void;
+  private setUpdateDoc: (x: DocumentItem) => void;
 
-  filterName="Document filter"
-  itemName="Documents"
-  private model: Model
-  private store: DocumentStore
-  private reg: Registry|null
-  private setAddMode: (b: boolean) => void
-  private updating:DocumentItem|null
-  private data: DocumentItem
-  private setData: (x:DocumentItem) => void
-  private forceUpdate: () => void
-  private setUpdateMode: (b: boolean) => void
-  private setUpdateDoc: (x: DocumentItem) => void
-
-  constructor(model:Model,
-    store:DocumentStore,
-    reg:Registry|null,
-    updateObj:DocumentItem|null,
-    setAdd:(b:boolean)=>void,
-    setUpdate:(b:boolean)=>void,
-    setUpdateDoc:(x:DocumentItem)=>void,
-    forceUpdate:()=>void,
-    data:DocumentItem,
-    setDoc:(x:DocumentItem)=>void) {
-    this.model = model
-    this.store = store
-    this.reg = reg
-    this.updating = updateObj
-    this.setAddMode = setAdd
-    this.setUpdateMode = setUpdate
-    this.forceUpdate = forceUpdate
-    this.setUpdateDoc = setUpdateDoc
-    this.data = data
-    this.setData = setDoc
+  constructor(
+    model: Model,
+    store: DocumentStore,
+    reg: Registry | null,
+    updateObj: DocumentItem | null,
+    setAdd: (b: boolean) => void,
+    setUpdate: (b: boolean) => void,
+    setUpdateDoc: (x: DocumentItem) => void,
+    forceUpdate: () => void,
+    data: DocumentItem,
+    setDoc: (x: DocumentItem) => void
+  ) {
+    this.model = model;
+    this.store = store;
+    this.reg = reg;
+    this.updating = updateObj;
+    this.setAddMode = setAdd;
+    this.setUpdateMode = setUpdate;
+    this.forceUpdate = forceUpdate;
+    this.setUpdateDoc = setUpdateDoc;
+    this.data = data;
+    this.setData = setDoc;
   }
 
-  getItems = ():Array<DocumentListItem> =>  {
-    let out:Array<DocumentListItem> = []
+  getItems = (): Array<DocumentListItem> => {
+    const out: Array<DocumentListItem> = [];
     if (this.reg != null) {
-      let repo = this.store.get(this.reg)
+      const repo = this.store.get(this.reg);
       repo.docs.forEach((v, k) => {
-        out.push(new DocumentListItem(""+k, descDocument(v), ""+k))
-      })
+        out.push(new DocumentListItem('' + k, descDocument(v), '' + k));
+      });
     }
-    return out
-  }
+    return out;
+  };
 
   addItemClicked = () => {
     if (this.reg != null) {
-      this.data = this.store.get(this.reg).createNewDocument()
-      this.setData({...this.data})
-      this.setAddMode(true)
+      this.data = this.store.get(this.reg).createNewDocument();
+      this.setData({ ...this.data });
+      this.setAddMode(true);
     }
-  }
-  
-  removeItem = (refs:Array<string>) => {
+  };
+
+  removeItem = (refs: Array<string>) => {
     if (this.reg != null) {
-      let repo = this.store.get(this.reg)
-      refs.map((x) => {
-        repo.docs.delete(parseInt(x))
-      })                 
-      this.forceUpdate()
+      const repo = this.store.get(this.reg);
+      refs.map(x => {
+        repo.docs.delete(parseInt(x));
+      });
+      this.forceUpdate();
     }
-  }
+  };
 
   updateItem = (ref: string) => {
-    let x = parseInt(ref)
-    if (!isNaN(x) && this.reg != null) {      
-      let repo = this.store.get(this.reg)
-      let r = repo.get(x)
-      this.data.id = r.id
-      this.data.meta = r.meta
-      this.data.attributes = r.attributes
-      this.setData({...this.data})
-      this.setUpdateDoc(r)
-      this.setUpdateMode(true)
-    }    
-  }    
+    const x = parseInt(ref);
+    if (!isNaN(x) && this.reg != null) {
+      const repo = this.store.get(this.reg);
+      const r = repo.get(x);
+      this.data.id = r.id;
+      this.data.meta = r.meta;
+      this.data.attributes = r.attributes;
+      this.setData({ ...this.data });
+      this.setUpdateDoc(r);
+      this.setUpdateMode(true);
+    }
+  };
 
   private getFields = (): Array<JSX.Element> => {
-    let elms: Array<JSX.Element> = []
-    if (this.reg != null && this.reg.data != null) {      
-      elms.push(<NormalTextField
-        key={"field#metadata"}
-        text={"Document description"}
-        value={this.data.meta}
-        update={
-          (x: string) => {
-            this.data.meta = x
-            this.setData({ ...this.data })
-          }
-        } />)
-      this.enumerateDataClass("", this.reg.data, elms)      
-    }    
-    return elms
-  }
+    const elms: Array<JSX.Element> = [];
+    if (this.reg != null && this.reg.data != null) {
+      elms.push(
+        <NormalTextField
+          key={'field#metadata'}
+          text={'Document description'}
+          value={this.data.meta}
+          update={(x: string) => {
+            this.data.meta = x;
+            this.setData({ ...this.data });
+          }}
+        />
+      );
+      this.enumerateDataClass('', this.reg.data, elms);
+    }
+    return elms;
+  };
 
-  getAddFields = (): Array<JSX.Element>  => { return this.getFields() }
+  getAddFields = (): Array<JSX.Element> => {
+    return this.getFields();
+  };
 
   addClicked = () => {
     if (this.reg != null) {
-      let repo = this.store.get(this.reg)
-      repo.docs.set(this.data.id, this.data)
-      this.setAddMode(false)    
-    }        
-  }
-
-  addCancel = () => {    
-    this.setAddMode(false)
-  }  
-
-  getUpdateFields = (): Array<JSX.Element> => { return this.getFields() }
-
-  updateClicked = () => {    
-    if (this.updating != null && this.reg != null) {
-      let repo = this.store.get(this.reg)            
-      if (this.data.id != this.updating.id) {        
-        repo.docs.delete(this.updating.id)
-        repo.docs.set(this.data.id, this.data)        
-        this.setUpdateMode(false) 
-      }      
+      const repo = this.store.get(this.reg);
+      repo.docs.set(this.data.id, this.data);
+      this.setAddMode(false);
     }
-  }
+  };
 
-  updateCancel = () => {    
-    this.setUpdateMode(false)
-  }
+  addCancel = () => {
+    this.setAddMode(false);
+  };
 
-  private enumerateDataClass(prefix:string, dc:Dataclass, elms:Array<JSX.Element>) {
-    let roleoptions:Array<string> = []
-    functionCollection.getStateMan().state.modelWrapper.model.roles.forEach((r) => {
-      roleoptions.push(r.id)
-    })
+  getUpdateFields = (): Array<JSX.Element> => {
+    return this.getFields();
+  };
 
-    dc.attributes.map((a) => {
-      let value = getAttributeValue(this.data, a.id)
+  updateClicked = () => {
+    if (this.updating != null && this.reg != null) {
+      const repo = this.store.get(this.reg);
+      if (this.data.id != this.updating.id) {
+        repo.docs.delete(this.updating.id);
+        repo.docs.set(this.data.id, this.data);
+        this.setUpdateMode(false);
+      }
+    }
+  };
+
+  updateCancel = () => {
+    this.setUpdateMode(false);
+  };
+
+  private enumerateDataClass(
+    prefix: string,
+    dc: Dataclass,
+    elms: Array<JSX.Element>
+  ) {
+    const roleoptions: Array<string> = [];
+    functionCollection
+      .getStateMan()
+      .state.modelWrapper.model.roles.forEach(r => {
+        roleoptions.push(r.id);
+      });
+
+    dc.attributes.map(a => {
+      const value = getAttributeValue(this.data, a.id);
       if (a.type == STRINGTYPE || a.type == EMPTYTYPE) {
-        elms.push(<NormalTextField
-          key={"field#"+prefix+a.id}
-          text={a.definition}
-          value={value}
-          update={
-            (x: string) => {
-              this.data.attributes.set(a.id, x)
-              this.setData({ ...this.data })
-            }
-          } />)
-      } else if (a.type == BOOLEANTYPE) {
-        elms.push(<NormalComboBox
-          key={"field#"+prefix+a.id}
-          text={a.definition}
-          value={value}
-          options={BOOLEANOPTIONS}
-          update={
-            (x: string) => {
-              this.data.attributes.set(a.id, x)
-              this.setData({ ...this.data })
-            }
-          } />)
-        } else if (a.type == ROLETYPE) {
-          elms.push(<ReferenceSelector
-            key={"field#"+prefix+a.id}
+        elms.push(
+          <NormalTextField
+            key={'field#' + prefix + a.id}
             text={a.definition}
-            filterName={"Role filter"}
+            value={value}
+            update={(x: string) => {
+              this.data.attributes.set(a.id, x);
+              this.setData({ ...this.data });
+            }}
+          />
+        );
+      } else if (a.type == BOOLEANTYPE) {
+        elms.push(
+          <NormalComboBox
+            key={'field#' + prefix + a.id}
+            text={a.definition}
+            value={value}
+            options={BOOLEANOPTIONS}
+            update={(x: string) => {
+              this.data.attributes.set(a.id, x);
+              this.setData({ ...this.data });
+            }}
+          />
+        );
+      } else if (a.type == ROLETYPE) {
+        elms.push(
+          <ReferenceSelector
+            key={'field#' + prefix + a.id}
+            text={a.definition}
+            filterName={'Role filter'}
             value={getAttributeValue(this.data, a.id)}
-            options = {roleoptions}
-            update={
-              (x: number) => {
-                if (x != -1) {
-                  this.data.attributes.set(a.id, roleoptions[x])
-                  this.setData({ ...this.data })
-                }
+            options={roleoptions}
+            update={(x: number) => {
+              if (x != -1) {
+                this.data.attributes.set(a.id, roleoptions[x]);
+                this.setData({ ...this.data });
               }
-            } />)
-        } else if (a.type == DATETIMETYPE) {
-        elms.push(<DataTimeTextField
-          key={"field#"+prefix+a.id}
-          text={a.definition}
-          value={value}          
-          update={
-            (x: string) => {
-              this.data.attributes.set(a.id, x)
-              this.setData({ ...this.data })
-            }
-          } />)
+            }}
+          />
+        );
+      } else if (a.type == DATETIMETYPE) {
+        elms.push(
+          <DataTimeTextField
+            key={'field#' + prefix + a.id}
+            text={a.definition}
+            value={value}
+            update={(x: string) => {
+              this.data.attributes.set(a.id, x);
+              this.setData({ ...this.data });
+            }}
+          />
+        );
       } else {
-        let u = a.type.indexOf("(")
-        let v = a.type.indexOf(")")
+        const u = a.type.indexOf('(');
+        const v = a.type.indexOf(')');
         if (u != -1 && v != -1) {
-          let type = a.type.substr(u+1, v-u-1)
-          let opts:Array<string> = []
-          let r = this.model.idreg.getObject(type)
+          const type = a.type.substr(u + 1, v - u - 1);
+          const opts: Array<string> = [];
+          const r = this.model.idreg.getObject(type);
           if (r instanceof Dataclass && r.mother != null) {
-            this.store.get(r.mother).docs.forEach((d) => {
-              opts.push(descDocument(d))
-            })
-            elms.push(<ReferenceSelector
-              key={"field#"+prefix+a.id}
-              text={a.definition}
-              filterName={type + " filter"}
-              value={getAttributeValue(this.data, a.id)}              
-              options = {opts}
-              update={
-                (x: number) => {
+            this.store.get(r.mother).docs.forEach(d => {
+              opts.push(descDocument(d));
+            });
+            elms.push(
+              <ReferenceSelector
+                key={'field#' + prefix + a.id}
+                text={a.definition}
+                filterName={type + ' filter'}
+                value={getAttributeValue(this.data, a.id)}
+                options={opts}
+                update={(x: number) => {
                   if (x != -1) {
-                    this.data.attributes.set(a.id, opts[x])
-                    this.setData({ ...this.data })
+                    this.data.attributes.set(a.id, opts[x]);
+                    this.setData({ ...this.data });
                   }
-                }
-              } />)
+                }}
+              />
+            );
           }
         } else {
           // the data type is a data class
-          let d = this.model.idreg.getObject(a.type)
+          const d = this.model.idreg.getObject(a.type);
           if (d instanceof Dataclass) {
-            let childelms:Array<JSX.Element> = []
-            this.enumerateDataClass(prefix+"#"+a.id, d, childelms)
-            elms.push(<div key={"field#container#"+prefix+a.id} style={containercss}> <p key={"field#containertext#"+prefix+a.id}>{a.definition}</p> {childelms} </div>)
+            const childelms: Array<JSX.Element> = [];
+            this.enumerateDataClass(prefix + '#' + a.id, d, childelms);
+            elms.push(
+              <div
+                key={'field#container#' + prefix + a.id}
+                style={containercss}
+              >
+                {' '}
+                <p key={'field#containertext#' + prefix + a.id}>
+                  {a.definition}
+                </p>{' '}
+                {childelms}{' '}
+              </div>
+            );
           } else if (d instanceof Enum) {
-            let opts:Array<string> = []
-            d.values.map((v) => {
-              opts.push(v.value)
-            })
-            elms.push(<NormalComboBox
-              key={"field#"+prefix+a.id}
-              text={a.definition}
-              options={opts}
-              value={getAttributeValue(this.data, a.id)}                            
-              update={
-                (x: string) => {                  
-                  this.data.attributes.set(a.id, x)
-                  this.setData({ ...this.data })                  
-                }
-              } />)
+            const opts: Array<string> = [];
+            d.values.map(v => {
+              opts.push(v.value);
+            });
+            elms.push(
+              <NormalComboBox
+                key={'field#' + prefix + a.id}
+                text={a.definition}
+                options={opts}
+                value={getAttributeValue(this.data, a.id)}
+                update={(x: string) => {
+                  this.data.attributes.set(a.id, x);
+                  this.setData({ ...this.data });
+                }}
+              />
+            );
           }
         }
       }
-    })
+    });
   }
 }
 
-function getAttributeValue(doc:DocumentItem, x:string) {
-  let y = doc.attributes.get(x)
+function getAttributeValue(doc: DocumentItem, x: string) {
+  let y = doc.attributes.get(x);
   if (y == undefined) {
-    y = ""
+    y = '';
   }
-  return y
+  return y;
 }
 
-function descDocument(doc:DocumentItem):string {
-  return doc.meta + " (" + doc.id + ")"
+function descDocument(doc: DocumentItem): string {
+  return doc.meta + ' (' + doc.id + ')';
 }
 
 export class DocumentListItem implements IListItem {
-  id:string
-  text:string = ""
-  reference:string
+  id: string;
+  text = '';
+  reference: string;
 
-  constructor(a:string, b:string, c:string) {
-    this.id = a
-    this.text = b
-    this.reference = c
+  constructor(a: string, b: string, c: string) {
+    this.id = a;
+    this.text = b;
+    this.reference = c;
   }
 }

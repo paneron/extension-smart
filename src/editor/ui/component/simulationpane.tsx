@@ -4,9 +4,8 @@ import { StateMan } from '../interface/state';
 import { Simulator } from '../util/simulator';
 import { MyCloseButtons } from './unit/closebutton';
 
-const SimulationPage:React.FC<StateMan> = (sm:StateMan) => {        
-
-  let elm = Simulator.getElms()
+const SimulationPage: React.FC<StateMan> = (sm: StateMan) => {
+  const elm = Simulator.getElms();
 
   return (
     <SideBar>
@@ -14,9 +13,8 @@ const SimulationPage:React.FC<StateMan> = (sm:StateMan) => {
       <h1> Simulation </h1>
       {elm}
     </SideBar>
-  )
-  
-}
+  );
+};
 
 const SideBar = styled.aside`
   position: fixed;
@@ -27,8 +25,8 @@ const SideBar = styled.aside`
   background-color: white;
   border-style: solid;
   font-size: 12px;
-  overflow-y: auto;  
+  overflow-y: auto;
   z-index: 110;
-`
+`;
 
-export default SimulationPage
+export default SimulationPage;

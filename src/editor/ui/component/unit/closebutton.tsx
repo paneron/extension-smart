@@ -1,7 +1,7 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
 export const MyCloseButtons = styled.button`
-  position: absolute;  
+  position: absolute;
   right: 0;
   top: 0;
-`
+`;
