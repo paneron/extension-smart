@@ -137,11 +137,12 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     'Debug message: editor',
     state,
     searchState,
-    state.modelWrapper.model.idreg);
+    state.modelWrapper.model.idreg
+  );
 
   const checkUpdated = () => {
-    const modelwrapper = state.modelWrapper
-    const root = modelwrapper.model.root
+    const modelwrapper = state.modelWrapper;
+    const root = modelwrapper.model.root;
     if (root != null) {
       recalculateProgress(root, modelwrapper);
     }
@@ -159,18 +160,18 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     console.debug('Save Layout');
     if (state.rfInstance != null) {
       state.rfInstance.getElements().forEach(x => {
-        const data = x.data
-        const page = sm.state.modelWrapper.page
-        const idreg = sm.state.modelWrapper.model.idreg
+        const data = x.data;
+        const page = sm.state.modelWrapper.page;
+        const idreg = sm.state.modelWrapper.model.idreg;
         if (isNode(x) && data instanceof NodeData) {
-          const gn = page.map.get(data.represent)
+          const gn = page.map.get(data.represent);
           if (gn != null) {
             gn.x = x.position.x;
             gn.y = x.position.y;
           } else {
-            const obj = idreg.ids.get(data.represent)
+            const obj = idreg.ids.get(data.represent);
             if (obj != undefined) {
-              const nc = new SubprocessComponent(data.represent, "")
+              const nc = new SubprocessComponent(data.represent, '');
               if (obj instanceof Dataclass || obj instanceof Registry) {
                 page.data.push(nc);
                 nc.element = obj;
@@ -216,9 +217,9 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   };
 
   const getObjectByID = (id: string): GraphNode | undefined => {
-    const idreg = sm.state.modelWrapper.model.idreg
+    const idreg = sm.state.modelWrapper.model.idreg;
     if (idreg.ids.has(id)) {
-      const ret = idreg.ids.get(id)
+      const ret = idreg.ids.get(id);
       if (ret instanceof GraphNode) {
         return ret;
       }
@@ -247,7 +248,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     saveLayout();
     state.modelWrapper.model.pages.forEach(p => {
       if (p.map.has(old)) {
-        const y = p.map.get(old)
+        const y = p.map.get(old);
         if (y != null) {
           p.map.delete(old);
           p.map.set(name, y);
@@ -324,7 +325,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   };
 
   const viewEGate = (x: EGate) => {
-    const edges:Array<IEdgeLabel> = []    
+    const edges: Array<IEdgeLabel> = [];
     sm.state.modelWrapper.page.edges.forEach(e => {
       if (e.from != null && e.from.element == x) {
         edges.push({
@@ -370,12 +371,12 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
 
   const connectHandle = (x: Edge<any> | Connection) => {
     if (!state.clvisible && x.source != null && x.target != null) {
-      const mw = state.modelWrapper
-      const model = mw.model
-      const idreg = model.idreg
-      const page = mw.page
-      const s = page.map.get(x.source)
-      const t = page.map.get(x.target)
+      const mw = state.modelWrapper;
+      const model = mw.model;
+      const idreg = model.idreg;
+      const page = mw.page;
+      const s = page.map.get(x.source);
+      const t = page.map.get(x.target);
       if (
         s != null &&
         t != null &&
@@ -390,7 +391,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
         ) {
           return;
         }
-        const newEdge = new MyEdge(idreg.findUniqueEdgeID("Edge"), "")
+        const newEdge = new MyEdge(idreg.findUniqueEdgeID('Edge'), '');
         s.child.push(newEdge);
         newEdge.from = s;
         newEdge.to = t;
@@ -486,7 +487,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
           state.edgeDeleteVisible = false;
           state.onepage = false;
 
-          let model = sm.state.modelWrapper.model;
+          const model = sm.state.modelWrapper.model;
           if (model.root != null) {
             model.hps.map(p => {
               p.parent = [];
@@ -585,7 +586,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   functionCollection.viewSignalCatch = viewSignalCatch;
   functionCollection.viewTimer = viewTimer;
 
-  const elms:Array<JSX.Element> = []  
+  const elms: Array<JSX.Element> = [];
   if (state.svisible) {
     elms.push(<BasicSettingPane key="BasicSettingPage" {...sm} />);
   }
@@ -680,9 +681,11 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
           </ReactFlow>
           {state.simulation == null ? <PathPane {...sm} /> : ''}
 
-          {state.measureVisible
-            ? <MeasureCheckPane />
-            : <InfoPane clvisible={state.clvisible}/>}
+          {state.measureVisible ? (
+            <MeasureCheckPane />
+          ) : (
+            <InfoPane clvisible={state.clvisible} />
+          )}
 
           <ControlPane key="ControlPanel" {...sm} />
           {elms}

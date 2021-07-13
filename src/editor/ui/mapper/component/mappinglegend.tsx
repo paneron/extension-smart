@@ -11,12 +11,12 @@ export enum MappedType {
 }
 
 const Legend: React.FC<{ color: string; text: string }> = ({ color, text }) => {
-  const css:CSSProperties = {    
-    height: "12px",
-    float: "left",
-    width: "12px",
-    border: "1px solid black",
-  }
+  const css: CSSProperties = {
+    height: '12px',
+    float: 'left',
+    width: '12px',
+    border: '1px solid black',
+  };
   css.backgroundColor = color;
   return (
     <div>
@@ -47,8 +47,8 @@ const LegendLabel = styled.div`
 `;
 
 const MappingLegendPane: React.FC = () => {
-  const legs = [MappedType.Exact, MappedType.Component, MappedType.None]
-  const desc = ["Fully mapped", "Partially mapped", "Not mapped"]
+  const legs = [MappedType.Exact, MappedType.Component, MappedType.None];
+  const desc = ['Fully mapped', 'Partially mapped', 'Not mapped'];
   const elms: Array<JSX.Element> = [];
 
   for (let i = 0; i < legs.length; i++) {

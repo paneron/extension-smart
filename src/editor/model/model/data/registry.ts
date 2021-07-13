@@ -4,18 +4,18 @@ import { GraphNode } from '../graphnode';
 import { IDRegistry } from '../../util/IDRegistry';
 
 export class Registry extends GraphNode {
-  title = ""
+  title = '';
   data: Dataclass | null = null;
 
-  dctext = ""
+  dctext = '';
 
   constructor(id: string, data: string) {
     super(id);
     if (data != '') {
-      const t:Array<string> = tokenizer.tokenizePackage(data)
-      let i  = 0
+      const t: Array<string> = tokenizer.tokenizePackage(data);
+      let i = 0;
       while (i < t.length) {
-        const command:string = t[i++]
+        const command: string = t[i++];
         if (i < t.length) {
           if (command == 'title') {
             this.title = tokenizer.removePackage(t[i++]);
@@ -42,7 +42,7 @@ export class Registry extends GraphNode {
   }
 
   resolve(idreg: IDRegistry): void {
-    const y = idreg.getObject(this.dctext)
+    const y = idreg.getObject(this.dctext);
     if (y instanceof Dataclass) {
       this.data = <Dataclass>y;
       y.mother = this;

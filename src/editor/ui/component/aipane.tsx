@@ -11,7 +11,7 @@ import { MyCloseButtons } from './unit/closebutton';
 const modelfile: RefObject<HTMLInputElement> = React.createRef();
 
 const AIPane: React.FC<StateMan> = (sm: StateMan) => {
-  const state = sm.state  
+  const state = sm.state;
 
   const readModelFromFile = (result: string) => {
     console.debug('Transforming XML to model');
@@ -37,7 +37,8 @@ const AIPane: React.FC<StateMan> = (sm: StateMan) => {
         accept=".xml"
         onChange={e => modelFileSelected(e, readModelFromFile)}
         ref={modelfile}
-        style={{ display: 'none' }} />
+        style={{ display: 'none' }}
+      />
     </ControlBar>
   );
 };
@@ -59,7 +60,7 @@ function modelFileSelected(
   e: React.ChangeEvent<HTMLInputElement>,
   readModel: (x: string) => void
 ): void {
-  const flist = e.target.files
+  const flist = e.target.files;
   if (flist != undefined && flist.length > 0) {
     flist[0].text().then(result => {
       readModel(result);
