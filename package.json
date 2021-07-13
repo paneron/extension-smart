@@ -1,0 +1,51 @@
+{
+  "name": "@riboseinc/paneron-extension-hls",
+  "version": "1.0.0-dev1",
+  "description": "Paneron extension for HLS model editing",
+  "main": "plugin.js",
+  "repository": "https://github.com/riboseinc/paneron-extension-hls",
+  "author": "Ribose Inc. <open.source@ribose.com>",
+  "paneronExtension": {
+    "title": "HLS",
+    "iconURL": "https://www.glossarist.org/SymbolLoupe.png",
+    "featured": true,
+    "requiredHostAppVersion": "^1.0.0-beta2"
+  },
+  "scripts": {
+    "build": "rm -r compiled dist; mkdir compiled dist; tsc --outDir compiled; babel compiled --out-dir dist; cp package.json dist/; rsync -a --include '*/' --include '*.d.ts' --include '*.js.map' --exclude '*' compiled/ dist/"
+  },
+  "files": [
+    "README.adoc",
+    "*.js",
+    "*.js.map",
+    "*.d.ts",
+    "**/*.js",
+    "**/*.js.map",
+    "**/*.d.ts"
+  ],
+  "resolutions": {
+    "@types/react": "16.9.11",
+    "react": "16.11.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "@blueprintjs/core": "^3.42.0",
+    "@blueprintjs/icons": "^3.26.0",
+    "@emotion/react": "^11.4.0",
+    "@emotion/styled": "^11.3.0",
+    "@riboseinc/paneron-extension-kit": "2.0.0-dev31",
+    "@types/node": "^14.11.2",
+    "@types/react": "16.9.11",
+    "@types/webpack-env": "^1.16.0",
+    "electron": "^10.1.2",
+    "electron-log": "^4.2.4",
+    "liquidjs": "^9.25.0",
+    "react": "16.11.0",
+    "react-flow-renderer": "^9.6.0",
+    "react-mathjax2": "^0.0.2",
+    "typescript": "^4.1.3"
+  },
+  "license": "MIT"
+}
