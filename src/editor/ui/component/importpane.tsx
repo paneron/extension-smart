@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import React, { ChangeEvent, RefObject } from 'react';
+import { textToMMEL } from '../../serialize/MMEL';
 import { StateMan } from '../interface/state';
 import * as shape from '../util/shapes';
-import { MyCloseButtons } from './unit/closebutton';
-import * as parser from '../../model/util/parser';
+import { MyTopRightButtons } from './unit/closebutton';
 
 const importfile: RefObject<HTMLInputElement> = React.createRef();
 const ref: RefObject<HTMLSelectElement> = React.createRef();
@@ -12,7 +12,8 @@ const ImportPane: React.FC<StateMan> = (sm: StateMan) => {
   const state = sm.state;
 
   const importModelFromFile = (result: string) => {
-    state.imodel = parser.parse(result);
+    const model = textToMMEL(result);
+    state.imodel = model;
     state.namespace = state.imodel.meta.namespace;
     sm.setState(state);
   };
@@ -27,14 +28,14 @@ const ImportPane: React.FC<StateMan> = (sm: StateMan) => {
       {''}
     </option>,
   ];
-  if (state.imodel.hps.length > 0) {
+  if (state.imodel.processes.length > 0) {
     elms.push(
       <option key="option-2" value={'*'}>
         {'*'}
       </option>
     );
   }
-  state.imodel.hps.map((p, index) => {
+  state.imodel.processes.map((p, index) => {
     elms.push(
       <option key={'option' + index} value={p.id}>
         {p.id}
@@ -58,7 +59,7 @@ const ImportPane: React.FC<StateMan> = (sm: StateMan) => {
     <ComponentBar>
       <Container>
         Measurement import is not yet implemented
-        <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+        <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
         <button onClick={() => importfile.current?.click()}>Open Model</button>
         <input
           type="file"

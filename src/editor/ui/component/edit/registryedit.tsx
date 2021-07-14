@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Registry } from '../../../model/model/data/registry';
+import { MMELRegistry } from '../../../serialize/interface/datainterface';
 import { IRegistry } from '../../interface/datainterface';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { RegistryHandler } from '../handle/registryhandler';
@@ -13,7 +13,7 @@ const RegistryEditPage: React.FC<{
 }> = ({ modelWrapper, isVisible }) => {
   const [isAdd, setAddMode] = useState(false);
   const [isUpdate, setUpdateMode] = useState(false);
-  const [registry, setUpdateRegistry] = useState<Registry | null>(null);
+  const [registry, setUpdateRegistry] = useState<MMELRegistry | null>(null);
   const [dummy, setDummy] = useState<boolean>(false);
   const [data, setData] = useState<IRegistry>({
     regid: '',

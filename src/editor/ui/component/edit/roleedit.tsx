@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { Model } from '../../../model/model/model';
-import { Role } from '../../../model/model/support/role';
+import { MMELModel } from '../../../serialize/interface/model';
+import { MMELRole } from '../../../serialize/interface/supportinterface';
 import { IRole } from '../../interface/datainterface';
 import { RoleHandler } from '../handle/roleshandler';
 import ItemAddPane from '../unit/itemadd';
 import ItemUpdatePane from '../unit/itemupdate';
 import ListManagerPane from '../unit/listmanage';
 
-const RoleEditPage: React.FC<{ model: Model; isVisible: boolean }> = ({
+const RoleEditPage: React.FC<{ model: MMELModel; isVisible: boolean }> = ({
   model,
   isVisible,
 }) => {
   const [isAdd, setAddMode] = useState(false);
   const [isUpdate, setUpdateMode] = useState(false);
-  const [role, setUpdateRole] = useState<Role | null>(null);
+  const [role, setUpdateRole] = useState<MMELRole | null>(null);
   const [dummy, setDummy] = useState<boolean>(false);
   const [data, setData] = useState<IRole>({ roleid: '', rolename: '' });
 

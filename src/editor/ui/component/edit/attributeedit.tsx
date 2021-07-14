@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Model } from '../../../model/model/model';
+import { MMELModel } from '../../../serialize/interface/model';
 import { IAttribute, IAttributeContainer } from '../../interface/datainterface';
 import { AttributeHandler } from '../handle/attributehandler';
 import ItemAddPane from '../unit/itemadd';
@@ -7,7 +7,7 @@ import ItemUpdatePane from '../unit/itemupdate';
 import ListManagerPane from '../unit/listmanage';
 
 const AttributeEditPage: React.FC<{
-  model: Model;
+  model: MMELModel;
   atts: IAttributeContainer;
   setAtts: (x: IAttributeContainer) => void;
 }> = ({ model, atts, setAtts }) => {

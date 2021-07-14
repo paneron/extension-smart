@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { Variable } from '../../../model/model/measure/variable';
-import { Model } from '../../../model/model/model';
+import { MMELModel } from '../../../serialize/interface/model';
+import { MMELVariable } from '../../../serialize/interface/supportinterface';
 import { IVar } from '../../interface/datainterface';
 import { VarHandler } from '../handle/varhandler';
 import ItemAddPane from '../unit/itemadd';
 import ItemUpdatePane from '../unit/itemupdate';
 import ListManagerPane from '../unit/listmanage';
 
-const VarEditPage: React.FC<{ model: Model; isVisible: boolean }> = ({
+const VarEditPage: React.FC<{ model: MMELModel; isVisible: boolean }> = ({
   model,
   isVisible,
 }) => {
   const [isAdd, setAddMode] = useState(false);
   const [isUpdate, setUpdateMode] = useState(false);
-  const [variable, setUpdateVariable] = useState<Variable | null>(null);
+  const [variable, setUpdateVariable] = useState<MMELVariable | null>(null);
   const [dummy, setDummy] = useState<boolean>(false);
   const [data, setData] = useState<IVar>({
     id: '',

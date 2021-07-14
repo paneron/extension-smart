@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { DocumentItem } from '../../../repository/document';
 import { StateMan } from '../../interface/state';
 import { DataRepoHandler } from '../handle/datarepohandler';
-import { MyCloseButtons } from '../unit/closebutton';
+import { MyTopRightButtons } from '../unit/closebutton';
 import ItemAddPane from '../unit/itemadd';
 import ItemUpdatePane from '../unit/itemupdate';
 import ListManagerPane from '../unit/listmanage';
@@ -44,18 +44,18 @@ const RepoEditPane: React.FC<StateMan> = (sm: StateMan) => {
     sm.setState(sm.state);
   };
 
-  //const normal:React.CSSProperties = {
-  //  background: "#e7e7e7"
-  //}
+  const normal: React.CSSProperties = {
+    background: '#e7e7e7',
+  };
 
-  //const selected:React.CSSProperties = {
-  //  background: "#555555",
-  //  color: "white"
-  //}
+  const selected: React.CSSProperties = {
+    background: '#555555',
+    color: 'white',
+  };
 
   return (
     <DisplayPane style={{ display: isVisible ? 'inline' : 'none' }}>
-      <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+      <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
       <h1>{state.datarepo?.title}</h1>
       <div
         style={{

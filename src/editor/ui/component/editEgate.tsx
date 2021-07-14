@@ -4,12 +4,15 @@
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { CSSProperties } from 'react';
-import { Edge } from '../../model/model/flow/edge';
-import { EGate } from '../../model/model/gate/egate';
+import { DataType } from '../../serialize/interface/baseinterface';
+import {
+  MMELEdge,
+  MMELEGate,
+} from '../../serialize/interface/flowcontrolinterface';
 import { IEGate } from '../interface/datainterface';
 import { StateMan } from '../interface/state';
 import { functionCollection } from '../util/function';
-import { MyCloseButtons } from './unit/closebutton';
+import { MyTopRightButtons } from './unit/closebutton';
 import { ReferenceSelector } from './unit/referenceselect';
 import NormalTextField from './unit/textfield';
 
@@ -151,7 +154,7 @@ export const EditEGatePage: React.FC<StateMan> = (sm: StateMan) => {
       <DisplayPane
         style={{ display: sm.state.viewEGate != null ? 'inline' : 'none' }}
       >
-        <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+        <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
         {elms}
         <div key="div#buttons">
           <button
@@ -174,33 +177,34 @@ export const EditEGatePage: React.FC<StateMan> = (sm: StateMan) => {
 
 function saveEGate(
   sm: StateMan,
-  oldValue: EGate | null,
+  oldValue: MMELEGate | null,
   newValue: IEGate | null
 ) {
   if (oldValue != null && newValue != null) {
-    const idreg = sm.state.modelWrapper.model.idreg;
+    const idreg = sm.state.modelWrapper.idman;
     if (oldValue.id != newValue.id) {
       if (newValue.id == '') {
         alert('ID is empty');
         return false;
       }
-      if (idreg.ids.has(newValue.id)) {
+      if (idreg.nodes.has(newValue.id)) {
         alert('New ID already exists');
         return false;
       }
-      idreg.ids.delete(oldValue.id);
-      idreg.addID(newValue.id, oldValue);
+      idreg.nodes.delete(oldValue.id);
+      idreg.nodes.set(newValue.id, oldValue);
       functionCollection.renameLayoutItem(oldValue.id, newValue.id);
       oldValue.id = newValue.id;
     }
     oldValue.label = newValue.label;
     newValue.edges.forEach(e => {
-      const edge = idreg.edgeids.get(e.id);
+      const edge = idreg.edges.get(e.id);
       if (edge == undefined) {
         console.error('Edge not found', e.id);
-      } else if (edge instanceof Edge) {
-        edge.description = e.description;
-        edge.condition = e.condition;
+      } else if (edge.datatype == DataType.EDGE) {
+        const ed = edge as MMELEdge;
+        ed.description = e.description;
+        ed.condition = e.condition;
       } else {
         console.error('Found object is not an Edge', e.id);
       }
@@ -209,7 +213,6 @@ function saveEGate(
     sm.state.eGate = null;
     sm.setState(sm.state);
   }
-  return;
 }
 
 const DisplayPane = styled.div`

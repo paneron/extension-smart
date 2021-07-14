@@ -1,6 +1,6 @@
 import React from 'react';
-import { Model } from '../../../model/model/model';
-import { DATATYPE, MODAILITYOPTIONS } from '../../../model/util/IDRegistry';
+import { DATATYPE, MODAILITYOPTIONS } from '../../../runtime/idManager';
+import { MMELModel } from '../../../serialize/interface/model';
 import { IAttribute, IAttributeContainer } from '../../interface/datainterface';
 import {
   IAddItem,
@@ -8,6 +8,7 @@ import {
   IListItem,
   IUpdateItem,
 } from '../../interface/fieldinterface';
+import { functionCollection } from '../../util/function';
 import NormalComboBox from '../unit/combobox';
 import {
   MultiReferenceSelector,
@@ -18,7 +19,7 @@ import NormalTextField from '../unit/textfield';
 export class AttributeHandler implements IList, IAddItem, IUpdateItem {
   filterName = 'Attribute filter';
   itemName = 'Attribute';
-  private model: Model;
+  private model: MMELModel;
   private setAddMode: (b: boolean) => void;
   private updating: IAttribute | null;
   private data: IAttribute;
@@ -29,7 +30,7 @@ export class AttributeHandler implements IList, IAddItem, IUpdateItem {
   private parent: IAttributeContainer;
 
   constructor(
-    model: Model,
+    model: MMELModel,
     reg: IAttributeContainer,
     updateObj: IAttribute | null,
     setAdd: (b: boolean) => void,
@@ -90,6 +91,7 @@ export class AttributeHandler implements IList, IAddItem, IUpdateItem {
   };
 
   private getFields = (): Array<JSX.Element> => {
+    const mw = functionCollection.getStateMan().state.modelWrapper;
     const elms: Array<JSX.Element> = [];
     const opt: Array<string> = [];
     this.model.refs.map(r => {
@@ -102,8 +104,8 @@ export class AttributeHandler implements IList, IAddItem, IUpdateItem {
         types.push('reference(' + d.data.id + ')');
       }
     });
-    this.model.dcs.map(d => {
-      if (d.mother == null) {
+    this.model.dataclasses.map(d => {
+      if (mw.dlman.get(d).mother == null) {
         types.push(d.id);
       }
     });

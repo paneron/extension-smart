@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import React, { RefObject } from 'react';
 import { SearchMan, StateMan } from '../interface/state';
 import { calculateFilter } from '../util/filtermanager';
-import { MyCloseButtons } from './unit/closebutton';
+import { MyTopRightButtons } from './unit/closebutton';
 
 const selectbox: RefObject<HTMLSelectElement> = React.createRef();
 const authorselectbox: RefObject<HTMLSelectElement> = React.createRef();
@@ -27,7 +27,7 @@ const FilterPane: React.FC<{ sm: StateMan; ssm: SearchMan }> = ({
       No filter
     </option>
   );
-  modelWrapper.documents.forEach((v, k) =>
+  modelWrapper.filterman.documents.forEach((v, k) =>
     docoptions.push(
       <option key={'docfilter#' + i++} value={k}>
         {k}
@@ -43,9 +43,9 @@ const FilterPane: React.FC<{ sm: StateMan; ssm: SearchMan }> = ({
     </option>
   );
   if (ss.document != '') {
-    const index = modelWrapper.documents.get(ss.document);
+    const index = modelWrapper.filterman.documents.get(ss.document);
     if (index != undefined) {
-      modelWrapper.clauses[index].forEach(v =>
+      modelWrapper.filterman.clauses[index].forEach(v =>
         clauseoptions.push(
           <option key={'clausefilter#' + i++} value={v}>
             {v}
@@ -88,7 +88,7 @@ const FilterPane: React.FC<{ sm: StateMan; ssm: SearchMan }> = ({
 
   return (
     <ControlBar>
-      <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+      <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
       <p> Reference filter: </p>
       <select
         value={ss.document}

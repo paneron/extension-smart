@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { ISearch, StateMan } from '../interface/state';
-import { MyCloseButtons } from './unit/closebutton';
+import { MyTopRightButtons } from './unit/closebutton';
 
 const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
   sm,
@@ -14,11 +14,11 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
 
   const data = new Map<string, Map<string, Array<string>>>();
   const mw = sm.state.modelWrapper;
-  mw.documents.forEach((d, x) => {
+  mw.filterman.documents.forEach((d, x) => {
     if (cond.document == '' || cond.document == x) {
       const m = new Map<string, Array<string>>();
       data.set(x, m);
-      mw.clauses[d].forEach(c => {
+      mw.filterman.clauses[d].forEach(c => {
         if (cond.clause == '' || cond.clause == c) {
           m.set(c, []);
         }
@@ -27,7 +27,7 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
   });
   const elms: Array<JSX.Element> = [];
 
-  mw.model.hps.map(p => {
+  mw.model.processes.map(p => {
     if (cond.actor == '' || (p.actor != null && p.actor.name == cond.actor)) {
       p.provision.map(s => {
         s.ref.map(r => {
@@ -90,8 +90,8 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
       }
     });
 
-    mw.model.dcs.map(dc => {
-      if (dc.mother == null) {
+    mw.model.dataclasses.map(dc => {
+      if (mw.dlman.get(dc).mother == null) {
         dc.attributes.map(a => {
           a.ref.map(ref => {
             if (
@@ -161,7 +161,7 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
 
   return (
     <DisplayPane>
-      <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+      <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
       {elms}
     </DisplayPane>
   );

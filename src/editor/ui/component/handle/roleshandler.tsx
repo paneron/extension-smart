@@ -1,6 +1,7 @@
 import React from 'react';
-import { Model } from '../../../model/model/model';
-import { Role } from '../../../model/model/support/role';
+import { MMELFactory } from '../../../runtime/modelComponentCreator';
+import { MMELModel } from '../../../serialize/interface/model';
+import { MMELRole } from '../../../serialize/interface/supportinterface';
 import { IRole } from '../../interface/datainterface';
 import {
   IAddItem,
@@ -8,26 +9,27 @@ import {
   IListItem,
   IUpdateItem,
 } from '../../interface/fieldinterface';
+import { functionCollection } from '../../util/function';
 import NormalTextField from '../unit/textfield';
 
 export class RoleHandler implements IList, IAddItem, IUpdateItem {
   filterName = 'Role filter';
   itemName = 'Roles';
-  private model: Model;
+  private model: MMELModel;
   private setAddMode: (b: boolean) => void;
-  private updating: Role | null;
+  private updating: MMELRole | null;
   private data: IRole;
   private setData: (x: IRole) => void;
   private forceUpdate: () => void;
   private setUpdateMode: (b: boolean) => void;
-  private setUpdateRole: (x: Role) => void;
+  private setUpdateRole: (x: MMELRole) => void;
 
   constructor(
-    model: Model,
-    updateObj: Role | null,
+    model: MMELModel,
+    updateObj: MMELRole | null,
     setAdd: (b: boolean) => void,
     setUpdate: (b: boolean) => void,
-    setUpdateRole: (x: Role) => void,
+    setUpdateRole: (x: MMELRole) => void,
     forceUpdate: () => void,
     data: IRole,
     setRole: (x: IRole) => void
@@ -58,16 +60,17 @@ export class RoleHandler implements IList, IAddItem, IUpdateItem {
   };
 
   removeItem = (refs: Array<string>) => {
+    const mw = functionCollection.getStateMan().state.modelWrapper;
     for (let i = refs.length - 1; i >= 0; i--) {
       const removed = this.model.roles.splice(parseInt(refs[i]), 1);
       if (removed.length > 0) {
         const r = removed[0];
-        for (const p of this.model.hps) {
+        for (const p of this.model.processes) {
           if (p.actor == r) {
             p.actor = null;
           }
         }
-        for (const p of this.model.aps) {
+        for (const p of this.model.approvals) {
           if (p.actor == r) {
             p.actor = null;
           }
@@ -75,7 +78,7 @@ export class RoleHandler implements IList, IAddItem, IUpdateItem {
             p.approver = null;
           }
         }
-        this.model.idreg.ids.delete(r.id);
+        mw.idman.roles.delete(r.id);
       }
     }
     this.forceUpdate();
@@ -125,16 +128,17 @@ export class RoleHandler implements IList, IAddItem, IUpdateItem {
   };
 
   addClicked = () => {
+    const mw = functionCollection.getStateMan().state.modelWrapper;
     if (this.data.roleid == '') {
       alert('ID is empty');
       return;
     }
-    const idreg = this.model.idreg;
-    if (idreg.ids.has(this.data.roleid)) {
+    const idreg = mw.idman;
+    if (idreg.roles.has(this.data.roleid)) {
       alert('ID already exists');
     } else {
-      const role = new Role(this.data.roleid, '');
-      idreg.addID(role.id, role);
+      const role = MMELFactory.createRole(this.data.roleid);
+      idreg.roles.set(role.id, role);
       role.name = this.data.rolename;
       this.model.roles.push(role);
       this.setAddMode(false);
@@ -152,20 +156,21 @@ export class RoleHandler implements IList, IAddItem, IUpdateItem {
   };
 
   updateClicked = () => {
+    const mw = functionCollection.getStateMan().state.modelWrapper;
     if (this.updating != null) {
-      const idreg = this.model.idreg;
+      const idreg = mw.idman;
       if (this.data.roleid != this.updating.id) {
         if (this.data.roleid == '') {
           alert('New ID is empty');
           return;
         }
-        if (idreg.ids.has(this.data.roleid)) {
+        if (idreg.roles.has(this.data.roleid)) {
           alert('New ID already exists');
           return;
         }
       }
-      idreg.ids.delete(this.updating.id);
-      idreg.addID(this.data.roleid, this.updating);
+      idreg.roles.delete(this.updating.id);
+      idreg.roles.set(this.data.roleid, this.updating);
       this.updating.id = this.data.roleid;
       this.updating.name = this.data.rolename;
       this.setUpdateMode(false);

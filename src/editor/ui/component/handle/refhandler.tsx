@@ -1,5 +1,7 @@
 import React from 'react';
-import { Reference } from '../../../model/model/support/reference';
+import { toSummary } from '../../../runtime/functions';
+import { MMELFactory } from '../../../runtime/modelComponentCreator';
+import { MMELReference } from '../../../serialize/interface/supportinterface';
 import { IRef } from '../../interface/datainterface';
 import {
   IAddItem,
@@ -15,19 +17,19 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
   itemName = 'References';
   private mw: ModelWrapper;
   private setAddMode: (b: boolean) => void;
-  private updating: Reference | null;
+  private updating: MMELReference | null;
   private data: IRef;
   private setData: (x: IRef) => void;
   private forceUpdate: () => void;
   private setUpdateMode: (b: boolean) => void;
-  private setUpdateRef: (x: Reference) => void;
+  private setUpdateRef: (x: MMELReference) => void;
 
   constructor(
     mw: ModelWrapper,
-    updateObj: Reference | null,
+    updateObj: MMELReference | null,
     setAdd: (b: boolean) => void,
     setUpdate: (b: boolean) => void,
-    setUpdateRef: (x: Reference) => void,
+    setUpdateRef: (x: MMELReference) => void,
     forceUpdate: () => void,
     data: IRef,
     setRef: (x: IRef) => void
@@ -45,7 +47,7 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
   getItems = (): Array<RefListItem> => {
     const out: Array<RefListItem> = [];
     this.mw.model.refs.forEach((r, index) => {
-      out.push(new RefListItem(r.id, r.toSummary(), '' + index));
+      out.push(new RefListItem(r.id, toSummary(r), '' + index));
     });
     return out;
   };
@@ -71,7 +73,7 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
             }
           }
         }
-        for (const app of this.mw.model.aps) {
+        for (const app of this.mw.model.approvals) {
           for (let j = 0; j < app.ref.length; j++) {
             if (app.ref[j] == r) {
               app.ref.splice(j, 1);
@@ -79,7 +81,7 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
             }
           }
         }
-        for (const d of this.mw.model.dcs) {
+        for (const d of this.mw.model.dataclasses) {
           for (const a of d.attributes) {
             for (let j = 0; j < a.ref.length; j++) {
               if (a.ref[j] == r) {
@@ -89,8 +91,8 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
             }
           }
         }
-        this.mw.model.idreg.refs.delete(r.id);
-        this.mw.readDocu();
+        this.mw.idman.refs.delete(r.id);
+        this.mw.filterman.readDocu(this.mw.model.refs);
       }
     }
     this.forceUpdate();
@@ -152,21 +154,21 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
   };
 
   addClicked = () => {
-    const idreg = this.mw.model.idreg;
+    const idreg = this.mw.idman;
     if (this.data.clause.indexOf(',') != 0) {
       const rs = this.data.clause.split(',');
       for (let r of rs) {
         r = r.trim();
         const id = (this.data.refid + r.replaceAll('.', '-')).trim();
         if (!idreg.refs.has(id)) {
-          const ref = new Reference(id, '');
-          idreg.addReference(id, ref);
+          const ref = MMELFactory.createReference(id);
+          idreg.refs.set(id, ref);
           ref.document = this.data.document;
           ref.clause = r;
           this.mw.model.refs.push(ref);
         }
       }
-      this.mw.readDocu();
+      this.mw.filterman.readDocu(this.mw.model.refs);
       this.setAddMode(false);
     } else {
       if (this.data.refid == '') {
@@ -176,12 +178,12 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
       if (idreg.refs.has(this.data.refid)) {
         alert('ID already exists');
       } else {
-        const ref = new Reference(this.data.refid, '');
-        idreg.addReference(ref.id, ref);
+        const ref = MMELFactory.createReference(this.data.refid);
+        idreg.refs.set(ref.id, ref);
         ref.document = this.data.document;
         ref.clause = this.data.clause;
         this.mw.model.refs.push(ref);
-        this.mw.readDocu();
+        this.mw.filterman.readDocu(this.mw.model.refs);
         this.setAddMode(false);
       }
     }
@@ -200,7 +202,7 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
 
   updateClicked = () => {
     if (this.updating != null) {
-      const idreg = this.mw.model.idreg;
+      const idreg = this.mw.idman;
       if (this.data.refid != this.updating.id) {
         if (this.data.refid == '') {
           alert('ID is empty');
@@ -212,11 +214,11 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
         }
       }
       idreg.refs.delete(this.updating.id);
-      idreg.addReference(this.data.refid, this.updating);
+      idreg.refs.set(this.data.refid, this.updating);
       this.updating.id = this.data.refid;
       this.updating.document = this.data.document;
       this.updating.clause = this.data.clause;
-      this.mw.readDocu();
+      this.mw.filterman.readDocu(this.mw.model.refs);
       this.setUpdateMode(false);
     }
   };

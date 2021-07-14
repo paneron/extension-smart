@@ -22,7 +22,7 @@ const InfoPane: React.FC<{ clvisible: boolean }> = ({ clvisible }) => {
   };
 
   return (
-    <SideBar>
+    <SideBar key="ui#InfoPaneSideBar">
       <h1> Information of selected node </h1>
       <div> {updateSelection(selected)} </div>
     </SideBar>

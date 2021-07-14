@@ -1,6 +1,6 @@
 import React from 'react';
-import { Model } from '../../../model/model/model';
-import { MODAILITYOPTIONS } from '../../../model/util/IDRegistry';
+import { MODAILITYOPTIONS } from '../../../runtime/idManager';
+import { MMELModel } from '../../../serialize/interface/model';
 import { IProcess, IProvision } from '../../interface/datainterface';
 import {
   IAddItem,
@@ -15,7 +15,7 @@ import NormalTextField from '../unit/textfield';
 export class ProvisionHandler implements IList, IAddItem, IUpdateItem {
   filterName = 'Provision filter';
   itemName = 'Provision';
-  private model: Model;
+  private model: MMELModel;
   private setAddMode: (b: boolean) => void;
   private oldValue: IProvision | null;
   private data: IProvision;
@@ -26,7 +26,7 @@ export class ProvisionHandler implements IList, IAddItem, IUpdateItem {
   private parent: IProcess;
 
   constructor(
-    model: Model,
+    model: MMELModel,
     process: IProcess,
     oldValue: IProvision | null,
     setAdd: (b: boolean) => void,

@@ -1,7 +1,6 @@
 import React from 'react';
-import { DataAttribute } from '../../../model/model/data/dataattribute';
-import { Dataclass } from '../../../model/model/data/dataclass';
-import { Registry } from '../../../model/model/data/registry';
+import { MMELFactory } from '../../../runtime/modelComponentCreator';
+import { MMELRegistry } from '../../../serialize/interface/datainterface';
 import { IAttribute, IRegistry } from '../../interface/datainterface';
 import {
   IAddItem,
@@ -19,19 +18,19 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
   itemName = 'Registry';
   private mw: ModelWrapper;
   private setAddMode: (b: boolean) => void;
-  private updating: Registry | null;
+  private updating: MMELRegistry | null;
   private data: IRegistry;
   private setData: (x: IRegistry) => void;
   private forceUpdate: () => void;
   private setUpdateMode: (b: boolean) => void;
-  private setUpdateRegistry: (x: Registry) => void;
+  private setUpdateRegistry: (x: MMELRegistry) => void;
 
   constructor(
     mw: ModelWrapper,
-    updateObj: Registry | null,
+    updateObj: MMELRegistry | null,
     setAdd: (b: boolean) => void,
     setUpdate: (b: boolean) => void,
-    setUpdateRegistry: (x: Registry) => void,
+    setUpdateRegistry: (x: MMELRegistry) => void,
     forceUpdate: () => void,
     data: IRegistry,
     setRegistry: (x: IRegistry) => void
@@ -67,9 +66,10 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
       const removed = this.mw.model.regs.splice(parseInt(refs[i]), 1);
       if (removed.length > 0) {
         const r = removed[0];
-        this.mw.model.idreg.ids.delete(r.id);
+        this.mw.idman.nodes.delete(r.id);
+        this.mw.idman.regs.delete(r.id);
         // remove data from process input
-        for (const p of this.mw.model.hps) {
+        for (const p of this.mw.model.processes) {
           let index = p.input.indexOf(r);
           if (index != -1) {
             p.input.splice(index, 1);
@@ -80,7 +80,7 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
           }
         }
         // remove data from process output
-        for (const p of this.mw.model.aps) {
+        for (const p of this.mw.model.approvals) {
           const index = p.records.indexOf(r);
           if (index != -1) {
             p.records.splice(index, 1);
@@ -88,18 +88,19 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
         }
         const d = r.data;
         if (d != null) {
-          let index = this.mw.model.dcs.indexOf(d);
-          this.mw.model.dcs.splice(index, 1);
-          for (const dc of this.mw.model.dcs) {
+          let index = this.mw.model.dataclasses.indexOf(d);
+          this.mw.model.dataclasses.splice(index, 1);
+          for (const dc of this.mw.model.dataclasses) {
             for (const a of dc.attributes) {
               index = a.type.indexOf(d.id);
               if (index != -1) {
                 a.type = '';
               }
-              dc.rdcs.delete(d);
+              this.mw.dlman.get(dc).rdcs.delete(d);
             }
           }
-          this.mw.model.idreg.ids.delete(d.id);
+          this.mw.idman.nodes.delete(d.id);
+          this.mw.idman.dcs.delete(d.id);
           functionCollection.removeLayoutItem(r.id);
         }
       }
@@ -188,29 +189,35 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
       return;
     }
     const model = this.mw.model;
-    const idreg = model.idreg;
-    if (idreg.ids.has(this.data.regid)) {
+    const idreg = this.mw.idman;
+    if (idreg.nodes.has(this.data.regid)) {
       alert('ID already exists');
     } else {
       // add registry
-      const nr = new Registry(this.data.regid, '');
+      const nr = MMELFactory.createRegistry(this.data.regid);
       nr.title = this.data.regtitle;
-      nr.data = new Dataclass(this.data.regid + '#data', '');
-      nr.data.mother = nr;
+      nr.data = MMELFactory.createDataClass(this.data.regid + '#data');
+      this.mw.dlman.get(nr.data).mother = nr;
       for (const a of this.data.attributes) {
-        const na = new DataAttribute(a.id, '');
+        const na = MMELFactory.createDataAttribute(a.id);
         na.definition = a.definition;
         na.cardinality = a.cardinality;
         na.type = a.type;
-        na.reftext = a.ref;
+        for (const r of a.ref) {
+          const ref = this.mw.idman.refs.get(r);
+          if (ref != undefined) {
+            na.ref.push(ref);
+          }
+        }
         na.modality = a.modality;
         nr.data.attributes.push(na);
       }
-      nr.data.resolve(idreg);
-      idreg.addID(nr.id, nr);
-      idreg.addID(nr.data.id, nr.data);
+      idreg.nodes.set(nr.id, nr);
+      idreg.regs.set(nr.id, nr);
+      idreg.nodes.set(nr.data.id, nr.data);
+      idreg.dcs.set(nr.data.id, nr.data);
       model.regs.push(nr);
-      model.dcs.push(nr.data);
+      model.dataclasses.push(nr.data);
       this.setAddMode(false);
     }
   };
@@ -228,42 +235,50 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
 
   updateClicked = () => {
     if (this.updating != null) {
-      const idreg = this.mw.model.idreg;
+      const idreg = this.mw.idman;
       if (this.data.regid != this.updating.id) {
         if (this.data.regid == '') {
           alert('New ID is empty');
           return;
         }
-        if (idreg.ids.has(this.data.regid)) {
+        if (idreg.nodes.has(this.data.regid)) {
           alert('New ID already exists');
           return;
         }
       }
       functionCollection.renameLayoutItem(this.updating.id, this.data.regid);
-      idreg.ids.delete(this.updating.id);
+      idreg.nodes.delete(this.updating.id);
+      idreg.regs.delete(this.updating.id);
       this.updating.id = this.data.regid;
       this.updating.title = this.data.regtitle;
-      idreg.addID(this.data.regid, this.updating);
+      idreg.nodes.set(this.data.regid, this.updating);
+      idreg.regs.set(this.data.regid, this.updating);
       let olddcname = '';
       if (this.updating.data != null) {
         const dc = this.updating.data;
-        idreg.ids.delete(dc.id);
+        idreg.nodes.delete(dc.id);
+        idreg.dcs.delete(dc.id);
         olddcname = dc.id;
         dc.id = this.data.regid + '#data';
-        idreg.addID(dc.id, dc);
-        dc.rdcs.clear();
+        idreg.nodes.set(dc.id, dc);
+        idreg.dcs.set(dc.id, dc);
+        this.mw.dlman.get(dc).rdcs.clear();
         dc.attributes = [];
         for (const a of this.data.attributes) {
-          const na = new DataAttribute(a.id, '');
+          const na = MMELFactory.createDataAttribute(a.id);
           na.definition = a.definition;
           na.cardinality = a.cardinality;
           na.type = a.type;
-          na.reftext = a.ref;
+          for (const r of a.ref) {
+            const ref = this.mw.idman.refs.get(r);
+            if (ref != undefined) {
+              na.ref.push(ref);
+            }
+          }
           na.modality = a.modality;
           dc.attributes.push(na);
         }
-        dc.resolve(idreg);
-        for (const alldc of this.mw.model.dcs) {
+        for (const alldc of this.mw.model.dataclasses) {
           for (const a of alldc.attributes) {
             const index = a.type.indexOf(olddcname);
             if (index != -1) {

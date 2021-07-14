@@ -2,53 +2,60 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
+import styled from '@emotion/styled';
 import React, { ChangeEvent, CSSProperties } from 'react';
-import { DataAttribute } from '../../model/model/data/dataattribute';
-import { Dataclass } from '../../model/model/data/dataclass';
-import { Registry } from '../../model/model/data/registry';
-import { EndEvent } from '../../model/model/event/endevent';
-import { SignalCatchEvent } from '../../model/model/event/signalcatchevent';
-import { StartEvent } from '../../model/model/event/startevent';
-import { TimerEvent } from '../../model/model/event/timerevent';
-import { EGate } from '../../model/model/gate/egate';
-import { GraphNode } from '../../model/model/graphnode';
-import { Approval } from '../../model/model/process/approval';
-import { Process } from '../../model/model/process/process';
-import { Provision } from '../../model/model/support/provision';
-import { Reference } from '../../model/model/support/reference';
+import { toSummary } from '../../runtime/functions';
+import { MMELFactory } from '../../runtime/modelComponentCreator';
+import { DataType, MMELNode } from '../../serialize/interface/baseinterface';
+import {
+  MMELDataAttribute,
+  MMELDataClass,
+  MMELRegistry,
+} from '../../serialize/interface/datainterface';
+import {
+  MMELEndEvent,
+  MMELSignalCatchEvent,
+  MMELStartEvent,
+  MMELTimerEvent,
+} from '../../serialize/interface/eventinterface';
+import { MMELEGate } from '../../serialize/interface/flowcontrolinterface';
+import {
+  MMELApproval,
+  MMELProcess,
+} from '../../serialize/interface/processinterface';
+import {
+  MMELProvision,
+  MMELReference,
+} from '../../serialize/interface/supportinterface';
 import { Cleaner } from './cleaner';
 import { functionCollection } from './function';
-import {
-  setAttributeChecked,
-  setProvisionChecked,
-  setProvisionProgress,
-} from './progressmanager';
+import { ProgressManager } from './progressmanager';
 import { Simulator } from './simulator';
 
-export function describe(x: GraphNode, isCheckListMode: boolean) {
-  if (x instanceof Dataclass) {
-    return describeDC(x, isCheckListMode);
-  } else if (x instanceof Registry) {
-    return describeRegistry(x, isCheckListMode);
-  } else if (x instanceof StartEvent) {
-    return descStart(x, isCheckListMode);
-  } else if (x instanceof EndEvent) {
-    return descEnd(x, isCheckListMode);
-  } else if (x instanceof TimerEvent) {
-    return descTimer(x, isCheckListMode);
-  } else if (x instanceof SignalCatchEvent) {
-    return descSignalCatch(x, isCheckListMode);
-  } else if (x instanceof EGate) {
-    return descEGate(x, isCheckListMode);
-  } else if (x instanceof Approval) {
-    return descApproval(x, isCheckListMode);
-  } else if (x instanceof Process) {
-    return descProcess(x, isCheckListMode);
+export function describe(x: MMELNode, isCheckListMode: boolean) {
+  if (x.datatype == DataType.DATACLASS) {
+    return describeDC(x as MMELDataClass, isCheckListMode);
+  } else if (x.datatype == DataType.REGISTRY) {
+    return describeRegistry(x as MMELRegistry, isCheckListMode);
+  } else if (x.datatype == DataType.STARTEVENT) {
+    return descStart(x as MMELStartEvent, isCheckListMode);
+  } else if (x.datatype == DataType.ENDEVENT) {
+    return descEnd(x as MMELEndEvent, isCheckListMode);
+  } else if (x.datatype == DataType.TIMEREVENT) {
+    return descTimer(x as MMELTimerEvent, isCheckListMode);
+  } else if (x.datatype == DataType.SIGNALCATCHEVENT) {
+    return descSignalCatch(x as MMELSignalCatchEvent, isCheckListMode);
+  } else if (x.datatype == DataType.EGATE) {
+    return descEGate(x as MMELEGate, isCheckListMode);
+  } else if (x.datatype == DataType.APPROVAL) {
+    return descApproval(x as MMELApproval, isCheckListMode);
+  } else if (x.datatype == DataType.PROCESS) {
+    return descProcess(x as MMELProcess, isCheckListMode);
   }
   return <> {x.id} </>;
 }
 
-function descStart(x: StartEvent, isCheckListMode: boolean): JSX.Element {
+function descStart(x: MMELStartEvent, isCheckListMode: boolean): JSX.Element {
   const elms: Array<JSX.Element> = [];
   elms.push(<span key="ui#startlabel"> Start event </span>);
   if (!isCheckListMode) {
@@ -65,7 +72,7 @@ function descStart(x: StartEvent, isCheckListMode: boolean): JSX.Element {
   return <>{elms}</>;
 }
 
-function descEnd(x: EndEvent, isCheckListMode: boolean): JSX.Element {
+function descEnd(x: MMELEndEvent, isCheckListMode: boolean): JSX.Element {
   const elms: Array<JSX.Element> = [];
   if (!isCheckListMode) {
     elms.push(
@@ -86,7 +93,7 @@ function descEnd(x: EndEvent, isCheckListMode: boolean): JSX.Element {
   );
 }
 
-function descProcess(x: Process, isCheckListMode: boolean): JSX.Element {
+function descProcess(x: MMELProcess, isCheckListMode: boolean): JSX.Element {
   const elms: Array<JSX.Element> = [];
   if (!isCheckListMode) {
     elms.push(
@@ -107,6 +114,11 @@ function descProcess(x: Process, isCheckListMode: boolean): JSX.Element {
         Remove{' '}
       </button>
     );
+    if (x.page == null) {
+      elms.push(
+        <MyFloatButton onClick={() => addSubprocess(x)}>+</MyFloatButton>
+      );
+    }
   }
   elms.push(<p key={x.id + '#ProcessID'}> Process: {x.id} </p>);
   elms.push(<p key={x.id + '#ProcessName'}> Name: {x.name} </p>);
@@ -118,7 +130,7 @@ function descProcess(x: Process, isCheckListMode: boolean): JSX.Element {
   }
   if (x.provision.length > 0) {
     const ps: Array<JSX.Element> = [];
-    x.provision.map((a: Provision) =>
+    x.provision.map((a: MMELProvision) =>
       ps.push(
         <li key={x.id + '#Pro#' + a.id}>
           {' '}
@@ -140,7 +152,7 @@ function descProcess(x: Process, isCheckListMode: boolean): JSX.Element {
   return <>{elms} </>;
 }
 
-function descApproval(x: Approval, isCheckListMode: boolean): JSX.Element {
+function descApproval(x: MMELApproval, isCheckListMode: boolean): JSX.Element {
   const elms: Array<JSX.Element> = [];
   if (!isCheckListMode) {
     elms.push(
@@ -177,7 +189,7 @@ function descApproval(x: Approval, isCheckListMode: boolean): JSX.Element {
   }
   if (x.records.length > 0) {
     const ps: Array<JSX.Element> = [];
-    x.records.map((a: Registry) =>
+    x.records.map((a: MMELRegistry) =>
       ps.push(<li key={x.id + '#approvalRecord#' + a.id}> {a.title} </li>)
     );
     elms.push(<p key={x.id + '#approvalRecordLabel'}>Appproval record(s):</p>);
@@ -185,14 +197,16 @@ function descApproval(x: Approval, isCheckListMode: boolean): JSX.Element {
   }
   if (x.ref.length > 0) {
     const ps: Array<JSX.Element> = [];
-    x.ref.map((a: Reference) => ps.push(<li key={a.id}> {a.toSummary()} </li>));
+    x.ref.map((a: MMELReference) =>
+      ps.push(<li key={a.id}> {toSummary(a)} </li>)
+    );
     elms.push(<p key={x.id + '#referenceLabel'}>Reference:</p>);
     elms.push(<ul key={x.id + '#referenceList'}>{ps}</ul>);
   }
   return <>{elms}</>;
 }
 
-function descEGate(x: EGate, isCheckListMode: boolean): JSX.Element {
+function descEGate(x: MMELEGate, isCheckListMode: boolean): JSX.Element {
   const elms: Array<JSX.Element> = [];
   if (!isCheckListMode) {
     elms.push(
@@ -224,7 +238,7 @@ function descEGate(x: EGate, isCheckListMode: boolean): JSX.Element {
 }
 
 function descSignalCatch(
-  x: SignalCatchEvent,
+  x: MMELSignalCatchEvent,
   isCheckListMode: boolean
 ): JSX.Element {
   const elms: Array<JSX.Element> = [];
@@ -257,7 +271,7 @@ function descSignalCatch(
   );
 }
 
-function descTimer(x: TimerEvent, isCheckListMode: boolean): JSX.Element {
+function descTimer(x: MMELTimerEvent, isCheckListMode: boolean): JSX.Element {
   const elms: Array<JSX.Element> = [];
   if (!isCheckListMode) {
     elms.push(
@@ -289,7 +303,10 @@ function descTimer(x: TimerEvent, isCheckListMode: boolean): JSX.Element {
   return <>{elms}</>;
 }
 
-function describeRegistry(x: Registry, isCheckListMode: boolean): JSX.Element {
+function describeRegistry(
+  x: MMELRegistry,
+  isCheckListMode: boolean
+): JSX.Element {
   const elms: Array<JSX.Element> = [];
   if (!isCheckListMode) {
     elms.push(
@@ -311,13 +328,13 @@ function describeRegistry(x: Registry, isCheckListMode: boolean): JSX.Element {
   );
 }
 
-function describeDC(x: Dataclass, isCheckListMode: boolean): JSX.Element {
+function describeDC(x: MMELDataClass, isCheckListMode: boolean): JSX.Element {
   return (
     <>
       <p key={x.id + '#dataclassLabel'}> Data class: {x.id} </p>
       <p key={x.id + '#attributesLabel'}> Arrtibutes: </p>
       <ul key={x.id + '#attributeList'}>
-        {x.attributes.map((a: DataAttribute) => (
+        {x.attributes.map((a: MMELDataAttribute) => (
           <li key={a.id}> {describeAttribute(a, isCheckListMode)} </li>
         ))}
       </ul>
@@ -326,30 +343,34 @@ function describeDC(x: Dataclass, isCheckListMode: boolean): JSX.Element {
 }
 
 function describeAttribute(
-  x: DataAttribute,
+  x: MMELDataAttribute,
   isCheckListMode: boolean
 ): JSX.Element {
   const elms: Array<JSX.Element> = [];
   const css: CSSProperties = {};
+  const mw = functionCollection.getStateMan().state.modelWrapper;
   if (x.modality == 'SHALL') {
     css.textDecorationLine = 'underline';
   }
   if (isCheckListMode) {
-    elms.push(
-      <p key={x.id + '#attributeIDLabel'}>
-        {' '}
-        <input
-          type="checkbox"
-          key={x.mother[0].id + '#' + x.id + '#CheckBox'}
-          checked={x.isChecked}
-          onChange={() => {
-            setAttributeChecked(x);
-            functionCollection.checkUpdated();
-          }}
-        />{' '}
-        <span style={css}>Attribute ID: {x.id} </span>
-      </p>
-    );
+    const addon = mw.clman.items.get(x);
+    if (addon != undefined) {
+      elms.push(
+        <p key={x.id + '#attributeIDLabel'}>
+          {' '}
+          <input
+            type="checkbox"
+            key={addon.mother[0].id + '#' + x.id + '#CheckBox'}
+            checked={addon.isChecked}
+            onChange={() => {
+              ProgressManager.setAttributeChecked(x);
+              functionCollection.checkUpdated();
+            }}
+          />{' '}
+          <span style={css}>Attribute ID: {x.id} </span>
+        </p>
+      );
+    }
   } else {
     elms.push(
       <p key={x.id + '#attributeIDLabel'}>
@@ -398,7 +419,9 @@ function describeAttribute(
   }
   if (x.ref.length > 0) {
     const ps: Array<JSX.Element> = [];
-    x.ref.map((a: Reference) => ps.push(<li key={a.id}> {a.toSummary()} </li>));
+    x.ref.map((a: MMELReference) =>
+      ps.push(<li key={a.id}> {toSummary(a)} </li>)
+    );
     elms.push(<p key={x.id + '#attributeReferenceLabel'}>Reference:</p>);
     elms.push(<ul key={x.id + '#referenceList'}>{ps}</ul>);
   }
@@ -406,7 +429,7 @@ function describeAttribute(
 }
 
 function describeProvision(
-  x: Provision,
+  x: MMELProvision,
   isCheckListMode: boolean
 ): JSX.Element {
   const elms: Array<JSX.Element> = [];
@@ -415,20 +438,24 @@ function describeProvision(
     css.textDecorationLine = 'underline';
   }
   if (isCheckListMode) {
-    elms.push(
-      <p key={'ui#provisionStatementLabel#' + x.id}>
-        <input
-          type="checkbox"
-          id={x.id + '#CheckBox'}
-          checked={x.isChecked}
-          onChange={e => {
-            setProvisionChecked(x);
-            functionCollection.checkUpdated();
-          }}
-        />
-        Statement: <span style={css}> {x.condition}</span>
-      </p>
-    );
+    const mw = functionCollection.getStateMan().state.modelWrapper;
+    const addon = mw.clman.items.get(x);
+    if (addon != undefined) {
+      elms.push(
+        <p key={'ui#provisionStatementLabel#' + x.id}>
+          <input
+            type="checkbox"
+            id={x.id + '#CheckBox'}
+            checked={addon.isChecked}
+            onChange={e => {
+              ProgressManager.setProvisionChecked(x);
+              functionCollection.checkUpdated();
+            }}
+          />
+          Statement: <span style={css}> {x.condition}</span>
+        </p>
+      );
+    }
   } else {
     elms.push(
       <p key={'ui#provisionStatementLabel#' + x.id}>
@@ -444,21 +471,25 @@ function describeProvision(
   }
   if (x.ref.length > 0) {
     const ps: Array<JSX.Element> = [];
-    x.ref.map((a: Reference) =>
-      ps.push(<li key={a.id + '#ref#' + x.id}>{a.toSummary()} </li>)
+    x.ref.map((a: MMELReference) =>
+      ps.push(<li key={a.id + '#ref#' + x.id}>{toSummary(a)} </li>)
     );
     elms.push(<p key={'ui#reflabel#' + x.id}>Reference:</p>);
     elms.push(<ul key={x.id + '#referenceList'}>{ps}</ul>);
   }
   if (isCheckListMode) {
     elms.push(
-      <p key={'x.id#ProgressLabel'}>
+      <p key={x.id + '#ProgressLabel'}>
         Progress:{' '}
         <input
           type="number"
           min="0"
           max="100"
-          value={x.progress}
+          value={
+            functionCollection
+              .getStateMan()
+              .state.modelWrapper.clman.items.get(x)?.progress
+          }
           onChange={e => progressUpdate(e, x)}
         ></input>
         %{' '}
@@ -468,7 +499,7 @@ function describeProvision(
   return <>{elms}</>;
 }
 
-function progressUpdate(e: ChangeEvent<HTMLInputElement>, x: Provision) {
+function progressUpdate(e: ChangeEvent<HTMLInputElement>, x: MMELProvision) {
   const subject = e.target.value;
   let parsed = parseInt(subject);
   if (isNaN(parsed)) {
@@ -483,6 +514,46 @@ function progressUpdate(e: ChangeEvent<HTMLInputElement>, x: Provision) {
     parsed = 0;
     e.target.value = '0';
   }
-  setProvisionProgress(x, parsed);
+  ProgressManager.setProvisionProgress(x, parsed);
   functionCollection.checkUpdated();
 }
+
+function addSubprocess(x: MMELProcess) {
+  const sm = functionCollection.getStateMan();
+  const mw = sm.state.modelWrapper;
+  const model = mw.model;
+  const idreg = mw.idman;
+  const pg = MMELFactory.createSubprocess(idreg.findUniquePageID('Page'));
+  const st = MMELFactory.createStartEvent(idreg.findUniqueID('Start'));
+  const nc = MMELFactory.createSubprocessComponent(st);
+  idreg.nodes.set(st.id, st);
+  pg.childs.push(nc);
+  const pgaddon = mw.subman.get(pg);
+  pgaddon.map.set(st.id, nc);
+  pgaddon.start = nc;
+  model.events.push(st);
+  x.page = pg;
+  model.pages.push(pg);
+  idreg.pages.set(pg.id, pg);
+  sm.setState({ ...sm.state });
+}
+
+const MyFloatButton = styled.button`
+  position: absolute;
+  right: 5%;
+  top: 2%;
+  font-size: 30px;
+  box-shadow: inset 0px 1px 0px 0px #fff6af;
+  background: linear-gradient(to bottom, #ffec64 5%, #ffab23 100%);
+  background-color: #ffec64;
+  border-radius: 6px;
+  border: 1px solid #ffaa22;
+  display: inline-block;
+  cursor: pointer;
+  color: #333333;
+  font-family: Arial;
+  font-weight: bold;
+  padding: 6px 24px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #ffee66;
+`;

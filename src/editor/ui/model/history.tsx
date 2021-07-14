@@ -3,14 +3,17 @@
 
 import { jsx } from '@emotion/react';
 import React from 'react';
-import { Subprocess } from '../../model/model/flow/subprocess';
+import {
+  MMELSubprocess,
+  //MMELSubprocessComponent,
+} from '../../serialize/interface/flowcontrolinterface';
 import { StateMan } from '../interface/state';
 import { ModelType, ModelViewStateMan } from '../mapper/model/mapperstate';
 import { MapperFunctions } from '../mapper/util/helperfunctions';
 import { functionCollection } from '../util/function';
 
 export class PageHistory {
-  private history: Subprocess[];
+  private history: MMELSubprocess[];
   private pathtext: string[];
   modelType: ModelType | null;
 
@@ -25,7 +28,16 @@ export class PageHistory {
     this.pathtext = [];
   }
 
-  add(x: Subprocess, y: string) {
+  copyContent(p: PageHistory) {
+    for (const h of p.history) {
+      this.history.push(h);
+    }
+    for (const t of p.pathtext) {
+      this.pathtext.push(t);
+    }
+  }
+
+  add(x: MMELSubprocess, y: string) {
     this.history.push(x);
     this.pathtext.push(y);
   }
@@ -88,7 +100,7 @@ export class PageHistory {
     return <>{elms}</>;
   }
 
-  pop(): Subprocess {
+  pop(): MMELSubprocess {
     this.pathtext.pop();
     this.history.pop();
     if (this.history.length > 0) {
@@ -98,7 +110,15 @@ export class PageHistory {
     }
   }
 
-  getRootPage(): Subprocess {
+  top(): MMELSubprocess {
+    if (this.history.length > 0) {
+      return this.history[this.history.length - 1];
+    } else {
+      return this.getRootPage();
+    }
+  }
+
+  getRootPage(): MMELSubprocess {
     let page;
     if (this.modelType == null) {
       page = functionCollection.getStateMan().state.modelWrapper.model.root;
@@ -107,13 +127,12 @@ export class PageHistory {
       page = sm.state.modelWrapper.model.root;
     }
     if (page == null) {
-      console.error('Root page not found');
-      page = new Subprocess('root', '');
+      throw new Error('Root page not found');
     }
     return page;
   }
 
-  popUntil(i: number): Subprocess {
+  popUntil(i: number): MMELSubprocess {
     if (i < 0) {
       this.clear();
       return this.getRootPage();

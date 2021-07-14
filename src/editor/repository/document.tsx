@@ -1,4 +1,4 @@
-import { Registry } from '../model/model/data/registry';
+import { MMELRegistry } from '../serialize/interface/datainterface';
 
 export class DocumentStore {
   regs: Map<string, DocumentRegistry>;
@@ -7,7 +7,7 @@ export class DocumentStore {
     this.regs = new Map<string, DocumentRegistry>();
   }
 
-  get(x: Registry): DocumentRegistry {
+  get(x: MMELRegistry): DocumentRegistry {
     if (this.regs.has(x.id)) {
       const y = this.regs.get(x.id);
       if (y != undefined) {

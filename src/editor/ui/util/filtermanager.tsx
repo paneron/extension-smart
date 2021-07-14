@@ -1,33 +1,41 @@
-import { Dataclass } from '../../model/model/data/dataclass';
+import { DataType } from '../../serialize/interface/baseinterface';
+import { MMELDataClass } from '../../serialize/interface/datainterface';
 import {
-  Subprocess,
-  SubprocessComponent,
-} from '../../model/model/flow/subprocess';
-import { Approval } from '../../model/model/process/approval';
-import { Process } from '../../model/model/process/process';
-import { Provision } from '../../model/model/support/provision';
+  MMELSubprocess,
+  MMELSubprocessComponent,
+} from '../../serialize/interface/flowcontrolinterface';
+import {
+  MMELApproval,
+  MMELProcess,
+} from '../../serialize/interface/processinterface';
+import { MMELProvision } from '../../serialize/interface/supportinterface';
 import { ISearch } from '../interface/state';
 import { ModelWrapper } from '../model/modelwrapper';
+import { functionCollection } from './function';
 
 export function calculateFilter(mw: ModelWrapper, cond: ISearch): void {
   const model = mw.model;
   const require: boolean = cond.document != '' || cond.actor != '';
-  for (const p of model.hps) {
-    p.filterMatch = require ? FilterType.UNKNOWN : FilterType.NOT_MATCH;
+  for (const p of model.processes) {
+    mw.filterman.get(p).filterMatch = require
+      ? FilterType.UNKNOWN
+      : FilterType.NOT_MATCH;
   }
-  for (const p of model.aps) {
-    p.filterMatch = require ? FilterType.UNKNOWN : FilterType.NOT_MATCH;
+  for (const p of model.approvals) {
+    mw.filterman.get(p).filterMatch = require
+      ? FilterType.UNKNOWN
+      : FilterType.NOT_MATCH;
   }
-  for (const d of model.dcs) {
-    d.filterMatch =
+  for (const d of model.dataclasses) {
+    mw.filterman.get(d).filterMatch =
       cond.document != '' ? checkData(d, cond) : FilterType.NOT_MATCH;
   }
   if (mw.model.root != null && require) {
-    explore(mw.model.root, new Set<SubprocessComponent>(), cond);
+    explore(mw.model.root, new Set<MMELSubprocessComponent>(), cond);
   }
 }
 
-function checkData(d: Dataclass, cond: ISearch): FilterType {
+function checkData(d: MMELDataClass, cond: ISearch): FilterType {
   for (const a of d.attributes) {
     for (const r of a.ref) {
       if (
@@ -42,30 +50,34 @@ function checkData(d: Dataclass, cond: ISearch): FilterType {
 }
 
 function explore(
-  x: Subprocess,
-  visited: Set<SubprocessComponent>,
+  x: MMELSubprocess,
+  visited: Set<MMELSubprocessComponent>,
   cond: ISearch
 ): boolean {
   let result = false;
   x.childs.forEach(c => {
     if (!visited.has(c)) {
       visited.add(c);
-      if (c.element instanceof Process) {
-        if (checkProcess(c.element, cond, visited)) {
+      if (c.element?.datatype == DataType.PROCESS) {
+        if (checkProcess(c.element as MMELProcess, cond, visited)) {
           result = true;
         }
-      } else if (c.element instanceof Approval) {
-        if (checkApproval(c.element, cond)) {
+      } else if (c.element?.datatype == DataType.APPROVAL) {
+        if (checkApproval(c.element as MMELApproval, cond)) {
           result = true;
         }
       }
-    } else if (c.element instanceof Process) {
-      if (c.element.filterMatch == FilterType.UNKNOWN) {
+    } else if (c.element?.datatype == DataType.PROCESS) {
+      const process = c.element as MMELProcess;
+      const addon = functionCollection
+        .getStateMan()
+        .state.modelWrapper.filterman.get(process);
+      if (addon.filterMatch == FilterType.UNKNOWN) {
         console.error('Filter match result is not computed before access?', x);
       }
       if (
-        c.element.filterMatch == FilterType.EXACT_MATCH ||
-        c.element.filterMatch == FilterType.SUBPROCESS_MATCH
+        addon.filterMatch == FilterType.EXACT_MATCH ||
+        addon.filterMatch == FilterType.SUBPROCESS_MATCH
       ) {
         result = true;
       }
@@ -75,14 +87,17 @@ function explore(
 }
 
 function checkProcess(
-  p: Process,
+  p: MMELProcess,
   cond: ISearch,
-  visited: Set<SubprocessComponent>
+  visited: Set<MMELSubprocessComponent>
 ): boolean {
   let result = false;
+  const addon = functionCollection
+    .getStateMan()
+    .state.modelWrapper.filterman.get(p);
   if (p.page != null) {
     if (explore(p.page, visited, cond)) {
-      p.filterMatch = FilterType.SUBPROCESS_MATCH;
+      addon.filterMatch = FilterType.SUBPROCESS_MATCH;
       result = true;
     }
   }
@@ -90,22 +105,22 @@ function checkProcess(
     if (cond.document != '') {
       p.provision.map(x => {
         if (checkProvision(x, cond)) {
-          p.filterMatch = FilterType.EXACT_MATCH;
+          addon.filterMatch = FilterType.EXACT_MATCH;
           result = true;
         }
       });
     } else {
-      p.filterMatch = FilterType.EXACT_MATCH;
+      addon.filterMatch = FilterType.EXACT_MATCH;
       result = true;
     }
   }
   if (!result) {
-    p.filterMatch = FilterType.NOT_MATCH;
+    addon.filterMatch = FilterType.NOT_MATCH;
   }
   return result;
 }
 
-function checkProvision(p: Provision, cond: ISearch): boolean {
+function checkProvision(p: MMELProvision, cond: ISearch): boolean {
   for (const r of p.ref) {
     if (
       cond.document == r.document &&
@@ -117,7 +132,7 @@ function checkProvision(p: Provision, cond: ISearch): boolean {
   return false;
 }
 
-function checkApproval(p: Approval, cond: ISearch): boolean {
+function checkApproval(p: MMELApproval, cond: ISearch): boolean {
   if (
     cond.actor == '' ||
     (p.actor != null && p.actor.name == cond.actor) ||
@@ -128,7 +143,10 @@ function checkApproval(p: Approval, cond: ISearch): boolean {
         cond.document == r.document &&
         (cond.clause == '' || cond.clause == r.clause)
       ) {
-        p.filterMatch = FilterType.EXACT_MATCH;
+        functionCollection
+          .getStateMan()
+          .state.modelWrapper.filterman.get(p).filterMatch =
+          FilterType.EXACT_MATCH;
         return true;
       }
     }

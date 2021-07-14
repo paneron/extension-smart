@@ -1,10 +1,8 @@
 import React from 'react';
-import {
-  Variable,
-  VarType,
-  VAR_TYPES,
-} from '../../../model/model/measure/variable';
-import { Model } from '../../../model/model/model';
+import { VarType, VAR_TYPES } from '../../../runtime/idManager';
+import { MMELFactory } from '../../../runtime/modelComponentCreator';
+import { MMELModel } from '../../../serialize/interface/model';
+import { MMELVariable } from '../../../serialize/interface/supportinterface';
 import { IVar } from '../../interface/datainterface';
 
 import {
@@ -42,21 +40,21 @@ const INTRO = (
 export class VarHandler implements IList, IAddItem, IUpdateItem {
   filterName = 'Measurement filter';
   itemName = 'Measurements';
-  private model: Model;
+  private model: MMELModel;
   private setAddMode: (b: boolean) => void;
-  private updating: Variable | null;
+  private updating: MMELVariable | null;
   private data: IVar;
   private setData: (x: IVar) => void;
   private forceUpdate: () => void;
   private setUpdateMode: (b: boolean) => void;
-  private setUpdateVar: (x: Variable) => void;
+  private setUpdateVar: (x: MMELVariable) => void;
 
   constructor(
-    model: Model,
-    updateObj: Variable | null,
+    model: MMELModel,
+    updateObj: MMELVariable | null,
     setAdd: (b: boolean) => void,
     setUpdate: (b: boolean) => void,
-    setUpdateVar: (x: Variable) => void,
+    setUpdateVar: (x: MMELVariable) => void,
     forceUpdate: () => void,
     data: IVar,
     setVar: (x: IVar) => void
@@ -89,11 +87,12 @@ export class VarHandler implements IList, IAddItem, IUpdateItem {
   };
 
   removeItem = (refs: Array<string>) => {
+    const idman = functionCollection.getStateMan().state.modelWrapper.idman;
     for (let i = refs.length - 1; i >= 0; i--) {
       const removed = this.model.vars.splice(parseInt(refs[i]), 1);
       if (removed.length > 0) {
         const r = removed[0];
-        this.model.idreg.varids.delete(r.id);
+        idman.vars.delete(r.id);
       }
     }
     this.forceUpdate();
@@ -202,16 +201,16 @@ export class VarHandler implements IList, IAddItem, IUpdateItem {
       alert('ID is empty');
       return;
     }
-    const idreg = this.model.idreg;
-    if (idreg.varids.has(this.data.id)) {
+    const idreg = functionCollection.getStateMan().state.modelWrapper.idman;
+    if (idreg.vars.has(this.data.id)) {
       alert('ID already exists');
     } else {
-      const variable = new Variable(this.data.id, '');
+      const variable = MMELFactory.createVariable(this.data.id);
       variable.type = this.data.type;
       variable.definition =
         this.data.type == VarType.DERIVED ? this.data.definition : '';
       variable.description = this.data.description;
-      idreg.addVariable(variable.id, variable);
+      idreg.vars.set(variable.id, variable);
       this.model.vars.push(variable);
       this.setAddMode(false);
     }
@@ -227,19 +226,19 @@ export class VarHandler implements IList, IAddItem, IUpdateItem {
 
   updateClicked = () => {
     if (this.updating != null) {
-      const idreg = this.model.idreg;
+      const idreg = functionCollection.getStateMan().state.modelWrapper.idman;
       if (this.data.id != this.updating.id) {
         if (this.data.id == '') {
           alert('New ID is empty');
           return;
         }
-        if (idreg.varids.has(this.data.id)) {
+        if (idreg.vars.has(this.data.id)) {
           alert('New ID already exists');
           return;
         }
       }
-      idreg.varids.delete(this.updating.id);
-      idreg.addVariable(this.data.id, this.updating);
+      idreg.vars.delete(this.updating.id);
+      idreg.vars.set(this.data.id, this.updating);
       this.updating.id = this.data.id;
       this.updating.type = this.data.type;
       this.updating.description = this.data.description;
@@ -266,13 +265,13 @@ export class VarListItem implements IListItem {
   }
 }
 
-function validCheck(def: string, m: Model) {
-  const idreg = m.idreg;
+function validCheck(def: string, m: MMELModel) {
+  const idreg = functionCollection.getStateMan().state.modelWrapper.idman;
   const results = Array.from(def.matchAll(/\[.*?\]/g));
   let ok = true;
   for (const r of results) {
     const name = r[0].substr(1, r[0].length - 2);
-    if (!idreg.varids.has(name)) {
+    if (!idreg.vars.has(name)) {
       alert(name + ' is not a measurement');
       ok = false;
     }

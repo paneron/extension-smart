@@ -4,19 +4,27 @@
 import React from 'react';
 import { jsx } from '@emotion/react';
 
-import { SignalCatchEvent } from '../../model/model/event/signalcatchevent';
-import { TimerEvent } from '../../model/model/event/timerevent';
-import { Edge } from '../../model/model/flow/edge';
-import { SubprocessComponent } from '../../model/model/flow/subprocess';
-import { EGate } from '../../model/model/gate/egate';
-import { Approval } from '../../model/model/process/approval';
-import { Process } from '../../model/model/process/process';
+import { DataType } from '../../serialize/interface/baseinterface';
+import {
+  MMELSignalCatchEvent,
+  MMELTimerEvent,
+} from '../../serialize/interface/eventinterface';
+import {
+  MMELEdge,
+  MMELEGate,
+  MMELSubprocessComponent,
+} from '../../serialize/interface/flowcontrolinterface';
+import {
+  MMELApproval,
+  MMELProcess,
+} from '../../serialize/interface/processinterface';
 import { functionCollection } from './function';
 
 export class Simulator {
   static startSimulation() {
     const sm = functionCollection.getStateMan();
-    sm.state.simulation = sm.state.modelWrapper.page.start;
+    const mw = sm.state.modelWrapper;
+    sm.state.simulation = mw.subman.get(mw.page).start;
     sm.state.clvisible = false;
     sm.state.cvisible = false;
     sm.state.fpvisible = false;
@@ -31,18 +39,20 @@ export class Simulator {
 
   static getElms(): Array<JSX.Element> {
     const sm = functionCollection.getStateMan();
+    const mw = sm.state.modelWrapper;
     const s = sm.state.simulation;
     const elms: Array<JSX.Element> = [];
     if (s != null) {
       if (s.element != null) {
         const x = s.element;
         console.debug(x);
-        if (x instanceof Process) {
-          elms.push(<h3 key={x.id + '#ProcessID'}> {x.id} </h3>);
-          elms.push(<p key={x.id + '#ProcessName'}> Name: {x.name} </p>);
-          if (x.provision.length > 0) {
+        if (x.datatype == DataType.PROCESS) {
+          const process = x as MMELProcess;
+          elms.push(<h3 key={x.id + '#ProcessID'}> {process.id} </h3>);
+          elms.push(<p key={x.id + '#ProcessName'}> Name: {process.name} </p>);
+          if (process.provision.length > 0) {
             const pros: Array<JSX.Element> = [];
-            x.provision.forEach(p => {
+            process.provision.forEach(p => {
               pros.push(
                 <li key={x.id + '#provision#' + p.id}>
                   <p key={x.id + '#provision#' + p.id + 'statement'}>
@@ -62,9 +72,9 @@ export class Simulator {
             });
             elms.push(<ul key={x.id + '#provisionlist'}>{pros}</ul>);
           }
-          if (x.input.length > 0) {
+          if (process.input.length > 0) {
             const datas: Array<JSX.Element> = [];
-            x.input.forEach(p => {
+            process.input.forEach(p => {
               datas.push(
                 <li key={x.id + '#input#' + p.id}>
                   {p.title}
@@ -85,9 +95,9 @@ export class Simulator {
               </div>
             );
           }
-          if (x.output.length > 0) {
+          if (process.output.length > 0) {
             const datas: Array<JSX.Element> = [];
-            x.output.forEach(p => {
+            process.output.forEach(p => {
               datas.push(
                 <li key={x.id + '#input#' + p.id}>
                   {p.title}
@@ -108,20 +118,21 @@ export class Simulator {
               </div>
             );
           }
-        } else if (x instanceof Approval) {
-          elms.push(<h3 key={x.id + '#ApprovalID'}> {x.id} </h3>);
-          elms.push(<p key={x.id + '#ApprovalName'}> Name: {x.name} </p>);
-          if (x.approver != null) {
+        } else if (x.datatype == DataType.APPROVAL) {
+          const app = x as MMELApproval;
+          elms.push(<h3 key={x.id + '#ApprovalID'}> {app.id} </h3>);
+          elms.push(<p key={x.id + '#ApprovalName'}> Name: {app.name} </p>);
+          if (app.approver != null) {
             elms.push(
               <p key={x.id + '#ApproverName'}>
                 {' '}
-                Approved by: {x.approver.name}{' '}
+                Approved by: {app.approver.name}{' '}
               </p>
             );
           }
-          if (x.records.length > 0) {
+          if (app.records.length > 0) {
             const datas: Array<JSX.Element> = [];
-            x.records.forEach(p => {
+            app.records.forEach(p => {
               datas.push(
                 <li key={x.id + '#approverecord#' + p.id}>
                   {p.title}
@@ -142,22 +153,34 @@ export class Simulator {
               </div>
             );
           }
-        } else if (x instanceof EGate) {
+        } else if (x.datatype == DataType.EGATE) {
           elms.push(<h3 key={x.id + '#EGateID'}> {x.id} </h3>);
           elms.push(
-            <p key={x.id + '#Gatewaylabel'}> Gateway label: {x.label} </p>
+            <p key={x.id + '#Gatewaylabel'}>
+              {' '}
+              Gateway label: {(x as MMELEGate).label}{' '}
+            </p>
           );
-        } else if (x instanceof TimerEvent) {
-          elms.push(<h3 key={x.id + '#TimerID'}> {x.id} </h3>);
-          elms.push(<p key={x.id + '#Timertype'}> Timer type: {x.type} </p>);
+        } else if (x.datatype == DataType.TIMEREVENT) {
+          const timer = x as MMELTimerEvent;
+          elms.push(<h3 key={x.id + '#TimerID'}> {timer.id} </h3>);
           elms.push(
-            <p key={x.id + '#Timerpara'}> Timer parameters: {x.para} </p>
+            <p key={x.id + '#Timertype'}> Timer type: {timer.type} </p>
           );
-        } else if (x instanceof SignalCatchEvent) {
+          elms.push(
+            <p key={x.id + '#Timerpara'}> Timer parameters: {timer.para} </p>
+          );
+        } else if (x.datatype == DataType.SIGNALCATCHEVENT) {
           elms.push(<h3 key={x.id + '#SCEventID'}> {x.id} </h3>);
-          elms.push(<p key={x.id + '#Signal'}> Catch signal: {x.signal} </p>);
+          elms.push(
+            <p key={x.id + '#Signal'}>
+              {' '}
+              Catch signal: {(x as MMELSignalCatchEvent).signal}{' '}
+            </p>
+          );
         }
-        if (s.child.length == 0) {
+        const addon = mw.comman.get(s);
+        if (addon.child.length == 0) {
           elms.push(<p key={x.id + '#TheEndText'}> This is the end. </p>);
           elms.push(
             <button
@@ -167,14 +190,14 @@ export class Simulator {
               Quit simulation
             </button>
           );
-        } else if (s.child.length == 1 && s.child[0].to != null) {
-          const target = s.child[0].to;
+        } else if (addon.child.length == 1 && addon.child[0].to != null) {
+          const target = addon.child[0].to;
           elms.push(
             <button key={x.id + '#nextButton'} onClick={() => goToNext(target)}>
               Next step
             </button>
           );
-        } else if (s.child.length > 1) {
+        } else if (addon.child.length > 1) {
           elms.push(
             <p key={x.id + '#MultipathText'}>
               {' '}
@@ -199,13 +222,13 @@ export class Simulator {
   }
 }
 
-function goToNext(x: SubprocessComponent) {
+function goToNext(x: MMELSubprocessComponent) {
   const sm = functionCollection.getStateMan();
   sm.state.simulation = x;
   sm.setState(sm.state);
 }
 
-function getNextButton(parentid: string, e: Edge): JSX.Element {
+function getNextButton(parentid: string, e: MMELEdge): JSX.Element {
   if (e.to != null) {
     const target = e.to;
     if (e.description == 'default') {

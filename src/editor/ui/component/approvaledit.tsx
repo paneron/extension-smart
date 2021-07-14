@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { Registry } from '../../model/model/data/registry';
-import { Approval } from '../../model/model/process/approval';
-import { Role } from '../../model/model/support/role';
-import { MODAILITYOPTIONS } from '../../model/util/IDRegistry';
+import { MODAILITYOPTIONS } from '../../runtime/idManager';
+import { DataType } from '../../serialize/interface/baseinterface';
+import { MMELApproval } from '../../serialize/interface/processinterface';
+import { MMELRole } from '../../serialize/interface/supportinterface';
 import { IApproval } from '../interface/datainterface';
 import { StateMan } from '../interface/state';
 import { functionCollection } from '../util/function';
-import { MyCloseButtons } from './unit/closebutton';
+import { MyTopRightButtons } from './unit/closebutton';
 import NormalComboBox from './unit/combobox';
 import {
   MultiReferenceSelector,
@@ -178,7 +178,7 @@ const EditApprovalPage: React.FC<StateMan> = (sm: StateMan) => {
       <DisplayPane
         style={{ display: sm.state.viewapproval != null ? 'inline' : 'none' }}
       >
-        <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+        <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
         {elms}
         <div>
           <button
@@ -201,22 +201,22 @@ const EditApprovalPage: React.FC<StateMan> = (sm: StateMan) => {
 
 function save(
   sm: StateMan,
-  oldValue: Approval | null,
+  oldValue: MMELApproval | null,
   newValue: IApproval | null
 ) {
   if (oldValue != null && newValue != null) {
-    const idreg = sm.state.modelWrapper.model.idreg;
+    const idreg = sm.state.modelWrapper.idman;
     if (oldValue.id != newValue.id) {
       if (newValue.id == '') {
         alert('ID is empty');
         return;
       }
-      if (idreg.ids.has(newValue.id)) {
+      if (idreg.nodes.has(newValue.id)) {
         alert('New ID already exists');
         return;
       }
-      idreg.ids.delete(oldValue.id);
-      idreg.addID(newValue.id, oldValue);
+      idreg.nodes.delete(oldValue.id);
+      idreg.nodes.set(newValue.id, oldValue);
       functionCollection.renameLayoutItem(oldValue.id, newValue.id);
       oldValue.id = newValue.id;
     }
@@ -225,9 +225,9 @@ function save(
     if (newValue.actor == '') {
       oldValue.actor = null;
     } else {
-      const actor = idreg.getObject(newValue.actor);
-      if (actor instanceof Role) {
-        oldValue.actor = actor;
+      const obj = idreg.roles.get(newValue.actor);
+      if (obj?.datatype == DataType.ROLE) {
+        oldValue.actor = obj as MMELRole;
       } else {
         console.error('Role not found: ', newValue.actor);
       }
@@ -235,17 +235,17 @@ function save(
     if (newValue.approver == '') {
       oldValue.approver = null;
     } else {
-      const approver = idreg.getObject(newValue.approver);
-      if (approver instanceof Role) {
-        oldValue.approver = approver;
+      const approver = idreg.roles.get(newValue.approver);
+      if (approver?.datatype == DataType.ROLE) {
+        oldValue.approver = approver as MMELRole;
       } else {
         console.error('Role not found: ', newValue.approver);
       }
     }
     oldValue.records = [];
     newValue.records.map(x => {
-      const data = idreg.getObject(x);
-      if (data instanceof Registry) {
+      const data = idreg.regs.get(x);
+      if (data != undefined) {
         oldValue.records.push(data);
       } else {
         console.error('Data not found: ', x);
@@ -253,7 +253,7 @@ function save(
     });
     oldValue.ref = [];
     newValue.ref.map(x => {
-      const data = idreg.getReference(x);
+      const data = idreg.refs.get(x);
       if (data != null) {
         oldValue.ref.push(data);
       } else {

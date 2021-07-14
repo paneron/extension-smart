@@ -2,14 +2,14 @@ import styled from '@emotion/styled';
 import React from 'react';
 import { StateMan } from '../interface/state';
 import { Simulator } from '../util/simulator';
-import { MyCloseButtons } from './unit/closebutton';
+import { MyTopRightButtons } from './unit/closebutton';
 
 const SimulationPage: React.FC<StateMan> = (sm: StateMan) => {
   const elm = Simulator.getElms();
 
   return (
     <SideBar>
-      <MyCloseButtons onClick={() => Simulator.close()}>X</MyCloseButtons>
+      <MyTopRightButtons onClick={() => Simulator.close()}>X</MyTopRightButtons>
       <h1> Simulation </h1>
       {elm}
     </SideBar>

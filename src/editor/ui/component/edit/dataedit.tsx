@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dataclass } from '../../../model/model/data/dataclass';
+import { MMELDataClass } from '../../../serialize/interface/datainterface';
 import { IDataclass } from '../../interface/datainterface';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { DataclassHandler } from '../handle/dataclasshandler';
@@ -13,7 +13,7 @@ const DataEditPage: React.FC<{
 }> = ({ modelWrapper, isVisible }) => {
   const [isAdd, setAddMode] = useState(false);
   const [isUpdate, setUpdateMode] = useState(false);
-  const [dataclass, setUpdateDataclass] = useState<Dataclass | null>(null);
+  const [dataclass, setUpdateDataclass] = useState<MMELDataClass | null>(null);
   const [dummy, setDummy] = useState<boolean>(false);
   const [data, setData] = useState<IDataclass>({ id: '', attributes: [] });
 

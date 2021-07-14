@@ -1,16 +1,4 @@
 import React, { CSSProperties } from 'react';
-import { Dataclass } from '../../../model/model/data/dataclass';
-import { Enum } from '../../../model/model/data/enum';
-import { Registry } from '../../../model/model/data/registry';
-import { Model } from '../../../model/model/model';
-import {
-  BOOLEANOPTIONS,
-  BOOLEANTYPE,
-  DATETIMETYPE,
-  EMPTYTYPE,
-  ROLETYPE,
-  STRINGTYPE,
-} from '../../../model/util/IDRegistry';
 import { DocumentItem, DocumentStore } from '../../../repository/document';
 import {
   IAddItem,
@@ -23,6 +11,21 @@ import NormalComboBox from '../unit/combobox';
 import DataTimeTextField from '../unit/datetimefield';
 import { ReferenceSelector } from '../unit/referenceselect';
 import NormalTextField from '../unit/textfield';
+import { MMELModel } from '../../../serialize/interface/model';
+import {
+  MMELDataClass,
+  MMELEnum,
+  MMELRegistry,
+} from '../../../serialize/interface/datainterface';
+import {
+  BOOLEANOPTIONS,
+  BOOLEANTYPE,
+  DATETIMETYPE,
+  EMPTYTYPE,
+  ROLETYPE,
+  STRINGTYPE,
+} from '../../../runtime/idManager';
+import { DataType } from '../../../serialize/interface/baseinterface';
 
 const containercss: CSSProperties = {
   border: '1px solid black',
@@ -32,9 +35,9 @@ const containercss: CSSProperties = {
 export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
   filterName = 'Document filter';
   itemName = 'Documents';
-  private model: Model;
+  private model: MMELModel;
   private store: DocumentStore;
-  private reg: Registry | null;
+  private reg: MMELRegistry | null;
   private setAddMode: (b: boolean) => void;
   private updating: DocumentItem | null;
   private data: DocumentItem;
@@ -44,9 +47,9 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
   private setUpdateDoc: (x: DocumentItem) => void;
 
   constructor(
-    model: Model,
+    model: MMELModel,
     store: DocumentStore,
-    reg: Registry | null,
+    reg: MMELRegistry | null,
     updateObj: DocumentItem | null,
     setAdd: (b: boolean) => void,
     setUpdate: (b: boolean) => void,
@@ -166,7 +169,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
 
   private enumerateDataClass(
     prefix: string,
-    dc: Dataclass,
+    dc: MMELDataClass,
     elms: Array<JSX.Element>
   ) {
     const roleoptions: Array<string> = [];
@@ -232,36 +235,42 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
           />
         );
       } else {
+        const mw = functionCollection.getStateMan().state.modelWrapper;
         const u = a.type.indexOf('(');
         const v = a.type.indexOf(')');
         if (u != -1 && v != -1) {
           const type = a.type.substr(u + 1, v - u - 1);
           const opts: Array<string> = [];
-          const r = this.model.idreg.getObject(type);
-          if (r instanceof Dataclass && r.mother != null) {
-            this.store.get(r.mother).docs.forEach(d => {
-              opts.push(descDocument(d));
-            });
-            elms.push(
-              <ReferenceSelector
-                key={'field#' + prefix + a.id}
-                text={a.definition}
-                filterName={type + ' filter'}
-                value={getAttributeValue(this.data, a.id)}
-                options={opts}
-                update={(x: number) => {
-                  if (x != -1) {
-                    this.data.attributes.set(a.id, opts[x]);
-                    this.setData({ ...this.data });
-                  }
-                }}
-              />
-            );
+          const obj = mw.idman.nodes.get(type);
+          if (obj?.datatype == DataType.DATACLASS) {
+            const r = obj as MMELDataClass;
+            const mother = mw.dlman.get(r).mother;
+            if (mother != null) {
+              this.store.get(mother).docs.forEach(d => {
+                opts.push(descDocument(d));
+              });
+              elms.push(
+                <ReferenceSelector
+                  key={'field#' + prefix + a.id}
+                  text={a.definition}
+                  filterName={type + ' filter'}
+                  value={getAttributeValue(this.data, a.id)}
+                  options={opts}
+                  update={(x: number) => {
+                    if (x != -1) {
+                      this.data.attributes.set(a.id, opts[x]);
+                      this.setData({ ...this.data });
+                    }
+                  }}
+                />
+              );
+            }
           }
         } else {
           // the data type is a data class
-          const d = this.model.idreg.getObject(a.type);
-          if (d instanceof Dataclass) {
+          const obj = mw.idman.nodes.get(a.type);
+          if (obj?.datatype == DataType.DATACLASS) {
+            const d = obj as MMELDataClass;
             const childelms: Array<JSX.Element> = [];
             this.enumerateDataClass(prefix + '#' + a.id, d, childelms);
             elms.push(
@@ -276,7 +285,8 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
                 {childelms}{' '}
               </div>
             );
-          } else if (d instanceof Enum) {
+          } else if (obj?.datatype == DataType.ENUM) {
+            const d = obj as MMELEnum;
             const opts: Array<string> = [];
             d.values.map(v => {
               opts.push(v.value);

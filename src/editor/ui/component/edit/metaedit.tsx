@@ -3,10 +3,10 @@
 
 import { jsx } from '@emotion/react';
 import { useState } from 'react';
-import { Model } from '../../../model/model/model';
+import { MMELModel } from '../../../serialize/interface/model';
 import NormalTextField from '../unit/textfield';
 
-const MetaEditPage: React.FC<{ model: Model; isVisible: boolean }> = ({
+const MetaEditPage: React.FC<{ model: MMELModel; isVisible: boolean }> = ({
   model,
   isVisible,
 }) => {

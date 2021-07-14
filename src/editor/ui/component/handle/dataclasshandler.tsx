@@ -1,6 +1,6 @@
 import React from 'react';
-import { DataAttribute } from '../../../model/model/data/dataattribute';
-import { Dataclass } from '../../../model/model/data/dataclass';
+import { MMELFactory } from '../../../runtime/modelComponentCreator';
+import { MMELDataClass } from '../../../serialize/interface/datainterface';
 import { IAttribute, IDataclass } from '../../interface/datainterface';
 import {
   IAddItem,
@@ -18,19 +18,19 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
   itemName = 'Data structure';
   private mw: ModelWrapper;
   private setAddMode: (b: boolean) => void;
-  private updating: Dataclass | null;
+  private updating: MMELDataClass | null;
   private data: IDataclass;
   private setData: (x: IDataclass) => void;
   private forceUpdate: () => void;
   private setUpdateMode: (b: boolean) => void;
-  private setUpdateDataclass: (x: Dataclass) => void;
+  private setUpdateDataclass: (x: MMELDataClass) => void;
 
   constructor(
     mw: ModelWrapper,
-    updateObj: Dataclass | null,
+    updateObj: MMELDataClass | null,
     setAdd: (b: boolean) => void,
     setUpdate: (b: boolean) => void,
-    setUpdateRegistry: (x: Dataclass) => void,
+    setUpdateRegistry: (x: MMELDataClass) => void,
     forceUpdate: () => void,
     data: IDataclass,
     setRegistry: (x: IDataclass) => void
@@ -47,8 +47,8 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
 
   getItems = (): Array<DataclassListItem> => {
     const out: Array<DataclassListItem> = [];
-    this.mw.model.dcs.forEach((d, index) => {
-      if (d.mother == null) {
+    this.mw.model.dataclasses.forEach((d, index) => {
+      if (this.mw.dlman.get(d).mother == null) {
         out.push(new DataclassListItem(d.id, d.id, '' + index));
       }
     });
@@ -64,18 +64,19 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
 
   removeItem = (refs: Array<string>) => {
     for (let i = refs.length - 1; i >= 0; i--) {
-      const removed = this.mw.model.dcs.splice(parseInt(refs[i]), 1);
+      const removed = this.mw.model.dataclasses.splice(parseInt(refs[i]), 1);
       if (removed.length > 0) {
         const r = removed[0];
-        this.mw.model.idreg.ids.delete(r.id);
+        this.mw.idman.nodes.delete(r.id);
+        this.mw.idman.dcs.delete(r.id);
 
-        for (const dc of this.mw.model.dcs) {
+        for (const dc of this.mw.model.dataclasses) {
           for (const a of dc.attributes) {
             const index = a.type.indexOf(r.id);
             if (index != -1) {
               a.type = '';
             }
-            dc.rdcs.delete(r);
+            this.mw.dlman.get(dc).rdcs.delete(r);
           }
         }
         functionCollection.removeLayoutItem(r.id);
@@ -87,7 +88,7 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
   updateItem = (ref: string) => {
     const x = parseInt(ref);
     if (!isNaN(x)) {
-      const r = this.mw.model.dcs[x];
+      const r = this.mw.model.dataclasses[x];
       this.data.id = r.id;
       this.data.attributes = [];
       r.attributes.map(a => {
@@ -145,24 +146,29 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
       return;
     }
     const model = this.mw.model;
-    const idreg = model.idreg;
-    if (idreg.ids.has(this.data.id)) {
+    const idreg = this.mw.idman;
+    if (idreg.nodes.has(this.data.id)) {
       alert('ID already exists');
     } else {
       // add data class
-      const nr = new Dataclass(this.data.id, '');
+      const nr = MMELFactory.createDataClass(this.data.id);
       for (const a of this.data.attributes) {
-        const na = new DataAttribute(a.id, '');
+        const na = MMELFactory.createDataAttribute(a.id);
         na.definition = a.definition;
         na.cardinality = a.cardinality;
         na.type = a.type;
-        na.reftext = a.ref;
         na.modality = a.modality;
         nr.attributes.push(na);
+        for (const ref of a.ref) {
+          const resolved = idreg.refs.get(ref);
+          if (resolved != undefined) {
+            na.ref.push(resolved);
+          }
+        }
       }
-      nr.resolve(idreg);
-      idreg.addID(nr.id, nr);
-      model.dcs.push(nr);
+      idreg.dcs.set(nr.id, nr);
+      idreg.nodes.set(nr.id, nr);
+      model.dataclasses.push(nr);
       this.setAddMode(false);
     }
   };
@@ -179,19 +185,19 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
 
   updateClicked = () => {
     if (this.updating != null) {
-      const idreg = this.mw.model.idreg;
+      const idreg = this.mw.idman;
       const dc = this.updating;
       if (this.data.id != dc.id) {
         if (this.data.id == '') {
           alert('New ID is empty');
           return;
         }
-        if (idreg.ids.has(this.data.id)) {
+        if (idreg.nodes.has(this.data.id)) {
           alert('New ID already exists');
           return;
         }
       }
-      for (const x of this.mw.model.dcs) {
+      for (const x of this.mw.model.dataclasses) {
         for (const a of x.attributes) {
           if (a.type == dc.id) {
             a.type = this.data.id;
@@ -199,21 +205,27 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
         }
       }
       functionCollection.renameLayoutItem(this.updating.id, this.data.id);
-      idreg.ids.delete(dc.id);
+      idreg.nodes.delete(dc.id);
+      idreg.dcs.delete(dc.id);
       dc.id = this.data.id;
-      idreg.addID(dc.id, dc);
-      dc.rdcs.clear();
+      idreg.nodes.set(dc.id, dc);
+      idreg.dcs.set(dc.id, dc);
+      this.mw.dlman.get(dc).rdcs.clear();
       dc.attributes = [];
       for (const a of this.data.attributes) {
-        const na = new DataAttribute(a.id, '');
+        const na = MMELFactory.createDataAttribute(a.id);
         na.definition = a.definition;
         na.cardinality = a.cardinality;
         na.type = a.type;
-        na.reftext = a.ref;
         na.modality = a.modality;
         dc.attributes.push(na);
+        for (const ref of a.ref) {
+          const resolved = idreg.refs.get(ref);
+          if (resolved != undefined) {
+            na.ref.push(resolved);
+          }
+        }
       }
-      dc.resolve(idreg);
       this.setUpdateMode(false);
     }
   };

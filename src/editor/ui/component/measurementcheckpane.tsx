@@ -4,7 +4,7 @@
 import styled from '@emotion/styled';
 import { jsx } from '@emotion/react';
 import React from 'react';
-import { VarType } from '../../model/model/measure/variable';
+import { VarType } from '../../runtime/idManager';
 import { MeasureChecker } from '../model/measure/measureChecker';
 import { functionCollection } from '../util/function';
 import NormalTextField from './unit/textfield';

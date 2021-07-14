@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import React, { ChangeEvent, CSSProperties, RefObject } from 'react';
-import { Model } from '../../../model/model/model';
-import * as parser from '../../../model/util/parser';
 import { ModelViewStateMan } from '../model/mapperstate';
 import { ModelWrapper } from '../../model/modelwrapper';
-import { MyCloseButtons } from '../../component/unit/closebutton';
+import { MyTopRightButtons } from '../../component/unit/closebutton';
 import { MapperFunctions } from '../util/helperfunctions';
 import { MappingProfile } from '../model/MappingProfile';
+import { MMELToText, textToMMEL } from '../../../serialize/MMEL';
+import { MMELFactory } from '../../../runtime/modelComponentCreator';
 
 const MapperControlPane: React.FC<{
   sm: ModelViewStateMan;
@@ -24,7 +24,8 @@ const MapperControlPane: React.FC<{
   const readModelFromFile = (result: string) => {
     console.debug('Read model from file');
     state.history.clear();
-    state.modelWrapper = new ModelWrapper(parser.parse(result));
+    const model = textToMMEL(result);
+    state.modelWrapper = new ModelWrapper(model);
     MapperFunctions.setIsMap(false);
     MapperFunctions.updateMapRef(sm);
     sm.setState(state);
@@ -32,14 +33,14 @@ const MapperControlPane: React.FC<{
 
   const newModel = () => {
     state.history.clear();
-    state.modelWrapper = new ModelWrapper(new Model());
+    state.modelWrapper = new ModelWrapper(MMELFactory.createNewModel());
     MapperFunctions.updateMapRef(sm);
     sm.setState(state);
   };
 
   const exportModel = (fn: string | undefined): void => {
     MapperFunctions.saveLayout(sm);
-    const blob = new Blob([state.modelWrapper.model.toModel()], {
+    const blob = new Blob([MMELToText(state.modelWrapper.model)], {
       type: 'text/plain',
     });
     const url = window.URL.createObjectURL(blob);
@@ -73,30 +74,13 @@ const MapperControlPane: React.FC<{
 
   return (
     <ControlBar style={css}>
-      <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+      <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
 
       <button onClick={() => modelfile.current?.click()}>Load Model</button>
-      <button onClick={() => exportModel(modelfilename.current?.value)}>
-        Download Model
-      </button>
-      <p>
-        {' '}
-        Download model name:{' '}
-        <input
-          type="text"
-          ref={modelfilename}
-          name="modelfn"
-          defaultValue="default.mmel"
-        />{' '}
-      </p>
-      <input
-        type="file"
-        accept=".mmel"
-        onChange={e => modelFileSelected(e, readModelFromFile)}
-        ref={modelfile}
-        style={{ display: 'none' }}
-      />
-      <button onClick={() => newModel()}>New Model</button>
+      {/* <button onClick={() => exportModel(modelfilename.current?.value)} >Download Model</button>
+    <p> Download model name: <input type='text' ref={modelfilename} name="modelfn" defaultValue="default.mmel" /> </p>
+    <input type='file' accept=".mmel" onChange={(e) => modelFileSelected(e, readModelFromFile)} ref={modelfile} style={{display: "none"}} />
+    <button onClick={() => newModel()} >New Model</button>     */}
     </ControlBar>
   );
 };
@@ -104,7 +88,7 @@ const MapperControlPane: React.FC<{
 const ControlBar = styled.aside`
   position: absolute;
   width: 25%;
-  height: 30%;
+  height: 10%;
   bottom: 0;
   right: 0%;
   background-color: white;

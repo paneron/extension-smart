@@ -13,7 +13,7 @@ const MappingCanvus: React.FC<{ data: MapLinkState }> = ({ data }) => {
   const elms: Array<JSX.Element> = [];
   if (data.isMap) {
     const sm = MapperFunctions.getImpStateMan();
-    const map = sm.state.modelWrapper.model.maps;
+    const map = sm.state.modelWrapper.mapman;
     const ns =
       MapperFunctions.getRefStateMan().state.modelWrapper.model.meta.namespace;
     const mapfunction = map.profiles.get(ns);

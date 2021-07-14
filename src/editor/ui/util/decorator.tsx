@@ -2,22 +2,27 @@ import { Handle, Position } from 'react-flow-renderer';
 import styled from '@emotion/styled';
 import React from 'react';
 import { NodeContainer } from '../nodecontainer';
-import { Process } from '../../model/model/process/process';
-import { Approval } from '../../model/model/process/approval';
 import * as shapes from './shapes';
-import { Dataclass } from '../../model/model/data/dataclass';
-import { Registry } from '../../model/model/data/registry';
+import { functionCollection } from './function';
+import { getFilterColor, getMeasureResultColor } from './legendpane';
+import { MapperFunctions } from '../mapper/util/helperfunctions';
+import { ModelType } from '../mapper/model/mapperstate';
+import { getMapResultColor } from '../mapper/component/mappinglegend';
+import { DataType } from '../../serialize/interface/baseinterface';
+import {
+  MMELDataClass,
+  MMELRegistry,
+} from '../../serialize/interface/datainterface';
+import {
+  MMELApproval,
+  MMELProcess,
+} from '../../serialize/interface/processinterface';
 import {
   MyDataCheckBox,
   MyProcessCheckBox,
   PercentageLabel,
   ProgressLabel,
 } from './progressmanager';
-import { functionCollection } from './function';
-import { getFilterColor, getMeasureResultColor } from './legendpane';
-import { MapperFunctions } from '../mapper/util/helperfunctions';
-import { ModelType } from '../mapper/model/mapperstate';
-import { getMapResultColor } from '../mapper/component/mappinglegend';
 
 function onDragStart(
   event: React.DragEvent<HTMLDivElement>,
@@ -40,12 +45,12 @@ export const datacube = (data: NodeContainer) => {
   const elms: Array<JSX.Element> = [];
   if (data.data.modelType == undefined) {
     const x = functionCollection.getObjectByID(datanode.represent);
-    let y: Dataclass | null = null;
+    let y: MMELDataClass | null = null;
     const isCheckListMode = functionCollection.getStateMan().state.clvisible;
-    if (x instanceof Dataclass) {
-      y = x;
-    } else if (x instanceof Registry) {
-      y = x.data;
+    if (x != undefined && x.datatype == DataType.DATACLASS) {
+      y = x as MMELDataClass;
+    } else if (x?.datatype == DataType.REGISTRY) {
+      y = (x as MMELRegistry).data;
     }
     if (y != null) {
       if (isCheckListMode) {
@@ -56,7 +61,10 @@ export const datacube = (data: NodeContainer) => {
             checkUpdated={functionCollection.checkUpdated}
           />
         );
-        color = getFilterColor(y.filterMatch);
+        color = getFilterColor(
+          functionCollection.getStateMan().state.modelWrapper.filterman.get(y)
+            .filterMatch
+        );
       }
     }
   }
@@ -85,14 +93,15 @@ export const processComponent = (data: NodeContainer) => {
   const css: React.CSSProperties = {};
   let pbox: JSX.Element = <></>;
   if (data.data.modelType == undefined) {
-    const process = functionCollection.getObjectByID(datanode.represent);
+    const obj = functionCollection.getObjectByID(datanode.represent);
 
     const state = functionCollection.getStateMan().state;
     const isCheckListMode = state.clvisible;
     const sm = functionCollection.getStateMan();
     const mtest = sm.state.mtestResult;
 
-    if (process instanceof Process) {
+    if (obj?.datatype == DataType.PROCESS) {
+      const process = obj as MMELProcess;
       if (process.actor != null) {
         elms.push(
           <FirstLabel key={process.id + '#ActorLabel'}>
@@ -109,16 +118,17 @@ export const processComponent = (data: NodeContainer) => {
           css.background = getMeasureResultColor(result);
         }
       } else if (isCheckListMode) {
+        const addon = sm.state.modelWrapper.clman.getProcessAddOn(process);
         elms.push(
           <ProgressLabel key={process.id + '#ProgressLabel'}>
             {' '}
-            {process.progress} / {process.job?.length}{' '}
+            {addon.progress} / {addon.job?.length}{' '}
           </ProgressLabel>
         );
         elms.push(
           <PercentageLabel key={process.id + '#PercentageLabel'}>
             {' '}
-            {process.percentage}%{' '}
+            {addon.percentage}%{' '}
           </PercentageLabel>
         );
         elms.push(
@@ -128,10 +138,15 @@ export const processComponent = (data: NodeContainer) => {
             checkUpdated={functionCollection.checkUpdated}
           />
         );
-        css.background = getFilterColor(process.filterMatch);
+        css.background = getFilterColor(
+          sm.state.modelWrapper.filterman.get(process).filterMatch
+        );
       } else {
         // non-checklist mode
         if (state.simulation != null && state.simulation.element == process) {
+          css.background = 'lightyellow';
+        }
+        if (state.searchvisible && state.highlight == process) {
           css.background = 'lightyellow';
         }
       }
@@ -156,8 +171,9 @@ export const processComponent = (data: NodeContainer) => {
     );
   } else {
     const sm = MapperFunctions.getStateMan(data.data.modelType);
-    const process = MapperFunctions.getObjectByID(sm, datanode.represent);
-    if (process instanceof Process) {
+    const obj = MapperFunctions.getObjectByID(sm, datanode.represent);
+    if (obj?.datatype == DataType.PROCESS) {
+      const process = obj as MMELProcess;
       const pid = process.id;
       if (process.actor != null) {
         elms.push(
@@ -244,10 +260,11 @@ export const approvalComponent = (data: NodeContainer) => {
   const elms: Array<JSX.Element> = [];
   const css: React.CSSProperties = {};
   if (data.data.modelType == undefined) {
-    const approval = functionCollection.getObjectByID(data.data.represent);
+    const obj = functionCollection.getObjectByID(data.data.represent);
     const state = functionCollection.getStateMan().state;
     const isCheckListMode = state.clvisible;
-    if (approval instanceof Approval) {
+    if (obj?.datatype == DataType.APPROVAL) {
+      const approval = obj as MMELApproval;
       if (approval.actor != null) {
         elms.push(
           <FirstLabel key={approval.id + '#ActorLabel'}>
@@ -272,7 +289,11 @@ export const approvalComponent = (data: NodeContainer) => {
         );
       }
       if (isCheckListMode) {
-        css.background = getFilterColor(approval.filterMatch);
+        css.background = getFilterColor(
+          functionCollection
+            .getStateMan()
+            .state.modelWrapper.filterman.get(approval).filterMatch
+        );
         elms.push(
           <MyProcessCheckBox
             key={approval.id + '#ProgressCheckBox'}
@@ -284,12 +305,16 @@ export const approvalComponent = (data: NodeContainer) => {
         if (state.simulation != null && state.simulation.element == approval) {
           css.background = 'lightyellow';
         }
+        if (state.searchvisible && state.highlight == approval) {
+          css.background = 'lightyellow';
+        }
       }
     }
   } else {
     const sm = MapperFunctions.getStateMan(data.data.modelType);
-    const approval = MapperFunctions.getObjectByID(sm, data.data.represent);
-    if (approval instanceof Approval) {
+    const obj = MapperFunctions.getObjectByID(sm, data.data.represent);
+    if (obj?.datatype == DataType.APPROVAL) {
+      const approval = obj as MMELApproval;
       if (approval.actor != null) {
         elms.push(
           <FirstLabel key={approval.id + '#ActorLabel'}>

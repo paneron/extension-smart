@@ -153,12 +153,12 @@ export class MeasurementListItem implements IListItem {
 
 function validCheck(def: string) {
   const sm = functionCollection.getStateMan();
-  const idreg = sm.state.modelWrapper.model.idreg;
+  const idreg = sm.state.modelWrapper.idman;
   const results = Array.from(def.matchAll(/\[.*?\]/g));
   let ok = true;
   for (const r of results) {
     const name = r[0].substr(1, r[0].length - 2);
-    if (!idreg.varids.has(name)) {
+    if (!idreg.vars.has(name)) {
       alert(name + ' is not a measurement');
       ok = false;
     }

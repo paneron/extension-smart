@@ -1,25 +1,22 @@
-import { StartEvent } from '../model/model/event/startevent';
-import { Edge } from '../model/model/flow/edge';
+import { MMELFactory } from '../runtime/modelComponentCreator';
+import { MMELSubprocess } from '../serialize/interface/flowcontrolinterface';
+import { MMELModel } from '../serialize/interface/model';
+import { MMELProcess } from '../serialize/interface/processinterface';
 import {
-  Subprocess,
-  SubprocessComponent,
-} from '../model/model/flow/subprocess';
-import { Model } from '../model/model/model';
-import { Process } from '../model/model/process/process';
-import { Provision } from '../model/model/support/provision';
-import { Reference } from '../model/model/support/reference';
-import { Role } from '../model/model/support/role';
-import { IDRegistry } from '../model/util/IDRegistry';
+  MMELReference,
+  MMELRole,
+} from '../serialize/interface/supportinterface';
+import { ModelWrapper } from '../ui/model/modelwrapper';
 import { XMLParser } from './parser';
 import { XMLElement } from './xmlelement';
 
 export class AIAgent {
-  static xmlToModel(data: string): Model {
+  static xmlToModel(data: string): ModelWrapper {
     const xml = XMLParser.parse(data);
     const front = xml.getChildByTagName('front');
     const body = xml.getChildByTagName('body');
-    const m = new Model();
-    initModel(m);
+    const m = MMELFactory.createNewModel();
+    const mw = new ModelWrapper(m);
 
     if (front.length > 0) {
       setMeta(m, front[0]);
@@ -28,16 +25,16 @@ export class AIAgent {
       const secs = body[0].getChildByTagName('sec');
       secs.forEach(s => {
         if (parseInt(s.getElementValue('label')) >= 4 && m.root != null) {
-          readDetails(s, m, m.root);
+          readDetails(s, mw, m.root);
         }
       });
       postCalChildPos(m.root);
     }
-    return m;
+    return mw;
   }
 }
 
-function postCalChildPos(page: Subprocess) {
+function postCalChildPos(page: MMELSubprocess) {
   let sx = 50 - 200 * (page.childs.length - 1);
   sx /= 2;
   for (let i = 1; i < page.childs.length; i++) {
@@ -48,7 +45,7 @@ function postCalChildPos(page: Subprocess) {
   }
 }
 
-function setMeta(m: Model, xml: XMLElement) {
+function setMeta(m: MMELModel, xml: XMLElement) {
   m.meta.author = xml.getElementValueByPath(['iso-meta', 'doc-ident', 'sdo']);
   m.meta.edition = xml.getElementValueByPath([
     'iso-meta',
@@ -62,46 +59,51 @@ function setMeta(m: Model, xml: XMLElement) {
   m.meta.title = xml.getElementValueByPath(['iso-meta', 'title-wrap', 'full']);
 }
 
-function initModel(m: Model) {
-  m.root = initPage(m, 'root');
-}
-
-function initPage(m: Model, id: string) {
-  const page = new Subprocess(id, '');
+function initPage(mw: ModelWrapper, id: string) {
+  const m = mw.model;
+  const idreg = mw.idman;
+  const page = MMELFactory.createSubprocess(id);
   m.pages.push(page);
-  const start = new StartEvent(m.idreg.findUniqueID('Start'), '');
-  m.evs.push(start);
-  m.idreg.addID(start.id, start);
-  page.start = new SubprocessComponent(start.id, '');
-  page.start.element = start;
-  page.childs.push(page.start);
-  page.map.set(start.id, page.start);
-  m.idreg.addPage(page.id, page);
+  const start = MMELFactory.createStartEvent(idreg.findUniqueID('Start'));
+  m.events.push(start);
+  idreg.nodes.set(start.id, start);
+  const addon = mw.subman.get(page);
+  addon.start = MMELFactory.createSubprocessComponent(start);
+  addon.start.element = start;
+  page.childs.push(addon.start);
+  addon.map.set(start.id, addon.start);
+  idreg.pages.set(page.id, page);
   return page;
 }
 
-function readDetails(sec: XMLElement, m: Model, page: Subprocess) {
+function readDetails(sec: XMLElement, mw: ModelWrapper, page: MMELSubprocess) {
+  const m = mw.model;
   const secno = sec.getElementValue('label');
   const sectitle = sec.getElementValue('title');
-  const idreg = m.idreg;
+  const idreg = mw.idman;
 
-  const p = new Process(findUniqueID('Clause' + secno, idreg), '');
+  const p = MMELFactory.createProcess(idreg.findUniqueID('Clause' + secno));
   p.name = sectitle;
-  idreg.addID(p.id, p);
-  m.hps.push(p);
-  const nc = new SubprocessComponent(p.id, '');
+  idreg.nodes.set(p.id, p);
+  m.processes.push(p);
+  const nc = MMELFactory.createSubprocessComponent(p);
   nc.element = p;
-  page.map.set(p.id, nc);
+  const paddon = mw.subman.get(page);
+  paddon.map.set(p.id, nc);
   page.childs.push(nc);
-  const nedge = new Edge(idreg.findUniqueEdgeID('Edge'), '');
-  idreg.addEdge(nedge.id, nedge);
-  nedge.from = page.start;
+  const nedge = MMELFactory.createEdge(idreg.findUniqueEdgeID('Edge'));
+  idreg.edges.set(nedge.id, nedge);
+  nedge.from = paddon.start;
   nedge.to = nc;
-  page.start?.child.push(nedge);
+  if (paddon.start != null) {
+    mw.comman.get(paddon.start).child.push(nedge);
+  }
   page.edges.push(nedge);
 
   let refadded = false;
-  const ref = new Reference(idreg.findUniqueRefID('Ref'), '');
+  const ref = MMELFactory.createReference(
+    'Ref' + secno.replaceAll('.', '-').trim()
+  );
   ref.document = m.meta.title;
   ref.clause = secno;
 
@@ -113,13 +115,13 @@ function readDetails(sec: XMLElement, m: Model, page: Subprocess) {
         // already obtained their values. Ignore these parts
       } else if (c.tag == 'sec') {
         if (p.page == null) {
-          p.page = initPage(m, idreg.findUniquePageID('Page'));
+          p.page = initPage(mw, idreg.findUniquePageID('Page'));
         }
-        readDetails(c, m, p.page);
+        readDetails(c, mw, p.page);
       } else if (c.tag == 'p') {
-        refadded = addProvisions(c.toString(), m, p, ref, refadded, roles);
+        refadded = addProvisions(c.toString(), mw, p, ref, refadded, roles);
       } else if (c.tag == 'list') {
-        refadded = processList(c, m, p, ref, refadded, roles);
+        refadded = processList(c, mw, p, ref, refadded, roles);
       } else {
         // Other elements are ignored at the moment
         // like tables, figures, note, etc
@@ -137,7 +139,7 @@ function readDetails(sec: XMLElement, m: Model, page: Subprocess) {
     }
   });
   if (role != '') {
-    let choice: Role | null = null;
+    let choice: MMELRole | null = null;
     for (const r of m.roles) {
       if (similarMatch(r.name.toLowerCase(), role.toLowerCase())) {
         choice = r;
@@ -145,11 +147,11 @@ function readDetails(sec: XMLElement, m: Model, page: Subprocess) {
       }
     }
     if (choice == null) {
-      const idreg = m.idreg;
-      choice = new Role(idreg.findUniqueID('Role'), '');
+      const idreg = mw.idman;
+      choice = MMELFactory.createRole(idreg.findUniqueID('Role'));
       choice.name = role.toLowerCase();
       m.roles.push(choice);
-      idreg.addID(choice.id, choice);
+      idreg.roles.set(choice.id, choice);
     }
     p.actor = choice;
   }
@@ -160,12 +162,13 @@ function readDetails(sec: XMLElement, m: Model, page: Subprocess) {
 
 function processList(
   c: XMLElement,
-  m: Model,
-  p: Process,
-  ref: Reference,
+  mw: ModelWrapper,
+  p: MMELProcess,
+  ref: MMELReference,
   refadded: boolean,
   roles: Map<string, number>
 ): boolean {
+  //const m = mw.model;
   c.getChilds().forEach(gc => {
     if (gc instanceof XMLElement) {
       if (gc.tag == 'list-item') {
@@ -176,14 +179,14 @@ function processList(
             } else if (ggc.tag == 'p') {
               refadded = addProvisions(
                 ggc.toString(),
-                m,
+                mw,
                 p,
                 ref,
                 refadded,
                 roles
               );
             } else if (ggc.tag == 'list') {
-              refadded = processList(ggc, m, p, ref, refadded, roles);
+              refadded = processList(ggc, mw, p, ref, refadded, roles);
             } else {
               // Other elements are ignored at the moment
               // like tables, figures, note, etc
@@ -204,9 +207,9 @@ function processList(
 
 function addProvisions(
   statement: string,
-  m: Model,
-  process: Process,
-  ref: Reference,
+  m: ModelWrapper,
+  process: MMELProcess,
+  ref: MMELReference,
   refAdded: boolean,
   roles: Map<string, number>
 ): boolean {
@@ -228,16 +231,17 @@ function addProvisions(
 
 function addProvision(
   statement: string,
-  m: Model,
-  process: Process,
-  ref: Reference,
+  mw: ModelWrapper,
+  process: MMELProcess,
+  ref: MMELReference,
   refAdded: boolean,
   roles: Map<string, number>
 ): boolean {
-  const idreg = m.idreg;
+  const m = mw.model;
+  const idreg = mw.idman;
   const s = statement.trim();
   if (s != '') {
-    const pro = new Provision(idreg.findUniqueProvisionID('Provision'), '');
+    const pro = MMELFactory.createProvision(idreg.findProvisionID('Provision'));
     pro.condition = s;
     // let text = pro.condition.toUpperCase()
     // MODAILITYOPTIONS.forEach((x) => {
@@ -256,47 +260,39 @@ function addProvision(
     //   }
     // })
     m.provisions.push(pro);
-    idreg.addProvision(pro.id, pro);
+    idreg.provisions.set(pro.id, pro);
     process.provision.push(pro);
     pro.ref.push(ref);
     if (!refAdded) {
       m.refs.push(ref);
-      idreg.addReference(ref.id, ref);
+      idreg.refs.set(ref.id, ref);
       refAdded = true;
     }
   }
   return refAdded;
 }
 
-function findUniqueID(x: string, idreg: IDRegistry) {
-  if (idreg.ids.has(x)) {
-    return idreg.findUniqueID(x);
-  } else {
-    return x;
-  }
-}
-
-//function identifyActor(name:string, m:Model):string {
-//  name = name.replaceAll(/.*[\.:,]/g, "").trim()
-//  name = name.replaceAll(/^THEN\s+/g, "")
-//  name = name.replaceAll(/^BUT\s+/g, "")
-//  name = name.replaceAll(/^BECAUSE\s+/g, "")
-//  name = name.replaceAll(/^THE\s+/g, "")
-//  name = name.replaceAll(/^SO\s+/g, "")
-//  name = name.replaceAll(/^A\s+/g, "")
-//  name = name.replaceAll(/^AN\s+/g, "")
-//  name = name.replaceAll(/\s+/g, " ").trim()
-//  if (name.split(/\s+/).length > 3) {
-//    return ""
-//  }
-//  let badlist = ["IT", "THEY", "THIS", "WHICH", "THESE"]
-//  for (let x of badlist) {
-//    if (name == x) {
-//      return ""
-//    }
-//  }
-//  return name
-//}
+// function identifyActor(name:string, m:Model):string {
+//   name = name.replaceAll(/.*[\.:,]/g, "").trim()
+//   name = name.replaceAll(/^THEN\s+/g, "")
+//   name = name.replaceAll(/^BUT\s+/g, "")
+//   name = name.replaceAll(/^BECAUSE\s+/g, "")
+//   name = name.replaceAll(/^THE\s+/g, "")
+//   name = name.replaceAll(/^SO\s+/g, "")
+//   name = name.replaceAll(/^A\s+/g, "")
+//   name = name.replaceAll(/^AN\s+/g, "")
+//   name = name.replaceAll(/\s+/g, " ").trim()
+//   if (name.split(/\s+/).length > 3) {
+//     return ""
+//   }
+//   let badlist = ["IT", "THEY", "THIS", "WHICH", "THESE"]
+//   for (let x of badlist) {
+//     if (name == x) {
+//       return ""
+//     }
+//   }
+//   return name
+// }
 
 function similarMatch(x: string, y: string): boolean {
   x = x.toUpperCase();

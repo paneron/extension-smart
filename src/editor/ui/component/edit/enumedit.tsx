@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Enum } from '../../../model/model/data/enum';
+import { MMELEnum } from '../../../serialize/interface/datainterface';
 import { IEnum } from '../../interface/datainterface';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { EnumHandler } from '../handle/enumhandler';
@@ -13,7 +13,7 @@ const EnumEditPage: React.FC<{
 }> = ({ modelWrapper, isVisible }) => {
   const [isAdd, setAddMode] = useState(false);
   const [isUpdate, setUpdateMode] = useState(false);
-  const [en, setUpdateEnum] = useState<Enum | null>(null);
+  const [en, setUpdateEnum] = useState<MMELEnum | null>(null);
   const [dummy, setDummy] = useState<boolean>(false);
   const [data, setData] = useState<IEnum>({ id: '', values: [] });
 

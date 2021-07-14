@@ -19,7 +19,7 @@ const MapperInfoPane: React.FC<ModelViewStateMan> = (sm: ModelViewStateMan) => {
       if (s.data instanceof NodeData) {
         const data = MapperFunctions.getObjectByID(sm, s.data.represent);
         if (data != undefined) {
-          return MappingDescribe(data);
+          return MappingDescribe(data as GraphNode);
         }
       }
     }

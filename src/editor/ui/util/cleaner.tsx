@@ -1,30 +1,31 @@
 // centralize all the functions for cleaning up the model when removing something (e.g., process)
 
-import { EventNode } from '../../model/model/event/event';
-import { Approval } from '../../model/model/process/approval';
-import { Process } from '../../model/model/process/process';
 import { functionCollection } from './function';
-import { Gateway } from '../../model/model/gate/gate';
-import { Registry } from '../../model/model/data/registry';
-import { Dataclass } from '../../model/model/data/dataclass';
-import { GraphNode } from '../../model/model/graphnode';
 import {
-  Subprocess,
-  SubprocessComponent,
-} from '../../model/model/flow/subprocess';
+  MMELApproval,
+  MMELProcess,
+} from '../../serialize/interface/processinterface';
+import {
+  MMELGateway,
+  MMELSubprocess,
+  MMELSubprocessComponent,
+} from '../../serialize/interface/flowcontrolinterface';
+import { DataType, MMELNode } from '../../serialize/interface/baseinterface';
+import { isEventNode, isGate } from '../model/modelwrapper';
+import { MMELEventNode } from '../../serialize/interface/eventinterface';
 
 export class Cleaner {
-  static removeProcess(process: Process) {
+  static removeProcess(process: MMELProcess) {
     const sm = functionCollection.getStateMan();
     const state = sm.state;
     const model = state.modelWrapper.model;
 
     const found = Cleaner.removeGraphNode(process);
-    const idreg = model.idreg;
+    const idreg = state.modelWrapper.idman;
     if (!found) {
-      const index = model.hps.indexOf(process);
-      model.hps.splice(index, 1);
-      idreg.ids.delete(process.id);
+      const index = model.processes.indexOf(process);
+      model.processes.splice(index, 1);
+      idreg.nodes.delete(process.id);
       Cleaner.cleanProvisions(process);
     }
     if (process.page != null) {
@@ -33,35 +34,41 @@ export class Cleaner {
     sm.setState({ ...state });
   }
 
-  static killPage(page: Subprocess) {
+  static killPage(page: MMELSubprocess) {
     const sm = functionCollection.getStateMan();
     const state = sm.state;
     const model = state.modelWrapper.model;
-    const idreg = model.idreg;
+    const idreg = state.modelWrapper.idman;
 
-    const childHandle = (c: SubprocessComponent) => {
+    const childHandle = (c: MMELSubprocessComponent) => {
+      const mw = functionCollection.getStateMan().state.modelWrapper;
       if (c.element != null) {
         const x = c.element;
-        x.pages.delete(page);
-        if (!(x instanceof Dataclass || x instanceof Registry)) {
-          if (x.pages.size == 0) {
-            idreg.ids.delete(x.id);
-            if (x instanceof Process) {
-              const index = model.hps.indexOf(x);
-              model.hps.splice(index, 1);
-              Cleaner.cleanProvisions(x);
-              if (x.page != null) {
-                Cleaner.killPage(x.page);
+        const addon = mw.nodeman.get(x);
+        addon.pages.delete(page);
+        if (
+          !(x.datatype == DataType.DATACLASS || x.datatype == DataType.REGISTRY)
+        ) {
+          if (addon.pages.size == 0) {
+            idreg.nodes.delete(x.id);
+            if (x.datatype == DataType.PROCESS) {
+              const process = x as MMELProcess;
+              const index = model.processes.indexOf(process);
+              model.processes.splice(index, 1);
+              Cleaner.cleanProvisions(process);
+              if (process.page != null) {
+                Cleaner.killPage(process.page);
               }
-            } else if (x instanceof Approval) {
-              const index = model.aps.indexOf(x);
-              model.aps.splice(index, 1);
-            } else if (x instanceof EventNode) {
-              const index = model.evs.indexOf(x);
-              model.evs.splice(index, 1);
-            } else if (x instanceof Gateway) {
-              const index = model.gates.indexOf(x);
-              model.gates.splice(index, 1);
+            } else if (x.datatype == DataType.APPROVAL) {
+              const app = x as MMELApproval;
+              const index = model.approvals.indexOf(app);
+              model.approvals.splice(index, 1);
+            } else if (isEventNode(x)) {
+              const index = model.events.indexOf(x);
+              model.events.splice(index, 1);
+            } else if (isGate(x)) {
+              const index = model.gateways.indexOf(x);
+              model.gateways.splice(index, 1);
             }
           }
         }
@@ -75,13 +82,13 @@ export class Cleaner {
     model.pages.splice(index, 1);
   }
 
-  static cleanProvisions(process: Process) {
+  static cleanProvisions(process: MMELProcess) {
     const sm = functionCollection.getStateMan();
     const state = sm.state;
     const model = state.modelWrapper.model;
-    const idreg = model.idreg;
+    const idreg = state.modelWrapper.idman;
     process.provision.map(p => {
-      idreg.reqs.delete(p.id);
+      idreg.provisions.delete(p.id);
       const index = model.provisions.indexOf(p);
       model.provisions.splice(index, 1);
     });
@@ -89,25 +96,25 @@ export class Cleaner {
   }
 
   // return true if the removed node is not the last appearance
-  static removeGraphNode(x: GraphNode): boolean {
+  static removeGraphNode(x: MMELNode): boolean {
     const sm = functionCollection.getStateMan();
     const state = sm.state;
-    const idreg = state.modelWrapper.model.idreg;
+    const idreg = state.modelWrapper.idman;
     const page = sm.state.modelWrapper.page;
 
     page.childs.forEach((c, index) => {
       if (c.element == x) {
         page.childs.splice(index, 1);
-        x.pages.delete(page);
-        page.map.delete(x.id);
+        state.modelWrapper.nodeman.get(x).pages.delete(page);
+        state.modelWrapper.subman.get(page).map.delete(x.id);
       }
     });
 
     page.data.forEach((c, index) => {
       if (c.element == x) {
         page.data.splice(index, 1);
-        x.pages.delete(page);
-        page.map.delete(x.id);
+        state.modelWrapper.nodeman.get(x).pages.delete(page);
+        state.modelWrapper.subman.get(page).map.delete(x.id);
       }
     });
 
@@ -115,60 +122,60 @@ export class Cleaner {
       const e = page.edges[i];
       if (e.from?.element == x || e.to?.element == x) {
         page.edges.splice(i, 1);
-        idreg.edgeids.delete(e.id);
+        idreg.edges.delete(e.id);
         if (e.to?.element == x) {
-          const index = e.from?.child.indexOf(e);
+          const index = state.modelWrapper.comman.get(e.from!).child.indexOf(e);
           if (index != undefined) {
-            e.from?.child.splice(index, 1);
+            state.modelWrapper.comman.get(e.from!).child.splice(index, 1);
           }
         }
       }
     }
 
-    return x.pages.size > 0;
+    return state.modelWrapper.nodeman.get(x).pages.size > 0;
   }
 
-  static removeApproval(a: Approval) {
+  static removeApproval(a: MMELApproval) {
     const sm = functionCollection.getStateMan();
     const state = sm.state;
     const model = state.modelWrapper.model;
 
     const found = Cleaner.removeGraphNode(a);
-    const idreg = model.idreg;
+    const idreg = state.modelWrapper.idman;
     if (!found) {
-      const index = model.aps.indexOf(a);
-      model.aps.splice(index, 1);
-      idreg.ids.delete(a.id);
+      const index = model.approvals.indexOf(a);
+      model.approvals.splice(index, 1);
+      idreg.nodes.delete(a.id);
     }
     sm.setState({ ...state });
   }
 
-  static removeGate(e: Gateway) {
+  static removeGate(e: MMELGateway) {
     const sm = functionCollection.getStateMan();
     const state = sm.state;
     const model = state.modelWrapper.model;
 
     const found = Cleaner.removeGraphNode(e);
-    const idreg = model.idreg;
+    const idreg = state.modelWrapper.idman;
     if (!found) {
-      const index = model.gates.indexOf(e);
-      model.gates.splice(index, 1);
-      idreg.ids.delete(e.id);
+      const index = model.gateways.indexOf(e);
+      model.gateways.splice(index, 1);
+      idreg.nodes.delete(e.id);
     }
     sm.setState({ ...state });
   }
 
-  static removeEvent(e: EventNode) {
+  static removeEvent(e: MMELEventNode) {
     const sm = functionCollection.getStateMan();
     const state = sm.state;
     const model = state.modelWrapper.model;
 
     const found = Cleaner.removeGraphNode(e);
-    const idreg = model.idreg;
+    const idreg = state.modelWrapper.idman;
     if (!found) {
-      const index = model.evs.indexOf(e);
-      model.evs.splice(index, 1);
-      idreg.ids.delete(e.id);
+      const index = model.events.indexOf(e);
+      model.events.splice(index, 1);
+      idreg.nodes.delete(e.id);
     }
     sm.setState({ ...state });
   }
@@ -176,22 +183,18 @@ export class Cleaner {
   static removeEdge(source: string, target: string) {
     const sm = functionCollection.getStateMan();
     const state = sm.state;
-    const model = state.modelWrapper.model;
+    const mw = state.modelWrapper;
     const page = state.modelWrapper.page;
-    const idreg = model.idreg;
+    const idreg = state.modelWrapper.idman;
+    const paddon = mw.subman.get(page);
 
-    const s = page.map.get(source);
-    const t = page.map.get(target);
-    if (
-      s != null &&
-      t != null &&
-      s instanceof SubprocessComponent &&
-      t instanceof SubprocessComponent
-    ) {
+    const s = paddon.map.get(source);
+    const t = paddon.map.get(target);
+    if (s != undefined && t != undefined) {
       page.edges.forEach((e, index) => {
         if (e.from == s && e.to == t) {
           page.edges.splice(index, 1);
-          idreg.edgeids.delete(e.id);
+          idreg.edges.delete(e.id);
           sm.setState({ ...state });
           return;
         }

@@ -5,8 +5,7 @@ import styled from '@emotion/styled';
 import React, { RefObject } from 'react';
 import { AIAgent } from '../../ai/aiagent';
 import { StateMan } from '../interface/state';
-import { ModelWrapper } from '../model/modelwrapper';
-import { MyCloseButtons } from './unit/closebutton';
+import { MyTopRightButtons } from './unit/closebutton';
 
 const modelfile: RefObject<HTMLInputElement> = React.createRef();
 
@@ -16,7 +15,7 @@ const AIPane: React.FC<StateMan> = (sm: StateMan) => {
   const readModelFromFile = (result: string) => {
     console.debug('Transforming XML to model');
     state.history.clear();
-    state.modelWrapper = new ModelWrapper(AIAgent.xmlToModel(result));
+    state.modelWrapper = AIAgent.xmlToModel(result);
     sm.setState(state);
   };
 
@@ -27,7 +26,7 @@ const AIPane: React.FC<StateMan> = (sm: StateMan) => {
 
   return (
     <ControlBar>
-      <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+      <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
 
       <button onClick={() => modelfile.current?.click()}>
         Transform XML to Model

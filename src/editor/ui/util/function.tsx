@@ -1,22 +1,24 @@
-import { Registry } from '../../model/model/data/registry';
-import { SignalCatchEvent } from '../../model/model/event/signalcatchevent';
-import { TimerEvent } from '../../model/model/event/timerevent';
-import { Subprocess } from '../../model/model/flow/subprocess';
-import { EGate } from '../../model/model/gate/egate';
-import { GraphNode } from '../../model/model/graphnode';
-import { Approval } from '../../model/model/process/approval';
-import { Process } from '../../model/model/process/process';
+import { MMELNode } from '../../serialize/interface/baseinterface';
+import { MMELRegistry } from '../../serialize/interface/datainterface';
+import {
+  MMELSignalCatchEvent,
+  MMELTimerEvent,
+} from '../../serialize/interface/eventinterface';
+import {
+  MMELEGate,
+  MMELSubprocess,
+} from '../../serialize/interface/flowcontrolinterface';
+import {
+  MMELApproval,
+  MMELProcess,
+} from '../../serialize/interface/processinterface';
 import { StateMan } from '../interface/state';
 
-function alert(msg: string) {
-  throw new Error(msg);
-}
-
 export class functionCollection {
-  static addPageToHistory = (x: Subprocess, name: string): void => {
+  static addPageToHistory = (x: MMELSubprocess, name: string): void => {
     alert('No implementation');
   };
-  static getObjectByID = (id: string): GraphNode | undefined => {
+  static getObjectByID = (id: string): MMELNode | undefined => {
     alert('No implementation');
     return undefined;
   };
@@ -32,23 +34,23 @@ export class functionCollection {
   static renameLayoutItem = (old: string, name: string): void => {
     alert('No implementation');
   };
-  static viewDataRepository = (x: Registry): void => {
+  static viewDataRepository = (x: MMELRegistry): void => {
     alert('No implementation');
   };
-  static viewEditProcess = (x: Process): void => {
+  static viewEditProcess = (x: MMELProcess): void => {
     alert('No implementation');
   };
-  static viewEditApproval = (x: Approval): void => {
+  static viewEditApproval = (x: MMELApproval): void => {
     alert('No implementation');
   };
   static getStateMan: () => StateMan;
-  static viewEGate = (x: EGate): void => {
+  static viewEGate = (x: MMELEGate): void => {
     alert('No implementation');
   };
-  static viewSignalCatch = (x: SignalCatchEvent): void => {
+  static viewSignalCatch = (x: MMELSignalCatchEvent): void => {
     alert('No implementation');
   };
-  static viewTimer = (x: TimerEvent): void => {
+  static viewTimer = (x: MMELTimerEvent): void => {
     alert('No implementation');
   };
 }

@@ -3,16 +3,12 @@
 
 import React from 'react';
 import { XYPosition } from 'react-flow-renderer';
-import { Dataclass } from '../model/model/data/dataclass';
-import { Registry } from '../model/model/data/registry';
-import { EndEvent } from '../model/model/event/endevent';
-import { SignalCatchEvent } from '../model/model/event/signalcatchevent';
-import { StartEvent } from '../model/model/event/startevent';
-import { TimerEvent } from '../model/model/event/timerevent';
-import { EGate } from '../model/model/gate/egate';
-import { GraphNode } from '../model/model/graphnode';
-import { Approval } from '../model/model/process/approval';
-import { Process } from '../model/model/process/process';
+import { DataType, MMELNode } from '../serialize/interface/baseinterface';
+import { MMELRegistry } from '../serialize/interface/datainterface';
+import {
+  MMELApproval,
+  MMELProcess,
+} from '../serialize/interface/processinterface';
 import { ModelType } from './mapper/model/mapperstate';
 
 export class NodeContainer {
@@ -22,7 +18,7 @@ export class NodeContainer {
   position: XYPosition;
   isHidden = false;
 
-  constructor(x: GraphNode, pos: { x: number; y: number }) {
+  constructor(x: MMELNode, pos: { x: number; y: number }) {
     this.id = x.id;
     this.position = pos;
     this.type = checkType(x);
@@ -30,22 +26,25 @@ export class NodeContainer {
   }
 }
 
-function checkType(x: GraphNode): string {
-  if (x instanceof StartEvent) {
+function checkType(x: MMELNode): string {
+  if (x.datatype == DataType.STARTEVENT) {
     return 'start';
-  } else if (x instanceof EndEvent) {
+  } else if (x.datatype == DataType.ENDEVENT) {
     return 'end';
-  } else if (x instanceof TimerEvent) {
+  } else if (x.datatype == DataType.TIMEREVENT) {
     return 'timer';
-  } else if (x instanceof EGate) {
+  } else if (x.datatype == DataType.EGATE) {
     return 'egate';
-  } else if (x instanceof SignalCatchEvent) {
+  } else if (x.datatype == DataType.SIGNALCATCHEVENT) {
     return 'signalcatch';
-  } else if (x instanceof Process) {
+  } else if (x.datatype == DataType.PROCESS) {
     return 'process';
-  } else if (x instanceof Approval) {
+  } else if (x.datatype == DataType.APPROVAL) {
     return 'approval';
-  } else if (x instanceof Registry || x instanceof Dataclass) {
+  } else if (
+    x.datatype == DataType.REGISTRY ||
+    x.datatype == DataType.DATACLASS
+  ) {
     return 'data';
   }
   return 'default';
@@ -56,15 +55,18 @@ export class NodeData {
   represent: string;
   modelType: ModelType | null;
 
-  constructor(x: GraphNode) {
+  constructor(x: MMELNode) {
     this.represent = x.id;
     this.modelType = null;
-    if (x instanceof Process) {
-      this.label = <> {x.name == '' ? x.id : x.name} </>;
-    } else if (x instanceof Approval) {
-      this.label = <> {x.name == '' ? x.id : x.name} </>;
-    } else if (x instanceof Registry) {
-      this.label = <> {x.title == '' ? x.id : x.title} </>;
+    if (x.datatype == DataType.PROCESS) {
+      const p = x as MMELProcess;
+      this.label = <> {p.name == '' ? p.id : p.name} </>;
+    } else if (x.datatype == DataType.APPROVAL) {
+      const app = x as MMELApproval;
+      this.label = <> {app.name == '' ? app.id : app.name} </>;
+    } else if (x.datatype == DataType.REGISTRY) {
+      const reg = x as MMELRegistry;
+      this.label = <> {reg.title == '' ? reg.id : reg.title} </>;
     } else {
       this.label = <> {extractID(x.id)} </>;
     }

@@ -4,23 +4,18 @@
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
-import { Registry } from '../../model/model/data/registry';
-import { StartEvent } from '../../model/model/event/startevent';
-import {
-  Subprocess,
-  SubprocessComponent,
-} from '../../model/model/flow/subprocess';
-import { Process } from '../../model/model/process/process';
-import { Provision } from '../../model/model/support/provision';
-import { Role } from '../../model/model/support/role';
-import { MODAILITYOPTIONS } from '../../model/util/IDRegistry';
+import { MODAILITYOPTIONS } from '../../runtime/idManager';
+import { MMELFactory } from '../../runtime/modelComponentCreator';
+import { DataType } from '../../serialize/interface/baseinterface';
+import { MMELProcess } from '../../serialize/interface/processinterface';
+import { MMELRole } from '../../serialize/interface/supportinterface';
 import { IProcess, IProvision } from '../interface/datainterface';
 import { StateMan } from '../interface/state';
 import { Cleaner } from '../util/cleaner';
 import { functionCollection } from '../util/function';
 import { MeasureHandler } from './handle/measurecheckhandler';
 import { ProvisionHandler } from './handle/provisionhandler';
-import { MyCloseButtons } from './unit/closebutton';
+import { MyTopRightButtons } from './unit/closebutton';
 import NormalComboBox from './unit/combobox';
 import ItemAddPane from './unit/itemadd';
 import ItemUpdatePane from './unit/itemupdate';
@@ -230,7 +225,7 @@ const EditProcessPage: React.FC<StateMan> = (sm: StateMan) => {
       <DisplayPane
         style={{ display: sm.state.viewprocess != null ? 'inline' : 'none' }}
       >
-        <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+        <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
         {elms}
         <DisplayContainer>
           <div style={{ display: !isAdd && !isUpdate ? 'inline' : 'none' }}>
@@ -275,23 +270,24 @@ const EditProcessPage: React.FC<StateMan> = (sm: StateMan) => {
 
 function save(
   sm: StateMan,
-  oldValue: Process | null,
+  oldValue: MMELProcess | null,
   newValue: IProcess | null
 ) {
   if (oldValue != null && newValue != null) {
     const model = sm.state.modelWrapper.model;
-    const idreg = model.idreg;
+    const idreg = sm.state.modelWrapper.idman;
+    const mw = sm.state.modelWrapper;
     if (oldValue.id != newValue.id) {
       if (newValue.id == '') {
         alert('ID is empty');
         return;
       }
-      if (idreg.ids.has(newValue.id)) {
+      if (idreg.nodes.has(newValue.id)) {
         alert('New ID already exists');
         return;
       }
-      idreg.ids.delete(oldValue.id);
-      idreg.addID(newValue.id, oldValue);
+      idreg.nodes.delete(oldValue.id);
+      idreg.nodes.set(newValue.id, oldValue);
       functionCollection.renameLayoutItem(oldValue.id, newValue.id);
       oldValue.id = newValue.id;
     }
@@ -300,17 +296,17 @@ function save(
     if (newValue.actor == '') {
       oldValue.actor = null;
     } else {
-      const actor = idreg.getObject(newValue.actor);
-      if (actor instanceof Role) {
-        oldValue.actor = actor;
+      const actor = idreg.roles.get(newValue.actor);
+      if (actor?.datatype == DataType.ROLE) {
+        oldValue.actor = actor as MMELRole;
       } else {
         console.error('Role not found: ', newValue.actor);
       }
     }
     oldValue.input = [];
     newValue.input.map(x => {
-      const data = idreg.getObject(x);
-      if (data instanceof Registry) {
+      const data = idreg.regs.get(x);
+      if (data != undefined) {
         oldValue.input.push(data);
       } else {
         console.error('Data not found: ', x);
@@ -318,8 +314,8 @@ function save(
     });
     oldValue.output = [];
     newValue.output.map(x => {
-      const data = idreg.getObject(x);
-      if (data instanceof Registry) {
+      const data = idreg.regs.get(x);
+      if (data != undefined) {
         oldValue.output.push(data);
       } else {
         console.error('Data not found: ', x);
@@ -327,12 +323,12 @@ function save(
     });
     Cleaner.cleanProvisions(oldValue);
     newValue.provision.map(p => {
-      const id = idreg.findUniqueProvisionID('Provision');
-      const pro = new Provision(id, '');
+      const id = idreg.findProvisionID('Provision');
+      const pro = MMELFactory.createProvision(id);
       pro.condition = p.condition;
       pro.modality = p.modality;
       p.ref.map(r => {
-        const ref = idreg.getReference(r);
+        const ref = idreg.refs.get(r);
         if (ref == null) {
           console.error('Reference not found: ', r);
         } else {
@@ -340,7 +336,7 @@ function save(
         }
       });
       model.provisions.push(pro);
-      idreg.addProvision(pro.id, pro);
+      idreg.provisions.set(pro.id, pro);
       oldValue.provision.push(pro);
     });
     oldValue.measure = newValue.measure;
@@ -350,18 +346,18 @@ function save(
       oldValue.page = null;
     } else if (oldValue.page == null && newValue.start) {
       // add subprocess
-      const pg = new Subprocess(idreg.findUniquePageID('Page'), '');
-      const st = new StartEvent(idreg.findUniqueID('Start'), '');
-      const nc = new SubprocessComponent(st.id, '');
-      nc.element = st;
-      idreg.addID(st.id, st);
+      const pg = MMELFactory.createSubprocess(idreg.findUniquePageID('Page'));
+      const st = MMELFactory.createStartEvent(idreg.findUniqueID('Start'));
+      const nc = MMELFactory.createSubprocessComponent(st);
+      idreg.nodes.set(st.id, st);
       pg.childs.push(nc);
-      pg.map.set(st.id, nc);
-      pg.start = nc;
-      model.evs.push(st);
+      const pgaddon = mw.subman.get(pg);
+      pgaddon.map.set(st.id, nc);
+      pgaddon.start = nc;
+      model.events.push(st);
       oldValue.page = pg;
       model.pages.push(pg);
-      idreg.addPage(pg.id, pg);
+      idreg.pages.set(pg.id, pg);
     }
     sm.state.viewprocess = null;
     sm.state.process = null;

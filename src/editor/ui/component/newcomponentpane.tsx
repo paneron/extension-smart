@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import React, { RefObject } from 'react';
 import { StateMan } from '../interface/state';
 import * as shape from '../util/shapes';
-import { MyCloseButtons } from './unit/closebutton';
+import { MyTopRightButtons } from './unit/closebutton';
 
 const ref: RefObject<HTMLSelectElement> = React.createRef();
 
@@ -15,8 +15,10 @@ const NewComponentPane: React.FC<StateMan> = (sm: StateMan) => {
     </option>,
   ];
   const page = state.modelWrapper.page;
-  state.modelWrapper.model.hps.map((p, index) => {
-    if (!page.map.has(p.id)) {
+  const mw = state.modelWrapper;
+  const paddon = mw.subman.get(page);
+  state.modelWrapper.model.processes.map((p, index) => {
+    if (!paddon.map.has(p.id)) {
       elms.push(
         <option key={'option' + index} value={p.id}>
           {p.id}
@@ -40,7 +42,7 @@ const NewComponentPane: React.FC<StateMan> = (sm: StateMan) => {
   return (
     <ComponentBar>
       <Container>
-        <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+        <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
         <Unit onDragStart={event => onDragStart(event, 'process')} draggable>
           {' '}
           {<shape.ProcessBox> Process </shape.ProcessBox>}{' '}

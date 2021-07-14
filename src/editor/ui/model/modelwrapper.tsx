@@ -1,90 +1,84 @@
 import { Elements } from 'react-flow-renderer';
 import { NodeContainer } from '../nodecontainer';
-import { Model } from '../../model/model/model';
-import {
-  Subprocess,
-  SubprocessComponent,
-} from '../../model/model/flow/subprocess';
 import { EdgeContainer } from '../edgecontainer';
-import { Registry } from '../../model/model/data/registry';
-import { Dataclass } from '../../model/model/data/dataclass';
 import { DataLinkContainer } from '../datalinkcontainer';
-import { Process } from '../../model/model/process/process';
-import { Approval } from '../../model/model/process/approval';
-import { StartEvent } from '../../model/model/event/startevent';
 import { ModelType } from '../mapper/model/mapperstate';
 import { MappedType } from '../mapper/component/mappinglegend';
+import { DataType, MMELObject } from '../../serialize/interface/baseinterface';
+import { MMELModel } from '../../serialize/interface/model';
+import { MMELSubprocess } from '../../serialize/interface/flowcontrolinterface';
+import { VisualManager } from '../../runtime/visualManager';
+import { FilterManager } from '../../runtime/filterManager';
+import { IDManager } from '../../runtime/idManager';
+import {
+  MMELDataClass,
+  MMELRegistry,
+} from '../../serialize/interface/datainterface';
+import {
+  MMELApproval,
+  MMELProcess,
+} from '../../serialize/interface/processinterface';
+import { SubprocessManager } from '../../runtime/subprocessManager';
+import { CheckListManager } from '../../runtime/checklistManager';
+import { DataLinkManager } from '../../runtime/datalinkManager';
+import { SubprocessComponentManager } from '../../runtime/componentManager';
+import { MappingManager } from '../mapper/util/mappingmanager';
+import { NodeManager } from '../../runtime/nodeManager';
 
 export class ModelWrapper {
-  model: Model;
-  page: Subprocess;
+  model: MMELModel;
 
-  documents: Map<string, number> = new Map<string, number>();
-  clauses: Array<Set<string>> = [];
+  page: MMELSubprocess;
 
   mapped: Map<string, MappedType> = new Map<string, MappedType>();
 
+  visualman = new VisualManager();
+  filterman = new FilterManager();
+  clman = new CheckListManager();
+  dlman: DataLinkManager;
+  subman: SubprocessManager;
+  idman: IDManager;
+  comman: SubprocessComponentManager;
+  mapman = new MappingManager();
+  nodeman: NodeManager;
+
   lastvisible = true;
 
-  constructor(m: Model) {
+  constructor(m: MMELModel) {
     this.model = m;
-    const idreg = m.idreg;
     if (m.root == null) {
-      const newpage = new Subprocess('root', '');
-      m.pages.push(newpage);
-      const start = new StartEvent(m.idreg.findUniqueID('Start'), '');
-      m.evs.push(start);
-      m.idreg.addID(start.id, start);
-      newpage.start = new SubprocessComponent(start.id, '');
-      newpage.start.element = start;
-      newpage.childs.push(newpage.start);
-      newpage.map.set(start.id, newpage.start);
-      idreg.addPage(newpage.id, newpage);
-      this.page = newpage;
-      m.root = newpage;
+      throw new Error(
+        'Model structure is corrupted. Model does not contain a root'
+      );
     } else {
       this.page = m.root;
     }
-    this.model.reset();
-    this.readDocu();
-  }
-
-  readDocu() {
-    this.documents.clear();
-    this.clauses = [];
-    for (const r of this.model.refs) {
-      if (!this.documents.has(r.document)) {
-        this.documents.set(r.document, this.documents.size);
-        this.clauses.push(new Set<string>());
-      }
-      const x = this.documents.get(r.document);
-      if (x != undefined) {
-        if (!this.clauses[x].has(r.clause)) {
-          this.clauses[x].add(r.clause);
-        }
-      }
-    }
+    this.idman = new IDManager(m);
+    this.subman = new SubprocessManager(m);
+    this.dlman = new DataLinkManager(m, this.idman.dcs);
+    this.comman = new SubprocessComponentManager(m);
+    this.nodeman = new NodeManager(m);
+    this.filterman.readDocu(m.refs);
   }
 
   getReactFlowElementsFrom(
-    page: Subprocess,
     dvisible: boolean,
     clvisible: boolean,
     type?: ModelType
   ): Elements {
-    this.model.reset();
+    this.visualman.reset();
 
     const elms: Elements = [];
-    const datas = new Map<string, Registry | Dataclass>();
+    const datas = new Map<string, MMELRegistry | MMELDataClass>();
 
-    page.childs.forEach(x => {
+    this.page.childs.forEach(x => {
       const y = x.element;
 
       if (y != null) {
-        const exploreDataNode = (r: Registry, incoming: boolean) => {
-          if (!r.isAdded) {
+        const exploreDataNode = (r: MMELRegistry, incoming: boolean) => {
+          if (!this.visualman.has(r)) {
             datas.set(r.id, r);
-            r.isAdded = true;
+            this.visualman.add(r);
             this.exploreData(r, datas, elms, dvisible);
           }
           if (y != null) {
@@ -101,20 +95,22 @@ export class ModelWrapper {
           nn.data.modelType = type;
         }
         elms.push(nn);
-        y.isAdded = true;
+        this.visualman.add(y);
         if (dvisible) {
-          if (y instanceof Process) {
-            y.input.map(r => exploreDataNode(r, true));
-            y.output.map(r => exploreDataNode(r, false));
+          if (y.datatype == DataType.PROCESS) {
+            const process = y as MMELProcess;
+            process.input.map(r => exploreDataNode(r, true));
+            process.output.map(r => exploreDataNode(r, false));
           }
-          if (y instanceof Approval) {
-            y.records.map(r => exploreDataNode(r, false));
+          if (y.datatype == DataType.APPROVAL) {
+            const app = y as MMELApproval;
+            app.records.map(r => exploreDataNode(r, false));
           }
         }
       }
     });
     if (dvisible) {
-      page.data.forEach(e => {
+      this.page.data.forEach(e => {
         if (e.element != null) {
           const x = datas.get(e.element.id);
           if (x != undefined) {
@@ -135,19 +131,20 @@ export class ModelWrapper {
         elms.push(nn);
       });
       datas.forEach(d => {
-        const sc = page.map.get(d.id);
+        const map = this.subman.get(this.page).map;
+        const sc = map.get(d.id);
         if (sc != undefined) {
-          const index = page.data.indexOf(sc);
+          const index = this.page.data.indexOf(sc);
           if (index != -1) {
-            page.data.splice(index, 1);
+            this.page.data.splice(index, 1);
           }
         }
       });
     }
-    page.edges.forEach(e => {
+    this.page.edges.forEach(e => {
       const ec = new EdgeContainer(e);
       if (clvisible) {
-        if (e.isDone) {
+        if (this.clman.getEdgeAddOn(e).isDone) {
           ec.animated = true;
           ec.style = { stroke: 'green' };
         } else {
@@ -161,26 +158,26 @@ export class ModelWrapper {
   }
 
   exploreData(
-    x: Registry,
-    es: Map<string, Registry | Dataclass>,
+    x: MMELRegistry,
+    es: Map<string, MMELRegistry | MMELDataClass>,
     elms: Elements,
     dvisible: boolean
   ) {
     if (x.data != null) {
-      x.data.rdcs.forEach(e => {
-        if (e.mother != null) {
-          const m = e.mother;
-          if (!m.isAdded) {
+      this.dlman.get(x.data).rdcs.forEach(e => {
+        const m = this.dlman.get(e).mother;
+        if (m != null) {
+          if (!this.visualman.has(m)) {
             es.set(m.id, m);
-            m.isAdded = true;
+            this.visualman.add(m);
             this.exploreData(m, es, elms, dvisible);
           }
           const ne = new DataLinkContainer(x, m);
           elms.push(ne);
         } else {
-          if (!e.isAdded) {
+          if (!this.visualman.has(e)) {
             es.set(e.id, e);
-            e.isAdded = true;
+            this.visualman.add(e);
           }
           const ne = new DataLinkContainer(x, e);
           elms.push(ne);
@@ -188,4 +185,31 @@ export class ModelWrapper {
       });
     }
   }
+}
+
+export function isGraphNode(x: MMELObject) {
+  return (
+    x.datatype == DataType.REGISTRY ||
+    x.datatype == DataType.DATACLASS ||
+    x.datatype == DataType.ENDEVENT ||
+    x.datatype == DataType.STARTEVENT ||
+    x.datatype == DataType.SIGNALCATCHEVENT ||
+    x.datatype == DataType.TIMEREVENT ||
+    x.datatype == DataType.EGATE ||
+    x.datatype == DataType.APPROVAL ||
+    x.datatype == DataType.PROCESS
+  );
+}
+
+export function isEventNode(x: MMELObject) {
+  return (
+    x.datatype == DataType.ENDEVENT ||
+    x.datatype == DataType.STARTEVENT ||
+    x.datatype == DataType.SIGNALCATCHEVENT ||
+    x.datatype == DataType.TIMEREVENT
+  );
+}
+
+export function isGate(x: MMELObject) {
+  return x.datatype == DataType.EGATE;
 }

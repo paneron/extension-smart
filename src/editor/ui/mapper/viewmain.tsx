@@ -12,7 +12,6 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 import { ModelWrapper } from '../model/modelwrapper';
 import { PageHistory } from '../model/history';
-import * as factory from '../../model/util/componentFactory';
 import {
   IMapModelState,
   ModelType,
@@ -24,8 +23,9 @@ import MapperPathPane from './component/Pathpane';
 import MapperControlPane from './component/controlpane';
 import MapperInfoPane from './component/MapperInfoPane';
 import { MappingProfile } from './model/MappingProfile';
+import { MMELFactory } from '../../runtime/modelComponentCreator';
 
-const model = factory.createNewModel();
+const model = MMELFactory.createNewModel();
 const modelWrapper = new ModelWrapper(model);
 
 const ModelView: React.FC<{
@@ -143,7 +143,6 @@ const ModelView: React.FC<{
   }
 
   const elms = state.modelWrapper.getReactFlowElementsFrom(
-    state.modelWrapper.page,
     state.datavisible,
     false,
     state.type

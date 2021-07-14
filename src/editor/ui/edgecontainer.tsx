@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react';
 import { ArrowHeadType } from 'react-flow-renderer';
-import { Edge } from '../model/model/flow/edge';
+import { MMELEdge } from '../serialize/interface/flowcontrolinterface';
 
 export class EdgeContainer {
   id: string;
@@ -14,7 +14,7 @@ export class EdgeContainer {
   animated = false;
   style: CSSProperties = { stroke: 'black' };
 
-  constructor(e: Edge) {
+  constructor(e: MMELEdge) {
     this.id = e.id;
     if (e.from != null && e.from.element != null) {
       this.source = e.from.element.id;
@@ -39,9 +39,9 @@ function conditionExtract(l: string): string {
 }
 
 export class EdgeData {
-  represent: Edge;
+  represent: MMELEdge;
 
-  constructor(e: Edge) {
+  constructor(e: MMELEdge) {
     this.represent = e;
   }
 }

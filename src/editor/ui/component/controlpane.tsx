@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
 import React, { ChangeEvent, CSSProperties, RefObject } from 'react';
-import { Model } from '../../model/model/model';
-import * as parser from '../../model/util/parser';
+import { MMELFactory } from '../../runtime/modelComponentCreator';
+import { MMELModel } from '../../serialize/interface/model';
+import { MMELToText, textToMMEL } from '../../serialize/MMEL';
 import { StateMan } from '../interface/state';
 import { ModelWrapper } from '../model/modelwrapper';
 import { functionCollection } from '../util/function';
-import { MyCloseButtons } from './unit/closebutton';
+import { MyTopRightButtons } from './unit/closebutton';
 
 const modelfile: RefObject<HTMLInputElement> = React.createRef();
 const modelfilename: RefObject<HTMLInputElement> = React.createRef();
@@ -20,19 +21,20 @@ const ControlPane: React.FC<StateMan> = (sm: StateMan) => {
   const readModelFromFile = (result: string) => {
     console.debug('Read model from file');
     state.history.clear();
-    state.modelWrapper = new ModelWrapper(parser.parse(result));
+    const model = textToMMEL(result);
+    state.modelWrapper = new ModelWrapper(model);
     sm.setState(state);
   };
 
   const newModel = () => {
     state.history.clear();
-    state.modelWrapper = new ModelWrapper(new Model());
+    state.modelWrapper = new ModelWrapper(MMELFactory.createNewModel());
     sm.setState(state);
   };
 
   const exportModel = (fn: string | undefined): void => {
     functionCollection.saveLayout();
-    const blob = new Blob([state.modelWrapper.model.toModel()], {
+    const blob = new Blob([MMELToText(state.modelWrapper.model)], {
       type: 'text/plain',
     });
     const url = window.URL.createObjectURL(blob);
@@ -47,9 +49,43 @@ const ControlPane: React.FC<StateMan> = (sm: StateMan) => {
     sm.setState(state);
   };
 
+  const exportJSON = (fn: string | undefined) => {
+    functionCollection.saveLayout();
+    const blob = new Blob([MMELToJSON(state.modelWrapper.model)], {
+      type: 'text/plain',
+    });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    if (fn == null) {
+      fn = 'default.json';
+    } else {
+      fn = fn.replaceAll('.mmel', '.json');
+    }
+    a.download = fn;
+    a.click();
+  };
+
+  const exportXML = (fn: string | undefined) => {
+    functionCollection.saveLayout();
+    const blob = new Blob([MMELToXML(state.modelWrapper.model)], {
+      type: 'text/plain',
+    });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    if (fn == null) {
+      fn = 'default.xml';
+    } else {
+      fn = fn.replaceAll('.mmel', '.xml');
+    }
+    a.download = fn;
+    a.click();
+  };
+
   return (
     <ControlBar style={css}>
-      <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+      <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
 
       <button onClick={() => modelfile.current?.click()}>Load Model</button>
       <button onClick={() => exportModel(modelfilename.current?.value)}>
@@ -73,6 +109,14 @@ const ControlPane: React.FC<StateMan> = (sm: StateMan) => {
         style={{ display: 'none' }}
       />
       <button onClick={() => newModel()}>New Model</button>
+      <button onClick={() => exportJSON(modelfilename.current?.value)}>
+        {' '}
+        Export to JSON{' '}
+      </button>
+      <button onClick={() => exportXML(modelfilename.current?.value)}>
+        {' '}
+        Export to XML{' '}
+      </button>
     </ControlBar>
   );
 };
@@ -108,3 +152,81 @@ function modelFileSelected(
 }
 
 export default ControlPane;
+
+function MMELToJSON(m: MMELModel): string {
+  return JSON.stringify(m);
+}
+
+function MMELToXML(m: MMELModel): string {
+  let out = '<mmel>';
+  const visited = new Set<Object>();
+  out += `<meta>${ObjectToXML(m.meta, visited)}</meta>`;
+  out += getXMLElementFromArray('role', m.roles, visited);
+  out += getXMLElementFromArray('reference', m.refs, visited);
+  out += getXMLElementFromArray('event', m.events, visited);
+  out += getXMLElementFromArray('gateway', m.gateways, visited);
+  out += getXMLElementFromArray('enum', m.enums, visited);
+  out += getXMLElementFromArray('dataclass', m.dataclasses, visited);
+  out += getXMLElementFromArray('registry', m.regs, visited);
+  out += getXMLElementFromArray('measurement', m.vars, visited);
+  out += getXMLElementFromArray('approval', m.approvals, visited);
+  out += getXMLElementFromArray('provision', m.provisions, visited);
+  out += getXMLElementFromArray('process', m.processes, visited);
+  out += getXMLElementFromArray('subprocess', m.pages, visited);
+  if (m.root != null) {
+    out += `<root>${ObjectToXML(m.root, visited)}</root>`;
+  }
+  out += '</mmel>';
+  return out;
+}
+
+function ObjectToXML(x: Object, visited: Set<Object>): string {
+  if (visited.has(x)) {
+    const entries = Object.entries(x);
+    for (const [k, o] of entries) {
+      if (k == 'id') {
+        return o;
+      }
+    }
+    return 'null';
+  }
+  visited.add(x);
+  const entries = Object.entries(x);
+  let out = '';
+  for (const [k, o] of entries) {
+    if (Array.isArray(o)) {
+      getXMLElementFromArray(k, o, visited);
+    } else {
+      let content: string;
+      if (o == null) {
+        content = 'null';
+      } else if (typeof o === 'object') {
+        content = ObjectToXML(o, visited);
+      } else {
+        content = o;
+      }
+      out += `<${k}>\n${content}\n</${k}>\n`;
+    }
+  }
+  return out;
+}
+
+function getXMLElementFromArray(
+  tag: string,
+  array: Array<Object>,
+  visited: Set<Object>
+) {
+  let out = '';
+  for (const y of array) {
+    let content: string;
+    if (y == null) {
+      content = 'null';
+    } else if (typeof y === 'object') {
+      content = ObjectToXML(y, visited);
+    } else {
+      content = y;
+    }
+    out += `<${tag}>\n${content}\n</${tag}>\n`;
+  }
+  return out;
+}

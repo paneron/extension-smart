@@ -1,11 +1,11 @@
-import { Edge } from '../../../model/model/flow/edge';
+import { VarType } from '../../../runtime/idManager';
+import { DataType } from '../../../serialize/interface/baseinterface';
 import {
-  Subprocess,
-  SubprocessComponent,
-} from '../../../model/model/flow/subprocess';
-import { EGate } from '../../../model/model/gate/egate';
-import { VarType } from '../../../model/model/measure/variable';
-import { Process } from '../../../model/model/process/process';
+  MMELEdge,
+  MMELSubprocess,
+  MMELSubprocessComponent,
+} from '../../../serialize/interface/flowcontrolinterface';
+import { MMELProcess } from '../../../serialize/interface/processinterface';
 import { functionCollection } from '../../util/function';
 import { ComparisonsOperators } from './ComparisonOperators';
 import {
@@ -29,14 +29,18 @@ export enum MeasureRType {
 
 export class MeasureChecker {
   static markResult(
-    input: Set<SubprocessComponent>,
-    choice: Map<SubprocessComponent, SubprocessComponent>
+    input: Set<MMELSubprocessComponent>,
+    choice: Map<MMELSubprocessComponent, MMELSubprocessComponent>
   ): Map<string, MeasureRType> {
     const result = new Map<string, MeasureRType>();
     const sm = functionCollection.getStateMan();
+    const mw = sm.state.modelWrapper;
     const model = sm.state.modelWrapper.model;
-    if (model.root != null && model.root.start != null) {
-      markNode(model.root.start, model.root, input, result, choice);
+    if (model.root != null) {
+      const start = mw.subman.get(model.root).start;
+      if (start != null) {
+        markNode(start, model.root, input, result, choice);
+      }
     }
     return result;
   }
@@ -86,17 +90,27 @@ export class MeasureChecker {
 
   static examineModel(
     values: Map<string, MTreeNode>
-  ): [Set<SubprocessComponent>, Map<SubprocessComponent, SubprocessComponent>] {
+  ): [
+    Set<MMELSubprocessComponent>,
+    Map<MMELSubprocessComponent, MMELSubprocessComponent>
+  ] {
     const sm = functionCollection.getStateMan();
+    const mw = sm.state.modelWrapper;
     const model = sm.state.modelWrapper.model;
-    const visited = new Map<SubprocessComponent, Boolean>();
-    const pathchoice = new Map<SubprocessComponent, SubprocessComponent>();
-    const dead = new Set<SubprocessComponent>();
-    if (model.root != null && model.root.start != null) {
-      if (verifyNode(model.root.start, values, visited, dead, pathchoice)) {
-        alert('Measurement test passed');
-      } else {
-        alert('Measurement test failed');
+    const visited = new Map<MMELSubprocessComponent, Boolean>();
+    const pathchoice = new Map<
+      MMELSubprocessComponent,
+      MMELSubprocessComponent
+    >();
+    const dead = new Set<MMELSubprocessComponent>();
+    if (model.root != null) {
+      const start = mw.subman.get(model.root).start;
+      if (start != null) {
+        if (verifyNode(start, values, visited, dead, pathchoice)) {
+          alert('Measurement test passed');
+        } else {
+          alert('Measurement test failed');
+        }
       }
     }
     return [dead, pathchoice];
@@ -104,12 +118,13 @@ export class MeasureChecker {
 }
 
 function markNode(
-  x: SubprocessComponent,
-  page: Subprocess,
-  dead: Set<SubprocessComponent>,
+  x: MMELSubprocessComponent,
+  page: MMELSubprocess,
+  dead: Set<MMELSubprocessComponent>,
   result: Map<string, MeasureRType>,
-  choice: Map<SubprocessComponent, SubprocessComponent>
+  choice: Map<MMELSubprocessComponent, MMELSubprocessComponent>
 ): boolean {
+  const mw = functionCollection.getStateMan().state.modelWrapper;
   let ret = true;
   if (x.element != null) {
     const id = page.id + ' ' + x.element.id;
@@ -118,21 +133,24 @@ function markNode(
         result.set(id, MeasureRType.ERRORSOURCE);
         return false;
       }
-      if (x.element instanceof Process) {
-        const p = x.element;
-        if (p.page != null && p.page.start != null) {
-          if (!markNode(p.page.start, p.page, dead, result, choice)) {
-            result.set(id, MeasureRType.CONTAINERROR);
-            return false;
+      if (x.element.datatype == DataType.PROCESS) {
+        const p = x.element as MMELProcess;
+        if (p.page != null) {
+          const start = mw.subman.get(p.page).start;
+          if (start != null) {
+            if (!markNode(start, p.page, dead, result, choice)) {
+              result.set(id, MeasureRType.CONTAINERROR);
+              return false;
+            }
           }
         }
       }
       result.set(id, MeasureRType.OK);
-      if (x.element instanceof EGate) {
+      if (x.element.datatype == DataType.EGATE) {
         const go = choice.get(x);
         if (go == undefined) {
           ret = false;
-          for (const c of x.child) {
+          for (const c of mw.comman.get(x).child) {
             if (c.to != null) {
               const x = markNode(c.to, page, dead, result, choice);
               ret = x || ret;
@@ -143,7 +161,7 @@ function markNode(
           ret = markNode(go, page, dead, result, choice);
         }
       } else {
-        for (const c of x.child) {
+        for (const c of mw.comman.get(x).child) {
           if (c.to != null) {
             const x = markNode(c.to, page, dead, result, choice);
             ret = ret && x;
@@ -163,40 +181,45 @@ function markNode(
 }
 
 function verifyNode(
-  x: SubprocessComponent,
+  x: MMELSubprocessComponent,
   values: Map<string, MTreeNode>,
-  visited: Map<SubprocessComponent, Boolean>,
-  dead: Set<SubprocessComponent>,
-  choice: Map<SubprocessComponent, SubprocessComponent>
+  visited: Map<MMELSubprocessComponent, Boolean>,
+  dead: Set<MMELSubprocessComponent>,
+  choice: Map<MMELSubprocessComponent, MMELSubprocessComponent>
 ): Boolean {
+  const mw = functionCollection.getStateMan().state.modelWrapper;
   const y = visited.get(x);
   if (y != undefined) {
     return y;
   }
   let result: Boolean = true;
   visited.set(x, result);
-  if (x.element instanceof Process) {
-    const p = x.element;
+  if (x.element?.datatype == DataType.PROCESS) {
+    const p = x.element as MMELProcess;
     p.measure.map(m => {
       if (!validateCondition(m, values)) {
         dead.add(x);
         result = false;
       }
     });
-    if (p.page != null && p.page.start != null) {
-      result = verifyNode(p.page.start, values, visited, dead, choice);
+    if (p.page != null) {
+      const start = mw.subman.get(p.page).start;
+      if (start != null) {
+        result = verifyNode(start, values, visited, dead, choice);
+      }
     }
   }
-  if (x.element instanceof EGate) {
-    let alldefined = x.child.length > 0;
-    for (const c of x.child) {
+  if (x.element?.datatype == DataType.EGATE) {
+    const addon = mw.comman.get(x);
+    let alldefined = addon.child.length > 0;
+    for (const c of addon.child) {
       if (c.condition == '') {
         alldefined = false;
       }
     }
     if (!alldefined) {
-      result = x.child.length == 0;
-      for (const c of x.child) {
+      result = addon.child.length == 0;
+      for (const c of addon.child) {
         if (c.to != null) {
           if (verifyNode(c.to, values, visited, dead, choice)) {
             result = true;
@@ -210,7 +233,8 @@ function verifyNode(
       result = verifyNode(go, values, visited, dead, choice);
     }
   } else {
-    for (const c of x.child) {
+    const addon = mw.comman.get(x);
+    for (const c of addon.child) {
       if (c.to != null) {
         if (!verifyNode(c.to, values, visited, dead, choice)) {
           result = false;
@@ -284,16 +308,18 @@ function validateCondition(
 }
 
 function findNext(
-  x: SubprocessComponent,
+  x: MMELSubprocessComponent,
   values: Map<string, MTreeNode>
-): SubprocessComponent {
-  let go: Edge = x.child[0];
-  for (const c of x.child) {
+): MMELSubprocessComponent {
+  const mw = functionCollection.getStateMan().state.modelWrapper;
+  const addon = mw.comman.get(x);
+  let go: MMELEdge = addon.child[0];
+  for (const c of addon.child) {
     if (c.condition == 'default') {
       go = c;
     }
   }
-  for (const c of x.child) {
+  for (const c of addon.child) {
     if (c.condition != 'default') {
       if (validateCondition(c.condition, values)) {
         go = c;

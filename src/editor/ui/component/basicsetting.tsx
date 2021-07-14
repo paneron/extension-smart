@@ -5,7 +5,7 @@ import RegistryEditPage from './edit/registryedit';
 import MetaEditPage from './edit/metaedit';
 import RefEditPage from './edit/refedit';
 import RoleEditPage from './edit/roleedit';
-import { MyCloseButtons } from './unit/closebutton';
+import { MyTopRightButtons } from './unit/closebutton';
 import DataEditPage from './edit/dataedit';
 import EnumEditPage from './edit/enumedit';
 import VarEditPage from './edit/varedit';
@@ -42,7 +42,7 @@ const BasicSettingPane: React.FC<StateMan> = (sm: StateMan) => {
 
   return (
     <DisplayPane>
-      <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+      <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
       <div className="tab">
         <button
           onClick={() => setPage(SETTINGPAGE.METAPAGE)}

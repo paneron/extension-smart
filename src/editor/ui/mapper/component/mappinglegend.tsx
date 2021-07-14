@@ -5,9 +5,9 @@ import styled from '@emotion/styled';
 import React, { CSSProperties } from 'react';
 
 export enum MappedType {
-  Exact,
-  Component,
-  None,
+  FULL = 2,
+  PARTIAL = 1,
+  None = 0,
 }
 
 const Legend: React.FC<{ color: string; text: string }> = ({ color, text }) => {
@@ -27,10 +27,10 @@ const Legend: React.FC<{ color: string; text: string }> = ({ color, text }) => {
 };
 
 export function getMapResultColor(x: MappedType): string {
-  if (x == MappedType.Exact) {
+  if (x == MappedType.FULL) {
     return 'lightgreen';
   }
-  if (x == MappedType.Component) {
+  if (x == MappedType.PARTIAL) {
     return 'lightyellow';
   }
   // not match
@@ -47,10 +47,9 @@ const LegendLabel = styled.div`
 `;
 
 const MappingLegendPane: React.FC = () => {
-  const legs = [MappedType.Exact, MappedType.Component, MappedType.None];
+  const legs = [MappedType.FULL, MappedType.PARTIAL, MappedType.None];
   const desc = ['Fully mapped', 'Partially mapped', 'Not mapped'];
   const elms: Array<JSX.Element> = [];
-
   for (let i = 0; i < legs.length; i++) {
     elms.push(
       <Legend

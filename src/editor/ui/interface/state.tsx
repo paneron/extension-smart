@@ -1,12 +1,4 @@
-import { OnLoadParams } from 'react-flow-renderer';
-import { Registry } from '../../model/model/data/registry';
-import { SignalCatchEvent } from '../../model/model/event/signalcatchevent';
-import { TimerEvent } from '../../model/model/event/timerevent';
-import { SubprocessComponent } from '../../model/model/flow/subprocess';
-import { EGate } from '../../model/model/gate/egate';
-import { Model } from '../../model/model/model';
-import { Approval } from '../../model/model/process/approval';
-import { Process } from '../../model/model/process/process';
+import { OnLoadParams, XYPosition } from 'react-flow-renderer';
 import { DocumentStore } from '../../repository/document';
 import NormalEdge from '../component/unit/normaledge';
 import SelfLoopEdge from '../component/unit/selfloopedge';
@@ -21,6 +13,21 @@ import {
   ITimer,
 } from './datainterface';
 import * as deco from '../util/decorator';
+import { MMELModel } from '../../serialize/interface/model';
+import { MMELRegistry } from '../../serialize/interface/datainterface';
+import {
+  MMELEGate,
+  MMELSubprocessComponent,
+} from '../../serialize/interface/flowcontrolinterface';
+import {
+  MMELSignalCatchEvent,
+  MMELTimerEvent,
+} from '../../serialize/interface/eventinterface';
+import {
+  MMELApproval,
+  MMELProcess,
+} from '../../serialize/interface/processinterface';
+import { MMELNode } from '../../serialize/interface/baseinterface';
 
 export interface IState {
   cvisible: boolean; // visibility of the control panel
@@ -34,28 +41,30 @@ export interface IState {
   edgeDeleteVisible: boolean; // visibility of the remove edge buttons
   onepage: boolean; // visitibility of the one-page checklist
   measureVisible: boolean; // visibility of the measurement checking page
+  searchvisible: boolean; // visibility of the search mechanism
   history: PageHistory;
   modelWrapper: ModelWrapper;
   rfInstance: OnLoadParams | null;
-  datarepo: Registry | null; // whether the data repository view is on and which registry is specified
+  datarepo: MMELRegistry | null; // whether the data repository view is on and which registry is specified
   datastore: DocumentStore;
   viewprocess: IProcess | null;
-  process: Process | null; // process to be edited
+  process: MMELProcess | null; // process to be edited
   viewapproval: IApproval | null;
-  approval: Approval | null; // approval to be edited
+  approval: MMELApproval | null; // approval to be edited
   viewTimer: ITimer | null;
-  timer: TimerEvent | null; // Timer to be edited
+  timer: MMELTimerEvent | null; // Timer to be edited
   viewSignalEvent: ISignalCatchEvent | null;
-  scEvent: SignalCatchEvent | null; // Signal Catch Event to be edited
+  scEvent: MMELSignalCatchEvent | null; // Signal Catch Event to be edited
   viewEGate: IEGate | null;
-  eGate: EGate | null; // Exclusive Gateway to be edited
+  eGate: MMELEGate | null; // Exclusive Gateway to be edited
   addingexisting: string;
-  simulation: SubprocessComponent | null;
-  imodel: Model;
+  simulation: MMELSubprocessComponent | null;
+  imodel: MMELModel;
   namespace: string;
   importing: string;
   mtestResult: Map<string, MeasureRType> | null; // the result of the measurement test
   mtestValues: Map<string, string>; // measurement data
+  highlight: MMELNode | null;
 }
 
 export interface StateMan {

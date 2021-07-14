@@ -1,19 +1,18 @@
 import React from 'react';
 import { isNode } from 'react-flow-renderer';
-import { Dataclass } from '../../../model/model/data/dataclass';
-import { Registry } from '../../../model/model/data/registry';
+import { MMELFactory } from '../../../runtime/modelComponentCreator';
+import { DataType, MMELNode } from '../../../serialize/interface/baseinterface';
 import {
-  Subprocess,
-  SubprocessComponent,
-} from '../../../model/model/flow/subprocess';
-import { EGate } from '../../../model/model/gate/egate';
-import { GraphNode } from '../../../model/model/graphnode';
-import { MapProfile } from '../../../model/model/mapping/profile';
-import { Process } from '../../../model/model/process/process';
+  MMELSubprocess,
+  MMELSubprocessComponent,
+} from '../../../serialize/interface/flowcontrolinterface';
+import { MMELProcess } from '../../../serialize/interface/processinterface';
+import { isGraphNode } from '../../model/modelwrapper';
 import { NodeData } from '../../nodecontainer';
 import { MappedType } from '../component/mappinglegend';
 import { ModelType, ModelViewStateMan } from '../model/mapperstate';
 import { MappingProfile } from '../model/MappingProfile';
+import { MapProfile } from '../model/profile';
 
 export class MapperFunctions {
   static getRefStateMan: () => ModelViewStateMan;
@@ -38,28 +37,31 @@ export class MapperFunctions {
       instance.getElements().forEach(x => {
         const data = x.data;
         const page = mw.page;
-        const idreg = mw.model.idreg;
+        const idreg = mw.idman;
         if (isNode(x) && data instanceof NodeData) {
-          const gn = page.map.get(data.represent);
+          const gn = mw.subman.get(page).map.get(data.represent);
           if (gn != null) {
             gn.x = x.position.x;
             gn.y = x.position.y;
           } else {
-            const obj = idreg.ids.get(data.represent);
+            const obj = idreg.nodes.get(data.represent);
             if (obj != undefined) {
-              const nc = new SubprocessComponent(data.represent, '');
-              if (obj instanceof Dataclass || obj instanceof Registry) {
+              const nc = MMELFactory.createSubprocessComponent(obj);
+              if (
+                obj.datatype == DataType.DATACLASS ||
+                obj.datatype == DataType.REGISTRY
+              ) {
                 page.data.push(nc);
-                nc.element = obj;
+                nc.element = obj as MMELNode;
                 nc.x = x.position.x;
                 nc.y = x.position.y;
-                page.map.set(data.represent, nc);
-              } else if (obj instanceof GraphNode) {
+                mw.subman.get(page).map.set(data.represent, nc);
+              } else if (isGraphNode(obj)) {
                 page.childs.push(nc);
-                nc.element = obj;
+                nc.element = obj as MMELNode;
                 nc.x = x.position.x;
                 nc.y = x.position.y;
-                page.map.set(data.represent, nc);
+                mw.subman.get(page).map.set(data.represent, nc);
               }
             }
           }
@@ -69,10 +71,10 @@ export class MapperFunctions {
   }
 
   static getObjectByID(sm: ModelViewStateMan, id: string) {
-    const idreg = sm.state.modelWrapper.model.idreg;
-    if (idreg.ids.has(id)) {
-      const ret = idreg.ids.get(id);
-      if (ret instanceof GraphNode) {
+    const idreg = sm.state.modelWrapper.idman;
+    if (idreg.nodes.has(id)) {
+      const ret = idreg.nodes.get(id);
+      if (ret != undefined && isGraphNode(ret)) {
         return ret;
       }
     }
@@ -81,7 +83,7 @@ export class MapperFunctions {
 
   static addPageToHistory = (
     sm: ModelViewStateMan,
-    x: Subprocess,
+    x: MMELSubprocess,
     name: string
   ) => {
     const state = sm.state;
@@ -96,11 +98,11 @@ export class MapperFunctions {
     const state = MapperFunctions.getStateMan(ModelType.ImplementationModel);
     const refmodel = MapperFunctions.getStateMan(ModelType.ReferenceModel).state
       .modelWrapper.model;
-    const model = state.state.modelWrapper.model;
+    const mw = state.state.modelWrapper;
     if (refmodel.meta.namespace == '') {
       alert('Reference model does not have a non-empty namespace');
     } else {
-      model.maps.addMapping(refmodel.meta.namespace, fromid, toid);
+      mw.mapman.addMapping(refmodel.meta.namespace, fromid, toid);
     }
     MapperFunctions.reCalculateMapped();
   }
@@ -111,7 +113,7 @@ export class MapperFunctions {
     const mw = state.modelWrapper;
     elms.clear();
     for (const c of mw.page.childs) {
-      if (c.element != null && c.element instanceof Process) {
+      if (c.element?.datatype == DataType.PROCESS) {
         const id = c.element.id;
         elms.set(id, new MappingProfile(React.createRef<HTMLDivElement>()));
       }
@@ -121,7 +123,7 @@ export class MapperFunctions {
 
   static removeMapping(ns: string, source: string, target: string): void {
     const sm = MapperFunctions.getStateMan(ModelType.ImplementationModel);
-    sm.state.modelWrapper.model.maps.removeMapping(ns, source, target);
+    sm.state.modelWrapper.mapman.removeMapping(ns, source, target);
     sm.setState({ ...sm.state });
     MapperFunctions.reCalculateMapped();
     MapperFunctions.updateMap();
@@ -129,13 +131,13 @@ export class MapperFunctions {
 
   static reCalculateMapped() {
     const mapping = MapperFunctions.getStateMan(ModelType.ImplementationModel)
-      .state.modelWrapper.model.maps;
+      .state.modelWrapper.mapman;
     const mw = MapperFunctions.getStateMan(ModelType.ReferenceModel).state
       .modelWrapper;
     mw.mapped.clear();
-    const visited = new Set<SubprocessComponent>();
-    const map = mapping.profiles.get(mw.model.meta.namespace);
-    if (map != undefined && mw.model.root != null) {
+    const visited = new Set<MMELSubprocessComponent>();
+    const map = mapping.getMapping(mw.model.meta.namespace);
+    if (mw.model.root != null) {
       for (const c of mw.model.root.childs) {
         explore(c, mw.mapped, map, visited);
       }
@@ -144,47 +146,42 @@ export class MapperFunctions {
 }
 
 function explore(
-  c: SubprocessComponent,
+  c: MMELSubprocessComponent,
   mapped: Map<string, MappedType>,
   data: MapProfile,
-  visited: Set<SubprocessComponent>
-): boolean {
+  visited: Set<MMELSubprocessComponent>
+): MappedType | null {
+  const mw = MapperFunctions.getStateMan(ModelType.ReferenceModel).state
+    .modelWrapper;
   if (visited.has(c)) {
-    if (c.element instanceof Process) {
+    if (c.element?.datatype == DataType.PROCESS) {
       const result = mapped.get(c.element.id);
       if (result != undefined) {
-        return result != MappedType.None;
+        return result;
       }
     }
-    return true;
+    return null;
   }
   visited.add(c);
-  let result = MappedType.Exact;
-  let ret = false;
+  let result: MappedType | null;
   if (c.element != null) {
-    if (c.element instanceof Process) {
-      const pid = c.element.id;
+    if (c.element.datatype == DataType.PROCESS) {
+      const process = c.element as MMELProcess;
+      const pid = process.id;
       const record = mapped.get(pid);
       if (record == undefined) {
         result = MappedType.None;
         const froms = data.tos.get(pid);
         if (froms != undefined && froms.size > 0) {
-          result = MappedType.Exact;
-        } else if (c.element.page != null && c.element.page.start != null) {
-          const r = explore(c.element.page.start, mapped, data, visited);
-          if (r) {
-            result = MappedType.Exact;
-          } else {
-            for (const x of c.element.page.childs) {
-              if (x.element != null && x.element instanceof Process) {
-                const re = mapped.get(x.element.id);
-                if (re != undefined) {
-                  if (re != MappedType.None) {
-                    result = MappedType.Component;
-                    break;
-                  }
-                }
-              }
+          result = MappedType.FULL;
+        } else if (process.page != null) {
+          const paddon = mw.subman.get(process.page);
+          if (paddon.start != null) {
+            const r = explore(paddon.start, mapped, data, visited);
+            if (r == null) {
+              result = MappedType.None;
+            } else {
+              result = r;
             }
           }
         }
@@ -192,30 +189,57 @@ function explore(
       } else {
         result = record;
       }
+    } else {
+      result = null;
     }
 
-    if (c.element instanceof EGate) {
-      ret = false;
-      for (const x of c.child) {
+    if (c.element.datatype == DataType.EGATE) {
+      result = MappedType.None;
+      for (const x of mw.comman.get(c).child) {
         if (x.to != null) {
           const r = explore(x.to, mapped, data, visited);
-          if (r) {
-            ret = true;
+          if (r != null && r > result) {
+            result = r;
           }
         }
       }
     } else {
-      ret = result != MappedType.None;
-      for (const x of c.child) {
+      let good = false;
+      let bad = false;
+      if (c.element.datatype == DataType.PROCESS) {
+        if (result == MappedType.PARTIAL) {
+          good = true;
+          bad = true;
+        } else if (result == MappedType.None) {
+          bad = true;
+        } else if (result == MappedType.FULL) {
+          good = true;
+        }
+      }
+      for (const x of mw.comman.get(c).child) {
         if (x.to != null) {
           const r = explore(x.to, mapped, data, visited);
-          if (!r) {
-            ret = false;
+          if (r == MappedType.PARTIAL) {
+            good = true;
+            bad = true;
+          } else if (r == MappedType.None) {
+            bad = true;
+          } else if (r == MappedType.FULL) {
+            good = true;
           }
+        }
+        if (good && bad) {
+          result = MappedType.PARTIAL;
+        } else if (good) {
+          result = MappedType.FULL;
+        } else if (bad) {
+          result = MappedType.None;
+        } else {
+          result = null;
         }
       }
     }
-    return ret;
+    return result;
   }
-  return false;
+  return null;
 }

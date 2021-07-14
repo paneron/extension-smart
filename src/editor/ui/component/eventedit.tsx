@@ -1,13 +1,15 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { SignalCatchEvent } from '../../model/model/event/signalcatchevent';
-import { TimerEvent } from '../../model/model/event/timerevent';
-import { GraphNode } from '../../model/model/graphnode';
-import { TimerType } from '../../model/util/IDRegistry';
+import { TimerType } from '../../runtime/idManager';
+import { MMELNode } from '../../serialize/interface/baseinterface';
+import {
+  MMELSignalCatchEvent,
+  MMELTimerEvent,
+} from '../../serialize/interface/eventinterface';
 import { ISignalCatchEvent, ITimer } from '../interface/datainterface';
 import { StateMan } from '../interface/state';
 import { functionCollection } from '../util/function';
-import { MyCloseButtons } from './unit/closebutton';
+import { MyTopRightButtons } from './unit/closebutton';
 import NormalComboBox from './unit/combobox';
 import { ReferenceSelector } from './unit/referenceselect';
 import NormalTextField from './unit/textfield';
@@ -72,7 +74,7 @@ export const EditTimerPage: React.FC<StateMan> = (sm: StateMan) => {
       <DisplayPane
         style={{ display: sm.state.viewTimer != null ? 'inline' : 'none' }}
       >
-        <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+        <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
         {elms}
         <div>
           <button
@@ -157,7 +159,7 @@ export const EditSCEventPage: React.FC<StateMan> = (sm: StateMan) => {
           display: sm.state.viewSignalEvent != null ? 'inline' : 'none',
         }}
       >
-        <MyCloseButtons onClick={() => close()}>X</MyCloseButtons>
+        <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
         {elms}
         <div>
           <button
@@ -180,7 +182,7 @@ export const EditSCEventPage: React.FC<StateMan> = (sm: StateMan) => {
 
 function saveTimer(
   sm: StateMan,
-  oldValue: TimerEvent | null,
+  oldValue: MMELTimerEvent | null,
   newValue: ITimer | null
 ) {
   if (oldValue != null && newValue != null) {
@@ -196,7 +198,7 @@ function saveTimer(
 
 function saveSCEvent(
   sm: StateMan,
-  oldValue: SignalCatchEvent | null,
+  oldValue: MMELSignalCatchEvent | null,
   newValue: ISignalCatchEvent | null
 ) {
   if (oldValue != null && newValue != null) {
@@ -211,21 +213,21 @@ function saveSCEvent(
 
 function commonUpdate(
   sm: StateMan,
-  oldValue: GraphNode,
+  oldValue: MMELNode,
   newID: string
 ): boolean {
-  const idreg = sm.state.modelWrapper.model.idreg;
+  const idreg = sm.state.modelWrapper.idman;
   if (oldValue.id != newID) {
     if (newID == '') {
       alert('ID is empty');
       return false;
     }
-    if (idreg.ids.has(newID)) {
+    if (idreg.nodes.has(newID)) {
       alert('New ID already exists');
       return false;
     }
-    idreg.ids.delete(oldValue.id);
-    idreg.addID(newID, oldValue);
+    idreg.nodes.delete(oldValue.id);
+    idreg.nodes.set(newID, oldValue);
     functionCollection.renameLayoutItem(oldValue.id, newID);
     oldValue.id = newID;
   }

@@ -1,8 +1,6 @@
 import { CSSProperties } from 'react';
 import { ArrowHeadType } from 'react-flow-renderer';
-import { Dataclass } from '../model/model/data/dataclass';
-import { Registry } from '../model/model/data/registry';
-import { GraphNode } from '../model/model/graphnode';
+import { DataType, MMELNode } from '../serialize/interface/baseinterface';
 
 export class DataLinkContainer {
   id: string;
@@ -15,7 +13,7 @@ export class DataLinkContainer {
   style: CSSProperties = {};
   isHidden = false;
 
-  constructor(s: GraphNode, t: GraphNode) {
+  constructor(s: MMELNode, t: MMELNode) {
     this.id = s.id + '#datato#' + t.id;
     this.source = s.id;
     this.target = t.id;
@@ -25,6 +23,6 @@ export class DataLinkContainer {
   }
 }
 
-function isData(x: GraphNode): boolean {
-  return x instanceof Registry || x instanceof Dataclass;
+function isData(x: MMELNode): boolean {
+  return x.datatype == DataType.DATACLASS || x.datatype == DataType.REGISTRY;
 }

@@ -11,13 +11,13 @@ import ReactFlow, {
   Connection,
   Edge,
   isNode,
+  //useZoomPanHelper,
 } from 'react-flow-renderer';
 import InfoPane from './component/infopane';
 import ControlPane from './component/controlpane';
-import { ModelWrapper } from './model/modelwrapper';
+import { isGraphNode, ModelWrapper } from './model/modelwrapper';
 import { PageHistory } from './model/history';
 import PathPane from './component/pathpane';
-import { Registry } from '../model/model/data/registry';
 import {
   edgeTypes,
   ISearch,
@@ -27,44 +27,44 @@ import {
   StateMan,
 } from './interface/state';
 import NewComponentPane from './component/newcomponentpane';
-import * as factory from '../model/util/componentFactory';
 import BasicSettingPane from './component/basicsetting';
 import FilterPane from './component/filterpane';
-import {
-  initProgressManager,
-  recalculateEdgeHighlight,
-  recalculateProgress,
-} from './util/progressmanager';
 import { functionCollection } from './util/function';
-import { GraphNode } from '../model/model/graphnode';
 import RepoEditPane from './component/edit/repoedit';
 import { DocumentStore } from '../repository/document';
 import OnePageChecklist from './component/onepagechecklist';
-import { Process } from '../model/model/process/process';
 import EditProcessPage from './component/processedit';
-import { Approval } from '../model/model/process/approval';
-import { EGate } from '../model/model/gate/egate';
-import { SignalCatchEvent } from '../model/model/event/signalcatchevent';
-import { Edge as MyEdge } from '../model/model/flow/edge';
 import EditApprovalPage from './component/approvaledit';
-import { TimerEvent } from '../model/model/event/timerevent';
 import { EditSCEventPage, EditTimerPage } from './component/eventedit';
 import { IEdgeLabel } from './interface/datainterface';
 import { EditEGatePage } from './component/editEgate';
-import {
-  Subprocess,
-  SubprocessComponent,
-} from '../model/model/flow/subprocess';
-import { NodeData } from './nodecontainer';
-import { Dataclass } from '../model/model/data/dataclass';
 import SimulationPage from './component/simulationpane';
 import ImportPane from './component/importpane';
 import AIPane from './component/aipane';
 import MeasureCheckPane from './component/measurementcheckpane';
 import LegendPane from './util/legendpane';
 import styled from '@emotion/styled';
+import { DataType, MMELNode } from '../serialize/interface/baseinterface';
+import { MMELFactory } from '../runtime/modelComponentCreator';
+import { ProgressManager } from './util/progressmanager';
+import {
+  MMELEGate,
+  MMELSubprocess,
+} from '../serialize/interface/flowcontrolinterface';
+import { MMELRegistry } from '../serialize/interface/datainterface';
+import {
+  MMELApproval,
+  MMELProcess,
+} from '../serialize/interface/processinterface';
+import {
+  MMELSignalCatchEvent,
+  MMELTimerEvent,
+} from '../serialize/interface/eventinterface';
+import { NodeData } from './nodecontainer';
+import IndexPane from './component/IndexPane';
+import { DataIndexer } from './util/datasearchmanager';
 
-const initModel = factory.createNewModel();
+const initModel = MMELFactory.createNewModel();
 const initModelWrapper = new ModelWrapper(initModel);
 
 const canvusRef: RefObject<HTMLDivElement> = React.createRef();
@@ -81,6 +81,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     clvisible: false,
     fpvisible: false,
     aivisible: false,
+    searchvisible: false,
     edgeDeleteVisible: false,
     importvisible: false,
     measureVisible: false,
@@ -99,11 +100,12 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     viewEGate: null,
     addingexisting: '',
     simulation: null,
-    imodel: factory.createNewModel(),
+    imodel: MMELFactory.createNewModel(),
     namespace: '',
     importing: '',
     mtestResult: null,
     mtestValues: new Map<string, string>(),
+    highlight: null,
   });
 
   const [searchState, setSearchState] = useState<ISearch>({
@@ -133,23 +135,18 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     updateState(sm.state);
   };
 
-  console.debug(
-    'Debug message: editor',
-    state,
-    searchState,
-    state.modelWrapper.model.idreg
-  );
+  console.debug('Debug message: editor', state, searchState);
 
   const checkUpdated = () => {
     const modelwrapper = state.modelWrapper;
     const root = modelwrapper.model.root;
     if (root != null) {
-      recalculateProgress(root, modelwrapper);
+      ProgressManager.recalculateProgress(root, modelwrapper);
     }
     updateState(state);
   };
 
-  const addPageToHistory = (x: Subprocess, name: string) => {
+  const addPageToHistory = (x: MMELSubprocess, name: string) => {
     saveLayout();
     state.history.add(x, name);
     state.modelWrapper.page = x;
@@ -161,29 +158,34 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     if (state.rfInstance != null) {
       state.rfInstance.getElements().forEach(x => {
         const data = x.data;
-        const page = sm.state.modelWrapper.page;
-        const idreg = sm.state.modelWrapper.model.idreg;
+        const mw = sm.state.modelWrapper;
+        const page = mw.page;
+        const idreg = mw.idman;
+        const paddon = mw.subman.get(page);
         if (isNode(x) && data instanceof NodeData) {
-          const gn = page.map.get(data.represent);
+          const gn = paddon.map.get(data.represent);
           if (gn != null) {
             gn.x = x.position.x;
             gn.y = x.position.y;
           } else {
-            const obj = idreg.ids.get(data.represent);
+            const obj = idreg.nodes.get(data.represent);
             if (obj != undefined) {
-              const nc = new SubprocessComponent(data.represent, '');
-              if (obj instanceof Dataclass || obj instanceof Registry) {
+              const nc = MMELFactory.createSubprocessComponent(obj);
+              if (
+                obj.datatype == DataType.DATACLASS ||
+                obj.datatype == DataType.REGISTRY
+              ) {
                 page.data.push(nc);
-                nc.element = obj;
+                nc.element = obj as MMELNode;
                 nc.x = x.position.x;
                 nc.y = x.position.y;
-                page.map.set(data.represent, nc);
-              } else if (obj instanceof GraphNode) {
+                paddon.map.set(data.represent, nc);
+              } else if (isGraphNode(obj)) {
                 page.childs.push(nc);
-                nc.element = obj;
+                nc.element = obj as MMELNode;
                 nc.x = x.position.x;
                 nc.y = x.position.y;
-                page.map.set(data.represent, nc);
+                paddon.map.set(data.represent, nc);
               }
             }
           }
@@ -206,9 +208,9 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
-      factory.addComponent(
+      MMELFactory.addComponent(
         type,
-        state.modelWrapper.model,
+        state.modelWrapper,
         state.modelWrapper.page,
         pos
       );
@@ -216,11 +218,11 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     }
   };
 
-  const getObjectByID = (id: string): GraphNode | undefined => {
-    const idreg = sm.state.modelWrapper.model.idreg;
-    if (idreg.ids.has(id)) {
-      const ret = idreg.ids.get(id);
-      if (ret instanceof GraphNode) {
+  const getObjectByID = (id: string): MMELNode | undefined => {
+    const idreg = sm.state.modelWrapper.idman;
+    if (idreg.nodes.has(id)) {
+      const ret = idreg.nodes.get(id);
+      if (ret != undefined) {
         return ret;
       }
     }
@@ -228,17 +230,19 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   };
 
   const removeLayoutItem = (id: string) => {
+    const mw = sm.state.modelWrapper;
     state.modelWrapper.model.pages.forEach(p => {
+      const paddon = mw.subman.get(p);
       p.childs.forEach((c, index) => {
         if (c.element != null && c.element.id == id) {
           p.childs.splice(index, 1);
-          p.map.delete(id);
+          paddon.map.delete(id);
         }
       });
       p.data.forEach((c, index) => {
         if (c.element != null && c.element.id == id) {
           p.data.splice(index, 1);
-          p.map.delete(id);
+          paddon.map.delete(id);
         }
       });
     });
@@ -246,23 +250,25 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
 
   const renameLayoutItem = (old: string, name: string) => {
     saveLayout();
+    const mw = functionCollection.getStateMan().state.modelWrapper;
     state.modelWrapper.model.pages.forEach(p => {
-      if (p.map.has(old)) {
-        const y = p.map.get(old);
+      const paddon = mw.subman.get(p);
+      if (paddon.map.has(old)) {
+        const y = paddon.map.get(old);
         if (y != null) {
-          p.map.delete(old);
-          p.map.set(name, y);
+          paddon.map.delete(old);
+          paddon.map.set(name, y);
         }
       }
     });
   };
 
-  const viewDataRepository = (x: Registry) => {
+  const viewDataRepository = (x: MMELRegistry) => {
     state.datarepo = x;
     updateState(state);
   };
 
-  const viewEditProcess = (p: Process) => {
+  const viewEditProcess = (p: MMELProcess) => {
     state.viewprocess = {
       id: p == null ? '' : p.id,
       name: p == null ? '' : p.name,
@@ -300,7 +306,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     updateState(state);
   };
 
-  const viewEditApproval = (p: Approval) => {
+  const viewEditApproval = (p: MMELApproval) => {
     state.viewapproval = {
       id: p == null ? '' : p.id,
       name: p == null ? '' : p.name,
@@ -324,7 +330,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     updateState(state);
   };
 
-  const viewEGate = (x: EGate) => {
+  const viewEGate = (x: MMELEGate) => {
     const edges: Array<IEdgeLabel> = [];
     sm.state.modelWrapper.page.edges.forEach(e => {
       if (e.from != null && e.from.element == x) {
@@ -345,7 +351,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     updateState(state);
   };
 
-  const viewSignalCatch = (x: SignalCatchEvent) => {
+  const viewSignalCatch = (x: MMELSignalCatchEvent) => {
     state.viewSignalEvent = {
       id: x == null ? '' : x.id,
       signal: x == null ? '' : x.signal,
@@ -354,7 +360,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     updateState(state);
   };
 
-  const viewTimer = (t: TimerEvent) => {
+  const viewTimer = (t: MMELTimerEvent) => {
     state.viewTimer = {
       id: t == null ? '' : t.id,
       type: t == null ? '' : t.type,
@@ -372,31 +378,31 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   const connectHandle = (x: Edge<any> | Connection) => {
     if (!state.clvisible && x.source != null && x.target != null) {
       const mw = state.modelWrapper;
-      const model = mw.model;
-      const idreg = model.idreg;
+      const idreg = mw.idman;
       const page = mw.page;
-      const s = page.map.get(x.source);
-      const t = page.map.get(x.target);
+      const paddon = mw.subman.get(page);
+      const s = paddon.map.get(x.source);
+      const t = paddon.map.get(x.target);
       if (
         s != null &&
         t != null &&
-        s instanceof SubprocessComponent &&
-        t instanceof SubprocessComponent
+        s.datatype == DataType.SUBPROCESSCOMPONENT &&
+        t.datatype == DataType.SUBPROCESSCOMPONENT
       ) {
         if (
-          s.element instanceof Dataclass ||
-          s.element instanceof Registry ||
-          t.element instanceof Dataclass ||
-          t.element instanceof Registry
+          s.element?.datatype == DataType.DATACLASS ||
+          s.element?.datatype == DataType.REGISTRY ||
+          t.element?.datatype == DataType.DATACLASS ||
+          t.element?.datatype == DataType.REGISTRY
         ) {
           return;
         }
-        const newEdge = new MyEdge(idreg.findUniqueEdgeID('Edge'), '');
-        s.child.push(newEdge);
+        const newEdge = MMELFactory.createEdge(idreg.findUniqueEdgeID('Edge'));
+        mw.comman.get(s).child.push(newEdge);
         newEdge.from = s;
         newEdge.to = t;
         mw.page.edges.push(newEdge);
-        idreg.addEdge(newEdge.id, newEdge);
+        idreg.edges.set(newEdge.id, newEdge);
         updateState(state);
       }
     }
@@ -486,18 +492,19 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
           state.importvisible = false;
           state.edgeDeleteVisible = false;
           state.onepage = false;
-
+          state.searchvisible = false;
+          const mw = sm.state.modelWrapper;
           const model = sm.state.modelWrapper.model;
           if (model.root != null) {
-            model.hps.map(p => {
-              p.parent = [];
-              p.job = null;
+            model.processes.map(p => {
+              const paddon = mw.clman.getProcessAddOn(p);
+              mw.nodeman.get(p).parent = [];
+              paddon.job = null;
             });
-            model.dcs.map(p => (p.parent = []));
-            model.evs.map(p => (p.parent = []));
-            model.gates.map(p => (p.parent = []));
-            model.aps.map(p => (p.parent = []));
-            initProgressManager();
+            model.dataclasses.map(p => (mw.nodeman.get(p).parent = []));
+            model.gateways.map(p => (mw.nodeman.get(p).parent = []));
+            model.approvals.map(p => (mw.nodeman.get(p).parent = []));
+            ProgressManager.initProgressManager();
           }
         } else {
           state.fpvisible = false;
@@ -562,14 +569,24 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     </ControlButton>
   );
 
+  const searchButton = (
+    <ControlButton
+      style={state.searchvisible ? csson : cssoff}
+      onClick={() => {
+        state.searchvisible = !state.searchvisible;
+        state.highlight = null;
+        updateState(state);
+      }}
+    >
+      Ind
+    </ControlButton>
+  );
+
   /* rendering */
 
   if (state.clvisible) {
     if (state.modelWrapper.model.root != null) {
-      recalculateEdgeHighlight(
-        state.modelWrapper.page,
-        state.modelWrapper.model
-      );
+      ProgressManager.recalculateEdgeHighlight(state.modelWrapper.page);
     }
   }
   functionCollection.checkUpdated = checkUpdated;
@@ -631,6 +648,21 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   if (state.mtestResult != null || state.fpvisible) {
     elms.push(<LegendPane key="LegendPage" {...sm} />);
   }
+  if (state.measureVisible) {
+    elms.push(<MeasureCheckPane />);
+  } else {
+    elms.push(<InfoPane key="InfoPage" clvisible={state.clvisible} />);
+  }
+  if (state.searchvisible) {
+    elms.push(
+      <IndexPane
+        key="IndexPage"
+        sm={sm}
+        index={DataIndexer.populateIndex(sm.state.modelWrapper)}
+      />
+    );
+  }
+
   let ret: JSX.Element;
   if (isVisible) {
     ret = (
@@ -639,7 +671,6 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
           <ReactFlow
             key="MMELModel"
             elements={state.modelWrapper.getReactFlowElementsFrom(
-              state.modelWrapper.page,
               state.dvisible,
               state.clvisible
             )}
@@ -677,16 +708,10 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
                 : ''}
               {state.simulation == null && !state.clvisible ? importButton : ''}
               {state.simulation == null && !state.clvisible ? aiButton : ''}
+              {state.simulation == null && !state.clvisible ? searchButton : ''}
             </Controls>
           </ReactFlow>
           {state.simulation == null ? <PathPane {...sm} /> : ''}
-
-          {state.measureVisible ? (
-            <MeasureCheckPane />
-          ) : (
-            <InfoPane clvisible={state.clvisible} />
-          )}
-
           <ControlPane key="ControlPanel" {...sm} />
           {elms}
         </ReactFlowProvider>

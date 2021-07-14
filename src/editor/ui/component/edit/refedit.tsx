@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Reference } from '../../../model/model/support/reference';
+import { MMELReference } from '../../../serialize/interface/supportinterface';
 import { IRef } from '../../interface/datainterface';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { RefHandler } from '../handle/refhandler';
@@ -13,7 +13,7 @@ const RefEditPage: React.FC<{
 }> = ({ modelWrapper, isVisible }) => {
   const [isAdd, setAddMode] = useState(false);
   const [isUpdate, setUpdateMode] = useState(false);
-  const [ref, setUpdateRef] = useState<Reference | null>(null);
+  const [ref, setUpdateRef] = useState<MMELReference | null>(null);
   const [dummy, setDummy] = useState<boolean>(false);
   const [data, setData] = useState<IRef>({
     refid: '',
