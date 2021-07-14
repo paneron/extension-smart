@@ -1,4 +1,4 @@
-import { OnLoadParams, XYPosition } from 'react-flow-renderer';
+import { OnLoadParams } from 'react-flow-renderer';
 import { DocumentStore } from '../../repository/document';
 import NormalEdge from '../component/unit/normaledge';
 import SelfLoopEdge from '../component/unit/selfloopedge';

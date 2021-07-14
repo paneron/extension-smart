@@ -15,38 +15,25 @@ import { DataIndexer, DataIndexRecord } from '../util/datasearchmanager';
 import { MyTopRightButtons } from './unit/closebutton';
 import NormalComboBox from './unit/combobox';
 
-const SideBar = styled.aside`
-  position: absolute;
-  width: 35%;
-  height: 50%;
-  bottom: 0;
-  right: 0;
-  background-color: white;
-  border-style: solid;
-  font-size: 12px;
-  overflow-y: auto;
-  z-index: 100;
-`;
-
 const IndexPane: React.FC<{ sm: StateMan; index: DataIndexer }> = ({
   sm,
   index,
 }) => {
-  const mw = sm.state.modelWrapper;
+  const mw = sm.state.modelWrapper
   const [data, setData] = useState<MMELRegistry | null>(null);
   const { setCenter } = useZoomPanHelper();
-  const elms: Array<JSX.Element> = [];
-  const datatext = data == null ? '' : data.id;
-  const options: Array<string> = [''];
+  const elms:Array<JSX.Element> = []
+  const datatext = data==null?"":data.id
+  const options:Array<string> = [""]
   for (const dc of mw.model.regs) {
     options.push(dc.id);
   }
 
   if (data != null) {
-    const records = index.get(data);
+    const records = index.get(data)
     for (const r of records) {
       if (r.elm.element?.datatype == DataType.PROCESS) {
-        const process = r.elm.element as MMELProcess;
+        const process = r.elm.element as MMELProcess
         elms.push(
           <p
             key={
@@ -57,7 +44,7 @@ const IndexPane: React.FC<{ sm: StateMan; index: DataIndexer }> = ({
           </p>
         );
       } else if (r.elm.element?.datatype == DataType.APPROVAL) {
-        const approval = r.elm.element as MMELApproval;
+        const approval = r.elm.element as MMELApproval
         elms.push(
           <p
             key={
@@ -117,7 +104,7 @@ const IndexPane: React.FC<{ sm: StateMan; index: DataIndexer }> = ({
   };
 
   const update = (x: string) => {
-    const dc = sm.state.modelWrapper.idman.regs.get(x);
+    const dc = sm.state.modelWrapper.idman.regs.get(x)    
     if (dc != undefined) {
       setData(dc);
     } else {
@@ -143,5 +130,18 @@ const IndexPane: React.FC<{ sm: StateMan; index: DataIndexer }> = ({
     </SideBar>
   );
 };
+
+const SideBar = styled.aside`
+  position: absolute;
+  width: 35%;
+  height: 50%;
+  bottom: 0;
+  right: 0;
+  background-color: white;
+  border-style: solid;
+  font-size: 12px;
+  overflow-y: auto;
+  z-index: 100;
+`;
 
 export default IndexPane;

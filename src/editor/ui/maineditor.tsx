@@ -138,8 +138,8 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   console.debug('Debug message: editor', state, searchState);
 
   const checkUpdated = () => {
-    const modelwrapper = state.modelWrapper;
-    const root = modelwrapper.model.root;
+    const modelwrapper = state.modelWrapper
+    const root = modelwrapper.model.root
     if (root != null) {
       ProgressManager.recalculateProgress(root, modelwrapper);
     }
@@ -157,20 +157,20 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     console.debug('Save Layout');
     if (state.rfInstance != null) {
       state.rfInstance.getElements().forEach(x => {
-        const data = x.data;
-        const mw = sm.state.modelWrapper;
-        const page = mw.page;
-        const idreg = mw.idman;
-        const paddon = mw.subman.get(page);
+        const data = x.data
+        const mw = sm.state.modelWrapper
+        const page = mw.page
+        const idreg = mw.idman
+        const paddon = mw.subman.get(page)
         if (isNode(x) && data instanceof NodeData) {
-          const gn = paddon.map.get(data.represent);
+          const gn = paddon.map.get(data.represent)
           if (gn != null) {
             gn.x = x.position.x;
             gn.y = x.position.y;
           } else {
-            const obj = idreg.nodes.get(data.represent);
+            const obj = idreg.nodes.get(data.represent)
             if (obj != undefined) {
-              const nc = MMELFactory.createSubprocessComponent(obj);
+              const nc = MMELFactory.createSubprocessComponent(obj)
               if (
                 obj.datatype == DataType.DATACLASS ||
                 obj.datatype == DataType.REGISTRY
@@ -219,9 +219,9 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   };
 
   const getObjectByID = (id: string): MMELNode | undefined => {
-    const idreg = sm.state.modelWrapper.idman;
+    const idreg = sm.state.modelWrapper.idman
     if (idreg.nodes.has(id)) {
-      const ret = idreg.nodes.get(id);
+      const ret = idreg.nodes.get(id)
       if (ret != undefined) {
         return ret;
       }
@@ -230,9 +230,9 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   };
 
   const removeLayoutItem = (id: string) => {
-    const mw = sm.state.modelWrapper;
+    const mw = sm.state.modelWrapper
     state.modelWrapper.model.pages.forEach(p => {
-      const paddon = mw.subman.get(p);
+      const paddon = mw.subman.get(p)
       p.childs.forEach((c, index) => {
         if (c.element != null && c.element.id == id) {
           p.childs.splice(index, 1);
@@ -250,11 +250,11 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
 
   const renameLayoutItem = (old: string, name: string) => {
     saveLayout();
-    const mw = functionCollection.getStateMan().state.modelWrapper;
+    const mw = functionCollection.getStateMan().state.modelWrapper
     state.modelWrapper.model.pages.forEach(p => {
-      const paddon = mw.subman.get(p);
+      const paddon = mw.subman.get(p)
       if (paddon.map.has(old)) {
-        const y = paddon.map.get(old);
+        const y = paddon.map.get(old)
         if (y != null) {
           paddon.map.delete(old);
           paddon.map.set(name, y);
@@ -331,7 +331,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   };
 
   const viewEGate = (x: MMELEGate) => {
-    const edges: Array<IEdgeLabel> = [];
+    const edges:Array<IEdgeLabel> = []    
     sm.state.modelWrapper.page.edges.forEach(e => {
       if (e.from != null && e.from.element == x) {
         edges.push({
@@ -377,12 +377,12 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
 
   const connectHandle = (x: Edge<any> | Connection) => {
     if (!state.clvisible && x.source != null && x.target != null) {
-      const mw = state.modelWrapper;
-      const idreg = mw.idman;
-      const page = mw.page;
-      const paddon = mw.subman.get(page);
-      const s = paddon.map.get(x.source);
-      const t = paddon.map.get(x.target);
+      const mw = state.modelWrapper      
+      const idreg = mw.idman
+      const page = mw.page
+      const paddon = mw.subman.get(page)
+      const s = paddon.map.get(x.source)
+      const t = paddon.map.get(x.target)
       if (
         s != null &&
         t != null &&
@@ -397,7 +397,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
         ) {
           return;
         }
-        const newEdge = MMELFactory.createEdge(idreg.findUniqueEdgeID('Edge'));
+        const newEdge = MMELFactory.createEdge(idreg.findUniqueEdgeID("Edge"))
         mw.comman.get(s).child.push(newEdge);
         newEdge.from = s;
         newEdge.to = t;
@@ -493,11 +493,11 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
           state.edgeDeleteVisible = false;
           state.onepage = false;
           state.searchvisible = false;
-          const mw = sm.state.modelWrapper;
-          const model = sm.state.modelWrapper.model;
+          let mw = sm.state.modelWrapper;
+          let model = sm.state.modelWrapper.model;
           if (model.root != null) {
             model.processes.map(p => {
-              const paddon = mw.clman.getProcessAddOn(p);
+              let paddon = mw.clman.getProcessAddOn(p);
               mw.nodeman.get(p).parent = [];
               paddon.job = null;
             });
@@ -603,7 +603,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   functionCollection.viewSignalCatch = viewSignalCatch;
   functionCollection.viewTimer = viewTimer;
 
-  const elms: Array<JSX.Element> = [];
+  const elms:Array<JSX.Element> = []  
   if (state.svisible) {
     elms.push(<BasicSettingPane key="BasicSettingPage" {...sm} />);
   }

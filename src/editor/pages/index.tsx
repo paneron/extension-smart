@@ -4,7 +4,6 @@
 import React, { useState } from 'react';
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
-import Head from 'next/head';
 import ModelEditor from '../ui/maineditor';
 import ModelMapper from '../ui/mapper/mappermain';
 
@@ -22,12 +21,6 @@ const Home: React.FC<Record<never, never>> = function () {
 
   return (
     <Wrapper>
-      <Head>
-        <title>MMEL Model applications GUI kit </title>
-        <meta name="description" content="MMEL Model applications kit" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <div className="tab">
         <button
           onClick={() => setPage(Page.Editor)}

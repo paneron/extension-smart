@@ -35,7 +35,7 @@ const containercss: CSSProperties = {
 export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
   filterName = 'Document filter';
   itemName = 'Documents';
-  private model: MMELModel;
+  //private model: MMELModel;
   private store: DocumentStore;
   private reg: MMELRegistry | null;
   private setAddMode: (b: boolean) => void;
@@ -58,7 +58,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
     data: DocumentItem,
     setDoc: (x: DocumentItem) => void
   ) {
-    this.model = model;
+    //this.model = model;
     this.store = store;
     this.reg = reg;
     this.updating = updateObj;

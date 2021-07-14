@@ -44,14 +44,14 @@ const RepoEditPane: React.FC<StateMan> = (sm: StateMan) => {
     sm.setState(sm.state);
   };
 
-  const normal: React.CSSProperties = {
-    background: '#e7e7e7',
-  };
+  //const normal: React.CSSProperties = {
+  //  background: '#e7e7e7',
+  //};
 
-  const selected: React.CSSProperties = {
-    background: '#555555',
-    color: 'white',
-  };
+  //const selected: React.CSSProperties = {
+  //  background: '#555555',
+  //  color: 'white',
+  //};
 
   return (
     <DisplayPane style={{ display: isVisible ? 'inline' : 'none' }}>

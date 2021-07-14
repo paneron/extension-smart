@@ -213,6 +213,7 @@ function saveEGate(
     sm.state.eGate = null;
     sm.setState(sm.state);
   }
+  return;
 }
 
 const DisplayPane = styled.div`
