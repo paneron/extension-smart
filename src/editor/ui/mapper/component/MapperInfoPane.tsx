@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import React, { CSSProperties } from 'react';
 import { useStoreState, Elements } from 'react-flow-renderer';
+import { MMELNode } from '../../../serialize/interface/baseinterface';
 import { NodeData } from '../../nodecontainer';
 import { ModelViewStateMan } from '../model/mapperstate';
 import { MapperFunctions } from '../util/helperfunctions';
@@ -19,7 +20,7 @@ const MapperInfoPane: React.FC<ModelViewStateMan> = (sm: ModelViewStateMan) => {
       if (s.data instanceof NodeData) {
         const data = MapperFunctions.getObjectByID(sm, s.data.represent);
         if (data != undefined) {
-          return MappingDescribe(data as GraphNode);
+          return MappingDescribe(data as MMELNode);
         }
       }
     }
