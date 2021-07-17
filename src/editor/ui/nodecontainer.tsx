@@ -27,23 +27,23 @@ export class NodeContainer {
 }
 
 function checkType(x: MMELNode): string {
-  if (x.datatype == DataType.STARTEVENT) {
+  if (x.datatype === DataType.STARTEVENT) {
     return 'start';
-  } else if (x.datatype == DataType.ENDEVENT) {
+  } else if (x.datatype === DataType.ENDEVENT) {
     return 'end';
-  } else if (x.datatype == DataType.TIMEREVENT) {
+  } else if (x.datatype === DataType.TIMEREVENT) {
     return 'timer';
-  } else if (x.datatype == DataType.EGATE) {
+  } else if (x.datatype === DataType.EGATE) {
     return 'egate';
-  } else if (x.datatype == DataType.SIGNALCATCHEVENT) {
+  } else if (x.datatype === DataType.SIGNALCATCHEVENT) {
     return 'signalcatch';
-  } else if (x.datatype == DataType.PROCESS) {
+  } else if (x.datatype === DataType.PROCESS) {
     return 'process';
-  } else if (x.datatype == DataType.APPROVAL) {
+  } else if (x.datatype === DataType.APPROVAL) {
     return 'approval';
   } else if (
-    x.datatype == DataType.REGISTRY ||
-    x.datatype == DataType.DATACLASS
+    x.datatype === DataType.REGISTRY ||
+    x.datatype === DataType.DATACLASS
   ) {
     return 'data';
   }
