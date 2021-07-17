@@ -46,7 +46,7 @@ export class ModelWrapper {
 
   constructor(m: MMELModel) {
     this.model = m;
-    if (m.root == null) {
+    if (m.root === null) {
       throw new Error(
         'Model structure is corrupted. Model does not contain a root'
       );
@@ -74,14 +74,14 @@ export class ModelWrapper {
     this.page.childs.forEach(x => {
       const y = x.element;
 
-      if (y != null) {
+      if (y !== null) {
         const exploreDataNode = (r: MMELRegistry, incoming: boolean) => {
           if (!this.visualman.has(r)) {
             datas.set(r.id, r);
             this.visualman.add(r);
             this.exploreData(r, datas, elms, dvisible);
           }
-          if (y != null) {
+          if (y !== null) {
             const ne = incoming
               ? new DataLinkContainer(r, y)
               : new DataLinkContainer(y, r);
@@ -91,18 +91,18 @@ export class ModelWrapper {
         };
 
         const nn = new NodeContainer(y, { x: x.x, y: x.y });
-        if (type != undefined) {
+        if (type !== undefined) {
           nn.data.modelType = type;
         }
         elms.push(nn);
         this.visualman.add(y);
         if (dvisible) {
-          if (y.datatype == DataType.PROCESS) {
+          if (y.datatype === DataType.PROCESS) {
             const process = y as MMELProcess;
             process.input.map(r => exploreDataNode(r, true));
             process.output.map(r => exploreDataNode(r, false));
           }
-          if (y.datatype == DataType.APPROVAL) {
+          if (y.datatype === DataType.APPROVAL) {
             const app = y as MMELApproval;
             app.records.map(r => exploreDataNode(r, false));
           }
@@ -111,11 +111,11 @@ export class ModelWrapper {
     });
     if (dvisible) {
       this.page.data.forEach(e => {
-        if (e.element != null) {
+        if (e.element !== null) {
           const x = datas.get(e.element.id);
-          if (x != undefined) {
+          if (x !== undefined) {
             const nn = new NodeContainer(x, { x: e.x, y: e.y });
-            if (type != undefined) {
+            if (type !== undefined) {
               nn.data.modelType = type;
             }
             elms.push(nn);
@@ -125,7 +125,7 @@ export class ModelWrapper {
       });
       datas.forEach(e => {
         const nn = new NodeContainer(e, { x: 0, y: 0 });
-        if (type != undefined) {
+        if (type !== undefined) {
           nn.data.modelType = type;
         }
         elms.push(nn);
@@ -133,9 +133,9 @@ export class ModelWrapper {
       datas.forEach(d => {
         const map = this.subman.get(this.page).map;
         const sc = map.get(d.id);
-        if (sc != undefined) {
+        if (sc !== undefined) {
           const index = this.page.data.indexOf(sc);
-          if (index != -1) {
+          if (index !== -1) {
             this.page.data.splice(index, 1);
           }
         }
@@ -163,10 +163,10 @@ export class ModelWrapper {
     elms: Elements,
     dvisible: boolean
   ) {
-    if (x.data != null) {
+    if (x.data !== null) {
       this.dlman.get(x.data).rdcs.forEach(e => {
         const m = this.dlman.get(e).mother;
-        if (m != null) {
+        if (m !== null) {
           if (!this.visualman.has(m)) {
             es.set(m.id, m);
             this.visualman.add(m);
@@ -189,27 +189,27 @@ export class ModelWrapper {
 
 export function isGraphNode(x: MMELObject) {
   return (
-    x.datatype == DataType.REGISTRY ||
-    x.datatype == DataType.DATACLASS ||
-    x.datatype == DataType.ENDEVENT ||
-    x.datatype == DataType.STARTEVENT ||
-    x.datatype == DataType.SIGNALCATCHEVENT ||
-    x.datatype == DataType.TIMEREVENT ||
-    x.datatype == DataType.EGATE ||
-    x.datatype == DataType.APPROVAL ||
-    x.datatype == DataType.PROCESS
+    x.datatype === DataType.REGISTRY ||
+    x.datatype === DataType.DATACLASS ||
+    x.datatype === DataType.ENDEVENT ||
+    x.datatype === DataType.STARTEVENT ||
+    x.datatype === DataType.SIGNALCATCHEVENT ||
+    x.datatype === DataType.TIMEREVENT ||
+    x.datatype === DataType.EGATE ||
+    x.datatype === DataType.APPROVAL ||
+    x.datatype === DataType.PROCESS
   );
 }
 
 export function isEventNode(x: MMELObject) {
   return (
-    x.datatype == DataType.ENDEVENT ||
-    x.datatype == DataType.STARTEVENT ||
-    x.datatype == DataType.SIGNALCATCHEVENT ||
-    x.datatype == DataType.TIMEREVENT
+    x.datatype === DataType.ENDEVENT ||
+    x.datatype === DataType.STARTEVENT ||
+    x.datatype === DataType.SIGNALCATCHEVENT ||
+    x.datatype === DataType.TIMEREVENT
   );
 }
 
 export function isGate(x: MMELObject) {
-  return x.datatype == DataType.EGATE;
+  return x.datatype === DataType.EGATE;
 }
