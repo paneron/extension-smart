@@ -74,7 +74,7 @@ export class NodeData {
 
 function extractID(x: string) {
   const index = x.lastIndexOf('#');
-  if (index !== -1) {
+  if (index >= 0) {
     return x.substr(index + 1);
   }
   return x;
