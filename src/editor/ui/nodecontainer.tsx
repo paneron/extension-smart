@@ -58,15 +58,15 @@ export class NodeData {
   constructor(x: MMELNode) {
     this.represent = x.id;
     this.modelType = null;
-    if (x.datatype == DataType.PROCESS) {
+    if (x.datatype === DataType.PROCESS) {
       const p = x as MMELProcess;
-      this.label = <> {p.name == '' ? p.id : p.name} </>;
-    } else if (x.datatype == DataType.APPROVAL) {
+      this.label = <> {p.name === '' ? p.id : p.name} </>;
+    } else if (x.datatype === DataType.APPROVAL) {
       const app = x as MMELApproval;
-      this.label = <> {app.name == '' ? app.id : app.name} </>;
+      this.label = <> {app.name === '' ? app.id : app.name} </>;
     } else if (x.datatype == DataType.REGISTRY) {
       const reg = x as MMELRegistry;
-      this.label = <> {reg.title == '' ? reg.id : reg.title} </>;
+      this.label = <> {reg.title === '' ? reg.id : reg.title} </>;
     } else {
       this.label = <> {extractID(x.id)} </>;
     }
@@ -75,7 +75,7 @@ export class NodeData {
 
 function extractID(x: string) {
   const index = x.lastIndexOf('#');
-  if (index != -1) {
+  if (index !== -1) {
     return x.substr(index + 1);
   }
   return x;
