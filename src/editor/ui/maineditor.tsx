@@ -201,7 +201,7 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
 
   const onDrop = (event: React.DragEvent<any>) => {
     event.preventDefault();
-    if (canvusRef.current != null && state.rfInstance != null) {
+    if (canvusRef.current !== null && state.rfInstance !== null) {
       const reactFlowBounds = canvusRef.current.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/modeleditor');
       const pos = state.rfInstance.project({
