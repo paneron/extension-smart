@@ -95,6 +95,7 @@ export class ModelWrapper {
           nn.data.modelType = type;
         }
         elms.push(nn);
+
         this.visualman.add(y);
         if (dvisible) {
           if (y.datatype === DataType.PROCESS) {
@@ -109,7 +110,9 @@ export class ModelWrapper {
         }
       }
     });
+
     if (dvisible) {
+
       this.page.data.forEach(e => {
         if (e.element !== null) {
           const x = datas.get(e.element.id);
@@ -140,7 +143,9 @@ export class ModelWrapper {
           }
         }
       });
+
     }
+
     this.page.edges.forEach(e => {
       const ec = new EdgeContainer(e);
       if (clvisible) {
@@ -154,6 +159,7 @@ export class ModelWrapper {
       }
       elms.push(ec);
     });
+
     return elms;
   }
 
