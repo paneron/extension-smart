@@ -9,7 +9,7 @@ import ModelEditor from './editor/ui/maineditor';
 Object.assign(console, log);
 
 const RepositoryView: React.FC<Record<never, never>> = function () {
-  return <ModelEditor isVisible={false} />;
+  return <ModelEditor isVisible />;
 };
 
 export default RepositoryView;
