@@ -1,4 +1,3 @@
-/** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
 import React from 'react';
