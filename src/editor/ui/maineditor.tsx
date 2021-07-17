@@ -1,6 +1,7 @@
 /** @jsx jsx */
 
 import { jsx } from '@emotion/react';
+import styled from '@emotion/styled';
 import React, { RefObject, useState } from 'react';
 
 import ReactFlow, {
@@ -43,7 +44,6 @@ import ImportPane from './component/importpane';
 import AIPane from './component/aipane';
 import MeasureCheckPane from './component/measurementcheckpane';
 import LegendPane from './util/legendpane';
-import styled from '@emotion/styled';
 import { DataType, MMELNode } from '../serialize/interface/baseinterface';
 import { MMELFactory } from '../runtime/modelComponentCreator';
 import { ProgressManager } from './util/progressmanager';
