@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
 import React from 'react';
 import { TimerType } from '../../runtime/idManager';

@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { ChangeEvent, RefObject } from 'react';
 import { textToMMEL } from '../../serialize/MMEL';

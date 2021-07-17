@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { ChangeEvent, CSSProperties, RefObject } from 'react';
 import { MMELFactory } from '../../runtime/modelComponentCreator';
