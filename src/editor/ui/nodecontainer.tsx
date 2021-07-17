@@ -63,7 +63,7 @@ export class NodeData {
     } else if (x.datatype === DataType.APPROVAL) {
       const app = x as MMELApproval;
       this.label = <> {app.name === '' ? app.id : app.name} </>;
-    } else if (x.datatype == DataType.REGISTRY) {
+    } else if (x.datatype === DataType.REGISTRY) {
       const reg = x as MMELRegistry;
       this.label = <> {reg.title === '' ? reg.id : reg.title} </>;
     } else {
