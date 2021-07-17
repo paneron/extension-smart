@@ -24,5 +24,5 @@ export class DataLinkContainer {
 }
 
 function isData(x: MMELNode): boolean {
-  return x.datatype == DataType.DATACLASS || x.datatype == DataType.REGISTRY;
+  return x.datatype === DataType.DATACLASS || x.datatype === DataType.REGISTRY;
 }
