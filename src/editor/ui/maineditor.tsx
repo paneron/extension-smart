@@ -687,31 +687,31 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
           >
             <Controls>
               {dataVisibleButton}
-              {state.simulation == null && !state.clvisible
+              {state.simulation === null && !state.clvisible
                 ? controlPaneButton
                 : ''}
-              {state.simulation == null && state.clvisible
+              {state.simulation === null && state.clvisible
                 ? filterPaneButton
                 : ''}
-              {state.simulation == null && state.clvisible
+              {state.simulation === null && state.clvisible
                 ? measurePaneButton
                 : ''}
-              {state.simulation == null ? checkListButton : ''}
-              {state.simulation == null && !state.clvisible
+              {state.simulation === null ? checkListButton : ''}
+              {state.simulation === null && !state.clvisible
                 ? basicSettingButton
                 : ''}
-              {state.simulation == null && !state.clvisible
+              {state.simulation === null && !state.clvisible
                 ? newComponentButton
                 : ''}
-              {state.simulation == null && !state.clvisible
+              {state.simulation === null && !state.clvisible
                 ? edgeDeleteButton
                 : ''}
-              {state.simulation == null && !state.clvisible ? importButton : ''}
-              {state.simulation == null && !state.clvisible ? aiButton : ''}
-              {state.simulation == null && !state.clvisible ? searchButton : ''}
+              {state.simulation === null && !state.clvisible ? importButton : ''}
+              {state.simulation === null && !state.clvisible ? aiButton : ''}
+              {state.simulation === null && !state.clvisible ? searchButton : ''}
             </Controls>
           </ReactFlow>
-          {state.simulation == null ? <PathPane {...sm} /> : ''}
+          {state.simulation === null ? <PathPane {...sm} /> : ''}
           <ControlPane key="ControlPanel" {...sm} />
           {elms}
         </ReactFlowProvider>
