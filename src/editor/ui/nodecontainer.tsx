@@ -20,29 +20,29 @@ export class NodeContainer {
   constructor(x: MMELNode, pos: { x: number; y: number }) {
     this.id = x.id;
     this.position = pos;
-    this.type = checkType(x);
+    this.type = getNodeType(x.datatype);
     this.data = new NodeData(x);
   }
 }
 
-function checkType(x: MMELNode): string {
-  if (x.datatype === DataType.STARTEVENT) {
+function getNodeType(datatype: DataType): string {
+  if (datatype === DataType.STARTEVENT) {
     return 'start';
-  } else if (x.datatype === DataType.ENDEVENT) {
+  } else if (datatype === DataType.ENDEVENT) {
     return 'end';
-  } else if (x.datatype === DataType.TIMEREVENT) {
+  } else if (datatype === DataType.TIMEREVENT) {
     return 'timer';
-  } else if (x.datatype === DataType.EGATE) {
+  } else if (datatype === DataType.EGATE) {
     return 'egate';
-  } else if (x.datatype === DataType.SIGNALCATCHEVENT) {
+  } else if (datatype === DataType.SIGNALCATCHEVENT) {
     return 'signalcatch';
-  } else if (x.datatype === DataType.PROCESS) {
+  } else if (datatype === DataType.PROCESS) {
     return 'process';
-  } else if (x.datatype === DataType.APPROVAL) {
+  } else if (datatype === DataType.APPROVAL) {
     return 'approval';
   } else if (
-    x.datatype === DataType.REGISTRY ||
-    x.datatype === DataType.DATACLASS
+    datatype === DataType.REGISTRY ||
+    datatype === DataType.DATACLASS
   ) {
     return 'data';
   }
