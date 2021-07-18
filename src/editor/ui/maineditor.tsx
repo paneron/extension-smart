@@ -1,7 +1,6 @@
 /** @jsx jsx */
 
-import { jsx } from '@emotion/react';
-import styled from '@emotion/styled';
+import { jsx, css } from '@emotion/react';
 import React, { RefObject, useState } from 'react';
 
 import ReactFlow, {
@@ -14,6 +13,10 @@ import ReactFlow, {
   isNode,
   //useZoomPanHelper,
 } from 'react-flow-renderer';
+
+import { Button, ControlGroup } from '@blueprintjs/core';
+import { Popover2 } from '@blueprintjs/popover2';
+
 import InfoPane from './component/infopane';
 import ControlPane from './component/controlpane';
 import { isGraphNode, ModelWrapper } from './model/modelwrapper';
@@ -63,11 +66,16 @@ import {
 import { NodeData } from './nodecontainer';
 import IndexPane from './component/IndexPane';
 import { DataIndexer } from './util/datasearchmanager';
+import FileMenu from './component/menu/File';
+import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
 const initModel = MMELFactory.createNewModel();
 const initModelWrapper = new ModelWrapper(initModel);
 
-const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
+const ModelEditor: React.FC<{
+  isVisible: boolean
+  className?: string
+}> = ({ isVisible, className }) => {
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
   const [state, setState] = useState<IState>({
@@ -663,72 +671,77 @@ const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
     );
   }
 
+  const toolbar = (
+    <ControlGroup>
+      <Popover2 minimal placement="bottom-start" content={<FileMenu sm={sm} />}>
+        <Button
+            icon="document">
+          File
+        </Button>
+      </Popover2>
+    </ControlGroup>
+  );
+
   let ret: JSX.Element;
   if (isVisible) {
     ret = (
-      <Container>
+      <Workspace className={className} toolbar={toolbar}>
         <ReactFlowProvider>
-          <ReactFlow
-            key="MMELModel"
-            elements={state.modelWrapper.getReactFlowElementsFrom(
-              state.dvisible,
-              state.clvisible
-            )}
-            onConnect={connectHandle}
-            onLoad={onLoad}
-            onDrop={onDrop}
-            onDragOver={onDragOver}
-            snapToGrid={true}
-            snapGrid={[10, 10]}
-            nodeTypes={nodeTypes}
-            edgeTypes={edgeTypes}
-            nodesConnectable={!state.clvisible}
-            ref={canvusRef}
-          >
-            <Controls>
-              {dataVisibleButton}
-              {state.simulation === null && !state.clvisible
-                ? controlPaneButton
-                : ''}
-              {state.simulation === null && state.clvisible
-                ? filterPaneButton
-                : ''}
-              {state.simulation === null && state.clvisible
-                ? measurePaneButton
-                : ''}
-              {state.simulation === null ? checkListButton : ''}
-              {state.simulation === null && !state.clvisible
-                ? basicSettingButton
-                : ''}
-              {state.simulation === null && !state.clvisible
-                ? newComponentButton
-                : ''}
-              {state.simulation === null && !state.clvisible
-                ? edgeDeleteButton
-                : ''}
-              {state.simulation === null && !state.clvisible ? importButton : ''}
-              {state.simulation === null && !state.clvisible ? aiButton : ''}
-              {state.simulation === null && !state.clvisible ? searchButton : ''}
-            </Controls>
-          </ReactFlow>
-          {state.simulation === null ? <PathPane {...sm} /> : ''}
-          <ControlPane key="ControlPanel" {...sm} />
-          {elms}
+          <div css={css`flex: 1; position: relative;`}>
+            <ReactFlow
+              key="MMELModel"
+              elements={state.modelWrapper.getReactFlowElementsFrom(
+                state.dvisible,
+                state.clvisible
+              )}
+              onConnect={connectHandle}
+              onLoad={onLoad}
+              onDrop={onDrop}
+              onDragOver={onDragOver}
+              snapToGrid={true}
+              snapGrid={[10, 10]}
+              nodeTypes={nodeTypes}
+              edgeTypes={edgeTypes}
+              nodesConnectable={!state.clvisible}
+              ref={canvusRef}
+            >
+              <Controls>
+                {dataVisibleButton}
+                {state.simulation === null && !state.clvisible
+                  ? controlPaneButton
+                  : ''}
+                {state.simulation === null && state.clvisible
+                  ? filterPaneButton
+                  : ''}
+                {state.simulation === null && state.clvisible
+                  ? measurePaneButton
+                  : ''}
+                {state.simulation === null ? checkListButton : ''}
+                {state.simulation === null && !state.clvisible
+                  ? basicSettingButton
+                  : ''}
+                {state.simulation === null && !state.clvisible
+                  ? newComponentButton
+                  : ''}
+                {state.simulation === null && !state.clvisible
+                  ? edgeDeleteButton
+                  : ''}
+                {state.simulation === null && !state.clvisible ? importButton : ''}
+                {state.simulation === null && !state.clvisible ? aiButton : ''}
+                {state.simulation === null && !state.clvisible ? searchButton : ''}
+              </Controls>
+            </ReactFlow>
+            {state.simulation === null ? <PathPane {...sm} /> : ''}
+            <ControlPane key="ControlPanel" {...sm} />
+            {elms}
+          </div>
         </ReactFlowProvider>
-      </Container>
+      </Workspace>
     );
   } else {
     ret = <div></div>;
   }
   return ret;
 };
-
-const Container = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 30%;
-`;
 
 export default ModelEditor;
