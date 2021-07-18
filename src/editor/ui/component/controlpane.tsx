@@ -1,6 +1,8 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+// TODO: This is superseded by FileMenu.
+
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { CSSProperties, RefObject, useContext } from 'react';
