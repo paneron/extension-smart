@@ -3,7 +3,8 @@
 
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
-import React, { ChangeEvent, CSSProperties, RefObject } from 'react';
+import React, { CSSProperties, RefObject, useContext } from 'react';
+import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { MMELFactory } from '../../runtime/modelComponentCreator';
 import { MMELModel } from '../../serialize/interface/model';
 import { MMELToText, textToMMEL } from '../../serialize/MMEL';
@@ -12,10 +13,17 @@ import { ModelWrapper } from '../model/modelwrapper';
 import { functionCollection } from '../util/function';
 import { MyTopRightButtons } from './unit/closebutton';
 
-const modelfile: RefObject<HTMLInputElement> = React.createRef();
 const modelfilename: RefObject<HTMLInputElement> = React.createRef();
 
 const ControlPane: React.FC<StateMan> = (sm: StateMan) => {
+  const {
+    logger,
+    getBlob,
+    useDecodedBlob,
+    writeFileToFilesystem,
+    requestFileFromFilesystem,
+  } = useContext(DatasetContext);
+
   const state = sm.state;
 
   const css: CSSProperties = {
@@ -23,11 +31,16 @@ const ControlPane: React.FC<StateMan> = (sm: StateMan) => {
   };
 
   const readModelFromFile = (result: string) => {
-    console.debug('Read model from file');
-    state.history.clear();
-    const model = textToMMEL(result);
-    state.modelWrapper = new ModelWrapper(model);
-    sm.setState(state);
+    logger?.log("Importing model");
+    try {
+      const model = textToMMEL(result);
+      state.history.clear();
+      state.modelWrapper = new ModelWrapper(model);
+      logger?.log("Loaded model");
+      sm.setState(state);
+    } catch (e) {
+      logger?.log("Failed to load model", e);
+    }
   };
 
   const newModel = () => {
@@ -36,62 +49,81 @@ const ControlPane: React.FC<StateMan> = (sm: StateMan) => {
     sm.setState(state);
   };
 
-  const exportModel = (fn: string | undefined): void => {
-    functionCollection.saveLayout();
-    const blob = new Blob([MMELToText(state.modelWrapper.model)], {
-      type: 'text/plain',
-    });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fn == undefined ? 'default.mmel' : fn;
-    a.click();
-  };
-
   const close = () => {
     state.cvisible = false;
     sm.setState(state);
   };
 
-  const exportJSON = (fn: string | undefined) => {
-    functionCollection.saveLayout();
-    const blob = new Blob([MMELToJSON(state.modelWrapper.model)], {
-      type: 'text/plain',
-    });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    if (fn == null) {
-      fn = 'default.json';
-    } else {
-      fn = fn.replaceAll('.mmel', '.json');
+  // Importing
+  async function importFileSelected(
+    readModel: (x: string) => void
+  ): Promise<void> {
+    if (!requestFileFromFilesystem) {
+      throw new Error("File import function not availbale");
     }
-    a.download = fn;
-    a.click();
-  };
+    if (!useDecodedBlob) {
+      throw new Error("Blob decode function not availbale");
+    }
 
-  const exportXML = (fn: string | undefined) => {
-    functionCollection.saveLayout();
-    const blob = new Blob([MMELToXML(state.modelWrapper.model)], {
-      type: 'text/plain',
+    logger?.log("Requesting file");
+
+    requestFileFromFilesystem({
+      prompt: "Choose an MMEL file to import",
+      allowMultiple: false,
+      filters: [{ name: "MMEL files", extensions: ['mmel'] }],
+    }, (selectedFiles) => {
+      logger?.log("Requesting file: Got selection", selectedFiles);
+      const fileData = Object.values(selectedFiles ?? {})[0];
+      if (fileData) {
+        const fileDataAsString = useDecodedBlob({ blob: fileData }).asString;
+        logger?.log("Requesting file: Decoded blob", fileDataAsString);
+        readModel(fileDataAsString);
+      } else {
+        logger?.log("Requesting file: No file data received");
+        console.error("Import file: no file data received");
+      }
     });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    if (fn == null) {
-      fn = 'default.xml';
-    } else {
-      fn = fn.replaceAll('.mmel', '.xml');
-    }
-    a.download = fn;
-    a.click();
+  }
+
+  // Exporting
+  // XXX: fn is unused. Is it important?
+  const exportModel = async (fn: string | undefined): Promise<void> => {
+    functionCollection.saveLayout();
+    const mmel = MMELToText(state.modelWrapper.model);
+    await exportFile(mmel);
   };
+  const exportJSON = async (fn: string | undefined) => {
+    functionCollection.saveLayout();
+    const json = MMELToJSON(state.modelWrapper.model);
+    await exportFile(json);
+  };
+  const exportXML = async (fn: string | undefined) => {
+    functionCollection.saveLayout();
+    const xml = MMELToXML(state.modelWrapper.model);
+    await exportFile(xml);
+  };
+  async function exportFile(fileData: string) {
+    if (!getBlob || !writeFileToFilesystem) {
+      throw new Error("File export function(s) are not provided");
+    }
+    //const blob = new Blob([fileData], {
+    //  type: 'text/plain',
+    //});
+    const blob = await getBlob(fileData);
+    await writeFileToFilesystem({
+      dialogOpts: {
+        prompt: "Choose location to save",
+        filters: [{ name: 'All files', extensions: ['*'] }],
+      },
+      bufferData: blob,
+    })
+  }
 
   return (
     <ControlBar style={css}>
       <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
 
-      <button onClick={() => modelfile.current?.click()}>Load Model</button>
+      <button onClick={() => importFileSelected(readModelFromFile)}>Load Model</button>
       <button onClick={() => exportModel(modelfilename.current?.value)}>
         Download Model
       </button>
@@ -105,13 +137,6 @@ const ControlPane: React.FC<StateMan> = (sm: StateMan) => {
           defaultValue="default.mmel"
         />{' '}
       </p>
-      <input
-        type="file"
-        accept=".mmel"
-        onChange={e => modelFileSelected(e, readModelFromFile)}
-        ref={modelfile}
-        style={{ display: 'none' }}
-      />
       <button onClick={() => newModel()}>New Model</button>
       <button onClick={() => exportJSON(modelfilename.current?.value)}>
         {' '}
@@ -137,23 +162,6 @@ const ControlBar = styled.aside`
   overflow-y: auto;
   z-index: 100;
 `;
-
-function modelFileSelected(
-  e: ChangeEvent<HTMLInputElement>,
-  readModel: (x: string) => void
-): void {
-  const flist = e.target.files;
-  if (flist != undefined && flist.length > 0) {
-    flist[0].text().then(result => {
-      readModel(result);
-    });
-  }
-  const name = e.target.value.split('\\');
-  if (modelfilename.current != undefined) {
-    modelfilename.current.value = name[name.length - 1];
-  }
-  e.target.value = '';
-}
 
 export default ControlPane;
 
