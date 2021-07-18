@@ -30,19 +30,6 @@ const ControlPane: React.FC<StateMan> = (sm: StateMan) => {
     display: state.cvisible ? 'inline' : 'none',
   };
 
-  const readModelFromFile = (result: string) => {
-    logger?.log("Importing model");
-    try {
-      const model = textToMMEL(result);
-      state.history.clear();
-      state.modelWrapper = new ModelWrapper(model);
-      logger?.log("Loaded model");
-      sm.setState(state);
-    } catch (e) {
-      logger?.log("Failed to load model", e);
-    }
-  };
-
   const newModel = () => {
     state.history.clear();
     state.modelWrapper = new ModelWrapper(MMELFactory.createNewModel());
@@ -55,6 +42,19 @@ const ControlPane: React.FC<StateMan> = (sm: StateMan) => {
   };
 
   // Importing
+
+  const readModelFromFile = (result: string) => {
+    logger?.log("Importing model");
+    try {
+      const model = textToMMEL(result);
+      state.history.clear();
+      state.modelWrapper = new ModelWrapper(model);
+      logger?.log("Loaded model");
+      sm.setState(state);
+    } catch (e) {
+      logger?.log("Failed to load model", e);
+    }
+  };
   async function importFileSelected(
     readModel: (x: string) => void
   ): Promise<void> {
