@@ -67,9 +67,9 @@ import { DataIndexer } from './util/datasearchmanager';
 const initModel = MMELFactory.createNewModel();
 const initModelWrapper = new ModelWrapper(initModel);
 
-const canvusRef: RefObject<HTMLDivElement> = React.createRef();
-
 const ModelEditor: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
+  const canvusRef: RefObject<HTMLDivElement> = React.createRef();
+
   const [state, setState] = useState<IState>({
     cvisible: false,
     dvisible: true,
