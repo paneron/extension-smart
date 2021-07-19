@@ -112,7 +112,6 @@ export class ModelWrapper {
     });
 
     if (dvisible) {
-
       this.page.data.forEach(e => {
         if (e.element !== null) {
           const x = datas.get(e.element.id);
@@ -143,7 +142,6 @@ export class ModelWrapper {
           }
         }
       });
-
     }
 
     this.page.edges.forEach(e => {

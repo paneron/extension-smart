@@ -36,13 +36,12 @@ import { functionCollection } from '../ui/util/function';
 import { DATATYPE, VarType } from './idManager';
 
 export class MMELFactory {
-
-  static createNewModel():MMELModel {
-    const page = MMELFactory.createSubprocess("Root")
-    const start = MMELFactory.createStartEvent("Start0")
-    const com = MMELFactory.createSubprocessComponent(start)
+  static createNewModel(): MMELModel {
+    const page = MMELFactory.createSubprocess('Root');
+    const start = MMELFactory.createStartEvent('Start0');
+    const com = MMELFactory.createSubprocessComponent(start);
     page.childs.push(com);
-    const m:MMELModel = {
+    const m: MMELModel = {
       meta: MMELFactory.createMetaData(),
       roles: [],
       provisions: [],
@@ -56,8 +55,8 @@ export class MMELFactory {
       approvals: [],
       enums: [],
       vars: [],
-      root: page
-    }
+      root: page,
+    };
     return m;
   }
 
@@ -260,19 +259,33 @@ export class MMELFactory {
     pos: XYPosition
   ): MMELNode | null {
     let ret: MMELNode | null = null;
-    if (type == 'process') ret = addProcess(mw);
-    if (type == 'approval') ret = addApproval(mw);
-    if (type == 'end') ret = addEnd(mw);
-    if (type == 'timer') ret = addTimer(mw);
-    if (type == 'signalcatch') ret = addSignalCatch(mw);
-    if (type == 'egate') ret = addEGate(mw);
-    if (type == 'custom') ret = findProcess(mw, page);
+    if (type == 'process') {
+      ret = addProcess(mw);
+    }
+    if (type == 'approval') {
+      ret = addApproval(mw);
+    }
+    if (type == 'end') {
+      ret = addEnd(mw);
+    }
+    if (type == 'timer') {
+      ret = addTimer(mw);
+    }
+    if (type == 'signalcatch') {
+      ret = addSignalCatch(mw);
+    }
+    if (type == 'egate') {
+      ret = addEGate(mw);
+    }
+    if (type == 'custom') {
+      ret = findProcess(mw, page);
+    }
     if (type == 'import') {
       ret = loadImport();
       mw.filterman.readDocu(mw.model.refs);
     }
     if (ret != null) {
-      const nc = MMELFactory.createSubprocessComponent(ret)
+      const nc = MMELFactory.createSubprocessComponent(ret);
       nc.element = ret;
       nc.x = pos.x;
       nc.y = pos.y;
@@ -285,53 +298,55 @@ export class MMELFactory {
 }
 
 function addProcess(mw: ModelWrapper): MMELProcess {
-  const model = mw.model
-  const p = MMELFactory.createProcess(mw.idman.findUniqueID("Process"))
+  const model = mw.model;
+  const p = MMELFactory.createProcess(mw.idman.findUniqueID('Process'));
   model.processes.push(p);
   mw.idman.nodes.set(p.id, p);
   return p;
 }
 
 function addApproval(mw: ModelWrapper): MMELApproval {
-  const idreg = mw.idman
-  const model = mw.model
-  const p = MMELFactory.createApproval(idreg.findUniqueID("Approval"))
+  const idreg = mw.idman;
+  const model = mw.model;
+  const p = MMELFactory.createApproval(idreg.findUniqueID('Approval'));
   model.approvals.push(p);
   idreg.nodes.set(p.id, p);
   return p;
 }
 
 function addEnd(mw: ModelWrapper): MMELEndEvent {
-  const idreg = mw.idman
-  const model = mw.model
-  const e = MMELFactory.createEndEvent(idreg.findUniqueID("EndEvent"))
+  const idreg = mw.idman;
+  const model = mw.model;
+  const e = MMELFactory.createEndEvent(idreg.findUniqueID('EndEvent'));
   model.events.push(e);
   idreg.nodes.set(e.id, e);
   return e;
 }
 
 function addTimer(mw: ModelWrapper): MMELTimerEvent {
-  const idreg = mw.idman
-  const model = mw.model
-  const e = MMELFactory.createTimerEvent(idreg.findUniqueID("TimerEvent"))
+  const idreg = mw.idman;
+  const model = mw.model;
+  const e = MMELFactory.createTimerEvent(idreg.findUniqueID('TimerEvent'));
   model.events.push(e);
   idreg.nodes.set(e.id, e);
   return e;
 }
 
 function addSignalCatch(mw: ModelWrapper): MMELSignalCatchEvent {
-  const idreg = mw.idman
-  const model = mw.model
-  const e = MMELFactory.createSignalCatchEvent(idreg.findUniqueID("SignalCatchEvent"))
+  const idreg = mw.idman;
+  const model = mw.model;
+  const e = MMELFactory.createSignalCatchEvent(
+    idreg.findUniqueID('SignalCatchEvent')
+  );
   model.events.push(e);
   idreg.nodes.set(e.id, e);
   return e;
 }
 
 function addEGate(mw: ModelWrapper): MMELEGate {
-  const idreg = mw.idman
-  const model = mw.model
-  const e = MMELFactory.createEGate(idreg.findUniqueID("EGate"))
+  const idreg = mw.idman;
+  const model = mw.model;
+  const e = MMELFactory.createEGate(idreg.findUniqueID('EGate'));
   model.gateways.push(e);
   idreg.nodes.set(e.id, e);
   return e;
@@ -341,13 +356,13 @@ function findProcess(
   mw: ModelWrapper,
   page: MMELSubprocess
 ): MMELProcess | null {
-  const sm = functionCollection.getStateMan()  
+  const sm = functionCollection.getStateMan();
   //const model = mw.model
-  const idreg = mw.idman
-  const p = idreg.nodes.get(sm.state.addingexisting)
+  const idreg = mw.idman;
+  const p = idreg.nodes.get(sm.state.addingexisting);
   sm.state.addingexisting = '';
   if (p != null && p.datatype == DataType.PROCESS) {
-    const process = p as MMELProcess
+    const process = p as MMELProcess;
     mw.nodeman.get(process).pages.add(page);
     return process;
   }
@@ -355,20 +370,20 @@ function findProcess(
 }
 
 function loadImport(): MMELProcess | null {
-  const sm = functionCollection.getStateMan()
-  const imodel = sm.state.imodel
-  const type = sm.state.importing
-  const ns = sm.state.namespace
-  const imw = new ModelWrapper(imodel)
-  const prefix = ns+"#"  
+  const sm = functionCollection.getStateMan();
+  const imodel = sm.state.imodel;
+  const type = sm.state.importing;
+  const ns = sm.state.namespace;
+  const imw = new ModelWrapper(imodel);
+  const prefix = ns + '#';
   if (type == '*') {
-    const id = prefix+"*"    
+    const id = prefix + '*';
     return addRootProcessToModel(imw, id, prefix);
   } else {
-    const op = imw.idman.nodes.get(type)    
-    const id = prefix+type
+    const op = imw.idman.nodes.get(type);
+    const id = prefix + type;
     if (op != undefined && op.datatype == DataType.PROCESS) {
-      const process = op as MMELProcess
+      const process = op as MMELProcess;
       return addProcessIfNotFound(imw, id, prefix, process);
     }
   }
@@ -381,12 +396,12 @@ function addRootProcessToModel(
   id: string,
   prefix: string
 ): MMELProcess {
-  const sm = functionCollection.getStateMan()
-  const imodel = sm.state.imodel
-  const model = sm.state.modelWrapper.model
-  const idreg = sm.state.modelWrapper.idman
+  const sm = functionCollection.getStateMan();
+  const imodel = sm.state.imodel;
+  const model = sm.state.modelWrapper.model;
+  const idreg = sm.state.modelWrapper.idman;
 
-  const p = MMELFactory.createProcess(id)
+  const p = MMELFactory.createProcess(id);
   p.name = imodel.meta.title;
   if (imodel.root != null) {
     p.page = addPageIfNotFound(
@@ -410,17 +425,17 @@ function addRoleIfNotFound(
   id: string,
   role: MMELRole
 ): MMELRole {
-  const sm = functionCollection.getStateMan()
-  const model = sm.state.modelWrapper.model
-  const idreg = sm.state.modelWrapper.idman
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = sm.state.modelWrapper.idman;
   if (!idreg.roles.has(id)) {
-    const r = MMELFactory.createRole(id)
+    const r = MMELFactory.createRole(id);
     r.name = role.name;
     model.roles.push(r);
     idreg.roles.set(id, r);
     return r;
   }
-  const r = idreg.roles.get(id)
+  const r = idreg.roles.get(id);
   if (r != undefined && r.datatype == DataType.ROLE) {
     return r as MMELRole;
   }
@@ -434,11 +449,11 @@ function addProcessIfNotFound(
   prefix: string,
   process: MMELProcess
 ): MMELProcess {
-  const sm = functionCollection.getStateMan()
-  const model = sm.state.modelWrapper.model
-  const idreg = sm.state.modelWrapper.idman
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = sm.state.modelWrapper.idman;
   if (!idreg.nodes.has(id)) {
-    const p = MMELFactory.createProcess(id)
+    const p = MMELFactory.createProcess(id);
     p.name = process.name;
     if (process.actor != null) {
       p.actor = addRoleIfNotFound(
@@ -471,7 +486,7 @@ function addProcessIfNotFound(
     idreg.nodes.set(id, p);
     return p;
   }
-  const p = idreg.nodes.get(id)
+  const p = idreg.nodes.get(id);
   if (p != undefined && p.datatype == DataType.PROCESS) {
     return p as MMELProcess;
   }
@@ -485,11 +500,11 @@ function addApprovalIfNotFound(
   prefix: string,
   approval: MMELApproval
 ): MMELApproval {
-  const sm = functionCollection.getStateMan()
-  const model = sm.state.modelWrapper.model
-  const idreg = sm.state.modelWrapper.idman
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = sm.state.modelWrapper.idman;
   if (!idreg.nodes.has(id)) {
-    const p = MMELFactory.createApproval(id)
+    const p = MMELFactory.createApproval(id);
     p.name = approval.name;
     p.modality = approval.modality;
     if (approval.actor != null) {
@@ -516,7 +531,7 @@ function addApprovalIfNotFound(
     idreg.nodes.set(id, p);
     return p;
   }
-  const p = idreg.nodes.get(id)
+  const p = idreg.nodes.get(id);
   if (p != undefined && p.datatype == DataType.APPROVAL) {
     return p as MMELApproval;
   }
@@ -530,11 +545,11 @@ function addRegistryIfNotFound(
   prefix: string,
   registry: MMELRegistry
 ): MMELRegistry {
-  const sm = functionCollection.getStateMan()
-  const model = sm.state.modelWrapper.model
-  const idreg = sm.state.modelWrapper.idman
+  const sm = functionCollection.getStateMan();
+  const model = sm.state.modelWrapper.model;
+  const idreg = sm.state.modelWrapper.idman;
   if (!idreg.nodes.has(id)) {
-    const r = MMELFactory.createRegistry(id)
+    const r = MMELFactory.createRegistry(id);
     // Cloning Registry
     r.title = registry.title;
     if (registry.data != null) {
@@ -551,7 +566,7 @@ function addRegistryIfNotFound(
     idreg.regs.set(id, r);
     return r;
   }
-  const r = idreg.nodes.get(id)
+  const r = idreg.nodes.get(id);
   if (r != undefined && r.datatype == DataType.REGISTRY) {
     return r as MMELRegistry;
   }
@@ -565,15 +580,15 @@ function addDataclassIfNotFound(
   prefix: string,
   dc: MMELDataClass
 ): MMELDataClass {
-  const sm = functionCollection.getStateMan()
-  const mw = sm.state.modelWrapper
-  const model = mw.model
-  const idreg = mw.idman
+  const sm = functionCollection.getStateMan();
+  const mw = sm.state.modelWrapper;
+  const model = mw.model;
+  const idreg = mw.idman;
   if (!idreg.nodes.has(id)) {
-    const r = MMELFactory.createDataClass(id)
+    const r = MMELFactory.createDataClass(id);
     // Cloning Dataclass
     dc.attributes.map(a => {
-      const na = MMELFactory.createDataAttribute(prefix+a.id)
+      const na = MMELFactory.createDataAttribute(prefix + a.id);
       na.cardinality = a.cardinality;
       na.definition = a.definition;
       na.modality = a.modality;
@@ -586,11 +601,11 @@ function addDataclassIfNotFound(
       if (DATATYPE.indexOf(a.type) != -1) {
         na.type = a.type;
       } else {
-        const u = a.type.indexOf("(")
-        const v = a.type.indexOf(")")
+        const u = a.type.indexOf('(');
+        const v = a.type.indexOf(')');
         if (u != -1 && v != -1) {
-          const type = a.type.substr(u+1, v-u-1)
-          const nextdc = imw.idman.nodes.get(type)          
+          const type = a.type.substr(u + 1, v - u - 1);
+          const nextdc = imw.idman.nodes.get(type);
           if (nextdc != undefined && nextdc.datatype == DataType.DATACLASS) {
             const ret = addDataclassIfNotFound(
               imw,
@@ -605,7 +620,7 @@ function addDataclassIfNotFound(
             }
           }
         } else {
-          const nextdc = imw.idman.nodes.get(a.type)
+          const nextdc = imw.idman.nodes.get(a.type);
           if (nextdc != undefined && nextdc.datatype == DataType.DATACLASS) {
             const ret = addDataclassIfNotFound(
               imw,
@@ -633,7 +648,7 @@ function addDataclassIfNotFound(
     idreg.dcs.set(id, r);
     return r;
   }
-  const r = idreg.nodes.get(id)
+  const r = idreg.nodes.get(id);
   if (r != undefined && r.datatype == DataType.DATACLASS) {
     return r as MMELDataClass;
   }
@@ -646,15 +661,15 @@ function addEnumIfNotFound(
   id: string,
   en: MMELEnum
 ): MMELEnum {
-  const sm = functionCollection.getStateMan()
-  const mw = sm.state.modelWrapper
-  const model = mw.model
-  const idreg = mw.idman
+  const sm = functionCollection.getStateMan();
+  const mw = sm.state.modelWrapper;
+  const model = mw.model;
+  const idreg = mw.idman;
   if (!idreg.enums.has(id)) {
-    const r = MMELFactory.createEnum(id)
+    const r = MMELFactory.createEnum(id);
     // Cloning Enum
     en.values.forEach(v => {
-      const ev = MMELFactory.createEnumValue(v.id)
+      const ev = MMELFactory.createEnumValue(v.id);
       ev.value = v.value;
       r.values.push(ev);
     });
@@ -663,7 +678,7 @@ function addEnumIfNotFound(
     idreg.enums.set(id, r);
     return r;
   }
-  const r = idreg.enums.get(id)
+  const r = idreg.enums.get(id);
   if (r != undefined && r.datatype == DataType.ENUM) {
     return r as MMELEnum;
   }
@@ -677,12 +692,12 @@ function addProvisionIfNotFound(
   prefix: string,
   provision: MMELProvision
 ): MMELProvision {
-  const sm = functionCollection.getStateMan()
-  const mw = sm.state.modelWrapper
-  const model = mw.model
-  const idreg = mw.idman
+  const sm = functionCollection.getStateMan();
+  const mw = sm.state.modelWrapper;
+  const model = mw.model;
+  const idreg = mw.idman;
   if (!idreg.provisions.has(id)) {
-    const p = MMELFactory.createProvision(id)
+    const p = MMELFactory.createProvision(id);
     // Cloning Provision
     provision.subject.forEach((v, k) => {
       p.subject.set(k, v);
@@ -696,7 +711,7 @@ function addProvisionIfNotFound(
     idreg.provisions.set(id, p);
     return p;
   }
-  const r = idreg.provisions.get(id)
+  const r = idreg.provisions.get(id);
   if (r != undefined && r.datatype == DataType.PROVISION) {
     return r as MMELProvision;
   }
@@ -709,12 +724,12 @@ function addReferenceIfNotFound(
   id: string,
   ref: MMELReference
 ): MMELReference {
-  const sm = functionCollection.getStateMan()
-  const mw = sm.state.modelWrapper
-  const model = mw.model
-  const idreg = mw.idman
+  const sm = functionCollection.getStateMan();
+  const mw = sm.state.modelWrapper;
+  const model = mw.model;
+  const idreg = mw.idman;
   if (!idreg.refs.has(id)) {
-    const r = MMELFactory.createReference(id)
+    const r = MMELFactory.createReference(id);
     // Cloning Reference
     r.document = ref.document;
     r.clause = ref.clause;
@@ -722,7 +737,7 @@ function addReferenceIfNotFound(
     idreg.refs.set(id, r);
     return r;
   }
-  const r = idreg.refs.get(id)
+  const r = idreg.refs.get(id);
   if (r != undefined && r.datatype == DataType.REFERENCE) {
     return r as MMELReference;
   }
@@ -736,18 +751,18 @@ function addPageIfNotFound(
   prefix: string,
   page: MMELSubprocess
 ): MMELSubprocess {
-  const sm = functionCollection.getStateMan()
-  const mw = sm.state.modelWrapper
-  const model = mw.model
-  const idreg = mw.idman
+  const sm = functionCollection.getStateMan();
+  const mw = sm.state.modelWrapper;
+  const model = mw.model;
+  const idreg = mw.idman;
   if (!idreg.pages.has(id)) {
-    const p = MMELFactory.createSubprocess(id)
+    const p = MMELFactory.createSubprocess(id);
     // Cloning Subprocess
     page.childs.map(c => {
       if (c.element != null && isGraphNode(c.element)) {
-        const id = prefix + c.element.id
-        const elm = addGraphNodeIfNotFound(imw, id, prefix, c.element)
-        const nc = MMELFactory.createSubprocessComponent(elm)
+        const id = prefix + c.element.id;
+        const elm = addGraphNodeIfNotFound(imw, id, prefix, c.element);
+        const nc = MMELFactory.createSubprocessComponent(elm);
         nc.x = c.x;
         nc.y = c.y;
         p.childs.push(nc);
@@ -755,18 +770,18 @@ function addPageIfNotFound(
       }
     });
     page.edges.map(e => {
-      const ne = MMELFactory.createEdge(prefix+e.id)
+      const ne = MMELFactory.createEdge(prefix + e.id);
       ne.description = e.description;
       if (e.from != null && e.from.element != null) {
-        const id = prefix+e.from.element.id
-        const ret = mw.subman.get(p).map.get(id)
+        const id = prefix + e.from.element.id;
+        const ret = mw.subman.get(p).map.get(id);
         if (ret != null) {
           ne.from = ret;
         }
       }
       if (e.to != null && e.to.element != null) {
-        const id = prefix+e.to.element.id        
-        const ret = mw.subman.get(p).map.get(id)
+        const id = prefix + e.to.element.id;
+        const ret = mw.subman.get(p).map.get(id);
         if (ret != null) {
           ne.to = ret;
         }
@@ -781,9 +796,14 @@ function addPageIfNotFound(
     });
     page.data.map(c => {
       if (c.element != null && c.element.datatype == DataType.REGISTRY) {
-        const id = prefix + c.element.id
-        const elm = addRegistryIfNotFound(imw, id, prefix, c.element as MMELRegistry)
-        const nc = MMELFactory.createSubprocessComponent(elm)        
+        const id = prefix + c.element.id;
+        const elm = addRegistryIfNotFound(
+          imw,
+          id,
+          prefix,
+          c.element as MMELRegistry
+        );
+        const nc = MMELFactory.createSubprocessComponent(elm);
         nc.x = c.x;
         nc.y = c.y;
         p.data.push(nc);
@@ -792,18 +812,23 @@ function addPageIfNotFound(
         c.element != null &&
         c.element.datatype == DataType.DATACLASS
       ) {
-        const id = prefix + c.element.id
-        const elm = addDataclassIfNotFound(imw, id, prefix, c.element as MMELDataClass)
-        const nc = MMELFactory.createSubprocessComponent(elm)        
+        const id = prefix + c.element.id;
+        const elm = addDataclassIfNotFound(
+          imw,
+          id,
+          prefix,
+          c.element as MMELDataClass
+        );
+        const nc = MMELFactory.createSubprocessComponent(elm);
         nc.x = c.x;
         nc.y = c.y;
         p.data.push(nc);
         mw.subman.get(p).map.set(id, nc);
       }
     });
-    const paddon = imw.subman.get(page)
+    const paddon = imw.subman.get(page);
     if (paddon.start != null && paddon.start.element != null) {
-      const start = mw.subman.get(p).map.get(prefix+paddon.start.element.id)
+      const start = mw.subman.get(p).map.get(prefix + paddon.start.element.id);
       if (start != undefined) {
         mw.subman.get(p).start = start;
       }
@@ -812,7 +837,7 @@ function addPageIfNotFound(
     idreg.pages.set(id, p);
     return p;
   }
-  const r = idreg.pages.get(id)
+  const r = idreg.pages.get(id);
   if (r != undefined && r.datatype == DataType.SUBPROCESS) {
     return r as MMELSubprocess;
   }
@@ -825,19 +850,19 @@ function addEGateIfNotFound(
   id: string,
   g: MMELEGate
 ): MMELEGate {
-  const sm = functionCollection.getStateMan()
-  const mw = sm.state.modelWrapper
-  const model = mw.model
-  const idreg = mw.idman
+  const sm = functionCollection.getStateMan();
+  const mw = sm.state.modelWrapper;
+  const model = mw.model;
+  const idreg = mw.idman;
   if (!idreg.nodes.has(id)) {
-    const r = MMELFactory.createEGate(id)
+    const r = MMELFactory.createEGate(id);
     // Cloning EGate
     r.label = g.label;
     model.gateways.push(r);
     idreg.nodes.set(id, r);
     return r;
   }
-  const r = idreg.nodes.get(id)
+  const r = idreg.nodes.get(id);
   if (r != undefined && r.datatype == DataType.EGATE) {
     return r as MMELEGate;
   }
@@ -850,18 +875,18 @@ function addStartEventIfNotFound(
   id: string,
   e: MMELStartEvent
 ): MMELStartEvent {
-  const sm = functionCollection.getStateMan()
-  const mw = sm.state.modelWrapper
-  const model = mw.model
-  const idreg = mw.idman
+  const sm = functionCollection.getStateMan();
+  const mw = sm.state.modelWrapper;
+  const model = mw.model;
+  const idreg = mw.idman;
   if (!idreg.nodes.has(id)) {
-    const r = MMELFactory.createStartEvent(id)
+    const r = MMELFactory.createStartEvent(id);
     // Cloning Start Event
     model.events.push(r);
     idreg.nodes.set(id, r);
     return r;
   }
-  const r = idreg.nodes.get(id)
+  const r = idreg.nodes.get(id);
   if (r != undefined && r.datatype == DataType.STARTEVENT) {
     return r as MMELStartEvent;
   }
@@ -874,18 +899,18 @@ function addEndEventIfNotFound(
   id: string,
   e: MMELEndEvent
 ): MMELEndEvent {
-  const sm = functionCollection.getStateMan()
-  const mw = sm.state.modelWrapper
-  const model = mw.model
-  const idreg = mw.idman
+  const sm = functionCollection.getStateMan();
+  const mw = sm.state.modelWrapper;
+  const model = mw.model;
+  const idreg = mw.idman;
   if (!idreg.nodes.has(id)) {
-    const r = MMELFactory.createEndEvent(id)
+    const r = MMELFactory.createEndEvent(id);
     // Cloning End Event
     model.events.push(r);
     idreg.nodes.set(id, r);
     return r;
   }
-  const r = idreg.nodes.get(id)
+  const r = idreg.nodes.get(id);
   if (r != undefined && r.datatype == DataType.ENDEVENT) {
     return r as MMELEndEvent;
   }
@@ -899,19 +924,19 @@ function addSCEventIfNotFound(
   prefix: string,
   e: MMELSignalCatchEvent
 ): MMELSignalCatchEvent {
-  const sm = functionCollection.getStateMan()
-  const mw = sm.state.modelWrapper
-  const model = mw.model
-  const idreg = mw.idman
+  const sm = functionCollection.getStateMan();
+  const mw = sm.state.modelWrapper;
+  const model = mw.model;
+  const idreg = mw.idman;
   if (!idreg.nodes.has(id)) {
-    const r = MMELFactory.createSignalCatchEvent(id)
+    const r = MMELFactory.createSignalCatchEvent(id);
     r.signal = prefix + e.signal;
     // Cloning Signal Catch Event
     model.events.push(r);
     idreg.nodes.set(id, r);
     return r;
   }
-  const r = idreg.nodes.get(id)
+  const r = idreg.nodes.get(id);
   if (r != undefined && r.datatype == DataType.SIGNALCATCHEVENT) {
     return r as MMELSignalCatchEvent;
   }
@@ -924,12 +949,12 @@ function addTimerEventIfNotFound(
   id: string,
   e: MMELTimerEvent
 ): MMELTimerEvent {
-  const sm = functionCollection.getStateMan()
-  const mw = sm.state.modelWrapper
-  const model = mw.model
-  const idreg = mw.idman
+  const sm = functionCollection.getStateMan();
+  const mw = sm.state.modelWrapper;
+  const model = mw.model;
+  const idreg = mw.idman;
   if (!idreg.nodes.has(id)) {
-    const r = MMELFactory.createTimerEvent(id)
+    const r = MMELFactory.createTimerEvent(id);
     // Cloning Timer Event
     r.type = e.type;
     r.para = e.para;
@@ -937,7 +962,7 @@ function addTimerEventIfNotFound(
     idreg.nodes.set(id, r);
     return r;
   }
-  const r = idreg.nodes.get(id)
+  const r = idreg.nodes.get(id);
   if (r != undefined && r.datatype == DataType.TIMEREVENT) {
     return r as MMELTimerEvent;
   }
@@ -951,11 +976,11 @@ function addGraphNodeIfNotFound(
   prefix: string,
   x: MMELNode
 ): MMELNode {
-  const sm = functionCollection.getStateMan()
-  const mw = sm.state.modelWrapper
+  const sm = functionCollection.getStateMan();
+  const mw = sm.state.modelWrapper;
   //const model = mw.model
-  const idreg = mw.idman
-  const ret = idreg.nodes.get(id)
+  const idreg = mw.idman;
+  const ret = idreg.nodes.get(id);
   if (ret != undefined && isGraphNode(ret)) {
     return ret as MMELNode;
   }

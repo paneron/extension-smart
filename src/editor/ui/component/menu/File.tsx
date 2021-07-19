@@ -11,7 +11,6 @@ import { ModelWrapper } from '../../model/modelwrapper';
 import { MMELToText, textToMMEL } from '../../../serialize/MMEL';
 import { MMELModel } from '../../../serialize/interface/model';
 
-
 const FileMenu: React.FC<{ sm: StateMan }> = function ({ sm }) {
   const {
     logger,
@@ -33,38 +32,43 @@ const FileMenu: React.FC<{ sm: StateMan }> = function ({ sm }) {
 
   // Open
   function parseModel(data: string) {
-    logger?.log("Importing model");
+    logger?.log('Importing model');
     try {
       const model = textToMMEL(data);
       sm.state.history.clear();
       sm.state.modelWrapper = new ModelWrapper(model);
-      logger?.log("Loaded model");
+      logger?.log('Loaded model');
       sm.setState(sm.state);
     } catch (e) {
-      logger?.log("Failed to load model", e);
+      logger?.log('Failed to load model', e);
     }
-  };
+  }
   async function handleOpen() {
     if (requestFileFromFilesystem && useDecodedBlob) {
-      logger?.log("Requesting file");
-      requestFileFromFilesystem({
-        prompt: "Choose an MMEL file to import",
-        allowMultiple: false,
-        filters: [{ name: "MMEL files", extensions: ['mmel'] }],
-      }, (selectedFiles) => {
-        logger?.log("Requesting file: Got selection", selectedFiles);
-        const fileData = Object.values(selectedFiles ?? {})[0];
-        if (fileData) {
-          const fileDataAsString = useDecodedBlob({ blob: fileData }).asString;
-          logger?.log("Requesting file: Decoded blob", fileDataAsString);
-          parseModel(fileDataAsString);
-        } else {
-          logger?.log("Requesting file: No file data received");
-          console.error("Import file: no file data received");
+      logger?.log('Requesting file');
+      requestFileFromFilesystem(
+        {
+          prompt: 'Choose an MMEL file to import',
+          allowMultiple: false,
+          filters: [{ name: 'MMEL files', extensions: ['mmel'] }],
+        },
+        selectedFiles => {
+          logger?.log('Requesting file: Got selection', selectedFiles);
+          const fileData = Object.values(selectedFiles ?? {})[0];
+          if (fileData) {
+            const fileDataAsString = useDecodedBlob({
+              blob: fileData,
+            }).asString;
+            logger?.log('Requesting file: Decoded blob', fileDataAsString);
+            parseModel(fileDataAsString);
+          } else {
+            logger?.log('Requesting file: No file data received');
+            console.error('Import file: no file data received');
+          }
         }
-      });
+      );
     } else {
-      throw new Error("File import function not availbale");
+      throw new Error('File import function not availbale');
     }
   }
 
@@ -80,24 +84,20 @@ const FileMenu: React.FC<{ sm: StateMan }> = function ({ sm }) {
         const blob = await getBlob(fileData);
         await writeFileToFilesystem({
           dialogOpts: {
-            prompt: "Choose location to save",
+            prompt: 'Choose location to save',
             filters: [{ name: 'All files', extensions: ['*'] }],
           },
           bufferData: blob,
-        })
+        });
       } else {
-        throw new Error("File export function(s) are not provided");
+        throw new Error('File export function(s) are not provided');
       }
     };
   }
 
   return (
     <Menu>
-      <MenuItem
-        text="New"
-        onClick={handleNew}
-        icon="document"
-      />
+      <MenuItem text="New" onClick={handleNew} icon="document" />
       <MenuItem
         text="Open…"
         disabled={!canOpen}
@@ -114,13 +114,13 @@ const FileMenu: React.FC<{ sm: StateMan }> = function ({ sm }) {
         text="Export"
         icon="export"
         disabled={!canSave}
-        children={EXPORT_FORMATS.map(format =>
+        children={EXPORT_FORMATS.map(format => (
           <MenuItem
             text={`Export to ${format}`}
             disabled={!canSave}
             onClick={getExportHandler(EXPORT_HANDLERS[format])}
           />
-        )}
+        ))}
       />
     </Menu>
   );
@@ -128,18 +128,14 @@ const FileMenu: React.FC<{ sm: StateMan }> = function ({ sm }) {
 
 export default FileMenu;
 
-
-const EXPORT_FORMATS = [
-  'XML',
-  'JSON',
-] as const;
+const EXPORT_FORMATS = ['XML', 'JSON'] as const;
 
 type ExportFormat = typeof EXPORT_FORMATS[number];
 
 const EXPORT_HANDLERS: Record<ExportFormat, (m: MMELModel) => string> = {
-  'XML': mmelToXML,
-  'JSON': mmelToJSON,
-}
+  XML: mmelToXML,
+  JSON: mmelToJSON,
+};
 
 function mmelToJSON(m: MMELModel): string {
   return JSON.stringify(m);

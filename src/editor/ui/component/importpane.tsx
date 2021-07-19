@@ -13,20 +13,21 @@ import { MyTopRightButtons } from './unit/closebutton';
 const ref: RefObject<HTMLSelectElement> = React.createRef();
 
 const ImportPane: React.FC<StateMan> = (sm: StateMan) => {
-  const { logger, requestFileFromFilesystem, useDecodedBlob } = useContext(DatasetContext);
+  const { logger, requestFileFromFilesystem, useDecodedBlob } =
+    useContext(DatasetContext);
 
   const state = sm.state;
 
   const importModelFromFile = (result: string) => {
-    logger?.log("Importing model");
+    logger?.log('Importing model');
     try {
       const model = textToMMEL(result);
       state.imodel = model;
       state.namespace = state.imodel.meta.namespace;
-      logger?.log("Imported model", model);
+      logger?.log('Imported model', model);
       sm.setState(state);
     } catch (e) {
-      logger?.log("Failed to import model", e);
+      logger?.log('Failed to import model', e);
     }
   };
 
@@ -71,30 +72,33 @@ const ImportPane: React.FC<StateMan> = (sm: StateMan) => {
     readModel: (x: string) => void
   ): Promise<void> {
     if (!requestFileFromFilesystem) {
-      throw new Error("File import function not availbale");
+      throw new Error('File import function not availbale');
     }
     if (!useDecodedBlob) {
-      throw new Error("Blob decode function not availbale");
+      throw new Error('Blob decode function not availbale');
     }
 
-    logger?.log("Requesting file");
+    logger?.log('Requesting file');
 
-    requestFileFromFilesystem({
-      prompt: "Choose an MMEL file to import",
-      allowMultiple: false,
-      filters: [{ name: "MMEL files", extensions: ['mmel'] }],
-    }, (selectedFiles) => {
-      logger?.log("Requesting file: Got selection", selectedFiles);
-      const fileData = Object.values(selectedFiles ?? {})[0];
-      if (fileData) {
-        const fileDataAsString = useDecodedBlob({ blob: fileData }).asString;
-        logger?.log("Requesting file: Decoded blob", fileDataAsString);
-        readModel(fileDataAsString);
-      } else {
-        logger?.log("Requesting file: No file data received");
-        console.error("Import file: no file data received");
+    requestFileFromFilesystem(
+      {
+        prompt: 'Choose an MMEL file to import',
+        allowMultiple: false,
+        filters: [{ name: 'MMEL files', extensions: ['mmel'] }],
+      },
+      selectedFiles => {
+        logger?.log('Requesting file: Got selection', selectedFiles);
+        const fileData = Object.values(selectedFiles ?? {})[0];
+        if (fileData) {
+          const fileDataAsString = useDecodedBlob({ blob: fileData }).asString;
+          logger?.log('Requesting file: Decoded blob', fileDataAsString);
+          readModel(fileDataAsString);
+        } else {
+          logger?.log('Requesting file: No file data received');
+          console.error('Import file: no file data received');
+        }
       }
-    });
+    );
   }
 
   return (
@@ -102,7 +106,9 @@ const ImportPane: React.FC<StateMan> = (sm: StateMan) => {
       <Container>
         Measurement import is not yet implemented
         <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
-        <button onClick={() => importFileSelected(importModelFromFile)}>Open Model</button>
+        <button onClick={() => importFileSelected(importModelFromFile)}>
+          Open Model
+        </button>
         Namespace
         <input
           type="text"

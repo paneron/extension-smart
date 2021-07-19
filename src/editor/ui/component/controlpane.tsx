@@ -46,45 +46,48 @@ const ControlPane: React.FC<StateMan> = (sm: StateMan) => {
   // Importing
 
   const readModelFromFile = (result: string) => {
-    logger?.log("Importing model");
+    logger?.log('Importing model');
     try {
       const model = textToMMEL(result);
       state.history.clear();
       state.modelWrapper = new ModelWrapper(model);
-      logger?.log("Loaded model");
+      logger?.log('Loaded model');
       sm.setState(state);
     } catch (e) {
-      logger?.log("Failed to load model", e);
+      logger?.log('Failed to load model', e);
     }
   };
   async function importFileSelected(
     readModel: (x: string) => void
   ): Promise<void> {
     if (!requestFileFromFilesystem) {
-      throw new Error("File import function not availbale");
+      throw new Error('File import function not availbale');
     }
     if (!useDecodedBlob) {
-      throw new Error("Blob decode function not availbale");
+      throw new Error('Blob decode function not availbale');
     }
 
-    logger?.log("Requesting file");
+    logger?.log('Requesting file');
 
-    requestFileFromFilesystem({
-      prompt: "Choose an MMEL file to import",
-      allowMultiple: false,
-      filters: [{ name: "MMEL files", extensions: ['mmel'] }],
-    }, (selectedFiles) => {
-      logger?.log("Requesting file: Got selection", selectedFiles);
-      const fileData = Object.values(selectedFiles ?? {})[0];
-      if (fileData) {
-        const fileDataAsString = useDecodedBlob({ blob: fileData }).asString;
-        logger?.log("Requesting file: Decoded blob", fileDataAsString);
-        readModel(fileDataAsString);
-      } else {
-        logger?.log("Requesting file: No file data received");
-        console.error("Import file: no file data received");
+    requestFileFromFilesystem(
+      {
+        prompt: 'Choose an MMEL file to import',
+        allowMultiple: false,
+        filters: [{ name: 'MMEL files', extensions: ['mmel'] }],
+      },
+      selectedFiles => {
+        logger?.log('Requesting file: Got selection', selectedFiles);
+        const fileData = Object.values(selectedFiles ?? {})[0];
+        if (fileData) {
+          const fileDataAsString = useDecodedBlob({ blob: fileData }).asString;
+          logger?.log('Requesting file: Decoded blob', fileDataAsString);
+          readModel(fileDataAsString);
+        } else {
+          logger?.log('Requesting file: No file data received');
+          console.error('Import file: no file data received');
+        }
       }
-    });
+    );
   }
 
   // Exporting
@@ -106,7 +109,7 @@ const ControlPane: React.FC<StateMan> = (sm: StateMan) => {
   };
   async function exportFile(fileData: string) {
     if (!getBlob || !writeFileToFilesystem) {
-      throw new Error("File export function(s) are not provided");
+      throw new Error('File export function(s) are not provided');
     }
     //const blob = new Blob([fileData], {
     //  type: 'text/plain',
@@ -114,18 +117,20 @@ const ControlPane: React.FC<StateMan> = (sm: StateMan) => {
     const blob = await getBlob(fileData);
     await writeFileToFilesystem({
       dialogOpts: {
-        prompt: "Choose location to save",
+        prompt: 'Choose location to save',
         filters: [{ name: 'All files', extensions: ['*'] }],
       },
       bufferData: blob,
-    })
+    });
   }
 
   return (
     <ControlBar style={css}>
       <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
 
-      <button onClick={() => importFileSelected(readModelFromFile)}>Load Model</button>
+      <button onClick={() => importFileSelected(readModelFromFile)}>
+        Load Model
+      </button>
       <button onClick={() => exportModel(modelfilename.current?.value)}>
         Download Model
       </button>
