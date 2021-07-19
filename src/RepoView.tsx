@@ -21,7 +21,7 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
         className={Classes.ELEVATION_3}
         css={css`
           z-index: 14;
-          background: ${Colors.LIGHT_GRAY3};
+          background: ${Colors.BLUE3};
           width: 32px;
           align-items: center;
           overflow: hidden;
@@ -120,6 +120,7 @@ function ({ moduleName, selected, onSelect }) {
     <Tooltip2 content={cfg.description} css={css`margin-top: -2px`}>
       <Button
         large
+        intent="primary"
         active={selected}
         onClick={onSelect}
         icon={cfg.icon}
