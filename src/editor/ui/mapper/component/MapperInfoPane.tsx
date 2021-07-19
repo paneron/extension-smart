@@ -15,11 +15,11 @@ const MapperInfoPane: React.FC<ModelViewStateMan> = (sm: ModelViewStateMan) => {
   };
 
   const updateSelection = (selected: Elements<any> | null) => {
-    if (selected != null && selected.length > 0) {
+    if (selected !== null && selected.length > 0) {
       const s = selected[0];
       if (s.data instanceof NodeData) {
         const data = MapperFunctions.getObjectByID(sm, s.data.represent);
-        if (data != undefined) {
+        if (data !== undefined) {
           return MappingDescribe(data as MMELNode);
         }
       }

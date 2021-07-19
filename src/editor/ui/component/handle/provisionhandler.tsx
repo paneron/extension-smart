@@ -122,7 +122,7 @@ export class ProvisionHandler implements IList, IAddItem, IUpdateItem {
         remove={(x: Array<string>) => {
           x.map(r => {
             const index = this.data.ref.indexOf(r);
-            if (index != -1) {
+            if (index !== -1) {
               this.data.ref.splice(index, 1);
             }
           });
@@ -153,7 +153,7 @@ export class ProvisionHandler implements IList, IAddItem, IUpdateItem {
 
   updateClicked = () => {
     this.setUpdateMode(false);
-    if (this.oldValue != null) {
+    if (this.oldValue !== null) {
       this.oldValue.condition = this.data.condition;
       this.oldValue.modality = this.data.modality;
       this.oldValue.ref = this.data.ref;

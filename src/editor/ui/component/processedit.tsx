@@ -50,48 +50,48 @@ const EditProcessPage: React.FC<StateMan> = (sm: StateMan) => {
   const model = sm.state.modelWrapper.model;
   const roles: Array<string> = [''];
   const regs: Array<string> = [];
-  if (process != null) {
+  if (process !== null) {
     model.roles.map(r => roles.push(r.id));
     model.regs.map(r => regs.push(r.id));
   }
 
   const setPID = (x: string) => {
-    if (process != null) {
+    if (process !== null) {
       process.id = x.replaceAll(/\s+/g, '');
       sm.setState({ ...sm.state });
     }
   };
 
   const setPName = (x: string) => {
-    if (process != null) {
+    if (process !== null) {
       process.name = x;
       sm.setState({ ...sm.state });
     }
   };
 
   const setPModality = (x: string) => {
-    if (process != null) {
+    if (process !== null) {
       process.modality = x;
       sm.setState({ ...sm.state });
     }
   };
 
   const setPStart = (x: string) => {
-    if (process != null) {
-      process.start = x == 'YES';
+    if (process !== null) {
+      process.start = x === 'YES';
       sm.setState({ ...sm.state });
     }
   };
 
   const setActor = (x: number) => {
-    if (process != null) {
+    if (process !== null) {
       process.actor = roles[x];
       sm.setState({ ...sm.state });
     }
   };
 
   const inputAdd = (x: Array<string>) => {
-    if (process != null) {
+    if (process !== null) {
       process.input = process.input.concat(x);
       sm.setState({ ...sm.state });
     }
@@ -99,9 +99,9 @@ const EditProcessPage: React.FC<StateMan> = (sm: StateMan) => {
 
   const inputRemove = (x: Array<string>) => {
     x.map(r => {
-      if (process != null) {
+      if (process !== null) {
         const index = process.input.indexOf(r);
-        if (index != -1) {
+        if (index !== -1) {
           process.input.splice(index, 1);
         }
       }
@@ -110,7 +110,7 @@ const EditProcessPage: React.FC<StateMan> = (sm: StateMan) => {
   };
 
   const outputAdd = (x: Array<string>) => {
-    if (process != null) {
+    if (process !== null) {
       process.output = process.output.concat(x);
       sm.setState({ ...sm.state });
     }
@@ -118,9 +118,9 @@ const EditProcessPage: React.FC<StateMan> = (sm: StateMan) => {
 
   const outputRemove = (x: Array<string>) => {
     x.map(r => {
-      if (process != null) {
+      if (process !== null) {
         const index = process.output.indexOf(r);
-        if (index != -1) {
+        if (index !== -1) {
           process.output.splice(index, 1);
         }
       }
@@ -133,7 +133,7 @@ const EditProcessPage: React.FC<StateMan> = (sm: StateMan) => {
   };
 
   const elms: Array<JSX.Element> = [];
-  if (process != null) {
+  if (process !== null) {
     elms.push(
       <NormalTextField
         key="field#processID"
@@ -223,7 +223,7 @@ const EditProcessPage: React.FC<StateMan> = (sm: StateMan) => {
     );
     return (
       <DisplayPane
-        style={{ display: sm.state.viewprocess != null ? 'inline' : 'none' }}
+        style={{ display: sm.state.viewprocess !== null ? 'inline' : 'none' }}
       >
         <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
         {elms}
@@ -273,12 +273,12 @@ function save(
   oldValue: MMELProcess | null,
   newValue: IProcess | null
 ) {
-  if (oldValue != null && newValue != null) {
+  if (oldValue !== null && newValue !== null) {
     const model = sm.state.modelWrapper.model;
     const idreg = sm.state.modelWrapper.idman;
     const mw = sm.state.modelWrapper;
-    if (oldValue.id != newValue.id) {
-      if (newValue.id == '') {
+    if (oldValue.id !== newValue.id) {
+      if (newValue.id === '') {
         alert('ID is empty');
         return;
       }
@@ -293,11 +293,11 @@ function save(
     }
     oldValue.name = newValue.name;
     oldValue.modality = newValue.modality;
-    if (newValue.actor == '') {
+    if (newValue.actor === '') {
       oldValue.actor = null;
     } else {
       const actor = idreg.roles.get(newValue.actor);
-      if (actor?.datatype == DataType.ROLE) {
+      if (actor?.datatype === DataType.ROLE) {
         oldValue.actor = actor as MMELRole;
       } else {
         console.error('Role not found: ', newValue.actor);
@@ -306,7 +306,7 @@ function save(
     oldValue.input = [];
     newValue.input.map(x => {
       const data = idreg.regs.get(x);
-      if (data != undefined) {
+      if (data !== undefined) {
         oldValue.input.push(data);
       } else {
         console.error('Data not found: ', x);
@@ -315,7 +315,7 @@ function save(
     oldValue.output = [];
     newValue.output.map(x => {
       const data = idreg.regs.get(x);
-      if (data != undefined) {
+      if (data !== undefined) {
         oldValue.output.push(data);
       } else {
         console.error('Data not found: ', x);
@@ -329,7 +329,7 @@ function save(
       pro.modality = p.modality;
       p.ref.map(r => {
         const ref = idreg.refs.get(r);
-        if (ref == null) {
+        if (ref === undefined) {
           console.error('Reference not found: ', r);
         } else {
           pro.ref.push(ref);
@@ -340,11 +340,11 @@ function save(
       oldValue.provision.push(pro);
     });
     oldValue.measure = newValue.measure;
-    if (oldValue.page != null && !newValue.start) {
+    if (oldValue.page !== null && !newValue.start) {
       // remove subprocess
       Cleaner.killPage(oldValue.page);
       oldValue.page = null;
-    } else if (oldValue.page == null && newValue.start) {
+    } else if (oldValue.page === null && newValue.start) {
       // add subprocess
       const pg = MMELFactory.createSubprocess(idreg.findUniquePageID('Page'));
       const st = MMELFactory.createStartEvent(idreg.findUniqueID('Start'));

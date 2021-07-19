@@ -30,25 +30,25 @@ export const EditEGatePage: React.FC<StateMan> = (sm: StateMan) => {
   const egate = sm.state.viewEGate;
 
   const setGID = (x: string) => {
-    if (egate != null) {
+    if (egate !== null) {
       egate.id = x.replaceAll(/\s+/g, '');
       sm.setState({ ...sm.state });
     }
   };
 
   const setLabel = (x: string) => {
-    if (egate != null) {
+    if (egate !== null) {
       egate.label = x;
       sm.setState({ ...sm.state });
     }
   };
 
   const setDesc = (index: number, x: string) => {
-    if (egate != null) {
+    if (egate !== null) {
       egate.edges[index].description = x;
-      if (x == 'default') {
+      if (x === 'default') {
         egate.edges.forEach((e, i) => {
-          if (i != index && e.description == 'default') {
+          if (i !== index && e.description === 'default') {
             e.description = '';
           }
         });
@@ -58,18 +58,18 @@ export const EditEGatePage: React.FC<StateMan> = (sm: StateMan) => {
   };
 
   const selectMeasure = (index: number, x: number) => {
-    if (egate != null && x != -1) {
+    if (egate !== null && x !== -1) {
       egate.edges[index].condition += '[' + types[x] + ']';
       sm.setState({ ...sm.state });
     }
   };
 
   const setCond = (index: number, x: string) => {
-    if (egate != null) {
+    if (egate !== null) {
       egate.edges[index].condition = x;
-      if (x == 'default') {
+      if (x === 'default') {
         egate.edges.forEach((e, i) => {
-          if (i != index && e.condition == 'default') {
+          if (i !== index && e.condition === 'default') {
             e.condition = '';
           }
         });
@@ -83,7 +83,7 @@ export const EditEGatePage: React.FC<StateMan> = (sm: StateMan) => {
     types.push(v.id);
   });
   const elms: Array<JSX.Element> = [];
-  if (egate != null) {
+  if (egate !== null) {
     elms.push(
       <NormalTextField
         key="field#egateID"
@@ -152,7 +152,7 @@ export const EditEGatePage: React.FC<StateMan> = (sm: StateMan) => {
     );
     return (
       <DisplayPane
-        style={{ display: sm.state.viewEGate != null ? 'inline' : 'none' }}
+        style={{ display: sm.state.viewEGate !== null ? 'inline' : 'none' }}
       >
         <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
         {elms}
@@ -180,10 +180,10 @@ function saveEGate(
   oldValue: MMELEGate | null,
   newValue: IEGate | null
 ) {
-  if (oldValue != null && newValue != null) {
+  if (oldValue !== null && newValue !== null) {
     const idreg = sm.state.modelWrapper.idman;
-    if (oldValue.id != newValue.id) {
-      if (newValue.id == '') {
+    if (oldValue.id !== newValue.id) {
+      if (newValue.id === '') {
         alert('ID is empty');
         return false;
       }
@@ -199,9 +199,9 @@ function saveEGate(
     oldValue.label = newValue.label;
     newValue.edges.forEach(e => {
       const edge = idreg.edges.get(e.id);
-      if (edge == undefined) {
+      if (edge === undefined) {
         console.error('Edge not found', e.id);
-      } else if (edge.datatype == DataType.EDGE) {
+      } else if (edge.datatype === DataType.EDGE) {
         const ed = edge as MMELEdge;
         ed.description = e.description;
         ed.condition = e.condition;

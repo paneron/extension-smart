@@ -35,31 +35,31 @@ export function parseDataAttribute(
     p_ref: [],
   };
   let index = basic.indexOf('[');
-  if (index != -1) {
+  if (index !== -1) {
     attribute.cardinality = basic
       .substr(index + 1, basic.length - index - 2)
       .trim();
     basic = basic.substr(0, index);
   }
   index = basic.indexOf(':');
-  if (index != -1) {
+  if (index !== -1) {
     attribute.type = basic.substr(index + 1, basic.length - index - 1).trim();
     basic = basic.substr(0, index);
   }
   attribute.id = basic.trim();
-  if (details != '') {
+  if (details !== '') {
     const t: Array<string> = MMELtokenizePackage(details);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'modality') {
+        if (command === 'modality') {
           attribute.modality = t[i++];
-        } else if (command == 'definition') {
+        } else if (command === 'definition') {
           attribute.definition = MMELremovePackage(t[i++]);
-        } else if (command == 'reference') {
+        } else if (command === 'reference') {
           container.p_ref = MMELtokenizePackage(t[i++]);
-        } else if (command == 'satisfy') {
+        } else if (command === 'satisfy') {
           attribute.satisfy = MMELtokenizePackage(t[i++]);
         } else {
           throw new Error(
@@ -89,7 +89,7 @@ export function resolveAttribute(
   const attribute = a.content;
   for (const x of a.p_ref) {
     const y = idreg.get(x);
-    if (y != undefined) {
+    if (y !== undefined) {
       attribute.ref.push(y);
     } else {
       throw new Error(
@@ -112,7 +112,7 @@ export function parseDataClass(id: string, data: string): ParsingDataClass {
     p_attribute: [],
   };
 
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizeAttributes(data);
     let i = 0;
     while (i < t.length) {
@@ -147,13 +147,13 @@ export function parseEnumValue(id: string, data: string): MMELEnumValue {
     value: '',
     datatype: DataType.ENUMVALUE,
   };
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'definition') {
+        if (command === 'definition') {
           ev.value = MMELremovePackage(t[i++]);
         } else {
           throw new Error(
@@ -182,7 +182,7 @@ export function parseEnum(id: string, data: string): MMELEnum {
     values: [],
     datatype: DataType.ENUM,
   };
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
@@ -215,15 +215,15 @@ export function parseRegistry(id: string, data: string): ParsingRegistry {
     p_dataclass: '',
   };
 
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'title') {
+        if (command === 'title') {
           reg.title = MMELremovePackage(t[i++]);
-        } else if (command == 'data_class') {
+        } else if (command === 'data_class') {
           container.p_dataclass = t[i++];
         } else {
           throw new Error(
@@ -249,7 +249,7 @@ export function resolveRegistry(
 ): MMELRegistry {
   const reg = container.content;
   const y = idreg.get(container.p_dataclass);
-  if (y != undefined) {
+  if (y !== undefined) {
     reg.data = y;
   } else {
     throw new Error(

@@ -18,7 +18,7 @@ const MapperPathPane: React.FC<ModelViewStateMan> = (sm: ModelViewStateMan) => {
   return (
     <>
       <PathLabel key="ui#pathlabel">
-        {sm.state.type == ModelType.ImplementationModel
+        {sm.state.type === ModelType.ImplementationModel
           ? 'Implementation model'
           : 'Reference model'}{' '}
         : {his.getMapperPath(sm)}{' '}

@@ -7,7 +7,7 @@ import { FilterType } from './filtermanager';
 const LegendPane: React.FC<StateMan> = (sm: StateMan) => {
   const state = sm.state;
   const elms: Array<JSX.Element> = [];
-  if (state.mtestResult != null) {
+  if (state.mtestResult !== null) {
     const legs = [
       MeasureRType.OK,
       MeasureRType.CONTAINERROR,
@@ -57,10 +57,10 @@ const Legend: React.FC<{ color: string; text: string }> = ({ color, text }) => {
 };
 
 export function getMeasureResultColor(x: MeasureRType): string {
-  if (x == MeasureRType.OK) {
+  if (x === MeasureRType.OK) {
     return 'lightgreen';
   }
-  if (x == MeasureRType.ERRORSOURCE) {
+  if (x === MeasureRType.ERRORSOURCE) {
     return '#E9967A';
   }
   // MeasureRType.CONTAINERROR
@@ -68,10 +68,10 @@ export function getMeasureResultColor(x: MeasureRType): string {
 }
 
 export function getFilterColor(x: FilterType): string {
-  if (x == FilterType.EXACT_MATCH) {
+  if (x === FilterType.EXACT_MATCH) {
     return 'lightblue';
   }
-  if (x == FilterType.SUBPROCESS_MATCH) {
+  if (x === FilterType.SUBPROCESS_MATCH) {
     return 'lightyellow';
   }
   // others

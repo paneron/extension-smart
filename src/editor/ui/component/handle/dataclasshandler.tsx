@@ -48,7 +48,7 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
   getItems = (): Array<DataclassListItem> => {
     const out: Array<DataclassListItem> = [];
     this.mw.model.dataclasses.forEach((d, index) => {
-      if (this.mw.dlman.get(d).mother == null) {
+      if (this.mw.dlman.get(d).mother === null) {
         out.push(new DataclassListItem(d.id, d.id, '' + index));
       }
     });
@@ -73,7 +73,7 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
         for (const dc of this.mw.model.dataclasses) {
           for (const a of dc.attributes) {
             const index = a.type.indexOf(r.id);
-            if (index != -1) {
+            if (index !== -1) {
               a.type = '';
             }
             this.mw.dlman.get(dc).rdcs.delete(r);
@@ -141,7 +141,7 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
   };
 
   addClicked = () => {
-    if (this.data.id == '') {
+    if (this.data.id === '') {
       alert('ID is empty');
       return;
     }
@@ -161,7 +161,7 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
         nr.attributes.push(na);
         for (const ref of a.ref) {
           const resolved = idreg.refs.get(ref);
-          if (resolved != undefined) {
+          if (resolved !== undefined) {
             na.ref.push(resolved);
           }
         }
@@ -184,11 +184,11 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
   };
 
   updateClicked = () => {
-    if (this.updating != null) {
+    if (this.updating !== null) {
       const idreg = this.mw.idman;
       const dc = this.updating;
-      if (this.data.id != dc.id) {
-        if (this.data.id == '') {
+      if (this.data.id !== dc.id) {
+        if (this.data.id === '') {
           alert('New ID is empty');
           return;
         }
@@ -199,7 +199,7 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
       }
       for (const x of this.mw.model.dataclasses) {
         for (const a of x.attributes) {
-          if (a.type == dc.id) {
+          if (a.type === dc.id) {
             a.type = this.data.id;
           }
         }
@@ -221,7 +221,7 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
         dc.attributes.push(na);
         for (const ref of a.ref) {
           const resolved = idreg.refs.get(ref);
-          if (resolved != undefined) {
+          if (resolved !== undefined) {
             na.ref.push(resolved);
           }
         }

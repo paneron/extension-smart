@@ -27,10 +27,10 @@ const Legend: React.FC<{ color: string; text: string }> = ({ color, text }) => {
 };
 
 export function getMapResultColor(x: MappedType): string {
-  if (x == MappedType.FULL) {
+  if (x === MappedType.FULL) {
     return 'lightgreen';
   }
-  if (x == MappedType.PARTIAL) {
+  if (x === MappedType.PARTIAL) {
     return 'lightyellow';
   }
   // not match

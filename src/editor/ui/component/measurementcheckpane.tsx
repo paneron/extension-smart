@@ -16,9 +16,9 @@ const MeasureCheckPane: React.FC = () => {
   const values = sm.state.mtestValues;
 
   for (const m of model.vars) {
-    if (m.type == VarType.DATA || m.type == VarType.LISTDATA) {
+    if (m.type === VarType.DATA || m.type === VarType.LISTDATA) {
       let v = values.get(m.id);
-      if (v == undefined) {
+      if (v === undefined) {
         values.set(m.id, '');
         v = '';
       }
@@ -51,9 +51,9 @@ const MeasureCheckPane: React.FC = () => {
     </button>
   );
   for (const m of model.vars) {
-    if (m.type == VarType.DERIVED) {
+    if (m.type === VarType.DERIVED) {
       let v = values.get(m.id);
-      if (v == undefined) {
+      if (v === undefined) {
         v = '';
       }
       elms.push(

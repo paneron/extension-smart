@@ -67,7 +67,7 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
         const r = removed[0];
         for (const p of this.mw.model.provisions) {
           for (let j = 0; j < p.ref.length; j++) {
-            if (p.ref[j] == r) {
+            if (p.ref[j] === r) {
               p.ref.splice(j, 1);
               break;
             }
@@ -75,7 +75,7 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
         }
         for (const app of this.mw.model.approvals) {
           for (let j = 0; j < app.ref.length; j++) {
-            if (app.ref[j] == r) {
+            if (app.ref[j] === r) {
               app.ref.splice(j, 1);
               break;
             }
@@ -84,7 +84,7 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
         for (const d of this.mw.model.dataclasses) {
           for (const a of d.attributes) {
             for (let j = 0; j < a.ref.length; j++) {
-              if (a.ref[j] == r) {
+              if (a.ref[j] === r) {
                 a.ref.splice(j, 1);
                 break;
               }
@@ -155,7 +155,7 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
 
   addClicked = () => {
     const idreg = this.mw.idman;
-    if (this.data.clause.indexOf(',') != 0) {
+    if (this.data.clause.indexOf(',') !== -1) {
       const rs = this.data.clause.split(',');
       for (let r of rs) {
         r = r.trim();
@@ -171,7 +171,7 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
       this.mw.filterman.readDocu(this.mw.model.refs);
       this.setAddMode(false);
     } else {
-      if (this.data.refid == '') {
+      if (this.data.refid === '') {
         alert('ID is empty');
         return;
       }
@@ -201,10 +201,10 @@ export class RefHandler implements IList, IAddItem, IUpdateItem {
   };
 
   updateClicked = () => {
-    if (this.updating != null) {
+    if (this.updating !== null) {
       const idreg = this.mw.idman;
-      if (this.data.refid != this.updating.id) {
-        if (this.data.refid == '') {
+      if (this.data.refid !== this.updating.id) {
+        if (this.data.refid === '') {
           alert('ID is empty');
           return;
         }

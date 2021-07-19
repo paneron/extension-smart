@@ -9,11 +9,11 @@ const InfoPane: React.FC<{ clvisible: boolean }> = ({ clvisible }) => {
   const selected = useStoreState(store => store.selectedElements);
 
   const updateSelection = (selected: Elements<any> | null) => {
-    if (selected != null && selected.length > 0) {
+    if (selected !== null && selected.length > 0) {
       const s = selected[0];
       if (s.data instanceof NodeData) {
         const data = functionCollection.getObjectByID(s.data.represent);
-        if (data != undefined) {
+        if (data !== undefined) {
           return describe(data, clvisible);
         }
       }

@@ -86,7 +86,7 @@ export class MeasureHandler implements IList, IAddItem, IUpdateItem {
         value={this.data}
         options={types}
         update={(x: number) => {
-          if (x != -1) {
+          if (x !== -1) {
             this.setData(this.data + '[' + types[x] + ']');
           }
         }}
@@ -128,7 +128,7 @@ export class MeasureHandler implements IList, IAddItem, IUpdateItem {
 
   updateClicked = () => {
     this.setUpdateMode(false);
-    if (this.oldIndex != null) {
+    if (this.oldIndex !== null) {
       this.parent.measure[this.oldIndex] = this.data;
       this.forceUpdate();
     }

@@ -99,13 +99,13 @@ export class AttributeHandler implements IList, IAddItem, IUpdateItem {
     });
     const types: Array<string> = [...DATATYPE];
     this.model.regs.map(d => {
-      if (d.data != null) {
+      if (d.data !== null) {
         types.push(d.data.id);
         types.push('reference(' + d.data.id + ')');
       }
     });
     this.model.dataclasses.map(d => {
-      if (mw.dlman.get(d).mother == null) {
+      if (mw.dlman.get(d).mother === null) {
         types.push(d.id);
       }
     });
@@ -165,7 +165,7 @@ export class AttributeHandler implements IList, IAddItem, IUpdateItem {
         value={this.data.type}
         options={types}
         update={(x: number) => {
-          if (x != -1) {
+          if (x !== -1) {
             this.data.type = types[x];
             this.setData({ ...this.data });
           }
@@ -186,7 +186,7 @@ export class AttributeHandler implements IList, IAddItem, IUpdateItem {
         remove={(x: Array<string>) => {
           x.map(r => {
             const index = this.data.ref.indexOf(r);
-            if (index != -1) {
+            if (index !== -1) {
               this.data.ref.splice(index, 1);
             }
           });
@@ -202,12 +202,12 @@ export class AttributeHandler implements IList, IAddItem, IUpdateItem {
   };
 
   addClicked = () => {
-    if (this.data.id == '') {
+    if (this.data.id === '') {
       alert('ID is empty');
       return;
     }
     for (const a of this.parent.attributes) {
-      if (a.id == this.data.id) {
+      if (a.id === this.data.id) {
         alert('ID already exists');
         return;
       }
@@ -234,14 +234,14 @@ export class AttributeHandler implements IList, IAddItem, IUpdateItem {
 
   updateClicked = () => {
     this.setUpdateMode(false);
-    if (this.updating != null) {
-      if (this.data.id != this.updating.id) {
-        if (this.data.id == '') {
+    if (this.updating !== null) {
+      if (this.data.id !== this.updating.id) {
+        if (this.data.id === '') {
           alert('New ID is empty');
           return;
         }
         for (const a of this.parent.attributes) {
-          if (a.id == this.data.id) {
+          if (a.id === this.data.id) {
             alert('New ID already exists');
             return;
           }

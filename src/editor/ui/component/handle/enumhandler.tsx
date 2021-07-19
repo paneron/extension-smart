@@ -67,7 +67,7 @@ export class EnumHandler implements IList, IAddItem, IUpdateItem {
         this.mw.idman.enums.delete(r.id);
         for (const dc of this.mw.model.dataclasses) {
           for (const a of dc.attributes) {
-            if (a.type == r.id) {
+            if (a.type === r.id) {
               a.type = '';
             }
           }
@@ -121,7 +121,7 @@ export class EnumHandler implements IList, IAddItem, IUpdateItem {
   };
 
   addClicked = () => {
-    if (this.data.id == '') {
+    if (this.data.id === '') {
       alert('ID is empty');
       return;
     }
@@ -154,11 +154,11 @@ export class EnumHandler implements IList, IAddItem, IUpdateItem {
   };
 
   updateClicked = () => {
-    if (this.updating != null) {
+    if (this.updating !== null) {
       const idreg = this.mw.idman;
       const old = this.updating;
-      if (this.data.id != old.id) {
-        if (this.data.id == '') {
+      if (this.data.id !== old.id) {
+        if (this.data.id === '') {
           alert('New ID is empty');
           return;
         }
@@ -170,7 +170,7 @@ export class EnumHandler implements IList, IAddItem, IUpdateItem {
       // update enum
       for (const x of this.mw.model.dataclasses) {
         for (const a of x.attributes) {
-          if (a.type == old.id) {
+          if (a.type === old.id) {
             a.type = this.data.id;
           }
         }

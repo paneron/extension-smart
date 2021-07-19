@@ -12,15 +12,15 @@ export class SubprocessManager {
     for (const p of m.pages) {
       const addon = this.get(p);
       for (const c of p.childs) {
-        if (c.element?.datatype == DataType.STARTEVENT) {
+        if (c.element?.datatype === DataType.STARTEVENT) {
           addon.start = c;
         }
-        if (c.element != null) {
+        if (c.element !== null) {
           addon.map.set(c.element.id, c);
         }
       }
       for (const c of p.data) {
-        if (c.element != null) {
+        if (c.element !== null) {
           addon.map.set(c.element.id, c);
         }
       }
@@ -29,7 +29,7 @@ export class SubprocessManager {
 
   get(x: MMELSubprocess): SubprocessAddon {
     const ret = this.map.get(x);
-    if (ret != undefined) {
+    if (ret !== undefined) {
       return ret;
     }
     const record = new SubprocessAddon();

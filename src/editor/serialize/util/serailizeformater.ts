@@ -28,45 +28,45 @@ import {
 } from '../interface/supportinterface';
 
 export function toMMELModel(x: MMELObject): string {
-  if (x.datatype == DataType.DATAATTRIBUTE) {
+  if (x.datatype === DataType.DATAATTRIBUTE) {
     return toDataAttributeModel(x as MMELDataAttribute);
-  } else if (x.datatype == DataType.DATACLASS) {
+  } else if (x.datatype === DataType.DATACLASS) {
     return toDataClassModel(x as MMELDataClass);
-  } else if (x.datatype == DataType.ENUMVALUE) {
+  } else if (x.datatype === DataType.ENUMVALUE) {
     return toEnumValueModel(x as MMELEnumValue);
-  } else if (x.datatype == DataType.ENUM) {
+  } else if (x.datatype === DataType.ENUM) {
     return toEnumModel(x as MMELEnum);
-  } else if (x.datatype == DataType.REGISTRY) {
+  } else if (x.datatype === DataType.REGISTRY) {
     return toRegistryModel(x as MMELRegistry);
-  } else if (x.datatype == DataType.ENDEVENT) {
+  } else if (x.datatype === DataType.ENDEVENT) {
     return toEndEventModel(x as MMELEndEvent);
-  } else if (x.datatype == DataType.SIGNALCATCHEVENT) {
+  } else if (x.datatype === DataType.SIGNALCATCHEVENT) {
     return toSignalCatchEventModel(x as MMELSignalCatchEvent);
-  } else if (x.datatype == DataType.STARTEVENT) {
+  } else if (x.datatype === DataType.STARTEVENT) {
     return toStartEventModel(x as MMELStartEvent);
-  } else if (x.datatype == DataType.TIMEREVENT) {
+  } else if (x.datatype === DataType.TIMEREVENT) {
     return toTimerEventModel(x as MMELTimerEvent);
-  } else if (x.datatype == DataType.EDGE) {
+  } else if (x.datatype === DataType.EDGE) {
     return toEdgeModel(x as MMELEdge);
-  } else if (x.datatype == DataType.SUBPROCESS) {
+  } else if (x.datatype === DataType.SUBPROCESS) {
     return toSubprocessModel(x as MMELSubprocess);
-  } else if (x.datatype == DataType.SUBPROCESSCOMPONENT) {
+  } else if (x.datatype === DataType.SUBPROCESSCOMPONENT) {
     return toSubprocessComponentModel(x as MMELSubprocessComponent);
-  } else if (x.datatype == DataType.EGATE) {
+  } else if (x.datatype === DataType.EGATE) {
     return toEGateModel(x as MMELEGate);
-  } else if (x.datatype == DataType.VARIABLE) {
+  } else if (x.datatype === DataType.VARIABLE) {
     return toVariableModel(x as MMELVariable);
-  } else if (x.datatype == DataType.APPROVAL) {
+  } else if (x.datatype === DataType.APPROVAL) {
     return toApprovalModel(x as MMELApproval);
-  } else if (x.datatype == DataType.PROCESS) {
+  } else if (x.datatype === DataType.PROCESS) {
     return toProcessModel(x as MMELProcess);
-  } else if (x.datatype == DataType.METADATA) {
+  } else if (x.datatype === DataType.METADATA) {
     return toMetaDataModel(x as MMELMetadata);
-  } else if (x.datatype == DataType.PROVISION) {
+  } else if (x.datatype === DataType.PROVISION) {
     return toProvisionModel(x as MMELProvision);
-  } else if (x.datatype == DataType.REFERENCE) {
+  } else if (x.datatype === DataType.REFERENCE) {
     return toReferenceModel(x as MMELReference);
-  } else if (x.datatype == DataType.ROLE) {
+  } else if (x.datatype === DataType.ROLE) {
     return toRoleModel(x as MMELRole);
   }
   throw new Error('Unknown object' + x);
@@ -74,15 +74,15 @@ export function toMMELModel(x: MMELObject): string {
 
 function toDataAttributeModel(a: MMELDataAttribute): string {
   let out: string = '  ' + a.id;
-  if (a.type != '') {
+  if (a.type !== '') {
     out += ': ' + a.type;
   }
-  if (a.cardinality != '') {
+  if (a.cardinality !== '') {
     out += '[' + a.cardinality + ']';
   }
   out += ' {\n';
   out += '    definition "' + a.definition + '"\n';
-  if (a.modality != '') {
+  if (a.modality !== '') {
     out += '    modality ' + a.modality + '\n';
   }
   if (a.satisfy.length > 0) {
@@ -131,7 +131,7 @@ function toEnumModel(e: MMELEnum): string {
 function toRegistryModel(reg: MMELRegistry): string {
   let out: string = 'data_registry ' + reg.id + ' {\n';
   out += '  title "' + reg.title + '"\n';
-  if (reg.data != null) {
+  if (reg.data !== null) {
     out += '  data_class ' + reg.data.id + '\n';
   }
   out += '}\n';
@@ -144,7 +144,7 @@ function toEndEventModel(end: MMELEndEvent): string {
 
 function toSignalCatchEventModel(sc: MMELSignalCatchEvent): string {
   let out: string = 'signal_catch_event ' + sc.id + ' {\n';
-  if (sc.signal != '') {
+  if (sc.signal !== '') {
     out += '  catch "' + sc.signal + '"\n';
   }
   out += '}\n';
@@ -157,10 +157,10 @@ function toStartEventModel(s: MMELStartEvent): string {
 
 function toTimerEventModel(te: MMELTimerEvent): string {
   let out: string = 'timer_event ' + te.id + ' {\n';
-  if (te.type != '') {
+  if (te.type !== '') {
     out += '  type ' + te.type + '\n';
   }
-  if (te.para != '') {
+  if (te.para !== '') {
     out += '  para "' + te.para + '"\n';
   }
   out += '}\n';
@@ -169,16 +169,16 @@ function toTimerEventModel(te: MMELTimerEvent): string {
 
 function toEdgeModel(edge: MMELEdge): string {
   let out: string = '    ' + edge.id + ' {\n';
-  if (edge.from != null && edge.from.element != null) {
+  if (edge.from !== null && edge.from.element !== null) {
     out += '      from ' + edge.from.element.id + '\n';
   }
-  if (edge.to != null && edge.to.element != null) {
+  if (edge.to !== null && edge.to.element !== null) {
     out += '      to ' + edge.to.element.id + '\n';
   }
-  if (edge.description != '') {
+  if (edge.description !== '') {
     out += '      description "' + edge.description + '"\n';
   }
-  if (edge.condition != '') {
+  if (edge.condition !== '') {
     out += '      condition "' + edge.condition + '"\n';
   }
   out += '    }\n';
@@ -207,7 +207,7 @@ function toSubprocessModel(sub: MMELSubprocess): string {
 }
 
 function toSubprocessComponentModel(com: MMELSubprocessComponent): string {
-  if (com.element == null) {
+  if (com.element === null) {
     return '';
   }
   let out: string = '    ' + com.element.id + ' {\n';
@@ -219,7 +219,7 @@ function toSubprocessComponentModel(com: MMELSubprocessComponent): string {
 
 function toEGateModel(egate: MMELEGate): string {
   let out: string = 'exclusive_gateway ' + egate.id + ' {\n';
-  if (egate.label != '') {
+  if (egate.label !== '') {
     out += '  label "' + egate.label + '"\n';
   }
   out += '}\n';
@@ -228,13 +228,13 @@ function toEGateModel(egate: MMELEGate): string {
 
 function toVariableModel(v: MMELVariable): string {
   let out: string = 'measurement ' + v.id + ' {\n';
-  if (v.type != '') {
+  if (v.type !== '') {
     out += '  type ' + v.type + '\n';
   }
-  if (v.definition != '') {
+  if (v.definition !== '') {
     out += '  definition "' + v.definition + '"\n';
   }
-  if (v.description != '') {
+  if (v.description !== '') {
     out += '  description "' + v.description + '"\n';
   }
   out += '}\n';
@@ -258,7 +258,7 @@ function toProvisionModel(pro: MMELProvision): string {
     out += '  ' + key + ' ' + value + '\n';
   });
   out += '  condition "' + pro.condition + '"\n';
-  if (pro.modality != '') {
+  if (pro.modality !== '') {
     out += '  modality ' + pro.modality + '\n';
   }
   if (pro.ref.length > 0) {
@@ -290,11 +290,11 @@ function toRoleModel(role: MMELRole): string {
 function toApprovalModel(app: MMELApproval): string {
   let out: string = 'approval ' + app.id + ' {\n';
   out += '  name "' + app.name + '"\n';
-  if (app.actor != null) {
+  if (app.actor !== null) {
     out += '  actor ' + app.actor.id + '\n';
   }
   out += '  modality ' + app.modality + '\n';
-  if (app.approver != null) {
+  if (app.approver !== null) {
     out += '  approve_by ' + app.approver.id + '\n';
   }
   if (app.records.length > 0) {
@@ -318,10 +318,10 @@ function toApprovalModel(app: MMELApproval): string {
 export function toProcessModel(process: MMELProcess): string {
   let out: string = 'process ' + process.id + ' {\n';
   out += '  name "' + process.name + '"\n';
-  if (process.actor != null) {
+  if (process.actor !== null) {
     out += '  actor ' + process.actor.id + '\n';
   }
-  if (process.modality != '') {
+  if (process.modality !== '') {
     out += '  modality ' + process.modality + '\n';
   }
   if (process.input.length > 0) {
@@ -352,7 +352,7 @@ export function toProcessModel(process: MMELProcess): string {
     }
     out += '  }\n';
   }
-  if (process.page != null) {
+  if (process.page !== null) {
     out += '  subprocess ' + process.page.id + '\n';
   }
   out += '}\n';

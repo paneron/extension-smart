@@ -43,16 +43,16 @@ export const datacube = (data: NodeContainer) => {
   let color = 'none';
   const datanode = data.data;
   const elms: Array<JSX.Element> = [];
-  if (data.data.modelType == undefined) {
+  if (data.data.modelType === null) {
     const x = functionCollection.getObjectByID(datanode.represent);
     let y: MMELDataClass | null = null;
     const isCheckListMode = functionCollection.getStateMan().state.clvisible;
-    if (x != undefined && x.datatype == DataType.DATACLASS) {
+    if (x !== undefined && x.datatype === DataType.DATACLASS) {
       y = x as MMELDataClass;
-    } else if (x?.datatype == DataType.REGISTRY) {
+    } else if (x?.datatype === DataType.REGISTRY) {
       y = (x as MMELRegistry).data;
     }
-    if (y != null) {
+    if (y !== null) {
       if (isCheckListMode) {
         elms.push(
           <MyDataCheckBox
@@ -92,7 +92,7 @@ export const processComponent = (data: NodeContainer) => {
   const datanode = data.data;
   const css: React.CSSProperties = {};
   let pbox: JSX.Element = <></>;
-  if (data.data.modelType == undefined) {
+  if (data.data.modelType === null) {
     const obj = functionCollection.getObjectByID(datanode.represent);
 
     const state = functionCollection.getStateMan().state;
@@ -100,9 +100,9 @@ export const processComponent = (data: NodeContainer) => {
     const sm = functionCollection.getStateMan();
     const mtest = sm.state.mtestResult;
 
-    if (obj?.datatype == DataType.PROCESS) {
+    if (obj?.datatype === DataType.PROCESS) {
       const process = obj as MMELProcess;
-      if (process.actor != null) {
+      if (process.actor !== null) {
         elms.push(
           <FirstLabel key={process.id + '#ActorLabel'}>
             {actorIcon}
@@ -110,11 +110,11 @@ export const processComponent = (data: NodeContainer) => {
           </FirstLabel>
         );
       }
-      if (mtest != null) {
+      if (mtest !== null) {
         const result = mtest.get(
           sm.state.modelWrapper.page.id + ' ' + process.id
         );
-        if (result != undefined) {
+        if (result !== undefined) {
           css.background = getMeasureResultColor(result);
         }
       } else if (isCheckListMode) {
@@ -143,14 +143,14 @@ export const processComponent = (data: NodeContainer) => {
         );
       } else {
         // non-checklist mode
-        if (state.simulation != null && state.simulation.element == process) {
+        if (state.simulation !== null && state.simulation.element === process) {
           css.background = 'lightyellow';
         }
-        if (state.searchvisible && state.highlight == process) {
+        if (state.searchvisible && state.highlight === process) {
           css.background = 'lightyellow';
         }
       }
-      if (process.page != null) {
+      if (process.page !== null) {
         const ret = process.page;
         const name = process.id;
         elms.push(
@@ -172,10 +172,10 @@ export const processComponent = (data: NodeContainer) => {
   } else {
     const sm = MapperFunctions.getStateMan(data.data.modelType);
     const obj = MapperFunctions.getObjectByID(sm, datanode.represent);
-    if (obj?.datatype == DataType.PROCESS) {
+    if (obj?.datatype === DataType.PROCESS) {
       const process = obj as MMELProcess;
       const pid = process.id;
-      if (process.actor != null) {
+      if (process.actor !== null) {
         elms.push(
           <FirstLabel key={process.id + '#ActorLabel'}>
             {actorIcon}
@@ -183,7 +183,7 @@ export const processComponent = (data: NodeContainer) => {
           </FirstLabel>
         );
       }
-      if (process.page != null) {
+      if (process.page !== null) {
         const ret = process.page;
         const name = process.id;
         elms.push(
@@ -197,19 +197,19 @@ export const processComponent = (data: NodeContainer) => {
       }
       const refs = sm.state.maps;
       const ref = refs.get(pid);
-      if (ref != undefined) {
+      if (ref !== undefined) {
         if (
           MapperFunctions.isMap &&
-          data.data.modelType == ModelType.ReferenceModel
+          data.data.modelType === ModelType.ReferenceModel
         ) {
           const result = sm.state.modelWrapper.mapped.get(pid);
-          if (result != undefined) {
+          if (result !== undefined) {
             css.background = getMapResultColor(result);
           }
         }
         if (
           MapperFunctions.isMap &&
-          datanode.modelType == ModelType.ImplementationModel
+          datanode.modelType === ModelType.ImplementationModel
         ) {
           pbox = (
             <shapes.ProcessBox
@@ -259,20 +259,20 @@ export const processComponent = (data: NodeContainer) => {
 export const approvalComponent = (data: NodeContainer) => {
   const elms: Array<JSX.Element> = [];
   const css: React.CSSProperties = {};
-  if (data.data.modelType == undefined) {
+  if (data.data.modelType === null) {
     const obj = functionCollection.getObjectByID(data.data.represent);
     const state = functionCollection.getStateMan().state;
     const isCheckListMode = state.clvisible;
-    if (obj?.datatype == DataType.APPROVAL) {
+    if (obj?.datatype === DataType.APPROVAL) {
       const approval = obj as MMELApproval;
-      if (approval.actor != null) {
+      if (approval.actor !== null) {
         elms.push(
           <FirstLabel key={approval.id + '#ActorLabel'}>
             {actorIcon}
             {approval.actor.name}
           </FirstLabel>
         );
-        if (approval.approver != null) {
+        if (approval.approver !== null) {
           elms.push(
             <SecondLabel key={approval.id + '#ApproverLabel'}>
               {approverIcon}
@@ -280,7 +280,7 @@ export const approvalComponent = (data: NodeContainer) => {
             </SecondLabel>
           );
         }
-      } else if (approval.approver != null) {
+      } else if (approval.approver !== null) {
         elms.push(
           <FirstLabel key={approval.id + '#ApproverLabel'}>
             {approverIcon}
@@ -302,10 +302,13 @@ export const approvalComponent = (data: NodeContainer) => {
           />
         );
       } else {
-        if (state.simulation != null && state.simulation.element == approval) {
+        if (
+          state.simulation !== null &&
+          state.simulation.element === approval
+        ) {
           css.background = 'lightyellow';
         }
-        if (state.searchvisible && state.highlight == approval) {
+        if (state.searchvisible && state.highlight === approval) {
           css.background = 'lightyellow';
         }
       }
@@ -313,16 +316,16 @@ export const approvalComponent = (data: NodeContainer) => {
   } else {
     const sm = MapperFunctions.getStateMan(data.data.modelType);
     const obj = MapperFunctions.getObjectByID(sm, data.data.represent);
-    if (obj?.datatype == DataType.APPROVAL) {
+    if (obj?.datatype === DataType.APPROVAL) {
       const approval = obj as MMELApproval;
-      if (approval.actor != null) {
+      if (approval.actor !== null) {
         elms.push(
           <FirstLabel key={approval.id + '#ActorLabel'}>
             {actorIcon}
             {approval.actor.name}
           </FirstLabel>
         );
-        if (approval.approver != null) {
+        if (approval.approver !== null) {
           elms.push(
             <SecondLabel key={approval.id + '#ApproverLabel'}>
               {approverIcon}
@@ -330,7 +333,7 @@ export const approvalComponent = (data: NodeContainer) => {
             </SecondLabel>
           );
         }
-      } else if (approval.approver != null) {
+      } else if (approval.approver !== null) {
         elms.push(
           <FirstLabel key={approval.id + '#ApproverLabel'}>
             {approverIcon}
@@ -360,14 +363,14 @@ export const approvalComponent = (data: NodeContainer) => {
 
 export const startComponent = (data: NodeContainer) => {
   let color = 'none';
-  if (data.data.modelType == undefined) {
+  if (data.data.modelType === null) {
     const state = functionCollection.getStateMan().state;
     const isCheckListMode = state.clvisible;
     const x = functionCollection.getObjectByID(data.data.represent);
     if (
       !isCheckListMode &&
-      state.simulation != null &&
-      state.simulation.element == x
+      state.simulation !== null &&
+      state.simulation.element === x
     ) {
       color = 'lightyellow';
     }
@@ -387,14 +390,14 @@ export const startComponent = (data: NodeContainer) => {
 
 export const endComponent = (data: NodeContainer) => {
   let color = 'none';
-  if (data.data.modelType == undefined) {
+  if (data.data.modelType === null) {
     const state = functionCollection.getStateMan().state;
     const isCheckListMode = state.clvisible;
     const x = functionCollection.getObjectByID(data.data.represent);
     if (
       !isCheckListMode &&
-      state.simulation != null &&
-      state.simulation.element == x
+      state.simulation !== null &&
+      state.simulation.element === x
     ) {
       color = 'lightyellow';
     }
@@ -414,14 +417,14 @@ export const endComponent = (data: NodeContainer) => {
 
 export const timerComponent = (data: NodeContainer) => {
   let color = 'none';
-  if (data.data.modelType == undefined) {
+  if (data.data.modelType === null) {
     const state = functionCollection.getStateMan().state;
     const isCheckListMode = state.clvisible;
     const x = functionCollection.getObjectByID(data.data.represent);
     if (
       !isCheckListMode &&
-      state.simulation != null &&
-      state.simulation.element == x
+      state.simulation !== null &&
+      state.simulation.element === x
     ) {
       color = 'lightyellow';
     }
@@ -446,22 +449,22 @@ export const timerComponent = (data: NodeContainer) => {
 
 export const egateComponent = (data: NodeContainer) => {
   let color = 'none';
-  if (data.data.modelType == undefined) {
+  if (data.data.modelType === null) {
     const state = functionCollection.getStateMan().state;
     const isCheckListMode = state.clvisible;
     const x = functionCollection.getObjectByID(data.data.represent);
     const sm = functionCollection.getStateMan();
     const mtest = sm.state.mtestResult;
 
-    if (x != undefined && mtest != null) {
+    if (x !== undefined && mtest !== null) {
       const result = mtest.get(sm.state.modelWrapper.page.id + ' ' + x.id);
-      if (result != undefined) {
+      if (result !== undefined) {
         color = getMeasureResultColor(result);
       }
     } else if (
       !isCheckListMode &&
-      state.simulation != null &&
-      state.simulation.element == x
+      state.simulation !== null &&
+      state.simulation.element === x
     ) {
       color = 'lightyellow';
     }
@@ -486,14 +489,14 @@ export const egateComponent = (data: NodeContainer) => {
 
 export const signalcatchComponent = (data: NodeContainer) => {
   let color = 'none';
-  if (data.data.modelType == undefined) {
+  if (data.data.modelType === null) {
     const state = functionCollection.getStateMan().state;
     const isCheckListMode = state.clvisible;
     const x = functionCollection.getObjectByID(data.data.represent);
     if (
       !isCheckListMode &&
-      state.simulation != null &&
-      state.simulation.element == x
+      state.simulation !== null &&
+      state.simulation.element === x
     ) {
       color = 'lightyellow';
     }

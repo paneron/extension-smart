@@ -14,19 +14,19 @@ export class DataLinkManager {
         let x = a.type;
         const i1 = x.indexOf('(');
         const i2 = x.indexOf(')');
-        if (i1 != -1 && i2 != -1) {
+        if (i1 !== -1 && i2 !== -1) {
           x = x.substr(i1 + 1, i2 - i1 - 1);
         }
-        if (x != '') {
+        if (x !== '') {
           const ret = dcs.get(x);
-          if (ret != undefined) {
+          if (ret !== undefined) {
             addon.rdcs.add(ret);
           }
         }
       }
     }
     for (const r of m.regs) {
-      if (r.data != null) {
+      if (r.data !== null) {
         this.get(r.data).mother = r;
       }
     }
@@ -34,7 +34,7 @@ export class DataLinkManager {
 
   get(x: MMELDataClass): DataClassAddon {
     const ret = this.map.get(x);
-    if (ret != undefined) {
+    if (ret !== undefined) {
       return ret;
     }
     const record = new DataClassAddon();

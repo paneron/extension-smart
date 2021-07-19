@@ -30,49 +30,49 @@ const EditApprovalPage: React.FC<StateMan> = (sm: StateMan) => {
   const roles: Array<string> = [''];
   const regs: Array<string> = [];
   const refs: Array<string> = [];
-  if (approval != null) {
+  if (approval !== null) {
     model.roles.map(r => roles.push(r.id));
     model.regs.map(r => regs.push(r.id));
     model.refs.map(r => refs.push(r.id));
   }
 
   const setPID = (x: string) => {
-    if (approval != null) {
+    if (approval !== null) {
       approval.id = x.replaceAll(/\s+/g, '');
       sm.setState({ ...sm.state });
     }
   };
 
   const setAPPName = (x: string) => {
-    if (approval != null) {
+    if (approval !== null) {
       approval.name = x;
       sm.setState({ ...sm.state });
     }
   };
 
   const setAPPModality = (x: string) => {
-    if (approval != null) {
+    if (approval !== null) {
       approval.modality = x;
       sm.setState({ ...sm.state });
     }
   };
 
   const setActor = (x: number) => {
-    if (approval != null) {
+    if (approval !== null) {
       approval.actor = roles[x];
       sm.setState({ ...sm.state });
     }
   };
 
   const setAppprover = (x: number) => {
-    if (approval != null) {
+    if (approval !== null) {
       approval.approver = roles[x];
       sm.setState({ ...sm.state });
     }
   };
 
   const recordAdd = (x: Array<string>) => {
-    if (approval != null) {
+    if (approval !== null) {
       approval.records = approval.records.concat(x);
       sm.setState({ ...sm.state });
     }
@@ -80,9 +80,9 @@ const EditApprovalPage: React.FC<StateMan> = (sm: StateMan) => {
 
   const recordRemove = (x: Array<string>) => {
     x.map(r => {
-      if (approval != null) {
+      if (approval !== null) {
         const index = approval.records.indexOf(r);
-        if (index != -1) {
+        if (index !== -1) {
           approval.records.splice(index, 1);
         }
       }
@@ -91,7 +91,7 @@ const EditApprovalPage: React.FC<StateMan> = (sm: StateMan) => {
   };
 
   const refAdd = (x: Array<string>) => {
-    if (approval != null) {
+    if (approval !== null) {
       approval.ref = approval.ref.concat(x);
       sm.setState({ ...sm.state });
     }
@@ -99,9 +99,9 @@ const EditApprovalPage: React.FC<StateMan> = (sm: StateMan) => {
 
   const refRemove = (x: Array<string>) => {
     x.map(r => {
-      if (approval != null) {
+      if (approval !== null) {
         const index = approval.ref.indexOf(r);
-        if (index != -1) {
+        if (index !== -1) {
           approval.ref.splice(index, 1);
         }
       }
@@ -110,7 +110,7 @@ const EditApprovalPage: React.FC<StateMan> = (sm: StateMan) => {
   };
 
   const elms: Array<JSX.Element> = [];
-  if (approval != null) {
+  if (approval !== null) {
     elms.push(
       <NormalTextField
         key="field#approvalID"
@@ -180,7 +180,7 @@ const EditApprovalPage: React.FC<StateMan> = (sm: StateMan) => {
     );
     return (
       <DisplayPane
-        style={{ display: sm.state.viewapproval != null ? 'inline' : 'none' }}
+        style={{ display: sm.state.viewapproval !== null ? 'inline' : 'none' }}
       >
         <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
         {elms}
@@ -208,10 +208,10 @@ function save(
   oldValue: MMELApproval | null,
   newValue: IApproval | null
 ) {
-  if (oldValue != null && newValue != null) {
+  if (oldValue !== null && newValue !== null) {
     const idreg = sm.state.modelWrapper.idman;
-    if (oldValue.id != newValue.id) {
-      if (newValue.id == '') {
+    if (oldValue.id !== newValue.id) {
+      if (newValue.id === '') {
         alert('ID is empty');
         return;
       }
@@ -226,21 +226,21 @@ function save(
     }
     oldValue.name = newValue.name;
     oldValue.modality = newValue.modality;
-    if (newValue.actor == '') {
+    if (newValue.actor === '') {
       oldValue.actor = null;
     } else {
       const obj = idreg.roles.get(newValue.actor);
-      if (obj?.datatype == DataType.ROLE) {
+      if (obj?.datatype === DataType.ROLE) {
         oldValue.actor = obj as MMELRole;
       } else {
         console.error('Role not found: ', newValue.actor);
       }
     }
-    if (newValue.approver == '') {
+    if (newValue.approver === '') {
       oldValue.approver = null;
     } else {
       const approver = idreg.roles.get(newValue.approver);
-      if (approver?.datatype == DataType.ROLE) {
+      if (approver?.datatype === DataType.ROLE) {
         oldValue.approver = approver as MMELRole;
       } else {
         console.error('Role not found: ', newValue.approver);
@@ -249,7 +249,7 @@ function save(
     oldValue.records = [];
     newValue.records.map(x => {
       const data = idreg.regs.get(x);
-      if (data != undefined) {
+      if (data !== undefined) {
         oldValue.records.push(data);
       } else {
         console.error('Data not found: ', x);
@@ -258,7 +258,7 @@ function save(
     oldValue.ref = [];
     newValue.ref.map(x => {
       const data = idreg.refs.get(x);
-      if (data != null) {
+      if (data !== undefined) {
         oldValue.ref.push(data);
       } else {
         console.error('Reference not found: ', x);

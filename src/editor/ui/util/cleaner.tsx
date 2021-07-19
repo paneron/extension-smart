@@ -28,7 +28,7 @@ export class Cleaner {
       idreg.nodes.delete(process.id);
       Cleaner.cleanProvisions(process);
     }
-    if (process.page != null) {
+    if (process.page !== null) {
       Cleaner.killPage(process.page);
     }
     sm.setState({ ...state });
@@ -42,24 +42,25 @@ export class Cleaner {
 
     const childHandle = (c: MMELSubprocessComponent) => {
       const mw = functionCollection.getStateMan().state.modelWrapper;
-      if (c.element != null) {
+      if (c.element !== null) {
         const x = c.element;
         const addon = mw.nodeman.get(x);
         addon.pages.delete(page);
         if (
-          !(x.datatype == DataType.DATACLASS || x.datatype == DataType.REGISTRY)
+          !(x.datatype === DataType.DATACLASS ||
+            x.datatype === DataType.REGISTRY)
         ) {
-          if (addon.pages.size == 0) {
+          if (addon.pages.size === 0) {
             idreg.nodes.delete(x.id);
-            if (x.datatype == DataType.PROCESS) {
+            if (x.datatype === DataType.PROCESS) {
               const process = x as MMELProcess;
               const index = model.processes.indexOf(process);
               model.processes.splice(index, 1);
               Cleaner.cleanProvisions(process);
-              if (process.page != null) {
+              if (process.page !== null) {
                 Cleaner.killPage(process.page);
               }
-            } else if (x.datatype == DataType.APPROVAL) {
+            } else if (x.datatype === DataType.APPROVAL) {
               const app = x as MMELApproval;
               const index = model.approvals.indexOf(app);
               model.approvals.splice(index, 1);
@@ -103,7 +104,7 @@ export class Cleaner {
     const page = sm.state.modelWrapper.page;
 
     page.childs.forEach((c, index) => {
-      if (c.element == x) {
+      if (c.element === x) {
         page.childs.splice(index, 1);
         state.modelWrapper.nodeman.get(x).pages.delete(page);
         state.modelWrapper.subman.get(page).map.delete(x.id);
@@ -111,7 +112,7 @@ export class Cleaner {
     });
 
     page.data.forEach((c, index) => {
-      if (c.element == x) {
+      if (c.element === x) {
         page.data.splice(index, 1);
         state.modelWrapper.nodeman.get(x).pages.delete(page);
         state.modelWrapper.subman.get(page).map.delete(x.id);
@@ -120,12 +121,12 @@ export class Cleaner {
 
     for (let i = page.edges.length - 1; i >= 0; i--) {
       const e = page.edges[i];
-      if (e.from?.element == x || e.to?.element == x) {
+      if (e.from?.element === x || e.to?.element === x) {
         page.edges.splice(i, 1);
         idreg.edges.delete(e.id);
-        if (e.to?.element == x) {
+        if (e.to?.element === x) {
           const index = state.modelWrapper.comman.get(e.from!).child.indexOf(e);
-          if (index != undefined) {
+          if (index >= 0) {
             state.modelWrapper.comman.get(e.from!).child.splice(index, 1);
           }
         }
@@ -190,9 +191,9 @@ export class Cleaner {
 
     const s = paddon.map.get(source);
     const t = paddon.map.get(target);
-    if (s != undefined && t != undefined) {
+    if (s !== undefined && t !== undefined) {
       page.edges.forEach((e, index) => {
-        if (e.from == s && e.to == t) {
+        if (e.from === s && e.to === t) {
           page.edges.splice(index, 1);
           idreg.edges.delete(e.id);
           sm.setState({ ...state });

@@ -50,49 +50,49 @@ const BasicSettingPane: React.FC<StateMan> = (sm: StateMan) => {
       <div className="tab">
         <button
           onClick={() => setPage(SETTINGPAGE.METAPAGE)}
-          style={page == SETTINGPAGE.METAPAGE ? selected : normal}
+          style={page === SETTINGPAGE.METAPAGE ? selected : normal}
         >
           {' '}
           Metadata{' '}
         </button>
         <button
           onClick={() => setPage(SETTINGPAGE.ROLEPAGE)}
-          style={page == SETTINGPAGE.ROLEPAGE ? selected : normal}
+          style={page === SETTINGPAGE.ROLEPAGE ? selected : normal}
         >
           {' '}
           Roles{' '}
         </button>
         <button
           onClick={() => setPage(SETTINGPAGE.REFPAGE)}
-          style={page == SETTINGPAGE.REFPAGE ? selected : normal}
+          style={page === SETTINGPAGE.REFPAGE ? selected : normal}
         >
           {' '}
           References{' '}
         </button>
         <button
           onClick={() => setPage(SETTINGPAGE.REGISTRYPAGE)}
-          style={page == SETTINGPAGE.REGISTRYPAGE ? selected : normal}
+          style={page === SETTINGPAGE.REGISTRYPAGE ? selected : normal}
         >
           {' '}
           Data Registry{' '}
         </button>
         <button
           onClick={() => setPage(SETTINGPAGE.DATAPAGE)}
-          style={page == SETTINGPAGE.DATAPAGE ? selected : normal}
+          style={page === SETTINGPAGE.DATAPAGE ? selected : normal}
         >
           {' '}
           Data structure{' '}
         </button>
         <button
           onClick={() => setPage(SETTINGPAGE.ENUMPAGE)}
-          style={page == SETTINGPAGE.ENUMPAGE ? selected : normal}
+          style={page === SETTINGPAGE.ENUMPAGE ? selected : normal}
         >
           {' '}
           Enumeration{' '}
         </button>
         <button
           onClick={() => setPage(SETTINGPAGE.VARPAGE)}
-          style={page == SETTINGPAGE.VARPAGE ? selected : normal}
+          style={page === SETTINGPAGE.VARPAGE ? selected : normal}
         >
           {' '}
           Measurement{' '}
@@ -100,31 +100,31 @@ const BasicSettingPane: React.FC<StateMan> = (sm: StateMan) => {
       </div>
       <MetaEditPage
         model={sm.state.modelWrapper.model}
-        isVisible={page == SETTINGPAGE.METAPAGE}
+        isVisible={page === SETTINGPAGE.METAPAGE}
       />
       <RoleEditPage
         model={sm.state.modelWrapper.model}
-        isVisible={page == SETTINGPAGE.ROLEPAGE}
+        isVisible={page === SETTINGPAGE.ROLEPAGE}
       />
       <RefEditPage
         modelWrapper={sm.state.modelWrapper}
-        isVisible={page == SETTINGPAGE.REFPAGE}
+        isVisible={page === SETTINGPAGE.REFPAGE}
       />
       <RegistryEditPage
         modelWrapper={sm.state.modelWrapper}
-        isVisible={page == SETTINGPAGE.REGISTRYPAGE}
+        isVisible={page === SETTINGPAGE.REGISTRYPAGE}
       />
       <DataEditPage
         modelWrapper={sm.state.modelWrapper}
-        isVisible={page == SETTINGPAGE.DATAPAGE}
+        isVisible={page === SETTINGPAGE.DATAPAGE}
       />
       <EnumEditPage
         modelWrapper={sm.state.modelWrapper}
-        isVisible={page == SETTINGPAGE.ENUMPAGE}
+        isVisible={page === SETTINGPAGE.ENUMPAGE}
       />
       <VarEditPage
         model={sm.state.modelWrapper.model}
-        isVisible={page == SETTINGPAGE.VARPAGE}
+        isVisible={page === SETTINGPAGE.VARPAGE}
       />
     </DisplayPane>
   );

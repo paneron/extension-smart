@@ -46,9 +46,9 @@ const FilterPane: React.FC<{ sm: StateMan; ssm: SearchMan }> = ({
       No filter
     </option>
   );
-  if (ss.document != '') {
+  if (ss.document !== '') {
     const index = modelWrapper.filterman.documents.get(ss.document);
-    if (index != undefined) {
+    if (index !== undefined) {
       modelWrapper.filterman.clauses[index].forEach(v =>
         clauseoptions.push(
           <option key={'clausefilter#' + i++} value={v}>
@@ -97,7 +97,7 @@ const FilterPane: React.FC<{ sm: StateMan; ssm: SearchMan }> = ({
       <select
         value={ss.document}
         onChange={e => {
-          if (selectbox.current != null) {
+          if (selectbox.current !== null) {
             selectbox.current.value = '';
           }
           ss.document = e.target.value;
@@ -108,7 +108,7 @@ const FilterPane: React.FC<{ sm: StateMan; ssm: SearchMan }> = ({
       >
         {docoptions}
       </select>
-      {ss.document != '' ? clauseFilter : ''}
+      {ss.document !== '' ? clauseFilter : ''}
       <p> Actor filter: </p>
       <select
         value={ss.actor}

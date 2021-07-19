@@ -71,29 +71,29 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
         // remove data from process input
         for (const p of this.mw.model.processes) {
           let index = p.input.indexOf(r);
-          if (index != -1) {
+          if (index !== -1) {
             p.input.splice(index, 1);
           }
           index = p.output.indexOf(r);
-          if (index != -1) {
+          if (index !== -1) {
             p.output.splice(index, 1);
           }
         }
         // remove data from process output
         for (const p of this.mw.model.approvals) {
           const index = p.records.indexOf(r);
-          if (index != -1) {
+          if (index !== -1) {
             p.records.splice(index, 1);
           }
         }
         const d = r.data;
-        if (d != null) {
+        if (d !== null) {
           let index = this.mw.model.dataclasses.indexOf(d);
           this.mw.model.dataclasses.splice(index, 1);
           for (const dc of this.mw.model.dataclasses) {
             for (const a of dc.attributes) {
               index = a.type.indexOf(d.id);
-              if (index != -1) {
+              if (index !== -1) {
                 a.type = '';
               }
               this.mw.dlman.get(dc).rdcs.delete(d);
@@ -115,7 +115,7 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
       this.data.regid = r.id;
       this.data.regtitle = r.title;
       this.data.attributes = [];
-      if (r.data != null) {
+      if (r.data !== null) {
         r.data.attributes.map(a => {
           const rs: Array<string> = [];
           a.ref.map(r => {
@@ -184,7 +184,7 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
   };
 
   addClicked = () => {
-    if (this.data.regid == '') {
+    if (this.data.regid === '') {
       alert('ID is empty');
       return;
     }
@@ -205,7 +205,7 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
         na.type = a.type;
         for (const r of a.ref) {
           const ref = this.mw.idman.refs.get(r);
-          if (ref != undefined) {
+          if (ref !== undefined) {
             na.ref.push(ref);
           }
         }
@@ -234,10 +234,10 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
   };
 
   updateClicked = () => {
-    if (this.updating != null) {
+    if (this.updating !== null) {
       const idreg = this.mw.idman;
-      if (this.data.regid != this.updating.id) {
-        if (this.data.regid == '') {
+      if (this.data.regid !== this.updating.id) {
+        if (this.data.regid === '') {
           alert('New ID is empty');
           return;
         }
@@ -254,7 +254,7 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
       idreg.nodes.set(this.data.regid, this.updating);
       idreg.regs.set(this.data.regid, this.updating);
       let olddcname = '';
-      if (this.updating.data != null) {
+      if (this.updating.data !== null) {
         const dc = this.updating.data;
         idreg.nodes.delete(dc.id);
         idreg.dcs.delete(dc.id);
@@ -271,7 +271,7 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
           na.type = a.type;
           for (const r of a.ref) {
             const ref = this.mw.idman.refs.get(r);
-            if (ref != undefined) {
+            if (ref !== undefined) {
               na.ref.push(ref);
             }
           }
@@ -281,7 +281,7 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
         for (const alldc of this.mw.model.dataclasses) {
           for (const a of alldc.attributes) {
             const index = a.type.indexOf(olddcname);
-            if (index != -1) {
+            if (index !== -1) {
               a.type = a.type.replace(olddcname, dc.id);
             }
           }

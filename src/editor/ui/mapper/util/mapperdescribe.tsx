@@ -28,23 +28,23 @@ import {
 } from '../../../serialize/interface/supportinterface';
 
 export function MappingDescribe(x: MMELNode) {
-  if (x.datatype == DataType.DATACLASS) {
+  if (x.datatype === DataType.DATACLASS) {
     return describeDC(x as MMELDataClass);
-  } else if (x.datatype == DataType.REGISTRY) {
+  } else if (x.datatype === DataType.REGISTRY) {
     return describeRegistry(x as MMELRegistry);
-  } else if (x.datatype == DataType.STARTEVENT) {
+  } else if (x.datatype === DataType.STARTEVENT) {
     return descStart(x as MMELStartEvent);
-  } else if (x.datatype == DataType.ENDEVENT) {
+  } else if (x.datatype === DataType.ENDEVENT) {
     return descEnd(x as MMELEndEvent);
-  } else if (x.datatype == DataType.TIMEREVENT) {
+  } else if (x.datatype === DataType.TIMEREVENT) {
     return descTimer(x as MMELTimerEvent);
-  } else if (x.datatype == DataType.SIGNALCATCHEVENT) {
+  } else if (x.datatype === DataType.SIGNALCATCHEVENT) {
     return descSignalCatch(x as MMELSignalCatchEvent);
-  } else if (x.datatype == DataType.EGATE) {
+  } else if (x.datatype === DataType.EGATE) {
     return descEGate(x as MMELEGate);
-  } else if (x.datatype == DataType.APPROVAL) {
+  } else if (x.datatype === DataType.APPROVAL) {
     return descApproval(x as MMELApproval);
-  } else if (x.datatype == DataType.PROCESS) {
+  } else if (x.datatype === DataType.PROCESS) {
     return descProcess(x as MMELProcess);
   }
   return <> {x.id} </>;
@@ -62,10 +62,10 @@ function descProcess(x: MMELProcess): JSX.Element {
   const elms: Array<JSX.Element> = [];
   elms.push(<p key={x.id + '#ProcessID'}> Process: {x.id} </p>);
   elms.push(<p key={x.id + '#ProcessName'}> Name: {x.name} </p>);
-  if (x.actor != null) {
+  if (x.actor !== null) {
     elms.push(<p key={x.id + '#ProcessActor'}> Actor: {x.actor.name} </p>);
   }
-  if (x.modality != '') {
+  if (x.modality !== '') {
     elms.push(<p key={x.id + '#Modality'}> Modality: {x.modality} </p>);
   }
   if (x.provision.length > 0) {
@@ -91,15 +91,15 @@ function descApproval(x: MMELApproval): JSX.Element {
   const elms: Array<JSX.Element> = [];
   elms.push(<p key={x.id + '#approvalLabel'}> Approval: {x.id} </p>);
   elms.push(<p key={x.id + '#nameLabel'}> Name: {x.name} </p>);
-  if (x.actor != null) {
+  if (x.actor !== null) {
     elms.push(<p key={x.id + '#actorLabel'}> Actor: {x.actor.name} </p>);
   }
-  if (x.approver != null) {
+  if (x.approver !== null) {
     elms.push(
       <p key={x.id + '#approverLabel'}> Approver: {x.approver.name} </p>
     );
   }
-  if (x.modality != '') {
+  if (x.modality !== '') {
     elms.push(<p key={x.id + '#modalityLabel'}> Modality: {x.modality} </p>);
   }
   if (x.records.length > 0) {
@@ -146,10 +146,10 @@ function descSignalCatch(x: MMELSignalCatchEvent): JSX.Element {
 function descTimer(x: MMELTimerEvent): JSX.Element {
   const elms: Array<JSX.Element> = [];
   elms.push(<p key={x.id + '#timerLabel'}> Timer Event: {x.id} </p>);
-  if (x.type != '') {
+  if (x.type !== '') {
     elms.push(<p key={x.id + '#timerTypeLabel'}>Type: {x.type} </p>);
   }
-  if (x.para != '') {
+  if (x.para !== '') {
     elms.push(<p key={x.id + '#timerParaLabel'}>Parameter: {x.para} </p>);
   }
   return <>{elms}</>;
@@ -159,7 +159,7 @@ function describeRegistry(x: MMELRegistry): JSX.Element {
   return (
     <>
       <p key={x.id + '#registryLabel'}>Title: {x.title} </p>
-      {x.data == null ? '' : describeDC(x.data)}
+      {x.data === null ? '' : describeDC(x.data)}
     </>
   );
 }
@@ -181,7 +181,7 @@ function describeDC(x: MMELDataClass): JSX.Element {
 function describeAttribute(x: MMELDataAttribute): JSX.Element {
   const elms: Array<JSX.Element> = [];
   const css: CSSProperties = {};
-  if (x.modality == 'SHALL') {
+  if (x.modality === 'SHALL') {
     css.textDecorationLine = 'underline';
   }
   elms.push(
@@ -190,7 +190,7 @@ function describeAttribute(x: MMELDataAttribute): JSX.Element {
       <span style={css}>Attribute ID: {x.id} </span>
     </p>
   );
-  if (x.type != null && x.type != '') {
+  if (x.type !== '') {
     elms.push(
       <p key={x.id + '#attributeTypeLabel'} style={css}>
         {' '}
@@ -198,7 +198,7 @@ function describeAttribute(x: MMELDataAttribute): JSX.Element {
       </p>
     );
   }
-  if (x.cardinality != null && x.cardinality != '') {
+  if (x.cardinality !== '') {
     elms.push(
       <p key={x.id + '#attributeCardinalityLabel'} style={css}>
         {' '}
@@ -206,7 +206,7 @@ function describeAttribute(x: MMELDataAttribute): JSX.Element {
       </p>
     );
   }
-  if (x.modality != '') {
+  if (x.modality !== '') {
     elms.push(
       <p key={x.id + '#attributeModalityLabel'} style={css}>
         {' '}
@@ -214,7 +214,7 @@ function describeAttribute(x: MMELDataAttribute): JSX.Element {
       </p>
     );
   }
-  if (x.definition != '') {
+  if (x.definition !== '') {
     elms.push(
       <p key={x.id + '#attributeDefinitionLabel'} style={css}>
         {' '}
@@ -242,7 +242,7 @@ function describeAttribute(x: MMELDataAttribute): JSX.Element {
 function describeProvision(x: MMELProvision): JSX.Element {
   const elms: Array<JSX.Element> = [];
   const css: CSSProperties = {};
-  if (x.modality == 'SHALL') {
+  if (x.modality === 'SHALL') {
     css.textDecorationLine = 'underline';
   }
   elms.push(
@@ -251,7 +251,7 @@ function describeProvision(x: MMELProvision): JSX.Element {
       Statement: <span style={css}> {x.condition}</span>
     </p>
   );
-  if (x.modality != '') {
+  if (x.modality !== '') {
     elms.push(
       <p key={'ui#provisionModalityLabel#' + x.id}>Modality: {x.modality}</p>
     );

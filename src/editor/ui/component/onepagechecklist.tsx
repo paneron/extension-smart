@@ -19,11 +19,11 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
   const data = new Map<string, Map<string, Array<string>>>();
   const mw = sm.state.modelWrapper;
   mw.filterman.documents.forEach((d, x) => {
-    if (cond.document == '' || cond.document == x) {
+    if (cond.document === '' || cond.document === x) {
       const m = new Map<string, Array<string>>();
       data.set(x, m);
       mw.filterman.clauses[d].forEach(c => {
-        if (cond.clause == '' || cond.clause == c) {
+        if (cond.clause === '' || cond.clause === c) {
           m.set(c, []);
         }
       });
@@ -32,24 +32,27 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
   const elms: Array<JSX.Element> = [];
 
   mw.model.processes.map(p => {
-    if (cond.actor == '' || (p.actor != null && p.actor.name == cond.actor)) {
+    if (
+      cond.actor === '' ||
+      (p.actor !== null && p.actor.name === cond.actor)
+    ) {
       p.provision.map(s => {
         s.ref.map(r => {
           if (
-            cond.document == '' ||
-            (cond.document == r.document &&
-              (cond.clause == '' || cond.clause == r.clause))
+            cond.document === '' ||
+            (cond.document === r.document &&
+              (cond.clause === '' || cond.clause === r.clause))
           ) {
             const doc = data.get(r.document);
-            if (doc == undefined) {
+            if (doc === undefined) {
               console.error('Reference document not found');
             } else {
               const clause = doc.get(r.clause);
-              if (clause == undefined) {
+              if (clause === undefined) {
                 console.error('Reference clause not found');
               } else {
                 let out = '';
-                if (p.actor != null && s.modality != '') {
+                if (p.actor !== null && s.modality !== '') {
                   out += p.actor.name + ' ' + s.modality + ' ';
                 }
                 out += s.condition;
@@ -62,26 +65,26 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
     }
   });
 
-  if (cond.actor == '') {
+  if (cond.actor === '') {
     mw.model.regs.map(reg => {
-      if (reg.data != null) {
+      if (reg.data !== null) {
         reg.data.attributes.map(a => {
           a.ref.map(ref => {
             if (
-              cond.document == '' ||
-              (cond.document == ref.document &&
-                (cond.clause == '' || cond.clause == ref.clause))
+              cond.document === '' ||
+              (cond.document === ref.document &&
+                (cond.clause === '' || cond.clause === ref.clause))
             ) {
               const doc = data.get(ref.document);
-              if (doc == undefined) {
+              if (doc === undefined) {
                 console.error('Reference document not found');
               } else {
                 const clause = doc.get(ref.clause);
-                if (clause == undefined) {
+                if (clause === undefined) {
                   console.error('Reference clause not found');
                 } else {
                   let out = 'Documented information (' + reg.title + ') ';
-                  if (a.modality != '') {
+                  if (a.modality !== '') {
                     out += a.modality + ' ';
                   }
                   out += 'include ' + a.definition;
@@ -95,24 +98,24 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
     });
 
     mw.model.dataclasses.map(dc => {
-      if (mw.dlman.get(dc).mother == null) {
+      if (mw.dlman.get(dc).mother === null) {
         dc.attributes.map(a => {
           a.ref.map(ref => {
             if (
-              cond.document == '' ||
-              (cond.document == ref.document &&
-                (cond.clause == '' || cond.clause == ref.clause))
+              cond.document === '' ||
+              (cond.document === ref.document &&
+                (cond.clause === '' || cond.clause === ref.clause))
             ) {
               const doc = data.get(ref.document);
-              if (doc == undefined) {
+              if (doc === undefined) {
                 console.error('Reference document not found');
               } else {
                 const clause = doc.get(ref.clause);
-                if (clause == undefined) {
+                if (clause === undefined) {
                   console.error('Reference clause not found');
                 } else {
                   let out = 'Data structure (' + dc.id + ') ';
-                  if (a.modality != '') {
+                  if (a.modality !== '') {
                     out += a.modality + ' ';
                   }
                   out += 'include ' + a.definition;
@@ -142,12 +145,12 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
           currentid += parts[i];
           let found: CLGroup | null = null;
           for (const g of ng.gmember) {
-            if (g.id == currentid) {
+            if (g.id === currentid) {
               found = g;
               break;
             }
           }
-          if (found == null) {
+          if (found === null) {
             found = new CLGroup(currentid);
             ng.gmember.push(found);
           }
@@ -179,11 +182,11 @@ function recursiveAdd(
 ) {
   if (g.gmember.length > 0) {
     g.gmember.forEach(c => {
-      if (level == 0) {
+      if (level === 0) {
         elms.push(
           <h2 key={'ui#checklist#doc' + docindex + 'clause' + c.id}>{c.id} </h2>
         );
-      } else if (level == 1) {
+      } else if (level === 1) {
         elms.push(
           <h3 key={'ui#checklist#doc' + docindex + 'clause' + c.id}>{c.id} </h3>
         );

@@ -22,7 +22,7 @@ export class MapperFunctions {
   static setIsMap: (x: boolean) => void;
 
   static getStateMan(type: ModelType) {
-    if (type == ModelType.ImplementationModel) {
+    if (type === ModelType.ImplementationModel) {
       return MapperFunctions.getImpStateMan();
     } else {
       return MapperFunctions.getRefStateMan();
@@ -33,23 +33,23 @@ export class MapperFunctions {
     console.debug('Save Layout in Mapper', sm);
     const instance = sm.state.instance;
     const mw = sm.state.modelWrapper;
-    if (instance != null) {
+    if (instance !== null) {
       instance.getElements().forEach(x => {
         const data = x.data;
         const page = mw.page;
         const idreg = mw.idman;
         if (isNode(x) && data instanceof NodeData) {
           const gn = mw.subman.get(page).map.get(data.represent);
-          if (gn != null) {
+          if (gn !== undefined) {
             gn.x = x.position.x;
             gn.y = x.position.y;
           } else {
             const obj = idreg.nodes.get(data.represent);
-            if (obj != undefined) {
+            if (obj !== undefined) {
               const nc = MMELFactory.createSubprocessComponent(obj);
               if (
-                obj.datatype == DataType.DATACLASS ||
-                obj.datatype == DataType.REGISTRY
+                obj.datatype === DataType.DATACLASS ||
+                obj.datatype === DataType.REGISTRY
               ) {
                 page.data.push(nc);
                 nc.element = obj as MMELNode;
@@ -74,7 +74,7 @@ export class MapperFunctions {
     const idreg = sm.state.modelWrapper.idman;
     if (idreg.nodes.has(id)) {
       const ret = idreg.nodes.get(id);
-      if (ret != undefined && isGraphNode(ret)) {
+      if (ret !== undefined && isGraphNode(ret)) {
         return ret;
       }
     }
@@ -99,7 +99,7 @@ export class MapperFunctions {
     const refmodel = MapperFunctions.getStateMan(ModelType.ReferenceModel).state
       .modelWrapper.model;
     const mw = state.state.modelWrapper;
-    if (refmodel.meta.namespace == '') {
+    if (refmodel.meta.namespace === '') {
       alert('Reference model does not have a non-empty namespace');
     } else {
       mw.mapman.addMapping(refmodel.meta.namespace, fromid, toid);
@@ -113,7 +113,7 @@ export class MapperFunctions {
     const mw = state.modelWrapper;
     elms.clear();
     for (const c of mw.page.childs) {
-      if (c.element?.datatype == DataType.PROCESS) {
+      if (c.element?.datatype === DataType.PROCESS) {
         const id = c.element.id;
         elms.set(id, new MappingProfile(React.createRef<HTMLDivElement>()));
       }
@@ -137,7 +137,7 @@ export class MapperFunctions {
     mw.mapped.clear();
     const visited = new Set<MMELSubprocessComponent>();
     const map = mapping.getMapping(mw.model.meta.namespace);
-    if (mw.model.root != null) {
+    if (mw.model.root !== null) {
       for (const c of mw.model.root.childs) {
         explore(c, mw.mapped, map, visited);
       }
@@ -154,9 +154,9 @@ function explore(
   const mw = MapperFunctions.getStateMan(ModelType.ReferenceModel).state
     .modelWrapper;
   if (visited.has(c)) {
-    if (c.element?.datatype == DataType.PROCESS) {
+    if (c.element?.datatype === DataType.PROCESS) {
       const result = mapped.get(c.element.id);
-      if (result != undefined) {
+      if (result !== undefined) {
         return result;
       }
     }
@@ -164,21 +164,21 @@ function explore(
   }
   visited.add(c);
   let result: MappedType | null;
-  if (c.element != null) {
-    if (c.element.datatype == DataType.PROCESS) {
+  if (c.element !== null) {
+    if (c.element.datatype === DataType.PROCESS) {
       const process = c.element as MMELProcess;
       const pid = process.id;
       const record = mapped.get(pid);
-      if (record == undefined) {
+      if (record === undefined) {
         result = MappedType.None;
         const froms = data.tos.get(pid);
-        if (froms != undefined && froms.size > 0) {
+        if (froms !== undefined && froms.size > 0) {
           result = MappedType.FULL;
-        } else if (process.page != null) {
+        } else if (process.page !== null) {
           const paddon = mw.subman.get(process.page);
-          if (paddon.start != null) {
+          if (paddon.start !== null) {
             const r = explore(paddon.start, mapped, data, visited);
-            if (r == null) {
+            if (r === null) {
               result = MappedType.None;
             } else {
               result = r;
@@ -193,12 +193,12 @@ function explore(
       result = null;
     }
 
-    if (c.element.datatype == DataType.EGATE) {
+    if (c.element.datatype === DataType.EGATE) {
       result = MappedType.None;
       for (const x of mw.comman.get(c).child) {
-        if (x.to != null) {
+        if (x.to !== null) {
           const r = explore(x.to, mapped, data, visited);
-          if (r != null && r > result) {
+          if (r !== null && r > result) {
             result = r;
           }
         }
@@ -206,25 +206,25 @@ function explore(
     } else {
       let good = false;
       let bad = false;
-      if (c.element.datatype == DataType.PROCESS) {
-        if (result == MappedType.PARTIAL) {
+      if (c.element.datatype === DataType.PROCESS) {
+        if (result === MappedType.PARTIAL) {
           good = true;
           bad = true;
-        } else if (result == MappedType.None) {
+        } else if (result === MappedType.None) {
           bad = true;
-        } else if (result == MappedType.FULL) {
+        } else if (result === MappedType.FULL) {
           good = true;
         }
       }
       for (const x of mw.comman.get(c).child) {
-        if (x.to != null) {
+        if (x.to !== null) {
           const r = explore(x.to, mapped, data, visited);
-          if (r == MappedType.PARTIAL) {
+          if (r === MappedType.PARTIAL) {
             good = true;
             bad = true;
-          } else if (r == MappedType.None) {
+          } else if (r === MappedType.None) {
             bad = true;
-          } else if (r == MappedType.FULL) {
+          } else if (r === MappedType.FULL) {
             good = true;
           }
         }
