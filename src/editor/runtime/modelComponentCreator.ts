@@ -290,6 +290,7 @@ export class MMELFactory {
       nc.x = pos.x;
       nc.y = pos.y;
       mw.subman.get(page).map.set(ret.id, nc);
+      mw.nodeman.get(ret).pages.add(page);
       page.childs.push(nc);
     }
 

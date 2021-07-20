@@ -27,9 +27,9 @@ export class Cleaner {
       model.processes.splice(index, 1);
       idreg.nodes.delete(process.id);
       Cleaner.cleanProvisions(process);
-    }
-    if (process.page !== null) {
-      Cleaner.killPage(process.page);
+      if (process.page !== null) {
+        Cleaner.killPage(process.page);
+      }
     }
     sm.setState({ ...state });
   }

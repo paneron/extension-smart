@@ -291,7 +291,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
             );
           } else {
             const tryEnum = mw.idman.enums.get(a.type);
-            if (tryEnum != undefined) {
+            if (tryEnum !== undefined) {
               const d = tryEnum as MMELEnum;
               const opts: Array<string> = [];
               d.values.map(v => {
