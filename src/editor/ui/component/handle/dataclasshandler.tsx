@@ -217,6 +217,7 @@ export class DataclassHandler implements IList, IAddItem, IUpdateItem {
       dc.attributes = [];
       for (const a of this.data.attributes) {
         const na = MMELFactory.createDataAttribute(a.id);
+        this.mw.clman.getItemAddOn(na).mother.push(dc);
         na.definition = a.definition;
         na.cardinality = a.cardinality;
         na.type = a.type;

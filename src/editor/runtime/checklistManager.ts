@@ -8,6 +8,7 @@ import {
   MMELEGate,
   MMELSubprocessComponent,
 } from '../serialize/interface/flowcontrolinterface';
+import { MMELModel } from '../serialize/interface/model';
 import {
   MMELApproval,
   MMELProcess,
@@ -24,6 +25,14 @@ export class CheckListManager {
   gates = new Map<MMELEGate, CheckListGateAddon>();
   process = new Map<MMELProcess, CheckListProcessAddon>();
   apps = new Map<MMELApproval, CheckListApprovalAddon>();
+
+  constructor(m: MMELModel) {
+    for (const dc of m.dataclasses) {
+      for (const att of dc.attributes) {
+        this.getItemAddOn(att).mother.push(dc);
+      }
+    }
+  }
 
   getEdgeAddOn(x: MMELEdge): CheckListEdgeAddon {
     const ret = this.edges.get(x);

@@ -289,24 +289,27 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
                 {childelms}{' '}
               </div>
             );
-          } else if (obj?.datatype === DataType.ENUM) {
-            const d = obj as MMELEnum;
-            const opts: Array<string> = [];
-            d.values.map(v => {
-              opts.push(v.value);
-            });
-            elms.push(
-              <NormalComboBox
-                key={'field#' + prefix + a.id}
-                text={a.definition}
-                options={opts}
-                value={getAttributeValue(this.data, a.id)}
-                update={(x: string) => {
-                  this.data.attributes.set(a.id, x);
-                  this.setData({ ...this.data });
-                }}
-              />
-            );
+          } else {
+            const tryEnum = mw.idman.enums.get(a.type);
+            if (tryEnum != undefined) {
+              const d = tryEnum as MMELEnum;
+              const opts: Array<string> = [];
+              d.values.map(v => {
+                opts.push(v.value);
+              });
+              elms.push(
+                <NormalComboBox
+                  key={'field#' + prefix + a.id}
+                  text={a.definition}
+                  options={opts}
+                  value={getAttributeValue(this.data, a.id)}
+                  update={(x: string) => {
+                    this.data.attributes.set(a.id, x);
+                    this.setData({ ...this.data });
+                  }}
+                />
+              );
+            }
           }
         }
       }

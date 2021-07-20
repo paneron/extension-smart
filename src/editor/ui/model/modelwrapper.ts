@@ -34,7 +34,7 @@ export class ModelWrapper {
 
   visualman = new VisualManager();
   filterman = new FilterManager();
-  clman = new CheckListManager();
+  clman: CheckListManager;
   dlman: DataLinkManager;
   subman: SubprocessManager;
   idman: IDManager;
@@ -53,6 +53,7 @@ export class ModelWrapper {
     } else {
       this.page = m.root;
     }
+    this.clman = new CheckListManager(m);
     this.idman = new IDManager(m);
     this.subman = new SubprocessManager(m);
     this.dlman = new DataLinkManager(m, this.idman.dcs);

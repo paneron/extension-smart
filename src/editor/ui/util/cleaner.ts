@@ -47,8 +47,10 @@ export class Cleaner {
         const addon = mw.nodeman.get(x);
         addon.pages.delete(page);
         if (
-          !(x.datatype === DataType.DATACLASS ||
-            x.datatype === DataType.REGISTRY)
+          !(
+            x.datatype === DataType.DATACLASS ||
+            x.datatype === DataType.REGISTRY
+          )
         ) {
           if (addon.pages.size === 0) {
             idreg.nodes.delete(x.id);
