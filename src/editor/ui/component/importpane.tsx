@@ -133,7 +133,9 @@ const ImportPane: React.FC<StateMan> = (sm: StateMan) => {
             {
               <shape.ProcessBox>
                 {' '}
-                {state.importing === '*' ? 'Entire model' : state.importing}{' '}
+                {state.importing === '*'
+                  ? 'Entire model'
+                  : state.importing}{' '}
               </shape.ProcessBox>
             }{' '}
           </Unit>

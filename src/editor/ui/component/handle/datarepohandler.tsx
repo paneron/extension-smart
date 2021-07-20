@@ -1,4 +1,8 @@
-import React, { CSSProperties } from 'react';
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
+import { CSSProperties } from 'react';
 import { DocumentItem, DocumentStore } from '../../../repository/document';
 import {
   IAddItem,

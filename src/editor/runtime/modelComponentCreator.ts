@@ -634,7 +634,7 @@ function addDataclassIfNotFound(
               raddon.rdcs.add(ret);
             }
           } else if (
-            nextdc !== undefined && 
+            nextdc !== undefined &&
             nextdc.datatype === DataType.ENUM
           ) {
             const en = nextdc as MMELEnum;

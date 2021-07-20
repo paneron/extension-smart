@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
 import { MMELEnum } from '../../../serialize/interface/datainterface';
 import { IEnum } from '../../interface/datainterface';

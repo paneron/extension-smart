@@ -1,4 +1,7 @@
-import React from 'react';
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import { VarType, VAR_TYPES } from '../../../runtime/idManager';
 import { MMELFactory } from '../../../runtime/modelComponentCreator';
 import { MMELModel } from '../../../serialize/interface/model';

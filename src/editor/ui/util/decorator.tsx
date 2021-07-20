@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import { Handle, Position } from 'react-flow-renderer';
 import styled from '@emotion/styled';
 import React from 'react';

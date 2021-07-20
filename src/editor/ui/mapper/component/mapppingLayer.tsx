@@ -64,8 +64,7 @@ const MappingCanvus: React.FC<{ data: MapLinkState }> = ({ data }) => {
     }
   }
 
-  let ret: JSX.Element;
-  ret = (
+  return (
     <Canvus>
       <svg width="100%" height="99%">
         <defs>
@@ -86,7 +85,6 @@ const MappingCanvus: React.FC<{ data: MapLinkState }> = ({ data }) => {
       </svg>
     </Canvus>
   );
-  return ret;
 };
 
 const Canvus = styled.div`
