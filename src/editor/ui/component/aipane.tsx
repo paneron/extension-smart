@@ -3,42 +3,63 @@
 
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
-import React, { RefObject } from 'react';
+import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
+import React, { useContext } from 'react';
 import { AIAgent } from '../../ai/aiagent';
 import { StateMan } from '../interface/state';
 import { MyTopRightButtons } from './unit/closebutton';
 
-const modelfile: RefObject<HTMLInputElement> = React.createRef();
-
 const AIPane: React.FC<StateMan> = (sm: StateMan) => {
+  const { logger, useDecodedBlob, requestFileFromFilesystem } =
+    useContext(DatasetContext);
   const state = sm.state;
 
-  const readModelFromFile = (result: string) => {
+  function readModelFromFile(result: string) {
     console.debug('Transforming XML to model');
     state.history.clear();
     state.modelWrapper = AIAgent.xmlToModel(result);
     sm.setState(state);
-  };
+  }
 
-  const close = () => {
+  function close() {
     state.aivisible = false;
     sm.setState(state);
-  };
+  }
+
+  async function handleOpen() {
+    if (requestFileFromFilesystem && useDecodedBlob) {
+      logger?.log('Requesting file');
+      requestFileFromFilesystem(
+        {
+          prompt: 'Choose an XML file to import',
+          allowMultiple: false,
+          filters: [{ name: 'XML files', extensions: ['xml'] }],
+        },
+        selectedFiles => {
+          logger?.log('Requesting file: Got selection', selectedFiles);
+          const fileData = Object.values(selectedFiles ?? {})[0];
+          if (fileData) {
+            const fileDataAsString = useDecodedBlob({
+              blob: fileData,
+            }).asString;
+            logger?.log('Requesting file: Decoded blob', fileDataAsString);
+            readModelFromFile(fileDataAsString);
+          } else {
+            logger?.log('Requesting file: No file data received');
+            console.error('Import file: no file data received');
+          }
+        }
+      );
+    } else {
+      throw new Error('File import function not availbale');
+    }
+  }
 
   return (
     <ControlBar>
       <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
 
-      <button onClick={() => modelfile.current?.click()}>
-        Transform XML to Model
-      </button>
-      <input
-        type="file"
-        accept=".xml"
-        onChange={e => modelFileSelected(e, readModelFromFile)}
-        ref={modelfile}
-        style={{ display: 'none' }}
-      />
+      <button onClick={() => handleOpen()}> Transform XML to Model </button>
     </ControlBar>
   );
 };
@@ -55,18 +76,5 @@ const ControlBar = styled.aside`
   overflow-y: auto;
   z-index: 100;
 `;
-
-function modelFileSelected(
-  e: React.ChangeEvent<HTMLInputElement>,
-  readModel: (x: string) => void
-): void {
-  const flist = e.target.files;
-  if (flist !== null && flist.length > 0) {
-    flist[0].text().then(result => {
-      readModel(result);
-    });
-  }
-  e.target.value = '';
-}
 
 export default AIPane;
