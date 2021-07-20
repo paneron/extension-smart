@@ -108,9 +108,11 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
     if (!isNaN(x) && this.reg !== null) {
       const repo = this.store.get(this.reg);
       const r = repo.get(x);
-      this.data.id = r.id;
+      this.data = new DocumentItem(r.id);
       this.data.meta = r.meta;
-      this.data.attributes = r.attributes;
+      r.attributes.forEach((v, k) => {
+        this.data.attributes.set(k, v);
+      });
       this.setData({ ...this.data });
       this.setUpdateDoc(r);
       this.setUpdateMode(true);
@@ -159,11 +161,9 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
   updateClicked = () => {
     if (this.updating !== null && this.reg !== null) {
       const repo = this.store.get(this.reg);
-      if (this.data.id !== this.updating.id) {
-        repo.docs.delete(this.updating.id);
-        repo.docs.set(this.data.id, this.data);
-        this.setUpdateMode(false);
-      }
+      repo.docs.delete(this.updating.id);
+      repo.docs.set(this.data.id, this.data);
+      this.setUpdateMode(false);
     }
   };
 
