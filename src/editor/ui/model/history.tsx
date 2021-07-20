@@ -51,7 +51,7 @@ export class PageHistory {
     };
 
     const name =
-      sm.state.modelWrapper.model.meta.namespace == ''
+      sm.state.modelWrapper.model.meta.namespace === ''
         ? 'root'
         : sm.state.modelWrapper.model.meta.namespace;
     const elms: JSX.Element[] = [
@@ -83,7 +83,7 @@ export class PageHistory {
     };
 
     const name =
-      mw.model.meta.namespace == '' ? 'root' : mw.model.meta.namespace;
+      mw.model.meta.namespace === '' ? 'root' : mw.model.meta.namespace;
     const elms: JSX.Element[] = [
       <button key={'ui#rootpathbutton'} onClick={() => goToPage(-1)}>
         {name}
@@ -120,13 +120,13 @@ export class PageHistory {
 
   getRootPage(): MMELSubprocess {
     let page;
-    if (this.modelType == null) {
+    if (this.modelType === null) {
       page = functionCollection.getStateMan().state.modelWrapper.model.root;
     } else {
       const sm = MapperFunctions.getStateMan(this.modelType);
       page = sm.state.modelWrapper.model.root;
     }
-    if (page == null) {
+    if (page === null) {
       throw new Error('Root page not found');
     }
     return page;

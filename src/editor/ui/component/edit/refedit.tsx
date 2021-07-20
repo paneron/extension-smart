@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
 import { MMELReference } from '../../../serialize/interface/supportinterface';
 import { IRef } from '../../interface/datainterface';

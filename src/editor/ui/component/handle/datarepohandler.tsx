@@ -1,4 +1,8 @@
-import React, { CSSProperties } from 'react';
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
+import { CSSProperties } from 'react';
 import { DocumentItem, DocumentStore } from '../../../repository/document';
 import {
   IAddItem,
@@ -72,7 +76,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
 
   getItems = (): Array<DocumentListItem> => {
     const out: Array<DocumentListItem> = [];
-    if (this.reg != null) {
+    if (this.reg !== null) {
       const repo = this.store.get(this.reg);
       repo.docs.forEach((v, k) => {
         out.push(new DocumentListItem('' + k, descDocument(v), '' + k));
@@ -82,7 +86,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
   };
 
   addItemClicked = () => {
-    if (this.reg != null) {
+    if (this.reg !== null) {
       this.data = this.store.get(this.reg).createNewDocument();
       this.setData({ ...this.data });
       this.setAddMode(true);
@@ -90,7 +94,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
   };
 
   removeItem = (refs: Array<string>) => {
-    if (this.reg != null) {
+    if (this.reg !== null) {
       const repo = this.store.get(this.reg);
       refs.map(x => {
         repo.docs.delete(parseInt(x));
@@ -101,7 +105,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
 
   updateItem = (ref: string) => {
     const x = parseInt(ref);
-    if (!isNaN(x) && this.reg != null) {
+    if (!isNaN(x) && this.reg !== null) {
       const repo = this.store.get(this.reg);
       const r = repo.get(x);
       this.data.id = r.id;
@@ -115,7 +119,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
 
   private getFields = (): Array<JSX.Element> => {
     const elms: Array<JSX.Element> = [];
-    if (this.reg != null && this.reg.data != null) {
+    if (this.reg !== null && this.reg.data !== null) {
       elms.push(
         <NormalTextField
           key={'field#metadata'}
@@ -137,7 +141,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
   };
 
   addClicked = () => {
-    if (this.reg != null) {
+    if (this.reg !== null) {
       const repo = this.store.get(this.reg);
       repo.docs.set(this.data.id, this.data);
       this.setAddMode(false);
@@ -153,9 +157,9 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
   };
 
   updateClicked = () => {
-    if (this.updating != null && this.reg != null) {
+    if (this.updating !== null && this.reg !== null) {
       const repo = this.store.get(this.reg);
-      if (this.data.id != this.updating.id) {
+      if (this.data.id !== this.updating.id) {
         repo.docs.delete(this.updating.id);
         repo.docs.set(this.data.id, this.data);
         this.setUpdateMode(false);
@@ -181,7 +185,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
 
     dc.attributes.map(a => {
       const value = getAttributeValue(this.data, a.id);
-      if (a.type == STRINGTYPE || a.type == EMPTYTYPE) {
+      if (a.type === STRINGTYPE || a.type === EMPTYTYPE) {
         elms.push(
           <NormalTextField
             key={'field#' + prefix + a.id}
@@ -193,7 +197,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
             }}
           />
         );
-      } else if (a.type == BOOLEANTYPE) {
+      } else if (a.type === BOOLEANTYPE) {
         elms.push(
           <NormalComboBox
             key={'field#' + prefix + a.id}
@@ -206,7 +210,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
             }}
           />
         );
-      } else if (a.type == ROLETYPE) {
+      } else if (a.type === ROLETYPE) {
         elms.push(
           <ReferenceSelector
             key={'field#' + prefix + a.id}
@@ -215,14 +219,14 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
             value={getAttributeValue(this.data, a.id)}
             options={roleoptions}
             update={(x: number) => {
-              if (x != -1) {
+              if (x !== -1) {
                 this.data.attributes.set(a.id, roleoptions[x]);
                 this.setData({ ...this.data });
               }
             }}
           />
         );
-      } else if (a.type == DATETIMETYPE) {
+      } else if (a.type === DATETIMETYPE) {
         elms.push(
           <DataTimeTextField
             key={'field#' + prefix + a.id}
@@ -238,14 +242,14 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
         const mw = functionCollection.getStateMan().state.modelWrapper;
         const u = a.type.indexOf('(');
         const v = a.type.indexOf(')');
-        if (u != -1 && v != -1) {
+        if (u !== -1 && v !== -1) {
           const type = a.type.substr(u + 1, v - u - 1);
           const opts: Array<string> = [];
           const obj = mw.idman.nodes.get(type);
-          if (obj?.datatype == DataType.DATACLASS) {
+          if (obj?.datatype === DataType.DATACLASS) {
             const r = obj as MMELDataClass;
             const mother = mw.dlman.get(r).mother;
-            if (mother != null) {
+            if (mother !== null) {
               this.store.get(mother).docs.forEach(d => {
                 opts.push(descDocument(d));
               });
@@ -257,7 +261,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
                   value={getAttributeValue(this.data, a.id)}
                   options={opts}
                   update={(x: number) => {
-                    if (x != -1) {
+                    if (x !== -1) {
                       this.data.attributes.set(a.id, opts[x]);
                       this.setData({ ...this.data });
                     }
@@ -269,7 +273,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
         } else {
           // the data type is a data class
           const obj = mw.idman.nodes.get(a.type);
-          if (obj?.datatype == DataType.DATACLASS) {
+          if (obj?.datatype === DataType.DATACLASS) {
             const d = obj as MMELDataClass;
             const childelms: Array<JSX.Element> = [];
             this.enumerateDataClass(prefix + '#' + a.id, d, childelms);
@@ -285,7 +289,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
                 {childelms}{' '}
               </div>
             );
-          } else if (obj?.datatype == DataType.ENUM) {
+          } else if (obj?.datatype === DataType.ENUM) {
             const d = obj as MMELEnum;
             const opts: Array<string> = [];
             d.values.map(v => {
@@ -312,7 +316,7 @@ export class DataRepoHandler implements IList, IAddItem, IUpdateItem {
 
 function getAttributeValue(doc: DocumentItem, x: string) {
   let y = doc.attributes.get(x);
-  if (y == undefined) {
+  if (y === undefined) {
     y = '';
   }
   return y;

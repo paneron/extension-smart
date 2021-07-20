@@ -58,7 +58,7 @@ const ModelMapper: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
           />
         </ContainerLeft>
         <MappingCanvus data={mState} />
-        <VerticleLine />
+        <VerticalLine />
         {mState.isMap ? <MappingLegendPane /> : ''}
       </div>
     );
@@ -84,7 +84,7 @@ const ContainerRight = styled.div`
   bottom: 0;
 `;
 
-const VerticleLine = styled.div`
+const VerticalLine = styled.div`
   border-left: 2px solid black;
   height: 100%;
   position: absolute;

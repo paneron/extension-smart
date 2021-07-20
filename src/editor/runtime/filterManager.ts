@@ -13,7 +13,7 @@ export class FilterManager {
 
   get(x: MMELProcess | MMELApproval | MMELDataClass): FilterAddon {
     const ret = this.map.get(x);
-    if (ret != undefined) {
+    if (ret !== undefined) {
       return ret;
     }
     const record = new FilterAddon();
@@ -30,7 +30,7 @@ export class FilterManager {
         this.clauses.push(new Set<string>());
       }
       const x = this.documents.get(r.document);
-      if (x != undefined) {
+      if (x !== undefined) {
         if (!this.clauses[x].has(r.clause)) {
           this.clauses[x].add(r.clause);
         }

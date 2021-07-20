@@ -7,21 +7,21 @@ export function MMELtokenize(x: string): Array<string> {
     if (!isSpace(char)) {
       t += char;
       i++;
-      if (char == '"') {
-        while (i < x.length && x.charAt(i) != '"') {
+      if (char === '"') {
+        while (i < x.length && x.charAt(i) !== '"') {
           t += x.charAt(i);
           i++;
         }
         t += x.charAt(i);
         i++;
-      } else if (char == '{') {
+      } else if (char === '{') {
         let count = 1;
         while (i < x.length && count > 0) {
           char = x.charAt(i);
-          if (char == '{') {
+          if (char === '{') {
             count++;
           }
-          if (char == '}') {
+          if (char === '}') {
             count--;
           }
           t += char;
@@ -65,14 +65,14 @@ export function MMELtokenizeAttributes(x: string): Array<string> {
     if (!isSpace(char)) {
       t += char;
       i++;
-      if (char == '{') {
+      if (char === '{') {
         let count = 1;
         while (i < x.length && count > 0) {
           char = x.charAt(i);
-          if (char == '{') {
+          if (char === '{') {
             count++;
           }
-          if (char == '}') {
+          if (char === '}') {
             count--;
           }
           t += char;
@@ -80,7 +80,7 @@ export function MMELtokenizeAttributes(x: string): Array<string> {
         }
         i++;
       } else {
-        while (i < x.length && x.charAt(i) != '{') {
+        while (i < x.length && x.charAt(i) !== '{') {
           t += x.charAt(i);
           i++;
         }

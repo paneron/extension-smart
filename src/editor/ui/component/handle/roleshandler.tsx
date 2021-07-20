@@ -1,4 +1,7 @@
-import React from 'react';
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import { MMELFactory } from '../../../runtime/modelComponentCreator';
 import { MMELModel } from '../../../serialize/interface/model';
 import { MMELRole } from '../../../serialize/interface/supportinterface';
@@ -66,15 +69,15 @@ export class RoleHandler implements IList, IAddItem, IUpdateItem {
       if (removed.length > 0) {
         const r = removed[0];
         for (const p of this.model.processes) {
-          if (p.actor == r) {
+          if (p.actor === r) {
             p.actor = null;
           }
         }
         for (const p of this.model.approvals) {
-          if (p.actor == r) {
+          if (p.actor === r) {
             p.actor = null;
           }
-          if (p.approver == r) {
+          if (p.approver === r) {
             p.approver = null;
           }
         }
@@ -129,7 +132,7 @@ export class RoleHandler implements IList, IAddItem, IUpdateItem {
 
   addClicked = () => {
     const mw = functionCollection.getStateMan().state.modelWrapper;
-    if (this.data.roleid == '') {
+    if (this.data.roleid === '') {
       alert('ID is empty');
       return;
     }
@@ -157,10 +160,10 @@ export class RoleHandler implements IList, IAddItem, IUpdateItem {
 
   updateClicked = () => {
     const mw = functionCollection.getStateMan().state.modelWrapper;
-    if (this.updating != null) {
+    if (this.updating !== null) {
       const idreg = mw.idman;
-      if (this.data.roleid != this.updating.id) {
-        if (this.data.roleid == '') {
+      if (this.data.roleid !== this.updating.id) {
+        if (this.data.roleid === '') {
           alert('New ID is empty');
           return;
         }

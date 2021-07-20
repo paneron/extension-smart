@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
 import React from 'react';
 import { useStoreState, Elements } from 'react-flow-renderer';
@@ -9,11 +13,11 @@ const InfoPane: React.FC<{ clvisible: boolean }> = ({ clvisible }) => {
   const selected = useStoreState(store => store.selectedElements);
 
   const updateSelection = (selected: Elements<any> | null) => {
-    if (selected != null && selected.length > 0) {
+    if (selected !== null && selected.length > 0) {
       const s = selected[0];
       if (s.data instanceof NodeData) {
         const data = functionCollection.getObjectByID(s.data.represent);
-        if (data != undefined) {
+        if (data !== undefined) {
           return describe(data, clvisible);
         }
       }

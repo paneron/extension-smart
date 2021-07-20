@@ -27,7 +27,7 @@ export class CheckListManager {
 
   getEdgeAddOn(x: MMELEdge): CheckListEdgeAddon {
     const ret = this.edges.get(x);
-    if (ret != undefined) {
+    if (ret !== undefined) {
       return ret;
     }
     const record = new CheckListEdgeAddon();
@@ -39,7 +39,7 @@ export class CheckListManager {
     x: MMELProvision | MMELDataAttribute | MMELDataClass
   ): CheckListItemAddon {
     const ret = this.items.get(x);
-    if (ret != undefined) {
+    if (ret !== undefined) {
       return ret;
     }
     const record = new CheckListItemAddon();
@@ -49,7 +49,7 @@ export class CheckListManager {
 
   getGateAddOn(x: MMELEGate): CheckListGateAddon {
     const ret = this.gates.get(x);
-    if (ret != undefined) {
+    if (ret !== undefined) {
       return ret;
     }
     const record = new CheckListGateAddon();
@@ -59,7 +59,7 @@ export class CheckListManager {
 
   getComAddOn(x: MMELSubprocessComponent): CheckListComAddon {
     const ret = this.coms.get(x);
-    if (ret != undefined) {
+    if (ret !== undefined) {
       return ret;
     }
     const record = new CheckListComAddon();
@@ -69,7 +69,7 @@ export class CheckListManager {
 
   getProcessAddOn(x: MMELProcess): CheckListProcessAddon {
     const ret = this.process.get(x);
-    if (ret != undefined) {
+    if (ret !== undefined) {
       return ret;
     }
     const record = new CheckListProcessAddon();
@@ -79,7 +79,7 @@ export class CheckListManager {
 
   getApprovalAddOn(x: MMELApproval): CheckListApprovalAddon {
     const ret = this.apps.get(x);
-    if (ret != undefined) {
+    if (ret !== undefined) {
       return ret;
     }
     const record = new CheckListApprovalAddon();

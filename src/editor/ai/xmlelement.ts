@@ -13,7 +13,7 @@ export class XMLElement {
     this.childs.push(c);
     if (c instanceof XMLElement) {
       let array = this.map.get(c.tag);
-      if (array == undefined) {
+      if (array === undefined) {
         array = [];
         this.map.set(c.tag, array);
       }
@@ -27,7 +27,7 @@ export class XMLElement {
 
   getChildByTagName(x: string): Array<XMLElement> {
     const array = this.map.get(x);
-    if (array == undefined) {
+    if (array === undefined) {
       return [];
     }
     return array;
@@ -35,7 +35,7 @@ export class XMLElement {
 
   getElementValue(name: string): string {
     const array = this.map.get(name);
-    if (array == undefined) {
+    if (array === undefined) {
       return '';
     }
     return array[0].toString();
@@ -45,7 +45,7 @@ export class XMLElement {
     let c: XMLElement = this;
     path.forEach(x => {
       const childs = c.getChildByTagName(x);
-      if (childs.length == 0) {
+      if (childs.length === 0) {
         return '';
       } else {
         c = childs[0];

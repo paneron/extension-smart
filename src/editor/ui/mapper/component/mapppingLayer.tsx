@@ -17,17 +17,17 @@ const MappingCanvus: React.FC<{ data: MapLinkState }> = ({ data }) => {
     const ns =
       MapperFunctions.getRefStateMan().state.modelWrapper.model.meta.namespace;
     const mapfunction = map.profiles.get(ns);
-    if (mapfunction != null) {
+    if (mapfunction !== undefined) {
       const froms = mapfunction.froms;
       data.source.forEach((sprofile, sid) => {
         const tset = froms.get(sid);
-        if (tset != undefined) {
+        if (tset !== undefined) {
           const ts = tset;
           data.dest.forEach((tprofile, tid) => {
             if (ts.has(tid)) {
               const from = sprofile.ref.current;
               const to = tprofile.ref.current;
-              if (from != null && to != null) {
+              if (from !== null && to !== null) {
                 const fbox = from.getBoundingClientRect();
                 const tbox = to.getBoundingClientRect();
                 const fx = fbox.x + fbox.width;
@@ -64,8 +64,7 @@ const MappingCanvus: React.FC<{ data: MapLinkState }> = ({ data }) => {
     }
   }
 
-  let ret: JSX.Element;
-  ret = (
+  return (
     <Canvus>
       <svg width="100%" height="99%">
         <defs>
@@ -86,7 +85,6 @@ const MappingCanvus: React.FC<{ data: MapLinkState }> = ({ data }) => {
       </svg>
     </Canvus>
   );
-  return ret;
 };
 
 const Canvus = styled.div`

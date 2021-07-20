@@ -1,5 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+/** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
@@ -135,7 +136,7 @@ const ModelView: React.FC<{
   );
 
   /* rendering */
-  if (type == ModelType.ImplementationModel) {
+  if (type === ModelType.ImplementationModel) {
     MapperFunctions.getImpStateMan = getStateMan;
     MapperFunctions.updateMap = updateMap;
   } else {
@@ -167,7 +168,7 @@ const ModelView: React.FC<{
           {dataVisibleButton}
           {controlPaneButton}
           {infoButton}
-          {state.type == ModelType.ImplementationModel ? mapVisibleButton : ''}
+          {state.type === ModelType.ImplementationModel ? mapVisibleButton : ''}
         </Controls>
       </ReactFlow>
       <MapperPathPane {...sm} />

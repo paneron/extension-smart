@@ -1,5 +1,3 @@
-/** @jsxFrag React.Fragment */
-
 import React from 'react';
 import { XYPosition } from 'react-flow-renderer';
 import { DataType, MMELNode } from '../serialize/interface/baseinterface';

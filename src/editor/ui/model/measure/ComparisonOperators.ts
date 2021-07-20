@@ -101,12 +101,12 @@ const EqualOp = new CommparisonOperator(
     if (a instanceof MeasureDataUnit && b instanceof MeasureDataUnit) {
       const x = +a.value;
       const y = +b.value;
-      result = x == y;
+      result = x === y;
     } else if (a instanceof MeasureDataList && b instanceof MeasureDataUnit) {
       const v = +b.value;
       for (const x of a.values) {
         const u = +x;
-        if (!(u == v)) {
+        if (!(u === v)) {
           result = false;
           return result;
         }
@@ -115,7 +115,7 @@ const EqualOp = new CommparisonOperator(
       const v = +a.value;
       for (const x of b.values) {
         const u = +x;
-        if (!(v == u)) {
+        if (!(v === u)) {
           result = false;
           return result;
         }
@@ -126,7 +126,7 @@ const EqualOp = new CommparisonOperator(
       for (let i = 0; i < max; i++) {
         const x = +a.values[i % a.values.length];
         const y = +b.values[i % b.values.length];
-        if (!(x == y)) {
+        if (!(x === y)) {
           result = false;
           return result;
         }

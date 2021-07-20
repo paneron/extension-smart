@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import React, { CSSProperties, FC } from 'react';
 import {
   EdgeProps,

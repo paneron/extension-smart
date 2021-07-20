@@ -10,7 +10,7 @@ export class DocumentStore {
   get(x: MMELRegistry): DocumentRegistry {
     if (this.regs.has(x.id)) {
       const y = this.regs.get(x.id);
-      if (y != undefined) {
+      if (y !== undefined) {
         return y;
       }
     }
@@ -38,7 +38,7 @@ export class DocumentRegistry {
   get(x: number) {
     if (this.docs.has(x)) {
       const y = this.docs.get(x);
-      if (y != undefined) {
+      if (y !== undefined) {
         return y;
       }
     }

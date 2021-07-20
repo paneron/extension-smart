@@ -14,7 +14,7 @@ import ListManagerPane from '../unit/listmanage';
 
 const RepoEditPane: React.FC<StateMan> = (sm: StateMan) => {
   const state = sm.state;
-  const isVisible = state.datarepo != null;
+  const isVisible = state.datarepo !== null;
 
   const [isAdd, setAddMode] = useState(false);
   const [isUpdate, setUpdateMode] = useState(false);

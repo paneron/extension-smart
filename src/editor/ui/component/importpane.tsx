@@ -62,7 +62,7 @@ const ImportPane: React.FC<StateMan> = (sm: StateMan) => {
   };
 
   const onChange = () => {
-    if (ref.current != null) {
+    if (ref.current !== null) {
       state.importing = ref.current.value;
       sm.setState(state);
     }
@@ -127,13 +127,15 @@ const ImportPane: React.FC<StateMan> = (sm: StateMan) => {
           {' '}
           {elms}{' '}
         </select>
-        {state.importing != '' ? (
+        {state.importing !== '' ? (
           <Unit onDragStart={event => onDragStart(event, 'import')} draggable>
             {' '}
             {
               <shape.ProcessBox>
                 {' '}
-                {state.importing == '*' ? 'Entire model' : state.importing}{' '}
+                {state.importing === '*'
+                  ? 'Entire model'
+                  : state.importing}{' '}
               </shape.ProcessBox>
             }{' '}
           </Unit>
@@ -146,7 +148,7 @@ const ImportPane: React.FC<StateMan> = (sm: StateMan) => {
 };
 
 const onDragStart = (event: React.DragEvent<HTMLDivElement>, msg: string) => {
-  if (event.dataTransfer != null) {
+  if (event.dataTransfer !== null) {
     event.dataTransfer.setData('application/modeleditor', msg);
     event.dataTransfer.effectAllowed = 'move';
   }

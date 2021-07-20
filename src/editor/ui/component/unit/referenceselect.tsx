@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import React, { CSSProperties, useState } from 'react';
 import { RefObject } from 'react';
 import {
@@ -36,7 +40,7 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
   const elms: Array<JSX.Element> = [];
   const smallfilter = filter.toLowerCase();
   for (const x of f.values) {
-    if (x.toLowerCase().indexOf(smallfilter) != -1) {
+    if (x.toLowerCase().indexOf(smallfilter) !== -1) {
       elms.push(
         <option key={'ui#selector#values#' + x} value={x}>
           {x}
@@ -47,8 +51,8 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
   const options: Array<JSX.Element> = [];
   for (const x of f.options) {
     if (
-      x.toLowerCase().indexOf(smallfilter) != -1 &&
-      f.values.indexOf(x) == -1
+      x.toLowerCase().indexOf(smallfilter) !== -1 &&
+      f.values.indexOf(x) === -1
     ) {
       options.push(
         <option key={'ui#selector#options#' + x} value={x}>
@@ -95,8 +99,8 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
   const smallfilter = filter.toLowerCase();
   const options: Array<JSX.Element> = [];
   f.options.map((x, index) => {
-    if (x.toLowerCase().indexOf(smallfilter) != -1 && x != f.value) {
-      if (x == '') {
+    if (x.toLowerCase().indexOf(smallfilter) !== -1 && x !== f.value) {
+      if (x === '') {
         options.push(
           <option key={'ui#selector#options#empty'} value={0}>
             (Empty - not specified)
@@ -117,9 +121,9 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
       <textarea
         style={inputcss}
         value={f.value}
-        readOnly={f.editable != undefined && !f.editable}
+        readOnly={f.editable !== undefined && !f.editable}
         onChange={e => {
-          if (f.onChange != undefined) {
+          if (f.onChange !== undefined) {
             f.onChange(e.target.value);
           }
         }}
@@ -146,7 +150,7 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
 function extractOptions(
   ref: React.RefObject<HTMLSelectElement>
 ): Array<string> {
-  if (ref.current != undefined) {
+  if (ref.current !== null) {
     return Array.from(ref.current.selectedOptions, v => {
       return v.value;
     });
@@ -155,7 +159,7 @@ function extractOptions(
 }
 
 function extractOption(ref: React.RefObject<HTMLSelectElement>): number {
-  if (ref.current != undefined) {
+  if (ref.current !== null) {
     return parseInt(ref.current.value);
   }
   return -1;

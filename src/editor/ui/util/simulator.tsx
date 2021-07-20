@@ -42,11 +42,11 @@ export class Simulator {
     const mw = sm.state.modelWrapper;
     const s = sm.state.simulation;
     const elms: Array<JSX.Element> = [];
-    if (s != null) {
-      if (s.element != null) {
+    if (s !== null) {
+      if (s.element !== null) {
         const x = s.element;
         console.debug(x);
-        if (x.datatype == DataType.PROCESS) {
+        if (x.datatype === DataType.PROCESS) {
           const process = x as MMELProcess;
           elms.push(<h3 key={x.id + '#ProcessID'}> {process.id} </h3>);
           elms.push(<p key={x.id + '#ProcessName'}> Name: {process.name} </p>);
@@ -59,7 +59,7 @@ export class Simulator {
                     {' '}
                     Statement: {p.condition}{' '}
                   </p>
-                  {p.modality != '' ? (
+                  {p.modality !== '' ? (
                     <p key={x.id + '#provision#' + p.id + 'modality'}>
                       {' '}
                       Modality: {p.modality}{' '}
@@ -118,11 +118,11 @@ export class Simulator {
               </div>
             );
           }
-        } else if (x.datatype == DataType.APPROVAL) {
+        } else if (x.datatype === DataType.APPROVAL) {
           const app = x as MMELApproval;
           elms.push(<h3 key={x.id + '#ApprovalID'}> {app.id} </h3>);
           elms.push(<p key={x.id + '#ApprovalName'}> Name: {app.name} </p>);
-          if (app.approver != null) {
+          if (app.approver !== null) {
             elms.push(
               <p key={x.id + '#ApproverName'}>
                 {' '}
@@ -153,7 +153,7 @@ export class Simulator {
               </div>
             );
           }
-        } else if (x.datatype == DataType.EGATE) {
+        } else if (x.datatype === DataType.EGATE) {
           elms.push(<h3 key={x.id + '#EGateID'}> {x.id} </h3>);
           elms.push(
             <p key={x.id + '#Gatewaylabel'}>
@@ -161,7 +161,7 @@ export class Simulator {
               Gateway label: {(x as MMELEGate).label}{' '}
             </p>
           );
-        } else if (x.datatype == DataType.TIMEREVENT) {
+        } else if (x.datatype === DataType.TIMEREVENT) {
           const timer = x as MMELTimerEvent;
           elms.push(<h3 key={x.id + '#TimerID'}> {timer.id} </h3>);
           elms.push(
@@ -170,7 +170,7 @@ export class Simulator {
           elms.push(
             <p key={x.id + '#Timerpara'}> Timer parameters: {timer.para} </p>
           );
-        } else if (x.datatype == DataType.SIGNALCATCHEVENT) {
+        } else if (x.datatype === DataType.SIGNALCATCHEVENT) {
           elms.push(<h3 key={x.id + '#SCEventID'}> {x.id} </h3>);
           elms.push(
             <p key={x.id + '#Signal'}>
@@ -180,7 +180,7 @@ export class Simulator {
           );
         }
         const addon = mw.comman.get(s);
-        if (addon.child.length == 0) {
+        if (addon.child.length === 0) {
           elms.push(<p key={x.id + '#TheEndText'}> This is the end. </p>);
           elms.push(
             <button
@@ -190,7 +190,7 @@ export class Simulator {
               Quit simulation
             </button>
           );
-        } else if (addon.child.length == 1 && addon.child[0].to != null) {
+        } else if (addon.child.length === 1 && addon.child[0].to !== null) {
           const target = addon.child[0].to;
           elms.push(
             <button key={x.id + '#nextButton'} onClick={() => goToNext(target)}>
@@ -205,7 +205,7 @@ export class Simulator {
             </p>
           );
           sm.state.modelWrapper.page.edges.forEach(e => {
-            if (e.from != null && e.from.element == x) {
+            if (e.from !== null && e.from.element === x) {
               elms.push(getNextButton(x.id, e));
             }
           });
@@ -229,9 +229,9 @@ function goToNext(x: MMELSubprocessComponent) {
 }
 
 function getNextButton(parentid: string, e: MMELEdge): JSX.Element {
-  if (e.to != null) {
+  if (e.to !== null) {
     const target = e.to;
-    if (e.description == 'default') {
+    if (e.description === 'default') {
       return (
         <button
           key={parentid + '#nextButton' + e.to.element?.id}
@@ -240,7 +240,7 @@ function getNextButton(parentid: string, e: MMELEdge): JSX.Element {
           Default option
         </button>
       );
-    } else if (e.description == '') {
+    } else if (e.description === '') {
       return (
         <div key={parentid + '#nextButtonLabel' + e.to.element?.id}>
           Select next step: {e.to.element?.id}

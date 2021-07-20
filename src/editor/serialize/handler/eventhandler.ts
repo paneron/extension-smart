@@ -12,7 +12,7 @@ export function parseEndEvent(id: string, data: string): MMELEndEvent {
     id: id,
     datatype: DataType.ENDEVENT,
   };
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     if (t.length > 0) {
       throw new Error(
@@ -33,13 +33,13 @@ export function parseSignalCatchEvent(
     signal: '',
   };
 
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'catch') {
+        if (command === 'catch') {
           sc.signal = MMELremovePackage(t[i++]);
         } else {
           throw new Error(
@@ -68,7 +68,7 @@ export function parseStartEvent(id: string, data: string): MMELStartEvent {
     datatype: DataType.STARTEVENT,
   };
 
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     if (t.length > 0) {
       throw new Error(
@@ -87,15 +87,15 @@ export function parseTimerEvent(id: string, data: string): MMELTimerEvent {
     para: '',
   };
 
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'type') {
+        if (command === 'type') {
           te.type = t[i++];
-        } else if (command == 'para') {
+        } else if (command === 'para') {
           te.para = MMELremovePackage(t[i++]);
         } else {
           throw new Error(

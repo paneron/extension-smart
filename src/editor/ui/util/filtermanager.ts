@@ -15,7 +15,7 @@ import { functionCollection } from './function';
 
 export function calculateFilter(mw: ModelWrapper, cond: ISearch): void {
   const model = mw.model;
-  const require: boolean = cond.document != '' || cond.actor != '';
+  const require: boolean = cond.document !== '' || cond.actor !== '';
   for (const p of model.processes) {
     mw.filterman.get(p).filterMatch = require
       ? FilterType.UNKNOWN
@@ -28,9 +28,9 @@ export function calculateFilter(mw: ModelWrapper, cond: ISearch): void {
   }
   for (const d of model.dataclasses) {
     mw.filterman.get(d).filterMatch =
-      cond.document != '' ? checkData(d, cond) : FilterType.NOT_MATCH;
+      cond.document !== '' ? checkData(d, cond) : FilterType.NOT_MATCH;
   }
-  if (mw.model.root != null && require) {
+  if (mw.model.root !== null && require) {
     explore(mw.model.root, new Set<MMELSubprocessComponent>(), cond);
   }
 }
@@ -39,8 +39,8 @@ function checkData(d: MMELDataClass, cond: ISearch): FilterType {
   for (const a of d.attributes) {
     for (const r of a.ref) {
       if (
-        cond.document == r.document &&
-        (cond.clause == '' || cond.clause == r.clause)
+        cond.document === r.document &&
+        (cond.clause === '' || cond.clause === r.clause)
       ) {
         return FilterType.EXACT_MATCH;
       }
@@ -58,26 +58,26 @@ function explore(
   x.childs.forEach(c => {
     if (!visited.has(c)) {
       visited.add(c);
-      if (c.element?.datatype == DataType.PROCESS) {
+      if (c.element?.datatype === DataType.PROCESS) {
         if (checkProcess(c.element as MMELProcess, cond, visited)) {
           result = true;
         }
-      } else if (c.element?.datatype == DataType.APPROVAL) {
+      } else if (c.element?.datatype === DataType.APPROVAL) {
         if (checkApproval(c.element as MMELApproval, cond)) {
           result = true;
         }
       }
-    } else if (c.element?.datatype == DataType.PROCESS) {
+    } else if (c.element?.datatype === DataType.PROCESS) {
       const process = c.element as MMELProcess;
       const addon = functionCollection
         .getStateMan()
         .state.modelWrapper.filterman.get(process);
-      if (addon.filterMatch == FilterType.UNKNOWN) {
+      if (addon.filterMatch === FilterType.UNKNOWN) {
         console.error('Filter match result is not computed before access?', x);
       }
       if (
-        addon.filterMatch == FilterType.EXACT_MATCH ||
-        addon.filterMatch == FilterType.SUBPROCESS_MATCH
+        addon.filterMatch === FilterType.EXACT_MATCH ||
+        addon.filterMatch === FilterType.SUBPROCESS_MATCH
       ) {
         result = true;
       }
@@ -95,14 +95,14 @@ function checkProcess(
   const addon = functionCollection
     .getStateMan()
     .state.modelWrapper.filterman.get(p);
-  if (p.page != null) {
+  if (p.page !== null) {
     if (explore(p.page, visited, cond)) {
       addon.filterMatch = FilterType.SUBPROCESS_MATCH;
       result = true;
     }
   }
-  if (cond.actor == '' || (p.actor != null && p.actor.name == cond.actor)) {
-    if (cond.document != '') {
+  if (cond.actor === '' || (p.actor !== null && p.actor.name === cond.actor)) {
+    if (cond.document !== '') {
       p.provision.map(x => {
         if (checkProvision(x, cond)) {
           addon.filterMatch = FilterType.EXACT_MATCH;
@@ -123,8 +123,8 @@ function checkProcess(
 function checkProvision(p: MMELProvision, cond: ISearch): boolean {
   for (const r of p.ref) {
     if (
-      cond.document == r.document &&
-      (cond.clause == '' || cond.clause == r.clause)
+      cond.document === r.document &&
+      (cond.clause === '' || cond.clause === r.clause)
     ) {
       return true;
     }
@@ -134,14 +134,14 @@ function checkProvision(p: MMELProvision, cond: ISearch): boolean {
 
 function checkApproval(p: MMELApproval, cond: ISearch): boolean {
   if (
-    cond.actor == '' ||
-    (p.actor != null && p.actor.name == cond.actor) ||
-    (p.approver != null && p.approver.name == cond.actor)
+    cond.actor === '' ||
+    (p.actor !== null && p.actor.name === cond.actor) ||
+    (p.approver !== null && p.approver.name === cond.actor)
   ) {
     for (const r of p.ref) {
       if (
-        cond.document == r.document &&
-        (cond.clause == '' || cond.clause == r.clause)
+        cond.document === r.document &&
+        (cond.clause === '' || cond.clause === r.clause)
       ) {
         functionCollection
           .getStateMan()

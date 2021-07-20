@@ -10,7 +10,7 @@ export class SubprocessComponentManager {
   constructor(m: MMELModel) {
     for (const p of m.pages) {
       for (const e of p.edges) {
-        if (e.from != null && e.to != null) {
+        if (e.from !== null && e.to !== null) {
           this.get(e.from).child.push(e);
         }
       }
@@ -19,7 +19,7 @@ export class SubprocessComponentManager {
 
   get(x: MMELSubprocessComponent): SubprocessComponentAddon {
     const ret = this.map.get(x);
-    if (ret != undefined) {
+    if (ret !== undefined) {
       return ret;
     }
     const record = new SubprocessComponentAddon();

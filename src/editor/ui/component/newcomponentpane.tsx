@@ -37,7 +37,7 @@ const NewComponentPane: React.FC<StateMan> = (sm: StateMan) => {
   };
 
   const onChange = () => {
-    if (ref.current != null) {
+    if (ref.current !== null) {
       state.addingexisting = ref.current.value;
       sm.setState(state);
     }
@@ -86,7 +86,7 @@ const NewComponentPane: React.FC<StateMan> = (sm: StateMan) => {
           {' '}
           {elms}{' '}
         </select>
-        {state.addingexisting != '' ? (
+        {state.addingexisting !== '' ? (
           <Unit
             onDragStart={event => onDragStart(event, 'custom')}
             draggable={true}
@@ -103,7 +103,7 @@ const NewComponentPane: React.FC<StateMan> = (sm: StateMan) => {
 };
 
 const onDragStart = (event: React.DragEvent<HTMLDivElement>, msg: string) => {
-  if (event.dataTransfer != null) {
+  if (event.dataTransfer !== null) {
     event.dataTransfer.setData('application/modeleditor', msg);
     event.dataTransfer.effectAllowed = 'move';
   }

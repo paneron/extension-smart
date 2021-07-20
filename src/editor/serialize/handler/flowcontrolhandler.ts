@@ -30,13 +30,13 @@ export function parseEdge(id: string, data: string): ParsingEdge {
   while (i < t.length) {
     const command: string = t[i++];
     if (i < t.length) {
-      if (command == 'from') {
+      if (command === 'from') {
         container.p_from = t[i++];
-      } else if (command == 'description') {
+      } else if (command === 'description') {
         edge.description = MMELremovePackage(t[i++]);
-      } else if (command == 'condition') {
+      } else if (command === 'condition') {
         edge.condition = MMELremovePackage(t[i++]);
-      } else if (command == 'to') {
+      } else if (command === 'to') {
         container.p_to = t[i++];
       } else {
         throw new Error(
@@ -64,13 +64,13 @@ export function resolveEdge(
 ): MMELEdge {
   const edge = container.content;
   let x = idreg.get(container.p_from);
-  if (x != undefined) {
+  if (x !== undefined) {
     edge.from = x;
   } else {
     throw new Error('Error in resolving IDs in from for egde ' + edge.id);
   }
   x = idreg.get(container.p_to);
-  if (x != undefined) {
+  if (x !== undefined) {
     edge.to = x;
   } else {
     throw new Error('Error in resolving IDs in to for egde ' + edge.id);
@@ -94,17 +94,17 @@ export function parseSubprocess(id: string, data: string): ParsingSubprocess {
     map: new Map<string, MMELSubprocessComponent>(),
   };
 
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'elements') {
+        if (command === 'elements') {
           readElements(container, MMELremovePackage(t[i++]));
-        } else if (command == 'process_flow') {
+        } else if (command === 'process_flow') {
           readEdges(container, MMELremovePackage(t[i++]));
-        } else if (command == 'data') {
+        } else if (command === 'data') {
           readData(container, MMELremovePackage(t[i++]));
         } else {
           throw new Error(
@@ -213,9 +213,9 @@ export function parseSubprocessComponent(
   while (i < t.length) {
     const command: string = t[i++];
     if (i < t.length) {
-      if (command == 'x') {
+      if (command === 'x') {
         com.x = parseFloat(t[i++]);
-      } else if (command == 'y') {
+      } else if (command === 'y') {
         com.y = parseFloat(t[i++]);
       } else {
         throw new Error(
@@ -240,7 +240,7 @@ export function resolveSubprocessComponent(
 ): MMELSubprocessComponent {
   const com: MMELSubprocessComponent = container.content;
   const x = idreg.get(container.p_element);
-  if (x != undefined) {
+  if (x !== undefined) {
     com.element = x;
   } else {
     throw new Error(
@@ -256,13 +256,13 @@ export function parseEGate(id: string, data: string): MMELEGate {
     datatype: DataType.EGATE,
     label: '',
   };
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'label') {
+        if (command === 'label') {
           egate.label = MMELremovePackage(t[i++]);
         } else {
           throw new Error(
