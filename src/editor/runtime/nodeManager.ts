@@ -8,7 +8,7 @@ export class NodeManager {
   constructor(m: MMELModel) {
     for (const p of m.pages) {
       for (const c of p.childs) {
-        if (c.element != null) {
+        if (c.element !== null) {
           const addon = this.get(c.element);
           addon.pages.add(p);
         }
@@ -18,7 +18,7 @@ export class NodeManager {
 
   get(x: MMELNode): NodeAddon {
     const ret = this.map.get(x);
-    if (ret != undefined) {
+    if (ret !== undefined) {
       return ret;
     }
     const record = new NodeAddon();

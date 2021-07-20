@@ -21,7 +21,7 @@ export class MapProfile {
 
   registerMapping(f: string, t: string): boolean {
     let s = this.froms.get(f);
-    if (s == undefined) {
+    if (s === undefined) {
       s = new Set<string>();
       this.froms.set(f, s);
     }
@@ -30,7 +30,7 @@ export class MapProfile {
     }
     s.add(t);
     let s2 = this.tos.get(t);
-    if (s2 == undefined) {
+    if (s2 === undefined) {
       s2 = new Set<string>();
       this.tos.set(t, s2);
     }
@@ -40,15 +40,15 @@ export class MapProfile {
 
   deleteMapping(fromid: string, toid: string) {
     const s = this.froms.get(fromid);
-    if (s != undefined) {
+    if (s !== undefined) {
       s.delete(toid);
     }
     const t = this.tos.get(toid);
-    if (t != undefined) {
+    if (t !== undefined) {
       t.delete(fromid);
     }
     this.maps.forEach((m, index) => {
-      if (m.from == fromid && m.to == toid) {
+      if (m.from === fromid && m.to === toid) {
         this.maps.splice(index, 1);
         return;
       }

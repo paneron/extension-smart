@@ -27,28 +27,28 @@ export const EditTimerPage: React.FC<StateMan> = (sm: StateMan) => {
   const timer = sm.state.viewTimer;
 
   const setTID = (x: string) => {
-    if (timer != null) {
+    if (timer !== null) {
       timer.id = x.replaceAll(/\s+/g, '');
       sm.setState({ ...sm.state });
     }
   };
 
   const setType = (x: string) => {
-    if (timer != null) {
+    if (timer !== null) {
       timer.type = x;
       sm.setState({ ...sm.state });
     }
   };
 
   const setTPara = (x: string) => {
-    if (timer != null) {
+    if (timer !== null) {
       timer.para = x;
       sm.setState({ ...sm.state });
     }
   };
 
   const elms: Array<JSX.Element> = [];
-  if (timer != null) {
+  if (timer !== null) {
     elms.push(
       <NormalTextField
         key="field#timerID"
@@ -76,7 +76,7 @@ export const EditTimerPage: React.FC<StateMan> = (sm: StateMan) => {
     );
     return (
       <DisplayPane
-        style={{ display: sm.state.viewTimer != null ? 'inline' : 'none' }}
+        style={{ display: sm.state.viewTimer !== null ? 'inline' : 'none' }}
       >
         <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
         {elms}
@@ -115,28 +115,28 @@ export const EditSCEventPage: React.FC<StateMan> = (sm: StateMan) => {
   });
 
   const setEID = (x: string) => {
-    if (scEvent != null) {
+    if (scEvent !== null) {
       scEvent.id = x;
       sm.setState({ ...sm.state });
     }
   };
 
   const setSignal = (x: number) => {
-    if (scEvent != null) {
+    if (scEvent !== null) {
       scEvent.signal = opts[x];
       sm.setState({ ...sm.state });
     }
   };
 
   const setCustomSignal = (x: string) => {
-    if (scEvent != null) {
+    if (scEvent !== null) {
       scEvent.signal = x;
       sm.setState({ ...sm.state });
     }
   };
 
   const elms: Array<JSX.Element> = [];
-  if (scEvent != null) {
+  if (scEvent !== null) {
     elms.push(
       <NormalTextField
         key="field#scEventID"
@@ -160,7 +160,7 @@ export const EditSCEventPage: React.FC<StateMan> = (sm: StateMan) => {
     return (
       <DisplayPane
         style={{
-          display: sm.state.viewSignalEvent != null ? 'inline' : 'none',
+          display: sm.state.viewSignalEvent !== null ? 'inline' : 'none',
         }}
       >
         <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
@@ -189,7 +189,7 @@ function saveTimer(
   oldValue: MMELTimerEvent | null,
   newValue: ITimer | null
 ) {
-  if (oldValue != null && newValue != null) {
+  if (oldValue !== null && newValue !== null) {
     if (commonUpdate(sm, oldValue, newValue.id)) {
       oldValue.type = newValue.type;
       oldValue.para = newValue.para;
@@ -205,7 +205,7 @@ function saveSCEvent(
   oldValue: MMELSignalCatchEvent | null,
   newValue: ISignalCatchEvent | null
 ) {
-  if (oldValue != null && newValue != null) {
+  if (oldValue !== null && newValue !== null) {
     if (commonUpdate(sm, oldValue, newValue.id)) {
       oldValue.signal = newValue.signal;
       sm.state.viewSignalEvent = null;
@@ -221,8 +221,8 @@ function commonUpdate(
   newID: string
 ): boolean {
   const idreg = sm.state.modelWrapper.idman;
-  if (oldValue.id != newID) {
-    if (newID == '') {
+  if (oldValue.id !== newID) {
+    if (newID === '') {
       alert('ID is empty');
       return false;
     }

@@ -1,4 +1,7 @@
-import React from 'react';
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import { IEnum, IEnumValue } from '../../interface/datainterface';
 import {
   IAddItem,
@@ -104,12 +107,12 @@ export class EnumValueHandler implements IList, IAddItem, IUpdateItem {
   };
 
   addClicked = () => {
-    if (this.data.id == '') {
+    if (this.data.id === '') {
       alert('ID is empty');
       return;
     }
     for (const a of this.parent.values) {
-      if (a.id == this.data.id) {
+      if (a.id === this.data.id) {
         alert('ID already exists');
         return;
       }
@@ -129,14 +132,14 @@ export class EnumValueHandler implements IList, IAddItem, IUpdateItem {
 
   updateClicked = () => {
     this.setUpdateMode(false);
-    if (this.updating != null) {
-      if (this.data.id != this.updating.id) {
-        if (this.data.id == '') {
+    if (this.updating !== null) {
+      if (this.data.id !== this.updating.id) {
+        if (this.data.id === '') {
           alert('New ID is empty');
           return;
         }
         for (const a of this.parent.values) {
-          if (a.id == this.data.id) {
+          if (a.id === this.data.id) {
             alert('New ID already exists');
             return;
           }

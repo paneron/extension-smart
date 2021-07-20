@@ -33,23 +33,23 @@ import { ProgressManager } from './progressmanager';
 import { Simulator } from './simulator';
 
 export function describe(x: MMELNode, isCheckListMode: boolean) {
-  if (x.datatype == DataType.DATACLASS) {
+  if (x.datatype === DataType.DATACLASS) {
     return describeDC(x as MMELDataClass, isCheckListMode);
-  } else if (x.datatype == DataType.REGISTRY) {
+  } else if (x.datatype === DataType.REGISTRY) {
     return describeRegistry(x as MMELRegistry, isCheckListMode);
-  } else if (x.datatype == DataType.STARTEVENT) {
+  } else if (x.datatype === DataType.STARTEVENT) {
     return descStart(x as MMELStartEvent, isCheckListMode);
-  } else if (x.datatype == DataType.ENDEVENT) {
+  } else if (x.datatype === DataType.ENDEVENT) {
     return descEnd(x as MMELEndEvent, isCheckListMode);
-  } else if (x.datatype == DataType.TIMEREVENT) {
+  } else if (x.datatype === DataType.TIMEREVENT) {
     return descTimer(x as MMELTimerEvent, isCheckListMode);
-  } else if (x.datatype == DataType.SIGNALCATCHEVENT) {
+  } else if (x.datatype === DataType.SIGNALCATCHEVENT) {
     return descSignalCatch(x as MMELSignalCatchEvent, isCheckListMode);
-  } else if (x.datatype == DataType.EGATE) {
+  } else if (x.datatype === DataType.EGATE) {
     return descEGate(x as MMELEGate, isCheckListMode);
-  } else if (x.datatype == DataType.APPROVAL) {
+  } else if (x.datatype === DataType.APPROVAL) {
     return descApproval(x as MMELApproval, isCheckListMode);
-  } else if (x.datatype == DataType.PROCESS) {
+  } else if (x.datatype === DataType.PROCESS) {
     return descProcess(x as MMELProcess, isCheckListMode);
   }
   return <> {x.id} </>;
@@ -114,7 +114,7 @@ function descProcess(x: MMELProcess, isCheckListMode: boolean): JSX.Element {
         Remove{' '}
       </button>
     );
-    if (x.page == null) {
+    if (x.page === null) {
       elms.push(
         <MyFloatButton onClick={() => addSubprocess(x)}>+</MyFloatButton>
       );
@@ -122,10 +122,10 @@ function descProcess(x: MMELProcess, isCheckListMode: boolean): JSX.Element {
   }
   elms.push(<p key={x.id + '#ProcessID'}> Process: {x.id} </p>);
   elms.push(<p key={x.id + '#ProcessName'}> Name: {x.name} </p>);
-  if (x.actor != null) {
+  if (x.actor !== null) {
     elms.push(<p key={x.id + '#ProcessActor'}> Actor: {x.actor.name} </p>);
   }
-  if (x.modality != '') {
+  if (x.modality !== '') {
     elms.push(<p key={x.id + '#Modality'}> Modality: {x.modality} </p>);
   }
   if (x.provision.length > 0) {
@@ -176,15 +176,15 @@ function descApproval(x: MMELApproval, isCheckListMode: boolean): JSX.Element {
   }
   elms.push(<p key={x.id + '#approvalLabel'}> Approval: {x.id} </p>);
   elms.push(<p key={x.id + '#nameLabel'}> Name: {x.name} </p>);
-  if (x.actor != null) {
+  if (x.actor !== null) {
     elms.push(<p key={x.id + '#actorLabel'}> Actor: {x.actor.name} </p>);
   }
-  if (x.approver != null) {
+  if (x.approver !== null) {
     elms.push(
       <p key={x.id + '#approverLabel'}> Approver: {x.approver.name} </p>
     );
   }
-  if (x.modality != '') {
+  if (x.modality !== '') {
     elms.push(<p key={x.id + '#modalityLabel'}> Modality: {x.modality} </p>);
   }
   if (x.records.length > 0) {
@@ -294,10 +294,10 @@ function descTimer(x: MMELTimerEvent, isCheckListMode: boolean): JSX.Element {
     );
   }
   elms.push(<p key={x.id + '#timerLabel'}> Timer Event: {x.id} </p>);
-  if (x.type != '') {
+  if (x.type !== '') {
     elms.push(<p key={x.id + '#timerTypeLabel'}>Type: {x.type} </p>);
   }
-  if (x.para != '') {
+  if (x.para !== '') {
     elms.push(<p key={x.id + '#timerParaLabel'}>Parameter: {x.para} </p>);
   }
   return <>{elms}</>;
@@ -323,7 +323,7 @@ function describeRegistry(
     <>
       {elms}
       <p key={x.id + '#registryLabel'}>Title: {x.title} </p>
-      {x.data == null ? '' : describeDC(x.data, isCheckListMode)}
+      {x.data === null ? '' : describeDC(x.data, isCheckListMode)}
     </>
   );
 }
@@ -349,12 +349,12 @@ function describeAttribute(
   const elms: Array<JSX.Element> = [];
   const css: CSSProperties = {};
   const mw = functionCollection.getStateMan().state.modelWrapper;
-  if (x.modality == 'SHALL') {
+  if (x.modality === 'SHALL') {
     css.textDecorationLine = 'underline';
   }
   if (isCheckListMode) {
     const addon = mw.clman.items.get(x);
-    if (addon != undefined) {
+    if (addon !== undefined) {
       elms.push(
         <p key={x.id + '#attributeIDLabel'}>
           {' '}
@@ -379,7 +379,7 @@ function describeAttribute(
       </p>
     );
   }
-  if (x.type != null && x.type != '') {
+  if (x.type !== '') {
     elms.push(
       <p key={x.id + '#attributeTypeLabel'} style={css}>
         {' '}
@@ -387,7 +387,7 @@ function describeAttribute(
       </p>
     );
   }
-  if (x.cardinality != null && x.cardinality != '') {
+  if (x.cardinality !== '') {
     elms.push(
       <p key={x.id + '#attributeCardinalityLabel'} style={css}>
         {' '}
@@ -395,7 +395,7 @@ function describeAttribute(
       </p>
     );
   }
-  if (x.modality != '') {
+  if (x.modality !== '') {
     elms.push(
       <p key={x.id + '#attributeModalityLabel'} style={css}>
         {' '}
@@ -403,7 +403,7 @@ function describeAttribute(
       </p>
     );
   }
-  if (x.definition != '') {
+  if (x.definition !== '') {
     elms.push(
       <p key={x.id + '#attributeDefinitionLabel'} style={css}>
         {' '}
@@ -434,13 +434,13 @@ function describeProvision(
 ): JSX.Element {
   const elms: Array<JSX.Element> = [];
   const css: CSSProperties = {};
-  if (x.modality == 'SHALL') {
+  if (x.modality === 'SHALL') {
     css.textDecorationLine = 'underline';
   }
   if (isCheckListMode) {
     const mw = functionCollection.getStateMan().state.modelWrapper;
     const addon = mw.clman.items.get(x);
-    if (addon != undefined) {
+    if (addon !== undefined) {
       elms.push(
         <p key={'ui#provisionStatementLabel#' + x.id}>
           <input
@@ -464,7 +464,7 @@ function describeProvision(
       </p>
     );
   }
-  if (x.modality != '') {
+  if (x.modality !== '') {
     elms.push(
       <p key={'ui#provisionModalityLabel#' + x.id}>Modality: {x.modality}</p>
     );

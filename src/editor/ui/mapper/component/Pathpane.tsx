@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
 import React from 'react';
 import { ModelType, ModelViewStateMan } from '../model/mapperstate';
@@ -18,7 +22,7 @@ const MapperPathPane: React.FC<ModelViewStateMan> = (sm: ModelViewStateMan) => {
   return (
     <>
       <PathLabel key="ui#pathlabel">
-        {sm.state.type == ModelType.ImplementationModel
+        {sm.state.type === ModelType.ImplementationModel
           ? 'Implementation model'
           : 'Reference model'}{' '}
         : {his.getMapperPath(sm)}{' '}

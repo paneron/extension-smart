@@ -18,21 +18,21 @@ export function parseMetaData(x: string): MMELMetadata {
     namespace: '',
     datatype: DataType.METADATA,
   };
-  if (x != '') {
+  if (x !== '') {
     const t: Array<string> = MMELtokenizePackage(x);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'title') {
+        if (command === 'title') {
           meta.title = MMELremovePackage(t[i++]);
-        } else if (command == 'schema') {
+        } else if (command === 'schema') {
           meta.schema = MMELremovePackage(t[i++]);
-        } else if (command == 'edition') {
+        } else if (command === 'edition') {
           meta.edition = MMELremovePackage(t[i++]);
-        } else if (command == 'author') {
+        } else if (command === 'author') {
           meta.author = MMELremovePackage(t[i++]);
-        } else if (command == 'namespace') {
+        } else if (command === 'namespace') {
           meta.namespace = MMELremovePackage(t[i++]);
         } else {
           throw new Error(
@@ -63,17 +63,17 @@ export function parseProvision(id: string, data: string): ParsingProvision {
     p_ref: [],
   };
 
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'modality') {
+        if (command === 'modality') {
           pro.modality = t[i++];
-        } else if (command == 'condition') {
+        } else if (command === 'condition') {
           pro.condition = MMELremovePackage(t[i++]);
-        } else if (command == 'reference') {
+        } else if (command === 'reference') {
           container.p_ref = MMELtokenizePackage(t[i++]);
         } else {
           pro.subject.set(command, t[i++]);
@@ -98,7 +98,7 @@ export function resolveProvision(
   const pro = container.content;
   for (const x of container.p_ref) {
     const y = idreg.get(x);
-    if (y != undefined) {
+    if (y !== undefined) {
       pro.ref.push(y);
     } else {
       throw new Error(
@@ -117,15 +117,15 @@ export function parseReference(id: string, data: string): MMELReference {
     datatype: DataType.REFERENCE,
   };
 
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'document') {
+        if (command === 'document') {
           ref.document = MMELremovePackage(t[i++]);
-        } else if (command == 'clause') {
+        } else if (command === 'clause') {
           ref.clause = MMELremovePackage(t[i++]);
         } else {
           throw new Error(
@@ -159,7 +159,7 @@ export function parseRole(id: string, data: string): MMELRole {
   while (i < t.length) {
     const command: string = t[i++];
     if (i < t.length) {
-      if (command == 'name') {
+      if (command === 'name') {
         role.name = MMELremovePackage(t[i++]);
       } else {
         throw new Error(
@@ -184,17 +184,17 @@ export function parseVariable(id: string, data: string): MMELVariable {
     datatype: DataType.VARIABLE,
   };
 
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'type') {
+        if (command === 'type') {
           v.type = t[i++];
-        } else if (command == 'definition') {
+        } else if (command === 'definition') {
           v.definition = MMELremovePackage(t[i++]);
-        } else if (command == 'description') {
+        } else if (command === 'description') {
           v.description = MMELremovePackage(t[i++]);
         } else {
           throw new Error(

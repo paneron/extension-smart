@@ -1,4 +1,7 @@
-import React from 'react';
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import { VarType, VAR_TYPES } from '../../../runtime/idManager';
 import { MMELFactory } from '../../../runtime/modelComponentCreator';
 import { MMELModel } from '../../../serialize/interface/model';
@@ -161,11 +164,11 @@ export class VarHandler implements IList, IAddItem, IUpdateItem {
         filterName="Measurement filter"
         editable={true}
         value={
-          this.data.type == VarType.DERIVED ? this.data.definition : 'disabled'
+          this.data.type === VarType.DERIVED ? this.data.definition : 'disabled'
         }
         options={types}
         update={(x: number) => {
-          if (x != -1) {
+          if (x !== -1) {
             this.data.definition += '[' + types[x] + ']';
             this.setData({ ...this.data });
           }
@@ -176,7 +179,7 @@ export class VarHandler implements IList, IAddItem, IUpdateItem {
         }}
       />
     );
-    if (this.data.type == VarType.DERIVED) {
+    if (this.data.type === VarType.DERIVED) {
       elms.push(
         <div key="ui#measurement#builderbutton#holder">
           <button
@@ -197,7 +200,7 @@ export class VarHandler implements IList, IAddItem, IUpdateItem {
   };
 
   addClicked = () => {
-    if (this.data.id == '') {
+    if (this.data.id === '') {
       alert('ID is empty');
       return;
     }
@@ -208,7 +211,7 @@ export class VarHandler implements IList, IAddItem, IUpdateItem {
       const variable = MMELFactory.createVariable(this.data.id);
       variable.type = this.data.type;
       variable.definition =
-        this.data.type == VarType.DERIVED ? this.data.definition : '';
+        this.data.type === VarType.DERIVED ? this.data.definition : '';
       variable.description = this.data.description;
       idreg.vars.set(variable.id, variable);
       this.model.vars.push(variable);
@@ -225,10 +228,10 @@ export class VarHandler implements IList, IAddItem, IUpdateItem {
   };
 
   updateClicked = () => {
-    if (this.updating != null) {
+    if (this.updating !== null) {
       const idreg = functionCollection.getStateMan().state.modelWrapper.idman;
-      if (this.data.id != this.updating.id) {
-        if (this.data.id == '') {
+      if (this.data.id !== this.updating.id) {
+        if (this.data.id === '') {
           alert('New ID is empty');
           return;
         }
@@ -243,7 +246,7 @@ export class VarHandler implements IList, IAddItem, IUpdateItem {
       this.updating.type = this.data.type;
       this.updating.description = this.data.description;
       this.updating.definition =
-        this.data.type == VarType.DERIVED ? this.data.definition : '';
+        this.data.type === VarType.DERIVED ? this.data.definition : '';
       this.setUpdateMode(false);
     }
   };

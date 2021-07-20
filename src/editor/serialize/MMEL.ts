@@ -51,7 +51,7 @@ export function textToMMEL(x: string): MMELModel {
 // the function to convert MMEL to text
 export function MMELToText(model: MMELModel): string {
   let out = '';
-  if (model.root != null) {
+  if (model.root !== null) {
     out += 'root ' + model.root.id + '\n\n';
   }
   out += toMMELModel(model.meta) + '\n';
@@ -135,67 +135,67 @@ function parseModel(input: string): ParsingModel {
   let i = 0;
   while (i < token.length) {
     const command: string = token[i++];
-    if (command == 'root') {
+    if (command === 'root') {
       container.p_root = token[i++].trim();
-    } else if (command == 'metadata') {
+    } else if (command === 'metadata') {
       m.meta = parseMetaData(token[i++]);
-    } else if (command == 'role') {
+    } else if (command === 'role') {
       const r = parseRole(token[i++], token[i++]);
       m.roles.push(r);
       map.roles.set(r.id, r);
-    } else if (command == 'provision') {
+    } else if (command === 'provision') {
       const p = parseProvision(token[i++], token[i++]);
       container.p_provisions.push(p);
       map.provisions.set(p.content.id, p.content);
-    } else if (command == 'process') {
+    } else if (command === 'process') {
       const p = parseProcess(token[i++], token[i++]);
       container.p_processes.push(p);
       map.nodes.set(p.content.id, p.content);
-    } else if (command == 'class') {
+    } else if (command === 'class') {
       const p = parseDataClass(token[i++], token[i++]);
       container.p_dataclasses.push(p);
       map.nodes.set(p.content.id, p.content);
       map.dcs.set(p.content.id, p.content);
-    } else if (command == 'data_registry') {
+    } else if (command === 'data_registry') {
       const p = parseRegistry(token[i++], token[i++]);
       container.p_regs.push(p);
       map.regs.set(p.content.id, p.content);
       map.nodes.set(p.content.id, p.content);
-    } else if (command == 'start_event') {
+    } else if (command === 'start_event') {
       const p = parseStartEvent(token[i++], token[i++]);
       m.events.push(p);
       map.nodes.set(p.id, p);
-    } else if (command == 'end_event') {
+    } else if (command === 'end_event') {
       const p = parseEndEvent(token[i++], token[i++]);
       m.events.push(p);
       map.nodes.set(p.id, p);
-    } else if (command == 'timer_event') {
+    } else if (command === 'timer_event') {
       const p = parseTimerEvent(token[i++], token[i++]);
       m.events.push(p);
       map.nodes.set(p.id, p);
-    } else if (command == 'exclusive_gateway') {
+    } else if (command === 'exclusive_gateway') {
       const p = parseEGate(token[i++], token[i++]);
       m.gateways.push(p);
       map.nodes.set(p.id, p);
-    } else if (command == 'subprocess') {
+    } else if (command === 'subprocess') {
       const p = parseSubprocess(token[i++], token[i++]);
       container.p_pages.push(p);
       map.pages.set(p.content.id, p.content);
-    } else if (command == 'reference') {
+    } else if (command === 'reference') {
       const p = parseReference(token[i++], token[i++]);
       m.refs.push(p);
       map.refs.set(p.id, p);
-    } else if (command == 'approval') {
+    } else if (command === 'approval') {
       const p = parseApproval(token[i++], token[i++]);
       container.p_approvals.push(p);
       map.nodes.set(p.content.id, p.content);
-    } else if (command == 'enum') {
+    } else if (command === 'enum') {
       const p = parseEnum(token[i++], token[i++]);
       m.enums.push(p);
-    } else if (command == 'measurement') {
+    } else if (command === 'measurement') {
       const v = parseVariable(token[i++], token[i++]);
       m.vars.push(v);
-    } else if (command == 'signal_catch_event') {
+    } else if (command === 'signal_catch_event') {
       const e = parseSignalCatchEvent(token[i++], token[i++]);
       m.events.push(e);
       map.nodes.set(e.id, e);
@@ -210,9 +210,9 @@ function parseModel(input: string): ParsingModel {
 function resolveModel(container: ParsingModel): MMELModel {
   const model = container.content;
   const map = container.maps;
-  if (container.p_root != '') {
+  if (container.p_root !== '') {
     const r = map.pages.get(container.p_root);
-    if (r != undefined) {
+    if (r !== undefined) {
       model.root = r;
     }
   }

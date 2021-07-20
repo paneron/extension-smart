@@ -259,32 +259,32 @@ export class MMELFactory {
     pos: XYPosition
   ): MMELNode | null {
     let ret: MMELNode | null = null;
-    if (type == 'process') {
+    if (type === 'process') {
       ret = addProcess(mw);
     }
-    if (type == 'approval') {
+    if (type === 'approval') {
       ret = addApproval(mw);
     }
-    if (type == 'end') {
+    if (type === 'end') {
       ret = addEnd(mw);
     }
-    if (type == 'timer') {
+    if (type === 'timer') {
       ret = addTimer(mw);
     }
-    if (type == 'signalcatch') {
+    if (type === 'signalcatch') {
       ret = addSignalCatch(mw);
     }
-    if (type == 'egate') {
+    if (type === 'egate') {
       ret = addEGate(mw);
     }
-    if (type == 'custom') {
+    if (type === 'custom') {
       ret = findProcess(mw, page);
     }
-    if (type == 'import') {
+    if (type === 'import') {
       ret = loadImport();
       mw.filterman.readDocu(mw.model.refs);
     }
-    if (ret != null) {
+    if (ret !== null) {
       const nc = MMELFactory.createSubprocessComponent(ret);
       nc.element = ret;
       nc.x = pos.x;
@@ -361,7 +361,7 @@ function findProcess(
   const idreg = mw.idman;
   const p = idreg.nodes.get(sm.state.addingexisting);
   sm.state.addingexisting = '';
-  if (p != null && p.datatype == DataType.PROCESS) {
+  if (p !== undefined && p.datatype === DataType.PROCESS) {
     const process = p as MMELProcess;
     mw.nodeman.get(process).pages.add(page);
     return process;
@@ -376,13 +376,13 @@ function loadImport(): MMELProcess | null {
   const ns = sm.state.namespace;
   const imw = new ModelWrapper(imodel);
   const prefix = ns + '#';
-  if (type == '*') {
+  if (type === '*') {
     const id = prefix + '*';
     return addRootProcessToModel(imw, id, prefix);
   } else {
     const op = imw.idman.nodes.get(type);
     const id = prefix + type;
-    if (op != undefined && op.datatype == DataType.PROCESS) {
+    if (op !== undefined && op.datatype === DataType.PROCESS) {
       const process = op as MMELProcess;
       return addProcessIfNotFound(imw, id, prefix, process);
     }
@@ -403,7 +403,7 @@ function addRootProcessToModel(
 
   const p = MMELFactory.createProcess(id);
   p.name = imodel.meta.title;
-  if (imodel.root != null) {
+  if (imodel.root !== null) {
     p.page = addPageIfNotFound(
       imw,
       prefix + imodel.root.id,
@@ -436,7 +436,7 @@ function addRoleIfNotFound(
     return r;
   }
   const r = idreg.roles.get(id);
-  if (r != undefined && r.datatype == DataType.ROLE) {
+  if (r !== undefined && r.datatype === DataType.ROLE) {
     return r as MMELRole;
   }
   console.error('Error find object', role);
@@ -455,7 +455,7 @@ function addProcessIfNotFound(
   if (!idreg.nodes.has(id)) {
     const p = MMELFactory.createProcess(id);
     p.name = process.name;
-    if (process.actor != null) {
+    if (process.actor !== null) {
       p.actor = addRoleIfNotFound(
         imw,
         prefix + process.actor.id,
@@ -474,7 +474,7 @@ function addProcessIfNotFound(
         addProvisionIfNotFound(imw, prefix + pro.id, prefix, pro)
       );
     });
-    if (process.page != null) {
+    if (process.page !== null) {
       p.page = addPageIfNotFound(
         imw,
         prefix + process.page.id,
@@ -487,7 +487,7 @@ function addProcessIfNotFound(
     return p;
   }
   const p = idreg.nodes.get(id);
-  if (p != undefined && p.datatype == DataType.PROCESS) {
+  if (p !== undefined && p.datatype === DataType.PROCESS) {
     return p as MMELProcess;
   }
   console.error('Error find object', process);
@@ -507,14 +507,14 @@ function addApprovalIfNotFound(
     const p = MMELFactory.createApproval(id);
     p.name = approval.name;
     p.modality = approval.modality;
-    if (approval.actor != null) {
+    if (approval.actor !== null) {
       p.actor = addRoleIfNotFound(
         imw,
         prefix + approval.actor.id,
         approval.actor
       );
     }
-    if (approval.approver != null) {
+    if (approval.approver !== null) {
       p.approver = addRoleIfNotFound(
         imw,
         prefix + approval.approver.id,
@@ -532,7 +532,7 @@ function addApprovalIfNotFound(
     return p;
   }
   const p = idreg.nodes.get(id);
-  if (p != undefined && p.datatype == DataType.APPROVAL) {
+  if (p !== undefined && p.datatype === DataType.APPROVAL) {
     return p as MMELApproval;
   }
   console.error('Error find object', approval);
@@ -552,7 +552,7 @@ function addRegistryIfNotFound(
     const r = MMELFactory.createRegistry(id);
     // Cloning Registry
     r.title = registry.title;
-    if (registry.data != null) {
+    if (registry.data !== null) {
       r.data = addDataclassIfNotFound(
         imw,
         prefix + registry.data.id,
@@ -567,7 +567,7 @@ function addRegistryIfNotFound(
     return r;
   }
   const r = idreg.nodes.get(id);
-  if (r != undefined && r.datatype == DataType.REGISTRY) {
+  if (r !== undefined && r.datatype === DataType.REGISTRY) {
     return r as MMELRegistry;
   }
   console.error('Error find object', registry);
@@ -598,15 +598,15 @@ function addDataclassIfNotFound(
       a.satisfy.map(s => {
         na.satisfy.push(prefix + s);
       });
-      if (DATATYPE.indexOf(a.type) != -1) {
+      if (DATATYPE.indexOf(a.type) !== -1) {
         na.type = a.type;
       } else {
         const u = a.type.indexOf('(');
         const v = a.type.indexOf(')');
-        if (u != -1 && v != -1) {
+        if (u !== -1 && v !== -1) {
           const type = a.type.substr(u + 1, v - u - 1);
           const nextdc = imw.idman.nodes.get(type);
-          if (nextdc != undefined && nextdc.datatype == DataType.DATACLASS) {
+          if (nextdc !== undefined && nextdc.datatype === DataType.DATACLASS) {
             const ret = addDataclassIfNotFound(
               imw,
               prefix + type,
@@ -621,7 +621,7 @@ function addDataclassIfNotFound(
           }
         } else {
           const nextdc = imw.idman.nodes.get(a.type);
-          if (nextdc != undefined && nextdc.datatype == DataType.DATACLASS) {
+          if (nextdc !== undefined && nextdc.datatype === DataType.DATACLASS) {
             const ret = addDataclassIfNotFound(
               imw,
               prefix + a.type,
@@ -633,7 +633,10 @@ function addDataclassIfNotFound(
             if (!raddon.rdcs.has(ret)) {
               raddon.rdcs.add(ret);
             }
-          } else if (nextdc != undefined && nextdc.datatype == DataType.ENUM) {
+          } else if (
+            nextdc !== undefined &&
+            nextdc.datatype === DataType.ENUM
+          ) {
             const en = nextdc as MMELEnum;
             const ret = addEnumIfNotFound(imw, prefix + en.id, en);
             na.type = ret.id;
@@ -649,7 +652,7 @@ function addDataclassIfNotFound(
     return r;
   }
   const r = idreg.nodes.get(id);
-  if (r != undefined && r.datatype == DataType.DATACLASS) {
+  if (r !== undefined && r.datatype === DataType.DATACLASS) {
     return r as MMELDataClass;
   }
   console.error('Error find object', dc);
@@ -679,7 +682,7 @@ function addEnumIfNotFound(
     return r;
   }
   const r = idreg.enums.get(id);
-  if (r != undefined && r.datatype == DataType.ENUM) {
+  if (r !== undefined && r.datatype === DataType.ENUM) {
     return r as MMELEnum;
   }
   console.error('Error find object', en);
@@ -712,7 +715,7 @@ function addProvisionIfNotFound(
     return p;
   }
   const r = idreg.provisions.get(id);
-  if (r != undefined && r.datatype == DataType.PROVISION) {
+  if (r !== undefined && r.datatype === DataType.PROVISION) {
     return r as MMELProvision;
   }
   console.error('Error find object', provision);
@@ -738,7 +741,7 @@ function addReferenceIfNotFound(
     return r;
   }
   const r = idreg.refs.get(id);
-  if (r != undefined && r.datatype == DataType.REFERENCE) {
+  if (r !== undefined && r.datatype === DataType.REFERENCE) {
     return r as MMELReference;
   }
   console.error('Error find object', ref);
@@ -759,7 +762,7 @@ function addPageIfNotFound(
     const p = MMELFactory.createSubprocess(id);
     // Cloning Subprocess
     page.childs.map(c => {
-      if (c.element != null && isGraphNode(c.element)) {
+      if (c.element !== null && isGraphNode(c.element)) {
         const id = prefix + c.element.id;
         const elm = addGraphNodeIfNotFound(imw, id, prefix, c.element);
         const nc = MMELFactory.createSubprocessComponent(elm);
@@ -772,21 +775,21 @@ function addPageIfNotFound(
     page.edges.map(e => {
       const ne = MMELFactory.createEdge(prefix + e.id);
       ne.description = e.description;
-      if (e.from != null && e.from.element != null) {
+      if (e.from !== null && e.from.element !== null) {
         const id = prefix + e.from.element.id;
         const ret = mw.subman.get(p).map.get(id);
-        if (ret != null) {
+        if (ret !== undefined) {
           ne.from = ret;
         }
       }
-      if (e.to != null && e.to.element != null) {
+      if (e.to !== null && e.to.element !== null) {
         const id = prefix + e.to.element.id;
         const ret = mw.subman.get(p).map.get(id);
-        if (ret != null) {
+        if (ret !== undefined) {
           ne.to = ret;
         }
       }
-      if (ne.from != null) {
+      if (ne.from !== null) {
         mw.comman.get(ne.from).child.push(ne);
       } else {
         console.error('Edge elements not found!', ne);
@@ -795,7 +798,7 @@ function addPageIfNotFound(
       p.edges.push(ne);
     });
     page.data.map(c => {
-      if (c.element != null && c.element.datatype == DataType.REGISTRY) {
+      if (c.element !== null && c.element.datatype === DataType.REGISTRY) {
         const id = prefix + c.element.id;
         const elm = addRegistryIfNotFound(
           imw,
@@ -809,8 +812,8 @@ function addPageIfNotFound(
         p.data.push(nc);
         mw.subman.get(p).map.set(id, nc);
       } else if (
-        c.element != null &&
-        c.element.datatype == DataType.DATACLASS
+        c.element !== null &&
+        c.element.datatype === DataType.DATACLASS
       ) {
         const id = prefix + c.element.id;
         const elm = addDataclassIfNotFound(
@@ -827,9 +830,9 @@ function addPageIfNotFound(
       }
     });
     const paddon = imw.subman.get(page);
-    if (paddon.start != null && paddon.start.element != null) {
+    if (paddon.start !== null && paddon.start.element !== null) {
       const start = mw.subman.get(p).map.get(prefix + paddon.start.element.id);
-      if (start != undefined) {
+      if (start !== undefined) {
         mw.subman.get(p).start = start;
       }
     }
@@ -838,7 +841,7 @@ function addPageIfNotFound(
     return p;
   }
   const r = idreg.pages.get(id);
-  if (r != undefined && r.datatype == DataType.SUBPROCESS) {
+  if (r !== undefined && r.datatype === DataType.SUBPROCESS) {
     return r as MMELSubprocess;
   }
   console.error('Error find object', page);
@@ -863,7 +866,7 @@ function addEGateIfNotFound(
     return r;
   }
   const r = idreg.nodes.get(id);
-  if (r != undefined && r.datatype == DataType.EGATE) {
+  if (r !== undefined && r.datatype === DataType.EGATE) {
     return r as MMELEGate;
   }
   console.error('Error find object', g);
@@ -887,7 +890,7 @@ function addStartEventIfNotFound(
     return r;
   }
   const r = idreg.nodes.get(id);
-  if (r != undefined && r.datatype == DataType.STARTEVENT) {
+  if (r !== undefined && r.datatype === DataType.STARTEVENT) {
     return r as MMELStartEvent;
   }
   console.error('Error find object', e);
@@ -911,7 +914,7 @@ function addEndEventIfNotFound(
     return r;
   }
   const r = idreg.nodes.get(id);
-  if (r != undefined && r.datatype == DataType.ENDEVENT) {
+  if (r !== undefined && r.datatype === DataType.ENDEVENT) {
     return r as MMELEndEvent;
   }
   console.error('Error find object', e);
@@ -937,7 +940,7 @@ function addSCEventIfNotFound(
     return r;
   }
   const r = idreg.nodes.get(id);
-  if (r != undefined && r.datatype == DataType.SIGNALCATCHEVENT) {
+  if (r !== undefined && r.datatype === DataType.SIGNALCATCHEVENT) {
     return r as MMELSignalCatchEvent;
   }
   console.error('Error find object', e);
@@ -963,7 +966,7 @@ function addTimerEventIfNotFound(
     return r;
   }
   const r = idreg.nodes.get(id);
-  if (r != undefined && r.datatype == DataType.TIMEREVENT) {
+  if (r !== undefined && r.datatype === DataType.TIMEREVENT) {
     return r as MMELTimerEvent;
   }
   console.error('Error find object', e);
@@ -981,22 +984,22 @@ function addGraphNodeIfNotFound(
   //const model = mw.model
   const idreg = mw.idman;
   const ret = idreg.nodes.get(id);
-  if (ret != undefined && isGraphNode(ret)) {
+  if (ret !== undefined && isGraphNode(ret)) {
     return ret as MMELNode;
   }
-  if (x.datatype == DataType.PROCESS) {
+  if (x.datatype === DataType.PROCESS) {
     return addProcessIfNotFound(imw, id, prefix, x as MMELProcess);
-  } else if (x.datatype == DataType.APPROVAL) {
+  } else if (x.datatype === DataType.APPROVAL) {
     return addApprovalIfNotFound(imw, id, prefix, x as MMELApproval);
-  } else if (x.datatype == DataType.EGATE) {
+  } else if (x.datatype === DataType.EGATE) {
     return addEGateIfNotFound(imw, id, x as MMELEGate);
-  } else if (x.datatype == DataType.STARTEVENT) {
+  } else if (x.datatype === DataType.STARTEVENT) {
     return addStartEventIfNotFound(imw, id, x as MMELStartEvent);
-  } else if (x.datatype == DataType.ENDEVENT) {
+  } else if (x.datatype === DataType.ENDEVENT) {
     return addEndEventIfNotFound(imw, id, x as MMELEndEvent);
-  } else if (x.datatype == DataType.TIMEREVENT) {
+  } else if (x.datatype === DataType.TIMEREVENT) {
     return addTimerEventIfNotFound(imw, id, x as MMELTimerEvent);
-  } else if (x.datatype == DataType.SIGNALCATCHEVENT) {
+  } else if (x.datatype === DataType.SIGNALCATCHEVENT) {
     return addSCEventIfNotFound(imw, id, prefix, x as MMELSignalCatchEvent);
   }
   console.error('Graph node type not found', x);

@@ -1,4 +1,5 @@
 /** @jsx jsx */
+/** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -23,16 +24,16 @@ const IndexPane: React.FC<{ sm: StateMan; index: DataIndexer }> = ({
   const [data, setData] = useState<MMELRegistry | null>(null);
   const { setCenter } = useZoomPanHelper();
   const elms: Array<JSX.Element> = [];
-  const datatext = data == null ? '' : data.id;
+  const datatext = data === null ? '' : data.id;
   const options: Array<string> = [''];
   for (const dc of mw.model.regs) {
     options.push(dc.id);
   }
 
-  if (data != null) {
+  if (data !== null) {
     const records = index.get(data);
     for (const r of records) {
-      if (r.elm.element?.datatype == DataType.PROCESS) {
+      if (r.elm.element?.datatype === DataType.PROCESS) {
         const process = r.elm.element as MMELProcess;
         elms.push(
           <p
@@ -43,7 +44,7 @@ const IndexPane: React.FC<{ sm: StateMan; index: DataIndexer }> = ({
             {process.id} : {process.name}
           </p>
         );
-      } else if (r.elm.element?.datatype == DataType.APPROVAL) {
+      } else if (r.elm.element?.datatype === DataType.APPROVAL) {
         const approval = r.elm.element as MMELApproval;
         elms.push(
           <p
@@ -105,12 +106,12 @@ const IndexPane: React.FC<{ sm: StateMan; index: DataIndexer }> = ({
 
   const update = (x: string) => {
     const dc = sm.state.modelWrapper.idman.regs.get(x);
-    if (dc != undefined) {
+    if (dc !== undefined) {
       setData(dc);
     } else {
       setData(null);
     }
-    if (sm.state.highlight != null) {
+    if (sm.state.highlight !== null) {
       sm.state.highlight = null;
       sm.setState({ ...sm.state });
     }

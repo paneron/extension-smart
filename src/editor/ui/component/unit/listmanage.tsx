@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import React from 'react';
 import { RefObject, useState } from 'react';
 import { IList } from '../../interface/fieldinterface';
@@ -16,8 +20,8 @@ const ListManagerPane: React.FC<IList> = (content: IList) => {
   const smallfilter = filter.toLowerCase();
   for (const x of content.getItems()) {
     if (
-      x.id.toLowerCase().indexOf(smallfilter) != -1 ||
-      x.text.toLowerCase().indexOf(smallfilter) != -1
+      x.id.toLowerCase().indexOf(smallfilter) !== -1 ||
+      x.text.toLowerCase().indexOf(smallfilter) !== -1
     ) {
       elms.push(
         <option key={'listmanage#' + x.id} value={x.reference}>
@@ -48,7 +52,7 @@ const ListManagerPane: React.FC<IList> = (content: IList) => {
         <button
           onClick={() =>
             content.updateItem(
-              selectbox.current == undefined ? '' : selectbox.current.value
+              selectbox.current === null ? '' : selectbox.current.value
             )
           }
         >
@@ -62,7 +66,7 @@ const ListManagerPane: React.FC<IList> = (content: IList) => {
 function extractOptions(
   ref: React.RefObject<HTMLSelectElement>
 ): Array<string> {
-  if (ref.current != undefined) {
+  if (ref.current !== null) {
     return Array.from(ref.current.selectedOptions, v => {
       return v.value;
     });

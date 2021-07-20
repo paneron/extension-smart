@@ -13,7 +13,7 @@ export class MappingManager {
 
   addMapping(namespace: string, fromid: string, toid: string) {
     let p = this.profiles.get(namespace);
-    if (p == undefined) {
+    if (p === undefined) {
       p = new MapProfile(namespace);
       this.profiles.set(namespace, p);
     }
@@ -25,7 +25,7 @@ export class MappingManager {
 
   removeMapping(namespace: string, fromid: string, toid: string) {
     let p = this.profiles.get(namespace);
-    if (p == undefined) {
+    if (p === undefined) {
       p = new MapProfile(namespace);
       this.profiles.set(namespace, p);
     }
@@ -34,7 +34,7 @@ export class MappingManager {
 
   getMapping(key: string): MapProfile {
     let ret = this.profiles.get(key);
-    if (ret == undefined) {
+    if (ret === undefined) {
       ret = new MapProfile(key);
       this.profiles.set(key, ret);
     }

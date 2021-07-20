@@ -33,23 +33,23 @@ export function parseApproval(id: string, data: string): ParsingApproval {
     p_ref: [],
   };
 
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'modality') {
+        if (command === 'modality') {
           app.modality = t[i++];
-        } else if (command == 'name') {
+        } else if (command === 'name') {
           app.name = MMELremovePackage(t[i++]);
-        } else if (command == 'actor') {
+        } else if (command === 'actor') {
           container.p_actor = t[i++];
-        } else if (command == 'approve_by') {
+        } else if (command === 'approve_by') {
           container.p_approver = t[i++];
-        } else if (command == 'approval_record') {
+        } else if (command === 'approval_record') {
           container.p_records = MMELtokenizePackage(t[i++]);
-        } else if (command == 'reference') {
+        } else if (command === 'reference') {
           container.p_ref = MMELtokenizePackage(t[i++]);
         } else {
           throw new Error(
@@ -76,17 +76,17 @@ export function resolveApproval(
   records: Map<string, MMELRegistry>
 ): MMELApproval {
   const app = container.content;
-  if (container.p_actor != '') {
+  if (container.p_actor !== '') {
     const y = roles.get(container.p_actor);
-    if (y != undefined) {
+    if (y !== undefined) {
       app.actor = y;
     } else {
       throw new Error('Error in resolving IDs in actor for process ' + app.id);
     }
   }
-  if (container.p_approver != '') {
+  if (container.p_approver !== '') {
     const y = roles.get(container.p_approver);
-    if (y != undefined) {
+    if (y !== undefined) {
       app.approver = y;
     } else {
       throw new Error(
@@ -96,7 +96,7 @@ export function resolveApproval(
   }
   for (const x of container.p_records) {
     const y = records.get(x);
-    if (y != undefined) {
+    if (y !== undefined) {
       app.records.push(y);
     } else {
       throw new Error(
@@ -106,7 +106,7 @@ export function resolveApproval(
   }
   for (const x of container.p_ref) {
     const y = refs.get(x);
-    if (y != null) {
+    if (y !== undefined) {
       app.ref.push(y);
     } else {
       throw new Error('Error in resolving IDs in input for process ' + app.id);
@@ -137,29 +137,29 @@ export function parseProcess(id: string, data: string): ParsingProcess {
     p_provision: [],
   };
 
-  if (data != '') {
+  if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
       if (i < t.length) {
-        if (command == 'modality') {
+        if (command === 'modality') {
           p.modality = t[i++];
-        } else if (command == 'name') {
+        } else if (command === 'name') {
           p.name = MMELremovePackage(t[i++]);
-        } else if (command == 'actor') {
+        } else if (command === 'actor') {
           container.p_actor = t[i++];
-        } else if (command == 'subprocess') {
+        } else if (command === 'subprocess') {
           container.p_page = t[i++];
-        } else if (command == 'validate_provision') {
+        } else if (command === 'validate_provision') {
           container.p_provision = MMELtokenizePackage(t[i++]);
-        } else if (command == 'validate_measurement') {
+        } else if (command === 'validate_measurement') {
           p.measure = MMELtokenizePackage(t[i++]).flatMap(x =>
             MMELremovePackage(x)
           );
-        } else if (command == 'output') {
+        } else if (command === 'output') {
           container.p_output = MMELtokenizePackage(t[i++]);
-        } else if (command == 'reference_data_registry') {
+        } else if (command === 'reference_data_registry') {
           container.p_input = MMELtokenizePackage(t[i++]);
         } else {
           throw new Error(
@@ -189,7 +189,7 @@ export function resolveProcess(
   const p = container.content;
   for (const x of container.p_output) {
     const y = regs.get(x);
-    if (y != undefined) {
+    if (y !== undefined) {
       p.output.push(y);
     } else {
       throw new Error('Error in resolving IDs in output for process ' + p.id);
@@ -197,7 +197,7 @@ export function resolveProcess(
   }
   for (const x of container.p_input) {
     const y = regs.get(x);
-    if (y != undefined) {
+    if (y !== undefined) {
       p.input.push(y);
     } else {
       throw new Error('Error in resolving IDs in input for process ' + p.id);
@@ -205,7 +205,7 @@ export function resolveProcess(
   }
   for (const x of container.p_provision) {
     const y = provisions.get(x);
-    if (y != undefined) {
+    if (y !== undefined) {
       p.provision.push(y);
     } else {
       throw new Error(
@@ -213,17 +213,17 @@ export function resolveProcess(
       );
     }
   }
-  if (container.p_actor != '') {
+  if (container.p_actor !== '') {
     const y = roles.get(container.p_actor);
-    if (y != undefined) {
+    if (y !== undefined) {
       p.actor = y;
     } else {
       throw new Error('Error in resolving IDs in actor for process ' + p.id);
     }
   }
-  if (container.p_page != '') {
+  if (container.p_page !== '') {
     const a = pages.get(container.p_page);
-    if (a != undefined) {
+    if (a !== undefined) {
       p.page = a;
     } else {
       throw new Error(

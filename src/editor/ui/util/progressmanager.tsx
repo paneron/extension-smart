@@ -28,9 +28,9 @@ export class ProgressManager {
     console.debug('Recalculate jobs');
     const visited = new Set<MMELSubprocessComponent>();
     const model = mw.model;
-    if (model.root != null) {
+    if (model.root !== null) {
       const start = mw.subman.get(model.root).start;
-      if (start != null) {
+      if (start !== null) {
         exploreNode(start, visited, null);
         for (const x of model.root.childs) {
           if (!visited.has(x)) {
@@ -53,7 +53,7 @@ export class ProgressManager {
     const mw = functionCollection.getStateMan().state.modelWrapper;
     const addon = mw.clman.getItemAddOn(p);
     addon.progress = x;
-    if (x == 100 && !addon.isChecked) {
+    if (x === 100 && !addon.isChecked) {
       addon.isChecked = true;
     }
     if (x < 100 && addon.isChecked) {
@@ -78,14 +78,14 @@ export class ProgressManager {
       }
     }
     for (const g of model.gateways) {
-      if (g.datatype == DataType.EGATE) {
+      if (g.datatype === DataType.EGATE) {
         const gate = g as MMELEGate;
         const addon = mw.clman.getGateAddOn(gate);
         addon.met = null;
       }
     }
     const start = modelWrapper.subman.get(root).start;
-    if (start != null) {
+    if (start !== null) {
       calNodeProgress(start, new Set<MMELSubprocessComponent>());
     }
   }
@@ -100,12 +100,12 @@ export class ProgressManager {
     });
 
     const start = mw.subman.get(page).start;
-    if (start != null) {
+    if (start !== null) {
       setDoneStatus(start, new Set<MMELSubprocessComponent>());
     }
 
     page.edges.map(e => {
-      if (e.from != null && e.to != null) {
+      if (e.from !== null && e.to !== null) {
         mw.clman.getEdgeAddOn(e).isDone =
           mw.clman.getComAddOn(e.to).isDone &&
           mw.clman.getComAddOn(e.from).isDone;
@@ -142,7 +142,7 @@ export const MyProcessCheckBox: React.FC<{
   const sm = functionCollection.getStateMan();
   const mw = sm.state.modelWrapper;
   const ck =
-    data.datatype == DataType.PROCESS
+    data.datatype === DataType.PROCESS
       ? mw.clman.getProcessAddOn(data as MMELProcess).isChecked
       : mw.clman.getApprovalAddOn(data as MMELApproval).isChecked;
   return (
@@ -152,9 +152,9 @@ export const MyProcessCheckBox: React.FC<{
         key={data.id + '#CheckBox'}
         checked={ck}
         onChange={() => {
-          if (data.datatype == DataType.PROCESS) {
+          if (data.datatype === DataType.PROCESS) {
             setProcessChecked(data as MMELProcess);
-          } else if (data.datatype == DataType.APPROVAL) {
+          } else if (data.datatype === DataType.APPROVAL) {
             setApprovalChecked(data as MMELApproval);
           }
           checkUpdated();
@@ -173,13 +173,13 @@ function setDoneStatus(
   mw.clman.getComAddOn(x).isDone = true;
   visited.add(x);
   for (const c of mw.comman.get(x).child) {
-    if (c.to != null && !visited.has(c.to)) {
+    if (c.to !== null && !visited.has(c.to)) {
       const x = c.to.element;
-      if (x?.datatype == DataType.PROCESS) {
-        if (mw.clman.getProcessAddOn(x as MMELProcess).percentage == 100) {
+      if (x?.datatype === DataType.PROCESS) {
+        if (mw.clman.getProcessAddOn(x as MMELProcess).percentage === 100) {
           setDoneStatus(c.to, visited);
         }
-      } else if (x?.datatype == DataType.APPROVAL) {
+      } else if (x?.datatype === DataType.APPROVAL) {
         if (mw.clman.getApprovalAddOn(x as MMELApproval).isChecked) {
           setDoneStatus(c.to, visited);
         }
@@ -198,9 +198,9 @@ function setDataChecked(d: MMELDataClass) {
 function setProcessChecked(p: MMELProcess) {
   const mw = functionCollection.getStateMan().state.modelWrapper;
   enforceProcess(p, !mw.clman.getProcessAddOn(p).isChecked);
-  if (p.page != null) {
+  if (p.page !== null) {
     const start = mw.subman.get(p.page).start;
-    if (start != null) {
+    if (start !== null) {
       recursiveCheck(
         start,
         mw.clman.getProcessAddOn(p).isChecked,
@@ -220,7 +220,7 @@ function setDataCheckValue(d: MMELDataClass, b: boolean) {
   const mw = functionCollection.getStateMan().state.modelWrapper;
   mw.clman.getItemAddOn(d).isChecked = b;
   for (const a of d.attributes) {
-    if (a.modality == 'SHALL') {
+    if (a.modality === 'SHALL') {
       mw.clman.getItemAddOn(a).isChecked = b;
     }
   }
@@ -231,7 +231,7 @@ function evaluateCheckData(d: MMELDataClass, visited: Set<MMELDataClass>) {
   const mw = functionCollection.getStateMan().state.modelWrapper;
   let ok = true;
   for (const a of d.attributes) {
-    if (a.modality == 'SHALL') {
+    if (a.modality === 'SHALL') {
       ok &&= mw.clman.getItemAddOn(a).isChecked;
       if (!ok) {
         break;
@@ -256,10 +256,10 @@ function calNodeProgress(
   let result = true;
   visited.add(y);
   const x = y.element;
-  if (x?.datatype == DataType.EGATE) {
+  if (x?.datatype === DataType.EGATE) {
     result = false;
     for (const c of mw.comman.get(y).child) {
-      if (c.to != null && !visited.has(c.to)) {
+      if (c.to !== null && !visited.has(c.to)) {
         const r = calNodeProgress(c.to, visited);
         result ||= r;
       }
@@ -267,48 +267,48 @@ function calNodeProgress(
     mw.clman.getGateAddOn(x as MMELEGate).met = result;
   } else {
     for (const c of mw.comman.get(y).child) {
-      if (c.to != null && !visited.has(c.to)) {
+      if (c.to !== null && !visited.has(c.to)) {
         const r = calNodeProgress(c.to, visited);
         result &&= r;
       }
     }
   }
-  if (x?.datatype == DataType.PROCESS) {
+  if (x?.datatype === DataType.PROCESS) {
     const process = x as MMELProcess;
-    if (process.page != null) {
+    if (process.page !== null) {
       const start = mw.subman.get(process.page).start;
-      if (start != null) {
+      if (start !== null) {
         calNodeProgress(start, visited);
       }
     }
     const paddon = mw.clman.getProcessAddOn(process);
     const jobs = paddon.job;
-    if (jobs != null) {
+    if (jobs !== null) {
       let sum = 0;
       let count = 0;
       for (const j of jobs) {
-        if (j.datatype == DataType.DATACLASS) {
+        if (j.datatype === DataType.DATACLASS) {
           if (mw.clman.getItemAddOn(j as MMELDataClass).isChecked) {
             sum += 100;
             count++;
           }
-        } else if (j.datatype == DataType.PROVISION) {
+        } else if (j.datatype === DataType.PROVISION) {
           const job = j as MMELProvision;
           const addon = mw.clman.getItemAddOn(job);
           sum += addon.progress;
-          count += addon.progress == 100 ? 1 : 0;
-        } else if (j.datatype == DataType.EGATE) {
+          count += addon.progress === 100 ? 1 : 0;
+        } else if (j.datatype === DataType.EGATE) {
           if (mw.clman.getGateAddOn(j as MMELEGate).met) {
             sum += 100;
             count++;
           }
-        } else if (j.datatype == DataType.PROCESS) {
+        } else if (j.datatype === DataType.PROCESS) {
           const jp = j as MMELProcess;
           const addon = mw.clman.getProcessAddOn(jp);
           sum += addon.percentage;
-          count += addon.percentage == 100 ? 1 : 0;
+          count += addon.percentage === 100 ? 1 : 0;
         }
-        if (j.datatype == DataType.APPROVAL) {
+        if (j.datatype === DataType.APPROVAL) {
           const ja = j as MMELApproval;
           const addon = mw.clman.getApprovalAddOn(ja);
           sum += addon.isChecked ? 100 : 0;
@@ -316,12 +316,12 @@ function calNodeProgress(
         }
       }
       paddon.progress = count;
-      if (jobs.length != 0) {
+      if (jobs.length !== 0) {
         paddon.percentage = Math.floor(sum / jobs.length);
       } else {
         paddon.percentage = 100;
       }
-      paddon.isChecked = sum == jobs.length * 100;
+      paddon.isChecked = sum === jobs.length * 100;
       result &&= paddon.isChecked;
     }
   }
@@ -335,23 +335,23 @@ function exploreNode(
 ): Array<MMELNode | MMELProvision> {
   let ret: Array<MMELNode | MMELProvision> = [];
   const mw = functionCollection.getStateMan().state.modelWrapper;
-  if (y.element != null) {
+  if (y.element !== null) {
     const x = y.element;
     visited.add(y);
-    if (x.datatype == DataType.PROCESS) {
+    if (x.datatype === DataType.PROCESS) {
       const process = x as MMELProcess;
-      if (process.modality == 'SHALL') {
+      if (process.modality === 'SHALL') {
         ret.push(x);
       }
       const addon = mw.clman.process.get(process);
-      if (addon != undefined) {
-        if (parent != null) {
+      if (addon !== undefined) {
+        if (parent !== null) {
           mw.nodeman.get(process).parent.push(parent);
         }
-        if (addon.job == null) {
+        if (addon.job === null) {
           let jobs: Array<MMELNode | MMELProvision> = [];
           const method = (r: MMELRegistry) => {
-            if (r.data != null) {
+            if (r.data !== null) {
               jobs.push(r.data);
               mw.nodeman.get(r.data).parent.push(x);
             }
@@ -359,14 +359,14 @@ function exploreNode(
           process.input.map(method);
           process.output.map(method);
           for (const s of process.provision) {
-            if (s.modality == 'SHALL') {
+            if (s.modality === 'SHALL') {
               jobs.push(s);
             }
             mw.nodeman.get(s).parent.push(x);
           }
-          if (process.page != null) {
+          if (process.page !== null) {
             const start = mw.subman.get(process.page)?.start;
-            if (start != null) {
+            if (start !== null) {
               jobs = jobs.concat(
                 exploreNode(start, new Set<MMELSubprocessComponent>(), x)
               );
@@ -376,34 +376,34 @@ function exploreNode(
         }
       }
     }
-    if (x.datatype == DataType.APPROVAL) {
+    if (x.datatype === DataType.APPROVAL) {
       const app = x as MMELApproval;
       const addon = mw.nodeman.get(app);
-      if (parent != null) {
+      if (parent !== null) {
         addon.parent.push(parent);
       }
-      if (app.modality == 'SHALL') {
+      if (app.modality === 'SHALL') {
         ret.push(x);
       }
     }
-    if (x.datatype == DataType.EGATE) {
+    if (x.datatype === DataType.EGATE) {
       const gate = x as MMELEGate;
       const addon = mw.clman.getGateAddOn(gate);
-      if (parent != null) {
+      if (parent !== null) {
         mw.nodeman.get(gate).parent.push(parent);
       }
       addon.required = true;
       for (const c of mw.comman.get(y).child) {
-        if (c.to != null) {
+        if (c.to !== null) {
           if (
-            c.to.element?.datatype == DataType.ENDEVENT ||
+            c.to.element?.datatype === DataType.ENDEVENT ||
             visited.has(c.to)
           ) {
             addon.required = false;
           } else {
             exploreNode(c.to, visited, x);
           }
-          if (c.to.element?.datatype == DataType.EGATE) {
+          if (c.to.element?.datatype === DataType.EGATE) {
             const caddon = mw.clman.getGateAddOn(c.to.element as MMELEGate);
             if (!caddon.required) {
               addon.required = false;
@@ -414,7 +414,7 @@ function exploreNode(
       return addon.required ? [x] : [];
     }
     for (const c of mw.comman.get(y).child) {
-      if (c.to != null && !visited.has(c.to)) {
+      if (c.to !== null && !visited.has(c.to)) {
         ret = ret.concat(exploreNode(c.to, visited, parent));
       }
     }
@@ -440,8 +440,8 @@ function enforceProcess(x: MMELProcess, b: boolean) {
     mw.clman.getItemAddOn(p).isChecked = b;
     updateProvisionProgress(p);
   });
-  x.input.map(d => (d.data != null ? setDataCheckValue(d.data, b) : {}));
-  x.output.map(d => (d.data != null ? setDataCheckValue(d.data, b) : {}));
+  x.input.map(d => (d.data !== null ? setDataCheckValue(d.data, b) : {}));
+  x.output.map(d => (d.data !== null ? setDataCheckValue(d.data, b) : {}));
 }
 
 function recursiveCheck(
@@ -451,22 +451,22 @@ function recursiveCheck(
 ) {
   visited.add(x);
   const mw = functionCollection.getStateMan().state.modelWrapper;
-  if (x.element != null && x.element.datatype == DataType.PROCESS) {
+  if (x.element !== null && x.element.datatype === DataType.PROCESS) {
     const process = x.element as MMELProcess;
     enforceProcess(process, b);
-    if (process.page != null) {
+    if (process.page !== null) {
       const start = mw.subman.get(process.page).start;
-      if (start != null) {
+      if (start !== null) {
         recursiveCheck(start, b, visited);
       }
     }
   }
-  if (x.element?.datatype == DataType.APPROVAL) {
+  if (x.element?.datatype === DataType.APPROVAL) {
     const addon = mw.clman.getApprovalAddOn(x.element as MMELApproval);
     addon.isChecked = b;
   }
   for (const c of mw.comman.get(x).child) {
-    if (c.to != null && !visited.has(c.to)) {
+    if (c.to !== null && !visited.has(c.to)) {
       recursiveCheck(c.to, b, visited);
     }
   }

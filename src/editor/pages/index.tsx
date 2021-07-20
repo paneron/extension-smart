@@ -24,14 +24,14 @@ const Home: React.FC<Record<never, never>> = function () {
       <div className="tab">
         <button
           onClick={() => setPage(Page.Editor)}
-          style={page == Page.Editor ? selected : normal}
+          style={page === Page.Editor ? selected : normal}
         >
           {' '}
           Editor{' '}
         </button>
         <button
           onClick={() => setPage(Page.Mapper)}
-          style={page == Page.Mapper ? selected : normal}
+          style={page === Page.Mapper ? selected : normal}
         >
           {' '}
           Mapper{' '}
@@ -39,8 +39,8 @@ const Home: React.FC<Record<never, never>> = function () {
       </div>
       <hr />
       <Main>
-        <ModelEditor isVisible={page == Page.Editor} />
-        <ModelMapper isVisible={page == Page.Mapper} />
+        <ModelEditor isVisible={page === Page.Editor} />
+        <ModelMapper isVisible={page === Page.Mapper} />
       </Main>
     </Wrapper>
   );

@@ -36,9 +36,9 @@ export class MeasureChecker {
     const sm = functionCollection.getStateMan();
     const mw = sm.state.modelWrapper;
     const model = sm.state.modelWrapper.model;
-    if (model.root != null) {
+    if (model.root !== null) {
       const start = mw.subman.get(model.root).start;
-      if (start != null) {
+      if (start !== null) {
         markNode(start, model.root, input, result, choice);
       }
     }
@@ -50,17 +50,17 @@ export class MeasureChecker {
     const sm = functionCollection.getStateMan();
     const model = sm.state.modelWrapper.model;
     for (const v of model.vars) {
-      if (v.type == VarType.DATA) {
+      if (v.type === VarType.DATA) {
         const r = values.get(v.id);
-        if (r != undefined) {
+        if (r !== undefined) {
           functions.set(v.id, new MeasureDataUnit(v.id, r));
         }
-      } else if (v.type == VarType.LISTDATA) {
+      } else if (v.type === VarType.LISTDATA) {
         const r = values.get(v.id);
-        if (r != undefined) {
+        if (r !== undefined) {
           functions.set(v.id, new MeasureDataList(v.id, r.split(',')));
         }
-      } else if (v.type == VarType.DERIVED) {
+      } else if (v.type === VarType.DERIVED) {
         functions.set(v.id, parseMeasurement(functions, v.definition));
       } else {
         console.debug('Error! Unknown measurement type', v);
@@ -103,9 +103,9 @@ export class MeasureChecker {
       MMELSubprocessComponent
     >();
     const dead = new Set<MMELSubprocessComponent>();
-    if (model.root != null) {
+    if (model.root !== null) {
       const start = mw.subman.get(model.root).start;
-      if (start != null) {
+      if (start !== null) {
         if (verifyNode(start, values, visited, dead, pathchoice)) {
           alert('Measurement test passed');
         } else {
@@ -126,18 +126,18 @@ function markNode(
 ): boolean {
   const mw = functionCollection.getStateMan().state.modelWrapper;
   let ret = true;
-  if (x.element != null) {
+  if (x.element !== null) {
     const id = page.id + ' ' + x.element.id;
     if (!result.has(id)) {
       if (dead.has(x)) {
         result.set(id, MeasureRType.ERRORSOURCE);
         return false;
       }
-      if (x.element.datatype == DataType.PROCESS) {
+      if (x.element.datatype === DataType.PROCESS) {
         const p = x.element as MMELProcess;
-        if (p.page != null) {
+        if (p.page !== null) {
           const start = mw.subman.get(p.page).start;
-          if (start != null) {
+          if (start !== null) {
             if (!markNode(start, p.page, dead, result, choice)) {
               result.set(id, MeasureRType.CONTAINERROR);
               return false;
@@ -146,12 +146,12 @@ function markNode(
         }
       }
       result.set(id, MeasureRType.OK);
-      if (x.element.datatype == DataType.EGATE) {
+      if (x.element.datatype === DataType.EGATE) {
         const go = choice.get(x);
-        if (go == undefined) {
+        if (go === undefined) {
           ret = false;
           for (const c of mw.comman.get(x).child) {
-            if (c.to != null) {
+            if (c.to !== null) {
               const x = markNode(c.to, page, dead, result, choice);
               ret = x || ret;
             }
@@ -162,7 +162,7 @@ function markNode(
         }
       } else {
         for (const c of mw.comman.get(x).child) {
-          if (c.to != null) {
+          if (c.to !== null) {
             const x = markNode(c.to, page, dead, result, choice);
             ret = ret && x;
           }
@@ -170,7 +170,7 @@ function markNode(
       }
     } else {
       const r = result.get(id);
-      if (r == MeasureRType.OK) {
+      if (r === MeasureRType.OK) {
         return true;
       } else {
         return false;
@@ -189,12 +189,12 @@ function verifyNode(
 ): Boolean {
   const mw = functionCollection.getStateMan().state.modelWrapper;
   const y = visited.get(x);
-  if (y != undefined) {
+  if (y !== undefined) {
     return y;
   }
   let result: Boolean = true;
   visited.set(x, result);
-  if (x.element?.datatype == DataType.PROCESS) {
+  if (x.element?.datatype === DataType.PROCESS) {
     const p = x.element as MMELProcess;
     p.measure.map(m => {
       if (!validateCondition(m, values)) {
@@ -202,25 +202,25 @@ function verifyNode(
         result = false;
       }
     });
-    if (p.page != null) {
+    if (p.page !== null) {
       const start = mw.subman.get(p.page).start;
-      if (start != null) {
+      if (start !== null) {
         result = verifyNode(start, values, visited, dead, choice);
       }
     }
   }
-  if (x.element?.datatype == DataType.EGATE) {
+  if (x.element?.datatype === DataType.EGATE) {
     const addon = mw.comman.get(x);
     let alldefined = addon.child.length > 0;
     for (const c of addon.child) {
-      if (c.condition == '') {
+      if (c.condition === '') {
         alldefined = false;
       }
     }
     if (!alldefined) {
-      result = addon.child.length == 0;
+      result = addon.child.length === 0;
       for (const c of addon.child) {
-        if (c.to != null) {
+        if (c.to !== null) {
           if (verifyNode(c.to, values, visited, dead, choice)) {
             result = true;
           }
@@ -235,7 +235,7 @@ function verifyNode(
   } else {
     const addon = mw.comman.get(x);
     for (const c of addon.child) {
-      if (c.to != null) {
+      if (c.to !== null) {
         if (!verifyNode(c.to, values, visited, dead, choice)) {
           result = false;
         }
@@ -253,30 +253,30 @@ function validateCondition(
   let para1 = '';
   let para2 = '';
   let op = '';
-  if (cond.indexOf('>=') != -1) {
+  if (cond.indexOf('>=') !== -1) {
     const x = cond.indexOf('>=');
     console.debug(x);
     para1 = cond.substr(0, x).trim();
     op = cond.substr(x, 2);
     para2 = cond.substr(x + 2).trim();
-  } else if (cond.indexOf('<=') != -1) {
+  } else if (cond.indexOf('<=') !== -1) {
     const x = cond.indexOf('<=');
     console.debug(x);
     para1 = cond.substr(0, x).trim();
     op = cond.substr(x, 2);
     para2 = cond.substr(x + 2).trim();
-  } else if (cond.indexOf('=') != -1) {
+  } else if (cond.indexOf('=') !== -1) {
     const x = cond.indexOf('=');
     console.debug(x);
     para1 = cond.substr(0, x).trim();
     op = cond.substr(x, 1);
     para2 = cond.substr(x + 1).trim();
-  } else if (cond.indexOf('>') != -1) {
+  } else if (cond.indexOf('>') !== -1) {
     const x = cond.indexOf('>');
     para1 = cond.substr(0, x).trim();
     op = cond.substr(x, 1);
     para2 = cond.substr(x + 1).trim();
-  } else if (cond.indexOf('<') != -1) {
+  } else if (cond.indexOf('<') !== -1) {
     const x = cond.indexOf('<');
     para1 = cond.substr(0, x).trim();
     op = cond.substr(x, 1);
@@ -296,7 +296,7 @@ function validateCondition(
   }
   if (x instanceof MTreeNode && y instanceof MTreeNode) {
     const operator = ComparisonsOperators.get(op);
-    if (operator == undefined) {
+    if (operator === undefined) {
       console.error('Operator cannot be resolved', op);
     } else {
       return operator.op(x, y);
@@ -315,18 +315,18 @@ function findNext(
   const addon = mw.comman.get(x);
   let go: MMELEdge = addon.child[0];
   for (const c of addon.child) {
-    if (c.condition == 'default') {
+    if (c.condition === 'default') {
       go = c;
     }
   }
   for (const c of addon.child) {
-    if (c.condition != 'default') {
+    if (c.condition !== 'default') {
       if (validateCondition(c.condition, values)) {
         go = c;
       }
     }
   }
-  if (go.to != null) {
+  if (go.to !== null) {
     return go.to;
   }
   return x;
@@ -338,27 +338,27 @@ function resolve(n: NodeRef, key: string, functions: Map<string, MTreeNode>) {
 }
 
 function resolveNode(n: NodeRef, functions: Map<string, MTreeNode>): MTreeNode {
-  if (n.type == NodeType.DATA) {
+  if (n.type === NodeType.DATA) {
     const x = functions.get(n.id);
-    if (x == undefined) {
+    if (x === undefined) {
       console.error('Measurement cannot be resolved', n.id);
     } else {
       if (x instanceof NodeRef) {
         resolve(x, n.id, functions);
         const y = functions.get(n.id);
-        if (y != undefined) {
+        if (y !== undefined) {
           return y;
         }
       } else {
         return x;
       }
     }
-  } else if (n.type == NodeType.LISTOP) {
+  } else if (n.type === NodeType.LISTOP) {
     const op = MeasurementOperators.get(n.id);
-    if (op == undefined) {
+    if (op === undefined) {
       console.error('Operator cannot be resolved', n.id);
     } else if (op instanceof ListOperator) {
-      if (n.childs.length != 1) {
+      if (n.childs.length !== 1) {
         console.error('Number of parameter is not 1', n.id, op);
       } else {
         let c = n.childs[0];
@@ -375,12 +375,12 @@ function resolveNode(n: NodeRef, functions: Map<string, MTreeNode>): MTreeNode {
     } else {
       console.error('Operator is not a list operator', n.id, op);
     }
-  } else if (n.type == NodeType.BINOP) {
+  } else if (n.type === NodeType.BINOP) {
     const op = MeasurementOperators.get(n.id);
-    if (op == undefined) {
+    if (op === undefined) {
       console.error('Operator cannot be resolved', n.id);
     } else if (op instanceof BinaryOperator) {
-      if (n.childs.length != 2) {
+      if (n.childs.length !== 2) {
         console.error('Number of parameter is not 2', n.id, op);
       } else {
         let c1 = n.childs[0];
@@ -407,18 +407,18 @@ function parseMeasurement(f: Map<string, MTreeNode>, x: string): MTreeNode {
   // first merge only the list operators
   for (let i = 0; i < tokens.length; i++) {
     const t = tokens[i];
-    if (t.type == NodeType.DATA) {
+    if (t.type === NodeType.DATA) {
       stack.push(new NodeRef(t.ref, t.type));
-    } else if (t.type == NodeType.LISTOP) {
+    } else if (t.type === NodeType.LISTOP) {
       const z = stack.pop();
-      if (z == undefined) {
+      if (z === undefined) {
         console.error('No data for list operator', t, x, tokens);
       } else {
         const nn = new NodeRef(t.ref, t.type);
         nn.childs.push(z);
         stack.push(nn);
       }
-    } else if (t.type == NodeType.BINOP) {
+    } else if (t.type === NodeType.BINOP) {
       stack.push(new NodeRef(t.ref, t.type));
     }
   }
@@ -426,10 +426,10 @@ function parseMeasurement(f: Map<string, MTreeNode>, x: string): MTreeNode {
   // second, process and merge binary operators
   for (let i = 0; i < stack.length; i++) {
     const node = stack[i];
-    if (node instanceof NodeRef && node.type == NodeType.BINOP) {
+    if (node instanceof NodeRef && node.type === NodeType.BINOP) {
       const z = stack2.pop();
       i++;
-      if (z == undefined) {
+      if (z === undefined) {
         console.error(
           'No first data for binar operator',
           node,
@@ -455,7 +455,7 @@ function parseMeasurement(f: Map<string, MTreeNode>, x: string): MTreeNode {
       stack2.push(node);
     }
   }
-  if (stack2.length != 1) {
+  if (stack2.length !== 1) {
     console.error(
       'The parse result is not a single operation tree!',
       x,
@@ -472,16 +472,16 @@ function tokenize(x: string): Array<Token> {
     const c = x[i];
     if (/\s/.test(c)) {
       // space, do nothing
-    } else if (c == '[') {
+    } else if (c === '[') {
       // a measurement reference
       i++;
       let name = '';
-      while (i < x.length && x[i] != ']') {
+      while (i < x.length && x[i] !== ']') {
         name += x[i];
         i++;
       }
       out.push({ ref: name, type: NodeType.DATA });
-    } else if (c == '.') {
+    } else if (c === '.') {
       // a list operator
       i++;
       let name = '';

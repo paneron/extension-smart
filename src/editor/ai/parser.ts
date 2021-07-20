@@ -33,7 +33,7 @@ function tokenize(x: string) {
   const endtagreg = /<\/[^<]*?>/;
   const out: Array<Token> = [];
   let tags = x.match(tagreg);
-  while (tags != null && tags.length > 0) {
+  while (tags !== null && tags.length > 0) {
     const index = x.indexOf(tags[0]);
     const front = x.substr(0, index);
     if (!isSpace(front)) {
@@ -60,16 +60,16 @@ function removeComments(data: string) {
 
 function parse(data: Array<Token>): XMLElement {
   if (
-    data.length == 0 ||
-    (data[0].type != TokenType.STARTTAG &&
-      data[0].type != TokenType.SELFCLOSETAG)
+    data.length === 0 ||
+    (data[0].type !== TokenType.STARTTAG &&
+      data[0].type !== TokenType.SELFCLOSETAG)
   ) {
     console.error('Not a valid XML document', data);
     return new XMLElement('');
   }
   const first = data[0];
   let elm: XMLElement;
-  if (first.type == TokenType.STARTTAG) {
+  if (first.type === TokenType.STARTTAG) {
     elm = parseStartTagContents(first.data.substr(1, first.data.length - 2));
   } else {
     elm = parseStartTagContents(first.data.substr(1, first.data.length - 3));
@@ -88,15 +88,15 @@ function parseTokens(
 ): number {
   while (pos < token.length) {
     const t = token[pos++];
-    if (t.type == TokenType.SELFCLOSETAG) {
+    if (t.type === TokenType.SELFCLOSETAG) {
       elm.addChild(parseStartTagContents(t.data.substr(1, t.data.length - 3)));
-    } else if (t.type == TokenType.ENDTAG) {
+    } else if (t.type === TokenType.ENDTAG) {
       const name = t.data.substr(2, t.data.length - 3);
-      if (name != elm.tag) {
+      if (name !== elm.tag) {
         console.error('End tag does not match start tag', elm, t);
       }
       return pos;
-    } else if (t.type == TokenType.TEXT) {
+    } else if (t.type === TokenType.TEXT) {
       elm.addChild(t.data);
     } else {
       // Start Tag type
@@ -119,9 +119,9 @@ function parseStartTagContents(t: string): XMLElement {
       const part = x.split('=');
       if (part.length > 2) {
         console.error('Parse error. Too many =', x);
-      } else if (part.length == 2) {
+      } else if (part.length === 2) {
         elm.attributes.set(part[0], part[1]);
-      } else if (part.length == 1) {
+      } else if (part.length === 1) {
         elm.attributes.set(part[0], '');
       } else {
         console.error('Parse error. No =', x);

@@ -21,10 +21,10 @@ export class AIAgent {
     if (front.length > 0) {
       setMeta(m, front[0]);
     }
-    if (body.length > 0 && m.root != null) {
+    if (body.length > 0 && m.root !== null) {
       const secs = body[0].getChildByTagName('sec');
       secs.forEach(s => {
-        if (parseInt(s.getElementValue('label')) >= 4 && m.root != null) {
+        if (parseInt(s.getElementValue('label')) >= 4 && m.root !== null) {
           readDetails(s, mw, m.root);
         }
       });
@@ -95,7 +95,7 @@ function readDetails(sec: XMLElement, mw: ModelWrapper, page: MMELSubprocess) {
   idreg.edges.set(nedge.id, nedge);
   nedge.from = paddon.start;
   nedge.to = nc;
-  if (paddon.start != null) {
+  if (paddon.start !== null) {
     mw.comman.get(paddon.start).child.push(nedge);
   }
   page.edges.push(nedge);
@@ -111,16 +111,16 @@ function readDetails(sec: XMLElement, mw: ModelWrapper, page: MMELSubprocess) {
 
   sec.getChilds().forEach(c => {
     if (c instanceof XMLElement) {
-      if (c.tag == 'label' || c.tag == 'title') {
+      if (c.tag === 'label' || c.tag === 'title') {
         // already obtained their values. Ignore these parts
-      } else if (c.tag == 'sec') {
-        if (p.page == null) {
+      } else if (c.tag === 'sec') {
+        if (p.page === null) {
           p.page = initPage(mw, idreg.findUniquePageID('Page'));
         }
         readDetails(c, mw, p.page);
-      } else if (c.tag == 'p') {
+      } else if (c.tag === 'p') {
         refadded = addProvisions(c.toString(), mw, p, ref, refadded, roles);
-      } else if (c.tag == 'list') {
+      } else if (c.tag === 'list') {
         refadded = processList(c, mw, p, ref, refadded, roles);
       } else {
         // Other elements are ignored at the moment
@@ -138,7 +138,7 @@ function readDetails(sec: XMLElement, mw: ModelWrapper, page: MMELSubprocess) {
       role = r;
     }
   });
-  if (role != '') {
+  if (role !== '') {
     let choice: MMELRole | null = null;
     for (const r of m.roles) {
       if (similarMatch(r.name.toLowerCase(), role.toLowerCase())) {
@@ -146,7 +146,7 @@ function readDetails(sec: XMLElement, mw: ModelWrapper, page: MMELSubprocess) {
         break;
       }
     }
-    if (choice == null) {
+    if (choice === null) {
       const idreg = mw.idman;
       choice = MMELFactory.createRole(idreg.findUniqueID('Role'));
       choice.name = role.toLowerCase();
@@ -155,7 +155,7 @@ function readDetails(sec: XMLElement, mw: ModelWrapper, page: MMELSubprocess) {
     }
     p.actor = choice;
   }
-  if (p.page != null) {
+  if (p.page !== null) {
     postCalChildPos(p.page);
   }
 }
@@ -171,12 +171,12 @@ function processList(
   //const m = mw.model;
   c.getChilds().forEach(gc => {
     if (gc instanceof XMLElement) {
-      if (gc.tag == 'list-item') {
+      if (gc.tag === 'list-item') {
         gc.getChilds().forEach(ggc => {
           if (ggc instanceof XMLElement) {
-            if (ggc.tag == 'label') {
+            if (ggc.tag === 'label') {
               // no problem
-            } else if (ggc.tag == 'p') {
+            } else if (ggc.tag === 'p') {
               refadded = addProvisions(
                 ggc.toString(),
                 mw,
@@ -185,7 +185,7 @@ function processList(
                 refadded,
                 roles
               );
-            } else if (ggc.tag == 'list') {
+            } else if (ggc.tag === 'list') {
               refadded = processList(ggc, mw, p, ref, refadded, roles);
             } else {
               // Other elements are ignored at the moment
@@ -240,7 +240,7 @@ function addProvision(
   const m = mw.model;
   const idreg = mw.idman;
   const s = statement.trim();
-  if (s != '') {
+  if (s !== '') {
     const pro = MMELFactory.createProvision(idreg.findProvisionID('Provision'));
     pro.condition = s;
     // let text = pro.condition.toUpperCase()
@@ -297,8 +297,8 @@ function addProvision(
 function similarMatch(x: string, y: string): boolean {
   x = x.toUpperCase();
   y = y.toUpperCase();
-  if (x + 'S' == y || y + 'S' == x || x + 'ES' == y || y + 'ES' == x) {
+  if (x + 'S' === y || y + 'S' === x || x + 'ES' === y || y + 'ES' === x) {
     return true;
   }
-  return x == y;
+  return x === y;
 }
