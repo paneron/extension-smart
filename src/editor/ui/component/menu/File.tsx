@@ -116,7 +116,7 @@ const FileMenu: React.FC<{ sm: StateMan }> = function ({ sm }) {
         disabled={!canSave}
         children={EXPORT_FORMATS.map(format => (
           <MenuItem
-            text={`Export to ${format}`}
+            text={`Export to ${format}…`}
             disabled={!canSave}
             onClick={getExportHandler(EXPORT_HANDLERS[format])}
           />
