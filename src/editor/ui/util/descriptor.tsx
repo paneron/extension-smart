@@ -32,27 +32,28 @@ import { functionCollection } from './function';
 import { ProgressManager } from './progressmanager';
 import { Simulator } from './simulator';
 
-export function describe(x: MMELNode, isCheckListMode: boolean) {
-  if (x.datatype === DataType.DATACLASS) {
-    return describeDC(x as MMELDataClass, isCheckListMode);
-  } else if (x.datatype === DataType.REGISTRY) {
-    return describeRegistry(x as MMELRegistry, isCheckListMode);
-  } else if (x.datatype === DataType.STARTEVENT) {
-    return descStart(x as MMELStartEvent, isCheckListMode);
-  } else if (x.datatype === DataType.ENDEVENT) {
-    return descEnd(x as MMELEndEvent, isCheckListMode);
-  } else if (x.datatype === DataType.TIMEREVENT) {
-    return descTimer(x as MMELTimerEvent, isCheckListMode);
-  } else if (x.datatype === DataType.SIGNALCATCHEVENT) {
-    return descSignalCatch(x as MMELSignalCatchEvent, isCheckListMode);
-  } else if (x.datatype === DataType.EGATE) {
-    return descEGate(x as MMELEGate, isCheckListMode);
-  } else if (x.datatype === DataType.APPROVAL) {
-    return descApproval(x as MMELApproval, isCheckListMode);
-  } else if (x.datatype === DataType.PROCESS) {
-    return descProcess(x as MMELProcess, isCheckListMode);
+export const Describe: React.FC<{ node: MMELNode, isCheckListMode: boolean }> =
+function ({ node, isCheckListMode }) {
+  if (node.datatype === DataType.DATACLASS) {
+    return <DescribeDC dc={node as MMELDataClass} isCheckListMode={isCheckListMode} />;
+  } else if (node.datatype === DataType.REGISTRY) {
+    return describeRegistry(node as MMELRegistry, isCheckListMode);
+  } else if (node.datatype === DataType.STARTEVENT) {
+    return descStart(node as MMELStartEvent, isCheckListMode);
+  } else if (node.datatype === DataType.ENDEVENT) {
+    return descEnd(node as MMELEndEvent, isCheckListMode);
+  } else if (node.datatype === DataType.TIMEREVENT) {
+    return descTimer(node as MMELTimerEvent, isCheckListMode);
+  } else if (node.datatype === DataType.SIGNALCATCHEVENT) {
+    return descSignalCatch(node as MMELSignalCatchEvent, isCheckListMode);
+  } else if (node.datatype === DataType.EGATE) {
+    return descEGate(node as MMELEGate, isCheckListMode);
+  } else if (node.datatype === DataType.APPROVAL) {
+    return descApproval(node as MMELApproval, isCheckListMode);
+  } else if (node.datatype === DataType.PROCESS) {
+    return descProcess(node as MMELProcess, isCheckListMode);
   }
-  return <> {x.id} </>;
+  return <> {node.id} </>;
 }
 
 function descStart(x: MMELStartEvent, isCheckListMode: boolean): JSX.Element {
@@ -323,18 +324,24 @@ function describeRegistry(
     <>
       {elms}
       <p key={x.id + '#registryLabel'}>Title: {x.title} </p>
-      {x.data === null ? '' : describeDC(x.data, isCheckListMode)}
+      {x.data === null
+        ? ''
+        : <DescribeDC
+            dc={x.data}
+            isCheckListMode={isCheckListMode}
+          />}
     </>
   );
 }
 
-function describeDC(x: MMELDataClass, isCheckListMode: boolean): JSX.Element {
+const DescribeDC: React.FC<{ dc: MMELDataClass, isCheckListMode: boolean }> =
+function ({ dc, isCheckListMode }) {
   return (
     <>
-      <p key={x.id + '#dataclassLabel'}> Data class: {x.id} </p>
-      <p key={x.id + '#attributesLabel'}> Arrtibutes: </p>
-      <ul key={x.id + '#attributeList'}>
-        {x.attributes.map((a: MMELDataAttribute) => (
+      <p key={dc.id + '#dataclassLabel'}> Data class: {dc.id} </p>
+      <p key={dc.id + '#attributesLabel'}> Arrtibutes: </p>
+      <ul key={dc.id + '#attributeList'}>
+        {dc.attributes.map((a: MMELDataAttribute) => (
           <li key={a.id}> {describeAttribute(a, isCheckListMode)} </li>
         ))}
       </ul>
