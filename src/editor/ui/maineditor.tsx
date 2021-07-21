@@ -18,6 +18,8 @@ import ReactFlow, {
 import { Button, ControlGroup } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
+import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
+
 import InfoPane from './component/infopane';
 import ControlPane from './component/controlpane';
 import { isGraphNode, ModelWrapper } from './model/modelwrapper';
@@ -67,7 +69,6 @@ import { NodeData } from './nodecontainer';
 import IndexPane from './component/IndexPane';
 import { DataIndexer } from './util/datasearchmanager';
 import FileMenu from './component/menu/File';
-import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
 const initModel = MMELFactory.createNewModel();
 const initModelWrapper = new ModelWrapper(initModel);
