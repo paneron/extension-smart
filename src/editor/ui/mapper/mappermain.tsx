@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
-import { jsx } from '@emotion/react';
+import { jsx, css } from '@emotion/react';
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import ModelView from './viewmain';
@@ -38,7 +38,7 @@ const ModelMapper: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   let ret: JSX.Element;
   if (isVisible) {
     ret = (
-      <div>
+      <div css={css`position: relative; flex: 1;`}>
         <ContainerRight>
           <ModelView
             maps={mState.dest}
