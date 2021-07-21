@@ -675,7 +675,7 @@ const ModelEditor: React.FC<{
   const toolbar = (
     <ControlGroup>
       <Popover2 minimal placement="bottom-start" content={<FileMenu sm={sm} />}>
-        <Button>File</Button>
+        <Button>Model</Button>
       </Popover2>
     </ControlGroup>
   );
