@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx, css } from '@emotion/react';
-import React, { RefObject, useState } from 'react';
+import React, { RefObject, useContext, useMemo, useState } from 'react';
 
 import ReactFlow, {
   Controls,
@@ -18,9 +18,11 @@ import ReactFlow, {
 import { Button, ControlGroup } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
+import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
+import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
-import InfoPane from './component/infopane';
+import { SelectedNodeDescription } from './component/infopane';
 import ControlPane from './component/controlpane';
 import { isGraphNode, ModelWrapper } from './model/modelwrapper';
 import { PageHistory } from './model/history';
@@ -78,6 +80,10 @@ const ModelEditor: React.FC<{
   className?: string;
 }> = ({ isVisible, className }) => {
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
+
+  const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
+
+  const Sidebar = useMemo(() => makeSidebar(usePersistentDatasetStateReducer!), []);
 
   const [state, setState] = useState<IState>({
     cvisible: false,
@@ -657,11 +663,6 @@ const ModelEditor: React.FC<{
   if (state.mtestResult !== null || state.fpvisible) {
     elms.push(<LegendPane key="LegendPage" {...sm} />);
   }
-  if (state.measureVisible) {
-    elms.push(<MeasureCheckPane />);
-  } else {
-    elms.push(<InfoPane key="InfoPage" clvisible={state.clvisible} />);
-  }
   if (state.searchvisible) {
     elms.push(
       <IndexPane
@@ -672,11 +673,24 @@ const ModelEditor: React.FC<{
     );
   }
 
+  function drillUp() {
+    functionCollection.saveLayout();
+    const page = state.history.pop();
+    state.modelWrapper.page = page;
+    sm.setState(state);
+  };
+
   const toolbar = (
     <ControlGroup>
       <Popover2 minimal placement="bottom-start" content={<FileMenu sm={sm} />}>
         <Button>Model</Button>
       </Popover2>
+      <Button
+        disabled={state.history.isRoot()}
+        onClick={drillUp}
+      >
+        Drill up
+      </Button>
     </ControlGroup>
   );
 
@@ -689,17 +703,36 @@ const ModelEditor: React.FC<{
 
   const breadcrumbs = state.history.getBreadcrumbs(sm, goUpToLevel);
 
+  const sidebar = <Sidebar 
+    stateKey='opened-register-item'
+    css={css`width: 280px; z-index: 1;`}
+    title="Item metadata"
+    blocks={[
+      state.measureVisible
+        ? {
+            key: 'measure-check',
+            title: "Measurement check",
+            content: <MeasureCheckPane />,
+          }
+        : {
+            key: 'selected-node',
+            title: "Selected node",
+            content: <SelectedNodeDescription isCheckListMode={state.clvisible} />,
+          }]}
+  />;
+
   let ret: JSX.Element;
   if (isVisible) {
     ret = (
-      <Workspace
-        className={className}
-        toolbar={toolbar}
-        navbarProps={state.simulation === null
-          ? { breadcrumbs }
-          : undefined}
-      >
-        <ReactFlowProvider>
+      <ReactFlowProvider>
+        <Workspace
+          className={className}
+          toolbar={toolbar}
+          sidebar={sidebar}
+          navbarProps={state.simulation === null
+            ? { breadcrumbs }
+            : undefined}
+        >
           <div
             css={css`
               flex: 1;
@@ -756,8 +789,8 @@ const ModelEditor: React.FC<{
             <ControlPane key="ControlPanel" {...sm} />
             {elms}
           </div>
-        </ReactFlowProvider>
-      </Workspace>
+        </Workspace>
+      </ReactFlowProvider>
     );
   } else {
     ret = <div></div>;
