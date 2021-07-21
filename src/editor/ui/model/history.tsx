@@ -12,6 +12,11 @@ import { ModelType, ModelViewStateMan } from '../mapper/model/mapperstate';
 import { MapperFunctions } from '../mapper/util/helperfunctions';
 import { functionCollection } from '../util/function';
 
+interface Breadcrumb {
+  label: JSX.Element;
+  onNavigate: () => void;
+}
+
 export class PageHistory {
   private history: MMELSubprocess[];
   private pathtext: string[];
@@ -42,6 +47,27 @@ export class PageHistory {
     this.pathtext.push(y);
   }
 
+  getBreadcrumbs(
+    sm: StateMan | ModelViewStateMan,
+    goUpToLevel: (i: number) => void
+  ): Breadcrumb[] {
+    const name =
+      sm.state.modelWrapper.model.meta.namespace === ''
+        ? 'root'
+        : sm.state.modelWrapper.model.meta.namespace;
+    const breadcrumbs: Breadcrumb[] = [
+      { label: <>{name}</>, onNavigate: () => goUpToLevel(-1) },
+    ];
+    for (let i = 0; i < this.history.length; i++) {
+      breadcrumbs.push({
+        label: <>{this.pathtext[i]}</>,
+        onNavigate: () => goUpToLevel(i),
+      });
+    }
+    return breadcrumbs;
+  }
+
+  // TODO: Move path formatting into a React component.
   getPath(sm: StateMan): JSX.Element {
     const goToPage = (i: number) => {
       functionCollection.saveLayout();
@@ -49,55 +75,35 @@ export class PageHistory {
       sm.state.modelWrapper.page = page;
       sm.setState(sm.state);
     };
-
-    const name =
-      sm.state.modelWrapper.model.meta.namespace === ''
-        ? 'root'
-        : sm.state.modelWrapper.model.meta.namespace;
-    const elms: JSX.Element[] = [
-      <button key={'ui#rootpathbutton'} onClick={() => goToPage(-1)}>
-        {name}
-      </button>,
-    ];
-    for (let i = 0; i < this.history.length; i++) {
-      elms.push(<span key={'ui#pathseparator' + i}> / </span>);
-      elms.push(
-        <button key={'ui#pathbutton' + i} onClick={() => goToPage(i)}>
-          {this.pathtext[i]}
-        </button>
-      );
-    }
-    return <>{elms}</>;
+    return (
+      <>
+        {this.getBreadcrumbs(sm, goToPage).map((bc, idx) => (
+          <React.Fragment key={idx}>
+            <button onClick={bc.onNavigate}>{bc.label}</button>
+            <span> / </span>
+          </React.Fragment>
+        ))}
+      </>
+    );
   }
-
   getMapperPath(sm: ModelViewStateMan): JSX.Element {
-    const mw = sm.state.modelWrapper;
-    const his = sm.state.history;
-
     const goToPage = (i: number) => {
       MapperFunctions.saveLayout(sm);
-      const page = his.popUntil(i);
-      mw.page = page;
+      const page = sm.state.history.popUntil(i);
+      sm.state.modelWrapper.page = page;
       MapperFunctions.updateMapRef(sm);
       sm.setState(sm.state);
     };
-
-    const name =
-      mw.model.meta.namespace === '' ? 'root' : mw.model.meta.namespace;
-    const elms: JSX.Element[] = [
-      <button key={'ui#rootpathbutton'} onClick={() => goToPage(-1)}>
-        {name}
-      </button>,
-    ];
-    for (let i = 0; i < this.history.length; i++) {
-      elms.push(<span key={'ui#pathseparator' + i}> / </span>);
-      elms.push(
-        <button key={'ui#pathbutton' + i} onClick={() => goToPage(i)}>
-          {this.pathtext[i]}
-        </button>
-      );
-    }
-    return <>{elms}</>;
+    return (
+      <>
+        {this.getBreadcrumbs(sm, goToPage).map((bc, idx) => (
+          <React.Fragment key={idx}>
+            <button onClick={bc.onNavigate}>{bc.label}</button>
+            <span> / </span>
+          </React.Fragment>
+        ))}
+      </>
+    );
   }
 
   pop(): MMELSubprocess {
