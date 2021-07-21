@@ -16,6 +16,8 @@ const EditMenu: React.FC<{ sm: StateMan }> = function ({ sm }) {
 
   return (
     <Menu>
+      <MenuItem text="Settings" />
+      <MenuItem text="Metadata" />
       {PANEL_NAMES.map(panelName => (
         <PanelItem
           panelName={panelName}
