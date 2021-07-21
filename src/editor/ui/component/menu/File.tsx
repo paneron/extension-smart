@@ -3,7 +3,7 @@
 
 import { jsx } from '@emotion/react';
 import React, { useContext } from 'react';
-import { Menu, MenuItem } from '@blueprintjs/core';
+import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { MMELFactory } from '../../../runtime/modelComponentCreator';
 import { StateMan } from '../../interface/state';
@@ -122,6 +122,8 @@ const FileMenu: React.FC<{ sm: StateMan }> = function ({ sm }) {
           />
         ))}
       />
+      <MenuDivider />
+      <MenuItem text="Model settings…" />
     </Menu>
   );
 };
