@@ -106,6 +106,10 @@ export class PageHistory {
     );
   }
 
+  isRoot(): boolean {
+    return this.history.length === 0;
+  }
+
   pop(): MMELSubprocess {
     this.pathtext.pop();
     this.history.pop();
