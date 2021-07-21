@@ -4,34 +4,39 @@
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
 import React from 'react';
-import { useStoreState, Elements } from 'react-flow-renderer';
+import { useStoreState } from 'react-flow-renderer';
 import { NodeData } from '../nodecontainer';
-import { describe } from '../util/descriptor';
+import { Describe } from '../util/descriptor';
 import { functionCollection } from '../util/function';
 
 const InfoPane: React.FC<{ clvisible: boolean }> = ({ clvisible }) => {
-  const selected = useStoreState(store => store.selectedElements);
-
-  const updateSelection = (selected: Elements<any> | null) => {
-    if (selected !== null && selected.length > 0) {
-      const s = selected[0];
-      if (s.data instanceof NodeData) {
-        const data = functionCollection.getObjectByID(s.data.represent);
-        if (data !== undefined) {
-          return describe(data, clvisible);
-        }
-      }
-    }
-    return 'Nothing is selected';
-  };
-
   return (
-    <SideBar key="ui#InfoPaneSideBar">
+    <SideBar>
       <h1> Information of selected node </h1>
-      <div> {updateSelection(selected)} </div>
+      <div> <SelectedNodeDescription isCheckListMode={clvisible} /> </div>
     </SideBar>
   );
 };
+
+export const SelectedNodeDescription: React.FC<{ isCheckListMode: boolean }> =
+function ({ isCheckListMode }) {
+  const selected = useStoreState(store => store.selectedElements);
+
+  let desc: JSX.Element = <>Nothing is selected</>;
+  if (selected !== null && selected.length > 0) {
+    const s = selected[0];
+    if (s.data instanceof NodeData) {
+      const data = functionCollection.getObjectByID(s.data.represent);
+      if (data !== undefined) {
+        desc = <Describe
+          node={data}
+          isCheckListMode={isCheckListMode}
+        />;
+      }
+    }
+  }
+  return desc;
+}
 
 const SideBar = styled.aside`
   position: fixed;
