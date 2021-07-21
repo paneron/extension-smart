@@ -3,20 +3,21 @@
 
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
-import React, { CSSProperties, RefObject } from 'react';
+import React, { CSSProperties, useContext } from 'react';
 import { ModelViewStateMan } from '../model/mapperstate';
-//import { ModelWrapper } from '../../model/modelwrapper';
 import { MyTopRightButtons } from '../../component/unit/closebutton';
-//import { MapperFunctions } from '../util/helperfunctions';
 import { MappingProfile } from '../model/MappingProfile';
-//import { textToMMEL } from '../../../serialize/MMEL';
+import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
+import { textToMMEL } from '../../../serialize/MMEL';
+import { ModelWrapper } from '../../model/modelwrapper';
+import { MapperFunctions } from '../util/helperfunctions';
 
 const MapperControlPane: React.FC<{
   sm: ModelViewStateMan;
   elms: Map<string, MappingProfile>;
-}> = ({ sm, elms }) => {
-  const modelfile: RefObject<HTMLInputElement> = React.createRef();
-  //const modelfilename: RefObject<HTMLInputElement> = React.createRef();
+}> = ({ sm }) => {
+  const { logger, useDecodedBlob, requestFileFromFilesystem } =
+    useContext(DatasetContext);
 
   const state = sm.state;
 
@@ -24,66 +25,60 @@ const MapperControlPane: React.FC<{
     display: state.cpvisible ? 'inline' : 'none',
   };
 
-  //const readModelFromFile = (result: string) => {
-  //  console.debug('Read model from file');
-  //  state.history.clear();
-  //  const model = textToMMEL(result);
-  //  state.modelWrapper = new ModelWrapper(model);
-  //  MapperFunctions.setIsMap(false);
-  //  MapperFunctions.updateMapRef(sm);
-  //  sm.setState(state);
-  //};
+  function parseModel(data: string) {
+    logger?.log('Importing model');
+    try {
+      const model = textToMMEL(data);
+      sm.state.history.clear();
+      sm.state.modelWrapper = new ModelWrapper(model);
+      logger?.log('Loaded model');
+      MapperFunctions.setIsMap(false);
+      MapperFunctions.updateMapRef(sm);
+      sm.setState(sm.state);
+    } catch (e) {
+      logger?.log('Failed to load model', e);
+    }
+  }
 
-  //const newModel = () => {
-  //  state.history.clear();
-  //  state.modelWrapper = new ModelWrapper(MMELFactory.createNewModel());
-  //  MapperFunctions.updateMapRef(sm);
-  //  sm.setState(state);
-  //};
-
-  //const exportModel = (fn: string | undefined): void => {
-  //  MapperFunctions.saveLayout(sm);
-  //  const blob = new Blob([MMELToText(state.modelWrapper.model)], {
-  //    type: 'text/plain',
-  //  });
-  //  const url = window.URL.createObjectURL(blob);
-  //  const a = document.createElement('a');
-  //  a.href = url;
-  //  a.download = fn == undefined ? 'default.mmel' : fn;
-  //  a.click();
-  //};
+  async function handleOpen() {
+    if (requestFileFromFilesystem && useDecodedBlob) {
+      logger?.log('Requesting file');
+      requestFileFromFilesystem(
+        {
+          prompt: 'Choose an MMEL file to import',
+          allowMultiple: false,
+          filters: [{ name: 'MMEL files', extensions: ['mmel'] }],
+        },
+        selectedFiles => {
+          logger?.log('Requesting file: Got selection', selectedFiles);
+          const fileData = Object.values(selectedFiles ?? {})[0];
+          if (fileData) {
+            const fileDataAsString = useDecodedBlob({
+              blob: fileData,
+            }).asString;
+            logger?.log('Requesting file: Decoded blob', fileDataAsString);
+            parseModel(fileDataAsString);
+          } else {
+            logger?.log('Requesting file: No file data received');
+            console.error('Import file: no file data received');
+          }
+        }
+      );
+    } else {
+      throw new Error('File import function not availbale');
+    }
+  }
 
   const close = () => {
     state.cpvisible = false;
     sm.setState(state);
   };
 
-  //const modelFileSelected = (
-  //  e: ChangeEvent<HTMLInputElement>,
-  //  readModel: (x: string) => void
-  //) => {
-  //  const flist = e.target.files;
-  //  if (flist != undefined && flist.length > 0) {
-  //    flist[0].text().then(result => {
-  //      readModel(result);
-  //    });
-  //  }
-  //  const name = e.target.value.split('\\');
-  //  if (modelfilename.current != undefined) {
-  //    modelfilename.current.value = name[name.length - 1];
-  //  }
-  //  e.target.value = '';
-  //};
-
   return (
     <ControlBar style={css}>
       <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
 
-      <button onClick={() => modelfile.current?.click()}>Load Model</button>
-      {/* <button onClick={() => exportModel(modelfilename.current?.value)} >Download Model</button>
-    <p> Download model name: <input type='text' ref={modelfilename} name="modelfn" defaultValue="default.mmel" /> </p>
-    <input type='file' accept=".mmel" onChange={(e) => modelFileSelected(e, readModelFromFile)} ref={modelfile} style={{display: "none"}} />
-    <button onClick={() => newModel()} >New Model</button>     */}
+      <button onClick={() => handleOpen()}>Load Model</button>
     </ControlBar>
   );
 };

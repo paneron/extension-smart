@@ -205,7 +205,7 @@ function verifyNode(
     if (p.page !== null) {
       const start = mw.subman.get(p.page).start;
       if (start !== null) {
-        result = verifyNode(start, values, visited, dead, choice);
+        result &&= verifyNode(start, values, visited, dead, choice);
       }
     }
   }

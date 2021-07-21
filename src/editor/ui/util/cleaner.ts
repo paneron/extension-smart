@@ -27,9 +27,9 @@ export class Cleaner {
       model.processes.splice(index, 1);
       idreg.nodes.delete(process.id);
       Cleaner.cleanProvisions(process);
-    }
-    if (process.page !== null) {
-      Cleaner.killPage(process.page);
+      if (process.page !== null) {
+        Cleaner.killPage(process.page);
+      }
     }
     sm.setState({ ...state });
   }
@@ -47,8 +47,10 @@ export class Cleaner {
         const addon = mw.nodeman.get(x);
         addon.pages.delete(page);
         if (
-          !(x.datatype === DataType.DATACLASS ||
-            x.datatype === DataType.REGISTRY)
+          !(
+            x.datatype === DataType.DATACLASS ||
+            x.datatype === DataType.REGISTRY
+          )
         ) {
           if (addon.pages.size === 0) {
             idreg.nodes.delete(x.id);
