@@ -22,7 +22,6 @@ import InfoPane from './component/infopane';
 import ControlPane from './component/controlpane';
 import { isGraphNode, ModelWrapper } from './model/modelwrapper';
 import { PageHistory } from './model/history';
-import PathPane from './component/pathpane';
 import {
   edgeTypes,
   ISearch,
@@ -680,10 +679,25 @@ const ModelEditor: React.FC<{
     </ControlGroup>
   );
 
+  function goUpToLevel(i: number) {
+    functionCollection.saveLayout();
+    const page = sm.state.history.popUntil(i);
+    sm.state.modelWrapper.page = page;
+    sm.setState(sm.state);
+  }
+
+  const breadcrumbs = state.history.getBreadcrumbs(sm, goUpToLevel);
+
   let ret: JSX.Element;
   if (isVisible) {
     ret = (
-      <Workspace className={className} toolbar={toolbar}>
+      <Workspace
+        className={className}
+        toolbar={toolbar}
+        navbarProps={state.simulation === null
+          ? { breadcrumbs }
+          : undefined}
+      >
         <ReactFlowProvider>
           <div
             css={css`
@@ -738,7 +752,6 @@ const ModelEditor: React.FC<{
                   : ''}
               </Controls>
             </ReactFlow>
-            {state.simulation === null ? <PathPane {...sm} /> : ''}
             <ControlPane key="ControlPanel" {...sm} />
             {elms}
           </div>
