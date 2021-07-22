@@ -32,31 +32,79 @@ import { functionCollection } from './function';
 import { ProgressManager } from './progressmanager';
 import { Simulator } from './simulator';
 
-export const Describe: React.FC<{ node: MMELNode, isCheckListMode: boolean }> =
-function ({ node, isCheckListMode }) {
-  if (node.datatype === DataType.DATACLASS) {
-    return <DescribeDC dc={node as MMELDataClass} isCheckListMode={isCheckListMode} />;
-  } else if (node.datatype === DataType.REGISTRY) {
-    return describeRegistry(node as MMELRegistry, isCheckListMode);
-  } else if (node.datatype === DataType.STARTEVENT) {
-    return descStart(node as MMELStartEvent, isCheckListMode);
-  } else if (node.datatype === DataType.ENDEVENT) {
-    return descEnd(node as MMELEndEvent, isCheckListMode);
-  } else if (node.datatype === DataType.TIMEREVENT) {
-    return descTimer(node as MMELTimerEvent, isCheckListMode);
-  } else if (node.datatype === DataType.SIGNALCATCHEVENT) {
-    return descSignalCatch(node as MMELSignalCatchEvent, isCheckListMode);
-  } else if (node.datatype === DataType.EGATE) {
-    return descEGate(node as MMELEGate, isCheckListMode);
-  } else if (node.datatype === DataType.APPROVAL) {
-    return descApproval(node as MMELApproval, isCheckListMode);
-  } else if (node.datatype === DataType.PROCESS) {
-    return descProcess(node as MMELProcess, isCheckListMode);
-  }
-  return <> {node.id} </>;
-}
+export const Describe: React.FC<{ node: MMELNode; isCheckListMode: boolean }> =
+  function ({ node, isCheckListMode }) {
+    if (node.datatype === DataType.DATACLASS) {
+      return (
+        <DescribeDC
+          dc={node as MMELDataClass}
+          isCheckListMode={isCheckListMode}
+        />
+      );
+    } else if (node.datatype === DataType.REGISTRY) {
+      return (
+        <DescribeRegistry
+          reg={node as MMELRegistry}
+          isCheckListMode={isCheckListMode}
+        />
+      );
+    } else if (node.datatype === DataType.STARTEVENT) {
+      return (
+        <DescribeStart
+          start={node as MMELStartEvent}
+          isCheckListMode={isCheckListMode}
+        />
+      );
+    } else if (node.datatype === DataType.ENDEVENT) {
+      return (
+        <DescribeEnd
+          end={node as MMELEndEvent}
+          isCheckListMode={isCheckListMode}
+        />
+      );
+    } else if (node.datatype === DataType.TIMEREVENT) {
+      return (
+        <DescribeTimer
+          timer={node as MMELTimerEvent}
+          isCheckListMode={isCheckListMode}
+        />
+      );
+    } else if (node.datatype === DataType.SIGNALCATCHEVENT) {
+      return (
+        <DescribeSignalCatch
+          scEvent={node as MMELSignalCatchEvent}
+          isCheckListMode={isCheckListMode}
+        />
+      );
+    } else if (node.datatype === DataType.EGATE) {
+      return (
+        <DescribeEGate
+          egate={node as MMELEGate}
+          isCheckListMode={isCheckListMode}
+        />
+      );
+    } else if (node.datatype === DataType.APPROVAL) {
+      return (
+        <DescribeApproval
+          app={node as MMELApproval}
+          isCheckListMode={isCheckListMode}
+        />
+      );
+    } else if (node.datatype === DataType.PROCESS) {
+      return (
+        <DescribeProcess
+          process={node as MMELProcess}
+          isCheckListMode={isCheckListMode}
+        />
+      );
+    }
+    return <> {node.id} </>;
+  };
 
-function descStart(x: MMELStartEvent, isCheckListMode: boolean): JSX.Element {
+const DescribeStart: React.FC<{
+  start: MMELStartEvent;
+  isCheckListMode: boolean;
+}> = function ({ start: x, isCheckListMode }) {
   const elms: Array<JSX.Element> = [];
   elms.push(<span key="ui#startlabel"> Start event </span>);
   if (!isCheckListMode) {
@@ -71,36 +119,40 @@ function descStart(x: MMELStartEvent, isCheckListMode: boolean): JSX.Element {
     );
   }
   return <>{elms}</>;
-}
+};
 
-function descEnd(x: MMELEndEvent, isCheckListMode: boolean): JSX.Element {
-  const elms: Array<JSX.Element> = [];
-  if (!isCheckListMode) {
-    elms.push(
-      <button
-        key={'ui#button#removeEnd#' + x.id}
-        onClick={() => Cleaner.removeEvent(x)}
-      >
-        {' '}
-        Remove{' '}
-      </button>
+const DescribeEnd: React.FC<{ end: MMELEndEvent; isCheckListMode: boolean }> =
+  function ({ end, isCheckListMode }): JSX.Element {
+    const elms: Array<JSX.Element> = [];
+    if (!isCheckListMode) {
+      elms.push(
+        <button
+          key={'ui#button#removeEnd#' + end.id}
+          onClick={() => Cleaner.removeEvent(end)}
+        >
+          {' '}
+          Remove{' '}
+        </button>
+      );
+    }
+    return (
+      <>
+        {elms}
+        <p key={'ui#endlabel#' + end.id}> End event </p>
+      </>
     );
-  }
-  return (
-    <>
-      {elms}
-      <p key={'ui#endlabel#' + x.id}> End event </p>
-    </>
-  );
-}
+  };
 
-function descProcess(x: MMELProcess, isCheckListMode: boolean): JSX.Element {
+const DescribeProcess: React.FC<{
+  process: MMELProcess;
+  isCheckListMode: boolean;
+}> = function ({ process, isCheckListMode }) {
   const elms: Array<JSX.Element> = [];
   if (!isCheckListMode) {
     elms.push(
       <button
-        key={'ui#button#viewprocess#' + x.id}
-        onClick={() => functionCollection.viewEditProcess(x)}
+        key={'ui#button#viewprocess#' + process.id}
+        onClick={() => functionCollection.viewEditProcess(process)}
       >
         {' '}
         Edit{' '}
@@ -108,58 +160,68 @@ function descProcess(x: MMELProcess, isCheckListMode: boolean): JSX.Element {
     );
     elms.push(
       <button
-        key={'ui#button#removeprocess#' + x.id}
-        onClick={() => Cleaner.removeProcess(x)}
+        key={'ui#button#removeprocess#' + process.id}
+        onClick={() => Cleaner.removeProcess(process)}
       >
         {' '}
         Remove{' '}
       </button>
     );
-    if (x.page === null) {
+    if (process.page === null) {
       elms.push(
-        <MyFloatButton onClick={() => addSubprocess(x)}>+</MyFloatButton>
+        <MyFloatButton onClick={() => addSubprocess(process)}>+</MyFloatButton>
       );
     }
   }
-  elms.push(<p key={x.id + '#ProcessID'}> Process: {x.id} </p>);
-  elms.push(<p key={x.id + '#ProcessName'}> Name: {x.name} </p>);
-  if (x.actor !== null) {
-    elms.push(<p key={x.id + '#ProcessActor'}> Actor: {x.actor.name} </p>);
+  elms.push(<p key={process.id + '#ProcessID'}> Process: {process.id} </p>);
+  elms.push(<p key={process.id + '#ProcessName'}> Name: {process.name} </p>);
+  if (process.actor !== null) {
+    elms.push(
+      <p key={process.id + '#ProcessActor'}> Actor: {process.actor.name} </p>
+    );
   }
-  if (x.modality !== '') {
-    elms.push(<p key={x.id + '#Modality'}> Modality: {x.modality} </p>);
+  if (process.modality !== '') {
+    elms.push(
+      <p key={process.id + '#Modality'}> Modality: {process.modality} </p>
+    );
   }
-  if (x.provision.length > 0) {
+  if (process.provision.length > 0) {
     const ps: Array<JSX.Element> = [];
-    x.provision.map((a: MMELProvision) =>
+    process.provision.map((provision: MMELProvision) =>
       ps.push(
-        <li key={x.id + '#Pro#' + a.id}>
+        <li key={process.id + '#Pro#' + provision.id}>
           {' '}
-          {describeProvision(a, isCheckListMode)}{' '}
+          <DescribeProvision
+            provision={provision}
+            isCheckListMode={isCheckListMode}
+          />{' '}
         </li>
       )
     );
-    elms.push(<p key={x.id + '#Provisions'}>Provisions</p>);
-    elms.push(<ul key={x.id + '#ProvisionList'}>{ps}</ul>);
+    elms.push(<p key={process.id + '#Provisions'}>Provisions</p>);
+    elms.push(<ul key={process.id + '#ProvisionList'}>{ps}</ul>);
   }
-  if (x.measure.length > 0) {
+  if (process.measure.length > 0) {
     const ms: Array<JSX.Element> = [];
-    x.measure.map((m: string, index: number) =>
-      ms.push(<li key={x.id + '#Measure#' + index}> {m} </li>)
+    process.measure.map((m: string, index: number) =>
+      ms.push(<li key={process.id + '#Measure#' + index}> {m} </li>)
     );
-    elms.push(<p key={x.id + '#MeasureText'}>Measurements</p>);
-    elms.push(<ul key={x.id + '#MeasureList'}>{ms}</ul>);
+    elms.push(<p key={process.id + '#MeasureText'}>Measurements</p>);
+    elms.push(<ul key={process.id + '#MeasureList'}>{ms}</ul>);
   }
   return <>{elms} </>;
-}
+};
 
-function descApproval(x: MMELApproval, isCheckListMode: boolean): JSX.Element {
+const DescribeApproval: React.FC<{
+  app: MMELApproval;
+  isCheckListMode: boolean;
+}> = function ({ app, isCheckListMode }) {
   const elms: Array<JSX.Element> = [];
   if (!isCheckListMode) {
     elms.push(
       <button
-        key={'ui#button#viewapproval#' + x.id}
-        onClick={() => functionCollection.viewEditApproval(x)}
+        key={'ui#button#viewapproval#' + app.id}
+        onClick={() => functionCollection.viewEditApproval(app)}
       >
         {' '}
         Edit{' '}
@@ -167,53 +229,92 @@ function descApproval(x: MMELApproval, isCheckListMode: boolean): JSX.Element {
     );
     elms.push(
       <button
-        key={'ui#button#removeapproval#' + x.id}
-        onClick={() => Cleaner.removeApproval(x)}
+        key={'ui#button#removeapproval#' + app.id}
+        onClick={() => Cleaner.removeApproval(app)}
       >
         {' '}
         Remove{' '}
       </button>
     );
   }
-  elms.push(<p key={x.id + '#approvalLabel'}> Approval: {x.id} </p>);
-  elms.push(<p key={x.id + '#nameLabel'}> Name: {x.name} </p>);
-  if (x.actor !== null) {
-    elms.push(<p key={x.id + '#actorLabel'}> Actor: {x.actor.name} </p>);
+  elms.push(<p key={app.id + '#approvalLabel'}> Approval: {app.id} </p>);
+  elms.push(<p key={app.id + '#nameLabel'}> Name: {app.name} </p>);
+  if (app.actor !== null) {
+    elms.push(<p key={app.id + '#actorLabel'}> Actor: {app.actor.name} </p>);
   }
-  if (x.approver !== null) {
+  if (app.approver !== null) {
     elms.push(
-      <p key={x.id + '#approverLabel'}> Approver: {x.approver.name} </p>
+      <p key={app.id + '#approverLabel'}> Approver: {app.approver.name} </p>
     );
   }
-  if (x.modality !== '') {
-    elms.push(<p key={x.id + '#modalityLabel'}> Modality: {x.modality} </p>);
-  }
-  if (x.records.length > 0) {
-    const ps: Array<JSX.Element> = [];
-    x.records.map((a: MMELRegistry) =>
-      ps.push(<li key={x.id + '#approvalRecord#' + a.id}> {a.title} </li>)
+  if (app.modality !== '') {
+    elms.push(
+      <p key={app.id + '#modalityLabel'}> Modality: {app.modality} </p>
     );
-    elms.push(<p key={x.id + '#approvalRecordLabel'}>Appproval record(s):</p>);
-    elms.push(<ul key={x.id + '#approvalList'}>{ps}</ul>);
   }
-  if (x.ref.length > 0) {
+  if (app.records.length > 0) {
     const ps: Array<JSX.Element> = [];
-    x.ref.map((a: MMELReference) =>
+    app.records.map((a: MMELRegistry) =>
+      ps.push(<li key={app.id + '#approvalRecord#' + a.id}> {a.title} </li>)
+    );
+    elms.push(
+      <p key={app.id + '#approvalRecordLabel'}>Appproval record(s):</p>
+    );
+    elms.push(<ul key={app.id + '#approvalList'}>{ps}</ul>);
+  }
+  if (app.ref.length > 0) {
+    const ps: Array<JSX.Element> = [];
+    app.ref.map((a: MMELReference) =>
       ps.push(<li key={a.id}> {toSummary(a)} </li>)
     );
-    elms.push(<p key={x.id + '#referenceLabel'}>Reference:</p>);
-    elms.push(<ul key={x.id + '#referenceList'}>{ps}</ul>);
+    elms.push(<p key={app.id + '#referenceLabel'}>Reference:</p>);
+    elms.push(<ul key={app.id + '#referenceList'}>{ps}</ul>);
   }
   return <>{elms}</>;
-}
+};
 
-function descEGate(x: MMELEGate, isCheckListMode: boolean): JSX.Element {
+const DescribeEGate: React.FC<{ egate: MMELEGate; isCheckListMode: boolean }> =
+  function ({ egate, isCheckListMode }) {
+    const elms: Array<JSX.Element> = [];
+    if (!isCheckListMode) {
+      elms.push(
+        <button
+          key={'ui#button#viewEGate#' + egate.id}
+          onClick={() => functionCollection.viewEGate(egate)}
+        >
+          {' '}
+          Edit{' '}
+        </button>
+      );
+      elms.push(
+        <button
+          key={'ui#button#removeEGate#' + egate.id}
+          onClick={() => Cleaner.removeGate(egate)}
+        >
+          {' '}
+          Remove{' '}
+        </button>
+      );
+    }
+    return (
+      <>
+        {elms}
+        <p key={egate.id + '#egate'}> Exclusive Gateway: {egate.id} </p>
+        <p key={egate.id + '#egateLabel'}> Contents: {egate.label} </p>
+      </>
+    );
+  };
+
+const DescribeSignalCatch: React.FC<{
+  scEvent: MMELSignalCatchEvent;
+  isCheckListMode: boolean;
+}> = function ({ scEvent, isCheckListMode }) {
   const elms: Array<JSX.Element> = [];
   if (!isCheckListMode) {
     elms.push(
       <button
-        key={'ui#button#viewEGate#' + x.id}
-        onClick={() => functionCollection.viewEGate(x)}
+        key={'ui#button#viewSignalCatch#' + scEvent.id}
+        onClick={() => functionCollection.viewSignalCatch(scEvent)}
       >
         {' '}
         Edit{' '}
@@ -221,8 +322,8 @@ function descEGate(x: MMELEGate, isCheckListMode: boolean): JSX.Element {
     );
     elms.push(
       <button
-        key={'ui#button#removeEGate#' + x.id}
-        onClick={() => Cleaner.removeGate(x)}
+        key={'ui#button#removeSignalCatch#' + scEvent.id}
+        onClick={() => Cleaner.removeEvent(scEvent)}
       >
         {' '}
         Remove{' '}
@@ -232,22 +333,25 @@ function descEGate(x: MMELEGate, isCheckListMode: boolean): JSX.Element {
   return (
     <>
       {elms}
-      <p key={x.id + '#egate'}> Exclusive Gateway: {x.id} </p>
-      <p key={x.id + '#egateLabel'}> Contents: {x.label} </p>
+      <p key={scEvent.id + '#signalCatchLabel'}>
+        {' '}
+        Signal Catch Event: {scEvent.id}{' '}
+      </p>
+      <p key={scEvent.id + '#signalLabel'}> Signal: {scEvent.signal} </p>
     </>
   );
-}
+};
 
-function descSignalCatch(
-  x: MMELSignalCatchEvent,
-  isCheckListMode: boolean
-): JSX.Element {
+const DescribeTimer: React.FC<{
+  timer: MMELTimerEvent;
+  isCheckListMode: boolean;
+}> = function ({ timer, isCheckListMode }) {
   const elms: Array<JSX.Element> = [];
   if (!isCheckListMode) {
     elms.push(
       <button
-        key={'ui#button#viewSignalCatch#' + x.id}
-        onClick={() => functionCollection.viewSignalCatch(x)}
+        key={'ui#button#viewTimer#' + timer.id}
+        onClick={() => functionCollection.viewTimer(timer)}
       >
         {' '}
         Edit{' '}
@@ -255,65 +359,36 @@ function descSignalCatch(
     );
     elms.push(
       <button
-        key={'ui#button#removeSignalCatch#' + x.id}
-        onClick={() => Cleaner.removeEvent(x)}
+        key={'ui#button#removeTimer#' + timer.id}
+        onClick={() => Cleaner.removeEvent(timer)}
       >
         {' '}
         Remove{' '}
       </button>
     );
   }
-  return (
-    <>
-      {elms}
-      <p key={x.id + '#signalCatchLabel'}> Signal Catch Event: {x.id} </p>
-      <p key={x.id + '#signalLabel'}> Signal: {x.signal} </p>
-    </>
-  );
-}
-
-function descTimer(x: MMELTimerEvent, isCheckListMode: boolean): JSX.Element {
-  const elms: Array<JSX.Element> = [];
-  if (!isCheckListMode) {
-    elms.push(
-      <button
-        key={'ui#button#viewTimer#' + x.id}
-        onClick={() => functionCollection.viewTimer(x)}
-      >
-        {' '}
-        Edit{' '}
-      </button>
-    );
-    elms.push(
-      <button
-        key={'ui#button#removeTimer#' + x.id}
-        onClick={() => Cleaner.removeEvent(x)}
-      >
-        {' '}
-        Remove{' '}
-      </button>
-    );
+  elms.push(<p key={timer.id + '#timerLabel'}> Timer Event: {timer.id} </p>);
+  if (timer.type !== '') {
+    elms.push(<p key={timer.id + '#timerTypeLabel'}>Type: {timer.type} </p>);
   }
-  elms.push(<p key={x.id + '#timerLabel'}> Timer Event: {x.id} </p>);
-  if (x.type !== '') {
-    elms.push(<p key={x.id + '#timerTypeLabel'}>Type: {x.type} </p>);
-  }
-  if (x.para !== '') {
-    elms.push(<p key={x.id + '#timerParaLabel'}>Parameter: {x.para} </p>);
+  if (timer.para !== '') {
+    elms.push(
+      <p key={timer.id + '#timerParaLabel'}>Parameter: {timer.para} </p>
+    );
   }
   return <>{elms}</>;
-}
+};
 
-function describeRegistry(
-  x: MMELRegistry,
-  isCheckListMode: boolean
-): JSX.Element {
+const DescribeRegistry: React.FC<{
+  reg: MMELRegistry;
+  isCheckListMode: boolean;
+}> = function ({ reg, isCheckListMode }) {
   const elms: Array<JSX.Element> = [];
   if (!isCheckListMode) {
     elms.push(
       <button
-        key={'ui#button#datarepo#' + x.id}
-        onClick={() => functionCollection.viewDataRepository(x)}
+        key={'ui#button#datarepo#' + reg.id}
+        onClick={() => functionCollection.viewDataRepository(reg)}
       >
         {' '}
         Data repository{' '}
@@ -323,170 +398,177 @@ function describeRegistry(
   return (
     <>
       {elms}
-      <p key={x.id + '#registryLabel'}>Title: {x.title} </p>
-      {x.data === null
-        ? ''
-        : <DescribeDC
-            dc={x.data}
-            isCheckListMode={isCheckListMode}
-          />}
+      <p key={reg.id + '#registryLabel'}>Title: {reg.title} </p>
+      {reg.data === null ? (
+        ''
+      ) : (
+        <DescribeDC dc={reg.data} isCheckListMode={isCheckListMode} />
+      )}
     </>
   );
-}
+};
 
-const DescribeDC: React.FC<{ dc: MMELDataClass, isCheckListMode: boolean }> =
-function ({ dc, isCheckListMode }) {
-  return (
-    <>
-      <p key={dc.id + '#dataclassLabel'}> Data class: {dc.id} </p>
-      <p key={dc.id + '#attributesLabel'}> Arrtibutes: </p>
-      <ul key={dc.id + '#attributeList'}>
-        {dc.attributes.map((a: MMELDataAttribute) => (
-          <li key={a.id}> {describeAttribute(a, isCheckListMode)} </li>
-        ))}
-      </ul>
-    </>
-  );
-}
+const DescribeDC: React.FC<{ dc: MMELDataClass; isCheckListMode: boolean }> =
+  function ({ dc, isCheckListMode }) {
+    return (
+      <>
+        <p key={dc.id + '#dataclassLabel'}> Data class: {dc.id} </p>
+        <p key={dc.id + '#attributesLabel'}> Arrtibutes: </p>
+        <ul key={dc.id + '#attributeList'}>
+          {dc.attributes.map((a: MMELDataAttribute) => (
+            <li key={a.id}>
+              {' '}
+              <DescribeAttribute
+                att={a}
+                isCheckListMode={isCheckListMode}
+              />{' '}
+            </li>
+          ))}
+        </ul>
+      </>
+    );
+  };
 
-function describeAttribute(
-  x: MMELDataAttribute,
-  isCheckListMode: boolean
-): JSX.Element {
+const DescribeAttribute: React.FC<{
+  att: MMELDataAttribute;
+  isCheckListMode: boolean;
+}> = function ({ att, isCheckListMode }) {
   const elms: Array<JSX.Element> = [];
   const css: CSSProperties = {};
   const mw = functionCollection.getStateMan().state.modelWrapper;
-  if (x.modality === 'SHALL') {
+  if (att.modality === 'SHALL') {
     css.textDecorationLine = 'underline';
   }
   if (isCheckListMode) {
-    const addon = mw.clman.items.get(x);
+    const addon = mw.clman.items.get(att);
     if (addon !== undefined) {
       elms.push(
-        <p key={x.id + '#attributeIDLabel'}>
+        <p key={att.id + '#attributeIDLabel'}>
           {' '}
           <input
             type="checkbox"
-            key={addon.mother[0].id + '#' + x.id + '#CheckBox'}
+            key={addon.mother[0].id + '#' + att.id + '#CheckBox'}
             checked={addon.isChecked}
             onChange={() => {
-              ProgressManager.setAttributeChecked(x);
+              ProgressManager.setAttributeChecked(att);
               functionCollection.checkUpdated();
             }}
           />{' '}
-          <span style={css}>Attribute ID: {x.id} </span>
+          <span style={css}>Attribute ID: {att.id} </span>
         </p>
       );
     }
   } else {
     elms.push(
-      <p key={x.id + '#attributeIDLabel'}>
+      <p key={att.id + '#attributeIDLabel'}>
         {' '}
-        <span style={css}>Attribute ID: {x.id} </span>
+        <span style={css}>Attribute ID: {att.id} </span>
       </p>
     );
   }
-  if (x.type !== '') {
+  if (att.type !== '') {
     elms.push(
-      <p key={x.id + '#attributeTypeLabel'} style={css}>
+      <p key={att.id + '#attributeTypeLabel'} style={css}>
         {' '}
-        Type: {x.type}{' '}
+        Type: {att.type}{' '}
       </p>
     );
   }
-  if (x.cardinality !== '') {
+  if (att.cardinality !== '') {
     elms.push(
-      <p key={x.id + '#attributeCardinalityLabel'} style={css}>
+      <p key={att.id + '#attributeCardinalityLabel'} style={css}>
         {' '}
-        Cardinality: {x.cardinality}{' '}
+        Cardinality: {att.cardinality}{' '}
       </p>
     );
   }
-  if (x.modality !== '') {
+  if (att.modality !== '') {
     elms.push(
-      <p key={x.id + '#attributeModalityLabel'} style={css}>
+      <p key={att.id + '#attributeModalityLabel'} style={css}>
         {' '}
-        Modality: {x.modality}{' '}
+        Modality: {att.modality}{' '}
       </p>
     );
   }
-  if (x.definition !== '') {
+  if (att.definition !== '') {
     elms.push(
-      <p key={x.id + '#attributeDefinitionLabel'} style={css}>
+      <p key={att.id + '#attributeDefinitionLabel'} style={css}>
         {' '}
-        Definition: {x.definition}{' '}
+        Definition: {att.definition}{' '}
       </p>
     );
   }
-  if (x.satisfy.length > 0) {
+  if (att.satisfy.length > 0) {
     const ps: Array<JSX.Element> = [];
-    x.satisfy.map((a: string) => ps.push(<li key={a}> {a} </li>));
-    elms.push(<p key={x.id + '#attributeSatisfyLabel'}>Satisfy:</p>);
-    elms.push(<ul key={x.id + '#satisfyList'}>{ps}</ul>);
+    att.satisfy.map((a: string) => ps.push(<li key={a}> {a} </li>));
+    elms.push(<p key={att.id + '#attributeSatisfyLabel'}>Satisfy:</p>);
+    elms.push(<ul key={att.id + '#satisfyList'}>{ps}</ul>);
   }
-  if (x.ref.length > 0) {
+  if (att.ref.length > 0) {
     const ps: Array<JSX.Element> = [];
-    x.ref.map((a: MMELReference) =>
+    att.ref.map((a: MMELReference) =>
       ps.push(<li key={a.id}> {toSummary(a)} </li>)
     );
-    elms.push(<p key={x.id + '#attributeReferenceLabel'}>Reference:</p>);
-    elms.push(<ul key={x.id + '#referenceList'}>{ps}</ul>);
+    elms.push(<p key={att.id + '#attributeReferenceLabel'}>Reference:</p>);
+    elms.push(<ul key={att.id + '#referenceList'}>{ps}</ul>);
   }
   return <>{elms}</>;
-}
+};
 
-function describeProvision(
-  x: MMELProvision,
-  isCheckListMode: boolean
-): JSX.Element {
+const DescribeProvision: React.FC<{
+  provision: MMELProvision;
+  isCheckListMode: boolean;
+}> = function ({ provision, isCheckListMode }) {
   const elms: Array<JSX.Element> = [];
   const css: CSSProperties = {};
-  if (x.modality === 'SHALL') {
+  if (provision.modality === 'SHALL') {
     css.textDecorationLine = 'underline';
   }
   if (isCheckListMode) {
     const mw = functionCollection.getStateMan().state.modelWrapper;
-    const addon = mw.clman.items.get(x);
+    const addon = mw.clman.items.get(provision);
     if (addon !== undefined) {
       elms.push(
-        <p key={'ui#provisionStatementLabel#' + x.id}>
+        <p key={'ui#provisionStatementLabel#' + provision.id}>
           <input
             type="checkbox"
-            id={x.id + '#CheckBox'}
+            id={provision.id + '#CheckBox'}
             checked={addon.isChecked}
-            onChange={e => {
-              ProgressManager.setProvisionChecked(x);
+            onChange={() => {
+              ProgressManager.setProvisionChecked(provision);
               functionCollection.checkUpdated();
             }}
           />
-          Statement: <span style={css}> {x.condition}</span>
+          Statement: <span style={css}> {provision.condition}</span>
         </p>
       );
     }
   } else {
     elms.push(
-      <p key={'ui#provisionStatementLabel#' + x.id}>
+      <p key={'ui#provisionStatementLabel#' + provision.id}>
         {' '}
-        Statement: <span style={css}> {x.condition}</span>
+        Statement: <span style={css}> {provision.condition}</span>
       </p>
     );
   }
-  if (x.modality !== '') {
+  if (provision.modality !== '') {
     elms.push(
-      <p key={'ui#provisionModalityLabel#' + x.id}>Modality: {x.modality}</p>
+      <p key={'ui#provisionModalityLabel#' + provision.id}>
+        Modality: {provision.modality}
+      </p>
     );
   }
-  if (x.ref.length > 0) {
+  if (provision.ref.length > 0) {
     const ps: Array<JSX.Element> = [];
-    x.ref.map((a: MMELReference) =>
-      ps.push(<li key={a.id + '#ref#' + x.id}>{toSummary(a)} </li>)
+    provision.ref.map((a: MMELReference) =>
+      ps.push(<li key={a.id + '#ref#' + provision.id}>{toSummary(a)} </li>)
     );
-    elms.push(<p key={'ui#reflabel#' + x.id}>Reference:</p>);
-    elms.push(<ul key={x.id + '#referenceList'}>{ps}</ul>);
+    elms.push(<p key={'ui#reflabel#' + provision.id}>Reference:</p>);
+    elms.push(<ul key={provision.id + '#referenceList'}>{ps}</ul>);
   }
   if (isCheckListMode) {
     elms.push(
-      <p key={x.id + '#ProgressLabel'}>
+      <p key={provision.id + '#ProgressLabel'}>
         Progress:{' '}
         <input
           type="number"
@@ -495,16 +577,16 @@ function describeProvision(
           value={
             functionCollection
               .getStateMan()
-              .state.modelWrapper.clman.items.get(x)?.progress
+              .state.modelWrapper.clman.items.get(provision)?.progress
           }
-          onChange={e => progressUpdate(e, x)}
+          onChange={e => progressUpdate(e, provision)}
         ></input>
         %{' '}
       </p>
     );
   }
   return <>{elms}</>;
-}
+};
 
 function progressUpdate(e: ChangeEvent<HTMLInputElement>, x: MMELProvision) {
   const subject = e.target.value;
