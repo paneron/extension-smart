@@ -1,88 +1,71 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import styled from '@emotion/styled';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { VarType } from '../../runtime/idManager';
 import { MeasureChecker } from '../model/measure/measureChecker';
 import { functionCollection } from '../util/function';
 import NormalTextField from './unit/textfield';
+import { MMELVariable } from '../../serialize/interface/supportinterface';
+
+type EditableVariable = MMELVariable & { type: VarType.DATA | VarType.LISTDATA };
+type DerivedVariable = MMELVariable & { type: VarType.DERIVED };
+
+const VariableField: React.FC<{
+  variable: EditableVariable,
+  val: string,
+  onChange?: (newVal: string) => void,
+}> =
+function ({ variable, val, onChange }) {
+  return <NormalTextField
+    text={`${variable.description} (separate values with a comma)`}
+    update={onChange ? onChange : () => void 0}
+    value={val}
+  />;
+}
+
+const DerivedVariable: React.FC<{ variable: MMELVariable, val: string }> =
+function ({ variable, val }) {
+  return <>{variable.description}: {val}</>;
+}
 
 const MeasureCheckPane: React.FC = () => {
   const sm = functionCollection.getStateMan();
   const model = sm.state.modelWrapper.model;
-  const elms: Array<JSX.Element> = [];
   const values = sm.state.mtestValues;
 
-  for (const m of model.vars) {
-    if (m.type === VarType.DATA || m.type === VarType.LISTDATA) {
-      let v = values.get(m.id);
-      if (v === undefined) {
-        values.set(m.id, '');
-        v = '';
-      }
-      elms.push(
-        <NormalTextField
-          key={'field#measurment#' + m.id}
-          text={m.description + ' (Seperate the values by ,)'}
-          value={v}
-          update={(x: string) => {
-            values.set(m.id, x);
-            sm.setState({ ...sm.state });
-          }}
-        />
-      );
-    }
-  }
-  elms.push(
-    <button
-      key="ui#measure#valueGen"
-      onClick={() => {
-        const resolved = MeasureChecker.resolveValues(values);
-        const [dead, pathchoice] = MeasureChecker.examineModel(resolved);
-        const resulttext = MeasureChecker.markResult(dead, pathchoice);
-        sm.state.mtestResult = resulttext;
-        sm.setState({ ...sm.state });
-      }}
-    >
-      {' '}
-      Measurement Test{' '}
-    </button>
-  );
-  for (const m of model.vars) {
-    if (m.type === VarType.DERIVED) {
-      let v = values.get(m.id);
-      if (v === undefined) {
-        v = '';
-      }
-      elms.push(
-        <p key={'field#measurment#' + m.id}>
-          {' '}
-          {m.description} : {v}{' '}
-        </p>
-      );
-    }
+  function handleTest() {
+    const resolved = MeasureChecker.resolveValues(values);
+    const [dead, pathchoice] = MeasureChecker.examineModel(resolved);
+    const resulttext = MeasureChecker.markResult(dead, pathchoice);
+    sm.state.mtestResult = resulttext;
+    sm.setState({ ...sm.state });
   }
 
   return (
-    <SideBar>
-      <h1> Measurement simulation </h1>
-      {elms}
-    </SideBar>
+    <>
+      {model.vars.filter(v => v.type === VarType.DATA || v.type === VarType.LISTDATA).map(v => (
+        <VariableField
+          variable={v as EditableVariable}
+          val={values.get(v.id) ?? ''}
+          onChange={(newVal) => {
+            values.set(v.id, newVal);
+            sm.setState({ ...sm.state });
+          }}
+        />
+      ))}
+      <button onClick={handleTest}>
+        Measurement Test
+      </button>
+      {model.vars.filter(v => v.type === VarType.DERIVED).map(v => (
+        <DerivedVariable
+          variable={v as DerivedVariable}
+          val={values.get(v.id) ?? ''}
+        />
+      ))}
+    </>
   );
 };
-
-const SideBar = styled.aside`
-  position: fixed;
-  width: 30%;
-  height: 100%;
-  bottom: 0;
-  right: 0;
-  background-color: white;
-  border-style: solid;
-  font-size: 12px;
-  overflow-y: auto;
-`;
 
 export default MeasureCheckPane;
