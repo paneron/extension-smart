@@ -686,7 +686,7 @@ const ModelEditor: React.FC<{
   const toolbar = (
     <ControlGroup>
       <Popover2 minimal placement="bottom-start" content={<FileMenu sm={sm} />}>
-        <Button>Model</Button>
+        <Button>Workspace</Button>
       </Popover2>
       <Button disabled={state.history.isRoot()} onClick={drillUp}>
         Drill up
