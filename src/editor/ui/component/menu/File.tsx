@@ -123,7 +123,7 @@ const FileMenu: React.FC<{ sm: StateMan }> = function ({ sm }) {
         ))}
       />
       <MenuDivider />
-      <MenuItem text="Model settings…" />
+      <MenuItem disabled text="Model settings…" />
     </Menu>
   );
 };
