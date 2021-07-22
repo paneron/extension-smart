@@ -1,7 +1,6 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import log from 'electron-log';
 import React from 'react';
 import { useState } from 'react';
 import { jsx, css } from '@emotion/react';
@@ -15,8 +14,6 @@ import {
 import { Tooltip2 } from '@blueprintjs/popover2';
 import ModelEditor from './editor/ui/maineditor';
 import ModelMapper from './editor/ui/mapper/mappermain';
-
-Object.assign(console, log);
 
 const RepositoryView: React.FC<Record<never, never>> = function () {
   const [selectedModule, selectModule] = useState<ModuleName>('modelEditor');
