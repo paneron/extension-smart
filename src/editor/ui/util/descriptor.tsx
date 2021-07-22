@@ -32,8 +32,16 @@ import { functionCollection } from './function';
 import { ProgressManager } from './progressmanager';
 import { Simulator } from './simulator';
 
+//const NODE_DETAIL_VIEWS: Record<DataType, React.FC<{ node: MMELNode, isCheckListMode: boolean }>> = {
+//  // TODO: Provide a
+//  [DataType.DATACLASS]: ({ node, isCheckListMode }) => <DescribeDC dc={node as MMELDataClass} isCheckListMode={isCheckListMode} />,
+//};
+
 export const Describe: React.FC<{ node: MMELNode; isCheckListMode: boolean }> =
   function ({ node, isCheckListMode }) {
+    //const View = NODE_DETAIL_VIEWS[node.datatype];
+    //return <View node={node} isCheckListMode={isCheckListMode} />;
+
     if (node.datatype === DataType.DATACLASS) {
       return (
         <DescribeDC
