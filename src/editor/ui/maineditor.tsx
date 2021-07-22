@@ -83,7 +83,10 @@ const ModelEditor: React.FC<{
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
-  const Sidebar = useMemo(() => makeSidebar(usePersistentDatasetStateReducer!), []);
+  const Sidebar = useMemo(
+    () => makeSidebar(usePersistentDatasetStateReducer!),
+    []
+  );
 
   const [state, setState] = useState<IState>({
     cvisible: false,
@@ -678,17 +681,14 @@ const ModelEditor: React.FC<{
     const page = state.history.pop();
     state.modelWrapper.page = page;
     sm.setState(state);
-  };
+  }
 
   const toolbar = (
     <ControlGroup>
       <Popover2 minimal placement="bottom-start" content={<FileMenu sm={sm} />}>
         <Button>Model</Button>
       </Popover2>
-      <Button
-        disabled={state.history.isRoot()}
-        onClick={drillUp}
-      >
+      <Button disabled={state.history.isRoot()} onClick={drillUp}>
         Drill up
       </Button>
     </ControlGroup>
@@ -703,23 +703,31 @@ const ModelEditor: React.FC<{
 
   const breadcrumbs = state.history.getBreadcrumbs(sm, goUpToLevel);
 
-  const sidebar = <Sidebar 
-    stateKey='opened-register-item'
-    css={css`width: 280px; z-index: 1;`}
-    title="Item metadata"
-    blocks={[
-      state.measureVisible
-        ? {
-            key: 'measure-check',
-            title: "Measurement check",
-            content: <MeasureCheckPane />,
-          }
-        : {
-            key: 'selected-node',
-            title: "Selected node",
-            content: <SelectedNodeDescription isCheckListMode={state.clvisible} />,
-          }]}
-  />;
+  const sidebar = (
+    <Sidebar
+      stateKey="opened-register-item"
+      css={css`
+        width: 280px;
+        z-index: 1;
+      `}
+      title="Item metadata"
+      blocks={[
+        state.measureVisible
+          ? {
+              key: 'measure-check',
+              title: 'Measurement check',
+              content: <MeasureCheckPane />,
+            }
+          : {
+              key: 'selected-node',
+              title: 'Selected node',
+              content: (
+                <SelectedNodeDescription isCheckListMode={state.clvisible} />
+              ),
+            },
+      ]}
+    />
+  );
 
   let ret: JSX.Element;
   if (isVisible) {
@@ -729,9 +737,7 @@ const ModelEditor: React.FC<{
           className={className}
           toolbar={toolbar}
           sidebar={sidebar}
-          navbarProps={state.simulation === null
-            ? { breadcrumbs }
-            : undefined}
+          navbarProps={state.simulation === null ? { breadcrumbs } : undefined}
         >
           <div
             css={css`

@@ -38,7 +38,12 @@ const ModelMapper: React.FC<{ isVisible: boolean }> = ({ isVisible }) => {
   let ret: JSX.Element;
   if (isVisible) {
     ret = (
-      <div css={css`position: relative; flex: 1;`}>
+      <div
+        css={css`
+          position: relative;
+          flex: 1;
+        `}
+      >
         <ContainerRight>
           <ModelView
             maps={mState.dest}
