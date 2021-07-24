@@ -3,7 +3,7 @@
   "version": "1.0.0-dev5",
   "description": "Paneron extension for HLS model editing",
   "main": "plugin.js",
-  "repository": "https://github.com/riboseinc/paneron-extension-hls",
+  "repository": "https://github.com/paneron/extension-hls",
   "author": "Ribose Inc. <open.source@ribose.com>",
   "paneronExtension": {
     "title": "HLS",
