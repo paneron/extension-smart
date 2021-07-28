@@ -214,7 +214,7 @@ function ObjectToXML(x: Object, visited: Set<Object>): string {
   let out = '';
   for (const [k, o] of entries) {
     if (Array.isArray(o)) {
-      getXMLElementFromArray(k, o, visited);
+      out += getXMLElementFromArray(k, o, visited);
     } else {
       let content: string;
       if (o === null) {

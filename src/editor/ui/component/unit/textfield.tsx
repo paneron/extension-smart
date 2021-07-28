@@ -21,6 +21,7 @@ const NormalTextField: React.FC<IField> = (f: IField) => {
         value={f.value}
         onChange={e => f.update(e.target.value)}
       />
+      {f.extend === undefined ? '' : f.extend}
     </p>
   );
 };

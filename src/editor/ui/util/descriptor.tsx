@@ -2,10 +2,8 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import styled from '@emotion/styled';
-import React, { ChangeEvent, CSSProperties } from 'react';
+import React, { CSSProperties } from 'react';
 import { toSummary } from '../../runtime/functions';
-import { MMELFactory } from '../../runtime/modelComponentCreator';
 import { DataType, MMELNode } from '../../serialize/interface/baseinterface';
 import {
   MMELDataAttribute,
@@ -24,291 +22,441 @@ import {
   MMELProcess,
 } from '../../serialize/interface/processinterface';
 import {
-  MMELProvision,
   MMELReference,
+  MMELRole,
 } from '../../serialize/interface/supportinterface';
+import { ProcessQuickEdit } from '../component/edit/processquickedit';
 import { Cleaner } from './cleaner';
 import { functionCollection } from './function';
 import { ProgressManager } from './progressmanager';
 import { Simulator } from './simulator';
 
-//const NODE_DETAIL_VIEWS: Record<DataType, React.FC<{ node: MMELNode, isCheckListMode: boolean }>> = {
-//  // TODO: Provide a
-//  [DataType.DATACLASS]: ({ node, isCheckListMode }) => <DescribeDC dc={node as MMELDataClass} isCheckListMode={isCheckListMode} />,
-//};
+const NODE_DETAIL_VIEWS: Record<
+  DataType,
+  React.FC<{
+    node: MMELNode;
+    isCheckListMode: boolean;
+    setOldValue: (x: MMELNode | null) => void;
+  }>
+> = {
+  [DataType.DATACLASS]: ({ node, isCheckListMode }) => (
+    <DescribeDC dc={node as MMELDataClass} isCheckListMode={isCheckListMode} />
+  ),
+  [DataType.REGISTRY]: ({ node, isCheckListMode }) => (
+    <DescribeRegistry
+      reg={node as MMELRegistry}
+      isCheckListMode={isCheckListMode}
+    />
+  ),
+  [DataType.STARTEVENT]: ({ node, isCheckListMode }) => (
+    <DescribeStart
+      start={node as MMELStartEvent}
+      isCheckListMode={isCheckListMode}
+    />
+  ),
+  [DataType.ENDEVENT]: ({ node, isCheckListMode }) => (
+    <DescribeEnd end={node as MMELEndEvent} isCheckListMode={isCheckListMode} />
+  ),
+  [DataType.TIMEREVENT]: ({ node, isCheckListMode }) => (
+    <DescribeTimer
+      timer={node as MMELTimerEvent}
+      isCheckListMode={isCheckListMode}
+    />
+  ),
+  [DataType.SIGNALCATCHEVENT]: ({ node, isCheckListMode }) => (
+    <DescribeSignalCatch
+      scEvent={node as MMELSignalCatchEvent}
+      isCheckListMode={isCheckListMode}
+    />
+  ),
+  [DataType.EGATE]: ({ node, isCheckListMode }) => (
+    <DescribeEGate
+      egate={node as MMELEGate}
+      isCheckListMode={isCheckListMode}
+    />
+  ),
+  [DataType.APPROVAL]: ({ node, isCheckListMode }) => (
+    <DescribeApproval
+      app={node as MMELApproval}
+      isCheckListMode={isCheckListMode}
+    />
+  ),
+  [DataType.PROCESS]: ({ node, isCheckListMode, setOldValue }) => (
+    <ProcessQuickEdit
+      process={node as MMELProcess}
+      isCLMode={isCheckListMode}
+      setOldValue={setOldValue}
+    />
+  ),
+  [DataType.DATAATTRIBUTE]: () => <></>,
+  [DataType.EDGE]: () => <></>,
+  [DataType.ENUM]: () => <></>,
+  [DataType.ENUMVALUE]: () => <></>,
+  [DataType.SUBPROCESS]: () => <></>,
+  [DataType.SUBPROCESSCOMPONENT]: () => <></>,
+  [DataType.ROLE]: () => <></>,
+  [DataType.REFERENCE]: () => <></>,
+  [DataType.PROVISION]: () => <></>,
+  [DataType.VARIABLE]: () => <></>,
+  [DataType.METADATA]: () => <></>,
+};
 
-export const Describe: React.FC<{ node: MMELNode; isCheckListMode: boolean }> =
-  function ({ node, isCheckListMode }) {
-    //const View = NODE_DETAIL_VIEWS[node.datatype];
-    //return <View node={node} isCheckListMode={isCheckListMode} />;
+export const Describe: React.FC<{
+  node: MMELNode;
+  isCheckListMode: boolean;
+  setOldValue: (x: MMELNode | null) => void;
+}> = function ({ node, isCheckListMode, setOldValue }) {
+  const View = NODE_DETAIL_VIEWS[node.datatype];
+  return (
+    <View
+      node={node}
+      isCheckListMode={isCheckListMode}
+      setOldValue={setOldValue}
+    />
+  );
+};
 
-    if (node.datatype === DataType.DATACLASS) {
-      return (
-        <DescribeDC
-          dc={node as MMELDataClass}
-          isCheckListMode={isCheckListMode}
-        />
-      );
-    } else if (node.datatype === DataType.REGISTRY) {
-      return (
-        <DescribeRegistry
-          reg={node as MMELRegistry}
-          isCheckListMode={isCheckListMode}
-        />
-      );
-    } else if (node.datatype === DataType.STARTEVENT) {
-      return (
-        <DescribeStart
-          start={node as MMELStartEvent}
-          isCheckListMode={isCheckListMode}
-        />
-      );
-    } else if (node.datatype === DataType.ENDEVENT) {
-      return (
-        <DescribeEnd
-          end={node as MMELEndEvent}
-          isCheckListMode={isCheckListMode}
-        />
-      );
-    } else if (node.datatype === DataType.TIMEREVENT) {
-      return (
-        <DescribeTimer
-          timer={node as MMELTimerEvent}
-          isCheckListMode={isCheckListMode}
-        />
-      );
-    } else if (node.datatype === DataType.SIGNALCATCHEVENT) {
-      return (
-        <DescribeSignalCatch
-          scEvent={node as MMELSignalCatchEvent}
-          isCheckListMode={isCheckListMode}
-        />
-      );
-    } else if (node.datatype === DataType.EGATE) {
-      return (
-        <DescribeEGate
-          egate={node as MMELEGate}
-          isCheckListMode={isCheckListMode}
-        />
-      );
-    } else if (node.datatype === DataType.APPROVAL) {
-      return (
-        <DescribeApproval
-          app={node as MMELApproval}
-          isCheckListMode={isCheckListMode}
-        />
-      );
-    } else if (node.datatype === DataType.PROCESS) {
-      return (
-        <DescribeProcess
-          process={node as MMELProcess}
-          isCheckListMode={isCheckListMode}
-        />
-      );
-    }
-    return <> {node.id} </>;
-  };
+const DescriptorButton: React.FC<{
+  id: string;
+  label: string;
+  callback: () => void;
+}> = function ({ id, label, callback }) {
+  return (
+    <button key={id} onClick={() => callback()}>
+      {' '}
+      {label}{' '}
+    </button>
+  );
+};
+
+const SimulationButton: React.FC<{
+  cid: String;
+}> = function ({ cid }) {
+  return (
+    <DescriptorButton
+      id={'ui#button#startSimulation' + cid}
+      callback={() => Simulator.startSimulation()}
+      label="Simulation"
+    />
+  );
+};
+
+const RemoveButton: React.FC<{
+  cid: string;
+  callback: () => void;
+}> = function ({ cid, callback }) {
+  return (
+    <DescriptorButton
+      id={'ui#button#removeButton#' + cid}
+      callback={callback}
+      label="Remove"
+    />
+  );
+};
+
+const EditButton: React.FC<{
+  cid: string;
+  callback: () => void;
+}> = function ({ cid, callback }) {
+  return (
+    <DescriptorButton
+      id={'ui#button#editComponent#' + cid}
+      callback={callback}
+      label="Edit"
+    />
+  );
+};
+
+const DataRepoButton: React.FC<{
+  cid: string;
+  callback: () => void;
+}> = function ({ cid, callback }) {
+  return (
+    <DescriptorButton
+      id={'ui#button#datarepo#' + cid}
+      callback={callback}
+      label="Data repository"
+    />
+  );
+};
+
+const ApprovalRecordList: React.FC<{
+  regs: MMELRegistry[];
+  pid: string;
+}> = function ({ regs, pid }) {
+  return (
+    <>
+      {regs.length > 0 ? (
+        <>
+          <p key={pid + '#approvalRecordLabel'}>Appproval record(s):</p>
+          <ul key={pid + '#approvalList'}>
+            {regs.map(reg => (
+              <li key={pid + '#approvalRecord#' + reg.id}> {reg.title} </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        ''
+      )}
+    </>
+  );
+};
+
+const SatisfyList: React.FC<{
+  sats: string[];
+  aid: string;
+}> = function ({ sats, aid }) {
+  return (
+    <>
+      {sats.length > 0 ? (
+        <>
+          <p key={aid + '#satisfyListLabel'}>Satisfy:</p>
+          <ul key={aid + '#satisfyList'}>
+            {sats.map(a => (
+              <li key={a}> {a} </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        ''
+      )}
+    </>
+  );
+};
+
+const ReferenceList: React.FC<{
+  refs: MMELReference[];
+  pid: string;
+}> = function ({ refs, pid }) {
+  return (
+    <>
+      {refs.length > 0 ? (
+        <>
+          <p key={pid + '#referenceLabel'}>Reference:</p>
+          <ul key={pid + '#referenceList'}>
+            {refs.map(ref => (
+              <li key={ref.id}> {toSummary(ref)} </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        ''
+      )}
+    </>
+  );
+};
+
+const AttributeList: React.FC<{
+  attributes: MMELDataAttribute[];
+  dcid: string;
+  isCheckListMode: boolean;
+}> = function ({ attributes, dcid, isCheckListMode }) {
+  return (
+    <>
+      {attributes.length > 0 ? (
+        <>
+          <p key={dcid + '#attributesLabel'}> Arrtibutes: </p>
+          <ul key={dcid + '#attributeList'}>
+            {attributes.map(a => (
+              <li key={a.id}>
+                {' '}
+                <DescribeAttribute
+                  att={a}
+                  isCheckListMode={isCheckListMode}
+                />{' '}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        ''
+      )}
+    </>
+  );
+};
+
+const DescriptionItem: React.FC<{
+  id: string;
+  label: string;
+  value: string;
+  css?: CSSProperties;
+}> = function ({ id, label, value, css }): JSX.Element {
+  return (
+    <p key={id}>
+      {' '}
+      {label}:{css !== undefined ? <span style={css}> {value}</span> : value}{' '}
+    </p>
+  );
+};
+
+const ActorDescription: React.FC<{
+  role: MMELRole | null;
+  id: string;
+  label: string;
+}> = function ({ role, id, label }): JSX.Element {
+  return (
+    <>
+      {' '}
+      {role !== null ? (
+        <DescriptionItem id={id} label={label} value={role.name} />
+      ) : (
+        <></>
+      )}{' '}
+    </>
+  );
+};
+
+const NonEmptyFieldDescription: React.FC<{
+  id: string;
+  label: string;
+  value: string;
+  css?: CSSProperties;
+}> = function ({ id, label, value, css }): JSX.Element {
+  return (
+    <>
+      {' '}
+      {value !== '' ? (
+        <DescriptionItem id={id} label={label} value={value} css={css} />
+      ) : (
+        ''
+      )}{' '}
+    </>
+  );
+};
+
+const CheckBoxProgressField: React.FC<{
+  fieldkey: string;
+  checkboxkey: string;
+  value: boolean;
+  css: CSSProperties;
+  label: string;
+  statement: string;
+  callback: () => void;
+}> = function ({
+  fieldkey,
+  checkboxkey,
+  value,
+  css,
+  label,
+  statement,
+  callback,
+}): JSX.Element {
+  return (
+    <p key={fieldkey}>
+      {' '}
+      <input
+        type="checkbox"
+        key={checkboxkey}
+        checked={value}
+        onChange={callback}
+      />
+      {label}: <span style={css}> {statement}</span>
+    </p>
+  );
+};
 
 const DescribeStart: React.FC<{
   start: MMELStartEvent;
   isCheckListMode: boolean;
-}> = function ({ start: x, isCheckListMode }) {
-  const elms: Array<JSX.Element> = [];
-  elms.push(<span key="ui#startlabel"> Start event </span>);
-  if (!isCheckListMode) {
-    elms.push(
-      <button
-        key={'ui#button#startSimulation' + x.id}
-        onClick={() => Simulator.startSimulation()}
-      >
-        {' '}
-        Simulation{' '}
-      </button>
-    );
-  }
-  return <>{elms}</>;
+}> = function ({ start, isCheckListMode }) {
+  return (
+    <>
+      <span key="ui#startlabel"> Start event </span>
+      {!isCheckListMode && <SimulationButton cid={start.id} />}
+    </>
+  );
 };
 
 const DescribeEnd: React.FC<{ end: MMELEndEvent; isCheckListMode: boolean }> =
   function ({ end, isCheckListMode }): JSX.Element {
-    const elms: Array<JSX.Element> = [];
-    if (!isCheckListMode) {
-      elms.push(
-        <button
-          key={'ui#button#removeEnd#' + end.id}
-          onClick={() => Cleaner.removeEvent(end)}
-        >
-          {' '}
-          Remove{' '}
-        </button>
-      );
-    }
     return (
       <>
-        {elms}
+        {!isCheckListMode && (
+          <RemoveButton
+            cid={end.id}
+            callback={() => Cleaner.removeEvent(end)}
+          />
+        )}
         <p key={'ui#endlabel#' + end.id}> End event </p>
       </>
     );
   };
 
-const DescribeProcess: React.FC<{
-  process: MMELProcess;
-  isCheckListMode: boolean;
-}> = function ({ process, isCheckListMode }) {
-  const elms: Array<JSX.Element> = [];
-  if (!isCheckListMode) {
-    elms.push(
-      <button
-        key={'ui#button#viewprocess#' + process.id}
-        onClick={() => functionCollection.viewEditProcess(process)}
-      >
-        {' '}
-        Edit{' '}
-      </button>
-    );
-    elms.push(
-      <button
-        key={'ui#button#removeprocess#' + process.id}
-        onClick={() => Cleaner.removeProcess(process)}
-      >
-        {' '}
-        Remove{' '}
-      </button>
-    );
-    if (process.page === null) {
-      elms.push(
-        <MyFloatButton onClick={() => addSubprocess(process)}>+</MyFloatButton>
-      );
-    }
-  }
-  elms.push(<p key={process.id + '#ProcessID'}> Process: {process.id} </p>);
-  elms.push(<p key={process.id + '#ProcessName'}> Name: {process.name} </p>);
-  if (process.actor !== null) {
-    elms.push(
-      <p key={process.id + '#ProcessActor'}> Actor: {process.actor.name} </p>
-    );
-  }
-  if (process.modality !== '') {
-    elms.push(
-      <p key={process.id + '#Modality'}> Modality: {process.modality} </p>
-    );
-  }
-  if (process.provision.length > 0) {
-    const ps: Array<JSX.Element> = [];
-    process.provision.map((provision: MMELProvision) =>
-      ps.push(
-        <li key={process.id + '#Pro#' + provision.id}>
-          {' '}
-          <DescribeProvision
-            provision={provision}
-            isCheckListMode={isCheckListMode}
-          />{' '}
-        </li>
-      )
-    );
-    elms.push(<p key={process.id + '#Provisions'}>Provisions</p>);
-    elms.push(<ul key={process.id + '#ProvisionList'}>{ps}</ul>);
-  }
-  if (process.measure.length > 0) {
-    const ms: Array<JSX.Element> = [];
-    process.measure.map((m: string, index: number) =>
-      ms.push(<li key={process.id + '#Measure#' + index}> {m} </li>)
-    );
-    elms.push(<p key={process.id + '#MeasureText'}>Measurements</p>);
-    elms.push(<ul key={process.id + '#MeasureList'}>{ms}</ul>);
-  }
-  return <>{elms} </>;
-};
-
 const DescribeApproval: React.FC<{
   app: MMELApproval;
   isCheckListMode: boolean;
 }> = function ({ app, isCheckListMode }) {
-  const elms: Array<JSX.Element> = [];
-  if (!isCheckListMode) {
-    elms.push(
-      <button
-        key={'ui#button#viewapproval#' + app.id}
-        onClick={() => functionCollection.viewEditApproval(app)}
-      >
-        {' '}
-        Edit{' '}
-      </button>
-    );
-    elms.push(
-      <button
-        key={'ui#button#removeapproval#' + app.id}
-        onClick={() => Cleaner.removeApproval(app)}
-      >
-        {' '}
-        Remove{' '}
-      </button>
-    );
-  }
-  elms.push(<p key={app.id + '#approvalLabel'}> Approval: {app.id} </p>);
-  elms.push(<p key={app.id + '#nameLabel'}> Name: {app.name} </p>);
-  if (app.actor !== null) {
-    elms.push(<p key={app.id + '#actorLabel'}> Actor: {app.actor.name} </p>);
-  }
-  if (app.approver !== null) {
-    elms.push(
-      <p key={app.id + '#approverLabel'}> Approver: {app.approver.name} </p>
-    );
-  }
-  if (app.modality !== '') {
-    elms.push(
-      <p key={app.id + '#modalityLabel'}> Modality: {app.modality} </p>
-    );
-  }
-  if (app.records.length > 0) {
-    const ps: Array<JSX.Element> = [];
-    app.records.map((a: MMELRegistry) =>
-      ps.push(<li key={app.id + '#approvalRecord#' + a.id}> {a.title} </li>)
-    );
-    elms.push(
-      <p key={app.id + '#approvalRecordLabel'}>Appproval record(s):</p>
-    );
-    elms.push(<ul key={app.id + '#approvalList'}>{ps}</ul>);
-  }
-  if (app.ref.length > 0) {
-    const ps: Array<JSX.Element> = [];
-    app.ref.map((a: MMELReference) =>
-      ps.push(<li key={a.id}> {toSummary(a)} </li>)
-    );
-    elms.push(<p key={app.id + '#referenceLabel'}>Reference:</p>);
-    elms.push(<ul key={app.id + '#referenceList'}>{ps}</ul>);
-  }
-  return <>{elms}</>;
+  return (
+    <>
+      {!isCheckListMode && (
+        <>
+          <EditButton
+            cid={app.id}
+            callback={() => functionCollection.viewEditApproval(app)}
+          />
+          <RemoveButton
+            cid={app.id}
+            callback={() => Cleaner.removeApproval(app)}
+          />
+        </>
+      )}
+      <DescriptionItem
+        id={app.id + '#approvalLabel'}
+        label="Approval"
+        value={app.id}
+      />
+      <DescriptionItem
+        id={app.id + '#nameLabel'}
+        label="Name"
+        value={app.name}
+      />
+      <ActorDescription
+        role={app.actor}
+        id={app.id + '#actorLabel'}
+        label="Actor"
+      />
+      <ActorDescription
+        role={app.approver}
+        id={app.id + '#approverLabel'}
+        label="Approver"
+      />
+      <NonEmptyFieldDescription
+        id={app.id + '#modalityLabel'}
+        label="Modality"
+        value={app.modality}
+      />
+      <ApprovalRecordList regs={app.records} pid={app.id} />
+      <ReferenceList refs={app.ref} pid={app.id} />
+    </>
+  );
 };
 
 const DescribeEGate: React.FC<{ egate: MMELEGate; isCheckListMode: boolean }> =
   function ({ egate, isCheckListMode }) {
-    const elms: Array<JSX.Element> = [];
-    if (!isCheckListMode) {
-      elms.push(
-        <button
-          key={'ui#button#viewEGate#' + egate.id}
-          onClick={() => functionCollection.viewEGate(egate)}
-        >
-          {' '}
-          Edit{' '}
-        </button>
-      );
-      elms.push(
-        <button
-          key={'ui#button#removeEGate#' + egate.id}
-          onClick={() => Cleaner.removeGate(egate)}
-        >
-          {' '}
-          Remove{' '}
-        </button>
-      );
-    }
     return (
       <>
-        {elms}
-        <p key={egate.id + '#egate'}> Exclusive Gateway: {egate.id} </p>
-        <p key={egate.id + '#egateLabel'}> Contents: {egate.label} </p>
+        {!isCheckListMode && (
+          <>
+            <EditButton
+              cid={egate.id}
+              callback={() => functionCollection.viewEGate(egate)}
+            />
+            <RemoveButton
+              cid={egate.id}
+              callback={() => Cleaner.removeGate(egate)}
+            />
+          </>
+        )}
+        <DescriptionItem
+          id={egate.id + '#egate'}
+          label="Exclusive Gateway"
+          value={egate.id}
+        />
+        <DescriptionItem
+          id={egate.id + '#egateLabel'}
+          label="Contents"
+          value={egate.label}
+        />
       </>
     );
   };
@@ -317,35 +465,30 @@ const DescribeSignalCatch: React.FC<{
   scEvent: MMELSignalCatchEvent;
   isCheckListMode: boolean;
 }> = function ({ scEvent, isCheckListMode }) {
-  const elms: Array<JSX.Element> = [];
-  if (!isCheckListMode) {
-    elms.push(
-      <button
-        key={'ui#button#viewSignalCatch#' + scEvent.id}
-        onClick={() => functionCollection.viewSignalCatch(scEvent)}
-      >
-        {' '}
-        Edit{' '}
-      </button>
-    );
-    elms.push(
-      <button
-        key={'ui#button#removeSignalCatch#' + scEvent.id}
-        onClick={() => Cleaner.removeEvent(scEvent)}
-      >
-        {' '}
-        Remove{' '}
-      </button>
-    );
-  }
   return (
     <>
-      {elms}
-      <p key={scEvent.id + '#signalCatchLabel'}>
-        {' '}
-        Signal Catch Event: {scEvent.id}{' '}
-      </p>
-      <p key={scEvent.id + '#signalLabel'}> Signal: {scEvent.signal} </p>
+      {!isCheckListMode && (
+        <>
+          <EditButton
+            cid={scEvent.id}
+            callback={() => functionCollection.viewSignalCatch(scEvent)}
+          />
+          <RemoveButton
+            cid={scEvent.id}
+            callback={() => Cleaner.removeEvent(scEvent)}
+          />
+        </>
+      )}
+      <DescriptionItem
+        id={scEvent.id + '#signalCatchLabel'}
+        label="Signal Catch Event"
+        value={scEvent.id}
+      />
+      <DescriptionItem
+        id={scEvent.id + '#signalLabel'}
+        label="Signal"
+        value={scEvent.signal}
+      />
     </>
   );
 };
@@ -354,64 +497,61 @@ const DescribeTimer: React.FC<{
   timer: MMELTimerEvent;
   isCheckListMode: boolean;
 }> = function ({ timer, isCheckListMode }) {
-  const elms: Array<JSX.Element> = [];
-  if (!isCheckListMode) {
-    elms.push(
-      <button
-        key={'ui#button#viewTimer#' + timer.id}
-        onClick={() => functionCollection.viewTimer(timer)}
-      >
-        {' '}
-        Edit{' '}
-      </button>
-    );
-    elms.push(
-      <button
-        key={'ui#button#removeTimer#' + timer.id}
-        onClick={() => Cleaner.removeEvent(timer)}
-      >
-        {' '}
-        Remove{' '}
-      </button>
-    );
-  }
-  elms.push(<p key={timer.id + '#timerLabel'}> Timer Event: {timer.id} </p>);
-  if (timer.type !== '') {
-    elms.push(<p key={timer.id + '#timerTypeLabel'}>Type: {timer.type} </p>);
-  }
-  if (timer.para !== '') {
-    elms.push(
-      <p key={timer.id + '#timerParaLabel'}>Parameter: {timer.para} </p>
-    );
-  }
-  return <>{elms}</>;
+  return (
+    <>
+      {!isCheckListMode && (
+        <>
+          <EditButton
+            cid={timer.id}
+            callback={() => functionCollection.viewTimer(timer)}
+          />
+          <RemoveButton
+            cid={timer.id}
+            callback={() => Cleaner.removeEvent(timer)}
+          />
+        </>
+      )}
+      <DescriptionItem
+        id={timer.id + '#timerLabel'}
+        label="Timer Event"
+        value={timer.id}
+      />
+      <NonEmptyFieldDescription
+        id={timer.id + '#timerTypeLabel'}
+        label="Type"
+        value={timer.type}
+      />
+      <NonEmptyFieldDescription
+        id={timer.id + '#timerParaLabel'}
+        label="Parameter"
+        value={timer.para}
+      />
+    </>
+  );
 };
 
 const DescribeRegistry: React.FC<{
   reg: MMELRegistry;
   isCheckListMode: boolean;
 }> = function ({ reg, isCheckListMode }) {
-  const elms: Array<JSX.Element> = [];
-  if (!isCheckListMode) {
-    elms.push(
-      <button
-        key={'ui#button#datarepo#' + reg.id}
-        onClick={() => functionCollection.viewDataRepository(reg)}
-      >
-        {' '}
-        Data repository{' '}
-      </button>
-    );
-  }
   return (
     <>
-      {elms}
-      <p key={reg.id + '#registryLabel'}>Title: {reg.title} </p>
-      {reg.data === null ? (
-        ''
-      ) : (
-        <DescribeDC dc={reg.data} isCheckListMode={isCheckListMode} />
+      {!isCheckListMode && (
+        <>
+          <DataRepoButton
+            cid={reg.id}
+            callback={() => functionCollection.viewDataRepository(reg)}
+          />
+          {reg.data !== null && (
+            <DescribeDC dc={reg.data} isCheckListMode={isCheckListMode} />
+          )}
+        </>
       )}
+      <DescriptionItem
+        id={reg.id + '#registryLabel'}
+        label="Title"
+        value={reg.title}
+      />
     </>
   );
 };
@@ -420,19 +560,16 @@ const DescribeDC: React.FC<{ dc: MMELDataClass; isCheckListMode: boolean }> =
   function ({ dc, isCheckListMode }) {
     return (
       <>
-        <p key={dc.id + '#dataclassLabel'}> Data class: {dc.id} </p>
-        <p key={dc.id + '#attributesLabel'}> Arrtibutes: </p>
-        <ul key={dc.id + '#attributeList'}>
-          {dc.attributes.map((a: MMELDataAttribute) => (
-            <li key={a.id}>
-              {' '}
-              <DescribeAttribute
-                att={a}
-                isCheckListMode={isCheckListMode}
-              />{' '}
-            </li>
-          ))}
-        </ul>
+        <DescriptionItem
+          id={dc.id + '#dataclassLabel'}
+          label="Data class"
+          value={dc.id}
+        />
+        <AttributeList
+          attributes={dc.attributes}
+          dcid={dc.id}
+          isCheckListMode={isCheckListMode}
+        />
       </>
     );
   };
@@ -441,216 +578,61 @@ const DescribeAttribute: React.FC<{
   att: MMELDataAttribute;
   isCheckListMode: boolean;
 }> = function ({ att, isCheckListMode }) {
-  const elms: Array<JSX.Element> = [];
-  const css: CSSProperties = {};
   const mw = functionCollection.getStateMan().state.modelWrapper;
+  const addon = mw.clman.getItemAddOn(att);
+  const css: CSSProperties = {};
   if (att.modality === 'SHALL') {
     css.textDecorationLine = 'underline';
   }
-  if (isCheckListMode) {
-    const addon = mw.clman.items.get(att);
-    if (addon !== undefined) {
-      elms.push(
-        <p key={att.id + '#attributeIDLabel'}>
-          {' '}
-          <input
-            type="checkbox"
-            key={addon.mother[0].id + '#' + att.id + '#CheckBox'}
-            checked={addon.isChecked}
-            onChange={() => {
-              ProgressManager.setAttributeChecked(att);
-              functionCollection.checkUpdated();
-            }}
-          />{' '}
-          <span style={css}>Attribute ID: {att.id} </span>
-        </p>
-      );
-    }
-  } else {
-    elms.push(
-      <p key={att.id + '#attributeIDLabel'}>
-        {' '}
-        <span style={css}>Attribute ID: {att.id} </span>
-      </p>
-    );
-  }
-  if (att.type !== '') {
-    elms.push(
-      <p key={att.id + '#attributeTypeLabel'} style={css}>
-        {' '}
-        Type: {att.type}{' '}
-      </p>
-    );
-  }
-  if (att.cardinality !== '') {
-    elms.push(
-      <p key={att.id + '#attributeCardinalityLabel'} style={css}>
-        {' '}
-        Cardinality: {att.cardinality}{' '}
-      </p>
-    );
-  }
-  if (att.modality !== '') {
-    elms.push(
-      <p key={att.id + '#attributeModalityLabel'} style={css}>
-        {' '}
-        Modality: {att.modality}{' '}
-      </p>
-    );
-  }
-  if (att.definition !== '') {
-    elms.push(
-      <p key={att.id + '#attributeDefinitionLabel'} style={css}>
-        {' '}
-        Definition: {att.definition}{' '}
-      </p>
-    );
-  }
-  if (att.satisfy.length > 0) {
-    const ps: Array<JSX.Element> = [];
-    att.satisfy.map((a: string) => ps.push(<li key={a}> {a} </li>));
-    elms.push(<p key={att.id + '#attributeSatisfyLabel'}>Satisfy:</p>);
-    elms.push(<ul key={att.id + '#satisfyList'}>{ps}</ul>);
-  }
-  if (att.ref.length > 0) {
-    const ps: Array<JSX.Element> = [];
-    att.ref.map((a: MMELReference) =>
-      ps.push(<li key={a.id}> {toSummary(a)} </li>)
-    );
-    elms.push(<p key={att.id + '#attributeReferenceLabel'}>Reference:</p>);
-    elms.push(<ul key={att.id + '#referenceList'}>{ps}</ul>);
-  }
-  return <>{elms}</>;
+  return (
+    <>
+      {isCheckListMode ? (
+        <CheckBoxProgressField
+          fieldkey={att.id + '#attributeIDLabel'}
+          checkboxkey={addon.mother[0].id + '#' + att.id + '#CheckBox'}
+          value={addon.isChecked}
+          css={css}
+          label="Attribute ID"
+          statement={att.id}
+          callback={() => {
+            ProgressManager.setAttributeChecked(att);
+            functionCollection.checkUpdated();
+          }}
+        />
+      ) : (
+        <DescriptionItem
+          css={css}
+          id={att.id + '#attributeIDLabel'}
+          label="Attribute ID"
+          value={att.id}
+        />
+      )}
+      <NonEmptyFieldDescription
+        css={css}
+        id={att.id + '#attributeTypeLabel'}
+        label="Type"
+        value={att.type}
+      />
+      <NonEmptyFieldDescription
+        css={css}
+        id={att.id + '#attributeCardinalityLabel'}
+        label="Cardinality"
+        value={att.cardinality}
+      />
+      <NonEmptyFieldDescription
+        css={css}
+        id={att.id + '#attributeModalityLabel'}
+        label="Modality"
+        value={att.modality}
+      />
+      <NonEmptyFieldDescription
+        css={css}
+        id={att.id + '#attributeDefinitionLabel'}
+        label="Definition"
+        value={att.definition}
+      />
+      <SatisfyList sats={att.satisfy} aid={att.id} />
+      <ReferenceList refs={att.ref} pid={att.id} />
+    </>
+  );
 };
-
-const DescribeProvision: React.FC<{
-  provision: MMELProvision;
-  isCheckListMode: boolean;
-}> = function ({ provision, isCheckListMode }) {
-  const elms: Array<JSX.Element> = [];
-  const css: CSSProperties = {};
-  if (provision.modality === 'SHALL') {
-    css.textDecorationLine = 'underline';
-  }
-  if (isCheckListMode) {
-    const mw = functionCollection.getStateMan().state.modelWrapper;
-    const addon = mw.clman.items.get(provision);
-    if (addon !== undefined) {
-      elms.push(
-        <p key={'ui#provisionStatementLabel#' + provision.id}>
-          <input
-            type="checkbox"
-            id={provision.id + '#CheckBox'}
-            checked={addon.isChecked}
-            onChange={() => {
-              ProgressManager.setProvisionChecked(provision);
-              functionCollection.checkUpdated();
-            }}
-          />
-          Statement: <span style={css}> {provision.condition}</span>
-        </p>
-      );
-    }
-  } else {
-    elms.push(
-      <p key={'ui#provisionStatementLabel#' + provision.id}>
-        {' '}
-        Statement: <span style={css}> {provision.condition}</span>
-      </p>
-    );
-  }
-  if (provision.modality !== '') {
-    elms.push(
-      <p key={'ui#provisionModalityLabel#' + provision.id}>
-        Modality: {provision.modality}
-      </p>
-    );
-  }
-  if (provision.ref.length > 0) {
-    const ps: Array<JSX.Element> = [];
-    provision.ref.map((a: MMELReference) =>
-      ps.push(<li key={a.id + '#ref#' + provision.id}>{toSummary(a)} </li>)
-    );
-    elms.push(<p key={'ui#reflabel#' + provision.id}>Reference:</p>);
-    elms.push(<ul key={provision.id + '#referenceList'}>{ps}</ul>);
-  }
-  if (isCheckListMode) {
-    elms.push(
-      <p key={provision.id + '#ProgressLabel'}>
-        Progress:{' '}
-        <input
-          type="number"
-          min="0"
-          max="100"
-          value={
-            functionCollection
-              .getStateMan()
-              .state.modelWrapper.clman.items.get(provision)?.progress
-          }
-          onChange={e => progressUpdate(e, provision)}
-        ></input>
-        %{' '}
-      </p>
-    );
-  }
-  return <>{elms}</>;
-};
-
-function progressUpdate(e: ChangeEvent<HTMLInputElement>, x: MMELProvision) {
-  const subject = e.target.value;
-  let parsed = parseInt(subject);
-  if (isNaN(parsed)) {
-    e.target.value = '0';
-    parsed = 0;
-  }
-  if (parsed > 100) {
-    parsed = 100;
-    e.target.value = '100';
-  }
-  if (parsed < 0) {
-    parsed = 0;
-    e.target.value = '0';
-  }
-  ProgressManager.setProvisionProgress(x, parsed);
-  functionCollection.checkUpdated();
-}
-
-function addSubprocess(x: MMELProcess) {
-  const sm = functionCollection.getStateMan();
-  const mw = sm.state.modelWrapper;
-  const model = mw.model;
-  const idreg = mw.idman;
-  const pg = MMELFactory.createSubprocess(idreg.findUniquePageID('Page'));
-  const st = MMELFactory.createStartEvent(idreg.findUniqueID('Start'));
-  const nc = MMELFactory.createSubprocessComponent(st);
-  idreg.nodes.set(st.id, st);
-  pg.childs.push(nc);
-  const pgaddon = mw.subman.get(pg);
-  pgaddon.map.set(st.id, nc);
-  pgaddon.start = nc;
-  model.events.push(st);
-  x.page = pg;
-  model.pages.push(pg);
-  idreg.pages.set(pg.id, pg);
-  sm.setState({ ...sm.state });
-}
-
-const MyFloatButton = styled.button`
-  position: absolute;
-  right: 5%;
-  top: 2%;
-  font-size: 30px;
-  box-shadow: inset 0px 1px 0px 0px #fff6af;
-  background: linear-gradient(to bottom, #ffec64 5%, #ffab23 100%);
-  background-color: #ffec64;
-  border-radius: 6px;
-  border: 1px solid #ffaa22;
-  display: inline-block;
-  cursor: pointer;
-  color: #333333;
-  font-family: Arial;
-  font-weight: bold;
-  padding: 6px 24px;
-  text-decoration: none;
-  text-shadow: 0px 1px 0px #ffee66;
-`;

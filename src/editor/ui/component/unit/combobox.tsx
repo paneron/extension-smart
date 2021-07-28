@@ -21,6 +21,7 @@ const NormalComboBox: React.FC<IComboField> = (f: IComboField) => {
       <select value={f.value} onChange={e => f.update(e.target.value)}>
         {elms}
       </select>
+      {f.extend === undefined ? '' : f.extend}
     </p>
   );
 };

@@ -53,6 +53,14 @@ export interface IProcess {
   measure: Array<string>;
 }
 
+export interface ISimpleProcess {
+  id: string;
+  name: string;
+  modality: string;
+  actor: string;
+  provision: Array<IProvision>;
+}
+
 export interface IProvision {
   modality: string;
   condition: string;

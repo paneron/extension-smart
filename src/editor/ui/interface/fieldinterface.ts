@@ -2,6 +2,7 @@ export interface IField {
   text: string;
   value: string;
   update: (x: string) => void;
+  extend?: JSX.Element;
 }
 
 export interface IComboField {
@@ -9,6 +10,7 @@ export interface IComboField {
   options: Array<string>;
   value: string;
   update: (x: string) => void;
+  extend?: JSX.Element;
 }
 
 export interface IMultiRefSelectField {

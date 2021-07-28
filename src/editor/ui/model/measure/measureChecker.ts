@@ -490,7 +490,7 @@ function tokenize(x: string): Array<Token> {
         i++;
       }
       out.push({ ref: name, type: NodeType.LISTOP });
-    } else if (/[\+\-\*/]/.test(c)) {
+    } else if (/[+\-*/]/.test(c)) {
       // a binary operator
       out.push({ ref: c, type: NodeType.BINOP });
     } else {
