@@ -200,7 +200,8 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
       const nr = MMELFactory.createRegistry(this.data.regid);
       nr.title = this.data.regtitle;
       nr.data = MMELFactory.createDataClass(this.data.regid + '#data');
-      this.mw.dlman.get(nr.data).mother = nr;
+      const addon = this.mw.dlman.get(nr.data);
+      addon.mother = nr;
       for (const a of this.data.attributes) {
         const na = MMELFactory.createDataAttribute(a.id);
         na.definition = a.definition;
@@ -214,13 +215,14 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
         }
         na.modality = a.modality;
         nr.data.attributes.push(na);
-      }
+      }      
       idreg.nodes.set(nr.id, nr);
       idreg.regs.set(nr.id, nr);
       idreg.nodes.set(nr.data.id, nr.data);
       idreg.dcs.set(nr.data.id, nr.data);
       model.regs.push(nr);
       model.dataclasses.push(nr.data);
+      addon.examine(idreg.dcs, nr.data.attributes);
       this.setAddMode(false);
     }
   };
@@ -281,6 +283,7 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
           na.modality = a.modality;
           dc.attributes.push(na);
         }
+        this.mw.dlman.get(dc).examine(idreg.dcs, dc.attributes);
         for (const alldc of this.mw.model.dataclasses) {
           for (const a of alldc.attributes) {
             const index = a.type.indexOf(olddcname);
