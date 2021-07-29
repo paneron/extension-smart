@@ -623,7 +623,11 @@ const ModelEditor: React.FC<{
   functionCollection.viewSignalCatch = viewSignalCatch;
   functionCollection.viewTimer = viewTimer;
 
-  let dialog: { title: JSX.Element; content: JSX.Element } | null = null;
+  let dialog: {
+    title: JSX.Element;
+    content: JSX.Element;
+    onClose: () => void;
+ } | null = null;
 
   const elms: Array<JSX.Element> = [];
   if (state.svisible) {
@@ -646,6 +650,7 @@ const ModelEditor: React.FC<{
   if (state.viewprocess !== null) {
     dialog = {
       title: <>Edit process</>,
+      onClose: () => sm.setState({ ...sm.state, viewprocess: null }),
       content: <EditProcessPage key="EditProcessPage" {...sm} />,
     };
   }
@@ -752,7 +757,7 @@ const ModelEditor: React.FC<{
               padding: 20px;
             }
           `}
-          onClose={() => sm.setState({ ...sm.state, viewprocess: null })}
+          onClose={dialog?.onClose}
           canEscapeKeyClose={false}
           canOutsideClickClose={false}
         >
