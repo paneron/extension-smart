@@ -23,6 +23,11 @@ const FileMenu: React.FC<{ sm: StateMan }> = function ({ sm }) {
   const canOpen = requestFileFromFilesystem && useDecodedBlob;
   const canSave = getBlob && writeFileToFilesystem;
 
+  // Settings
+  function handleOpenSettings() {
+    sm.setState({ ...sm.state, svisible: true });
+  }
+
   // New
   function handleNew() {
     sm.state.history.clear();
@@ -123,7 +128,11 @@ const FileMenu: React.FC<{ sm: StateMan }> = function ({ sm }) {
         ))}
       />
       <MenuDivider />
-      <MenuItem disabled text="Model settings…" />
+      <MenuItem
+        text="Model settings…"
+        onClick={handleOpenSettings}
+        icon="settings"
+      />
     </Menu>
   );
 };
