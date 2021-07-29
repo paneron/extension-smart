@@ -255,7 +255,7 @@ const AttributeList: React.FC<{
     <>
       {attributes.length > 0 ? (
         <>
-          <p key={dcid + '#attributesLabel'}> Arrtibutes: </p>
+          <p key={dcid + '#attributesLabel'}> Attributes: </p>
           <ul key={dcid + '#attributeList'}>
             {attributes.map(a => (
               <li key={a.id}>
@@ -542,10 +542,10 @@ const DescribeRegistry: React.FC<{
             cid={reg.id}
             callback={() => functionCollection.viewDataRepository(reg)}
           />
-          {reg.data !== null && (
-            <DescribeDC dc={reg.data} isCheckListMode={isCheckListMode} />
-          )}
         </>
+      )}
+      {reg.data !== null && (
+        <DescribeDC dc={reg.data} isCheckListMode={isCheckListMode} />
       )}
       <DescriptionItem
         id={reg.id + '#registryLabel'}
