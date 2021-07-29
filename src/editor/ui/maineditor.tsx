@@ -15,7 +15,7 @@ import ReactFlow, {
   //useZoomPanHelper,
 } from 'react-flow-renderer';
 
-import { Button, ControlGroup } from '@blueprintjs/core';
+import { Button, ControlGroup, Dialog } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
@@ -623,6 +623,8 @@ const ModelEditor: React.FC<{
   functionCollection.viewSignalCatch = viewSignalCatch;
   functionCollection.viewTimer = viewTimer;
 
+  let dialog: { title: JSX.Element; content: JSX.Element } | null = null;
+
   const elms: Array<JSX.Element> = [];
   if (state.svisible) {
     elms.push(<BasicSettingPane key="BasicSettingPage" {...sm} />);
@@ -642,7 +644,10 @@ const ModelEditor: React.FC<{
     );
   }
   if (state.viewprocess !== null) {
-    elms.push(<EditProcessPage key="EditProcessPage" {...sm} />);
+    dialog = {
+      title: <>Edit process</>,
+      content: <EditProcessPage key="EditProcessPage" {...sm} />,
+    };
   }
   if (state.viewapproval !== null) {
     elms.push(<EditApprovalPage key="EditApprovalPage" {...sm} />);
@@ -735,6 +740,24 @@ const ModelEditor: React.FC<{
   if (isVisible) {
     ret = (
       <ReactFlowProvider>
+        <Dialog
+          isOpen={dialog !== null}
+          title={dialog?.title}
+          css={css`
+            width: calc(100vw - 60px);
+            height: calc(100vh - 60px);
+            padding-bottom: 0;
+            & > :last-child {
+              overflow-y: auto;
+              padding: 20px;
+            }
+          `}
+          onClose={() => sm.setState({ ...sm.state, viewprocess: null })}
+          canEscapeKeyClose={false}
+          canOutsideClickClose={false}
+        >
+          {dialog?.content}
+        </Dialog>
         <Workspace
           className={className}
           toolbar={toolbar}

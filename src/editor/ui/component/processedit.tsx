@@ -15,7 +15,6 @@ import { Cleaner } from '../util/cleaner';
 import { functionCollection } from '../util/function';
 import { MeasureHandler } from './handle/measurecheckhandler';
 import { ProvisionHandler } from './handle/provisionhandler';
-import { MyTopRightButtons } from './unit/closebutton';
 import NormalComboBox from './unit/combobox';
 import ItemAddPane from './unit/itemadd';
 import ItemUpdatePane from './unit/itemupdate';
@@ -222,11 +221,9 @@ const EditProcessPage: React.FC<StateMan> = (sm: StateMan) => {
       setMData
     );
     return (
-      <DisplayPane
-        style={{ display: sm.state.viewprocess !== null ? 'inline' : 'none' }}
-      >
-        <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
+      <DisplayPane>
         {elms}
+
         <fieldset>
           <legend>Provisions</legend>
           <div style={{ display: !isAdd && !isUpdate ? 'inline' : 'none' }}>
@@ -368,16 +365,6 @@ function save(
 }
 
 const DisplayPane = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  bottom: 0;
-  left: 0;
-  background: white;
-  font-size: 12px;
-  overflow-y: auto;
-  border-style: solid;
-  z-index: 110;
 `;
 
 export default EditProcessPage;
