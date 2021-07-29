@@ -1,27 +1,20 @@
 /** @jsx jsx */
 
-import { jsx } from '@emotion/react';
-import { CSSProperties } from 'react';
+import { jsx, css } from '@emotion/react';
+import { FormGroup, TextArea } from '@blueprintjs/core'
 import { IField } from '../../interface/fieldinterface';
 
 const NormalTextField: React.FC<IField> = (f: IField) => {
-  const inputcss: CSSProperties = {
-    resize: 'both',
-    height: '18px',
-    verticalAlign: 'middle',
-  };
-
   return (
-    <p>
-      {' '}
-      {f.text}
-      <textarea
-        style={inputcss}
-        value={f.value}
-        onChange={e => f.update(e.target.value)}
+    <FormGroup
+        label={f.text}
+        helperText={f.extend}>
+      <TextArea
+        onChange={e => f.update(e.target.value)} value={f.value}
+        css={css`padding: 5px !important`}
+        fill
       />
-      {f.extend === undefined ? '' : f.extend}
-    </p>
+    </FormGroup>
   );
 };
 
