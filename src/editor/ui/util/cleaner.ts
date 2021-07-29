@@ -196,6 +196,12 @@ export class Cleaner {
     if (s !== undefined && t !== undefined) {
       page.edges.forEach((e, index) => {
         if (e.from === s && e.to === t) {
+          const addon = mw.comman.get(e.from);
+          addon.child.forEach((x, index) => {
+            if (x === e) {
+              addon.child.splice(index, 1);
+            }
+          });
           page.edges.splice(index, 1);
           idreg.edges.delete(e.id);
           sm.setState({ ...state });

@@ -3,7 +3,9 @@
 
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
-import React from 'react';
+import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
+import React, { useContext } from 'react';
+import { MODAILITYOPTIONS } from '../../runtime/idManager';
 import { ISearch, StateMan } from '../interface/state';
 import { MyTopRightButtons } from './unit/closebutton';
 
@@ -11,6 +13,8 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
   sm,
   cond,
 }) => {
+  const { getBlob, writeFileToFilesystem } = useContext(DatasetContext);
+
   const close = () => {
     sm.state.onepage = false;
     sm.setState(sm.state);
@@ -31,99 +35,108 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
   });
   const elms: Array<JSX.Element> = [];
 
-  mw.model.processes.map(p => {
+  mw.model.processes.forEach(p => {
     if (
       cond.actor === '' ||
       (p.actor !== null && p.actor.name === cond.actor)
     ) {
-      p.provision.map(s => {
-        s.ref.map(r => {
-          if (
-            cond.document === '' ||
-            (cond.document === r.document &&
-              (cond.clause === '' || cond.clause === r.clause))
-          ) {
-            const doc = data.get(r.document);
-            if (doc === undefined) {
-              console.error('Reference document not found');
-            } else {
-              const clause = doc.get(r.clause);
-              if (clause === undefined) {
-                console.error('Reference clause not found');
+      p.provision.forEach(s => {
+        const index = MODAILITYOPTIONS.indexOf(s.modality);
+        if (index >= 0 && cond.modality[index]) {
+          s.ref.forEach(r => {
+            if (
+              cond.document === '' ||
+              (cond.document === r.document &&
+                (cond.clause === '' || cond.clause === r.clause))
+            ) {
+              const doc = data.get(r.document);
+              if (doc === undefined) {
+                console.error('Reference document not found');
               } else {
-                let out = '';
-                if (p.actor !== null && s.modality !== '') {
-                  out += p.actor.name + ' ' + s.modality + ' ';
+                const clause = doc.get(r.clause);
+                if (clause === undefined) {
+                  console.error('Reference clause not found');
+                } else {
+                  let out = '';
+                  if (p.actor !== null && s.modality !== '') {
+                    out += p.actor.name + ' ' + s.modality + ' ';
+                  }
+                  out += s.condition;
+                  clause.push(out);
                 }
-                out += s.condition;
-                clause.push(out);
               }
             }
-          }
-        });
+          });
+        }
       });
     }
   });
 
   if (cond.actor === '') {
-    mw.model.regs.map(reg => {
+    mw.model.regs.forEach(reg => {
       if (reg.data !== null) {
-        reg.data.attributes.map(a => {
-          a.ref.map(ref => {
-            if (
-              cond.document === '' ||
-              (cond.document === ref.document &&
-                (cond.clause === '' || cond.clause === ref.clause))
-            ) {
-              const doc = data.get(ref.document);
-              if (doc === undefined) {
-                console.error('Reference document not found');
-              } else {
-                const clause = doc.get(ref.clause);
-                if (clause === undefined) {
-                  console.error('Reference clause not found');
+        reg.data.attributes.forEach(a => {
+          const index = MODAILITYOPTIONS.indexOf(a.modality);
+          if (index >= 0 && cond.modality[index]) {
+            a.ref.forEach(ref => {
+              if (
+                cond.document === '' ||
+                (cond.document === ref.document &&
+                  (cond.clause === '' || cond.clause === ref.clause))
+              ) {
+                const doc = data.get(ref.document);
+                if (doc === undefined) {
+                  console.error('Reference document not found');
                 } else {
-                  let out = 'Documented information (' + reg.title + ') ';
-                  if (a.modality !== '') {
-                    out += a.modality + ' ';
+                  const clause = doc.get(ref.clause);
+                  if (clause === undefined) {
+                    console.error('Reference clause not found');
+                  } else {
+                    let out = 'Documented information (' + reg.title + ') ';
+                    if (a.modality !== '') {
+                      out += a.modality + ' ';
+                    }
+                    out += 'include ' + a.definition;
+                    clause.push(out);
                   }
-                  out += 'include ' + a.definition;
-                  clause.push(out);
                 }
               }
-            }
-          });
+            });
+          }
         });
       }
     });
 
-    mw.model.dataclasses.map(dc => {
+    mw.model.dataclasses.forEach(dc => {
       if (mw.dlman.get(dc).mother === null) {
-        dc.attributes.map(a => {
-          a.ref.map(ref => {
-            if (
-              cond.document === '' ||
-              (cond.document === ref.document &&
-                (cond.clause === '' || cond.clause === ref.clause))
-            ) {
-              const doc = data.get(ref.document);
-              if (doc === undefined) {
-                console.error('Reference document not found');
-              } else {
-                const clause = doc.get(ref.clause);
-                if (clause === undefined) {
-                  console.error('Reference clause not found');
+        dc.attributes.forEach(a => {
+          const index = MODAILITYOPTIONS.indexOf(a.modality);
+          if (index >= 0 && cond.modality[index]) {
+            a.ref.forEach(ref => {
+              if (
+                cond.document === '' ||
+                (cond.document === ref.document &&
+                  (cond.clause === '' || cond.clause === ref.clause))
+              ) {
+                const doc = data.get(ref.document);
+                if (doc === undefined) {
+                  console.error('Reference document not found');
                 } else {
-                  let out = 'Data structure (' + dc.id + ') ';
-                  if (a.modality !== '') {
-                    out += a.modality + ' ';
+                  const clause = doc.get(ref.clause);
+                  if (clause === undefined) {
+                    console.error('Reference clause not found');
+                  } else {
+                    let out = 'Data structure (' + dc.id + ') ';
+                    if (a.modality !== '') {
+                      out += a.modality + ' ';
+                    }
+                    out += 'include ' + a.definition;
+                    clause.push(out);
                   }
-                  out += 'include ' + a.definition;
-                  clause.push(out);
                 }
               }
-            }
-          });
+            });
+          }
         });
       }
     });
@@ -144,7 +157,7 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
           }
           currentid += parts[i];
           let found: CLGroup | null = null;
-          for (const g of ng.gmember) {
+          for (const g of ng.children) {
             if (g.id === currentid) {
               found = g;
               break;
@@ -152,11 +165,11 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
           }
           if (found === null) {
             found = new CLGroup(currentid);
-            ng.gmember.push(found);
+            ng.children.push(found);
           }
           ng = found;
         }
-        ng.items = c;
+        ng.provisions = c;
       }
     });
   });
@@ -166,13 +179,78 @@ const OnePageChecklist: React.FC<{ sm: StateMan; cond: ISearch }> = ({
     recursiveAdd(d, 0, index, elms);
   });
 
+  const exportJSON = async (docs: CLGroup[]) => {
+    const container = { documents: docs };
+    const json = JSON.stringify(container);
+    await exportFile(json);
+  };
+
+  const exportXML = async (docs: CLGroup[]) => {
+    const xml: string =
+      '<documents>' + getXMLElementFromArray('document', docs) + '</documents>';
+    await exportFile(xml);
+  };
+
+  async function exportFile(fileData: string) {
+    if (!getBlob || !writeFileToFilesystem) {
+      throw new Error('File export function(s) are not provided');
+    }
+    const blob = await getBlob(fileData);
+    await writeFileToFilesystem({
+      dialogOpts: {
+        prompt: 'Choose location to save',
+        filters: [{ name: 'All files', extensions: ['*'] }],
+      },
+      bufferData: blob,
+    });
+  }
+
   return (
     <DisplayPane>
       <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
+      <button onClick={() => exportJSON(docs)}>Export JSON</button>
+      <button onClick={() => exportXML(docs)}>Export XML</button>
       {elms}
     </DisplayPane>
   );
 };
+
+function ObjectToXML(x: Object): string {
+  const entries = Object.entries(x);
+  let out = '';
+  for (const [k, o] of entries) {
+    if (Array.isArray(o)) {
+      out += getXMLElementFromArray(k, o);
+    } else {
+      let content: string;
+      if (o === null) {
+        content = 'null';
+      } else if (typeof o === 'object') {
+        content = ObjectToXML(o);
+      } else {
+        content = o;
+      }
+      out += `<${k}>${content}</${k}>`;
+    }
+  }
+  return out;
+}
+
+function getXMLElementFromArray(tag: string, array: Array<Object>): string {
+  let out = '';
+  for (const y of array) {
+    let content: string;
+    if (y === null) {
+      content = 'null';
+    } else if (typeof y === 'object') {
+      content = ObjectToXML(y);
+    } else {
+      content = y;
+    }
+    out += `<${tag}>${content}</${tag}>`;
+  }
+  return out;
+}
 
 function recursiveAdd(
   g: CLGroup,
@@ -180,8 +258,17 @@ function recursiveAdd(
   docindex: number,
   elms: Array<JSX.Element>
 ) {
-  if (g.gmember.length > 0) {
-    g.gmember.forEach(c => {
+  const opt: Array<JSX.Element> = [];
+  g.provisions.forEach((s, index) => {
+    opt.push(
+      <li key={'ui#checklist#doc' + docindex + 'provision' + index}> {s} </li>
+    );
+  });
+  elms.push(
+    <ul key={'ui#checklist#doc' + docindex + 'provisionlist' + g.id}>{opt}</ul>
+  );
+  if (g.children.length > 0) {
+    g.children.forEach(c => {
       if (level === 0) {
         elms.push(
           <h2 key={'ui#checklist#doc' + docindex + 'clause' + c.id}>{c.id} </h2>
@@ -198,15 +285,6 @@ function recursiveAdd(
       recursiveAdd(c, level + 1, docindex, elms);
     });
   }
-  const opt: Array<JSX.Element> = [];
-  g.items.map((s, index) => {
-    opt.push(
-      <li key={'ui#checklist#doc' + docindex + 'provision' + index}> {s} </li>
-    );
-  });
-  elms.push(
-    <ul key={'ui#checklist#doc' + docindex + 'provisionlist' + g.id}>{opt}</ul>
-  );
 }
 
 const DisplayPane = styled.div`
@@ -224,13 +302,13 @@ const DisplayPane = styled.div`
 
 class CLGroup {
   id: string;
-  gmember: Array<CLGroup>;
-  items: Array<string>;
+  children: Array<CLGroup>;
+  provisions: Array<string>;
 
   constructor(x: string) {
     this.id = x;
-    this.gmember = [];
-    this.items = [];
+    this.children = [];
+    this.provisions = [];
   }
 }
 

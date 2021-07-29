@@ -4,6 +4,7 @@
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { RefObject } from 'react';
+import { MODAILITYOPTIONS } from '../../runtime/idManager';
 import { SearchMan, StateMan } from '../interface/state';
 import { calculateFilter } from '../util/filtermanager';
 import { MyTopRightButtons } from './unit/closebutton';
@@ -90,6 +91,33 @@ const FilterPane: React.FC<{ sm: StateMan; ssm: SearchMan }> = ({
     </select>
   );
 
+  const modalityboxes: Array<JSX.Element> = [
+    <p key={'ui#filter#modalitytext'}>Modality filter:</p>,
+  ];
+  MODAILITYOPTIONS.forEach((m, index) => {
+    let text = m;
+    if (m === '') {
+      text = 'Empty (Not Specified)';
+    }
+    modalityboxes.push(
+      <p>
+        <input
+          type="checkbox"
+          id={'modality#' + m}
+          name={text}
+          value={m}
+          checked={ss.modality[index]}
+          onChange={() => {
+            ss.modality[index] = !ss.modality[index];
+            calculateFilter(state.modelWrapper, ssm.searchState);
+            ssm.setSearchState(ss);
+          }}
+        />
+        {text}
+      </p>
+    );
+  });
+
   return (
     <ControlBar>
       <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
@@ -122,6 +150,7 @@ const FilterPane: React.FC<{ sm: StateMan; ssm: SearchMan }> = ({
       >
         {actoroptions}
       </select>
+      {modalityboxes}
       <p>
         {' '}
         <button

@@ -105,7 +105,7 @@ export class IDManager implements MMELObjectMaps {
   }
 
   findUniqueID(prefix: string) {
-    let num = 0;
+    let num = 1;
     while (this.nodes.has(prefix + num)) {
       num++;
     }
@@ -113,7 +113,7 @@ export class IDManager implements MMELObjectMaps {
   }
 
   findProvisionID(prefix: string) {
-    let num = 0;
+    let num = 1;
     while (this.provisions.has(prefix + num)) {
       num++;
     }
@@ -121,7 +121,7 @@ export class IDManager implements MMELObjectMaps {
   }
 
   findUniqueEdgeID(prefix: string) {
-    let num = 0;
+    let num = 1;
     while (this.edges.has(prefix + num)) {
       num++;
     }
@@ -129,7 +129,7 @@ export class IDManager implements MMELObjectMaps {
   }
 
   findUniquePageID(prefix: string) {
-    let num = 0;
+    let num = 1;
     while (this.pages.has(prefix + num)) {
       num++;
     }
@@ -137,7 +137,7 @@ export class IDManager implements MMELObjectMaps {
   }
 
   findUniqueRefID(prefix: string) {
-    let num = 0;
+    let num = 1;
     while (this.refs.has(prefix + num)) {
       num++;
     }

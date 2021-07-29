@@ -59,9 +59,10 @@ export const ProcessQuickEdit: React.FC<{
   };
 
   const saveEdit = () => {
-    save(sm, process, editing);
-    setEditing(null);
-    setOldValue(null);
+    if (save(sm, process, editing)) {
+      setEditing(null);
+      setOldValue(null);
+    }
   };
 
   const cancelEdit = () => {
@@ -157,7 +158,8 @@ export const ProcessQuickEdit: React.FC<{
         key={'ui#button#deletereference#' + pindex + '#' + rindex}
         onClick={() => removereference(pindex, rindex)}
       >
-        Delete reference
+        {' '}
+        Delete reference{' '}
       </button>
     );
     elms.push(
@@ -180,7 +182,8 @@ export const ProcessQuickEdit: React.FC<{
         key={'ui#button#deleteprovision#' + index}
         onClick={() => removeProvision(index)}
       >
-        Delete provision
+        {' '}
+        Delete provision{' '}
       </button>
     );
     elms.push(
@@ -220,6 +223,7 @@ export const ProcessQuickEdit: React.FC<{
     elms.push(<ul key={'ui#provisionRefs#' + index}>{ps}</ul>);
     return <>{elms}</>;
   };
+
   const elms: Array<JSX.Element> = [];
   if (editing === null) {
     if (!isCLMode) {
@@ -392,7 +396,7 @@ function describeProvision(
             type="checkbox"
             id={x.id + '#CheckBox'}
             checked={addon.isChecked}
-            onChange={e => {
+            onChange={() => {
               ProgressManager.setProvisionChecked(x);
               functionCollection.checkUpdated();
             }}
@@ -487,7 +491,7 @@ function save(
   sm: StateMan,
   oldValue: MMELProcess | null,
   newValue: ISimpleProcess | null
-) {
+): boolean {
   if (oldValue !== null && newValue !== null) {
     const mw = sm.state.modelWrapper;
     const model = mw.model;
@@ -495,11 +499,11 @@ function save(
     if (oldValue.id !== newValue.id) {
       if (newValue.id === '') {
         alert('ID is empty');
-        return;
+        return false;
       }
       if (idreg.nodes.has(newValue.id)) {
         alert('New ID already exists');
-        return;
+        return false;
       }
       idreg.nodes.delete(oldValue.id);
       idreg.nodes.set(newValue.id, oldValue);
@@ -519,13 +523,15 @@ function save(
       }
     }
     Cleaner.cleanProvisions(oldValue);
-    newValue.provision.map(p => {
+    newValue.provision.forEach(p => {
       const id = idreg.findProvisionID('Provision');
       const pro = MMELFactory.createProvision(id);
       pro.condition = p.condition;
       pro.modality = p.modality;
-      p.ref.map(r => {
-        if (r !== '') {
+      const refSet = new Set<string>();
+      p.ref.forEach(r => {
+        if (r !== '' && !refSet.has(r)) {
+          refSet.add(r);
           const ref = idreg.refs.get(r);
           if (ref === undefined) {
             console.error('Reference not found: ', r);
@@ -538,173 +544,10 @@ function save(
       idreg.provisions.set(pro.id, pro);
       oldValue.provision.push(pro);
     });
+    sm.setState({ ...sm.state });
   }
+  return true;
 }
-
-// const ProgressLabel: React.FC<{
-//   provision: MMELProvision;
-// }> = function ({ provision }): JSX.Element {
-//   return (
-//     <p key={provision.id + '#ProgressLabel'}>
-//       Progress:{' '}
-//       <input
-//         type="number"
-//         min="0"
-//         max="100"
-//         value={
-//           functionCollection
-//             .getStateMan()
-//             .state.modelWrapper.clman.getItemAddOn(provision).progress
-//         }
-//         onChange={e => progressUpdate(e, provision)}
-//       ></input>
-//       %{' '}
-//     </p>
-//   );
-// };
-
-// const DescribeProvision: React.FC<{
-//   provision: MMELProvision;
-//   isCheckListMode: boolean;
-// }> = function ({ provision, isCheckListMode }) {
-//   const css: CSSProperties = {};
-//   const mw = functionCollection.getStateMan().state.modelWrapper;
-//   const addon = mw.clman.getItemAddOn(provision);
-//   if (provision.modality === 'SHALL') {
-//     css.textDecorationLine = 'underline';
-//   }
-//   return (
-//     <>
-//       {isCheckListMode ? (
-//         <CheckBoxProgressField
-//           fieldkey={'ui#provisionStatementLabel#' + provision.id}
-//           checkboxkey={provision.id + '#CheckBox'}
-//           value={addon.isChecked}
-//           css={css}
-//           label="Statement"
-//           statement={provision.condition}
-//           callback={() => {
-//             ProgressManager.setProvisionChecked(provision);
-//             functionCollection.checkUpdated();
-//           }}
-//         />
-//       ) : (
-//         <DescriptionItem
-//           id={'ui#provisionStatementLabel#' + provision.id}
-//           label="Statement"
-//           css={css}
-//           value={provision.condition}
-//         />
-//       )}
-//       <NonEmptyFieldDescription
-//         id={'ui#provisionModalityLabel#' + provision.id}
-//         label="Modality"
-//         value={provision.modality}
-//       />
-//       <ReferenceList refs={provision.ref} pid={provision.id} />
-//       {isCheckListMode ? <ProgressLabel provision={provision} /> : ''}
-//     </>
-//   );
-// };
-
-// return (
-//   <>
-//     {!isCheckListMode && (
-//       <>
-//         <EditButton
-//           cid={process.id}
-//           callback={() => functionCollection.viewEditProcess(process)}
-//         />
-//         <RemoveButton
-//           cid={process.id}
-//           callback={() => Cleaner.removeProcess(process)}
-//         />
-//         {process.page === null && (
-//           <MyFloatButton onClick={() => addSubprocess(process)}>
-//             +
-//           </MyFloatButton>
-//         )}
-//       </>
-//     )}
-//     <DescriptionItem
-//       id={process.id + '#ProcessID'}
-//       label={'Process'}
-//       value={process.id}
-//     />
-//     <DescriptionItem
-//       id={process.id + '#ProcessName'}
-//       label={'Name'}
-//       value={process.name}
-//     />
-//     <ActorDescription
-//       role={process.actor}
-//       id={process.id + '#ProcessActor'}
-//       label="Actor"
-//     />
-//     <NonEmptyFieldDescription
-//       id={process.id + '#Modality'}
-//       label="Modality"
-//       value={process.modality}
-//     />
-//     <ProvisionList
-//       pid={process.id}
-//       provisions={process.provision}
-//       isCheckListMode={isCheckListMode}
-//     />
-//     <MeasurementList pid={process.id} measurement={process.measure} />
-//   </>
-// );
-
-// const ProvisionList: React.FC<{
-//   provisions: MMELProvision[];
-//   pid: string;
-//   isCheckListMode: boolean;
-// }> = function ({ provisions, pid, isCheckListMode }) {
-//   return (
-//     <>
-//       {provisions.length > 0 ? (
-//         <>
-//           <p key={pid + '#Provisions'}>Provisions</p>
-//           <ul key={pid + '#ProvisionList'}>
-//             {provisions.map((provision: MMELProvision) => (
-//               <li key={pid + '#Pro#' + provision.id}>
-//                 {' '}
-//                 <DescribeProvision
-//                   provision={provision}
-//                   isCheckListMode={isCheckListMode}
-//                 />{' '}
-//               </li>
-//             ))}
-//           </ul>
-//         </>
-//       ) : (
-//         ''
-//       )}
-//     </>
-//   );
-// };
-
-// const MeasurementList: React.FC<{
-//   measurement: string[];
-//   pid: string;
-// }> = function ({ measurement, pid }) {
-//   return (
-//     <>
-//       {measurement.length > 0 ? (
-//         <>
-//           <p key={pid + '#MeasureText'}>Measurements</p>
-//           <ul key={pid + '#MeasureList'}>
-//             {measurement.map((m: string, index: number) => (
-//               <li key={pid + '#Measure#' + index}> {m} </li>
-//             ))}
-//           </ul>
-//         </>
-//       ) : (
-//         ''
-//       )}
-//     </>
-//   );
-// };
 
 const MyFloatButton = styled.button`
   position: absolute;

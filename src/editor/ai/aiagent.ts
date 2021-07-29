@@ -79,10 +79,13 @@ function initPage(mw: ModelWrapper, id: string) {
 function readDetails(sec: XMLElement, mw: ModelWrapper, page: MMELSubprocess) {
   const m = mw.model;
   const secno = sec.getElementValue('label');
+  const secid = secno.replaceAll('.', '-').trim();
   const sectitle = sec.getElementValue('title');
   const idreg = mw.idman;
 
-  const p = MMELFactory.createProcess(idreg.findUniqueID('Clause' + secno));
+  const p = MMELFactory.createProcess(
+    idreg.findUniqueID('Clause' + secid + 'Process')
+  );
   p.name = sectitle;
   idreg.nodes.set(p.id, p);
   m.processes.push(p);
@@ -101,9 +104,7 @@ function readDetails(sec: XMLElement, mw: ModelWrapper, page: MMELSubprocess) {
   page.edges.push(nedge);
 
   let refadded = false;
-  const ref = MMELFactory.createReference(
-    'Ref' + secno.replaceAll('.', '-').trim()
-  );
+  const ref = MMELFactory.createReference('Ref' + secid);
   ref.document = m.meta.title;
   ref.clause = secno;
 

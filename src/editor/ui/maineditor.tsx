@@ -71,6 +71,7 @@ import { NodeData } from './nodecontainer';
 import IndexPane from './component/IndexPane';
 import { DataIndexer } from './util/datasearchmanager';
 import FileMenu from './component/menu/File';
+import { MODAILITYOPTIONS } from '../runtime/idManager';
 
 const initModel = MMELFactory.createNewModel();
 const initModelWrapper = new ModelWrapper(initModel);
@@ -130,6 +131,7 @@ const ModelEditor: React.FC<{
     document: '',
     clause: '',
     actor: '',
+    modality: MODAILITYOPTIONS.flatMap(() => true),
   });
 
   const updateState = (s: IState): void => {

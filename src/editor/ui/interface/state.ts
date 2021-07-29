@@ -76,6 +76,7 @@ export interface ISearch {
   document: string;
   clause: string;
   actor: string;
+  modality: boolean[];
 }
 
 export interface SearchMan {

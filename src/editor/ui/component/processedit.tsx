@@ -227,7 +227,8 @@ const EditProcessPage: React.FC<StateMan> = (sm: StateMan) => {
       >
         <MyTopRightButtons onClick={() => close()}>X</MyTopRightButtons>
         {elms}
-        <DisplayContainer>
+        <fieldset>
+          <legend>Provisions</legend>
           <div style={{ display: !isAdd && !isUpdate ? 'inline' : 'none' }}>
             <ListManagerPane {...handle} />
           </div>
@@ -237,8 +238,9 @@ const EditProcessPage: React.FC<StateMan> = (sm: StateMan) => {
           <div style={{ display: isUpdate ? 'inline' : 'none' }}>
             <ItemUpdatePane {...handle} />
           </div>
-        </DisplayContainer>
-        <DisplayContainer>
+        </fieldset>
+        <fieldset>
+          <legend>Measurements</legend>
           <div style={{ display: !isMAdd && !isMUpdate ? 'inline' : 'none' }}>
             <ListManagerPane {...mhandle} />
           </div>
@@ -248,7 +250,7 @@ const EditProcessPage: React.FC<StateMan> = (sm: StateMan) => {
           <div style={{ display: isMUpdate ? 'inline' : 'none' }}>
             <ItemUpdatePane {...mhandle} />
           </div>
-        </DisplayContainer>
+        </fieldset>
         <div>
           <button
             key="processedit#saveButton"
@@ -376,10 +378,6 @@ const DisplayPane = styled.div`
   overflow-y: auto;
   border-style: solid;
   z-index: 110;
-`;
-
-const DisplayContainer = styled.div`
-  border-style: solid;
 `;
 
 export default EditProcessPage;

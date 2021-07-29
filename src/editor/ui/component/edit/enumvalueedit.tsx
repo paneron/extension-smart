@@ -32,7 +32,8 @@ const EnumValueEditPage: React.FC<{ en: IEnum; setEnum: (x: IEnum) => void }> =
     );
 
     return (
-      <div style={{ border: '1px solid black', width: '90%' }}>
+      <fieldset>
+        <legend>Enum values:</legend>
         <div style={{ display: !isAdd && !isUpdate ? 'inline' : 'none' }}>
           <ListManagerPane {...handle} />
         </div>
@@ -42,7 +43,7 @@ const EnumValueEditPage: React.FC<{ en: IEnum; setEnum: (x: IEnum) => void }> =
         <div style={{ display: isUpdate ? 'inline' : 'none' }}>
           <ItemUpdatePane {...handle} />
         </div>
-      </div>
+      </fieldset>
     );
   };
 

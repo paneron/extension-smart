@@ -3,7 +3,7 @@
 
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
-import React, { CSSProperties } from 'react';
+import React from 'react';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
   MMELEdge,
@@ -15,11 +15,6 @@ import { functionCollection } from '../util/function';
 import { MyTopRightButtons } from './unit/closebutton';
 import { ReferenceSelector } from './unit/referenceselect';
 import NormalTextField from './unit/textfield';
-
-const css: CSSProperties = {
-  border: '1px solid black',
-  width: '90%',
-};
 
 export const EditEGatePage: React.FC<StateMan> = (sm: StateMan) => {
   const close = () => {
@@ -103,53 +98,50 @@ export const EditEGatePage: React.FC<StateMan> = (sm: StateMan) => {
     const innerElms: Array<JSX.Element> = [];
     egate.edges.forEach((e, index) => {
       innerElms.push(
-        <div key={'field#edgeConditionLabel#' + index} style={css}>
-          Edge to {e.target}
-          <NormalTextField
-            key={'field#edgeCondition#' + index}
-            text="Description"
-            value={e.description}
-            update={x => setDesc(index, x)}
-          />
-          <ReferenceSelector
-            key="field#edgeCondition"
-            text="Condition"
-            filterName="Measurement filter"
-            editable={true}
-            value={e.condition}
-            options={types}
-            update={x => selectMeasure(index, x)}
-            onChange={x => setCond(index, x)}
-          />
-          <button
-            key={'defaultbutton#edgeCondition#' + index}
-            onClick={() => {
-              setDesc(index, 'default');
-              setCond(index, 'default');
-            }}
-          >
-            {' '}
-            Set default{' '}
-          </button>
-          <button
-            key={'emptybutton#edgeCondition#' + index}
-            onClick={() => {
-              setDesc(index, '');
-              setCond(index, '');
-            }}
-          >
-            {' '}
-            Set empty{' '}
-          </button>
-        </div>
+        <fieldset>
+          <legend>Edge to {e.target}</legend>
+          <div key={'field#edgeConditionLabel#' + index}>
+            <NormalTextField
+              key={'field#edgeCondition#' + index}
+              text="Description"
+              value={e.description}
+              update={x => setDesc(index, x)}
+            />
+            <ReferenceSelector
+              key="field#edgeCondition"
+              text="Condition"
+              filterName="Measurement filter"
+              editable={true}
+              value={e.condition}
+              options={types}
+              update={x => selectMeasure(index, x)}
+              onChange={x => setCond(index, x)}
+            />
+            <button
+              key={'defaultbutton#edgeCondition#' + index}
+              onClick={() => {
+                setDesc(index, 'default');
+                setCond(index, 'default');
+              }}
+            >
+              {' '}
+              Set default{' '}
+            </button>
+            <button
+              key={'emptybutton#edgeCondition#' + index}
+              onClick={() => {
+                setDesc(index, '');
+                setCond(index, '');
+              }}
+            >
+              {' '}
+              Set empty{' '}
+            </button>
+          </div>
+        </fieldset>
       );
     });
-    elms.push(
-      <div key="field#edgesLabel" style={css}>
-        {' '}
-        Edge conditions {innerElms}{' '}
-      </div>
-    );
+    elms.push(<div key="field#edgesLabel"> Edge conditions {innerElms} </div>);
     return (
       <DisplayPane
         style={{ display: sm.state.viewEGate !== null ? 'inline' : 'none' }}

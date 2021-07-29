@@ -44,7 +44,8 @@ const AttributeEditPage: React.FC<{
   );
 
   return (
-    <div style={{ border: '1px solid black', width: '90%' }}>
+    <fieldset>
+      <legend>Attributes:</legend>
       <div style={{ display: !isAdd && !isUpdate ? 'inline' : 'none' }}>
         <ListManagerPane {...handle} />
       </div>
@@ -54,7 +55,7 @@ const AttributeEditPage: React.FC<{
       <div style={{ display: isUpdate ? 'inline' : 'none' }}>
         <ItemUpdatePane {...handle} />
       </div>
-    </div>
+    </fieldset>
   );
 };
 

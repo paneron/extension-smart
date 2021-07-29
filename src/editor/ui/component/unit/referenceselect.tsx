@@ -16,8 +16,6 @@ const list: CSSProperties = {
 
 const containercss: CSSProperties = {
   overflow: 'hidden',
-  border: '1px solid black',
-  width: '90%',
   display: 'flex',
   flexFlow: 'row wrap',
   alignItems: 'center',
@@ -63,29 +61,35 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
   }
 
   return (
-    <div style={containercss}>
-      <div style={column}>
-        {f.text}
-        <select style={list} ref={mainlist} multiple>
-          {' '}
-          {elms}{' '}
-        </select>
-      </div>
-      <button onClick={() => f.add(extractOptions(reflist))}> &lt;- Add</button>
-      <button onClick={() => f.remove(extractOptions(mainlist))}>
-        Remove -&gt;{' '}
-      </button>
-      <div style={column}>
-        <div>
-          {' '}
-          {f.filterName}{' '}
-          <input type="text" onChange={e => setFilter(e.target.value)} />{' '}
+    <fieldset>
+      <legend>{f.text}</legend>
+      <div style={containercss}>
+        <div style={column}>
+          {f.text}
+          <select style={list} ref={mainlist} multiple>
+            {' '}
+            {elms}{' '}
+          </select>
         </div>
-        <select style={list} ref={reflist} multiple>
-          {options}
-        </select>
+        <button onClick={() => f.add(extractOptions(reflist))}>
+          {' '}
+          &lt;- Add
+        </button>
+        <button onClick={() => f.remove(extractOptions(mainlist))}>
+          Remove -&gt;{' '}
+        </button>
+        <div style={column}>
+          <div>
+            {' '}
+            {f.filterName}{' '}
+            <input type="text" onChange={e => setFilter(e.target.value)} />{' '}
+          </div>
+          <select style={list} ref={reflist} multiple>
+            {options}
+          </select>
+        </div>
       </div>
-    </div>
+    </fieldset>
   );
 };
 
@@ -116,34 +120,37 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
     }
   });
   return (
-    <div style={containercss}>
-      {f.text}
-      <textarea
-        style={inputcss}
-        value={f.value}
-        readOnly={f.editable !== undefined && !f.editable}
-        onChange={e => {
-          if (f.onChange !== undefined) {
-            f.onChange(e.target.value);
-          }
-        }}
-      />
-      <button onClick={() => f.update(extractOption(optionlist))}>
-        {' '}
-        &lt;- Select{' '}
-      </button>
-      <div style={column}>
-        <div>
+    <fieldset>
+      <legend>{f.text}</legend>
+      <div style={containercss}>
+        {f.text}
+        <textarea
+          style={inputcss}
+          value={f.value}
+          readOnly={f.editable !== undefined && !f.editable}
+          onChange={e => {
+            if (f.onChange !== undefined) {
+              f.onChange(e.target.value);
+            }
+          }}
+        />
+        <button onClick={() => f.update(extractOption(optionlist))}>
           {' '}
-          {f.filterName}{' '}
-          <input type="text" onChange={e => setFilter(e.target.value)} />{' '}
+          &lt;- Select{' '}
+        </button>
+        <div style={column}>
+          <div>
+            {' '}
+            {f.filterName}{' '}
+            <input type="text" onChange={e => setFilter(e.target.value)} />{' '}
+          </div>
+          <select style={list} ref={optionlist} multiple>
+            {' '}
+            {options}{' '}
+          </select>
         </div>
-        <select style={list} ref={optionlist} multiple>
-          {' '}
-          {options}{' '}
-        </select>
       </div>
-    </div>
+    </fieldset>
   );
 };
 

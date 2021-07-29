@@ -1,3 +1,4 @@
+import { MODAILITYOPTIONS } from '../../runtime/idManager';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELDataClass } from '../../serialize/interface/datainterface';
 import {
@@ -12,6 +13,13 @@ import { MMELProvision } from '../../serialize/interface/supportinterface';
 import { ISearch } from '../interface/state';
 import { ModelWrapper } from '../model/modelwrapper';
 import { functionCollection } from './function';
+
+export enum FilterType {
+  UNKNOWN,
+  NOT_MATCH,
+  EXACT_MATCH,
+  SUBPROCESS_MATCH,
+}
 
 export function calculateFilter(mw: ModelWrapper, cond: ISearch): void {
   const model = mw.model;
@@ -37,12 +45,15 @@ export function calculateFilter(mw: ModelWrapper, cond: ISearch): void {
 
 function checkData(d: MMELDataClass, cond: ISearch): FilterType {
   for (const a of d.attributes) {
-    for (const r of a.ref) {
-      if (
-        cond.document === r.document &&
-        (cond.clause === '' || cond.clause === r.clause)
-      ) {
-        return FilterType.EXACT_MATCH;
+    const index = MODAILITYOPTIONS.indexOf(a.modality);
+    if (index >= 0 && cond.modality[index]) {
+      for (const r of a.ref) {
+        if (
+          cond.document === r.document &&
+          (cond.clause === '' || cond.clause === r.clause)
+        ) {
+          return FilterType.EXACT_MATCH;
+        }
       }
     }
   }
@@ -103,7 +114,7 @@ function checkProcess(
   }
   if (cond.actor === '' || (p.actor !== null && p.actor.name === cond.actor)) {
     if (cond.document !== '') {
-      p.provision.map(x => {
+      p.provision.forEach(x => {
         if (checkProvision(x, cond)) {
           addon.filterMatch = FilterType.EXACT_MATCH;
           result = true;
@@ -121,12 +132,15 @@ function checkProcess(
 }
 
 function checkProvision(p: MMELProvision, cond: ISearch): boolean {
-  for (const r of p.ref) {
-    if (
-      cond.document === r.document &&
-      (cond.clause === '' || cond.clause === r.clause)
-    ) {
-      return true;
+  const index = MODAILITYOPTIONS.indexOf(p.modality);
+  if (index >= 0 && cond.modality[index]) {
+    for (const r of p.ref) {
+      if (
+        cond.document === r.document &&
+        (cond.clause === '' || cond.clause === r.clause)
+      ) {
+        return true;
+      }
     }
   }
   return false;
@@ -152,11 +166,4 @@ function checkApproval(p: MMELApproval, cond: ISearch): boolean {
     }
   }
   return false;
-}
-
-export enum FilterType {
-  UNKNOWN,
-  NOT_MATCH,
-  EXACT_MATCH,
-  SUBPROCESS_MATCH,
 }
