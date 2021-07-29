@@ -631,7 +631,11 @@ const ModelEditor: React.FC<{
 
   const elms: Array<JSX.Element> = [];
   if (state.svisible) {
-    elms.push(<BasicSettingPane key="BasicSettingPage" {...sm} />);
+    dialog = {
+      title: <>Settings</>,
+      onClose: () => sm.setState({ ...sm.state, svisible: false }),
+      content: <BasicSettingPane key="BasicSettingPage" {...sm} />,
+    };
   }
   if (state.nvisible) {
     elms.push(<NewComponentPane key="NewComponentPage" {...sm} />);
