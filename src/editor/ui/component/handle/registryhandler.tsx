@@ -215,7 +215,7 @@ export class RegistryHandler implements IList, IAddItem, IUpdateItem {
         }
         na.modality = a.modality;
         nr.data.attributes.push(na);
-      }      
+      }
       idreg.nodes.set(nr.id, nr);
       idreg.regs.set(nr.id, nr);
       idreg.nodes.set(nr.data.id, nr.data);
