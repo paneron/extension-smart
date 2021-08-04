@@ -5,9 +5,13 @@ import {
   MMELReference,
   MMELRole,
   MMELVariable,
-  ParsingProvision,
+  VarType,
 } from '../interface/supportinterface';
-import { MMELremovePackage, MMELtokenizePackage } from '../util/tokenizer';
+import {
+  MMELremovePackage,
+  MMELtokenizePackage,
+  MMELtokenizeSet,
+} from '../util/tokenizer';
 
 export function parseMetaData(x: string): MMELMetadata {
   const meta: MMELMetadata = {
@@ -49,18 +53,14 @@ export function parseMetaData(x: string): MMELMetadata {
   return meta;
 }
 
-export function parseProvision(id: string, data: string): ParsingProvision {
+export function parseProvision(id: string, data: string): MMELProvision {
   const pro: MMELProvision = {
-    subject: new Map<string, string>(),
+    subject: {},
     id: id,
     modality: '',
     condition: '',
-    ref: [],
+    ref: new Set<string>(),
     datatype: DataType.PROVISION,
-  };
-  const container: ParsingProvision = {
-    content: pro,
-    p_ref: [],
   };
 
   if (data !== '') {
@@ -74,9 +74,9 @@ export function parseProvision(id: string, data: string): ParsingProvision {
         } else if (command === 'condition') {
           pro.condition = MMELremovePackage(t[i++]);
         } else if (command === 'reference') {
-          container.p_ref = MMELtokenizePackage(t[i++]);
+          pro.ref = MMELtokenizeSet(t[i++]);
         } else {
-          pro.subject.set(command, t[i++]);
+          pro.subject[command] = t[i++];
         }
       } else {
         throw new Error(
@@ -86,24 +86,6 @@ export function parseProvision(id: string, data: string): ParsingProvision {
             command
         );
       }
-    }
-  }
-  return container;
-}
-
-export function resolveProvision(
-  container: ParsingProvision,
-  idreg: Map<string, MMELReference>
-): MMELProvision {
-  const pro = container.content;
-  for (const x of container.p_ref) {
-    const y = idreg.get(x);
-    if (y !== undefined) {
-      pro.ref.push(y);
-    } else {
-      throw new Error(
-        'Error in resolving IDs in reference for provision ' + pro.id
-      );
     }
   }
   return pro;
@@ -178,7 +160,7 @@ export function parseRole(id: string, data: string): MMELRole {
 export function parseVariable(id: string, data: string): MMELVariable {
   const v: MMELVariable = {
     id: id,
-    type: '',
+    type: VarType.EMPTY,
     definition: '',
     description: '',
     datatype: DataType.VARIABLE,
@@ -191,7 +173,7 @@ export function parseVariable(id: string, data: string): MMELVariable {
       const command: string = t[i++];
       if (i < t.length) {
         if (command === 'type') {
-          v.type = t[i++];
+          v.type = t[i++] as VarType;
         } else if (command === 'definition') {
           v.definition = MMELremovePackage(t[i++]);
         } else if (command === 'description') {

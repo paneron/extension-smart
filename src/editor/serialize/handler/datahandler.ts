@@ -5,35 +5,29 @@ import {
   MMELEnum,
   MMELEnumValue,
   MMELRegistry,
-  ParsingDataAttribute,
-  ParsingDataClass,
-  ParsingRegistry,
 } from '../interface/datainterface';
-import { MMELReference } from '../interface/supportinterface';
 import {
   MMELremovePackage,
   MMELtokenizeAttributes,
   MMELtokenizePackage,
+  MMELtokenizeSet,
 } from '../util/tokenizer';
 
 export function parseDataAttribute(
   basic: string,
   details: string
-): ParsingDataAttribute {
+): MMELDataAttribute {
   const attribute: MMELDataAttribute = {
     id: '',
     type: '',
     modality: '',
     cardinality: '',
     definition: '',
-    ref: [],
-    satisfy: [],
+    ref: new Set<string>(),
+    satisfy: new Set<string>(),
     datatype: DataType.DATAATTRIBUTE,
   };
-  const container: ParsingDataAttribute = {
-    content: attribute,
-    p_ref: [],
-  };
+
   let index = basic.indexOf('[');
   if (index !== -1) {
     attribute.cardinality = basic
@@ -58,9 +52,9 @@ export function parseDataAttribute(
         } else if (command === 'definition') {
           attribute.definition = MMELremovePackage(t[i++]);
         } else if (command === 'reference') {
-          container.p_ref = MMELtokenizePackage(t[i++]);
+          attribute.ref = MMELtokenizeSet(t[i++]);
         } else if (command === 'satisfy') {
-          attribute.satisfy = MMELtokenizePackage(t[i++]);
+          attribute.satisfy = MMELtokenizeSet(t[i++]);
         } else {
           throw new Error(
             'Parsing error: data class attribute. ID ' +
@@ -79,37 +73,14 @@ export function parseDataAttribute(
       }
     }
   }
-  return container;
-}
-
-export function resolveAttribute(
-  a: ParsingDataAttribute,
-  idreg: Map<string, MMELReference>
-): MMELDataAttribute {
-  const attribute = a.content;
-  for (const x of a.p_ref) {
-    const y = idreg.get(x);
-    if (y !== undefined) {
-      attribute.ref.push(y);
-    } else {
-      throw new Error(
-        'Error in resolving IDs in reference for data attributes ' +
-          attribute.id
-      );
-    }
-  }
   return attribute;
 }
 
-export function parseDataClass(id: string, data: string): ParsingDataClass {
+export function parseDataClass(id: string, data: string): MMELDataClass {
   const dc: MMELDataClass = {
     id: id,
-    attributes: [],
+    attributes: {},
     datatype: DataType.DATACLASS,
-  };
-  const container: ParsingDataClass = {
-    content: dc,
-    p_attribute: [],
   };
 
   if (data !== '') {
@@ -119,24 +90,14 @@ export function parseDataClass(id: string, data: string): ParsingDataClass {
       const basic: string = t[i++];
       if (i < t.length) {
         const details: string = t[i++];
-        container.p_attribute.push(parseDataAttribute(basic.trim(), details));
+        const att = parseDataAttribute(basic.trim(), details);
+        dc.attributes[att.id] = att;
       } else {
         throw new Error(
           'Parsing error: class. ID ' + id + ': Expecting { after ' + basic
         );
       }
     }
-  }
-  return container;
-}
-
-export function resolveDataClass(
-  container: ParsingDataClass,
-  idreg: Map<string, MMELReference>
-): MMELDataClass {
-  const dc = container.content;
-  for (const x of container.p_attribute) {
-    dc.attributes.push(resolveAttribute(x, idreg));
   }
   return dc;
 }
@@ -179,7 +140,7 @@ export function parseEnumValue(id: string, data: string): MMELEnumValue {
 export function parseEnum(id: string, data: string): MMELEnum {
   const e: MMELEnum = {
     id: id,
-    values: [],
+    values: {},
     datatype: DataType.ENUM,
   };
   if (data !== '') {
@@ -189,7 +150,8 @@ export function parseEnum(id: string, data: string): MMELEnum {
       const vid: string = t[i++];
       if (i < t.length) {
         const vcontent: string = t[i++];
-        e.values.push(parseEnumValue(vid, vcontent));
+        const ev = parseEnumValue(vid, vcontent);
+        e.values[ev.id] = ev;
       } else {
         throw new Error(
           'Parsing error: enum. ID ' +
@@ -203,16 +165,12 @@ export function parseEnum(id: string, data: string): MMELEnum {
   return e;
 }
 
-export function parseRegistry(id: string, data: string): ParsingRegistry {
+export function parseRegistry(id: string, data: string): MMELRegistry {
   const reg: MMELRegistry = {
     id: id,
     title: '',
-    data: null,
+    data: '',
     datatype: DataType.REGISTRY,
-  };
-  const container: ParsingRegistry = {
-    content: reg,
-    p_dataclass: '',
   };
 
   if (data !== '') {
@@ -224,7 +182,7 @@ export function parseRegistry(id: string, data: string): ParsingRegistry {
         if (command === 'title') {
           reg.title = MMELremovePackage(t[i++]);
         } else if (command === 'data_class') {
-          container.p_dataclass = t[i++];
+          reg.data = t[i++];
         } else {
           throw new Error(
             'Parsing error: registry. ID ' + id + ': Unknown keyword ' + command
@@ -239,22 +197,6 @@ export function parseRegistry(id: string, data: string): ParsingRegistry {
         );
       }
     }
-  }
-  return container;
-}
-
-export function resolveRegistry(
-  container: ParsingRegistry,
-  idreg: Map<string, MMELDataClass>
-): MMELRegistry {
-  const reg = container.content;
-  const y = idreg.get(container.p_dataclass);
-  if (y !== undefined) {
-    reg.data = y;
-  } else {
-    throw new Error(
-      'Error in resolving IDs in data class for registry ' + reg.id
-    );
   }
   return reg;
 }

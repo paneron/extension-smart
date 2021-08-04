@@ -1,28 +1,20 @@
-import { DataType, MMELNode } from '../interface/baseinterface';
+import { DataType } from '../interface/baseinterface';
 import {
   MMELEdge,
   MMELEGate,
   MMELSubprocess,
   MMELSubprocessComponent,
-  ParsingEdge,
-  ParsingSubprocess,
-  ParsingSubprocessComponent,
 } from '../interface/flowcontrolinterface';
 import { MMELremovePackage, MMELtokenizePackage } from '../util/tokenizer';
 
-export function parseEdge(id: string, data: string): ParsingEdge {
+export function parseEdge(id: string, data: string): MMELEdge {
   const edge: MMELEdge = {
     datatype: DataType.EDGE,
     id: id,
-    from: null,
-    to: null,
+    from: '',
+    to: '',
     description: '',
     condition: '',
-  };
-  const container: ParsingEdge = {
-    content: edge,
-    p_from: '',
-    p_to: '',
   };
 
   const t: Array<string> = MMELtokenizePackage(data);
@@ -31,13 +23,13 @@ export function parseEdge(id: string, data: string): ParsingEdge {
     const command: string = t[i++];
     if (i < t.length) {
       if (command === 'from') {
-        container.p_from = t[i++];
+        edge.from = t[i++];
       } else if (command === 'description') {
         edge.description = MMELremovePackage(t[i++]);
       } else if (command === 'condition') {
         edge.condition = MMELremovePackage(t[i++]);
       } else if (command === 'to') {
-        container.p_to = t[i++];
+        edge.to = t[i++];
       } else {
         throw new Error(
           'Parsing error: process flow. ID ' +
@@ -55,43 +47,16 @@ export function parseEdge(id: string, data: string): ParsingEdge {
       );
     }
   }
-  return container;
-}
-
-export function resolveEdge(
-  container: ParsingEdge,
-  idreg: Map<string, MMELSubprocessComponent>
-): MMELEdge {
-  const edge = container.content;
-  let x = idreg.get(container.p_from);
-  if (x !== undefined) {
-    edge.from = x;
-  } else {
-    throw new Error('Error in resolving IDs in from for egde ' + edge.id);
-  }
-  x = idreg.get(container.p_to);
-  if (x !== undefined) {
-    edge.to = x;
-  } else {
-    throw new Error('Error in resolving IDs in to for egde ' + edge.id);
-  }
   return edge;
 }
 
-export function parseSubprocess(id: string, data: string): ParsingSubprocess {
+export function parseSubprocess(id: string, data: string): MMELSubprocess {
   const sub: MMELSubprocess = {
     id: id,
-    childs: [],
-    edges: [],
-    data: [],
+    childs: {},
+    edges: {},
+    data: {},
     datatype: DataType.SUBPROCESS,
-  };
-  const container: ParsingSubprocess = {
-    content: sub,
-    p_childs: [],
-    p_data: [],
-    p_edges: [],
-    map: new Map<string, MMELSubprocessComponent>(),
   };
 
   if (data !== '') {
@@ -101,11 +66,11 @@ export function parseSubprocess(id: string, data: string): ParsingSubprocess {
       const command: string = t[i++];
       if (i < t.length) {
         if (command === 'elements') {
-          readElements(container, MMELremovePackage(t[i++]));
+          readElements(sub, MMELremovePackage(t[i++]));
         } else if (command === 'process_flow') {
-          readEdges(container, MMELremovePackage(t[i++]));
+          readEdges(sub, MMELremovePackage(t[i++]));
         } else if (command === 'data') {
-          readData(container, MMELremovePackage(t[i++]));
+          readData(sub, MMELremovePackage(t[i++]));
         } else {
           throw new Error(
             'Parsing error: subprocess. ID ' +
@@ -124,10 +89,10 @@ export function parseSubprocess(id: string, data: string): ParsingSubprocess {
       }
     }
   }
-  return container;
+  return sub;
 }
 
-function readElements(sub: ParsingSubprocess, data: string) {
+function readElements(sub: MMELSubprocess, data: string) {
   const t: Array<string> = MMELtokenizePackage(data);
   let i = 0;
   while (i < t.length) {
@@ -135,8 +100,7 @@ function readElements(sub: ParsingSubprocess, data: string) {
     if (i < t.length) {
       const id = name.trim();
       const nc = parseSubprocessComponent(id, t[i++]);
-      sub.p_childs.push(nc);
-      sub.map.set(id, nc.content);
+      sub.childs[nc.element] = nc;
     } else {
       throw new Error(
         'Parsing error: elements in subprocess. Expecting value for ' + name
@@ -145,7 +109,7 @@ function readElements(sub: ParsingSubprocess, data: string) {
   }
 }
 
-function readData(sub: ParsingSubprocess, data: string) {
+function readData(sub: MMELSubprocess, data: string) {
   const t: Array<string> = MMELtokenizePackage(data);
   let i = 0;
   while (i < t.length) {
@@ -153,8 +117,7 @@ function readData(sub: ParsingSubprocess, data: string) {
     if (i < t.length) {
       const id = name.trim();
       const nc = parseSubprocessComponent(id, t[i++]);
-      sub.p_data.push(nc);
-      sub.map.set(id, nc.content);
+      sub.data[nc.element] = nc;
     } else {
       throw new Error(
         'Parsing error: data in subprocess. Expecting value for ' + name
@@ -163,13 +126,14 @@ function readData(sub: ParsingSubprocess, data: string) {
   }
 }
 
-function readEdges(sub: ParsingSubprocess, data: string) {
+function readEdges(sub: MMELSubprocess, data: string) {
   const t: Array<string> = MMELtokenizePackage(data);
   let i = 0;
   while (i < t.length) {
     const id: string = t[i++];
     if (i < t.length) {
-      sub.p_edges.push(parseEdge(id.trim(), t[i++]));
+      const edge = parseEdge(id.trim(), t[i++]);
+      sub.edges[edge.id] = edge;
     } else {
       throw new Error(
         'Parsing error: edges in subprocess. Expecting value for ' + id
@@ -178,34 +142,15 @@ function readEdges(sub: ParsingSubprocess, data: string) {
   }
 }
 
-export function resolveSubprocess(
-  container: ParsingSubprocess,
-  idreg: Map<string, MMELNode>
-): MMELSubprocess {
-  const sub: MMELSubprocess = container.content;
-  container.p_childs.forEach(x => {
-    sub.childs.push(resolveSubprocessComponent(x, idreg));
-  });
-  container.p_edges.forEach(x => sub.edges.push(resolveEdge(x, container.map)));
-  container.p_data.forEach(x => {
-    sub.data.push(resolveSubprocessComponent(x, idreg));
-  });
-  return sub;
-}
-
 export function parseSubprocessComponent(
   elm: string,
   data: string
-): ParsingSubprocessComponent {
+): MMELSubprocessComponent {
   const com: MMELSubprocessComponent = {
-    element: null,
+    element: elm,
     x: 0,
     y: 0,
     datatype: DataType.SUBPROCESSCOMPONENT,
-  };
-  const container: ParsingSubprocessComponent = {
-    content: com,
-    p_element: elm,
   };
 
   const t: Array<string> = MMELtokenizePackage(data);
@@ -230,22 +175,6 @@ export function parseSubprocessComponent(
         'Parsing error: edges in subprocess. Expecting value for ' + command
       );
     }
-  }
-  return container;
-}
-
-export function resolveSubprocessComponent(
-  container: ParsingSubprocessComponent,
-  idreg: Map<string, MMELNode>
-): MMELSubprocessComponent {
-  const com: MMELSubprocessComponent = container.content;
-  const x = idreg.get(container.p_element);
-  if (x !== undefined) {
-    com.element = x;
-  } else {
-    throw new Error(
-      'Error in resolving IDs in from for graph node ' + container.p_element
-    );
   }
   return com;
 }

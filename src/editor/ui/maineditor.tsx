@@ -2,16 +2,20 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx, css } from '@emotion/react';
-import React, { RefObject, useContext, useMemo, useState } from 'react';
+import React, {
+  CSSProperties,
+  RefObject,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 
 import ReactFlow, {
   Controls,
   OnLoadParams,
-  ControlButton,
   ReactFlowProvider,
-  Connection,
-  Edge,
   isNode,
+  ControlButton,
   //useZoomPanHelper,
 } from 'react-flow-renderer';
 
@@ -22,64 +26,86 @@ import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
-import { SelectedNodeDescription } from './component/infopane';
-import ControlPane from './component/controlpane';
-import { isGraphNode, ModelWrapper } from './model/modelwrapper';
-import { PageHistory } from './model/history';
+// import { SelectedNodeDescription } from './component/infopane';
+// import ControlPane from './component/controlpane';
 import {
-  edgeTypes,
-  ISearch,
-  IState,
-  nodeTypes,
-  SearchMan,
-  StateMan,
-} from './interface/state';
-import NewComponentPane from './component/newcomponentpane';
-import BasicSettingPane from './component/basicsetting';
-import FilterPane from './component/filterpane';
-import { functionCollection } from './util/function';
-import RepoEditPane from './component/edit/repoedit';
-import { DocumentStore } from '../repository/document';
-import OnePageChecklist from './component/onepagechecklist';
-import EditProcessPage from './component/processedit';
-import EditApprovalPage from './component/approvaledit';
-import { EditSCEventPage, EditTimerPage } from './component/eventedit';
-import { IEdgeLabel } from './interface/datainterface';
-import { EditEGatePage } from './component/editEgate';
-import SimulationPage from './component/simulationpane';
-import ImportPane from './component/importpane';
-import AIPane from './component/aipane';
-import MeasureCheckPane from './component/measurementcheckpane';
-import LegendPane from './util/legendpane';
-import { DataType, MMELNode } from '../serialize/interface/baseinterface';
-import { MMELFactory } from '../runtime/modelComponentCreator';
-import { ProgressManager } from './util/progressmanager';
+  createEditorModelWrapper,
+  getReactFlowElementsFrom,
+  ModelWrapper,
+} from '../model/modelwrapper';
 import {
-  MMELEGate,
-  MMELSubprocess,
-} from '../serialize/interface/flowcontrolinterface';
-import { MMELRegistry } from '../serialize/interface/datainterface';
+  addToHistory,
+  createPageHistory,
+  getBreadcrumbs,
+  PageHistory,
+  popPage,
+} from '../model/history';
 import {
-  MMELApproval,
-  MMELProcess,
-} from '../serialize/interface/processinterface';
+  createNewModel,
+  createSubprocessComponent,
+} from '../utils/EditorFactory';
+import { EdgeTypes, EditorState, NodeTypes } from '../model/state';
 import {
-  MMELSignalCatchEvent,
-  MMELTimerEvent,
-} from '../serialize/interface/eventinterface';
-import { NodeData } from './nodecontainer';
-import IndexPane from './component/IndexPane';
-import { DataIndexer } from './util/datasearchmanager';
-import FileMenu from './component/menu/File';
-import { MODAILITYOPTIONS } from '../runtime/idManager';
+  EditorSubprocess,
+  isEditorData,
+  isEditorNode,
+} from '../model/editormodel';
+import FileMenu from './menu/file';
+import { SelectedNodeDescription } from './sidebar/selected';
+import { DiagTypes, MyDiag } from '../model/dialog';
+// import {
+//   edgeTypes,
+//   ISearch,
+//   IState,
+//   nodeTypes,
+//   SearchMan,
+//   StateMan,
+// } from './interface/state';
+// import NewComponentPane from './component/newcomponentpane';
+// import BasicSettingPane from './component/basicsetting';
+// import FilterPane from './component/filterpane';
+// import { functionCollection } from './util/function';
+// import RepoEditPane from './component/edit/repoedit';
+// import OnePageChecklist from './component/onepagechecklist';
+// import EditProcessPage from './component/processedit';
+// import EditApprovalPage from './component/approvaledit';
+// import { EditSCEventPage, EditTimerPage } from './component/eventedit';
+// import { IEdgeLabel } from './interface/datainterface';
+// import { EditEGatePage } from './component/editEgate';
+// import SimulationPage from './component/simulationpane';
+// import ImportPane from './component/importpane';
+// import AIPane from './component/aipane';
+// import MeasureCheckPane from './component/measurementcheckpane';
+// import LegendPane from './util/legendpane';
+// import { DataType, MMELNode } from '../serialize/interface/baseinterface';
+// import { MMELFactory } from '../runtime/modelComponentCreator';
+// import { ProgressManager } from './util/progressmanager';
+// import {
+//   MMELEGate,
+//   MMELSubprocess,
+// } from '../serialize/interface/flowcontrolinterface';
+// import { MMELRegistry } from '../serialize/interface/datainterface';
+// import {
+//   MMELApproval,
+//   MMELProcess,
+// } from '../serialize/interface/processinterface';
+// import {
+//   MMELSignalCatchEvent,
+//   MMELTimerEvent,
+// } from '../serialize/interface/eventinterface';
+// import { NodeData } from './nodecontainer';
+// import IndexPane from './component/IndexPane';
+// import { DataIndexer } from './util/datasearchmanager';
+// import { MODAILITYOPTIONS } from '../runtime/idManager';
 
-const initModel = MMELFactory.createNewModel();
-const initModelWrapper = new ModelWrapper(initModel);
+const initModel = createNewModel();
+const initModelWrapper = createEditorModelWrapper(initModel);
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
   className?: string;
 }> = ({ isVisible, className }) => {
+  const { logger } = useContext(DatasetContext);
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
@@ -89,635 +115,117 @@ const ModelEditor: React.FC<{
     []
   );
 
-  const [state, setState] = useState<IState>({
-    cvisible: false,
+  const [state, setState] = useState<EditorState>({
     dvisible: true,
     modelWrapper: initModelWrapper,
-    history: new PageHistory(null),
-    rfInstance: null,
+    history: createPageHistory(initModelWrapper),
     nvisible: false,
-    svisible: false,
-    clvisible: false,
-    fpvisible: false,
     aivisible: false,
-    searchvisible: false,
     edgeDeleteVisible: false,
     importvisible: false,
-    measureVisible: false,
-    datarepo: null,
-    datastore: new DocumentStore(),
-    onepage: false,
-    viewprocess: null,
-    process: null,
-    viewapproval: null,
-    approval: null,
-    viewTimer: null,
-    timer: null,
-    viewSignalEvent: null,
-    scEvent: null,
-    eGate: null,
-    viewEGate: null,
-    addingexisting: '',
-    simulation: null,
-    imodel: MMELFactory.createNewModel(),
-    namespace: '',
-    importing: '',
-    mtestResult: null,
-    mtestValues: new Map<string, string>(),
-    highlight: null,
   });
+  const [rfInstance, setRfInstance] = useState<OnLoadParams | null>(null);
+  const [dialogType, setDialogType] = useState<DiagTypes | null>(null);
 
-  const [searchState, setSearchState] = useState<ISearch>({
-    document: '',
-    clause: '',
-    actor: '',
-    modality: MODAILITYOPTIONS.flatMap(() => true),
-  });
-
-  const updateState = (s: IState): void => {
-    setState(() => ({ ...s }));
-  };
-
-  const updateSearchState = (s: ISearch): void => {
-    setSearchState(() => ({ ...s }));
-  };
-
-  const sm: StateMan = { state: state, setState: updateState };
-  const searchman: SearchMan = {
-    searchState: searchState,
-    setSearchState: updateSearchState,
-  };
-
-  const onLoad = (params: OnLoadParams) => {
-    console.log('flow loaded:', params);
+  function onLoad(params: OnLoadParams) {
+    logger?.log('flow loaded');
+    setRfInstance(params);
     params.fitView();
-    sm.state.rfInstance = params;
-    updateState(sm.state);
-  };
+  }
 
-  console.debug('Debug message: editor', state, searchState);
-
-  const checkUpdated = () => {
-    const modelwrapper = state.modelWrapper;
-    const root = modelwrapper.model.root;
-    if (root !== null) {
-      ProgressManager.recalculateProgress(root, modelwrapper);
-    }
-    updateState(state);
-  };
-
-  const addPageToHistory = (x: MMELSubprocess, name: string) => {
-    saveLayout();
-    state.history.add(x, name);
-    state.modelWrapper.page = x;
-    updateState(state);
-  };
-
-  const saveLayout = () => {
-    console.debug('Save Layout');
-    if (state.rfInstance !== null) {
-      state.rfInstance.getElements().forEach(x => {
+  function saveLayout() {
+    logger?.log('Save Layout');
+    if (rfInstance !== null) {
+      for (const x of rfInstance.getElements()) {
         const data = x.data;
-        const mw = sm.state.modelWrapper;
+        const mw = state.modelWrapper;
         const page = mw.page;
-        const idreg = mw.idman;
-        const paddon = mw.subman.get(page);
-        if (isNode(x) && data instanceof NodeData) {
-          const gn = paddon.map.get(data.represent);
-          if (gn !== undefined) {
-            gn.x = x.position.x;
-            gn.y = x.position.y;
+        if (isNode(x) && isEditorNode(data)) {
+          const node = isEditorData(data)
+            ? page.data[data.id]
+            : page.childs[data.id];
+          if (node !== undefined) {
+            node.x = x.position.x;
+            node.y = x.position.y;
           } else {
-            const obj = idreg.nodes.get(data.represent);
-            if (obj !== undefined) {
-              const nc = MMELFactory.createSubprocessComponent(obj);
-              if (
-                obj.datatype === DataType.DATACLASS ||
-                obj.datatype === DataType.REGISTRY
-              ) {
-                page.data.push(nc);
-                nc.element = obj as MMELNode;
-                nc.x = x.position.x;
-                nc.y = x.position.y;
-                paddon.map.set(data.represent, nc);
-              } else if (isGraphNode(obj)) {
-                page.childs.push(nc);
-                nc.element = obj as MMELNode;
-                nc.x = x.position.x;
-                nc.y = x.position.y;
-                paddon.map.set(data.represent, nc);
-              }
+            const nc = createSubprocessComponent(data.id);
+            if (isEditorData(data)) {
+              page.data[data.id] = nc;
+            } else {
+              page.childs[data.id] = nc;
             }
+            nc.x = x.position.x;
+            nc.y = x.position.y;
           }
         }
-      });
+      }
     }
-  };
+    return state.modelWrapper;
+  }
 
-  const onDragOver = (event: React.DragEvent<any>) => {
+  function toggleDataVisibility() {
+    state.dvisible = !state.dvisible;
+    if (!state.dvisible) {
+      saveLayout();
+    }
+    setState({ ...state });
+  }
+
+  function setModelWrapper(mw: ModelWrapper) {
+    setState({ ...state, history: createPageHistory(mw), modelWrapper: mw });
+  }
+
+  function onDragOver(event: React.DragEvent<any>) {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
-  };
+  }
 
-  const onDrop = (event: React.DragEvent<any>) => {
-    event.preventDefault();
-    if (canvusRef.current !== null && state.rfInstance !== null) {
-      const reactFlowBounds = canvusRef.current.getBoundingClientRect();
-      const type = event.dataTransfer.getData('application/modeleditor');
-      const pos = state.rfInstance.project({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
-      });
-      MMELFactory.addComponent(
-        type,
-        state.modelWrapper,
-        state.modelWrapper.page,
-        pos
-      );
-      updateState(state);
-    }
-  };
-
-  const getObjectByID = (id: string): MMELNode | undefined => {
-    const idreg = sm.state.modelWrapper.idman;
-    if (idreg.nodes.has(id)) {
-      const ret = idreg.nodes.get(id);
-      if (ret !== undefined) {
-        return ret;
-      }
-    }
-    return undefined;
-  };
-
-  const removeLayoutItem = (id: string) => {
-    const mw = sm.state.modelWrapper;
-    state.modelWrapper.model.pages.forEach(p => {
-      const paddon = mw.subman.get(p);
-      p.childs.forEach((c, index) => {
-        if (c.element !== null && c.element.id === id) {
-          p.childs.splice(index, 1);
-          paddon.map.delete(id);
-        }
-      });
-      p.data.forEach((c, index) => {
-        if (c.element !== null && c.element.id === id) {
-          p.data.splice(index, 1);
-          paddon.map.delete(id);
-        }
-      });
-    });
-  };
-
-  const renameLayoutItem = (old: string, name: string) => {
+  function onPageChange(updated: PageHistory, newPage: EditorSubprocess) {
     saveLayout();
-    const mw = functionCollection.getStateMan().state.modelWrapper;
-    state.modelWrapper.model.pages.forEach(p => {
-      const paddon = mw.subman.get(p);
-      if (paddon.map.has(old)) {
-        const y = paddon.map.get(old);
-        if (y !== undefined) {
-          paddon.map.delete(old);
-          paddon.map.set(name, y);
-        }
-      }
-    });
-  };
+    state.history = updated;
+    state.modelWrapper.page = newPage;
+    setState({ ...state });
+  }
 
-  const viewDataRepository = (x: MMELRegistry) => {
-    state.datarepo = x;
-    updateState(state);
-  };
+  function onProcessClick(pageid: string, processid: string): void {
+    saveLayout();
+    const mw = state.modelWrapper;
+    mw.page = mw.model.pages[pageid];
+    logger?.log('Go to page', pageid);
+    addToHistory(state.history, mw.page, processid);
+    setState({ ...state });
+  }
 
-  const viewEditProcess = (p: MMELProcess) => {
-    state.viewprocess = {
-      id: p === null ? '' : p.id,
-      name: p === null ? '' : p.name,
-      modality: p === null ? '' : p.modality,
-      actor: p === null || p.actor === null ? '' : p.actor.id,
-      start: p !== null && p.page !== null,
-      output:
-        p === null
-          ? []
-          : p.output.flatMap(r => {
-              return r.id;
-            }),
-      input:
-        p === null
-          ? []
-          : p.input.flatMap(r => {
-              return r.id;
-            }),
-      provision:
-        p === null
-          ? []
-          : p.provision.flatMap(r => {
-              return {
-                id: r.id,
-                modality: r.modality,
-                condition: r.condition,
-                ref: r.ref.flatMap(ref => {
-                  return ref.id;
-                }),
-              };
-            }),
-      measure: [...p.measure],
-    };
-    state.process = p;
-    updateState(state);
-  };
-
-  const viewEditApproval = (p: MMELApproval) => {
-    state.viewapproval = {
-      id: p === null ? '' : p.id,
-      name: p === null ? '' : p.name,
-      modality: p === null ? '' : p.modality,
-      actor: p === null || p.actor === null ? '' : p.actor.id,
-      approver: p === null || p.approver === null ? '' : p.approver.id,
-      records:
-        p === null
-          ? []
-          : p.records.flatMap(r => {
-              return r.id;
-            }),
-      ref:
-        p === null
-          ? []
-          : p.ref.flatMap(r => {
-              return r.id;
-            }),
-    };
-    state.approval = p;
-    updateState(state);
-  };
-
-  const viewEGate = (x: MMELEGate) => {
-    const edges: Array<IEdgeLabel> = [];
-    sm.state.modelWrapper.page.edges.forEach(e => {
-      if (e.from !== null && e.from.element === x) {
-        edges.push({
-          id: e.id,
-          description: e.description,
-          condition: e.condition,
-          target: e.to !== null && e.to.element !== null ? e.to.element.id : '',
-        });
-      }
-    });
-    state.viewEGate = {
-      id: x.id,
-      label: x.label,
-      edges: edges,
-    };
-    state.eGate = x;
-    updateState(state);
-  };
-
-  const viewSignalCatch = (x: MMELSignalCatchEvent) => {
-    state.viewSignalEvent = {
-      id: x.id,
-      signal: x.signal,
-    };
-    state.scEvent = x;
-    updateState(state);
-  };
-
-  const viewTimer = (t: MMELTimerEvent) => {
-    state.viewTimer = {
-      id: t.id,
-      type: t.type,
-      para: t.para,
-    };
-    state.timer = t;
-    console.debug(state.viewTimer, state.timer);
-    updateState(state);
-  };
-
-  const getStateMan = () => {
-    return sm;
-  };
-
-  const connectHandle = (x: Edge<any> | Connection) => {
-    if (!state.clvisible && x.source !== null && x.target !== null) {
-      const mw = state.modelWrapper;
-      const idreg = mw.idman;
-      const page = mw.page;
-      const paddon = mw.subman.get(page);
-      const s = paddon.map.get(x.source);
-      const t = paddon.map.get(x.target);
-      if (
-        s !== undefined &&
-        t !== undefined &&
-        s.datatype === DataType.SUBPROCESSCOMPONENT &&
-        t.datatype === DataType.SUBPROCESSCOMPONENT
-      ) {
-        if (
-          s.element?.datatype === DataType.DATACLASS ||
-          s.element?.datatype === DataType.REGISTRY ||
-          t.element?.datatype === DataType.DATACLASS ||
-          t.element?.datatype === DataType.REGISTRY
-        ) {
-          return;
-        }
-        const newEdge = MMELFactory.createEdge(idreg.findUniqueEdgeID('Edge'));
-        mw.comman.get(s).child.push(newEdge);
-        newEdge.from = s;
-        newEdge.to = t;
-        mw.page.edges.push(newEdge);
-        idreg.edges.set(newEdge.id, newEdge);
-        updateState(state);
-      }
+  function drillUp(): void {
+    if (state.history.history.length > 0) {
+      saveLayout();
+      state.modelWrapper.page = popPage(state.history);
+      setState({ ...state });
     }
-  };
-
-  /* components */
-  const csson: React.CSSProperties = {
-    background: '#3d3',
-  };
-
-  const cssoff: React.CSSProperties = {};
-
-  const controlPaneButton = (
-    <ControlButton
-      style={state.cvisible ? csson : cssoff}
-      onClick={() => {
-        state.cvisible = !state.cvisible;
-        updateState(state);
-      }}
-    >
-      Ctl
-    </ControlButton>
-  );
-
-  const dataVisibleButton = (
-    <ControlButton
-      style={state.dvisible ? csson : cssoff}
-      onClick={() => {
-        state.dvisible = !state.dvisible;
-        if (!state.dvisible) {
-          saveLayout();
-        }
-        updateState(state);
-      }}
-    >
-      Dat
-    </ControlButton>
-  );
-
-  const newComponentButton = (
-    <ControlButton
-      style={state.nvisible ? csson : cssoff}
-      onClick={() => {
-        state.nvisible = !state.nvisible;
-        updateState(state);
-      }}
-    >
-      Add
-    </ControlButton>
-  );
-
-  const basicSettingButton = (
-    <ControlButton
-      style={state.svisible ? csson : cssoff}
-      onClick={() => {
-        state.svisible = !state.svisible;
-        updateState(state);
-      }}
-    >
-      M
-    </ControlButton>
-  );
-
-  const edgeDeleteButton = (
-    <ControlButton
-      style={state.edgeDeleteVisible ? csson : cssoff}
-      onClick={() => {
-        state.edgeDeleteVisible = !state.edgeDeleteVisible;
-        updateState(state);
-      }}
-    >
-      E
-    </ControlButton>
-  );
-
-  const checkListButton = (
-    <ControlButton
-      style={state.clvisible ? csson : cssoff}
-      onClick={() => {
-        state.clvisible = !state.clvisible;
-        if (state.clvisible) {
-          state.cvisible = false;
-          state.nvisible = false;
-          state.svisible = false;
-          state.fpvisible = false;
-          state.aivisible = false;
-          state.importvisible = false;
-          state.edgeDeleteVisible = false;
-          state.onepage = false;
-          state.searchvisible = false;
-          const mw = sm.state.modelWrapper;
-          const model = sm.state.modelWrapper.model;
-          if (model.root !== null) {
-            model.processes.map(p => {
-              const paddon = mw.clman.getProcessAddOn(p);
-              mw.nodeman.get(p).parent = [];
-              paddon.job = null;
-            });
-            model.dataclasses.map(p => (mw.nodeman.get(p).parent = []));
-            model.gateways.map(p => (mw.nodeman.get(p).parent = []));
-            model.approvals.map(p => (mw.nodeman.get(p).parent = []));
-            ProgressManager.initProgressManager();
-          }
-        } else {
-          state.fpvisible = false;
-          state.measureVisible = false;
-          state.mtestResult = null;
-        }
-        updateState(state);
-      }}
-    >
-      CL
-    </ControlButton>
-  );
-
-  const measurePaneButton = (
-    <ControlButton
-      style={state.measureVisible ? csson : cssoff}
-      onClick={() => {
-        state.measureVisible = !state.measureVisible;
-        if (!state.measureVisible) {
-          state.mtestResult = null;
-        }
-        updateState(state);
-      }}
-    >
-      Mea
-    </ControlButton>
-  );
-
-  const filterPaneButton = (
-    <ControlButton
-      style={state.fpvisible ? csson : cssoff}
-      onClick={() => {
-        state.fpvisible = !state.fpvisible;
-        updateState(state);
-      }}
-    >
-      F
-    </ControlButton>
-  );
-
-  const importButton = (
-    <ControlButton
-      style={state.importvisible ? csson : cssoff}
-      onClick={() => {
-        state.importvisible = !state.importvisible;
-        updateState(state);
-      }}
-    >
-      Imp
-    </ControlButton>
-  );
-
-  const aiButton = (
-    <ControlButton
-      style={state.aivisible ? csson : cssoff}
-      onClick={() => {
-        state.aivisible = !state.aivisible;
-        updateState(state);
-      }}
-    >
-      AI
-    </ControlButton>
-  );
-
-  const searchButton = (
-    <ControlButton
-      style={state.searchvisible ? csson : cssoff}
-      onClick={() => {
-        state.searchvisible = !state.searchvisible;
-        state.highlight = null;
-        updateState(state);
-      }}
-    >
-      Ind
-    </ControlButton>
-  );
-
-  /* rendering */
-
-  if (state.clvisible) {
-    if (state.modelWrapper.model.root !== null) {
-      ProgressManager.recalculateEdgeHighlight(state.modelWrapper.page);
-    }
-  }
-  functionCollection.checkUpdated = checkUpdated;
-  functionCollection.addPageToHistory = addPageToHistory;
-  functionCollection.saveLayout = saveLayout;
-  functionCollection.getObjectByID = getObjectByID;
-  functionCollection.removeLayoutItem = removeLayoutItem;
-  functionCollection.viewDataRepository = viewDataRepository;
-  functionCollection.renameLayoutItem = renameLayoutItem;
-  functionCollection.viewEditProcess = viewEditProcess;
-  functionCollection.getStateMan = getStateMan;
-  functionCollection.viewEditApproval = viewEditApproval;
-  functionCollection.viewEGate = viewEGate;
-  functionCollection.viewSignalCatch = viewSignalCatch;
-  functionCollection.viewTimer = viewTimer;
-
-  let dialog: {
-    title: JSX.Element;
-    content: JSX.Element;
-    onClose: () => void;
- } | null = null;
-
-  const elms: Array<JSX.Element> = [];
-  if (state.svisible) {
-    dialog = {
-      title: <>Settings</>,
-      onClose: () => sm.setState({ ...sm.state, svisible: false }),
-      content: <BasicSettingPane key="BasicSettingPage" {...sm} />,
-    };
-  }
-  if (state.nvisible) {
-    elms.push(<NewComponentPane key="NewComponentPage" {...sm} />);
-  }
-  if (state.datarepo !== null) {
-    elms.push(<RepoEditPane key="DataRepoEditPage" {...sm} />);
-  }
-  if (state.fpvisible) {
-    elms.push(<FilterPane key="FilteringPage" sm={sm} ssm={searchman} />);
-  }
-  if (state.onepage) {
-    elms.push(
-      <OnePageChecklist key="OnePageChecklistPage" sm={sm} cond={searchState} />
-    );
-  }
-  if (state.viewprocess !== null) {
-    dialog = {
-      title: <>Edit process</>,
-      onClose: () => sm.setState({ ...sm.state, viewprocess: null }),
-      content: <EditProcessPage key="EditProcessPage" {...sm} />,
-    };
-  }
-  if (state.viewapproval !== null) {
-    elms.push(<EditApprovalPage key="EditApprovalPage" {...sm} />);
-  }
-  if (state.viewTimer !== null) {
-    elms.push(<EditTimerPage key="BasicTimerPage" {...sm} />);
-  }
-  if (state.viewSignalEvent !== null) {
-    elms.push(<EditSCEventPage key="EditSCEventPage" {...sm} />);
-  }
-  if (state.viewEGate !== null) {
-    elms.push(<EditEGatePage key="EditEGatePage" {...sm} />);
-  }
-  if (!state.clvisible && state.simulation !== null) {
-    elms.push(<SimulationPage key="SimulationPage" {...sm} />);
-  }
-  if (state.importvisible) {
-    elms.push(<ImportPane key="ImportComponentPage" {...sm} />);
-  }
-  if (state.aivisible) {
-    elms.push(<AIPane key="AIPage" {...sm} />);
-  }
-  if (state.mtestResult !== null || state.fpvisible) {
-    elms.push(<LegendPane key="LegendPage" {...sm} />);
-  }
-  if (state.searchvisible) {
-    elms.push(
-      <IndexPane
-        key="IndexPage"
-        sm={sm}
-        index={DataIndexer.populateIndex(sm.state.modelWrapper)}
-      />
-    );
-  }
-
-  function drillUp() {
-    functionCollection.saveLayout();
-    const page = state.history.pop();
-    state.modelWrapper.page = page;
-    sm.setState(state);
   }
 
   const toolbar = (
     <ControlGroup>
-      <Popover2 minimal placement="bottom-start" content={<FileMenu sm={sm} />}>
+      <Popover2
+        minimal
+        placement="bottom-start"
+        content={
+          <FileMenu
+            setModelWrapper={setModelWrapper}
+            saveModel={saveLayout}
+            setDialogType={setDialogType}
+          />
+        }
+      >
         <Button>Workspace</Button>
       </Popover2>
-      <Button disabled={state.history.isRoot()} onClick={drillUp}>
+      <Button disabled={state.history.history.length <= 1} onClick={drillUp}>
         Drill up
       </Button>
     </ControlGroup>
   );
 
-  function goUpToLevel(i: number) {
-    functionCollection.saveLayout();
-    const page = sm.state.history.popUntil(i);
-    sm.state.modelWrapper.page = page;
-    sm.setState(sm.state);
-  }
-
-  const breadcrumbs = state.history.getBreadcrumbs(sm, goUpToLevel);
+  const breadcrumbs = getBreadcrumbs(state.history, onPageChange);
 
   const sidebar = (
     <Sidebar
@@ -728,50 +236,48 @@ const ModelEditor: React.FC<{
       `}
       title="Item metadata"
       blocks={[
-        state.measureVisible
-          ? {
-              key: 'measure-check',
-              title: 'Measurement check',
-              content: <MeasureCheckPane />,
-            }
-          : {
-              key: 'selected-node',
-              title: 'Selected node',
-              content: (
-                <SelectedNodeDescription isCheckListMode={state.clvisible} />
-              ),
-            },
+        {
+          key: 'selected-node',
+          title: 'Selected node',
+          content: <SelectedNodeDescription />,
+        },
       ]}
     />
   );
 
   let ret: JSX.Element;
   if (isVisible) {
+    const diagProps = dialogType === null ? null : MyDiag[dialogType];
     ret = (
       <ReactFlowProvider>
-        <Dialog
-          isOpen={dialog !== null}
-          title={dialog?.title}
-          css={css`
-            width: calc(100vw - 60px);
-            height: calc(100vh - 60px);
-            padding-bottom: 0;
-            & > :last-child {
-              overflow-y: auto;
-              padding: 20px;
-            }
-          `}
-          onClose={dialog?.onClose}
-          canEscapeKeyClose={false}
-          canOutsideClickClose={false}
-        >
-          {dialog?.content}
-        </Dialog>
+        {diagProps !== null && (
+          <Dialog
+            isOpen={dialogType !== null}
+            title={diagProps.title}
+            css={css`
+              width: calc(100vw - 60px);
+              height: calc(100vh - 60px);
+              padding-bottom: 0;
+              & > :last-child {
+                overflow-y: auto;
+                padding: 20px;
+              }
+            `}
+            onClose={() => setDialogType(null)}
+            canEscapeKeyClose={false}
+            canOutsideClickClose={false}
+          >
+            <diagProps.Panel
+              modelwrapper={state.modelWrapper}
+              setModelWrapper={setModelWrapper}
+            />
+          </Dialog>
+        )}
         <Workspace
           className={className}
           toolbar={toolbar}
           sidebar={sidebar}
-          navbarProps={state.simulation === null ? { breadcrumbs } : undefined}
+          navbarProps={{ breadcrumbs }}
         >
           <div
             css={css`
@@ -781,53 +287,29 @@ const ModelEditor: React.FC<{
           >
             <ReactFlow
               key="MMELModel"
-              elements={state.modelWrapper.getReactFlowElementsFrom(
+              elements={getReactFlowElementsFrom(
+                state.modelWrapper,
                 state.dvisible,
-                state.clvisible
+                onProcessClick
               )}
-              onConnect={connectHandle}
               onLoad={onLoad}
-              onDrop={onDrop}
               onDragOver={onDragOver}
               snapToGrid={true}
               snapGrid={[10, 10]}
-              nodeTypes={nodeTypes}
-              edgeTypes={edgeTypes}
-              nodesConnectable={!state.clvisible}
+              nodeTypes={NodeTypes}
+              edgeTypes={EdgeTypes}
               ref={canvusRef}
             >
               <Controls>
-                {dataVisibleButton}
-                {state.simulation === null && !state.clvisible
-                  ? controlPaneButton
-                  : ''}
-                {state.simulation === null && state.clvisible
-                  ? filterPaneButton
-                  : ''}
-                {state.simulation === null && state.clvisible
-                  ? measurePaneButton
-                  : ''}
-                {state.simulation === null ? checkListButton : ''}
-                {state.simulation === null && !state.clvisible
-                  ? basicSettingButton
-                  : ''}
-                {state.simulation === null && !state.clvisible
-                  ? newComponentButton
-                  : ''}
-                {state.simulation === null && !state.clvisible
-                  ? edgeDeleteButton
-                  : ''}
-                {state.simulation === null && !state.clvisible
-                  ? importButton
-                  : ''}
-                {state.simulation === null && !state.clvisible ? aiButton : ''}
-                {state.simulation === null && !state.clvisible
-                  ? searchButton
-                  : ''}
+                <ControlButton
+                  style={getStyle(state.dvisible)}
+                  onClick={() => toggleDataVisibility()}
+                >
+                  {' '}
+                  Dat{' '}
+                </ControlButton>
               </Controls>
             </ReactFlow>
-            <ControlPane key="ControlPanel" {...sm} />
-            {elms}
           </div>
         </Workspace>
       </ReactFlowProvider>
@@ -837,5 +319,9 @@ const ModelEditor: React.FC<{
   }
   return ret;
 };
+
+function getStyle(on: boolean): CSSProperties {
+  return on ? { background: '#3d3' } : {};
+}
 
 export default ModelEditor;

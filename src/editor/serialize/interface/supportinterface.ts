@@ -1,5 +1,12 @@
 import { MMELObject } from './baseinterface';
 
+export enum VarType {
+  EMPTY = '',
+  DATA = 'DATAITEM',
+  LISTDATA = 'DATALIST',
+  DERIVED = 'DERIVED',
+}
+
 export interface MMELMetadata extends MMELObject {
   schema: string;
   author: string;
@@ -8,23 +15,18 @@ export interface MMELMetadata extends MMELObject {
   namespace: string;
 }
 
-export interface MMELProvision extends MMELObject {
-  subject: Map<string, string>;
-  id: string;
-  modality: string;
-  condition: string;
-  ref: Array<MMELReference>;
-}
-
-export interface ParsingProvision {
-  content: MMELProvision;
-  p_ref: Array<string>;
-}
-
 export interface MMELReference extends MMELObject {
   id: string;
   document: string;
   clause: string;
+}
+
+export interface MMELProvision extends MMELObject {
+  subject: Record<string, string>;
+  id: string;
+  modality: string;
+  condition: string;
+  ref: Set<string>;
 }
 
 export interface MMELRole extends MMELObject {
@@ -34,7 +36,7 @@ export interface MMELRole extends MMELObject {
 
 export interface MMELVariable extends MMELObject {
   id: string;
-  type: string;
+  type: VarType;
   definition: string;
   description: string;
 }

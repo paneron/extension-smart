@@ -1,6 +1,25 @@
-// the elements in the MMEL diagram
-export interface MMELNode extends MMELObject {
-  id: string;
+// all object types in MMEL
+export enum DataType {
+  DATAATTRIBUTE = 'attribute',
+  DATACLASS = 'dc',
+  ENUMVALUE = 'enumvalue',
+  ENUM = 'enum',
+  REGISTRY = 'reg',
+  ENDEVENT = 'end',
+  SIGNALCATCHEVENT = 'signal',
+  STARTEVENT = 'start',
+  TIMEREVENT = 'timer',
+  EDGE = 'edge',
+  SUBPROCESS = 'subprocess',
+  SUBPROCESSCOMPONENT = 'subprocesscomponent',
+  EGATE = 'egate',
+  VARIABLE = 'var',
+  APPROVAL = 'approval',
+  PROCESS = 'process',
+  ROLE = 'role',
+  METADATA = 'metadata',
+  PROVISION = 'provision',
+  REFERENCE = 'ref',
 }
 
 // the base interface for all objects in MMEL
@@ -8,26 +27,7 @@ export interface MMELObject {
   datatype: DataType;
 }
 
-// all object types in MMEL
-export enum DataType {
-  DATAATTRIBUTE,
-  DATACLASS,
-  ENUMVALUE,
-  ENUM,
-  REGISTRY,
-  ENDEVENT,
-  SIGNALCATCHEVENT,
-  STARTEVENT,
-  TIMEREVENT,
-  EDGE,
-  SUBPROCESS,
-  SUBPROCESSCOMPONENT,
-  EGATE,
-  VARIABLE,
-  APPROVAL,
-  PROCESS,
-  ROLE,
-  METADATA,
-  PROVISION,
-  REFERENCE,
+// the elements in the MMEL diagram
+export interface MMELNode extends MMELObject {
+  id: string;
 }

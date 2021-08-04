@@ -43,8 +43,14 @@ export function MMELtokenize(x: string): Array<string> {
   return set;
 }
 
-export function MMELtokenizePackage(x: string): Array<string> {
+export function MMELtokenizePackage(x: string): string[] {
   return MMELtokenize(MMELremovePackage(x));
+}
+
+export function MMELtokenizeSet(x: string): Set<string> {
+  const set = new Set<string>();
+  MMELtokenizePackage(x).forEach(y => set.add(y));
+  return set;
 }
 
 export function MMELremovePackage(x: string): string {

@@ -1,4 +1,4 @@
-import { DataType, MMELObject } from '../interface/baseinterface';
+import { MMELNode } from '../interface/baseinterface';
 import {
   MMELDataAttribute,
   MMELDataClass,
@@ -25,49 +25,39 @@ import {
   MMELReference,
   MMELRole,
   MMELVariable,
+  VarType,
 } from '../interface/supportinterface';
+import {
+  isApproval,
+  isDataClass,
+  isEGate,
+  isEndEvent,
+  isProcess,
+  isRegistry,
+  isSignalEvent,
+  isStartEvent,
+  isTimerEvent,
+} from './validation';
 
-export function toMMELModel(x: MMELObject): string {
-  if (x.datatype === DataType.DATAATTRIBUTE) {
-    return toDataAttributeModel(x as MMELDataAttribute);
-  } else if (x.datatype === DataType.DATACLASS) {
-    return toDataClassModel(x as MMELDataClass);
-  } else if (x.datatype === DataType.ENUMVALUE) {
-    return toEnumValueModel(x as MMELEnumValue);
-  } else if (x.datatype === DataType.ENUM) {
-    return toEnumModel(x as MMELEnum);
-  } else if (x.datatype === DataType.REGISTRY) {
-    return toRegistryModel(x as MMELRegistry);
-  } else if (x.datatype === DataType.ENDEVENT) {
-    return toEndEventModel(x as MMELEndEvent);
-  } else if (x.datatype === DataType.SIGNALCATCHEVENT) {
-    return toSignalCatchEventModel(x as MMELSignalCatchEvent);
-  } else if (x.datatype === DataType.STARTEVENT) {
-    return toStartEventModel(x as MMELStartEvent);
-  } else if (x.datatype === DataType.TIMEREVENT) {
-    return toTimerEventModel(x as MMELTimerEvent);
-  } else if (x.datatype === DataType.EDGE) {
-    return toEdgeModel(x as MMELEdge);
-  } else if (x.datatype === DataType.SUBPROCESS) {
-    return toSubprocessModel(x as MMELSubprocess);
-  } else if (x.datatype === DataType.SUBPROCESSCOMPONENT) {
-    return toSubprocessComponentModel(x as MMELSubprocessComponent);
-  } else if (x.datatype === DataType.EGATE) {
-    return toEGateModel(x as MMELEGate);
-  } else if (x.datatype === DataType.VARIABLE) {
-    return toVariableModel(x as MMELVariable);
-  } else if (x.datatype === DataType.APPROVAL) {
-    return toApprovalModel(x as MMELApproval);
-  } else if (x.datatype === DataType.PROCESS) {
-    return toProcessModel(x as MMELProcess);
-  } else if (x.datatype === DataType.METADATA) {
-    return toMetaDataModel(x as MMELMetadata);
-  } else if (x.datatype === DataType.PROVISION) {
-    return toProvisionModel(x as MMELProvision);
-  } else if (x.datatype === DataType.REFERENCE) {
-    return toReferenceModel(x as MMELReference);
-  } else if (x.datatype === DataType.ROLE) {
-    return toRoleModel(x as MMELRole);
+export function toNodeModel(x: MMELNode): string {
+  if (isDataClass(x)) {
+    return toDataClassModel(x);
+  } else if (isRegistry(x)) {
+    return toRegistryModel(x);
+  } else if (isEndEvent(x)) {
+    return toEndEventModel(x);
+  } else if (isSignalEvent(x)) {
+    return toSignalCatchEventModel(x);
+  } else if (isStartEvent(x)) {
+    return toStartEventModel(x);
+  } else if (isTimerEvent(x)) {
+    return toTimerEventModel(x);
+  } else if (isEGate(x)) {
+    return toEGateModel(x);
+  } else if (isApproval(x)) {
+    return toApprovalModel(x);
+  } else if (isProcess(x)) {
+    return toProcessModel(x);
   }
   throw new Error('Unknown object' + x);
 }
@@ -85,17 +75,17 @@ function toDataAttributeModel(a: MMELDataAttribute): string {
   if (a.modality !== '') {
     out += '    modality ' + a.modality + '\n';
   }
-  if (a.satisfy.length > 0) {
+  if (a.satisfy.size > 0) {
     out += '    satisfy {\n';
-    for (const s of a.satisfy) {
+    for (const s in a.satisfy) {
       out += '      ' + s + '\n';
     }
     out += '    }\n';
   }
-  if (a.ref.length > 0) {
+  if (a.ref.size > 0) {
     out += '    reference {\n';
-    for (const r of a.ref) {
-      out += '      ' + r.id + '\n';
+    for (const r in a.ref) {
+      out += '      ' + r + '\n';
     }
     out += '    }\n';
   }
@@ -105,8 +95,8 @@ function toDataAttributeModel(a: MMELDataAttribute): string {
 
 function toDataClassModel(dc: MMELDataClass): string {
   let out: string = 'class ' + dc.id + ' {\n';
-  for (const a of dc.attributes) {
-    out += toDataAttributeModel(a);
+  for (const a in dc.attributes) {
+    out += toDataAttributeModel(dc.attributes[a]);
   }
   out += '}\n';
   return out;
@@ -119,10 +109,10 @@ function toEnumValueModel(ev: MMELEnumValue): string {
   return out;
 }
 
-function toEnumModel(e: MMELEnum): string {
+export function toEnumModel(e: MMELEnum): string {
   let out: string = 'enum ' + e.id + ' {\n';
-  for (const v of e.values) {
-    out += toEnumValueModel(v);
+  for (const v in e.values) {
+    out += toEnumValueModel(e.values[v]);
   }
   out += '}\n';
   return out;
@@ -131,8 +121,8 @@ function toEnumModel(e: MMELEnum): string {
 function toRegistryModel(reg: MMELRegistry): string {
   let out: string = 'data_registry ' + reg.id + ' {\n';
   out += '  title "' + reg.title + '"\n';
-  if (reg.data !== null) {
-    out += '  data_class ' + reg.data.id + '\n';
+  if (reg.data !== '') {
+    out += '  data_class ' + reg.data + '\n';
   }
   out += '}\n';
   return out;
@@ -169,11 +159,11 @@ function toTimerEventModel(te: MMELTimerEvent): string {
 
 function toEdgeModel(edge: MMELEdge): string {
   let out: string = '    ' + edge.id + ' {\n';
-  if (edge.from !== null && edge.from.element !== null) {
-    out += '      from ' + edge.from.element.id + '\n';
+  if (edge.from !== '') {
+    out += '      from ' + edge.from + '\n';
   }
-  if (edge.to !== null && edge.to.element !== null) {
-    out += '      to ' + edge.to.element.id + '\n';
+  if (edge.to !== '') {
+    out += '      to ' + edge.to + '\n';
   }
   if (edge.description !== '') {
     out += '      description "' + edge.description + '"\n';
@@ -185,32 +175,32 @@ function toEdgeModel(edge: MMELEdge): string {
   return out;
 }
 
-function toSubprocessModel(sub: MMELSubprocess): string {
+export function toSubprocessModel(sub: MMELSubprocess): string {
   let out: string = 'subprocess ' + sub.id + ' {\n';
   out += '  elements {\n';
-  sub.childs.forEach(x => {
-    out += toMMELModel(x);
-  });
+  for (const x in sub.childs) {
+    out += toSubprocessComponentModel(sub.childs[x]);
+  }
   out += '  }\n';
   out += '  process_flow {\n';
-  sub.edges.forEach(e => {
-    out += toMMELModel(e);
-  });
+  for (const e in sub.edges) {
+    out += toEdgeModel(sub.edges[e]);
+  }
   out += '  }\n';
   out += '  data {\n';
-  sub.data.forEach(d => {
-    out += toMMELModel(d);
-  });
+  for (const d in sub.data) {
+    out += toSubprocessComponentModel(sub.data[d]);
+  }
   out += '  }\n';
   out += '}\n';
   return out;
 }
 
 function toSubprocessComponentModel(com: MMELSubprocessComponent): string {
-  if (com.element === null) {
+  if (com.element === '') {
     return '';
   }
-  let out: string = '    ' + com.element.id + ' {\n';
+  let out: string = '    ' + com.element + ' {\n';
   out += '      x ' + com.x + '\n';
   out += '      y ' + com.y + '\n';
   out += '    }\n';
@@ -226,9 +216,9 @@ function toEGateModel(egate: MMELEGate): string {
   return out;
 }
 
-function toVariableModel(v: MMELVariable): string {
+export function toVariableModel(v: MMELVariable): string {
   let out: string = 'measurement ' + v.id + ' {\n';
-  if (v.type !== '') {
+  if (v.type !== VarType.EMPTY) {
     out += '  type ' + v.type + '\n';
   }
   if (v.definition !== '') {
@@ -241,7 +231,7 @@ function toVariableModel(v: MMELVariable): string {
   return out;
 }
 
-function toMetaDataModel(meta: MMELMetadata): string {
+export function toMetaDataModel(meta: MMELMetadata): string {
   let out = 'metadata {\n';
   out += '  title "' + meta.title + '"\n';
   out += '  schema "' + meta.schema + '"\n';
@@ -252,19 +242,19 @@ function toMetaDataModel(meta: MMELMetadata): string {
   return out;
 }
 
-function toProvisionModel(pro: MMELProvision): string {
+export function toProvisionModel(pro: MMELProvision): string {
   let out: string = 'provision ' + pro.id + ' {\n';
-  pro.subject.forEach((value: string, key: string) => {
-    out += '  ' + key + ' ' + value + '\n';
-  });
+  for (const x in pro.subject) {
+    out += '  ' + x + ' ' + pro.subject[x] + '\n';
+  }
   out += '  condition "' + pro.condition + '"\n';
   if (pro.modality !== '') {
     out += '  modality ' + pro.modality + '\n';
   }
-  if (pro.ref.length > 0) {
+  if (pro.ref.size > 0) {
     out += '  reference {\n';
-    for (const r of pro.ref) {
-      out += '    ' + r.id + '\n';
+    for (const r in pro.ref) {
+      out += '    ' + r + '\n';
     }
     out += '  }\n';
   }
@@ -272,7 +262,7 @@ function toProvisionModel(pro: MMELProvision): string {
   return out;
 }
 
-function toReferenceModel(ref: MMELReference): string {
+export function toReferenceModel(ref: MMELReference): string {
   let out: string = 'reference ' + ref.id + ' {\n';
   out += '  document "' + ref.document + '"\n';
   out += '  clause "' + ref.clause + '"\n';
@@ -280,7 +270,7 @@ function toReferenceModel(ref: MMELReference): string {
   return out;
 }
 
-function toRoleModel(role: MMELRole): string {
+export function toRoleModel(role: MMELRole): string {
   let out: string = 'role ' + role.id + ' {\n';
   out += '  name "' + role.name + '"\n';
   out += '}\n';
@@ -290,24 +280,24 @@ function toRoleModel(role: MMELRole): string {
 function toApprovalModel(app: MMELApproval): string {
   let out: string = 'approval ' + app.id + ' {\n';
   out += '  name "' + app.name + '"\n';
-  if (app.actor !== null) {
-    out += '  actor ' + app.actor.id + '\n';
+  if (app.actor !== '') {
+    out += '  actor ' + app.actor + '\n';
   }
   out += '  modality ' + app.modality + '\n';
-  if (app.approver !== null) {
-    out += '  approve_by ' + app.approver.id + '\n';
+  if (app.approver !== '') {
+    out += '  approve_by ' + app.approver + '\n';
   }
-  if (app.records.length > 0) {
+  if (app.records.size > 0) {
     out += '  approval_record {\n';
-    for (const dr of app.records) {
-      out += '    ' + dr.id + '\n';
+    for (const dr in app.records) {
+      out += '    ' + dr + '\n';
     }
     out += '  }\n';
   }
-  if (app.ref.length > 0) {
+  if (app.ref.size > 0) {
     out += '  reference {\n';
-    for (const r of app.ref) {
-      out += '    ' + r.id + '\n';
+    for (const r in app.ref) {
+      out += '    ' + r + '\n';
     }
     out += '  }\n';
   }
@@ -318,23 +308,23 @@ function toApprovalModel(app: MMELApproval): string {
 export function toProcessModel(process: MMELProcess): string {
   let out: string = 'process ' + process.id + ' {\n';
   out += '  name "' + process.name + '"\n';
-  if (process.actor !== null) {
-    out += '  actor ' + process.actor.id + '\n';
+  if (process.actor !== '') {
+    out += '  actor ' + process.actor + '\n';
   }
   if (process.modality !== '') {
     out += '  modality ' + process.modality + '\n';
   }
-  if (process.input.length > 0) {
+  if (process.input.size > 0) {
     out += '  reference_data_registry {\n';
-    for (const dr of process.input) {
-      out += '    ' + dr.id + '\n';
+    for (const dr in process.input) {
+      out += '    ' + dr + '\n';
     }
     out += '  }\n';
   }
-  if (process.provision.length > 0) {
+  if (process.provision.size > 0) {
     out += '  validate_provision {\n';
-    for (const r of process.provision) {
-      out += '    ' + r.id + '\n';
+    for (const r in process.provision) {
+      out += '    ' + r + '\n';
     }
     out += '  }\n';
   }
@@ -345,15 +335,15 @@ export function toProcessModel(process: MMELProcess): string {
     }
     out += '  }\n';
   }
-  if (process.output.length > 0) {
+  if (process.output.size > 0) {
     out += '  output {\n';
-    for (const c of process.output) {
-      out += '    ' + c.id + '\n';
+    for (const c in process.output) {
+      out += '    ' + c + '\n';
     }
     out += '  }\n';
   }
-  if (process.page !== null) {
-    out += '  subprocess ' + process.page.id + '\n';
+  if (process.page !== '') {
+    out += '  subprocess ' + process.page + '\n';
   }
   out += '}\n';
   return out;
