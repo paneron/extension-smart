@@ -14,10 +14,10 @@ import { MMELToText, textToMMEL } from '../../serialize/MMEL';
 import { DiagTypes } from '../../model/dialog';
 
 const FileMenu: React.FC<{
-  setModelWrapper: (m: ModelWrapper) => void;
-  saveModel: () => ModelWrapper;
+  setNewModelWrapper: (m: ModelWrapper) => void;
+  getLatestLayout: () => ModelWrapper;
   setDialogType: (x: DiagTypes) => void;
-}> = function ({ setModelWrapper, saveModel, setDialogType }) {
+}> = function ({ setNewModelWrapper, getLatestLayout, setDialogType }) {
   const {
     logger,
     getBlob,
@@ -38,7 +38,7 @@ const FileMenu: React.FC<{
   function handleNew() {
     const model = createNewModel();
     const mw = createEditorModelWrapper(model);
-    setModelWrapper(mw);
+    setNewModelWrapper(mw);
   }
 
   // Open
@@ -47,7 +47,7 @@ const FileMenu: React.FC<{
     try {
       const model = textToMMEL(data);
       const mw = createEditorModelWrapper(model);
-      setModelWrapper(mw);
+      setNewModelWrapper(mw);
     } catch (e) {
       logger?.log('Failed to load model', e);
     }
@@ -87,7 +87,7 @@ const FileMenu: React.FC<{
   // Export
   function handleSave() {
     return async () => {
-      const mw = saveModel();
+      const mw = getLatestLayout();
       const fileData = MMELToText(mw.model);
 
       if (getBlob && writeFileToFilesystem) {

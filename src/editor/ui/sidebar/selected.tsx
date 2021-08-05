@@ -433,7 +433,7 @@ const DescribeRegistry: React.FC<{
         label="Title"
         value={reg.title}
       />
-      {dc !== null && <DescribeDC dc={dc} getRefById={getRefById} />}      
+      {dc !== null && <DescribeDC dc={dc} getRefById={getRefById} />}
     </>
   );
 };
@@ -443,7 +443,7 @@ const DescribeDC: React.FC<{
   getRefById: (id: string) => MMELReference | null;
 }> = function ({ dc, getRefById }) {
   return (
-    <>      
+    <>
       <AttributeList
         attributes={dc.attributes}
         dcid={dc.id}

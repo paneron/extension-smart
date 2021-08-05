@@ -13,6 +13,8 @@ import {
 } from '../../model/editormodel';
 import { MMELObject } from '../../serialize/interface/baseinterface';
 import {
+  checkId,
+  fillRDCS,
   genDCIdByRegId,
   getReferenceDCTypeName,
   replaceSet,
@@ -20,18 +22,18 @@ import {
 import { createDataClass, createRegistry } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
+import AttributeEditPage from './attributeedit';
 
 type RegistryCombined = EditorDataClass & {
   title: string;
 };
 
+const initObj: RegistryCombined = { ...createDataClass(''), title: '' };
+
 const RegistryEditPage: React.FC<{
   model: EditorModel;
   setModel: (model: EditorModel) => void;
 }> = function ({ model, setModel }) {
-  const newdc = createDataClass('');
-  const initObj: RegistryCombined = { ...newdc, title: '' };
-
   function getRegListItems(filter: string): IListItem[] {
     const smallfilter = filter.toLowerCase();
     const out: IListItem[] = [];
@@ -50,6 +52,7 @@ const RegistryEditPage: React.FC<{
         }
       }
     }
+    out.sort((a, b) => a.id.localeCompare(b.id));
     return out;
   }
 
@@ -57,8 +60,11 @@ const RegistryEditPage: React.FC<{
     matchregid: string,
     matchdcid: string,
     replaceid: string,
-    newdcid: string
+    newdcid: string,
+    newdc: EditorDataClass | null
   ) {
+    const oldrefdcid = getReferenceDCTypeName(matchdcid);
+    const newrefdcid = getReferenceDCTypeName(newdcid);
     for (const x in model.elements) {
       const elm = model.elements[x];
       if (isEditorProcess(elm)) {
@@ -66,20 +72,21 @@ const RegistryEditPage: React.FC<{
         replaceSet(elm.output, matchregid, replaceid);
       } else if (isEditorAppproval(elm)) {
         replaceSet(elm.records, matchregid, replaceid);
-      } else if (replaceid === '' && isEditorDataClass(elm)) {
+      } else if (isEditorDataClass(elm)) {
         for (const dc of elm.rdcs) {
           if (dc.id === matchdcid) {
             elm.rdcs.delete(dc);
+            if (newdc !== null) {
+              elm.rdcs.add(newdc);
+            }
           }
         }
         for (const a in elm.attributes) {
           const att = elm.attributes[a];
           if (att.type === matchdcid) {
             att.type = newdcid;
-          } else {
-            if (att.type === getReferenceDCTypeName(matchdcid)) {
-              att.type = getReferenceDCTypeName(newdcid);
-            }
+          } else if (att.type === oldrefdcid) {
+            att.type = newrefdcid;
           }
         }
       }
@@ -103,36 +110,25 @@ const RegistryEditPage: React.FC<{
       if (isEditorRegistry(reg)) {
         delete model.elements[id];
         delete model.elements[reg.data];
-        replaceReferences(id, reg.data, '', '');
+        replaceReferences(id, reg.data, '', '', null);
       }
     }
     setModel(model);
   }
 
-  function checkId(id: string, dcid: string): boolean {
-    if (id === '') {
-      alert('New ID is empty');
-      return false;
-    }
-    if (
-      model.elements[id] !== undefined ||
-      model.elements[dcid] !== undefined
-    ) {
-      alert('New ID already exists');
-      return false;
-    }
-    return true;
-  }
-
   function addRegistry(reg: RegistryCombined): boolean {
     const dcid = genDCIdByRegId(reg.id);
-    if (checkId(reg.id, dcid)) {
+    if (checkId(reg.id, model.elements) && checkId(dcid, model.elements)) {
       const newreg = createRegistry(reg.id);
-      const newdc = reg as EditorDataClass;
+      const newdc = { ...reg } as EditorDataClass;
+      newdc.id = dcid;
+      newdc.mother = newreg;
       newreg.data = dcid;
       newreg.title = reg.title;
       model.elements[reg.id] = newreg;
       model.elements[dcid] = newdc;
+      fillRDCS(newdc, model.elements);
+      setModel(model);
       return true;
     }
     return false;
@@ -143,18 +139,30 @@ const RegistryEditPage: React.FC<{
     const old = model.elements[oldid];
     if (isEditorRegistry(old)) {
       if (oldid !== reg.id) {
-        if (checkId(reg.id, dcid)) {
+        if (checkId(reg.id, model.elements) && checkId(dcid, model.elements)) {
           delete model.elements[oldid];
           delete model.elements[old.data];
-          replaceReferences(oldid, old.data, reg.id, dcid);
-          // examine
+          const newreg = createRegistry(reg.id);
+          const newdc = { ...reg } as EditorDataClass;
+          newdc.id = dcid;
+          newdc.mother = newreg;
+          newreg.data = dcid;
+          newreg.title = reg.title;
+          model.elements[reg.id] = newreg;
+          model.elements[dcid] = newdc;
+          fillRDCS(newdc, model.elements);
+          replaceReferences(oldid, old.data, reg.id, dcid, newdc);
+          setModel(model);
           return true;
         }
         return false;
       } else {
         old.title = reg.title;
         model.elements[oldid] = old;
-        // examine
+        const dc = reg as EditorDataClass;
+        model.elements[old.data] = dc;
+        fillRDCS(dc, model.elements);
+        setModel(model);
         return true;
       }
     }
@@ -170,14 +178,15 @@ const RegistryEditPage: React.FC<{
     if (!isEditorDataClass(dc)) {
       return { ...initObj };
     }
-    return { ...dc, title: reg.title };
+    return { ...dc, id: id, title: reg.title };
   }
 
-  const rolehandler: IManageHandler = {
+  const reghandler: IManageHandler = {
     filterName: 'Registry filter',
     itemName: 'Data Registries',
     Content: RegistryEditItemPage,
     initObj: { ...initObj },
+    model: model,
     getItems: getRegListItems,
     removeItems: removeRegListItem,
     addItem: obj => addRegistry(obj as RegistryCombined),
@@ -185,13 +194,14 @@ const RegistryEditPage: React.FC<{
     getObjById: getRegById,
   };
 
-  return <ListManagePage {...rolehandler} />;
+  return <ListManagePage {...reghandler} />;
 };
 
 const RegistryEditItemPage: React.FC<{
   object: MMELObject;
+  model: EditorModel;
   setObject: (obj: MMELObject) => void;
-}> = ({ object, setObject }) => {
+}> = ({ object, model, setObject }) => {
   const reg = object as RegistryCombined;
   return (
     <>
@@ -199,7 +209,7 @@ const RegistryEditItemPage: React.FC<{
         key="field#registryid"
         text="Registry ID"
         value={reg.id}
-        update={(x: string) => {
+        onChange={(x: string) => {
           reg.id = x.replaceAll(/\s+/g, '');
           setObject({ ...reg });
         }}
@@ -208,24 +218,20 @@ const RegistryEditItemPage: React.FC<{
         key="field#regtitle"
         text="Registry title"
         value={reg.title}
-        update={(x: string) => {
+        onChange={(x: string) => {
           reg.title = x;
           setObject({ ...reg });
         }}
       />
-      {/* <AttributeEditPage
+      <AttributeEditPage
         key={'ui#registry#attributeEditPage'}
-        model={this.mw.model}
-        atts={this.data}
-        setAtts={x =>
-          this.setData({
-            ...x,
-            regid: this.data.regid,
-            regtitle: this.data.regtitle,
-          })
-          setObject({...reg })
-        }
-      /> */}
+        attributes={{ ...reg.attributes }}
+        model={model}
+        setAtts={x => {
+          reg.attributes = x;
+          setObject({ ...reg });
+        }}
+      />
     </>
   );
 };

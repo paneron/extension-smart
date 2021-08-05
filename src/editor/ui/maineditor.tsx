@@ -16,7 +16,6 @@ import ReactFlow, {
   ReactFlowProvider,
   isNode,
   ControlButton,
-  //useZoomPanHelper,
 } from 'react-flow-renderer';
 
 import { Button, ControlGroup, Dialog } from '@blueprintjs/core';
@@ -26,8 +25,6 @@ import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
-// import { SelectedNodeDescription } from './component/infopane';
-// import ControlPane from './component/controlpane';
 import {
   createEditorModelWrapper,
   getReactFlowElementsFrom,
@@ -53,50 +50,6 @@ import {
 import FileMenu from './menu/file';
 import { SelectedNodeDescription } from './sidebar/selected';
 import { DiagTypes, MyDiag } from '../model/dialog';
-// import {
-//   edgeTypes,
-//   ISearch,
-//   IState,
-//   nodeTypes,
-//   SearchMan,
-//   StateMan,
-// } from './interface/state';
-// import NewComponentPane from './component/newcomponentpane';
-// import BasicSettingPane from './component/basicsetting';
-// import FilterPane from './component/filterpane';
-// import { functionCollection } from './util/function';
-// import RepoEditPane from './component/edit/repoedit';
-// import OnePageChecklist from './component/onepagechecklist';
-// import EditProcessPage from './component/processedit';
-// import EditApprovalPage from './component/approvaledit';
-// import { EditSCEventPage, EditTimerPage } from './component/eventedit';
-// import { IEdgeLabel } from './interface/datainterface';
-// import { EditEGatePage } from './component/editEgate';
-// import SimulationPage from './component/simulationpane';
-// import ImportPane from './component/importpane';
-// import AIPane from './component/aipane';
-// import MeasureCheckPane from './component/measurementcheckpane';
-// import LegendPane from './util/legendpane';
-// import { DataType, MMELNode } from '../serialize/interface/baseinterface';
-// import { MMELFactory } from '../runtime/modelComponentCreator';
-// import { ProgressManager } from './util/progressmanager';
-// import {
-//   MMELEGate,
-//   MMELSubprocess,
-// } from '../serialize/interface/flowcontrolinterface';
-// import { MMELRegistry } from '../serialize/interface/datainterface';
-// import {
-//   MMELApproval,
-//   MMELProcess,
-// } from '../serialize/interface/processinterface';
-// import {
-//   MMELSignalCatchEvent,
-//   MMELTimerEvent,
-// } from '../serialize/interface/eventinterface';
-// import { NodeData } from './nodecontainer';
-// import IndexPane from './component/IndexPane';
-// import { DataIndexer } from './util/datasearchmanager';
-// import { MODAILITYOPTIONS } from '../runtime/idManager';
 
 const initModel = createNewModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -171,8 +124,12 @@ const ModelEditor: React.FC<{
     setState({ ...state });
   }
 
-  function setModelWrapper(mw: ModelWrapper) {
+  function setNewModelWrapper(mw: ModelWrapper) {
     setState({ ...state, history: createPageHistory(mw), modelWrapper: mw });
+  }
+
+  function setModelWrapper(mw: ModelWrapper) {
+    setState({ ...state, modelWrapper: mw });
   }
 
   function onDragOver(event: React.DragEvent<any>) {
@@ -211,8 +168,8 @@ const ModelEditor: React.FC<{
         placement="bottom-start"
         content={
           <FileMenu
-            setModelWrapper={setModelWrapper}
-            saveModel={saveLayout}
+            setNewModelWrapper={setNewModelWrapper}
+            getLatestLayout={saveLayout}
             setDialogType={setDialogType}
           />
         }

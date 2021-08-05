@@ -23,6 +23,7 @@ const ListManagePage: React.FC<IManageHandler> = ({
   itemName,
   Content,
   initObj,
+  model,
   getItems,
   removeItems,
   addItem,
@@ -37,8 +38,10 @@ const ListManagePage: React.FC<IManageHandler> = ({
   const addHandler: IUpdateInterface = {
     Content: Content,
     object: selected,
+    model: model,
     setObject: setSelected,
     updateButtonLabel: 'Add',
+    updateButtonIcon: 'plus',
     updateClicked: () => {
       if (addItem(selected)) {
         setMode(ListManagePageType.VIEW);
@@ -52,8 +55,10 @@ const ListManagePage: React.FC<IManageHandler> = ({
   const updateHandler: IUpdateInterface = {
     Content: Content,
     object: selected,
+    model: model,
     setObject: setSelected,
     updateButtonLabel: 'Update',
+    updateButtonIcon: 'edit',
     updateClicked: () => {
       if (updateItem(oldid, selected)) {
         setMode(ListManagePageType.VIEW);
@@ -78,6 +83,7 @@ const ListManagePage: React.FC<IManageHandler> = ({
       setSelected({ ...getObjById(selected) });
       setMode(ListManagePageType.UPDATE);
     },
+    size: 15,
   };
 
   const ActionPage: Record<ListManagePageType, JSX.Element> = {

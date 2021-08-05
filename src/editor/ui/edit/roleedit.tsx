@@ -10,6 +10,7 @@ import {
 } from '../../model/editormodel';
 import { MMELObject } from '../../serialize/interface/baseinterface';
 import { MMELRole } from '../../serialize/interface/supportinterface';
+import { checkId } from '../../utils/commonfunctions';
 import { createRole } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
@@ -34,6 +35,7 @@ const RoleEditPage: React.FC<{
         });
       }
     }
+    out.sort((a, b) => a.id.localeCompare(b.id));
     return out;
   }
 
@@ -63,21 +65,10 @@ const RoleEditPage: React.FC<{
     setModel(model);
   }
 
-  function checkId(id: string): boolean {
-    if (id === '') {
-      alert('New ID is empty');
-      return false;
-    }
-    if (model.roles[id] !== undefined) {
-      alert('New ID already exists');
-      return false;
-    }
-    return true;
-  }
-
   function addRole(role: MMELRole): boolean {
-    if (checkId(role.id)) {
+    if (checkId(role.id, model.roles)) {
       model.roles[role.id] = role;
+      setModel(model);
       return true;
     }
     return false;
@@ -85,15 +76,17 @@ const RoleEditPage: React.FC<{
 
   function updateRole(oldid: string, role: MMELRole): boolean {
     if (oldid !== role.id) {
-      if (checkId(role.id)) {
+      if (checkId(role.id, model.roles)) {
         delete model.roles[oldid];
         model.roles[role.id] = role;
         replaceReferences(oldid, role.id);
+        setModel(model);
         return true;
       }
       return false;
     } else {
       model.roles[oldid] = role;
+      setModel(model);
       return true;
     }
   }
@@ -111,6 +104,7 @@ const RoleEditPage: React.FC<{
     itemName: 'Roles',
     Content: RoleEditItemPage,
     initObj: createRole(''),
+    model: model,
     getItems: getRoleListItems,
     removeItems: removeRoleListItem,
     addItem: obj => addRole(obj as MMELRole),
@@ -132,7 +126,7 @@ const RoleEditItemPage: React.FC<{
         key="field#roleid"
         text="Role ID"
         value={role.id}
-        update={(x: string) => {
+        onChange={(x: string) => {
           role.id = x.replaceAll(/\s+/g, '');
           setObject({ ...role });
         }}
@@ -141,7 +135,7 @@ const RoleEditItemPage: React.FC<{
         key="field#rolename"
         text="Role Name"
         value={role.name}
-        update={(x: string) => {
+        onChange={(x: string) => {
           role.name = x;
           setObject({ ...role });
         }}

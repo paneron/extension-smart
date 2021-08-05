@@ -10,7 +10,12 @@ import {
 } from '../../model/editormodel';
 import { MMELObject } from '../../serialize/interface/baseinterface';
 import { MMELReference } from '../../serialize/interface/supportinterface';
-import { replaceSet, toRefSummary } from '../../utils/commonfunctions';
+import {
+  checkId,
+  referenceSorter,
+  replaceSet,
+  toRefSummary,
+} from '../../utils/commonfunctions';
 import { createReference } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
@@ -21,9 +26,9 @@ const ReferenceEditPage: React.FC<{
 }> = function ({ model, setModel }) {
   function getRefListItems(filter: string): IListItem[] {
     const smallfilter = filter.toLowerCase();
+    const sorted = Object.values(model.refs).sort(referenceSorter);
     const out: IListItem[] = [];
-    for (const r in model.refs) {
-      const ref = model.refs[r];
+    for (const ref of sorted) {
       if (
         smallfilter === '' ||
         ref.id.toLowerCase().indexOf(smallfilter) !== -1 ||
@@ -63,18 +68,6 @@ const ReferenceEditPage: React.FC<{
     setModel(model);
   }
 
-  function checkId(id: string): boolean {
-    if (id === '') {
-      alert('New ID is empty');
-      return false;
-    }
-    if (model.refs[id] !== undefined) {
-      alert('New ID already exists');
-      return false;
-    }
-    return true;
-  }
-
   function addRef(ref: MMELReference): boolean {
     if (ref.clause.indexOf(',') !== -1) {
       const failed: string[] = [];
@@ -98,10 +91,12 @@ const ReferenceEditPage: React.FC<{
         );
         return false;
       }
+      setModel(model);
       return true;
     } else {
-      if (checkId(ref.id)) {
+      if (checkId(ref.id, model.refs)) {
         model.refs[ref.id] = ref;
+        setModel(model);
         return true;
       }
     }
@@ -110,15 +105,17 @@ const ReferenceEditPage: React.FC<{
 
   function updateRef(oldid: string, ref: MMELReference): boolean {
     if (oldid !== ref.id) {
-      if (checkId(ref.id)) {
+      if (checkId(ref.id, model.refs)) {
         delete model.refs[oldid];
         model.refs[ref.id] = ref;
         replaceReferences(oldid, ref.id);
+        setModel(model);
         return true;
       }
       return false;
     } else {
       model.refs[oldid] = ref;
+      setModel(model);
       return true;
     }
   }
@@ -131,11 +128,12 @@ const ReferenceEditPage: React.FC<{
     return ref;
   }
 
-  const rolehandler: IManageHandler = {
+  const refhandler: IManageHandler = {
     filterName: 'Reference filter',
     itemName: 'References',
     Content: ReferenceEditItemPage,
     initObj: createReference(''),
+    model: model,
     getItems: getRefListItems,
     removeItems: removeRefListItem,
     addItem: obj => addRef(obj as MMELReference),
@@ -143,7 +141,7 @@ const ReferenceEditPage: React.FC<{
     getObjById: getRefById,
   };
 
-  return <ListManagePage {...rolehandler} />;
+  return <ListManagePage {...refhandler} />;
 };
 
 const ReferenceEditItemPage: React.FC<{
@@ -163,7 +161,7 @@ const ReferenceEditItemPage: React.FC<{
         key="field#refid"
         text="Reference ID"
         value={ref.id}
-        update={(x: string) => {
+        onChange={(x: string) => {
           ref.id = x.replaceAll(/\s+/g, '');
           setObject({ ...ref });
         }}
@@ -172,7 +170,7 @@ const ReferenceEditItemPage: React.FC<{
         key="field#document"
         text="Document"
         value={ref.document}
-        update={(x: string) => {
+        onChange={(x: string) => {
           ref.document = x;
           setObject({ ...ref });
         }}
@@ -181,7 +179,7 @@ const ReferenceEditItemPage: React.FC<{
         key="field#clause"
         text="Clause"
         value={ref.clause}
-        update={(x: string) => {
+        onChange={(x: string) => {
           ref.clause = x;
           setObject({ ...ref });
         }}

@@ -29,6 +29,7 @@ import {
   createNodeContainer,
   getNodeCallBack,
 } from '../ui/flowui/container';
+import { fillRDCS } from '../utils/commonfunctions';
 
 export interface ModelWrapper {
   model: EditorModel;
@@ -156,21 +157,7 @@ function buildStructure(mw: ModelWrapper): ModelWrapper {
   for (const d in model.elements) {
     const data = model.elements[d];
     if (isEditorDataClass(data)) {
-      for (const a in data.attributes) {
-        const att = data.attributes[a];
-        let type = att.type;
-        const i1 = type.indexOf('(');
-        const i2 = type.indexOf(')');
-        if (i1 !== -1 && i2 !== -1) {
-          type = type.substr(i1 + 1, i2 - i1 - 1);
-        }
-        if (type !== '') {
-          const ret = model.elements[type];
-          if (ret !== undefined && isEditorDataClass(ret)) {
-            data.rdcs.add(ret);
-          }
-        }
-      }
+      fillRDCS(data, model.elements);
     } else if (isEditorRegistry(data)) {
       const dc = model.elements[data.data];
       if (isEditorDataClass(dc)) {

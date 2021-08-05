@@ -15,7 +15,7 @@ const MetaEditPage: React.FC<{
         key="field#modelschema"
         text="Data Model Schema"
         value={meta.schema}
-        update={(x: string) => {
+        onChange={(x: string) => {
           setMetadata({ ...meta, schema: x });
         }}
       />
@@ -23,7 +23,7 @@ const MetaEditPage: React.FC<{
         key="field#metaauthor"
         text="Author"
         value={meta.author}
-        update={(x: string) => {
+        onChange={(x: string) => {
           setMetadata({ ...meta, author: x });
         }}
       />
@@ -31,7 +31,7 @@ const MetaEditPage: React.FC<{
         key="field#modeltitle"
         text="Title of the Data Model"
         value={meta.title}
-        update={(x: string) => {
+        onChange={(x: string) => {
           setMetadata({ ...meta, title: x });
         }}
       />
@@ -39,7 +39,7 @@ const MetaEditPage: React.FC<{
         key="field#modeledition"
         text="Edition of the Data Model"
         value={meta.edition}
-        update={(x: string) => {
+        onChange={(x: string) => {
           setMetadata({ ...meta, edition: x });
         }}
       />
@@ -47,7 +47,7 @@ const MetaEditPage: React.FC<{
         key="field#modelnamespace"
         text="Globally unique identifier of the Data Model (Namespace)"
         value={meta.namespace}
-        update={(x: string) => {
+        onChange={(x: string) => {
           setMetadata({ ...meta, namespace: x.replaceAll(/\s+/g, '') });
         }}
       />

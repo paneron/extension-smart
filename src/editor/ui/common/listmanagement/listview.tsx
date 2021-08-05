@@ -1,25 +1,26 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { Button, ButtonGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { RefObject, useState } from 'react';
-import { IViewListInterface, NormalButton } from '../fields';
+import { IViewListInterface } from '../fields';
 
-const ListManagerPane: React.FC<IViewListInterface> = ({
+const ListViewPane: React.FC<IViewListInterface> = ({
   filterName,
   itemName,
   getItems,
   removeItems,
   addClicked,
   updateClicked,
+  size,
 }) => {
   const selectbox: RefObject<HTMLSelectElement> = React.createRef();
   const [filter, setFilter] = useState<string>('');
 
   const css: React.CSSProperties = {
-    minWidth: '20%',
-    maxWidth: '90%',
+    minWidth: '100%',
   };
 
   const options = getItems(filter);
@@ -33,37 +34,41 @@ const ListManagerPane: React.FC<IViewListInterface> = ({
       </p>
 
       <p> {itemName} </p>
-      <select style={css} size={15} ref={selectbox} multiple>
+      <select style={css} size={size} ref={selectbox} multiple>
         {options.map(value => (
           <option key={'listmanage#' + value.id} value={value.id}>
-            {value.text}
+            {value.text === '' ? '( Untitled )' : value.text}
           </option>
         ))}
       </select>
 
-      <p>
-        <NormalButton
+      <ButtonGroup>
+        <Button
           key="ui#listview#addbutton"
+          icon="plus"
           text="Add"
           onClick={() => addClicked()}
         />
-        <NormalButton
+        <Button
           key="ui#listview#removebutton"
+          icon="delete"
           text="Remove"
-          onClick={() => {
-            removeItems(extractOptions(selectbox));
-          }}
+          onClick={() => removeItems(extractOptions(selectbox))}
         />
-        <NormalButton
+        <Button
           key="ui#listview#updatebutton"
+          icon="edit"
           text="Update"
           onClick={() => {
-            if (selectbox.current !== null) {
-              updateClicked(selectbox.current.value);
+            if (
+              selectbox.current !== null &&
+              selectbox.current.selectedOptions.length > 0
+            ) {
+              updateClicked(selectbox.current.selectedOptions[0].value);
             }
           }}
         />
-      </p>
+      </ButtonGroup>
     </>
   );
 };
@@ -77,4 +82,4 @@ function extractOptions(ref: React.RefObject<HTMLSelectElement>): string[] {
   return [];
 }
 
-export default ListManagerPane;
+export default ListViewPane;

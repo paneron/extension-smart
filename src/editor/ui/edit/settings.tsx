@@ -7,6 +7,8 @@ import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useState } from 'react';
 import { EditorModel } from '../../model/editormodel';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
+import DataClassEditPage from './dataclassedit';
+import EnumEditPage from './enumedit';
 import MetaEditPage from './metaedit';
 import ReferenceEditPage from './refedit';
 import RegistryEditPage from './registryedit';
@@ -62,13 +64,13 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
   [SETTINGPAGE.DATAPAGE]: {
     title: 'Data structure',
     Panel: ({ model, setModel }) => (
-      <ReferenceEditPage model={model} setModel={setModel} />
+      <DataClassEditPage model={model} setModel={setModel} />
     ),
   },
   [SETTINGPAGE.ENUMPAGE]: {
     title: 'Enumeration',
     Panel: ({ model, setModel }) => (
-      <ReferenceEditPage model={model} setModel={setModel} />
+      <EnumEditPage model={model} setModel={setModel} />
     ),
   },
 };
@@ -95,30 +97,6 @@ const BasicSettingPane: React.FC<{
         />
       ))}
     </Tabs>
-
-    //     <button
-    //       onClick={() => setPage(SETTINGPAGE.DATAPAGE)}
-    //       style={page === SETTINGPAGE.DATAPAGE ? selected : normal}
-    //     >
-    //       {' '}
-    //       Data structure{' '}
-    //     </button>
-    //     <button
-    //       onClick={() => setPage(SETTINGPAGE.ENUMPAGE)}
-    //       style={page === SETTINGPAGE.ENUMPAGE ? selected : normal}
-    //     >
-    //       {' '}
-    //       Enumeration{' '}
-    //     </button>
-    //     <button
-    //       onClick={() => setPage(SETTINGPAGE.VARPAGE)}
-    //       style={page === SETTINGPAGE.VARPAGE ? selected : normal}
-    //     >
-    //       {' '}
-    //       Measurement{' '}
-    //     </button>
-    //   </div>
-    // </DisplayPane>
   );
 };
 
