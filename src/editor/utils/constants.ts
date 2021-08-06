@@ -39,3 +39,14 @@ export type NewComponentTypes =
   | DataType.TIMEREVENT
   | DataType.SIGNALCATCHEVENT
   | DataType.EGATE;
+
+  export type SelectableNodeTypes =
+  | DataType.PROCESS
+  | DataType.APPROVAL
+  | DataType.ENDEVENT
+  | DataType.TIMEREVENT
+  | DataType.SIGNALCATCHEVENT
+  | DataType.DATACLASS
+  | DataType.REGISTRY
+  | DataType.STARTEVENT
+  | DataType.EGATE;

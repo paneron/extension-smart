@@ -98,7 +98,7 @@ export function createDataLinkContainer(
     arrowHeadType: ArrowHeadType.ArrowClosed,
     animated: true,
     label: '',
-    style: isEditorData(s) && isEditorData(t) ? { stroke: '#f6ab6c' } : {},
+    style: isEditorData(s) && isEditorData(t) ? { stroke: '#f6ab6c' } : {},    
   };
 }
 

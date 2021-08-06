@@ -40,7 +40,7 @@ import { EdgeTypes, EditorState, NodeTypes } from '../model/state';
 import { isEditorData, isEditorNode } from '../model/editormodel';
 import FileMenu from './menu/file';
 import { SelectedNodeDescription } from './sidebar/selected';
-import { DiagTypes, MyDiag } from '../model/dialog';
+import { DiagTypes, MyDiag } from './dialog/dialogs';
 import { CustomizedControlButton as IconControlButton } from './control/buttons';
 import NewComponentPane from './control/newComponentPane';
 import { DragAndDropFormatType, NewComponentTypes } from '../utils/constants';
@@ -58,7 +58,7 @@ const ModelEditor: React.FC<{
   isVisible: boolean;
   className?: string;
 }> = ({ isVisible, className }) => {
-  const { logger } = useContext(DatasetContext);  
+  const { logger } = useContext(DatasetContext);    
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
@@ -153,8 +153,7 @@ const ModelEditor: React.FC<{
     setState({ ...state });
   }
 
-  function removeEdge(id: string) {
-    alert(id);
+  function removeEdge(id: string) {    
     deleteEdge(state.modelWrapper.model, state.modelWrapper.page, id);
     setState({...state});
   }
@@ -254,7 +253,7 @@ const ModelEditor: React.FC<{
           <Dialog
             isOpen={dialogType !== null}
             title={diagProps.title}
-            css={css`
+            css={diagProps.fullscreen ? css`
               width: calc(100vw - 60px);
               height: calc(100vh - 60px);
               padding-bottom: 0;
@@ -262,7 +261,7 @@ const ModelEditor: React.FC<{
                 overflow-y: auto;
                 padding: 20px;
               }
-            `}
+            ` : ''}
             onClose={() => setDialogType(null)}
             canEscapeKeyClose={false}
             canOutsideClickClose={false}
@@ -295,16 +294,15 @@ const ModelEditor: React.FC<{
                 removeEdge
               )}
               onLoad={onLoad}
-              // onDrop={onDrop}
+              onDrop={onDrop}
               onDragOver={onDragOver}
+              onConnect={connectHandle}              
+              nodesConnectable={true}
               snapToGrid={true}
               snapGrid={[10, 10]}
               nodeTypes={NodeTypes}
-              edgeTypes={EdgeTypes}
-              onConnect={connectHandle}
-              nodesConnectable={true}
-              ref={canvusRef}
-              onClick={(e)=>{e.preventDefault();e.stopPropagation();logger?.log(e)}}
+              edgeTypes={EdgeTypes}              
+              ref={canvusRef}              
             >
               <Controls>
                 <IconControlButton

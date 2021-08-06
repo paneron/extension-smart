@@ -11,7 +11,7 @@ import {
 } from '../../model/modelwrapper';
 import { createNewModel } from '../../utils/EditorFactory';
 import { MMELToText, textToMMEL } from '../../serialize/MMEL';
-import { DiagTypes } from '../../model/dialog';
+import { DiagTypes } from '../dialog/dialogs';
 
 const FileMenu: React.FC<{
   setNewModelWrapper: (m: ModelWrapper) => void;

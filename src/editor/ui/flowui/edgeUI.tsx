@@ -1,5 +1,4 @@
-import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import React, { useContext } from 'react';
+import React from 'react';
 
 import {
   ArrowHeadType,
@@ -127,8 +126,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
   label,
   arrowHeadType,
   markerEndId,
-}) {
-  const {logger} = useContext(DatasetContext);
+}) {  
   if (targetY > sourceY) {
     const edgePath1 = getSmoothStepPath({
       sourceX,
@@ -144,8 +142,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
       sourceY,
       targetX,
       targetY,
-    });
-    logger?.log(source, target, label);
+    });    
     return (
       <>
         <path
@@ -278,7 +275,8 @@ const EdgeLabel: React.FC<{
         <EdgeText
           key={'ui#edge#deletebutton#' + keytext}
           x={x}
-          y={y}          
+          y={y}
+          label='X'
           labelStyle={{
             width: '20px',
             height: '20px',

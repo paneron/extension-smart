@@ -1,5 +1,5 @@
 import React, { CSSProperties, useState } from 'react';
-import { useStoreState, Elements } from 'react-flow-renderer';
+import { useStoreState, Elements, isNode } from 'react-flow-renderer';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import {
@@ -25,6 +25,8 @@ import {
 } from '../../model/editormodel';
 import { ProcessQuickEdit } from './processquickedit';
 import { toRefSummary } from '../../utils/commonfunctions';
+import { SelectableNodeTypes } from '../../utils/constants';
+import { Button } from '@blueprintjs/core';
 
 export const SelectedNodeDescription: React.FC = () => {
   const selected = useStoreState(store => store.selectedElements);
@@ -40,8 +42,10 @@ export const SelectedNodeDescription: React.FC = () => {
       return oldValue;
     }
     if (selected !== null && selected.length > 0) {
-      const s = selected[0].data;
-      return s as EdtiorNodeWithInfoCallback;
+      const s = selected[0];
+      if (isNode(s)) {
+        return s.data as EdtiorNodeWithInfoCallback;
+      }
     }
     return null;
   }
@@ -58,14 +62,14 @@ export const SelectedNodeDescription: React.FC = () => {
 };
 
 const NODE_DETAIL_VIEWS: Record<
-  DataType,
+  SelectableNodeTypes,
   React.FC<{
     node: EdtiorNodeWithInfoCallback;
     setOldValue: (x: EdtiorNodeWithInfoCallback | null) => void;
   }>
 > = {
   [DataType.DATACLASS]: ({ node }) =>
-    isEditorDataClass(node) ? <DescribeDC dc={node} {...node} /> : <></>,
+    isEditorDataClass(node) ? <DescribeDC dc={node as EditorDataClass} {...node} /> : <></>,
   [DataType.REGISTRY]: ({ node }) =>
     isEditorRegistry(node) ? <DescribeRegistry reg={node} {...node} /> : <></>,
   [DataType.STARTEVENT]: () => <DescribeStart />,
@@ -85,39 +89,15 @@ const NODE_DETAIL_VIEWS: Record<
       <ProcessQuickEdit process={node} setOldValue={setOldValue} {...node} />
     ) : (
       <></>
-    ),
-  [DataType.DATAATTRIBUTE]: () => <></>,
-  [DataType.EDGE]: () => <></>,
-  [DataType.ENUM]: () => <></>,
-  [DataType.ENUMVALUE]: () => <></>,
-  [DataType.SUBPROCESS]: () => <></>,
-  [DataType.SUBPROCESSCOMPONENT]: () => <></>,
-  [DataType.ROLE]: () => <></>,
-  [DataType.REFERENCE]: () => <></>,
-  [DataType.PROVISION]: () => <></>,
-  [DataType.VARIABLE]: () => <></>,
-  [DataType.METADATA]: () => <></>,
+    )
 };
 
 export const Describe: React.FC<{
   node: EdtiorNodeWithInfoCallback;
   setOldValue: (x: EdtiorNodeWithInfoCallback | null) => void;
-}> = function ({ node, setOldValue }) {
-  const View = NODE_DETAIL_VIEWS[node.datatype];
+}> = function ({ node, setOldValue }) {  
+  const View = NODE_DETAIL_VIEWS[node.datatype as SelectableNodeTypes];
   return <View node={node} setOldValue={setOldValue} />;
-};
-
-const DescriptorButton: React.FC<{
-  id: string;
-  label: string;
-  callback: () => void;
-}> = function ({ id, label, callback }) {
-  return (
-    <button key={id} onClick={() => callback()}>
-      {' '}
-      {label}{' '}
-    </button>
-  );
 };
 
 export const RemoveButton: React.FC<{
@@ -125,10 +105,12 @@ export const RemoveButton: React.FC<{
   callback: () => void;
 }> = function ({ cid, callback }) {
   return (
-    <DescriptorButton
-      id={'ui#button#removeButton#' + cid}
-      callback={callback}
-      label="Remove"
+    <Button    
+      key={'ui#button#removeButton#' + cid}
+      icon='delete'
+      intent='danger'
+      text='Remove'
+      onClick={() => callback()}
     />
   );
 };
@@ -138,10 +120,11 @@ export const EditButton: React.FC<{
   callback: () => void;
 }> = function ({ cid, callback }) {
   return (
-    <DescriptorButton
-      id={'ui#button#editComponent#' + cid}
-      callback={callback}
-      label="Edit"
+    <Button
+      key={'ui#button#editComponent#' + cid}
+      icon='edit'
+      text='Edit'
+      onClick={() => callback()}
     />
   );
 };

@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import { Button } from '@blueprintjs/core';
 import React, { CSSProperties } from 'react';
 import { EditorProcess } from '../../model/editormodel';
 import {
@@ -260,11 +260,11 @@ export const ProcessQuickEdit: React.FC<
   return (
     <>
       <>
-        <EditButton cid={process.id} callback={() => {}} />
-        <RemoveButton cid={process.id} callback={() => {}} />
-        {process.page === null && (
-          <MyFloatButton onClick={() => {}}>+</MyFloatButton>
+        <EditButton cid={process.id} callback={() => {}} />        
+        {process.page === '' && (
+          <AddPageButton callback={() => {}} />
         )}
+        <RemoveButton cid={process.id} callback={() => {}} />
       </>
       <DescriptionItem
         id={process.id + '#ProcessID'}
@@ -291,7 +291,7 @@ export const ProcessQuickEdit: React.FC<
         provisions={process.provision}
         getProvisionById={getProvisionById}
         getRefById={getRefById}
-      />
+      />      
     </>
   );
 };
@@ -441,22 +441,15 @@ const DescribeProvision: React.FC<{
 //   return true
 // }
 
-const MyFloatButton = styled.button`
-  position: absolute;
-  right: 5%;
-  top: 2%;
-  font-size: 30px;
-  box-shadow: inset 0px 1px 0px 0px #fff6af;
-  background: linear-gradient(to bottom, #ffec64 5%, #ffab23 100%);
-  background-color: #ffec64;
-  border-radius: 6px;
-  border: 1px solid #ffaa22;
-  display: inline-block;
-  cursor: pointer;
-  color: #333333;
-  font-family: Arial;
-  font-weight: bold;
-  padding: 6px 24px;
-  text-decoration: none;
-  text-shadow: 0px 1px 0px #ffee66;
-`;
+export const AddPageButton: React.FC<{  
+  callback: () => void;
+}> = function ({ callback }) {
+  return (
+    <Button
+      key='ui#button#addPageButton#'
+      icon='map-create'
+      text='Create subprocess'
+      onClick={() => callback()}
+    />
+  );
+};
