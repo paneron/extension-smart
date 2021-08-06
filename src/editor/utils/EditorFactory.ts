@@ -32,8 +32,8 @@ import {
 
 export function createNewModel(): EditorModel {
   const start = createStartEvent('Start1');
-  const page = createSubprocess('Root', start);
-  start.pages.add(page);
+  const page = createSubprocess('Root', start.id);
+  start.pages.add(page.id);
   const com = createSubprocessComponent(start.id);
   page.childs[start.id] = com;
   const m: EditorModel = {
@@ -105,10 +105,7 @@ export function createRole(id: string): MMELRole {
   };
 }
 
-export function createSubprocess(
-  id: string,
-  start: EditorStartEvent
-): EditorSubprocess {
+export function createSubprocess(id: string, start: string): EditorSubprocess {
   return {
     id: id,
     childs: {},
@@ -138,12 +135,11 @@ export function createDataClass(id: string): EditorDataClass {
     id: id,
     attributes: {},
     datatype: DataType.DATACLASS,
-    objectVersion: 'Editor',
-    child: new Set<MMELEdge>(),
+    objectVersion: 'Editor',    
     added: false,
-    pages: new Set<EditorSubprocess>(),
-    rdcs: new Set<EditorDataClass>(),
-    mother: null,
+    pages: new Set<string>(),
+    rdcs: new Set<string>(),
+    mother: '',
   };
 }
 
@@ -153,21 +149,19 @@ export function createRegistry(id: string): EditorRegistry {
     title: '',
     data: '',
     datatype: DataType.REGISTRY,
-    objectVersion: 'Editor',
-    child: new Set<MMELEdge>(),
+    objectVersion: 'Editor',    
     added: false,
-    pages: new Set<EditorSubprocess>(),
+    pages: new Set<string>(),
   };
 }
 
 export function createStartEvent(id: string): EditorStartEvent {
   return {
     id: id,
-    datatype: DataType.STARTEVENT,
-    child: new Set<MMELEdge>(),
+    datatype: DataType.STARTEVENT,    
     added: false,
     objectVersion: 'Editor',
-    pages: new Set<EditorSubprocess>(),
+    pages: new Set<string>(),
   };
 }
 
@@ -202,11 +196,10 @@ export function createProcess(id: string): EditorProcess {
     input: new Set<string>(),
     provision: new Set<string>(),
     page: '',
-    measure: [],
-    child: new Set<MMELEdge>(),
+    measure: [],    
     added: false,
     objectVersion: 'Editor',
-    pages: new Set<EditorSubprocess>(),
+    pages: new Set<string>(),
   };
 }
 
@@ -219,11 +212,10 @@ export function createApproval(id: string): EditorApproval {
     actor: '',
     approver: '',
     records: new Set<string>(),
-    ref: new Set<string>(),
-    child: new Set<MMELEdge>(),
+    ref: new Set<string>(),    
     added: false,
     objectVersion: 'Editor',
-    pages: new Set<EditorSubprocess>(),
+    pages: new Set<string>(),
   };
 }
 
@@ -240,11 +232,10 @@ export function createVariable(id: string): MMELVariable {
 export function createEndEvent(id: string): EditorEndEvent {
   return {
     id: id,
-    datatype: DataType.ENDEVENT,
-    child: new Set<MMELEdge>(),
+    datatype: DataType.ENDEVENT,  
     added: false,
     objectVersion: 'Editor',
-    pages: new Set<EditorSubprocess>(),
+    pages: new Set<string>(),
   };
 }
 
@@ -253,11 +244,10 @@ export function createTimerEvent(id: string): EditorTimerEvent {
     id: id,
     datatype: DataType.TIMEREVENT,
     type: '',
-    para: '',
-    child: new Set<MMELEdge>(),
+    para: '',    
     added: false,
     objectVersion: 'Editor',
-    pages: new Set<EditorSubprocess>(),
+    pages: new Set<string>(),
   };
 }
 
@@ -265,11 +255,10 @@ export function createSignalCatchEvent(id: string): EditorSignalEvent {
   return {
     id: id,
     datatype: DataType.SIGNALCATCHEVENT,
-    signal: '',
-    child: new Set<MMELEdge>(),
+    signal: '',    
     added: false,
     objectVersion: 'Editor',
-    pages: new Set<EditorSubprocess>(),
+    pages: new Set<string>(),
   };
 }
 
@@ -277,10 +266,9 @@ export function createEGate(id: string): EditorEGate {
   return {
     id: id,
     datatype: DataType.EGATE,
-    label: '',
-    child: new Set<MMELEdge>(),
+    label: '',    
     added: false,
     objectVersion: 'Editor',
-    pages: new Set<EditorSubprocess>(),
+    pages: new Set<string>(),
   };
 }

@@ -10,7 +10,6 @@ import {
   EditorModel,
   EditorNode,
   EditorRegistry,
-  EditorStartEvent,
   EditorSubprocess,
   isEditorAppproval,
   isEditorDataClass,
@@ -18,7 +17,6 @@ import {
   isEditorRegistry,
 } from './editormodel';
 import {
-  MMELEdge,
   MMELSubprocess,
   MMELSubprocessComponent,
 } from '../serialize/interface/flowcontrolinterface';
@@ -33,7 +31,7 @@ import { fillRDCS } from '../utils/commonfunctions';
 
 export interface ModelWrapper {
   model: EditorModel;
-  page: EditorSubprocess;
+  page: string;
 }
 
 function exploreData(
@@ -44,9 +42,10 @@ function exploreData(
 ) {
   const data = nodes[x.data];
   if (data !== undefined && isEditorDataClass(data)) {
-    data.rdcs.forEach(e => {
-      const m = e.mother;
-      if (m !== null) {
+    data.rdcs.forEach(id => {
+      const e = nodes[id] as EditorDataClass;
+      if (e.mother !== '') {
+        const m = nodes[e.mother] as EditorRegistry;
         if (!es.has(m.id)) {
           es.set(m.id, m);
           exploreData(m, nodes, es, elms);
@@ -73,20 +72,18 @@ function convertElms(
     if (isDataClass(item)) {
       const newdc: EditorDataClass = {
         ...item,
-        child: new Set<MMELEdge>(),
         added: false,
-        pages: new Set<EditorSubprocess>(),
+        pages: new Set<string>(),
         objectVersion: 'Editor',
-        rdcs: new Set<EditorDataClass>(),
-        mother: null,
+        rdcs: new Set<string>(),
+        mother: '',
       };
       output[x] = newdc;
     } else {
       output[x] = {
         ...item,
-        child: new Set<MMELEdge>(),
         added: false,
-        pages: new Set<EditorSubprocess>(),
+        pages: new Set<string>(),
         objectVersion: 'Editor',
       };
     }
@@ -112,11 +109,11 @@ function convertPages(
 function findStart(
   coms: Record<string, MMELSubprocessComponent>,
   nodes: Record<string, EditorNode>
-): EditorStartEvent {
+): string {
   for (const x in coms) {
     const node = nodes[coms[x].element];
     if (isStartEvent(node)) {
-      return node;
+      return node.id;
     }
   }
   throw new Error('Start event is not found in subprocess');
@@ -133,25 +130,18 @@ export function createEditorModelWrapper(m: MMELModel): ModelWrapper {
   const converedPages = convertPages(m.pages, convertedElms);
   return buildStructure({
     model: { ...m, elements: convertedElms, pages: converedPages },
-    page: converedPages[m.root],
+    page: m.root,
   });
 }
 
 function buildStructure(mw: ModelWrapper): ModelWrapper {
   const model = mw.model;
   for (const p in model.pages) {
-    const page = model.pages[p];
-    for (const e in page.edges) {
-      const edge = page.edges[e];
-      const from = model.elements[edge.from];
-      if (from !== undefined) {
-        from.child.add(edge);
-      }
-    }
+    const page = model.pages[p];    
     for (const x in page.childs) {
       const com = page.childs[x];
       const elm = model.elements[com.element];
-      elm.pages.add(page);
+      elm.pages.add(page.id);
     }
   }
   for (const d in model.elements) {
@@ -161,7 +151,7 @@ function buildStructure(mw: ModelWrapper): ModelWrapper {
     } else if (isEditorRegistry(data)) {
       const dc = model.elements[data.data];
       if (isEditorDataClass(dc)) {
-        dc.mother = data;
+        dc.mother = data.id;
       }
     }
   }
@@ -171,15 +161,18 @@ function buildStructure(mw: ModelWrapper): ModelWrapper {
 export function getReactFlowElementsFrom(
   mw: ModelWrapper,
   dvisible: boolean,
-  onProcessClick: (pageid: string, processid: string) => void
+  edgeDelete: boolean,
+  onProcessClick: (pageid: string, processid: string) => void,
+  removeEdge: (id: string) => void  
 ): Elements {
   const callback = getNodeCallBack(mw.model, onProcessClick);
 
   resetAdded(mw.model);
   const elms: Elements = [];
   const datas = new Map<string, EditorRegistry | EditorDataClass>();
-  for (const x in mw.page.childs) {
-    const com = mw.page.childs[x];
+  const page = mw.model.pages[mw.page];
+  for (const x in page.childs) {
+    const com = page.childs[x];
     const child = mw.model.elements[com.element];
     if (child !== undefined && !child.added) {
       const exploreDataNode = (r: string, incoming: boolean) => {
@@ -211,15 +204,15 @@ export function getReactFlowElementsFrom(
     }
   }
   if (dvisible) {
-    for (const x in mw.page.data) {
-      const com = mw.page.data[x];
+    for (const x in page.data) {
+      const com = page.data[x];
       const elm = mw.model.elements[com.element];
       if (elm !== undefined && datas.has(elm.id)) {
         const nn = createNodeContainer(elm, { x: com.x, y: com.y }, callback);
         elms.push(nn);
         elm.added = true;
       } else {
-        delete mw.page.data[x];
+        delete page.data[x];
       }
     }
     datas.forEach(e => {
@@ -229,8 +222,8 @@ export function getReactFlowElementsFrom(
       }
     });
   }
-  for (const x in mw.page.edges) {
-    const ec = createEdgeContainer(mw.page.edges[x]);
+  for (const x in page.edges) {
+    const ec = createEdgeContainer(edgeDelete, page.edges[x], removeEdge);    
     elms.push(ec);
   }
   return elms;

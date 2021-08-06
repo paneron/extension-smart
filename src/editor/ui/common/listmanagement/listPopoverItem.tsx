@@ -6,7 +6,7 @@ import { jsx, css } from '@emotion/react';
 import React, { useState } from 'react';
 import { EditorModel } from '../../../model/editormodel';
 import { MMELObject } from '../../../serialize/interface/baseinterface';
-import { checkId } from '../../../utils/commonfunctions';
+import { checkId, defaultItemSorter } from '../../../utils/commonfunctions';
 import { IListItem, IUpdateInterface, IViewListInterface } from '../fields';
 import ItemUpdatePane from './itemupdate';
 import ListViewPane from './listview';
@@ -55,7 +55,7 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
     return Object.values(items)
       .filter(x => matchFilter(x, filter))
       .map(x => getListItem(x))
-      .sort((a, b) => a.id.localeCompare(b.id));
+      .sort(defaultItemSorter);
   }
 
   function removeItem(ids: string[]) {

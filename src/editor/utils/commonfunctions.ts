@@ -3,7 +3,9 @@ import {
   EditorNode,
   isEditorDataClass,
 } from '../model/editormodel';
+import { MMELObject } from '../serialize/interface/baseinterface';
 import { MMELReference } from '../serialize/interface/supportinterface';
+import { IListItem } from '../ui/common/fields';
 
 export function replaceSet(
   set: Set<string>,
@@ -52,7 +54,7 @@ export function fillRDCS(
     if (type !== '') {
       const ret = elements[type];
       if (ret !== undefined && isEditorDataClass(ret)) {
-        data.rdcs.add(ret);
+        data.rdcs.add(type);
       }
     }
   }
@@ -93,4 +95,18 @@ export function checkId(id: string, ids: Record<string, any>): boolean {
     return false;
   }
   return true;
+}
+
+export function defaultItemSorter(a: IListItem, b: IListItem): number {
+  return a.id.localeCompare(b.id);
+}
+
+export function findUniqueID(prefix: string, ids: Record<string, MMELObject>) {
+  let num = 1;
+  let name = prefix + num;
+  while (ids[name] !== undefined) {
+    num++;
+    name = prefix + num;
+  }
+  return name;
 }

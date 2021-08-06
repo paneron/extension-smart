@@ -221,7 +221,15 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
 
   const smallfilter = filter.toLowerCase();
   const options: Array<JSX.Element> = [];
-  f.options.map((x, index) => {
+
+  function handleOnClick() {
+    const selected = extractOption(optionlist);
+    if (selected !== null && selected !== -1) {
+      f.update(selected);
+    }
+  }
+
+  f.options.forEach((x, index) => {
     if (x.toLowerCase().indexOf(smallfilter) !== -1 && x !== f.value) {
       if (x === '') {
         options.push(
@@ -253,10 +261,7 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
             }
           }}
         />
-        <button onClick={() => f.update(extractOption(optionlist))}>
-          {' '}
-          &lt;- Select{' '}
-        </button>
+        <button onClick={() => handleOnClick()}> &lt;- Select </button>
         <div style={column}>
           <div>
             {' '}
@@ -285,7 +290,7 @@ function extractOptions(ref: React.RefObject<HTMLSelectElement>): Set<string> {
 }
 
 function extractOption(ref: React.RefObject<HTMLSelectElement>): number {
-  if (ref.current !== null) {
+  if (ref.current !== null && ref.current.value !== '') {
     return parseInt(ref.current.value);
   }
   return -1;

@@ -1,5 +1,5 @@
 import React from 'react';
-import BasicSettingPane from '../ui/edit/settings';
+import BasicSettingPane from '../ui/control/settings';
 import { EditorModel } from './editormodel';
 import { ModelWrapper } from './modelwrapper';
 

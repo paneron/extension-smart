@@ -6,7 +6,7 @@ import React from 'react';
 import { EditorModel, isEditorDataClass } from '../../model/editormodel';
 import { MMELObject } from '../../serialize/interface/baseinterface';
 import { MMELEnum } from '../../serialize/interface/datainterface';
-import { checkId } from '../../utils/commonfunctions';
+import { checkId, defaultItemSorter } from '../../utils/commonfunctions';
 import { createEnum } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
@@ -26,7 +26,7 @@ const EnumEditPage: React.FC<{
     return Object.values(model.enums)
       .filter(x => matchFilter(x, filter))
       .map(x => ({ id: x.id, text: x.id }))
-      .sort((a, b) => a.id.localeCompare(b.id));
+      .sort(defaultItemSorter);
   }
 
   function replaceReferences(matchid: string, replaceid: string) {

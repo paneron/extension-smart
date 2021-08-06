@@ -6,6 +6,7 @@ import React from 'react';
 import {
   EditorDataClass,
   EditorModel,
+  EditorRegistry,
   isEditorAppproval,
   isEditorDataClass,
   isEditorProcess,
@@ -14,6 +15,7 @@ import {
 import { MMELObject } from '../../serialize/interface/baseinterface';
 import {
   checkId,
+  defaultItemSorter,
   fillRDCS,
   genDCIdByRegId,
   getReferenceDCTypeName,
@@ -34,34 +36,26 @@ const RegistryEditPage: React.FC<{
   model: EditorModel;
   setModel: (model: EditorModel) => void;
 }> = function ({ model, setModel }) {
+  function matchFilter(reg: EditorRegistry, filter: string) {
+    return (
+      filter === '' ||
+      reg.id.toLowerCase().indexOf(filter) !== -1 ||
+      reg.title.toLowerCase().indexOf(filter) !== -1
+    );
+  }
+
   function getRegListItems(filter: string): IListItem[] {
-    const smallfilter = filter.toLowerCase();
-    const out: IListItem[] = [];
-    for (const r in model.elements) {
-      const reg = model.elements[r];
-      if (isEditorRegistry(reg)) {
-        if (
-          smallfilter === '' ||
-          reg.id.toLowerCase().indexOf(smallfilter) !== -1 ||
-          reg.title.toLowerCase().indexOf(smallfilter) !== -1
-        ) {
-          out.push({
-            id: reg.id,
-            text: reg.title,
-          });
-        }
-      }
-    }
-    out.sort((a, b) => a.id.localeCompare(b.id));
-    return out;
+    return Object.values(model.elements)
+      .filter(x => isEditorRegistry(x) && matchFilter(x, filter))
+      .map(x => ({ id: x.id, text: (x as EditorRegistry).title }))
+      .sort(defaultItemSorter);
   }
 
   function replaceReferences(
     matchregid: string,
     matchdcid: string,
     replaceid: string,
-    newdcid: string,
-    newdc: EditorDataClass | null
+    newdcid: string
   ) {
     const oldrefdcid = getReferenceDCTypeName(matchdcid);
     const newrefdcid = getReferenceDCTypeName(newdcid);
@@ -74,10 +68,10 @@ const RegistryEditPage: React.FC<{
         replaceSet(elm.records, matchregid, replaceid);
       } else if (isEditorDataClass(elm)) {
         for (const dc of elm.rdcs) {
-          if (dc.id === matchdcid) {
+          if (dc === matchdcid) {
             elm.rdcs.delete(dc);
-            if (newdc !== null) {
-              elm.rdcs.add(newdc);
+            if (newdcid !== '') {
+              elm.rdcs.add(newdcid);
             }
           }
         }
@@ -110,7 +104,7 @@ const RegistryEditPage: React.FC<{
       if (isEditorRegistry(reg)) {
         delete model.elements[id];
         delete model.elements[reg.data];
-        replaceReferences(id, reg.data, '', '', null);
+        replaceReferences(id, reg.data, '', '');
       }
     }
     setModel(model);
@@ -122,7 +116,7 @@ const RegistryEditPage: React.FC<{
       const newreg = createRegistry(reg.id);
       const newdc = { ...reg } as EditorDataClass;
       newdc.id = dcid;
-      newdc.mother = newreg;
+      newdc.mother = newreg.id;
       newreg.data = dcid;
       newreg.title = reg.title;
       model.elements[reg.id] = newreg;
@@ -145,13 +139,13 @@ const RegistryEditPage: React.FC<{
           const newreg = createRegistry(reg.id);
           const newdc = { ...reg } as EditorDataClass;
           newdc.id = dcid;
-          newdc.mother = newreg;
+          newdc.mother = newreg.id;
           newreg.data = dcid;
           newreg.title = reg.title;
           model.elements[reg.id] = newreg;
           model.elements[dcid] = newdc;
           fillRDCS(newdc, model.elements);
-          replaceReferences(oldid, old.data, reg.id, dcid, newdc);
+          replaceReferences(oldid, old.data, reg.id, dcid);
           setModel(model);
           return true;
         }

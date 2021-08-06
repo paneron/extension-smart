@@ -1,5 +1,4 @@
 import React from 'react';
-import { EditorSubprocess } from './editormodel';
 import { ModelWrapper } from './modelwrapper';
 
 interface Breadcrumb {
@@ -8,19 +7,19 @@ interface Breadcrumb {
 }
 
 export interface HistoryItem {
-  page: EditorSubprocess;
+  page: string;
   pathtext: string;
 }
 
 export interface PageHistory {
-  history: HistoryItem[];
+  items: HistoryItem[];
 }
 
 export function createPageHistory(mw: ModelWrapper): PageHistory {
   return {
-    history: [
+    items: [
       {
-        page: mw.model.pages[mw.model.root],
+        page: mw.model.root,
         pathtext:
           mw.model.meta.namespace === '' ? 'root' : mw.model.meta.namespace,
       },
@@ -30,10 +29,10 @@ export function createPageHistory(mw: ModelWrapper): PageHistory {
 
 export function getBreadcrumbs(
   ph: PageHistory,
-  onPageChange: (updated: PageHistory, newPage: EditorSubprocess) => void
+  onPageChange: (updated: PageHistory, newPage: string) => void
 ): Breadcrumb[] {
   const breadcrumbs: Breadcrumb[] = [];
-  ph.history.forEach((item, index) => {
+  ph.items.forEach((item, index) => {
     breadcrumbs.push({
       label: <>{item.pathtext}</>,
       onNavigate: () => {
@@ -45,23 +44,23 @@ export function getBreadcrumbs(
   return breadcrumbs;
 }
 
-export function addToHistory(ph: PageHistory, x: EditorSubprocess, y: string) {
-  ph.history.push({
+export function addToHistory(ph: PageHistory, x: string, y: string) {
+  ph.items.push({
     page: x,
     pathtext: y,
   });
 }
 
-export function popPage(ph: PageHistory): EditorSubprocess {
-  if (ph.history.length > 1) {
-    ph.history.pop();
+export function popPage(ph: PageHistory): string {
+  if (ph.items.length > 1) {
+    ph.items.pop();
   }
-  return ph.history[ph.history.length - 1].page;
+  return ph.items[ph.items.length - 1].page;
 }
 
-export function popUntil(ph: PageHistory, i: number): EditorSubprocess {
-  while (i + 1 < ph.history.length) {
-    ph.history.pop();
+export function popUntil(ph: PageHistory, i: number): string {
+  while (i + 1 < ph.items.length) {
+    ph.items.pop();
   }
-  return ph.history[ph.history.length - 1].page;
+  return ph.items[ph.items.length - 1].page;
 }

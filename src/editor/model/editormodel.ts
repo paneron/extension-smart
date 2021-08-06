@@ -11,7 +11,6 @@ import {
   MMELTimerEvent,
 } from '../serialize/interface/eventinterface';
 import {
-  MMELEdge,
   MMELEGate,
   MMELSubprocess,
 } from '../serialize/interface/flowcontrolinterface';
@@ -56,19 +55,18 @@ export type EditorEGate = MMELEGate & EditorNode;
 export type EditorApproval = MMELApproval & EditorNode;
 export type EditorProcess = MMELProcess & EditorNode;
 
-export interface EditorNodeChild extends EditorBaseObjectType {
-  child: Set<MMELEdge>;
+export interface EditorNodeChild extends EditorBaseObjectType {  
   added: boolean;
-  pages: Set<EditorSubprocess>;
+  pages: Set<string>;
 }
 
 export interface EditorDataClassReference extends EditorBaseObjectType {
-  rdcs: Set<EditorDataClass>;
-  mother: EditorRegistry | null;
+  rdcs: Set<string>;
+  mother: string;
 }
 
 export interface EditorPage extends EditorBaseObjectType {
-  start: EditorStartEvent;
+  start: string;
 }
 
 export interface EditorModel {
@@ -83,7 +81,7 @@ export interface EditorModel {
   root: string;
 }
 
-export function isEditorNode(x: any): x is EditorNode {
+export function isEditorNode(x:any): x is EditorNode {
   return (
     x !== null && x.objectVersion !== undefined && x.objectVersion === 'Editor'
   );

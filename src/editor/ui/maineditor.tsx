@@ -2,20 +2,15 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx, css } from '@emotion/react';
-import React, {
-  CSSProperties,
-  RefObject,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import React, { RefObject, useContext, useMemo, useState } from 'react';
 
 import ReactFlow, {
   Controls,
   OnLoadParams,
   ReactFlowProvider,
   isNode,
-  ControlButton,
+  Connection,
+  Edge,
 } from 'react-flow-renderer';
 
 import { Button, ControlGroup, Dialog } from '@blueprintjs/core';
@@ -42,14 +37,19 @@ import {
   createSubprocessComponent,
 } from '../utils/EditorFactory';
 import { EdgeTypes, EditorState, NodeTypes } from '../model/state';
-import {
-  EditorSubprocess,
-  isEditorData,
-  isEditorNode,
-} from '../model/editormodel';
+import { isEditorData, isEditorNode } from '../model/editormodel';
 import FileMenu from './menu/file';
 import { SelectedNodeDescription } from './sidebar/selected';
 import { DiagTypes, MyDiag } from '../model/dialog';
+import { CustomizedControlButton as IconControlButton } from './control/buttons';
+import NewComponentPane from './control/newComponentPane';
+import { DragAndDropFormatType, NewComponentTypes } from '../utils/constants';
+import {
+  addComponentToModel,
+  addEdge,
+} from '../utils/ModelAddComponentHandler';
+import { EdgePackage } from './flowui/container';
+import { deleteEdge } from '../utils/ModelRemoveComponentHandler';
 
 const initModel = createNewModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -58,7 +58,7 @@ const ModelEditor: React.FC<{
   isVisible: boolean;
   className?: string;
 }> = ({ isVisible, className }) => {
-  const { logger } = useContext(DatasetContext);
+  const { logger } = useContext(DatasetContext);  
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
@@ -72,10 +72,7 @@ const ModelEditor: React.FC<{
     dvisible: true,
     modelWrapper: initModelWrapper,
     history: createPageHistory(initModelWrapper),
-    nvisible: false,
-    aivisible: false,
     edgeDeleteVisible: false,
-    importvisible: false,
   });
   const [rfInstance, setRfInstance] = useState<OnLoadParams | null>(null);
   const [dialogType, setDialogType] = useState<DiagTypes | null>(null);
@@ -92,7 +89,7 @@ const ModelEditor: React.FC<{
       for (const x of rfInstance.getElements()) {
         const data = x.data;
         const mw = state.modelWrapper;
-        const page = mw.page;
+        const page = mw.model.pages[mw.page];
         if (isNode(x) && isEditorNode(data)) {
           const node = isEditorData(data)
             ? page.data[data.id]
@@ -117,11 +114,14 @@ const ModelEditor: React.FC<{
   }
 
   function toggleDataVisibility() {
-    state.dvisible = !state.dvisible;
-    if (!state.dvisible) {
+    if (state.dvisible) {
       saveLayout();
     }
-    setState({ ...state });
+    setState({ ...state, dvisible: !state.dvisible });
+  }
+
+  function toggleEdgeDelete() {
+    setState({ ...state, edgeDeleteVisible: !state.edgeDeleteVisible });
   }
 
   function setNewModelWrapper(mw: ModelWrapper) {
@@ -132,12 +132,12 @@ const ModelEditor: React.FC<{
     setState({ ...state, modelWrapper: mw });
   }
 
-  function onDragOver(event: React.DragEvent<any>) {
+  function onDragOver(event: React.DragEvent<HTMLDivElement>) {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
   }
 
-  function onPageChange(updated: PageHistory, newPage: EditorSubprocess) {
+  function onPageChange(updated: PageHistory, newPage: string) {
     saveLayout();
     state.history = updated;
     state.modelWrapper.page = newPage;
@@ -147,16 +147,54 @@ const ModelEditor: React.FC<{
   function onProcessClick(pageid: string, processid: string): void {
     saveLayout();
     const mw = state.modelWrapper;
-    mw.page = mw.model.pages[pageid];
+    mw.page = pageid;
     logger?.log('Go to page', pageid);
     addToHistory(state.history, mw.page, processid);
     setState({ ...state });
   }
 
+  function removeEdge(id: string) {
+    alert(id);
+    deleteEdge(state.modelWrapper.model, state.modelWrapper.page, id);
+    setState({...state});
+  }
+
   function drillUp(): void {
-    if (state.history.history.length > 0) {
+    if (state.history.items.length > 0) {
       saveLayout();
       state.modelWrapper.page = popPage(state.history);
+      setState({ ...state });
+    }
+  }
+
+  function onDrop(event: React.DragEvent<any>) {    
+    event.preventDefault();
+    if (canvusRef.current !== null && rfInstance !== null) {
+      const reactFlowBounds = canvusRef.current.getBoundingClientRect();      
+      const type = event.dataTransfer.getData(DragAndDropFormatType);
+      const pos = rfInstance.project({
+        x: event.clientX - reactFlowBounds.left,
+        y: event.clientY - reactFlowBounds.top,
+      });
+      const model = addComponentToModel(
+        state.modelWrapper,
+        type as NewComponentTypes,
+        pos
+      );
+      setState({ ...state, modelWrapper: { ...state.modelWrapper, model } });
+    }
+  }
+
+  function connectHandle(x: Edge<EdgePackage> | Connection) {
+    if (x.source !== null && x.target !== null) {
+      const mw = state.modelWrapper;
+      const page = mw.model.pages[mw.page];
+      mw.model.pages[mw.page] = addEdge(
+        page,
+        mw.model.elements,
+        x.source,
+        x.target
+      );
       setState({ ...state });
     }
   }
@@ -176,7 +214,7 @@ const ModelEditor: React.FC<{
       >
         <Button>Workspace</Button>
       </Popover2>
-      <Button disabled={state.history.history.length <= 1} onClick={drillUp}>
+      <Button disabled={state.history.items.length <= 1} onClick={drillUp}>
         Drill up
       </Button>
     </ControlGroup>
@@ -197,6 +235,11 @@ const ModelEditor: React.FC<{
           key: 'selected-node',
           title: 'Selected node',
           content: <SelectedNodeDescription />,
+        },
+        {
+          key: 'create-node',
+          title: 'Add components',
+          content: <NewComponentPane />,
         },
       ]}
     />
@@ -247,24 +290,33 @@ const ModelEditor: React.FC<{
               elements={getReactFlowElementsFrom(
                 state.modelWrapper,
                 state.dvisible,
-                onProcessClick
+                state.edgeDeleteVisible,
+                onProcessClick,
+                removeEdge
               )}
               onLoad={onLoad}
+              // onDrop={onDrop}
               onDragOver={onDragOver}
               snapToGrid={true}
               snapGrid={[10, 10]}
               nodeTypes={NodeTypes}
               edgeTypes={EdgeTypes}
+              onConnect={connectHandle}
+              nodesConnectable={true}
               ref={canvusRef}
+              onClick={(e)=>{e.preventDefault();e.stopPropagation();logger?.log(e)}}
             >
               <Controls>
-                <ControlButton
-                  style={getStyle(state.dvisible)}
-                  onClick={() => toggleDataVisibility()}
-                >
-                  {' '}
-                  Dat{' '}
-                </ControlButton>
+                <IconControlButton
+                  isOn={state.dvisible}
+                  onClick={toggleDataVisibility}
+                  icon="cube"
+                />
+                <IconControlButton
+                  isOn={state.edgeDeleteVisible}
+                  onClick={toggleEdgeDelete}
+                  icon="link"
+                />
               </Controls>
             </ReactFlow>
           </div>
@@ -276,9 +328,5 @@ const ModelEditor: React.FC<{
   }
   return ret;
 };
-
-function getStyle(on: boolean): CSSProperties {
-  return on ? { background: '#3d3' } : {};
-}
 
 export default ModelEditor;

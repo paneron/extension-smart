@@ -17,9 +17,6 @@ import {
 
 export interface EditorState {
   dvisible: boolean; // visibility of data nodes
-  nvisible: boolean; // visibiilty of new component pane
-  aivisible: boolean; // visibility of the AI setting pane
-  importvisible: boolean; // visibiilty of the import pane
   edgeDeleteVisible: boolean; // visibility of the remove edge buttons
   history: PageHistory;
   modelWrapper: ModelWrapper;

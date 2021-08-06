@@ -66,7 +66,7 @@ const AttributeItem: React.FC<{
     if (isEditorRegistry(elm)) {
       types.push(elm.data);
       types.push(getReferenceDCTypeName(elm.data));
-    } else if (isEditorDataClass(elm) && elm.mother === null) {
+    } else if (isEditorDataClass(elm) && elm.mother === '') {
       types.push(elm.id);
     }
   }
@@ -126,10 +126,8 @@ const AttributeItem: React.FC<{
         value={att.type}
         options={types}
         update={(x: number) => {
-          if (x !== -1) {
-            att.type = types[x];
-            setObject({ ...att });
-          }
+          att.type = types[x];
+          setObject({ ...att });
         }}
       />
       <MultiReferenceSelector

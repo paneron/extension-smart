@@ -1,6 +1,6 @@
 import { Handle, NodeProps, Position } from 'react-flow-renderer';
 import styled from '@emotion/styled';
-import { FC } from 'react';
+import { CSSProperties, FC } from 'react';
 import {
   EditorApproval,
   EditorEGate,
@@ -11,6 +11,23 @@ import {
 } from '../../model/editormodel';
 import { NodeCallBack } from './container';
 import React from 'react';
+import {
+  DatacubeShape,
+  EgateShape,
+  EndShape,
+  ProcessBox,
+  SignalCatchShape,
+  StartShape,
+  TimerShape,
+} from './shapes';
+
+const handlecss: CSSProperties = {
+  borderRadius: '5px!important',
+  width: '19px!important',
+  height: '19px!important',
+  background: 'whitesmoke!important',
+  border: '1px solid black!important',
+};
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -18,16 +35,8 @@ export const Datacube: FC<NodeProps> = function ({ data }) {
   const color = 'none';
   return (
     <>
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ borderRadius: 0 }}
-      />
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ borderRadius: 0 }}
-      />
+      <Handle type="source" position={Position.Bottom} style={handlecss} />
+      <Handle type="target" position={Position.Top} style={handlecss} />
       <DatacubeShape color={color} />
       <LongLabel>{label}</LongLabel>
     </>
@@ -40,20 +49,12 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
   const actor = callback.getRoleById(process.actor);
   return (
     <>
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ borderRadius: 0 }}
-      />
+      <Handle type="source" position={Position.Bottom} style={handlecss} />
       <ProcessBox>
         {' '}
         {process.name === '' ? process.id : process.name}{' '}
       </ProcessBox>
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ borderRadius: 0 }}
-      />
+      <Handle type="target" position={Position.Top} style={handlecss} />
       {process.page !== '' && (
         <MyButton
           key={process.id + '#subprocessbutton'}
@@ -80,20 +81,12 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
   const approver = callback.getRoleById(approval.approver);
   return (
     <>
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ borderRadius: 0 }}
-      />
+      <Handle type="source" position={Position.Bottom} style={handlecss} />
       <ProcessBox>
         {' '}
         {approval.name === '' ? approval.id : approval.name}{' '}
       </ProcessBox>
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ borderRadius: 0 }}
-      />
+      <Handle type="target" position={Position.Top} style={handlecss} />
       {actor !== null ? (
         approver !== null ? (
           <>
@@ -128,11 +121,7 @@ export const StartComponent: FC<NodeProps> = function () {
   const color = 'none';
   return (
     <>
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ borderRadius: 0 }}
-      />
+      <Handle type="source" position={Position.Bottom} style={handlecss} />
       <StartShape color={color} />
     </>
   );
@@ -142,11 +131,7 @@ export const EndComponent: FC<NodeProps> = function () {
   const color = 'none';
   return (
     <>
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ borderRadius: 0 }}
-      />
+      <Handle type="target" position={Position.Top} style={handlecss} />
       <EndShape color={color} />
       <ShortLabel>end</ShortLabel>
     </>
@@ -157,16 +142,8 @@ export const TimerComponent: FC<NodeProps> = function () {
   const color = 'none';
   return (
     <>
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ borderRadius: 0 }}
-      />
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ borderRadius: 0 }}
-      />
+      <Handle type="source" position={Position.Bottom} style={handlecss} />
+      <Handle type="target" position={Position.Top} style={handlecss} />
       <TimerShape color={color} />
       <ShortLabel>timer</ShortLabel>
     </>
@@ -178,16 +155,8 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
   const egate = data as EditorEGate;
   return (
     <>
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ borderRadius: 0 }}
-      />
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ borderRadius: 0 }}
-      />
+      <Handle type="source" position={Position.Bottom} style={handlecss} />
+      <Handle type="target" position={Position.Top} style={handlecss} />
       <EgateShape color={color} />
       <LongLabel>{egate.label}</LongLabel>
     </>
@@ -199,115 +168,11 @@ export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
   const color = 'none';
   return (
     <>
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ borderRadius: 0 }}
-      />
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ borderRadius: 0 }}
-      />
+      <Handle type="source" position={Position.Bottom} style={handlecss} />
+      <Handle type="target" position={Position.Top} style={handlecss} />
       <SignalCatchShape color={color} />
       <LongLabel>{scevent.id}</LongLabel>
     </>
-  );
-};
-
-const DatacubeShape: FC<{ color: string }> = function ({ color }) {
-  return (
-    <svg height="40" width="40">
-      <polygon points="3,10 31,10 31,38, 3,38" fill={color} stroke="black" />
-      <polygon points="3,10 31,10 39,2, 11,2" fill={color} stroke="black" />
-      <polygon points="31,38 31,10 39,2, 39,30" fill={color} stroke="black" />
-    </svg>
-  );
-};
-
-const StartShape: FC<{ color: string }> = function ({ color }) {
-  return (
-    <svg height="40" width="40">
-      <circle
-        cx="20"
-        cy="20"
-        r="18"
-        stroke="black"
-        strokeWidth="2"
-        fill={color}
-      />
-    </svg>
-  );
-};
-
-const EndShape: FC<{ color: string }> = function ({ color }) {
-  return (
-    <svg height="40" width="40">
-      <circle
-        cx="20"
-        cy="20"
-        r="15"
-        stroke="black"
-        strokeWidth="5"
-        fill={color}
-      />
-    </svg>
-  );
-};
-
-const TimerShape: FC<{ color: string }> = function ({ color }) {
-  return (
-    <svg height="40" width="40">
-      <circle
-        cx="20"
-        cy="20"
-        r="18"
-        stroke="black"
-        strokeWidth="2"
-        fill={color}
-      />
-      <circle
-        cx="20"
-        cy="20"
-        r="14"
-        stroke="black"
-        strokeWidth="2"
-        fill={color}
-      />
-      <line x1="20" y1="20" x2="20" y2="10" stroke="black" strokeWidth="2" />
-      <line x1="20" y1="20" x2="24" y2="26" stroke="black" strokeWidth="2" />
-    </svg>
-  );
-};
-
-const EgateShape: FC<{ color: string }> = function ({ color }) {
-  return (
-    <svg height="40" width="40">
-      <polygon
-        points="0,20 20,0 40,20, 20,40"
-        fill={color}
-        stroke="black"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-};
-
-const SignalCatchShape: FC<{ color: string }> = function ({ color }) {
-  return (
-    <svg height="40" width="40">
-      <circle
-        cx="20"
-        cy="20"
-        r="18"
-        stroke="black"
-        strokeWidth="2"
-        fill={color}
-      />
-      <line x1="10" y1="30" x2="30" y2="30" stroke="black" strokeWidth="2" />
-      <line x1="10" y1="30" x2="20" y2="10" stroke="black" strokeWidth="2" />
-      <line x1="30" y1="30" x2="20" y2="10" stroke="black" strokeWidth="2" />
-    </svg>
   );
 };
 
@@ -327,19 +192,6 @@ const LongLabel = styled.div`
   width: 140px;
   text-align: center;
   font-size: 10px;
-`;
-
-const ProcessBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  border-radius: 5px;
-  border: 1px;
-  width: 150px;
-  height: 40px;
-  font-size: 10px;
-  border-style: solid;
 `;
 
 const MyButton = styled.button`

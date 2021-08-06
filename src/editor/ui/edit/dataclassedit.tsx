@@ -9,7 +9,11 @@ import {
   isEditorDataClass,
 } from '../../model/editormodel';
 import { MMELObject } from '../../serialize/interface/baseinterface';
-import { checkId, fillRDCS } from '../../utils/commonfunctions';
+import {
+  checkId,
+  defaultItemSorter,
+  fillRDCS,
+} from '../../utils/commonfunctions';
 import { createDataClass } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
@@ -28,25 +32,21 @@ const DataClassEditPage: React.FC<{
   function getDCListItems(filter: string): IListItem[] {
     return Object.values(model.elements)
       .filter(
-        x => isEditorDataClass(x) && x.mother === null && matchFilter(x, filter)
+        x => isEditorDataClass(x) && x.mother === '' && matchFilter(x, filter)
       )
       .map(x => ({ id: x.id, text: x.id }))
-      .sort((a, b) => a.id.localeCompare(b.id));
+      .sort(defaultItemSorter);
   }
 
-  function replaceReferences(
-    matchid: string,
-    replaceid: string,
-    newdc: EditorDataClass | null
-  ) {
+  function replaceReferences(matchid: string, replaceid: string) {
     for (const x in model.elements) {
       const elm = model.elements[x];
       if (isEditorDataClass(elm)) {
         for (const dc of elm.rdcs) {
-          if (dc.id === matchid) {
+          if (dc === matchid) {
             elm.rdcs.delete(dc);
-            if (newdc !== null) {
-              elm.rdcs.add(newdc);
+            if (replaceid !== '') {
+              elm.rdcs.add(replaceid);
             }
           }
         }
@@ -76,7 +76,7 @@ const DataClassEditPage: React.FC<{
       const dc = model.elements[id];
       if (isEditorDataClass(dc)) {
         delete model.elements[id];
-        replaceReferences(id, '', null);
+        replaceReferences(id, '');
       }
     }
     setModel(model);
@@ -99,7 +99,7 @@ const DataClassEditPage: React.FC<{
         delete model.elements[oldid];
         const newdc = { ...dc };
         model.elements[dc.id] = newdc;
-        replaceReferences(oldid, dc.id, newdc);
+        replaceReferences(oldid, dc.id);
         fillRDCS(newdc, model.elements);
         setModel(model);
         return true;

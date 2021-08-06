@@ -24,10 +24,9 @@ export interface EdgeContainer {
   id: string;
   source: string;
   target: string;
-  type: string;
-  arrowHeadType: ArrowHeadType.ArrowClosed;
+  type: string;  
   label: string;
-  data: string;
+  data: EdgePackage;
 
   animated: boolean;
   style: CSSProperties;
@@ -42,6 +41,11 @@ export interface NodeCallBack {
   getRegistryById: (id: string) => EditorRegistry | null;
   getDataClassById: (id: string) => EditorDataClass | null;
   getProvisionById: (id: string) => MMELProvision | null;
+}
+
+export interface EdgePackage {
+  id: string;
+  removeEdge: (id: string) => void;
 }
 
 export interface NodeContainer {
@@ -62,15 +66,21 @@ export interface DataLinkContainer {
   style: CSSProperties;
 }
 
-export function createEdgeContainer(e: MMELEdge): EdgeContainer {
+export function createEdgeContainer(
+  isDelete: boolean,
+  e: MMELEdge,
+  removeEdge: (id: string) => void
+): EdgeContainer {
   return {
     id: e.id,
     source: e.from,
     target: e.to,
-    type: e.from === e.to ? 'self' : 'normal',
-    arrowHeadType: ArrowHeadType.ArrowClosed,
-    label: conditionExtract(e.condition),
-    data: e.id,
+    type: e.from === e.to ? 'self' : 'normal',    
+    label: conditionExtract(e.description),
+    data: {
+      id: isDelete? e.id : '',
+      removeEdge: removeEdge,
+    },      
     animated: false,
     style: { stroke: 'black' },
   };

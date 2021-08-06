@@ -24,24 +24,20 @@ const ReferenceEditPage: React.FC<{
   model: EditorModel;
   setModel: (model: EditorModel) => void;
 }> = function ({ model, setModel }) {
+  function matchFilter(ref: MMELReference, filter: string) {
+    return (
+      filter === '' ||
+      ref.id.toLowerCase().indexOf(filter) !== -1 ||
+      ref.document.toLowerCase().indexOf(filter) !== -1 ||
+      ref.clause.toLowerCase().indexOf(filter) !== -1
+    );
+  }
+
   function getRefListItems(filter: string): IListItem[] {
-    const smallfilter = filter.toLowerCase();
-    const sorted = Object.values(model.refs).sort(referenceSorter);
-    const out: IListItem[] = [];
-    for (const ref of sorted) {
-      if (
-        smallfilter === '' ||
-        ref.id.toLowerCase().indexOf(smallfilter) !== -1 ||
-        ref.document.toLowerCase().indexOf(smallfilter) !== -1 ||
-        ref.clause.toLowerCase().indexOf(smallfilter) !== -1
-      ) {
-        out.push({
-          id: ref.id,
-          text: toRefSummary(ref),
-        });
-      }
-    }
-    return out;
+    return Object.values(model.refs)
+      .filter(x => matchFilter(x, filter))
+      .sort(referenceSorter)
+      .map(x => ({ id: x.id, text: toRefSummary(x) }));
   }
 
   function replaceReferences(matchid: string, replaceid: string) {

@@ -10,7 +10,7 @@ import {
 } from '../../model/editormodel';
 import { MMELObject } from '../../serialize/interface/baseinterface';
 import { MMELRole } from '../../serialize/interface/supportinterface';
-import { checkId } from '../../utils/commonfunctions';
+import { checkId, defaultItemSorter } from '../../utils/commonfunctions';
 import { createRole } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
@@ -19,24 +19,19 @@ const RoleEditPage: React.FC<{
   model: EditorModel;
   setModel: (model: EditorModel) => void;
 }> = function ({ model, setModel }) {
+  function matchFilter(role: MMELRole, filter: string) {
+    return (
+      filter === '' ||
+      role.id.toLowerCase().indexOf(filter) !== -1 ||
+      role.name.toLowerCase().indexOf(filter) !== -1
+    );
+  }
+
   function getRoleListItems(filter: string): IListItem[] {
-    const smallfilter = filter.toLowerCase();
-    const out: IListItem[] = [];
-    for (const r in model.roles) {
-      const role = model.roles[r];
-      if (
-        smallfilter === '' ||
-        role.id.toLowerCase().indexOf(smallfilter) !== -1 ||
-        role.name.toLowerCase().indexOf(smallfilter) !== -1
-      ) {
-        out.push({
-          id: role.id,
-          text: role.name,
-        });
-      }
-    }
-    out.sort((a, b) => a.id.localeCompare(b.id));
-    return out;
+    return Object.values(model.roles)
+      .filter(x => matchFilter(x, filter))
+      .map(x => ({ id: x.id, text: x.name }))
+      .sort(defaultItemSorter);
   }
 
   function replaceReferences(matchid: string, replaceid: string) {

@@ -7,12 +7,13 @@ import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useState } from 'react';
 import { EditorModel } from '../../model/editormodel';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
-import DataClassEditPage from './dataclassedit';
-import EnumEditPage from './enumedit';
-import MetaEditPage from './metaedit';
-import ReferenceEditPage from './refedit';
-import RegistryEditPage from './registryedit';
-import RoleEditPage from './roleedit';
+import DataClassEditPage from '../edit/dataclassedit';
+import EnumEditPage from '../edit/enumedit';
+import MeasurementEditPage from '../edit/measurementedit';
+import MetaEditPage from '../edit/metaedit';
+import ReferenceEditPage from '../edit/refedit';
+import RegistryEditPage from '../edit/registryedit';
+import RoleEditPage from '../edit/roleedit';
 
 export enum SETTINGPAGE {
   METAPAGE = 'meta',
@@ -21,6 +22,7 @@ export enum SETTINGPAGE {
   REGISTRYPAGE = 'reg',
   DATAPAGE = 'dc',
   ENUMPAGE = 'enum',
+  MEASUREMENT = 'measure',
 }
 
 interface TabProps {
@@ -71,6 +73,12 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
     title: 'Enumeration',
     Panel: ({ model, setModel }) => (
       <EnumEditPage model={model} setModel={setModel} />
+    ),
+  },
+  [SETTINGPAGE.MEASUREMENT]: {
+    title: 'Measurement',
+    Panel: ({ model, setModel }) => (
+      <MeasurementEditPage model={model} setModel={setModel} />
     ),
   },
 };
