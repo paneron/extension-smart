@@ -19,12 +19,17 @@ import {
   isEditorData,
 } from '../../model/editormodel';
 import { MMELtoFlowEntries } from '../../model/state';
+import {
+  DeletableNodeTypes,
+  EditableNodeTypes,
+  EditAction,
+} from '../../utils/constants';
 
 export interface EdgeContainer {
   id: string;
   source: string;
   target: string;
-  type: string;  
+  type: string;
   label: string;
   data: EdgePackage;
 
@@ -41,6 +46,12 @@ export interface NodeCallBack {
   getRegistryById: (id: string) => EditorRegistry | null;
   getDataClassById: (id: string) => EditorDataClass | null;
   getProvisionById: (id: string) => MMELProvision | null;
+  setDialog: (
+    nodeType: EditableNodeTypes | DeletableNodeTypes,
+    action: EditAction,
+    id: string,
+    resetSelection: () => void
+  ) => void;
 }
 
 export interface EdgePackage {
@@ -75,12 +86,12 @@ export function createEdgeContainer(
     id: e.id,
     source: e.from,
     target: e.to,
-    type: e.from === e.to ? 'self' : 'normal',    
+    type: e.from === e.to ? 'self' : 'normal',
     label: conditionExtract(e.description),
     data: {
-      id: isDelete? e.id : '',
+      id: isDelete ? e.id : '',
       removeEdge: removeEdge,
-    },      
+    },
     animated: false,
     style: { stroke: 'black' },
   };
@@ -98,7 +109,7 @@ export function createDataLinkContainer(
     arrowHeadType: ArrowHeadType.ArrowClosed,
     animated: true,
     label: '',
-    style: isEditorData(s) && isEditorData(t) ? { stroke: '#f6ab6c' } : {},    
+    style: isEditorData(s) && isEditorData(t) ? { stroke: '#f6ab6c' } : {},
   };
 }
 
@@ -128,7 +139,13 @@ function conditionExtract(l: string): string {
 
 export function getNodeCallBack(
   model: EditorModel,
-  onProcessClick: (pageid: string, processid: string) => void
+  onProcessClick: (pageid: string, processid: string) => void,
+  setDialog: (
+    nodeType: EditableNodeTypes | DeletableNodeTypes,
+    action: EditAction,
+    id: string,
+    resetSelection: () => void
+  ) => void
 ): NodeCallBack {
   function getRoleById(id: string): MMELRole | null {
     return getEditorRoleById(model, id);
@@ -157,5 +174,6 @@ export function getNodeCallBack(
     getRegistryById: getRegistryById,
     getDataClassById: getDCById,
     getProvisionById: getProvisionById,
+    setDialog: setDialog,
   };
 }

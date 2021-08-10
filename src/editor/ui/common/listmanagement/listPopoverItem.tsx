@@ -6,7 +6,7 @@ import { jsx, css } from '@emotion/react';
 import React, { useState } from 'react';
 import { EditorModel } from '../../../model/editormodel';
 import { MMELObject } from '../../../serialize/interface/baseinterface';
-import { checkId, defaultItemSorter } from '../../../utils/commonfunctions';
+import { checkId, defaultItemSorter, findUniqueID } from '../../../utils/commonfunctions';
 import { IListItem, IUpdateInterface, IViewListInterface } from '../fields';
 import ItemUpdatePane from './itemupdate';
 import ListViewPane from './listview';
@@ -21,6 +21,7 @@ export interface PopListInterface {
   model: EditorModel;
   initObject: IObject;
   matchFilter: (x: IObject, filter: string) => boolean;
+  filterName: string;
   getListItem?: (x: IObject) => IListItem;
   Content: React.FC<{
     object: MMELObject;
@@ -28,6 +29,8 @@ export interface PopListInterface {
     setObject: (obj: MMELObject) => void;
   }>;
   label: string;
+  size?: number;
+  requireUniqueId?: boolean;
 }
 
 function defaultGetListItem(x: IObject): IListItem {
@@ -43,10 +46,13 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
   model,
   initObject,
   matchFilter,
+  filterName,
   getListItem = defaultGetListItem,
   Content,
   label,
-}) {
+  size = 10,
+  requireUniqueId = true,
+}) {  
   const [editing, setEditing] = useState<IObject>(initObject);
   const [oldId, setOldId] = useState<string>('');
   const [mode, setMode] = useState<'Add' | 'Update' | 'None'>('None');
@@ -58,7 +64,7 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
       .sort(defaultItemSorter);
   }
 
-  function removeItem(ids: string[]) {
+  function removeItem(ids: string[]) {    
     for (const id of ids) {
       delete items[id];
     }
@@ -77,16 +83,19 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
   }
 
   const viewHandler: IViewListInterface = {
-    filterName: 'Attribute filter',
+    filterName: filterName,
     itemName: '',
     getItems: getItems,
     removeItems: removeItem,
     addClicked: addClicked,
     updateClicked: updateClicked,
-    size: 10,
+    size: size,
   };
 
   function addItem(x: IObject): boolean {
+    if (!requireUniqueId) {
+      x.id = findUniqueID('object', items);
+    }
     if (checkId(x.id, items)) {
       items[x.id] = { ...x };
       setItems({ ...items });
@@ -97,6 +106,9 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
 
   function updateItem(oldId: string, x: IObject): boolean {
     if (oldId !== x.id) {
+      if (!requireUniqueId) {
+        x.id = findUniqueID('object', items);
+      }
       if (checkId(x.id, items)) {
         delete items[oldId];
         items[x.id] = { ...x };

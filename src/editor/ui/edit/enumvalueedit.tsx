@@ -28,6 +28,7 @@ const EnumValueEditPage: React.FC<{
       model={model}
       initObject={createEnumValue('')}
       matchFilter={matchFilter}
+      filterName='Value filter'
       Content={EnumValueItem}
       label="Enumeration values"
     />

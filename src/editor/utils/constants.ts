@@ -26,6 +26,11 @@ export const DATATYPE: Array<string> = [
   ROLETYPE,
 ];
 
+export enum EditAction {
+  EDIT = 'edit',
+  DELETE = 'delete',
+}
+
 export const MEASUREMENTTYPES = [
   VarType.DATA,
   VarType.LISTDATA,
@@ -40,7 +45,7 @@ export type NewComponentTypes =
   | DataType.SIGNALCATCHEVENT
   | DataType.EGATE;
 
-  export type SelectableNodeTypes =
+export type SelectableNodeTypes =
   | DataType.PROCESS
   | DataType.APPROVAL
   | DataType.ENDEVENT
@@ -50,3 +55,18 @@ export type NewComponentTypes =
   | DataType.REGISTRY
   | DataType.STARTEVENT
   | DataType.EGATE;
+
+export type EditableNodeTypes =
+  | DataType.PROCESS
+  | DataType.APPROVAL
+  | DataType.TIMEREVENT
+  | DataType.SIGNALCATCHEVENT
+  | DataType.EGATE;
+
+export type DeletableNodeTypes =
+  | DataType.PROCESS
+  | DataType.APPROVAL
+  | DataType.TIMEREVENT
+  | DataType.SIGNALCATCHEVENT
+  | DataType.EGATE
+  | DataType.ENDEVENT;

@@ -37,13 +37,25 @@ import {
   createSubprocessComponent,
 } from '../utils/EditorFactory';
 import { EdgeTypes, EditorState, NodeTypes } from '../model/state';
-import { isEditorData, isEditorNode } from '../model/editormodel';
+import { EditorModel, isEditorData, isEditorNode } from '../model/editormodel';
 import FileMenu from './menu/file';
 import { SelectedNodeDescription } from './sidebar/selected';
-import { DiagTypes, MyDiag } from './dialog/dialogs';
+import {
+  DiagPackage,
+  DiagTypes,
+  IDiagAction,
+  MyDiag,
+  SetDiagAction,
+} from './dialog/dialogs';
 import { CustomizedControlButton as IconControlButton } from './control/buttons';
 import NewComponentPane from './control/newComponentPane';
-import { DragAndDropFormatType, NewComponentTypes } from '../utils/constants';
+import {
+  DeletableNodeTypes,
+  DragAndDropFormatType,
+  EditableNodeTypes,
+  EditAction,
+  NewComponentTypes,
+} from '../utils/constants';
 import {
   addComponentToModel,
   addEdge,
@@ -58,7 +70,7 @@ const ModelEditor: React.FC<{
   isVisible: boolean;
   className?: string;
 }> = ({ isVisible, className }) => {
-  const { logger } = useContext(DatasetContext);    
+  const { logger } = useContext(DatasetContext);
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
@@ -75,12 +87,49 @@ const ModelEditor: React.FC<{
     edgeDeleteVisible: false,
   });
   const [rfInstance, setRfInstance] = useState<OnLoadParams | null>(null);
-  const [dialogType, setDialogType] = useState<DiagTypes | null>(null);
+  const [dialogPack, setDialogPack] = useState<DiagPackage>({
+    type: null,
+    callback: () => {},
+    msg: '',
+  });
 
   function onLoad(params: OnLoadParams) {
     logger?.log('flow loaded');
     setRfInstance(params);
     params.fitView();
+  }
+
+  function setDialogType(x: DiagTypes | null) {
+    setDialogPack({ ...dialogPack, type: x });
+  }
+
+  function setModelAfterDelete(model: EditorModel) {
+    setState({
+      ...state,
+      modelWrapper: { ...state.modelWrapper, model: model },
+    });
+    setDialogType(null);
+  }
+
+  function setDiag(
+    nodeType: EditableNodeTypes | DeletableNodeTypes,
+    action: EditAction,
+    id: string,
+    resetSelection: () => void
+  ) {
+    const props: IDiagAction = {
+      nodeType: nodeType,
+      model: state.modelWrapper.model,
+      page: state.modelWrapper.page,
+      id: id,
+      setModelAfterDelete: (model: EditorModel) => {
+        setModelAfterDelete(model);
+        resetSelection();
+      },
+    };
+    const x = SetDiagAction[action](props);
+    logger?.log(x);
+    setDialogPack(SetDiagAction[action](props));
   }
 
   function saveLayout() {
@@ -153,9 +202,9 @@ const ModelEditor: React.FC<{
     setState({ ...state });
   }
 
-  function removeEdge(id: string) {    
+  function removeEdge(id: string) {
     deleteEdge(state.modelWrapper.model, state.modelWrapper.page, id);
-    setState({...state});
+    setState({ ...state });
   }
 
   function drillUp(): void {
@@ -166,10 +215,10 @@ const ModelEditor: React.FC<{
     }
   }
 
-  function onDrop(event: React.DragEvent<any>) {    
+  function onDrop(event: React.DragEvent<any>) {
     event.preventDefault();
     if (canvusRef.current !== null && rfInstance !== null) {
-      const reactFlowBounds = canvusRef.current.getBoundingClientRect();      
+      const reactFlowBounds = canvusRef.current.getBoundingClientRect();
       const type = event.dataTransfer.getData(DragAndDropFormatType);
       const pos = rfInstance.project({
         x: event.clientX - reactFlowBounds.left,
@@ -246,22 +295,26 @@ const ModelEditor: React.FC<{
 
   let ret: JSX.Element;
   if (isVisible) {
-    const diagProps = dialogType === null ? null : MyDiag[dialogType];
+    const diagProps = dialogPack.type === null ? null : MyDiag[dialogPack.type];
     ret = (
       <ReactFlowProvider>
         {diagProps !== null && (
           <Dialog
-            isOpen={dialogType !== null}
+            isOpen={dialogPack !== null}
             title={diagProps.title}
-            css={diagProps.fullscreen ? css`
-              width: calc(100vw - 60px);
-              height: calc(100vh - 60px);
-              padding-bottom: 0;
-              & > :last-child {
-                overflow-y: auto;
-                padding: 20px;
-              }
-            ` : ''}
+            css={
+              diagProps.fullscreen
+                ? css`
+                    width: calc(100vw - 60px);
+                    min-height: calc(100vh - 60px);
+                    padding-bottom: 0;
+                    & > :last-child {
+                      overflow-y: auto;
+                      padding: 20px;
+                    }
+                  `
+                : ''
+            }
             onClose={() => setDialogType(null)}
             canEscapeKeyClose={false}
             canOutsideClickClose={false}
@@ -269,6 +322,11 @@ const ModelEditor: React.FC<{
             <diagProps.Panel
               modelwrapper={state.modelWrapper}
               setModelWrapper={setModelWrapper}
+              callback={dialogPack.callback}
+              cancel={() => {
+                setDialogType(null);
+              }}
+              msg={dialogPack.msg}
             />
           </Dialog>
         )}
@@ -291,18 +349,19 @@ const ModelEditor: React.FC<{
                 state.dvisible,
                 state.edgeDeleteVisible,
                 onProcessClick,
-                removeEdge
+                removeEdge,
+                setDiag
               )}
               onLoad={onLoad}
               onDrop={onDrop}
               onDragOver={onDragOver}
-              onConnect={connectHandle}              
+              onConnect={connectHandle}
               nodesConnectable={true}
               snapToGrid={true}
               snapGrid={[10, 10]}
               nodeTypes={NodeTypes}
-              edgeTypes={EdgeTypes}              
-              ref={canvusRef}              
+              edgeTypes={EdgeTypes}
+              ref={canvusRef}
             >
               <Controls>
                 <IconControlButton

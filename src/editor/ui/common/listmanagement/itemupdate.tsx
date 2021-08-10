@@ -29,7 +29,7 @@ const ItemUpdatePane: React.FC<IUpdateInterface> = ({
         />
         <Button
           key="ui#itemupdate#cancelbutton"
-          icon="cross"
+          icon="disable"
           intent={Intent.DANGER}
           text="Cancel"
           onClick={() => cancelClicked()}

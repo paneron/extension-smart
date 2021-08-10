@@ -97,7 +97,7 @@ export function addEdge(
     }
     const newEdge = createEdge(findUniqueID('Edge', page.edges));
     newEdge.from = source;
-    newEdge.to = target;    
+    newEdge.to = target;
     page.edges[newEdge.id] = newEdge;
   }
   return page;

@@ -2,8 +2,8 @@ import React from 'react';
 
 import {
   ArrowHeadType,
-  EdgeProps,  
-  EdgeText,  
+  EdgeProps,
+  EdgeText,
   getEdgeCenter,
   getMarkerEnd,
   getSmoothStepPath,
@@ -23,7 +23,7 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
   targetPosition,
   label,
   data,
-  style = {},  
+  style = {},
   markerEndId,
 }) {
   const p1x: number = sourceX + 40;
@@ -106,7 +106,7 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
         y={centerY}
         label={label}
         keytext={source + '#' + target}
-      />      
+      />
     </>
   );
 };
@@ -126,7 +126,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
   label,
   arrowHeadType,
   markerEndId,
-}) {  
+}) {
   if (targetY > sourceY) {
     const edgePath1 = getSmoothStepPath({
       sourceX,
@@ -142,7 +142,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
       sourceY,
       targetX,
       targetY,
-    });    
+    });
     return (
       <>
         <path
@@ -158,7 +158,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
           y={centerY}
           label={label}
           keytext={source + '#' + target}
-        />        
+        />
       </>
     );
   }
@@ -254,7 +254,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
         y={centerY}
         label={label}
         keytext={source + '#' + target}
-      />      
+      />
     </>
   );
 };
@@ -266,7 +266,7 @@ const EdgeLabel: React.FC<{
   y: number;
   label: React.ReactNode;
 }> = function ({ payload, keytext, x, y, label }) {
-  const {id, removeEdge} = payload;    
+  const { id, removeEdge } = payload;
   return (
     <>
       {id === '' ? (
@@ -276,7 +276,7 @@ const EdgeLabel: React.FC<{
           key={'ui#edge#deletebutton#' + keytext}
           x={x}
           y={y}
-          label='X'
+          label="X"
           labelStyle={{
             width: '20px',
             height: '20px',
@@ -287,7 +287,7 @@ const EdgeLabel: React.FC<{
             margin: 'auto',
           }}
           labelBgBorderRadius={10}
-          labelBgPadding={[7, 5]}        
+          labelBgPadding={[7, 5]}
           onClick={() => removeEdge(id)}
         />
       )}

@@ -19,10 +19,6 @@ const ListViewPane: React.FC<IViewListInterface> = ({
   const selectbox: RefObject<HTMLSelectElement> = React.createRef();
   const [filter, setFilter] = useState<string>('');
 
-  const css: React.CSSProperties = {
-    minWidth: '100%',
-  };
-
   const options = getItems(filter);
 
   return (
@@ -34,7 +30,11 @@ const ListViewPane: React.FC<IViewListInterface> = ({
       </p>
 
       <p> {itemName} </p>
-      <select style={css} size={size} ref={selectbox} multiple>
+      <select style={{
+        minWidth: '100%',
+        maxWidth: '100% !important',
+        width: '100%' 
+      }} size={size} ref={selectbox} multiple>
         {options.map(value => (
           <option key={'listmanage#' + value.id} value={value.id}>
             {value.text === '' ? '( Untitled )' : value.text}

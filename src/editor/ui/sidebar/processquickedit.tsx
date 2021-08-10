@@ -1,10 +1,12 @@
 import { Button } from '@blueprintjs/core';
 import React, { CSSProperties } from 'react';
 import { EditorProcess } from '../../model/editormodel';
+import { DataType } from '../../serialize/interface/baseinterface';
 import {
   MMELProvision,
   MMELReference,
 } from '../../serialize/interface/supportinterface';
+import { EditAction } from '../../utils/constants';
 import { EdtiorNodeWithInfoCallback, NodeCallBack } from '../flowui/container';
 import {
   ActorDescription,
@@ -19,8 +21,17 @@ export const ProcessQuickEdit: React.FC<
   NodeCallBack & {
     process: EditorProcess;
     setOldValue: (x: EdtiorNodeWithInfoCallback | null) => void;
+    resetSelection: () => void;
   }
-> = ({ process, setOldValue, getProvisionById, getRefById, getRoleById }) => {
+> = ({
+  process,
+  setOldValue,
+  getProvisionById,
+  getRefById,
+  getRoleById,
+  setDialog,
+  resetSelection,
+}) => {
   // const [editing, setEditing] = useState<ISimpleProcess | null>(null);
 
   // const roles:Array<string> = [''];
@@ -260,11 +271,29 @@ export const ProcessQuickEdit: React.FC<
   return (
     <>
       <>
-        <EditButton cid={process.id} callback={() => {}} />        
-        {process.page === '' && (
-          <AddPageButton callback={() => {}} />
-        )}
-        <RemoveButton cid={process.id} callback={() => {}} />
+        <EditButton
+          cid={process.id}
+          callback={() =>
+            setDialog(
+              DataType.PROCESS,
+              EditAction.EDIT,
+              process.id,
+              resetSelection
+            )
+          }
+        />
+        {process.page === '' && <AddPageButton callback={() => {}} />}
+        <RemoveButton
+          cid={process.id}
+          callback={() =>
+            setDialog(
+              DataType.PROCESS,
+              EditAction.DELETE,
+              process.id,
+              resetSelection
+            )
+          }
+        />
       </>
       <DescriptionItem
         id={process.id + '#ProcessID'}
@@ -291,7 +320,7 @@ export const ProcessQuickEdit: React.FC<
         provisions={process.provision}
         getProvisionById={getProvisionById}
         getRefById={getRefById}
-      />      
+      />
     </>
   );
 };
@@ -441,14 +470,14 @@ const DescribeProvision: React.FC<{
 //   return true
 // }
 
-export const AddPageButton: React.FC<{  
+export const AddPageButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
   return (
     <Button
-      key='ui#button#addPageButton#'
-      icon='map-create'
-      text='Create subprocess'
+      key="ui#button#addPageButton#"
+      icon="map-create"
+      text="Create subprocess"
       onClick={() => callback()}
     />
   );

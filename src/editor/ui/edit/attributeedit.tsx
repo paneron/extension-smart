@@ -47,6 +47,7 @@ const AttributeEditPage: React.FC<{
       model={model}
       initObject={createDataAttribute('')}
       matchFilter={matchFilter}
+      filterName='Attribute filter'
       Content={AttributeItem}
       label="Attributes"
     />
@@ -134,7 +135,7 @@ const AttributeItem: React.FC<{
         key="field#attributeReference"
         text="Reference"
         options={refs}
-        values={Array.from(att.ref)}
+        values={att.ref}
         filterName="Reference filter"
         add={x => {
           att.ref = new Set([...att.ref, ...x]);

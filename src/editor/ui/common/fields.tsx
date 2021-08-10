@@ -25,7 +25,7 @@ export interface IMultiRefSelectField {
   filterName: string;
   text: string;
   options: string[];
-  values: string[];
+  values: Set<string>;
   add: (x: Set<string>) => void;
   remove: (x: Set<string>) => void;
 }
@@ -169,7 +169,7 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
   for (const x of f.options) {
     if (
       x.toLowerCase().indexOf(smallfilter) !== -1 &&
-      f.values.indexOf(x) === -1
+      !f.values.has(x)
     ) {
       options.push(
         <option key={'ui#selector#options#' + x} value={x}>

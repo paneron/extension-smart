@@ -135,7 +135,7 @@ export function createDataClass(id: string): EditorDataClass {
     id: id,
     attributes: {},
     datatype: DataType.DATACLASS,
-    objectVersion: 'Editor',    
+    objectVersion: 'Editor',
     added: false,
     pages: new Set<string>(),
     rdcs: new Set<string>(),
@@ -149,7 +149,7 @@ export function createRegistry(id: string): EditorRegistry {
     title: '',
     data: '',
     datatype: DataType.REGISTRY,
-    objectVersion: 'Editor',    
+    objectVersion: 'Editor',
     added: false,
     pages: new Set<string>(),
   };
@@ -158,7 +158,7 @@ export function createRegistry(id: string): EditorRegistry {
 export function createStartEvent(id: string): EditorStartEvent {
   return {
     id: id,
-    datatype: DataType.STARTEVENT,    
+    datatype: DataType.STARTEVENT,
     added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
@@ -196,7 +196,7 @@ export function createProcess(id: string): EditorProcess {
     input: new Set<string>(),
     provision: new Set<string>(),
     page: '',
-    measure: [],    
+    measure: [],
     added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
@@ -212,7 +212,7 @@ export function createApproval(id: string): EditorApproval {
     actor: '',
     approver: '',
     records: new Set<string>(),
-    ref: new Set<string>(),    
+    ref: new Set<string>(),
     added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
@@ -232,7 +232,7 @@ export function createVariable(id: string): MMELVariable {
 export function createEndEvent(id: string): EditorEndEvent {
   return {
     id: id,
-    datatype: DataType.ENDEVENT,  
+    datatype: DataType.ENDEVENT,
     added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
@@ -244,7 +244,7 @@ export function createTimerEvent(id: string): EditorTimerEvent {
     id: id,
     datatype: DataType.TIMEREVENT,
     type: '',
-    para: '',    
+    para: '',
     added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
@@ -255,7 +255,7 @@ export function createSignalCatchEvent(id: string): EditorSignalEvent {
   return {
     id: id,
     datatype: DataType.SIGNALCATCHEVENT,
-    signal: '',    
+    signal: '',
     added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
@@ -266,7 +266,7 @@ export function createEGate(id: string): EditorEGate {
   return {
     id: id,
     datatype: DataType.EGATE,
-    label: '',    
+    label: '',
     added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),

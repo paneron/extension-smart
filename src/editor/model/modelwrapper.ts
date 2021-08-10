@@ -28,6 +28,11 @@ import {
   getNodeCallBack,
 } from '../ui/flowui/container';
 import { fillRDCS } from '../utils/commonfunctions';
+import {
+  DeletableNodeTypes,
+  EditableNodeTypes,
+  EditAction,
+} from '../utils/constants';
 
 export interface ModelWrapper {
   model: EditorModel;
@@ -137,7 +142,7 @@ export function createEditorModelWrapper(m: MMELModel): ModelWrapper {
 function buildStructure(mw: ModelWrapper): ModelWrapper {
   const model = mw.model;
   for (const p in model.pages) {
-    const page = model.pages[p];    
+    const page = model.pages[p];
     for (const x in page.childs) {
       const com = page.childs[x];
       const elm = model.elements[com.element];
@@ -163,9 +168,15 @@ export function getReactFlowElementsFrom(
   dvisible: boolean,
   edgeDelete: boolean,
   onProcessClick: (pageid: string, processid: string) => void,
-  removeEdge: (id: string) => void  
+  removeEdge: (id: string) => void,
+  setDialog: (
+    nodeType: EditableNodeTypes | DeletableNodeTypes,
+    action: EditAction,
+    id: string,
+    resetSelection: () => void
+  ) => void
 ): Elements {
-  const callback = getNodeCallBack(mw.model, onProcessClick);
+  const callback = getNodeCallBack(mw.model, onProcessClick, setDialog);
 
   resetAdded(mw.model);
   const elms: Elements = [];
@@ -223,7 +234,7 @@ export function getReactFlowElementsFrom(
     });
   }
   for (const x in page.edges) {
-    const ec = createEdgeContainer(edgeDelete, page.edges[x], removeEdge);    
+    const ec = createEdgeContainer(edgeDelete, page.edges[x], removeEdge);
     elms.push(ec);
   }
   return elms;

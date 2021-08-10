@@ -55,7 +55,7 @@ export type EditorEGate = MMELEGate & EditorNode;
 export type EditorApproval = MMELApproval & EditorNode;
 export type EditorProcess = MMELProcess & EditorNode;
 
-export interface EditorNodeChild extends EditorBaseObjectType {  
+export interface EditorNodeChild extends EditorBaseObjectType {
   added: boolean;
   pages: Set<string>;
 }
@@ -81,7 +81,7 @@ export interface EditorModel {
   root: string;
 }
 
-export function isEditorNode(x:any): x is EditorNode {
+export function isEditorNode(x: any): x is EditorNode {
   return (
     x !== null && x.objectVersion !== undefined && x.objectVersion === 'Editor'
   );
