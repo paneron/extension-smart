@@ -22,6 +22,8 @@ import {
   createEndEvent,
   createProcess,
   createSignalCatchEvent,
+  createStartEvent,
+  createSubprocess,
   createSubprocessComponent,
   createTimerEvent,
 } from './EditorFactory';
@@ -101,4 +103,15 @@ export function addEdge(
     page.edges[newEdge.id] = newEdge;
   }
   return page;
+}
+
+export function createNewPage(model: EditorModel): string {
+  const start = createStartEvent(findUniqueID('Start', model.elements));
+  const page = createSubprocess(findUniqueID('Page', model.pages), start.id);
+  start.pages.add(page.id);
+  const com = createSubprocessComponent(start.id);
+  model.elements[start.id] = start;
+  page.childs[start.id] = com;
+  model.pages[page.id] = page;
+  return page.id;
 }

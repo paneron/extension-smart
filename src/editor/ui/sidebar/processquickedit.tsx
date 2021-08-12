@@ -1,4 +1,4 @@
-import { Button } from '@blueprintjs/core';
+import { Button, ButtonGroup } from '@blueprintjs/core';
 import React, { CSSProperties } from 'react';
 import { EditorProcess } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
@@ -22,6 +22,7 @@ export const ProcessQuickEdit: React.FC<
     process: EditorProcess;
     setOldValue: (x: EdtiorNodeWithInfoCallback | null) => void;
     resetSelection: () => void;
+    onSubprocessClick: (pid: string) => void;
   }
 > = ({
   process,
@@ -31,6 +32,7 @@ export const ProcessQuickEdit: React.FC<
   getRoleById,
   setDialog,
   resetSelection,
+  onSubprocessClick
 }) => {
   // const [editing, setEditing] = useState<ISimpleProcess | null>(null);
 
@@ -270,7 +272,7 @@ export const ProcessQuickEdit: React.FC<
   // }
   return (
     <>
-      <>
+      <ButtonGroup>
         <EditButton
           cid={process.id}
           callback={() =>
@@ -282,7 +284,7 @@ export const ProcessQuickEdit: React.FC<
             )
           }
         />
-        {process.page === '' && <AddPageButton callback={() => {}} />}
+        {process.page === '' && <AddPageButton callback={() => onSubprocessClick(process.id)} />}
         <RemoveButton
           cid={process.id}
           callback={() =>
@@ -294,7 +296,7 @@ export const ProcessQuickEdit: React.FC<
             )
           }
         />
-      </>
+      </ButtonGroup>
       <DescriptionItem
         id={process.id + '#ProcessID'}
         label={'Process'}
@@ -475,9 +477,9 @@ export const AddPageButton: React.FC<{
 }> = function ({ callback }) {
   return (
     <Button
-      key="ui#button#addPageButton#"
-      icon="map-create"
-      text="Create subprocess"
+      key='ui#button#addPageButton'
+      icon='map-create'
+      text=''
       onClick={() => callback()}
     />
   );

@@ -4,12 +4,15 @@
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
-import { EditorModel, EditorProcess, isEditorRegistry } from '../../model/editormodel';
+import { useStoreActions } from 'react-flow-renderer';
+import { EditorModel, EditorProcess } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELProvision } from '../../serialize/interface/supportinterface';
-import { checkId } from '../../utils/commonfunctions';
+import { checkId, getModelAllRegs, getModelAllRolesWithEmpty, updatePageElement } from '../../utils/commonfunctions';
 import { MODAILITYOPTIONS } from '../../utils/constants';
 import { createProvision } from '../../utils/EditorFactory';
+import { createNewPage } from '../../utils/ModelAddComponentHandler';
+import { deletePage } from '../../utils/ModelRemoveComponentHandler';
 import { MultiReferenceSelector, NormalComboBox, NormalTextField, ReferenceSelector } from '../common/fields';
 import ListWithPopoverItem from '../common/listmanagement/listPopoverItem';
 import { IMeasure, matchMeasurementFilter, MeasurementItem } from './measurementExpressionEdit';
@@ -55,26 +58,18 @@ const EditProcessPage: React.FC<{
   model: EditorModel;
   setModel: (m:EditorModel) => void;
   id: string;
-  cancel: () => void;
-}> = function ({ model, setModel, id, cancel }) {
+  closeDialog: () => void;
+}> = function ({ model, setModel, id, closeDialog }) {
+  const setElm = useStoreActions( act => act.setSelectedElements);
+
   const process = model.elements[id] as EditorProcess;  
 
   const [editing, setEditing] = useState<EditorProcess>({...process});
   const [provisions, setProvisions] = useState<Record<string, MMELProvision>>(getInitProvisions(model, process));
   const [measurements, setMeasurements] = useState<Record<string, IMeasure>>(getInitMeasurement(process));
 
-  const roles: Array<string> = [''];
-  const regs: Array<string> = [];  
-  for (const x in model.roles) {
-    const role = model.roles[x];
-    roles.push(role.id);
-  }
-  for (const x in model.elements) {
-    const reg = model.elements[x];
-    if (isEditorRegistry(reg)) {
-      regs.push(reg.id);
-    }
-  }
+  const roles = getModelAllRolesWithEmpty(model);
+  const regs = getModelAllRegs(model);  
   
   function setPID (x: string) {
     setEditing({...editing, id:x.replaceAll(/\s+/g, '')});
@@ -116,7 +111,11 @@ const EditProcessPage: React.FC<{
               measurements,
               model
             );
-            setModel({...updated});
+            if (updated !== null) {
+              setElm([]);
+              setModel({ ...updated });
+              closeDialog();
+            }
           }}          
         />
         <Button
@@ -124,7 +123,7 @@ const EditProcessPage: React.FC<{
           icon="disable"
           intent={Intent.DANGER}
           text="Cancel"
-          onClick={() => cancel()}
+          onClick={() => closeDialog()}
         />
       </ButtonGroup>
       <NormalTextField
@@ -239,105 +238,56 @@ function save(
   provisions: Record<string, MMELProvision>, 
   measurements: Record<string, IMeasure>,
   model: EditorModel
-) : EditorModel {
+): EditorModel|null {
+  process.provision = new Set(Object.values(provisions).map(p => p.id));
+  process.measure = Object.values(measurements).map(m => m.measure);
+  const oldProcess = model.elements[oldId] as EditorProcess;
   if (oldId !== process.id) {
     if (checkId(process.id, model.elements)) {
-
+      delete model.elements[oldId];
+      for (const p in model.pages) {
+        const page = model.pages[p];
+        updatePageElement(page, oldId, process);
+      }
+      model.elements[process.id] = process;
+      model.provisions = updateProvisions(model.provisions, oldProcess.provision, provisions);
+      checkPage(model, oldProcess.page, process);
+    } else {
+      return null;
     }
   } else {
-    
-  }
+    model.elements[oldId] = process;
+    model.provisions = updateProvisions(model.provisions, oldProcess.provision, provisions);
+    checkPage(model, oldProcess.page, process);
+  }  
   return model;
 }
-  // if (oldValue !== null && newValue !== null) {
-  //   const model = sm.state.modelWrapper.model;
-  //   const idreg = sm.state.modelWrapper.idman;
-  //   const mw = sm.state.modelWrapper;
-  //   if (oldValue.id !== newValue.id) {
-  //     if (newValue.id === '') {
-  //       alert('ID is empty');
-  //       return;
-  //     }
-  //     if (idreg.nodes.has(newValue.id)) {
-  //       alert('New ID already exists');
-  //       return;
-  //     }
-  //     idreg.nodes.delete(oldValue.id);
-  //     idreg.nodes.set(newValue.id, oldValue);
-  //     functionCollection.renameLayoutItem(oldValue.id, newValue.id);
-  //     oldValue.id = newValue.id;
-  //   }
-  //   oldValue.name = newValue.name;
-  //   oldValue.modality = newValue.modality;
-  //   if (newValue.actor === '') {
-  //     oldValue.actor = null;
-  //   } else {
-  //     const actor = idreg.roles.get(newValue.actor);
-  //     if (actor?.datatype === DataType.ROLE) {
-  //       oldValue.actor = actor as MMELRole;
-  //     } else {
-  //       console.error('Role not found: ', newValue.actor);
-  //     }
-  //   }
-  //   oldValue.input = [];
-  //   newValue.input.map(x => {
-  //     const data = idreg.regs.get(x);
-  //     if (data !== undefined) {
-  //       oldValue.input.push(data);
-  //     } else {
-  //       console.error('Data not found: ', x);
-  //     }
-  //   });
-  //   oldValue.output = [];
-  //   newValue.output.map(x => {
-  //     const data = idreg.regs.get(x);
-  //     if (data !== undefined) {
-  //       oldValue.output.push(data);
-  //     } else {
-  //       console.error('Data not found: ', x);
-  //     }
-  //   });
-  //   Cleaner.cleanProvisions(oldValue);
-  //   newValue.provision.map(p => {
-  //     const id = idreg.findProvisionID('Provision');
-  //     const pro = MMELFactory.createProvision(id);
-  //     pro.condition = p.condition;
-  //     pro.modality = p.modality;
-  //     p.ref.map(r => {
-  //       const ref = idreg.refs.get(r);
-  //       if (ref === undefined) {
-  //         console.error('Reference not found: ', r);
-  //       } else {
-  //         pro.ref.push(ref);
-  //       }
-  //     });
-  //     model.provisions.push(pro);
-  //     idreg.provisions.set(pro.id, pro);
-  //     oldValue.provision.push(pro);
-  //   });
-  //   oldValue.measure = newValue.measure;
-  //   if (oldValue.page !== null && !newValue.start) {
-  //     // remove subprocess
-  //     Cleaner.killPage(oldValue.page);
-  //     oldValue.page = null;
-  //   } else if (oldValue.page === null && newValue.start) {
-  //     // add subprocess
-  //     const pg = MMELFactory.createSubprocess(idreg.findUniquePageID('Page'));
-  //     const st = MMELFactory.createStartEvent(idreg.findUniqueID('Start'));
-  //     const nc = MMELFactory.createSubprocessComponent(st);
-  //     idreg.nodes.set(st.id, st);
-  //     pg.childs.push(nc);
-  //     const pgaddon = mw.subman.get(pg);
-  //     pgaddon.map.set(st.id, nc);
-  //     pgaddon.start = nc;
-  //     model.events.push(st);
-  //     oldValue.page = pg;
-  //     model.pages.push(pg);
-  //     idreg.pages.set(pg.id, pg);
-  //   }
-  //   sm.state.viewprocess = null;
-  //   sm.state.process = null;
-  //   sm.setState(sm.state);
-  // }
+
+function updateProvisions(provisions: Record<string, MMELProvision>, old: Set<string>, update: Record<string, MMELProvision>): Record<string, MMELProvision> {  
+  for (const x of old) {
+    delete provisions[x];
+  }
+  let x = 1;
+  for (const p in update) {
+    const pro = update[p];
+    while (provisions['Provision' + x] !== undefined) {
+      x++;
+    }
+    pro.id = 'Provision' + x;
+    provisions[pro.id] = pro;
+    x++;
+  }  
+  return { ...provisions };
+}
+
+function checkPage(model: EditorModel, oldPage: string, process: EditorProcess) {
+  const oldHasPage = oldPage !== '';
+  const newHasPage = process.page !== '';
+  if (!oldHasPage && newHasPage) {
+    process.page = createNewPage(model);
+  } else if (oldHasPage && !newHasPage) {
+    deletePage(model, oldPage);
+  }  
+}  
 
 export default EditProcessPage;

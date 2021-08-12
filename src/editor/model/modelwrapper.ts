@@ -168,6 +168,7 @@ export function getReactFlowElementsFrom(
   dvisible: boolean,
   edgeDelete: boolean,
   onProcessClick: (pageid: string, processid: string) => void,
+  onSubprocessClick: (pid: string) => void,
   removeEdge: (id: string) => void,
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
@@ -176,7 +177,7 @@ export function getReactFlowElementsFrom(
     resetSelection: () => void
   ) => void
 ): Elements {
-  const callback = getNodeCallBack(mw.model, onProcessClick, setDialog);
+  const callback = getNodeCallBack(mw.model, onProcessClick, onSubprocessClick, setDialog);
 
   resetAdded(mw.model);
   const elms: Elements = [];

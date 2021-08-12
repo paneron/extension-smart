@@ -37,7 +37,7 @@ import {
   createSubprocessComponent,
 } from '../utils/EditorFactory';
 import { EdgeTypes, EditorState, NodeTypes } from '../model/state';
-import { EditorModel, isEditorData, isEditorNode } from '../model/editormodel';
+import { EditorModel, EditorProcess, isEditorData, isEditorNode } from '../model/editormodel';
 import FileMenu from './menu/file';
 import { SelectedNodeDescription } from './sidebar/selected';
 import {
@@ -59,6 +59,7 @@ import {
 import {
   addComponentToModel,
   addEdge,
+  createNewPage,
 } from '../utils/ModelAddComponentHandler';
 import { EdgePackage } from './flowui/container';
 import { deleteEdge } from '../utils/ModelRemoveComponentHandler';
@@ -71,6 +72,7 @@ const ModelEditor: React.FC<{
   className?: string;
 }> = ({ isVisible, className }) => {
   const { logger } = useContext(DatasetContext);
+
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
@@ -94,7 +96,7 @@ const ModelEditor: React.FC<{
   });
 
   function onLoad(params: OnLoadParams) {
-    logger?.log('flow loaded');
+    logger?.log('flow loaded');    
     setRfInstance(params);
     params.fitView();
   }
@@ -127,8 +129,7 @@ const ModelEditor: React.FC<{
         resetSelection();
       },
     };
-    const x = SetDiagAction[action](props);
-    logger?.log(x);
+    saveLayout();
     setDialogPack(SetDiagAction[action](props));
   }
 
@@ -199,6 +200,13 @@ const ModelEditor: React.FC<{
     mw.page = pageid;
     logger?.log('Go to page', pageid);
     addToHistory(state.history, mw.page, processid);
+    setState({ ...state });
+  }
+
+  function onSubprocessClick(pid: string): void {
+    const model = state.modelWrapper.model;
+    const process = model.elements[pid] as EditorProcess;
+    process.page = createNewPage(model);
     setState({ ...state });
   }
 
@@ -349,9 +357,10 @@ const ModelEditor: React.FC<{
                 state.dvisible,
                 state.edgeDeleteVisible,
                 onProcessClick,
+                onSubprocessClick,
                 removeEdge,
                 setDiag
-              )}
+              )}              
               onLoad={onLoad}
               onDrop={onDrop}
               onDragOver={onDragOver}

@@ -14,6 +14,8 @@ import {
 } from '../../utils/ModelRemoveComponentHandler';
 import { DataType } from '../../serialize/interface/baseinterface';
 import EditProcessPage from '../edit/processedit';
+import EditApprovalPage from '../edit/approvaledit';
+import EditEGatePage from '../edit/egateedit';
 
 export enum DiagTypes {
   SETTING = 'setting',
@@ -36,7 +38,7 @@ export interface IDiagInterface {
   setModelWrapper: (mw: ModelWrapper) => void;
   callback: () => void;
   cancel: () => void;
-  msg: string;
+  msg: string;  
 }
 
 export interface EditorDiagProps {
@@ -73,19 +75,33 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
         model={modelwrapper.model}
         setModel={(m:EditorModel) => setModelWrapper({ ...modelwrapper, model: m })}
         id={msg}
-        cancel={cancel}
+        closeDialog={cancel}
       />
     ),
   },
   [DiagTypes.EDITAPPROVAL]: {
     title: 'Edit Approval',
     fullscreen: true,
-    Panel: ({ modelwrapper, setModelWrapper, msg }) => <>msg</>,
+    Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
+      <EditApprovalPage
+        modelwrapper={modelwrapper}
+        setModel={(m: EditorModel) => setModelWrapper({ ...modelwrapper, model: m })}
+        id={msg}
+        closeDialog={cancel}
+      />
+    ),
   },
   [DiagTypes.EDITEGATE]: {
     title: 'Edit Gateway',
     fullscreen: true,
-    Panel: ({ modelwrapper, setModelWrapper, msg }) => <>msg</>,
+    Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
+      <EditEGatePage
+        modelwrapper={modelwrapper}
+        setModel={(m: EditorModel) => setModelWrapper({ ...modelwrapper, model: m })}
+        id={msg}
+        closeDialog={cancel}
+      />
+    ),
   },
   [DiagTypes.EDITTIMER]: {
     title: 'Edit Timer',

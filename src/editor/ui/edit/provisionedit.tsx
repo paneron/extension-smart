@@ -2,7 +2,7 @@ import React from "react";
 import { EditorModel } from "../../model/editormodel";
 import { MMELObject } from "../../serialize/interface/baseinterface";
 import { MMELProvision } from "../../serialize/interface/supportinterface";
-import { referenceSorter } from "../../utils/commonfunctions";
+import { getModelAllRefs } from "../../utils/commonfunctions";
 import { MODAILITYOPTIONS } from "../../utils/constants";
 import { MultiReferenceSelector, NormalComboBox, NormalTextField } from "../common/fields";
 import { IObject } from "../common/listmanagement/listPopoverItem";
@@ -21,10 +21,7 @@ export const ProvisonItem: React.FC<{
   setObject: (obj: MMELObject) => void;
 }> = ({ object, model, setObject }) => {
   const provision = object as MMELProvision;
-  
-  const refs = Object.values(model.refs)
-    .sort(referenceSorter)
-    .map(r => r.id);
+  const refs = getModelAllRefs(model);
 
   return (
     <>

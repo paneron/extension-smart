@@ -41,6 +41,7 @@ export type EdtiorNodeWithInfoCallback = EditorNode & NodeCallBack;
 
 export interface NodeCallBack {
   onProcessClick: (pageid: string, processid: string) => void;
+  onSubprocessClick: (pid:string) => void;
   getRoleById: (id: string) => MMELRole | null;
   getRefById: (id: string) => MMELReference | null;
   getRegistryById: (id: string) => EditorRegistry | null;
@@ -140,6 +141,7 @@ function conditionExtract(l: string): string {
 export function getNodeCallBack(
   model: EditorModel,
   onProcessClick: (pageid: string, processid: string) => void,
+  onSubprocessClick: (pid: string) => void,
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
@@ -175,5 +177,6 @@ export function getNodeCallBack(
     getDataClassById: getDCById,
     getProvisionById: getProvisionById,
     setDialog: setDialog,
+    onSubprocessClick: onSubprocessClick
   };
 }

@@ -35,7 +35,7 @@ function deleteProcess(model: EditorModel, pageid: string, id: string) {
   return model;
 }
 
-function deletePage(model: EditorModel, pageid: string) {
+export function deletePage(model: EditorModel, pageid: string) {
   const page = model.pages[pageid];
   for (const c in page.childs) {
     const child = page.childs[c];

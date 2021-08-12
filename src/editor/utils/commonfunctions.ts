@@ -1,7 +1,10 @@
 import {
-  EditorDataClass,
-  EditorNode,
+  EditorDataClass,    
+    EditorModel,    
+  EditorNode,  
+  EditorSubprocess,
   isEditorDataClass,
+  isEditorRegistry,
 } from '../model/editormodel';
 import { MMELObject } from '../serialize/interface/baseinterface';
 import { MMELReference } from '../serialize/interface/supportinterface';
@@ -60,19 +63,19 @@ export function fillRDCS(
   }
 }
 
-export function referenceSorter(a: MMELReference, b: MMELReference): number {
+export function referenceSorter(a: MMELReference, b: MMELReference): number {  
   if (a.document === b.document) {
     const partsA = a.clause.split('.');
     const partsB = b.clause.split('.');
     let index = 0;
     while (index < partsA.length && index < partsB.length) {
       const numA = partsA[index];
-      const numB = partsA[index];
-      if (numA === numB) {
+      const numB = partsB[index];      
+      if (numA === numB) {        
         index++;
       } else {
         const xA = Number(numA);
-        const xB = Number(numB);
+        const xB = Number(numB);        
         if (isNaN(xA) || isNaN(xB)) {
           return numA.localeCompare(numB);
         } else {
@@ -109,4 +112,49 @@ export function findUniqueID(prefix: string, ids: Record<string, MMELObject>) {
     name = prefix + num;
   }
   return name;
+}
+
+export function updatePageElement(page: EditorSubprocess, oldId: string, node: EditorNode) {
+  const newId = node.id;
+  const elm = page.childs[oldId];
+  if (elm !== undefined) {
+    delete page.childs[oldId];
+    page.childs[newId] = elm;
+    elm.element = node.id;
+    for (const e in page.edges) {
+      const edge = page.edges[e];
+      if (edge.from === oldId) {
+        edge.from = newId;
+      }
+      if (edge.to === oldId) {
+        edge.to = newId;
+      }
+    }
+    node.pages.add(page.id);
+  }  
+}
+
+export function getModelAllRolesWithEmpty(model: EditorModel): string[] {
+  return [''].concat(Object.values(model.roles)
+    .sort((a, b) => a.id.localeCompare(b.id))
+    .map(r => r.id));
+}
+
+export function getModelAllRegs(model: EditorModel): string[] {
+  return Object.values(model.elements)
+    .filter(x => isEditorRegistry(x))
+    .sort((a, b) => a.id.localeCompare(b.id))
+    .map(r => r.id);
+}
+
+export function getModelAllRefs(model: EditorModel): string[] {
+  return Object.values(model.refs)
+    .sort(referenceSorter)
+    .map(r => r.id);
+}
+
+export function getModelAllMeasures(model: EditorModel): string[] {
+  return Object.values(model.vars)
+    .sort((a, b) => a.id.localeCompare(b.id))
+    .map(r => r.id);
 }
