@@ -1,15 +1,16 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
 import { useStoreActions } from 'react-flow-renderer';
 import { EditorEGate, EditorModel, EditorSubprocess } from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
-import { checkId, getModelAllMeasures, updatePageElement } from '../../utils/commonfunctions';
+import { checkId, getModelAllMeasures, removeSpace, updatePageElement } from '../../utils/commonfunctions';
 import { NormalTextField, ReferenceSelector } from '../common/fields';
+import { EditPageButtons } from './commons';
 
 const EditEGatePage: React.FC<{
   modelwrapper: ModelWrapper;
@@ -28,56 +29,38 @@ const EditEGatePage: React.FC<{
   const [editing, setEditing] = useState<EditorEGate>({ ...egate });
   const [edges, setEdges] = useState<MMELEdge[]>(Object.values(page.edges).filter(e => e.from === id));
 
-  function setGID(x: string) {
-    setEditing({ ...editing, id: x.replaceAll(/\s+/g, '') });
+  function onUpdateClick() {
+    const updated = save(
+      id,
+      editing,
+      modelwrapper.page,
+      model,
+      edges
+    );
+    if (updated !== null) {
+      setElm([]);
+      setModel({ ...updated });
+      closeDialog();
+    }
   }
 
-  function setLabel(x: string) {
-    setEditing({ ...editing, label: x });
-  }
-  
   return (
     <>
-      <ButtonGroup style={{ textAlign: 'right' }}>
-        <Button
-          key="ui#itemupdate#savebutton"
-          icon='floppy-disk'
-          intent={Intent.SUCCESS}
-          text='Save'
-          onClick={() => {
-            const updated = save(
-              id,
-              editing,
-              modelwrapper.page,
-              model,
-              edges
-            );
-            if (updated !== null) {
-              setElm([]);
-              setModel({ ...updated });
-              closeDialog();
-            }
-          }}
-        />
-        <Button
-          key="ui#itemupdate#cancelbutton"
-          icon="disable"
-          intent={Intent.DANGER}
-          text="Cancel"
-          onClick={() => closeDialog()}
-        />
-      </ButtonGroup>
+      <EditPageButtons
+        onUpdateClick={onUpdateClick}
+        onCancelClick={closeDialog}
+      />      
       <NormalTextField
         key="field#egateID"
         text="Exclusive Gateway ID"
         value={editing.id}
-        onChange={setGID}
+        onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
       />    
       <NormalTextField
         key="field#egateLabel"
         text="Label"
         value={editing.label}
-        onChange={setLabel}
+        onChange={x => setEditing({ ...editing, label: x })}
       />
       {edges.map((edge, index) => (
         <EditEdgePage

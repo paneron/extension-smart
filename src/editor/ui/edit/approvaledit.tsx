@@ -1,15 +1,15 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
 import { useStoreActions } from 'react-flow-renderer';
 import { EditorApproval, EditorModel } from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
-import { checkId, getModelAllRefs, getModelAllRegs, getModelAllRolesWithEmpty, updatePageElement } from '../../utils/commonfunctions';
+import { checkId, getModelAllRefs, getModelAllRegs, getModelAllRolesWithEmpty, removeSpace, updatePageElement } from '../../utils/commonfunctions';
 import { MODAILITYOPTIONS } from '../../utils/constants';
 import { MultiReferenceSelector, NormalComboBox, NormalTextField, ReferenceSelector } from '../common/fields';
+import { EditPageButtons } from './commons';
 
 const EditApprovalPage: React.FC<{
   modelwrapper: ModelWrapper;
@@ -29,74 +29,44 @@ const EditApprovalPage: React.FC<{
   const regs = getModelAllRegs(model);
   const refs = getModelAllRefs(model);  
 
-  function setPID(x: string) {
-    setEditing({ ...editing, id: x.replaceAll(/\s+/g, '') });
-  }
-
-  function setAPPName(x: string) {
-    setEditing({ ...editing, name: x });
-  }
-
-  function setAPPModality(x: string) {
-    setEditing({ ...editing, modality: x });
-  };
-
-  function setActor(x: number) {
-    setEditing({ ...editing, actor: roles[x] });
-  }
-
-  function setAppprover(x: number) {
-    setEditing({ ...editing, approver: roles[x] });
+  function onUpdateClick() {
+    const updated = save(
+      id,
+      editing,
+      modelwrapper.page,
+      model
+    );
+    if (updated !== null) {
+      setElm([]);
+      setModel({ ...updated });
+      closeDialog();
+    }
   }
 
   return (
     <>
-      <ButtonGroup style={{ textAlign: 'right' }}>
-        <Button
-          key="ui#itemupdate#savebutton"
-          icon='floppy-disk'
-          intent={Intent.SUCCESS}
-          text='Save'
-          onClick={() => {
-            const updated = save(
-              id,
-              editing,
-              modelwrapper.page,
-              model
-            );
-            if (updated !== null) {
-              setElm([]);
-              setModel({ ...updated });
-              closeDialog();
-            }
-          }}
-        />
-        <Button
-          key="ui#itemupdate#cancelbutton"
-          icon="disable"
-          intent={Intent.DANGER}
-          text="Cancel"
-          onClick={() => closeDialog()}
-        />
-      </ButtonGroup>
+      <EditPageButtons
+        onUpdateClick={onUpdateClick}
+        onCancelClick={closeDialog}
+      />      
       <NormalTextField
         key="field#approvalID"
         text="Approval ID"
         value={editing.id}
-        onChange={setPID}
+        onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
       />   
       <NormalTextField
         key="field#approvalName"
         text="Approval Process Name"
         value={editing.name}
-        onChange={setAPPName}
+        onChange={x => setEditing({ ...editing, name: x })}
       />    
       <NormalComboBox
         key="field#approvalModality"
         text="Modality"
         value={editing.modality}
         options={MODAILITYOPTIONS}
-        onChange={setAPPModality}
+        onChange={x => setEditing({ ...editing, modality: x })}
       />    
       <ReferenceSelector
         key="field#ApprovalActor"
@@ -104,7 +74,7 @@ const EditApprovalPage: React.FC<{
         filterName="Actor filter"
         value={editing.actor}
         options={roles}
-        update={setActor}
+        update={x => setEditing({ ...editing, actor: roles[x] })}
       />    
       <ReferenceSelector
         key="field#ApprovalApprover"
@@ -112,7 +82,7 @@ const EditApprovalPage: React.FC<{
         filterName="Approver filter"
         value={editing.approver}
         options={roles}
-        update={setAppprover}
+        update={x => setEditing({ ...editing, approver: roles[x] })}
       />    
       <MultiReferenceSelector
         key="field#recordSelector"

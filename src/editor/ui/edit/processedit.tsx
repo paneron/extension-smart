@@ -1,20 +1,20 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
 import { useStoreActions } from 'react-flow-renderer';
 import { EditorModel, EditorProcess } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELProvision } from '../../serialize/interface/supportinterface';
-import { checkId, getModelAllRegs, getModelAllRolesWithEmpty, updatePageElement } from '../../utils/commonfunctions';
+import { checkId, getModelAllRegs, getModelAllRolesWithEmpty, removeSpace, updatePageElement } from '../../utils/commonfunctions';
 import { MODAILITYOPTIONS } from '../../utils/constants';
 import { createProvision } from '../../utils/EditorFactory';
 import { createNewPage } from '../../utils/ModelAddComponentHandler';
 import { deletePage } from '../../utils/ModelRemoveComponentHandler';
 import { MultiReferenceSelector, NormalComboBox, NormalTextField, ReferenceSelector } from '../common/fields';
 import ListWithPopoverItem from '../common/listmanagement/listPopoverItem';
+import { EditPageButtons } from './commons';
 import { IMeasure, matchMeasurementFilter, MeasurementItem } from './measurementExpressionEdit';
 import { matchProvisionFilter, ProvisonItem } from './provisionedit';
 
@@ -69,19 +69,7 @@ const EditProcessPage: React.FC<{
   const [measurements, setMeasurements] = useState<Record<string, IMeasure>>(getInitMeasurement(process));
 
   const roles = getModelAllRolesWithEmpty(model);
-  const regs = getModelAllRegs(model);  
-  
-  function setPID (x: string) {
-    setEditing({...editing, id:x.replaceAll(/\s+/g, '')});
-  }
-
-  function setPName (x: string) {
-    setEditing({...editing, name:x});    
-  }
-
-  function setPModality (x: string) {
-    setEditing({...editing, modality:x});
-  };
+  const regs = getModelAllRegs(model);    
 
   function setPStart (x: string) {
     if (x === SUBPROCESSYES) {
@@ -89,61 +77,47 @@ const EditProcessPage: React.FC<{
     } else {
       setEditing({...editing, page:''});
     }
-  }
+  }  
 
-  function setActor (x: number) {
-    setEditing({...editing, actor:roles[x]});    
+  function onUpdateClick() {
+    const updated = save(
+      id,
+      editing,
+      provisions,
+      measurements,
+      model
+    );
+    if (updated !== null) {
+      setElm([]);
+      setModel({ ...updated });
+      closeDialog();
+    }
   }
 
   return (
     <>
-      <ButtonGroup style={{textAlign:'right'}}>
-        <Button
-          key="ui#itemupdate#savebutton"
-          icon='floppy-disk'
-          intent={Intent.SUCCESS}
-          text='Save'
-          onClick={() => {
-            const updated = save(
-              id, 
-              editing,
-              provisions, 
-              measurements,
-              model
-            );
-            if (updated !== null) {
-              setElm([]);
-              setModel({ ...updated });
-              closeDialog();
-            }
-          }}          
-        />
-        <Button
-          key="ui#itemupdate#cancelbutton"
-          icon="disable"
-          intent={Intent.DANGER}
-          text="Cancel"
-          onClick={() => closeDialog()}
-        />
-      </ButtonGroup>
+      <EditPageButtons
+        onUpdateClick={onUpdateClick}
+        onCancelClick={closeDialog}
+      />      
       <NormalTextField
         key="field#processID"
         text="Process ID"
         value={editing.id}
-        onChange={setPID}
+        onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
       />    
       <NormalTextField
         key="field#processName"
         text="Process Name"
         value={editing.name}
-        onChange={setPName}
+        onChange={x => setEditing({ ...editing, name: x })}
       />    
       <NormalComboBox
         key="field#processModality"
         text="Modality"
         value={editing.modality}
         options={MODAILITYOPTIONS}
-        onChange={setPModality}
+        onChange={x => setEditing({ ...editing, modality: x })}
       />    
       <NormalComboBox
         key="field#processStart"
@@ -158,7 +132,7 @@ const EditProcessPage: React.FC<{
         filterName="Actor filter"
         value={editing.actor}
         options={roles}
-        update={setActor}
+        update={x => setEditing({ ...editing, actor: roles[x] })}
       />    
       <MultiReferenceSelector
         key="field#inputSelector"

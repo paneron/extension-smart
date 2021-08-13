@@ -16,6 +16,8 @@ import { DataType } from '../../serialize/interface/baseinterface';
 import EditProcessPage from '../edit/processedit';
 import EditApprovalPage from '../edit/approvaledit';
 import EditEGatePage from '../edit/egateedit';
+import EditTimerPage from '../edit/timeredit';
+import EditSignalEventPage from '../edit/signaleventedit';
 
 export enum DiagTypes {
   SETTING = 'setting',
@@ -106,12 +108,26 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.EDITTIMER]: {
     title: 'Edit Timer',
     fullscreen: true,
-    Panel: ({ modelwrapper, setModelWrapper, msg }) => <>msg</>,
+    Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
+      <EditTimerPage
+        modelwrapper={modelwrapper}
+        setModel={(m: EditorModel) => setModelWrapper({ ...modelwrapper, model: m })}
+        id={msg}
+        closeDialog={cancel}
+      />
+    ),
   },
   [DiagTypes.EDITSIGNAL]: {
     title: 'Edit Signal Catch Event',
     fullscreen: true,
-    Panel: ({ modelwrapper, setModelWrapper, msg }) => <>msg</>,
+    Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
+      <EditSignalEventPage
+        modelwrapper={modelwrapper}
+        setModel={(m: EditorModel) => setModelWrapper({ ...modelwrapper, model: m })}
+        id={msg}
+        closeDialog={cancel}
+      />
+    ),
   },
 };
 

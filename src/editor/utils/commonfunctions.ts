@@ -104,6 +104,10 @@ export function defaultItemSorter(a: IListItem, b: IListItem): number {
   return a.id.localeCompare(b.id);
 }
 
+export function removeSpace(id: string) {
+  return id.replaceAll(/\s+/g, '');
+}
+
 export function findUniqueID(prefix: string, ids: Record<string, MMELObject>) {
   let num = 1;
   let name = prefix + num;
@@ -157,4 +161,11 @@ export function getModelAllMeasures(model: EditorModel): string[] {
   return Object.values(model.vars)
     .sort((a, b) => a.id.localeCompare(b.id))
     .map(r => r.id);
+}
+
+export function getModelAllSignals(model: EditorModel): string[] {
+  return Object.values(model.elements)
+    .filter(x => isEditorRegistry(x))
+    .sort((a, b) => a.id.localeCompare(b.id))
+    .flatMap(r => [r.id+'CREATED', r.id+'UPDATED', r.id+'DELETED']);  
 }

@@ -12,6 +12,8 @@ export const MODAILITYOPTIONS: Array<string> = [
 
 export const DragAndDropFormatType = 'application/MMEL';
 
+export const TimerType = ['', 'WAIT', 'REPEAT'];
+
 export const EMPTYTYPE = '';
 export const STRINGTYPE = 'string';
 export const BOOLEANTYPE = 'boolean';
