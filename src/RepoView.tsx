@@ -12,7 +12,8 @@ import {
   IconName,
 } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
-import ModelEditor from './editor/ui/maineditor';
+import ModelEditor from './smart/ui/maineditor';
+import ModelMapper from './smart/ui/mainmapper';
 
 const RepositoryView: React.FC<Record<never, never>> = function () {
   const [selectedModule, selectModule] = useState<ModuleName>('modelEditor');
@@ -115,7 +116,7 @@ const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {
     description: <>Model mapper</>,
     tooltip: 'Model mapper',
     icon: 'data-lineage',
-    view: ModelEditor,
+    view: ModelMapper,
   },
 };
 
