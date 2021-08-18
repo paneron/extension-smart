@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { jsx } from '@emotion/react';
+import { jsx, css } from '@emotion/react';
 import React, { CSSProperties } from 'react';
 import {
   useStoreState,
@@ -158,10 +158,10 @@ const NODE_DETAIL_VIEWS: Record<
       <></>
     ),
   [DataType.PROCESS]: ({ 
-    node, 
-    resetSelection, 
-    getProvisionById, 
-    getRefById, 
+    node,
+    resetSelection,
+    getProvisionById,
+    getRefById,
     setDialog=()=>alert('Not implemeted'),
     onSubprocessClick
   }) =>
@@ -224,46 +224,42 @@ export const Describe: React.FC<{
 };
 
 export const RemoveButton: React.FC<{
-  cid: string;
   callback: () => void;
-}> = function ({ cid, callback }) {
+}> = function ({ callback }) {
   return (
     <Button
-      key={'ui#button#removeButton#' + cid}
-      icon="delete"
+      small
       intent="danger"
-      text="Remove"
-      onClick={() => callback()}
+      icon="cross"
+      onClick={callback}
     />
   );
 };
 
 export const EditButton: React.FC<{
-  cid: string;
   callback: () => void;
-}> = function ({ cid, callback }) {
+}> = function ({ callback }) {
   return (
     <Button
-      key={'ui#button#editComponent#' + cid}
+      small
       icon="edit"
       text="Edit"
-      onClick={() => callback()}
+      onClick={callback}
     />
   );
 };
 
 const ApprovalRecordList: React.FC<{
   regs: EditorRegistry[];
-  pid: string;
-}> = function ({ regs, pid }) {
+}> = function ({ regs }) {
   return (
     <>
       {regs.length > 0 ? (
         <>
-          <p key={pid + '#approvalRecordLabel'}>Appproval record(s):</p>
-          <ul key={pid + '#approvalList'}>
+          <p>Appproval record(s):</p>
+          <ul>
             {regs.map(reg => (
-              <li key={pid + '#approvalRecord#' + reg.id}> {reg.title} </li>
+              <li>{reg.title}</li>
             ))}
           </ul>
         </>
@@ -276,9 +272,8 @@ const ApprovalRecordList: React.FC<{
 
 export const ReferenceList: React.FC<{
   refs: Set<string>;
-  pid: string;
   getRefById: (id: string) => MMELReference | null;
-}> = function ({ refs, pid, getRefById }) {
+}> = function ({ refs, getRefById }) {
   const ref: MMELReference[] = [];
   refs.forEach(r => {
     const ret = getRefById(r);
@@ -290,16 +285,14 @@ export const ReferenceList: React.FC<{
     <>
       {refs.size > 0 ? (
         <>
-          <p key={pid + '#referenceLabel'}>Reference:</p>
-          <ul key={pid + '#referenceList'}>
+          <p>Reference:</p>
+          <ul>
             {ref.map(r => (
               <li key={r.id}> {toRefSummary(r)} </li>
             ))}
           </ul>
         </>
-      ) : (
-        ''
-      )}
+      ) : null}
     </>
   );
 };
@@ -313,8 +306,8 @@ const AttributeList: React.FC<{
     <>
       {Object.keys(attributes).length > 0 ? (
         <>
-          <p key={dcid + '#attributesLabel'}> Attributes: </p>
-          <ul key={dcid + '#attributeList'}>
+          <p> Attributes: </p>
+          <ul>
             {Object.entries(attributes).map(([v, att]) => (
               <li key={v}>
                 {' '}
@@ -331,13 +324,12 @@ const AttributeList: React.FC<{
 };
 
 export const DescriptionItem: React.FC<{
-  id: string;
   label: string;
   value: string;
   css?: CSSProperties;
-}> = function ({ id, label, value, css }): JSX.Element {
+}> = function ({ label, value, css }): JSX.Element {
   return (
-    <p key={id}>
+    <p>
       {' '}
       {label}:{css !== undefined ? <span style={css}> {value}</span> : value}{' '}
     </p>
@@ -346,14 +338,13 @@ export const DescriptionItem: React.FC<{
 
 export const ActorDescription: React.FC<{
   role: MMELRole | null;
-  id: string;
   label: string;
-}> = function ({ role, id, label }): JSX.Element {
+}> = function ({ role, label }): JSX.Element {
   return (
     <>
       {' '}
       {role !== null ? (
-        <DescriptionItem id={id} label={label} value={role.name} />
+        <DescriptionItem label={label} value={role.name} />
       ) : (
         <></>
       )}{' '}
@@ -362,16 +353,15 @@ export const ActorDescription: React.FC<{
 };
 
 export const NonEmptyFieldDescription: React.FC<{
-  id: string;
   label: string;
   value: string;
   css?: CSSProperties;
-}> = function ({ id, label, value, css }): JSX.Element {
+}> = function ({ label, value, css }): JSX.Element {
   return (
     <>
       {' '}
       {value !== '' ? (
-        <DescriptionItem id={id} label={label} value={value} css={css} />
+        <DescriptionItem label={label} value={value} css={css} />
       ) : (
         ''
       )}{' '}
@@ -380,7 +370,7 @@ export const NonEmptyFieldDescription: React.FC<{
 };
 
 const DescribeStart: React.FC = function () {
-  return <span key="ui#startlabel"> Start event </span>;
+  return <span> Start event </span>;
 };
 
 const DescribeEnd: React.FC<{
@@ -397,7 +387,6 @@ const DescribeEnd: React.FC<{
     <>
       {end.modelType === ModelType.EDIT && (
         <RemoveButton
-          cid={end.id}
           callback={() =>
             setDialog(
               DataType.ENDEVENT,
@@ -408,7 +397,7 @@ const DescribeEnd: React.FC<{
           }
         />
       )}
-      <p key={'ui#endlabel#' + end.id}> End event </p>
+      <p>End event</p>
     </>
   );
 };
@@ -443,9 +432,8 @@ const DescribeApproval: React.FC<{
   return (
     <>
       {app.modelType === ModelType.EDIT && (
-        <ButtonGroup>
+        <ButtonGroup css={css`margin-bottom: 10px;`}>
           <EditButton
-            cid={app.id}
             callback={() =>
               setDialog(
                 DataType.APPROVAL,
@@ -456,7 +444,6 @@ const DescribeApproval: React.FC<{
             }
           />
           <RemoveButton
-            cid={app.id}
             callback={() =>
               setDialog(
                 DataType.APPROVAL,
@@ -469,32 +456,27 @@ const DescribeApproval: React.FC<{
         </ButtonGroup>
       )}
       <DescriptionItem
-        id={app.id + '#approvalLabel'}
         label="Approval"
         value={app.id}
       />
       <DescriptionItem
-        id={app.id + '#nameLabel'}
         label="Name"
         value={app.name}
       />
       <ActorDescription
         role={getRoleById(app.actor)}
-        id={app.id + '#actorLabel'}
         label="Actor"
       />
       <ActorDescription
         role={getRoleById(app.approver)}
-        id={app.id + '#approverLabel'}
         label="Approver"
       />
       <NonEmptyFieldDescription
-        id={app.id + '#modalityLabel'}
         label="Modality"
         value={app.modality}
       />
-      <ApprovalRecordList regs={regs} pid={app.id} />
-      <ReferenceList refs={app.ref} pid={app.id} getRefById={getRefById} />
+      <ApprovalRecordList regs={regs} />
+      <ReferenceList refs={app.ref} getRefById={getRefById} />
     </>
   );
 };
@@ -514,7 +496,6 @@ const DescribeEGate: React.FC<{
       {egate.modelType === ModelType.EDIT && (
         <ButtonGroup>
           <EditButton
-            cid={egate.id}
             callback={() =>
               setDialog(
                 DataType.EGATE,
@@ -525,7 +506,6 @@ const DescribeEGate: React.FC<{
             }
           />
           <RemoveButton
-            cid={egate.id}
             callback={() =>
               setDialog(
                 DataType.EGATE,
@@ -538,12 +518,10 @@ const DescribeEGate: React.FC<{
         </ButtonGroup>
       )}
       <DescriptionItem
-        id={egate.id + '#egate'}
         label="Exclusive Gateway"
         value={egate.id}
       />
       <DescriptionItem
-        id={egate.id + '#egateLabel'}
         label="Contents"
         value={egate.label}
       />
@@ -566,7 +544,6 @@ const DescribeSignalCatch: React.FC<{
       {scEvent.modelType === ModelType.EDIT && (
         <ButtonGroup>
           <EditButton
-            cid={scEvent.id}
             callback={() =>
               setDialog(
                 DataType.SIGNALCATCHEVENT,
@@ -577,7 +554,6 @@ const DescribeSignalCatch: React.FC<{
             }
           />
           <RemoveButton
-            cid={scEvent.id}
             callback={() =>
               setDialog(
                 DataType.SIGNALCATCHEVENT,
@@ -590,12 +566,10 @@ const DescribeSignalCatch: React.FC<{
         </ButtonGroup>
       )}
       <DescriptionItem
-        id={scEvent.id + '#signalCatchLabel'}
         label="Signal Catch Event"
         value={scEvent.id}
       />
       <DescriptionItem
-        id={scEvent.id + '#signalLabel'}
         label="Signal"
         value={scEvent.signal}
       />
@@ -618,7 +592,6 @@ const DescribeTimer: React.FC<{
       {timer.modelType === ModelType.EDIT && (
         <ButtonGroup>
           <EditButton
-            cid={timer.id}
             callback={() =>
               setDialog(
                 DataType.TIMEREVENT,
@@ -629,7 +602,6 @@ const DescribeTimer: React.FC<{
             }
           />
           <RemoveButton
-            cid={timer.id}
             callback={() =>
               setDialog(
                 DataType.TIMEREVENT,
@@ -642,17 +614,14 @@ const DescribeTimer: React.FC<{
         </ButtonGroup>
       )}
       <DescriptionItem
-        id={timer.id + '#timerLabel'}
         label="Timer Event"
         value={timer.id}
       />
       <NonEmptyFieldDescription
-        id={timer.id + '#timerTypeLabel'}
         label="Type"
         value={timer.modelType}
       />
       <NonEmptyFieldDescription
-        id={timer.id + '#timerParaLabel'}
         label="Parameter"
         value={timer.para}
       />
@@ -669,7 +638,6 @@ const DescribeRegistry: React.FC<{
   return (
     <>
       <DescriptionItem
-        id={reg.id + '#registryLabel'}
         label="Title"
         value={reg.title}
       />
@@ -705,35 +673,30 @@ const DescribeAttribute: React.FC<{
     <>
       <DescriptionItem
         css={css}
-        id={att.id + '#attributeIDLabel'}
         label="Attribute ID"
         value={att.id}
       />
       <NonEmptyFieldDescription
         css={css}
-        id={att.id + '#attributeTypeLabel'}
         label="Type"
         value={att.type}
       />
       <NonEmptyFieldDescription
         css={css}
-        id={att.id + '#attributeCardinalityLabel'}
         label="Cardinality"
         value={att.cardinality}
       />
       <NonEmptyFieldDescription
         css={css}
-        id={att.id + '#attributeModalityLabel'}
         label="Modality"
         value={att.modality}
       />
       <NonEmptyFieldDescription
         css={css}
-        id={att.id + '#attributeDefinitionLabel'}
         label="Definition"
         value={att.definition}
       />
-      <ReferenceList refs={att.ref} pid={att.id} getRefById={getRefById} />
+      <ReferenceList refs={att.ref} getRefById={getRefById} />
     </>
   );
 };

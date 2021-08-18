@@ -52,7 +52,6 @@ export const ProcessQuickEdit: React.FC<
       {modelType === ModelType.EDIT && (
         <ButtonGroup>
           <EditButton
-            cid={process.id}
             callback={() =>
               setDialog(
                 DataType.PROCESS,
@@ -63,10 +62,9 @@ export const ProcessQuickEdit: React.FC<
             }
           />
           {process.page === '' && (
-            <AddPageButton callback={() => onSubprocessClick(process.id)} />
+            <AddSubprocessButton callback={() => onSubprocessClick(process.id)} />
           )}
           <RemoveButton
-            cid={process.id}
             callback={() =>
               setDialog(
                 DataType.PROCESS,
@@ -79,22 +77,18 @@ export const ProcessQuickEdit: React.FC<
         </ButtonGroup>
       )}
       <DescriptionItem
-        id={process.id + '#ProcessID'}
-        label={'Process'}
+        label="Process"
         value={process.id}
       />
       <DescriptionItem
-        id={process.id + '#ProcessName'}
-        label={'Name'}
+        label="Name"
         value={process.name}
       />
       <ActorDescription
         role={getRoleById(process.actor)}
-        id={process.id + '#ProcessActor'}
         label="Actor"
       />      
       <ProvisionList
-        pid={process.id}
         provisions={process.provision}
         getProvisionById={getProvisionById}
         getRefById={getRefById}
@@ -105,10 +99,9 @@ export const ProcessQuickEdit: React.FC<
 
 const ProvisionList: React.FC<{
   provisions: Set<string>;
-  pid: string;
   getProvisionById: (id: string) => MMELProvision | null;
   getRefById: (id: string) => MMELReference | null;
-}> = function ({ provisions, pid, getProvisionById, getRefById }) {
+}> = function ({ provisions, getProvisionById, getRefById }) {
   const pros: MMELProvision[] = [];
   provisions.forEach(r => {
     const ret = getProvisionById(r);
@@ -120,10 +113,10 @@ const ProvisionList: React.FC<{
     <>
       {provisions.size > 0 ? (
         <>
-          <p key={pid + '#Provisions'}>Provisions</p>
-          <ul key={pid + '#ProvisionList'}>
+          <p>Provisions</p>
+          <ul>
             {pros.map((provision: MMELProvision) => (
-              <li key={pid + '#Pro#' + provision.id}>
+              <li key={provision.id}>
                 {' '}
                 <DescribeProvision
                   provision={provision}
@@ -151,34 +144,27 @@ const DescribeProvision: React.FC<{
   return (
     <>
       <DescriptionItem
-        id={'ui#provisionStatementLabel#' + provision.id}
         label="Statement"
-        css={css}
         value={provision.condition}
       />
       <NonEmptyFieldDescription
-        id={'ui#provisionModalityLabel#' + provision.id}
         label="Modality"
         value={provision.modality}
       />
       <ReferenceList
         refs={provision.ref}
-        pid={provision.id}
         getRefById={getRefById}
       />
     </>
   );
 };
 
-export const AddPageButton: React.FC<{
+export const AddSubprocessButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
   return (
-    <Button
-      key="ui#button#addPageButton"
-      icon="map-create"
-      text=""
-      onClick={() => callback()}
-    />
+    <Button small onClick={() => callback()}>
+      Add subprocess
+    </Button>
   );
 };
