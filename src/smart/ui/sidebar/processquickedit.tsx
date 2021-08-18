@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import React, { CSSProperties } from 'react';
 import { EditorProcess, ModelType } from '../../model/editormodel';
