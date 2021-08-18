@@ -6,7 +6,7 @@ import React, { useContext, useState } from 'react';
 
 import ModelDiagram from './mapper/ModelDiagram';
 import { EditorModel, ModelType } from '../model/editormodel';
-import { createMapProfile, getMappings, MapProfile } from './mapper/mapmodel';
+import { createMapProfile, createNewMapSet, getMappings, MapProfile, MapSet } from './mapper/mapmodel';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import { Button, ControlGroup } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
@@ -18,6 +18,7 @@ import { createEditorModelWrapper } from '../model/modelwrapper';
 import { calculateMapping, MapResultType } from './mapper/MappingCalculator';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { Logger } from '../utils/commonfunctions';
+import MappingCanvus from './mapper/mappingcanvus';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -45,17 +46,33 @@ const ModelMapper: React.FC<{
   });
   const [mapResult, setMapResult] = useState<MapResultType>({});
 
-  function updateMapStyle({refmodel = referenceProps.modelWrapper.model, mp = mapProfile}) {
-    setMapResult(calculateMapping(refmodel, getMappings(mp, refmodel.meta.namespace)));
+  const refmodel = referenceProps.modelWrapper.model;
+  const refns = refmodel.meta.namespace === '' ? 'defaultns' : refmodel.meta.namespace;
+  if (mapProfile.mapSet[refns] === undefined) {
+    mapProfile.mapSet[refns] = createNewMapSet(refns);
+  }
+  const mapSet = mapProfile.mapSet[refns];
+
+  function updateMapStyle({model = refmodel, mp = mapProfile}) {
+    setMapResult(calculateMapping(model, getMappings(mp, refns)));
   }
 
-  function onMapProfileChanged(mp:MapProfile) {    
-    setMapProfile({...mp});
-    updateMapStyle({mp:mp});
+  function onMapSetChanged(ms:MapSet) {
+    const newProfile:MapProfile = {
+      id: mapProfile.id,
+      mapSet: {...mapProfile.mapSet, [ms.id]:ms}
+    }
+    setMapProfile(newProfile);
+    updateMapStyle({mp:newProfile});
   }
   
   function onRefModelChanged(model:EditorModel) {
-    updateMapStyle({refmodel:model});
+    updateMapStyle({model:model});
+  }
+
+  function onMapProfileChanged(mp:MapProfile) {
+    setMapProfile(mp);
+    updateMapStyle({mp:mp});
   }
 
   function onImpModelChanged(model:EditorModel) {    
@@ -77,7 +94,7 @@ const ModelMapper: React.FC<{
         <Button text="Mapping" />
       </Popover2>
     </ControlGroup>
-  );
+  );  
 
   if (isVisible) {
     return (
@@ -93,20 +110,25 @@ const ModelMapper: React.FC<{
             modelProps={implementProps}
             setProps={setImplProps}
             className={className}
-            mapProfile={mapProfile}
-            onMapProfileChanged={onMapProfileChanged}
+            mapSet={mapSet}
+            onMapSetChanged={onMapSetChanged}
             onModelChanged={onImpModelChanged}
           />
           <ModelDiagram
             modelProps={referenceProps}
             setProps={setRefProps}
             className={className}
-            mapProfile={mapProfile}
-            onMapProfileChanged={onMapProfileChanged}
+            mapSet={mapSet}
+            onMapSetChanged={onMapSetChanged}
             mapResult={mapResult}
             onModelChanged={onRefModelChanged}
-          />          
+          />
         </div>
+        <MappingCanvus
+          mapProfile={mapProfile}
+          implWrapper={implementProps.modelWrapper}
+          refWrapper={referenceProps.modelWrapper}
+        />
       </Workspace>
     );
   }

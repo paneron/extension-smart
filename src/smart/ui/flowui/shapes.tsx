@@ -130,7 +130,7 @@ export const ProcessBox: Record<
     pid: string;
     style: CSSProperties;
     namespace: string;
-    setMapping?: (fromid: string, tons: string, toid: string) => void;
+    setMapping?: (fromid: string, toid: string) => void;
   }>
 > = {
   [ModelType.EDIT]: ({ content }) => (
@@ -163,8 +163,8 @@ function onDrop(
   event: React.DragEvent<any>,
   ns: string,
   toid: string,
-  setMapping: (fromid: string, tons: string, toid: string) => void
+  setMapping: (fromid: string, toid: string) => void
 ): void {
   const fromid = event.dataTransfer.getData('text');
-  setMapping(fromid, ns, toid);
+  setMapping(fromid, toid);
 }

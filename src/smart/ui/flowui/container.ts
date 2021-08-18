@@ -1,30 +1,15 @@
 import { CSSProperties } from 'react';
 import { XYPosition } from 'react-flow-renderer';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
-import {
-  MMELProvision,
-  MMELReference,
-  MMELRole,
-} from '../../serialize/interface/supportinterface';
-import {
-  EditorDataClass,
+import {  
   EditorModel,
-  EditorNode,
-  EditorRegistry,
-  getEditorDataClassById,
-  getEditorProvisionById,
-  getEditorRefById,
-  getEditorRegistryById,
-  getEditorRoleById,
+  EditorNode,  
+  getEditorRoleById,  
   isEditorData,
   ModelType,
 } from '../../model/editormodel';
 import { MMELtoFlowEntries } from '../../model/state';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-} from '../../utils/constants';
+import { MMELRole } from '../../serialize/interface/supportinterface';
 
 export interface EdgeContainer {
   id: string;
@@ -44,20 +29,9 @@ export interface NodeCallBack {
   modelType: ModelType;
   style?: CSSProperties;
   namespace: string;
-  onProcessClick: (pageid: string, processid: string) => void;
-  onSubprocessClick: (pid: string) => void;
+  onProcessClick: (pageid: string, processid: string) => void;  
   getRoleById: (id: string) => MMELRole | null;
-  getRefById: (id: string) => MMELReference | null;
-  getRegistryById: (id: string) => EditorRegistry | null;
-  getDataClassById: (id: string) => EditorDataClass | null;
-  getProvisionById: (id: string) => MMELProvision | null;
-  setDialog: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string,
-    resetSelection: () => void
-  ) => void;
-  setMapping: (fromid: string, tons: string, toid: string) => void;
+  setMapping: (fromid: string, toid: string) => void;
   getMapStyleById: (id: string) => CSSProperties;
 }
 
@@ -145,58 +119,27 @@ function conditionExtract(l: string): string {
 export function getEditorNodeCallBack(props: {
   type: ModelType;
   model: EditorModel;  
-  onProcessClick: (pageid: string, processid: string) => void;
-  onSubprocessClick?: (pid: string) => void;
-  setDialog?: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string,
-    resetSelection: () => void
-  ) => void;
-  setMapping?: (fromid: string, tons: string, toid: string) => void;  
-  getMapStyleById?: (id:string) => CSSProperties;
+  onProcessClick: (pageid: string, processid: string) => void;    
+  setMapping?: (fromid: string, toid: string) => void;  
+  getMapStyleById: (id:string) => CSSProperties;
 }): NodeCallBack {
   const {
     type,
     model,    
     onProcessClick,
-    onSubprocessClick = () => {},
-    setDialog = () => {},
     setMapping = () => {},
     getMapStyleById = () => ({})
-  } = props;
+  } = props;  
 
   function getRoleById(id: string): MMELRole | null {
     return getEditorRoleById(model, id);
   }
 
-  function getRefById(id: string): MMELReference | null {
-    return getEditorRefById(model, id);
-  }
-
-  function getRegistryById(id: string): EditorRegistry | null {
-    return getEditorRegistryById(model, id);
-  }
-
-  function getDCById(id: string): EditorDataClass | null {
-    return getEditorDataClassById(model, id);
-  }
-
-  function getProvisionById(id: string): MMELProvision | null {
-    return getEditorProvisionById(model, id);
-  }  
-
   return {
     modelType: type,
     namespace: model.meta.namespace,
-    onProcessClick: onProcessClick,
     getRoleById: getRoleById,
-    getRefById: getRefById,
-    getRegistryById: getRegistryById,
-    getDataClassById: getDCById,
-    getProvisionById: getProvisionById,
-    setDialog: setDialog,
-    onSubprocessClick: onSubprocessClick,
+    onProcessClick: onProcessClick,    
     setMapping: setMapping,
     getMapStyleById: getMapStyleById
   };

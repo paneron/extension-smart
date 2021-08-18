@@ -10,7 +10,7 @@ import { createMapProfile, MapProfile } from '../mapper/mapmodel';
 const MapperFileMenu: React.FC<{
   mapProfile: MapProfile;
   onMapProfileChanged: (m: MapProfile) => void;
-}> = function ({ mapProfile, onMapProfileChanged: setMapProfile }) {
+}> = function ({ mapProfile, onMapProfileChanged: onMapProfileChanged }) {
   const {
     logger,
     getBlob,
@@ -23,7 +23,7 @@ const MapperFileMenu: React.FC<{
   const canSave = getBlob && writeFileToFilesystem;
 
   function handleNew() {
-    setMapProfile(createMapProfile());
+    onMapProfileChanged(createMapProfile());
   }
 
   function handleSave() {
@@ -66,7 +66,7 @@ const MapperFileMenu: React.FC<{
               'Requesting file: Decoded blob',
               fileDataAsString.substr(0, 20)
             );
-            setMapProfile(JSON.parse(fileDataAsString) as MapProfile);
+            onMapProfileChanged(JSON.parse(fileDataAsString) as MapProfile);
           } else {
             logger?.log('Requesting file: No file data received');
             console.error('Import file: no file data received');

@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 import { EditorModel, EditorSubprocess, isEditorAppproval, isEditorEgate, isEditorProcess } from "../../model/editormodel";
-import { MappingType } from "./mapmodel";
+import { MappingType, MapSet } from "./mapmodel";
 
 export enum MapCoverType {
   FULL = 'full',
@@ -129,4 +129,13 @@ export function getMapStyleById(mapResult:MapResultType, id:string):CSSPropertie
   return {
     backgroundColor: MappingResultStyles[result].color
   };  
+}
+
+export function getSourceStyleById(mapSet:MapSet, id:string):CSSProperties {
+  if (mapSet.mappings[id] === undefined || Object.keys(mapSet.mappings[id]).length === 0) {
+     return {};
+  }  
+  return {
+    backgroundColor: 'lightgreen'
+  };
 }

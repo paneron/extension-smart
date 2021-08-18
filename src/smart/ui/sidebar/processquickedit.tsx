@@ -9,8 +9,9 @@ import { DataType } from '../../serialize/interface/baseinterface';
 import {
   MMELProvision,
   MMELReference,
+  MMELRole,
 } from '../../serialize/interface/supportinterface';
-import { EditAction } from '../../utils/constants';
+import { DeletableNodeTypes, EditableNodeTypes, EditAction } from '../../utils/constants';
 import { NodeCallBack } from '../flowui/container';
 import {
   ActorDescription,
@@ -26,6 +27,15 @@ export const ProcessQuickEdit: React.FC<
     process: EditorProcess;
     resetSelection: () => void;
     onSubprocessClick: (pid: string) => void;
+    getRoleById: (id: string) => MMELRole | null;
+    getRefById: (id: string) => MMELReference | null;        
+    getProvisionById: (id: string) => MMELProvision | null;
+    setDialog: (
+      nodeType: EditableNodeTypes | DeletableNodeTypes,
+      action: EditAction,
+      id: string,
+      resetSelection: () => void
+    ) => void;
   }
 > = ({
   process,
@@ -82,12 +92,7 @@ export const ProcessQuickEdit: React.FC<
         role={getRoleById(process.actor)}
         id={process.id + '#ProcessActor'}
         label="Actor"
-      />
-      <NonEmptyFieldDescription
-        id={process.id + '#Modality'}
-        label="Modality"
-        value={process.modality}
-      />
+      />      
       <ProvisionList
         pid={process.id}
         provisions={process.provision}

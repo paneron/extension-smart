@@ -32,13 +32,8 @@ import {
   NodeCallBack,
 } from '../ui/flowui/container';
 import { fillRDCS } from '../utils/commonfunctions';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-} from '../utils/constants';
-import { getMapStyleById, MapResultType } from '../ui/mapper/MappingCalculator';
-import { CSSProperties } from 'react';
+import { getMapStyleById, getSourceStyleById, MapResultType } from '../ui/mapper/MappingCalculator';
+import { MapSet } from '../ui/mapper/mapmodel';
 
 export interface ModelWrapper {
   model: EditorModel;
@@ -174,22 +169,14 @@ export function getReactFlowElementsFrom(
   mw: ModelWrapper,
   dvisible: boolean,
   edgeDelete: boolean,
-  onProcessClick: (pageid: string, processid: string) => void,
-  onSubprocessClick: (pid: string) => void,
-  removeEdge: (id: string) => void,
-  setDialog: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string,
-    resetSelection: () => void
-  ) => void
+  onProcessClick: (pageid: string, processid: string) => void,  
+  removeEdge: (id: string) => void,  
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
     model: mw.model,
     onProcessClick,
-    onSubprocessClick,
-    setDialog,
+    getMapStyleById: () => ({})
   });
   return getElements(mw, dvisible, callback, e =>
     createEdgeContainer(e, edgeDelete, removeEdge)
@@ -201,7 +188,8 @@ export function getMapperReactFlowElementsFrom(
   type: ModelType,
   dvisible: boolean,
   onProcessClick: (pageid: string, processid: string) => void,
-  setMapping: (fromns: string, fromid: string, toid: string) => void,
+  setMapping: (fromid: string, toid: string) => void,
+  mapSet: MapSet,
   mapResult: MapResultType,  
 ): Elements {
   const callback = getEditorNodeCallBack({
@@ -209,13 +197,9 @@ export function getMapperReactFlowElementsFrom(
     model: mw.model,
     onProcessClick,
     setMapping,
-    getMapStyleById: id => getStyleById(mapResult, id)
+    getMapStyleById: type === ModelType.REF ? id => getMapStyleById(mapResult, id) : id => getSourceStyleById(mapSet, id)
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
-}
-
-function getStyleById(mapResult: MapResultType, id:string):CSSProperties {  
-  return getMapStyleById(mapResult, id);
 }
 
 function getElements(

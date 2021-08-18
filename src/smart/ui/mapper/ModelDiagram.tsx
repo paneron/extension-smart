@@ -28,25 +28,24 @@ import { EdgeTypes, MapperState, NodeTypes } from '../../model/state';
 import { IconControlButton } from '../control/buttons';
 import { handleModelOpen } from '../menu/file';
 import { SelectedNodeDescription } from '../sidebar/selected';
-import {
-  createNewMapSet,
+import {  
   indexModel,
   MapperModelLabel,
-  MapperModelType,
-  MapProfile,
+  MapperModelType,  
+  MapSet,
 } from './mapmodel';
 import { MapResultType } from './MappingCalculator';
 import MappingLegendPane from './mappinglegend';
 
 const ModelDiagram: React.FC<{
   className?: string;
-  mapProfile: MapProfile;
-  onMapProfileChanged: (mp: MapProfile) => void;
+  mapSet: MapSet;
+  onMapSetChanged: (mp: MapSet) => void;
   modelProps: MapperState;
   setProps: (mp: MapperState) => void;
   mapResult?: MapResultType;
   onModelChanged: (model:EditorModel) => void;
-}> = ({ className, mapProfile, onMapProfileChanged, modelProps, setProps, mapResult = {}, onModelChanged }) => {
+}> = ({ className, mapSet, onMapSetChanged, modelProps, setProps, mapResult = {}, onModelChanged }) => {
   const { 
     logger, 
     useDecodedBlob, 
@@ -103,17 +102,13 @@ const ModelDiagram: React.FC<{
     }
   }
 
-  function setMapping(fromid: string, tons: string, toid: string) {    
-    logger?.log(`Update mapping from ${fromid} to ${toid}`);
-    if (mapProfile.mapSet[tons] === undefined) {
-      mapProfile.mapSet[tons] = createNewMapSet(tons);
+  function setMapping(fromid: string, toid: string) {    
+    logger?.log(`Update mapping from ${fromid} to ${toid}`);        
+    if (mapSet.mappings[fromid] === undefined) {
+      mapSet.mappings[fromid] = {};
     }
-    const ms = mapProfile.mapSet[tons];
-    if (ms.mappings[fromid] === undefined) {
-      ms.mappings[fromid] = {};
-    }
-    ms.mappings[fromid][toid] = { description: '' };
-    onMapProfileChanged!({ ...mapProfile });
+    mapSet.mappings[fromid][toid] = { description: '' };
+    onMapSetChanged({ ...mapSet });
   }
 
   const toolbar = (
@@ -154,7 +149,10 @@ const ModelDiagram: React.FC<{
         {
           key: 'selected-node',
           title: 'Selected node',
-          content: <SelectedNodeDescription />,
+          content: 
+            <SelectedNodeDescription
+              model={modelProps.modelWrapper.model}              
+            />,
         },
       ]}
     />
@@ -182,6 +180,7 @@ const ModelDiagram: React.FC<{
               modelProps.dvisible,
               onProcessClick,
               setMapping,
+              mapSet,
               mapResult              
             )}            
             onLoad={onLoad}

@@ -14,7 +14,6 @@ import {
   removeSpace,
   updatePageElement,
 } from '../../utils/commonfunctions';
-import { MODAILITYOPTIONS } from '../../utils/constants';
 import { createProvision } from '../../utils/EditorFactory';
 import { createNewPage } from '../../utils/ModelAddComponentHandler';
 import { deletePage } from '../../utils/ModelRemoveComponentHandler';
@@ -127,13 +126,6 @@ const EditProcessPage: React.FC<{
         text="Process Name"
         value={editing.name}
         onChange={x => setEditing({ ...editing, name: x })}
-      />
-      <NormalComboBox
-        key="field#processModality"
-        text="Modality"
-        value={editing.modality}
-        options={MODAILITYOPTIONS}
-        onChange={x => setEditing({ ...editing, modality: x })}
       />
       <NormalComboBox
         key="field#processStart"

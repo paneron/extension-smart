@@ -295,7 +295,12 @@ const ModelEditor: React.FC<{
         {
           key: 'selected-node',
           title: 'Selected node',
-          content: <SelectedNodeDescription />,
+          content: 
+            <SelectedNodeDescription 
+              model={state.modelWrapper.model} 
+              setDialog={setDiag}
+              onSubprocessClick={onSubprocessClick}
+            />,
         },
         {
           key: 'create-node',
@@ -361,10 +366,8 @@ const ModelEditor: React.FC<{
                 state.modelWrapper,
                 state.dvisible,
                 state.edgeDeleteVisible,
-                onProcessClick,
-                onSubprocessClick,
-                removeEdge,
-                setDiag
+                onProcessClick,                
+                removeEdge,                
               )}              
               onLoad={onLoad}
               onDrop={onDrop}
