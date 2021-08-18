@@ -9,8 +9,8 @@ import { createMapProfile, MapProfile } from '../mapper/mapmodel';
 
 const MapperFileMenu: React.FC<{
   mapProfile: MapProfile;
-  setMapProfile: (m: MapProfile) => void;
-}> = function ({ mapProfile, setMapProfile }) {
+  onMapProfileChanged: (m: MapProfile) => void;
+}> = function ({ mapProfile, onMapProfileChanged: setMapProfile }) {
   const {
     logger,
     getBlob,

@@ -112,6 +112,7 @@ export function createSubprocess(id: string, start: string): EditorSubprocess {
     edges: {},
     data: {},
     datatype: DataType.SUBPROCESS,
+    neighbor: {},
     objectVersion: 'Editor',
     start: start,
   };

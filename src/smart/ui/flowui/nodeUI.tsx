@@ -8,6 +8,7 @@ import {
   EditorProcess,
   EditorSignalEvent,
   isEditorRegistry,
+  ModelType,
 } from '../../model/editormodel';
 import { NodeCallBack } from './container';
 import React from 'react';
@@ -54,7 +55,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
       <PB
         content={process.name === '' ? process.id : process.name}
         pid={process.id}
-        style={{}}
+        style={callback.modelType === ModelType.REF ? callback.getMapStyleById(process.id) : {}}
         namespace={callback.namespace}
         setMapping={callback.setMapping}
       />
@@ -90,7 +91,7 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
       <PB
         content={approval.name === '' ? approval.id : approval.name}
         pid={approval.id}
-        style={{}}
+        style={callback.modelType === ModelType.REF ? callback.getMapStyleById(approval.id) : {}}
         namespace={callback.namespace}
         setMapping={callback.setMapping}
       />

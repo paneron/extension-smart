@@ -130,7 +130,7 @@ export const ProcessBox: Record<
     pid: string;
     style: CSSProperties;
     namespace: string;
-    setMapping: (fromid: string, tons: string, toid: string) => void;
+    setMapping?: (fromid: string, tons: string, toid: string) => void;
   }>
 > = {
   [ModelType.EDIT]: ({ content }) => (
@@ -145,7 +145,7 @@ export const ProcessBox: Record<
       <div>{content}</div>
     </InternalProcessBox>
   ),
-  [ModelType.REF]: ({ namespace, content, pid, style, setMapping }) => (
+  [ModelType.REF]: ({ namespace, content, pid, style, setMapping = () => {} }) => (
     <InternalProcessBox
       style={style}
       onDrop={event => onDrop(event, namespace, pid, setMapping)}

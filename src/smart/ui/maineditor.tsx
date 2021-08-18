@@ -76,8 +76,8 @@ const ModelEditor: React.FC<{
   isVisible: boolean;
   className?: string;
 }> = ({ isVisible, className }) => {
-  const { logger } = useContext(DatasetContext);
-
+  const { logger } = useContext(DatasetContext);            
+  
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
@@ -365,7 +365,7 @@ const ModelEditor: React.FC<{
                 onSubprocessClick,
                 removeEdge,
                 setDiag
-              )}
+              )}              
               onLoad={onLoad}
               onDrop={onDrop}
               onDragOver={onDragOver}

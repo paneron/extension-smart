@@ -37,6 +37,8 @@ import {
   EditableNodeTypes,
   EditAction,
 } from '../utils/constants';
+import { getMapStyleById, MapResultType } from '../ui/mapper/MappingCalculator';
+import { CSSProperties } from 'react';
 
 export interface ModelWrapper {
   model: EditorModel;
@@ -110,6 +112,7 @@ function convertPages(
       ...elms[x],
       start: findStart(elms[x].childs, nodes),
       objectVersion: 'Editor',
+      neighbor: {},
     };
   }
   return output;
@@ -134,11 +137,11 @@ function resetAdded(model: EditorModel) {
   }
 }
 
-export function createEditorModelWrapper(m: MMELModel): ModelWrapper {
+export function createEditorModelWrapper(m: MMELModel): ModelWrapper {  
   const convertedElms = convertElms(m.elements);
-  const converedPages = convertPages(m.pages, convertedElms);
+  const converedPages = convertPages(m.pages, convertedElms);  
   return buildStructure({
-    model: { ...m, elements: convertedElms, pages: converedPages },
+    model: { ...m, elements: convertedElms, pages: converedPages },    
     page: m.root,
   });
 }
@@ -198,15 +201,21 @@ export function getMapperReactFlowElementsFrom(
   type: ModelType,
   dvisible: boolean,
   onProcessClick: (pageid: string, processid: string) => void,
-  setMapping: (fromns: string, fromid: string, toid: string) => void
+  setMapping: (fromns: string, fromid: string, toid: string) => void,
+  mapResult: MapResultType,  
 ): Elements {
   const callback = getEditorNodeCallBack({
     type,
     model: mw.model,
     onProcessClick,
     setMapping,
+    getMapStyleById: id => getStyleById(mapResult, id)
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
+}
+
+function getStyleById(mapResult: MapResultType, id:string):CSSProperties {  
+  return getMapStyleById(mapResult, id);
 }
 
 function getElements(

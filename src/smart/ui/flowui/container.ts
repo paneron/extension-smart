@@ -42,6 +42,7 @@ export type EdtiorNodeWithInfoCallback = EditorNode & NodeCallBack;
 
 export interface NodeCallBack {
   modelType: ModelType;
+  style?: CSSProperties;
   namespace: string;
   onProcessClick: (pageid: string, processid: string) => void;
   onSubprocessClick: (pid: string) => void;
@@ -57,6 +58,7 @@ export interface NodeCallBack {
     resetSelection: () => void
   ) => void;
   setMapping: (fromid: string, tons: string, toid: string) => void;
+  getMapStyleById: (id: string) => CSSProperties;
 }
 
 export interface EdgePackage {
@@ -119,7 +121,7 @@ export function createDataLinkContainer(
 export function createNodeContainer(
   x: EditorNode,
   pos: { x: number; y: number },
-  callback: NodeCallBack
+  callback: NodeCallBack,  
 ): NodeContainer {
   return {
     id: x.id,
@@ -142,7 +144,7 @@ function conditionExtract(l: string): string {
 
 export function getEditorNodeCallBack(props: {
   type: ModelType;
-  model: EditorModel;
+  model: EditorModel;  
   onProcessClick: (pageid: string, processid: string) => void;
   onSubprocessClick?: (pid: string) => void;
   setDialog?: (
@@ -151,16 +153,19 @@ export function getEditorNodeCallBack(props: {
     id: string,
     resetSelection: () => void
   ) => void;
-  setMapping?: (fromid: string, tons: string, toid: string) => void;
+  setMapping?: (fromid: string, tons: string, toid: string) => void;  
+  getMapStyleById?: (id:string) => CSSProperties;
 }): NodeCallBack {
   const {
     type,
-    model,
+    model,    
     onProcessClick,
     onSubprocessClick = () => {},
     setDialog = () => {},
     setMapping = () => {},
+    getMapStyleById = () => ({})
   } = props;
+
   function getRoleById(id: string): MMELRole | null {
     return getEditorRoleById(model, id);
   }
@@ -179,7 +184,7 @@ export function getEditorNodeCallBack(props: {
 
   function getProvisionById(id: string): MMELProvision | null {
     return getEditorProvisionById(model, id);
-  }
+  }  
 
   return {
     modelType: type,
@@ -193,5 +198,6 @@ export function getEditorNodeCallBack(props: {
     setDialog: setDialog,
     onSubprocessClick: onSubprocessClick,
     setMapping: setMapping,
+    getMapStyleById: getMapStyleById
   };
 }

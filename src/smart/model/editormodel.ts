@@ -73,6 +73,7 @@ export interface EditorDataClassReference extends EditorBaseObjectType {
 
 export interface EditorPage extends EditorBaseObjectType {
   start: string;
+  neighbor: Record<string, Set<string>>  
 }
 
 export interface EditorModel {

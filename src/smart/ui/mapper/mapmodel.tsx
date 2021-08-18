@@ -1,4 +1,7 @@
-import { ModelType } from '../../model/editormodel';
+import { EditorModel, ModelType } from '../../model/editormodel';
+
+// Mappingtype[fromid][toid] = MappingMeta
+export type MappingType = Record<string, Record<string, MappingMeta>>
 
 export interface MapProfile {
   id: string; // namespace of the implementation model
@@ -7,7 +10,7 @@ export interface MapProfile {
 
 export interface MapSet {
   id: string; // namespace of the reference model
-  mappings: Record<string, Record<string, MappingMeta>>;
+  mappings: MappingType;
 }
 
 export interface MappingMeta {
@@ -34,3 +37,21 @@ export const MapperModelLabel: Record<MapperModelType, string> = {
   [ModelType.IMP]: 'Implementation Model',
   [ModelType.REF]: 'Reference Model',
 };
+
+export function getMappings(mp:MapProfile, refns:string):MappingType {
+  return mp.mapSet[refns] === undefined ? {} : mp.mapSet[refns].mappings;
+}
+
+export function indexModel(model:EditorModel) {  
+  for (const p in model.pages) {
+    const page = model.pages[p];    
+    const neighbor:Record<string, Set<string>> = {};
+    Object.values(page.edges).forEach(e => {
+      if (neighbor[e.from] === undefined) {
+        neighbor[e.from] = new Set<string>();
+      }
+      neighbor[e.from].add(e.to);
+    });
+    page.neighbor = neighbor;    
+  }
+}

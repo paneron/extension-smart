@@ -12,6 +12,7 @@ import ReactFlow, {
   OnLoadParams,
   ReactFlowProvider,
 } from 'react-flow-renderer';
+import { EditorModel, ModelType } from '../../model/editormodel';
 import {
   addToHistory,
   createPageHistory,
@@ -29,20 +30,28 @@ import { handleModelOpen } from '../menu/file';
 import { SelectedNodeDescription } from '../sidebar/selected';
 import {
   createNewMapSet,
+  indexModel,
   MapperModelLabel,
   MapperModelType,
   MapProfile,
 } from './mapmodel';
+import { MapResultType } from './MappingCalculator';
+import MappingLegendPane from './mappinglegend';
 
 const ModelDiagram: React.FC<{
   className?: string;
   mapProfile: MapProfile;
-  setMapProfile: (mp: MapProfile) => void;
+  onMapProfileChanged: (mp: MapProfile) => void;
   modelProps: MapperState;
   setProps: (mp: MapperState) => void;
-}> = ({ className, mapProfile, setMapProfile, modelProps, setProps }) => {
-  const { logger, useDecodedBlob, requestFileFromFilesystem } =
-    useContext(DatasetContext);
+  mapResult?: MapResultType;
+  onModelChanged: (model:EditorModel) => void;
+}> = ({ className, mapProfile, onMapProfileChanged, modelProps, setProps, mapResult = {}, onModelChanged }) => {
+  const { 
+    logger, 
+    useDecodedBlob, 
+    requestFileFromFilesystem 
+  } = useContext(DatasetContext);  
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
@@ -65,6 +74,7 @@ const ModelDiagram: React.FC<{
       history: createPageHistory(mw),
       modelWrapper: mw,
     });
+    onModelChanged(mw.model);
   }
 
   function onDragOver(event: React.DragEvent<HTMLDivElement>) {
@@ -93,9 +103,8 @@ const ModelDiagram: React.FC<{
     }
   }
 
-  function setMapping(fromid: string, tons: string, toid: string) {
-    logger?.log(fromid + ' ' + tons + ' ' + toid);
-    logger?.log(mapProfile);
+  function setMapping(fromid: string, tons: string, toid: string) {    
+    logger?.log(`Update mapping from ${fromid} to ${toid}`);
     if (mapProfile.mapSet[tons] === undefined) {
       mapProfile.mapSet[tons] = createNewMapSet(tons);
     }
@@ -104,7 +113,7 @@ const ModelDiagram: React.FC<{
       ms.mappings[fromid] = {};
     }
     ms.mappings[fromid][toid] = { description: '' };
-    setMapProfile!({ ...mapProfile });
+    onMapProfileChanged!({ ...mapProfile });
   }
 
   const toolbar = (
@@ -113,14 +122,15 @@ const ModelDiagram: React.FC<{
         text={
           'Open ' + MapperModelLabel[modelProps.modelType as MapperModelType]
         }
-        onClick={() =>
+        onClick={() => {
           handleModelOpen({
             setNewModelWrapper,
             useDecodedBlob,
             requestFileFromFilesystem,
             logger,
-          })
-        }
+            indexModel
+          });          
+        }}
       />
       <Button
         disabled={modelProps.history.items.length <= 1}
@@ -171,8 +181,9 @@ const ModelDiagram: React.FC<{
               modelProps.modelType,
               modelProps.dvisible,
               onProcessClick,
-              setMapping
-            )}
+              setMapping,
+              mapResult              
+            )}            
             onLoad={onLoad}
             onDragOver={onDragOver}
             nodesConnectable={false}
@@ -190,6 +201,7 @@ const ModelDiagram: React.FC<{
               />
             </Controls>
           </ReactFlow>
+          {modelProps.modelType === ModelType.REF && <MappingLegendPane />}
         </div>
       </Workspace>
     </ReactFlowProvider>

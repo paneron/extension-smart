@@ -10,6 +10,11 @@ import { MMELObject } from '../serialize/interface/baseinterface';
 import { MMELReference } from '../serialize/interface/supportinterface';
 import { IListItem } from '../ui/common/fields';
 
+// temp class for debug, global console logger
+export class Logger {
+  static logger:{log:(...args: any[])=>void};
+}
+
 export function replaceSet(
   set: Set<string>,
   matchid: string,
