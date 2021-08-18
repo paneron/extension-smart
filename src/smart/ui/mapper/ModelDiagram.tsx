@@ -6,9 +6,8 @@ import { jsx, css } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
-import React, { useContext, useMemo } from 'react';
-import ReactFlow, {
-  Controls,
+import React, { CSSProperties, useContext, useMemo } from 'react';
+import ReactFlow, {  
   OnLoadParams,
   ReactFlowProvider,
 } from 'react-flow-renderer';
@@ -24,8 +23,7 @@ import {
   getMapperReactFlowElementsFrom,
   ModelWrapper,
 } from '../../model/modelwrapper';
-import { EdgeTypes, MapperState, NodeTypes } from '../../model/state';
-import { IconControlButton } from '../control/buttons';
+import { EdgeTypes, MapperState, MapperViewOption, NodeTypes } from '../../model/state';
 import { handleModelOpen } from '../menu/file';
 import { SelectedNodeDescription } from '../sidebar/selected';
 import {  
@@ -34,23 +32,26 @@ import {
   MapperModelType,  
   MapSet,
 } from './mapmodel';
-import { MapResultType } from './MappingCalculator';
+import { MappingResultStyles, MappingSourceStyles, MapResultType } from './MappingCalculator';
 import MappingLegendPane from './mappinglegend';
 
 const ModelDiagram: React.FC<{
   className?: string;
+  viewOption: MapperViewOption;
   mapSet: MapSet;
   onMapSetChanged: (mp: MapSet) => void;
   modelProps: MapperState;
   setProps: (mp: MapperState) => void;
   mapResult?: MapResultType;
   onModelChanged: (model:EditorModel) => void;
-}> = ({ className, mapSet, onMapSetChanged, modelProps, setProps, mapResult = {}, onModelChanged }) => {
-  const { 
+}> = ({ className, viewOption, mapSet, onMapSetChanged, modelProps, setProps, mapResult = {}, onModelChanged }) => {
+  const {
     logger, 
     useDecodedBlob, 
     requestFileFromFilesystem 
   } = useContext(DatasetContext);  
+
+  const modelType = modelProps.modelType;  
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
@@ -61,11 +62,7 @@ const ModelDiagram: React.FC<{
 
   function onLoad(params: OnLoadParams) {
     params.fitView();
-  }
-
-  function toggleDataVisibility() {
-    setProps({ ...modelProps, dvisible: !modelProps.dvisible });
-  }
+  }  
 
   function setNewModelWrapper(mw: ModelWrapper) {
     setProps({
@@ -110,7 +107,7 @@ const ModelDiagram: React.FC<{
     mapSet.mappings[fromid][toid] = { description: '' };
     onMapSetChanged({ ...mapSet });
   }
-
+  
   const toolbar = (
     <ControlGroup>
       <Button
@@ -136,6 +133,18 @@ const ModelDiagram: React.FC<{
   );
 
   const breadcrumbs = getBreadcrumbs(modelProps.history, onPageChange);
+  const legendcss:CSSProperties = {
+    position: 'absolute',
+    top: '20px',              
+    fontSize: '12px',                
+    overflowY: 'auto',
+    zIndex: 90,                
+  } 
+  if (modelType === ModelType.REF) {
+    legendcss.right = '1%';
+  } else {
+    legendcss.left = '1%';
+  }
 
   const sidebar = (
     <Sidebar
@@ -177,7 +186,7 @@ const ModelDiagram: React.FC<{
             elements={getMapperReactFlowElementsFrom(
               modelProps.modelWrapper,
               modelProps.modelType,
-              modelProps.dvisible,
+              viewOption.dataVisible,
               onProcessClick,
               setMapping,
               mapSet,
@@ -191,16 +200,12 @@ const ModelDiagram: React.FC<{
             nodeTypes={NodeTypes}
             edgeTypes={EdgeTypes}
             nodesDraggable={false}
-          >
-            <Controls>
-              <IconControlButton
-                isOn={modelProps.dvisible}
-                onClick={toggleDataVisibility}
-                icon="cube"
-              />
-            </Controls>
+          >            
           </ReactFlow>
-          {modelProps.modelType === ModelType.REF && <MappingLegendPane />}
+          {viewOption.legVisible && <MappingLegendPane 
+            list={modelType === ModelType.REF ? MappingResultStyles : MappingSourceStyles } 
+            style={legendcss}
+          />}
         </div>
       </Workspace>
     </ReactFlowProvider>

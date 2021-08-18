@@ -1,14 +1,16 @@
-import styled from '@emotion/styled'
-import React from 'react';
-import { MappingResultStyles } from './MappingCalculator';
+import React, { CSSProperties } from 'react';
+import { MapStyleInterface } from './MappingCalculator';
 
-const MappingLegendPane: React.FC = function () {
+const MappingLegendPane: React.FC<{
+  list: Record<string, MapStyleInterface>;
+  style?: CSSProperties;
+}> = function ({ list, style = {}}) {  
   return (
-    <LegendLabel key="ui#maplegendlabel">
-      {Object.values(MappingResultStyles).map(
+    <div style={ style } >
+      {Object.values(list).map(
         (value, index) => (<Legend key={'ui#maplegend#' + index} color={value.color} text={value.label} />)
       )}
-    </LegendLabel>
+    </div>
   )
 }
 
@@ -31,14 +33,5 @@ const Legend:React.FC<{
     </div>
   )
 }
-
-const LegendLabel = styled.div`
-position: absolute;
-top: 20px;
-right: 1%;
-font-size: 12px;
-overflow-y: auto;
-z-index:90;
-`
 
 export default MappingLegendPane

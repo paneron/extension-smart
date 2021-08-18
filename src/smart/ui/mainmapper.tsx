@@ -12,13 +12,14 @@ import { Button, ControlGroup } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import MapperFileMenu from './menu/mapperfile';
 import { createPageHistory } from '../model/history';
-import { MapperState } from '../model/state';
+import { MapperState, MapperViewOption } from '../model/state';
 import { createNewEditorModel } from '../utils/EditorFactory';
 import { createEditorModelWrapper } from '../model/modelwrapper';
 import { calculateMapping, MapResultType } from './mapper/MappingCalculator';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { Logger } from '../utils/commonfunctions';
 import MappingCanvus from './mapper/mappingcanvus';
+import MapperOptionMenu from './menu/mapperOptionMenu';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -32,14 +33,16 @@ const ModelMapper: React.FC<{
   Logger.logger = logger!;
 
   const [mapProfile, setMapProfile] = useState<MapProfile>(createMapProfile());
-  const [implementProps, setImplProps] = useState<MapperState>({    
-    dvisible: true,
+  const [viewOption, setViewOption] = useState<MapperViewOption>({
+    dataVisible: true,
+    legVisible: true
+  });
+  const [implementProps, setImplProps] = useState<MapperState>({
     modelWrapper: { ...initModelWrapper },
     history: createPageHistory(initModelWrapper),
     modelType: ModelType.IMP,
   });  
-  const [referenceProps, setRefProps] = useState<MapperState>({
-    dvisible: true,
+  const [referenceProps, setRefProps] = useState<MapperState>({    
     modelWrapper: { ...initModelWrapper },
     history: createPageHistory(initModelWrapper),
     modelType: ModelType.REF,
@@ -51,7 +54,7 @@ const ModelMapper: React.FC<{
   if (mapProfile.mapSet[refns] === undefined) {
     mapProfile.mapSet[refns] = createNewMapSet(refns);
   }
-  const mapSet = mapProfile.mapSet[refns];
+  const mapSet = mapProfile.mapSet[refns];  
 
   function updateMapStyle({model = refmodel, mp = mapProfile}) {
     setMapResult(calculateMapping(model, getMappings(mp, refns)));
@@ -93,6 +96,18 @@ const ModelMapper: React.FC<{
       >
         <Button text="Mapping" />
       </Popover2>
+      <Popover2
+        minimal
+        placement="bottom-start"
+        content={
+          <MapperOptionMenu        
+            viewOption={viewOption}
+            setOptions={setViewOption}
+          />
+        }
+      >
+        <Button text="View" />
+      </Popover2>
     </ControlGroup>
   );  
 
@@ -108,6 +123,7 @@ const ModelMapper: React.FC<{
         >
           <ModelDiagram
             modelProps={implementProps}
+            viewOption={viewOption}
             setProps={setImplProps}
             className={className}
             mapSet={mapSet}
@@ -116,6 +132,7 @@ const ModelMapper: React.FC<{
           />
           <ModelDiagram
             modelProps={referenceProps}
+            viewOption={viewOption}
             setProps={setRefProps}
             className={className}
             mapSet={mapSet}

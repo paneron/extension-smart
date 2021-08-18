@@ -9,16 +9,26 @@ export enum MapCoverType {
   NONE = 'none'
 }
 
-export interface MapResultInterface {
+export enum MapSourceType {
+  HASMAP = 'yes',
+  NOMAP = 'no'  
+}
+
+export interface MapStyleInterface {
   label: string;
   color: string;
 }
 
-export const MappingResultStyles: Record<MapCoverType, MapResultInterface> = {
+export const MappingResultStyles: Record<MapCoverType, MapStyleInterface> = {
   [MapCoverType.FULL]: { label:'Fully covered', color:'lightgreen' },
   [MapCoverType.PASS]: { label:'Minimal covered', color:'lightblue' },
   [MapCoverType.PARTIAL]: { label:'Partially covered', color:'lightyellow' },
   [MapCoverType.NONE]: { label:'Not covered', color:'#E9967A' }
+};
+
+export const MappingSourceStyles: Record<MapSourceType, MapStyleInterface> = {
+  [MapSourceType.HASMAP]: { label:'Has mapping', color:'lightblue' },  
+  [MapSourceType.NOMAP]: { label:'No mapping', color:'none' }
 };
 
 // MapResultType[nodeid] = MapCoverType
@@ -136,6 +146,6 @@ export function getSourceStyleById(mapSet:MapSet, id:string):CSSProperties {
      return {};
   }  
   return {
-    backgroundColor: 'lightgreen'
+    backgroundColor: MappingSourceStyles[MapSourceType.HASMAP].color
   };
 }
