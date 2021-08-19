@@ -20,7 +20,8 @@ export interface MapSet {
 }
 
 export interface MappingMeta {
-  description: string; // Description of the mapping, e.g., justifications
+  description: string; // Description of the mapping
+  justification: string; // Justification of the mapping
 }
 
 export function createMapProfile(): MapProfile {

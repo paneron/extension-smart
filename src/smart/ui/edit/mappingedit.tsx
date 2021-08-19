@@ -34,6 +34,13 @@ const MappingEditPage: React.FC<{
           setEditing({ ...editing, description: x });
         }}
       />
+      <NormalTextField
+        text="Justification"
+        value={editing.justification}
+        onChange={x => {
+          setEditing({ ...editing, justification: x });
+        }}
+      />
     </FormGroup>
   );
 };

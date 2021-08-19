@@ -135,7 +135,10 @@ const ModelDiagram: React.FC<{
     if (mapSet.mappings[fromid] === undefined) {
       mapSet.mappings[fromid] = {};
     }
-    mapSet.mappings[fromid][toid] = { description: '' };
+    mapSet.mappings[fromid][toid] = {
+      description: '',
+      justification: '',
+    };
     onMapSetChanged({ ...mapSet });
   }
 
