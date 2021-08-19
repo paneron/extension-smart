@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { EditorApproval, EditorProcess } from '../../model/editormodel';
 import { NormalTextField } from '../common/fields';
 import { MappingMeta } from '../mapper/mapmodel';
-import { FormGroup, Text } from '@blueprintjs/core';
+import { Button, FormGroup, Intent, Text } from '@blueprintjs/core';
 import { EditPageButtons } from './commons';
 
 const MappingEditPage: React.FC<{
@@ -14,15 +14,33 @@ const MappingEditPage: React.FC<{
   to: EditorProcess | EditorApproval;
   data: MappingMeta;
   onChange: (update: MappingMeta | null) => void;
-}> = function ({ from, to, data, onChange }) {
+  onDelete: () => void;
+}> = function ({ from, to, data, onChange, onDelete }) {
   const [editing, setEditing] = useState<MappingMeta>({ ...data });
 
   return (
     <FormGroup>
-      <EditPageButtons
-        onUpdateClick={() => onChange(editing)}
-        onCancelClick={() => onChange(null)}
-      />
+      <div
+        style={{
+          position: 'relative',
+        }}
+      >
+        <EditPageButtons
+          onUpdateClick={() => onChange(editing)}
+          onCancelClick={() => onChange(null)}
+        />
+        <Button
+          style={{
+            position: 'absolute',
+            top: '0px',
+            right: '0px',
+          }}
+          icon='delete'
+          intent={Intent.DANGER}
+          text='Delete'
+          onClick={() => onDelete()}
+        />
+      </div>
       <Text>
         {' '}
         Mapping: {from.name} ( {from.id} ) to {to.name} ( {to.id} ){' '}

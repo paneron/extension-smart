@@ -180,6 +180,29 @@ const ModelMapper: React.FC<{
     });
   }
 
+  function onMappingDelte() {
+    const { from, to } = editMappingProps;
+    const mapSet =
+      mapProfile.mapSet[referenceProps.modelWrapper.model.meta.namespace];
+    delete mapSet.mappings[from][to];
+    if (Object.keys(mapSet.mappings[from]).length === 0) {
+      delete mapSet.mappings[from];
+    }
+    setMapProfile({ ...mapProfile });
+    setEditMProps({
+      from: '',
+      to: '',
+    });
+    updateMapStyle({ mp: mapProfile });
+    updateMapEdges(
+      referenceProps.modelWrapper,
+      implementProps.modelWrapper,
+      mapProfile,
+      selected,
+      setMapEdges
+    );
+  }
+
   if (!isVisible && selected.selected !== '') {
     onSelectionChange({
       modelType: ModelType.IMP,
@@ -234,6 +257,7 @@ const ModelMapper: React.FC<{
             editMappingProps.to
           ]
         }
+        onDelete={onMappingDelte}
         onChange={onMappingChange}
       />
     ) : (

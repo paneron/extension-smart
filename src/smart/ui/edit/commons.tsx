@@ -17,7 +17,7 @@ export const EditPageButtons: React.FC<{
       <Button
         key="ui#itemupdate#cancelbutton"
         icon="disable"
-        intent={Intent.DANGER}
+        intent={Intent.WARNING}
         text="Cancel"
         onClick={() => onCancelClick()}
       />
