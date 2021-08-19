@@ -136,7 +136,7 @@ const ModelMapper: React.FC<{
   }
 
   function onImpModelChanged(model: EditorModel) {
-    setMapProfile({ id: model.meta.namespace, mapSet: {} });
+    onMapProfileChanged({ id: model.meta.namespace, mapSet: {} });
     implementProps.modelWrapper.model = model;
   }
 

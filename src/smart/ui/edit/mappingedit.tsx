@@ -35,9 +35,9 @@ const MappingEditPage: React.FC<{
             top: '0px',
             right: '0px',
           }}
-          icon='delete'
+          icon="delete"
           intent={Intent.DANGER}
-          text='Delete'
+          text="Delete"
           onClick={() => onDelete()}
         />
       </div>
