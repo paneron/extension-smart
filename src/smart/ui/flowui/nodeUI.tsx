@@ -54,25 +54,27 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
   const PB = ProcessBox[callback.modelType];
   return (
     <>
-      <Handle type='source' position={Position.Bottom} style={handlecss} />
+      <Handle type="source" position={Position.Bottom} style={handlecss} />
       <PB
         content={process.name === '' ? process.id : process.name}
         pid={process.id}
-        style={callback.getMapStyleById(process.id)}        
+        style={callback.getMapStyleById(process.id)}
         setMapping={callback.setMapping}
         uiref={process.uiref}
       />
-      <Handle type='target' position={Position.Top} style={handlecss} />
+      <Handle type="target" position={Position.Top} style={handlecss} />
       {process.page !== '' && (
-        <div style={{
-          position: 'fixed',
-          right: '-10px',
-          top: '-10px',
-        }}>
-          <Tooltip2 content='View subprocess' position='top'>
+        <div
+          style={{
+            position: 'fixed',
+            right: '-10px',
+            top: '-10px',
+          }}
+        >
+          <Tooltip2 content="View subprocess" position="top">
             <MyButton
               key={process.id + '#subprocessbutton'}
-              onClick={() => callback.onProcessClick(process.page, process.id)}            
+              onClick={() => callback.onProcessClick(process.page, process.id)}
             >
               {' '}
               +
@@ -80,11 +82,13 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           </Tooltip2>
         </div>
       )}
-      {callback.hasMapping !== undefined && callback.hasMapping(process.id) && <ViewMappingbutton
-        modelType={callback.modelType}
-        id={process.id}
-        setSelectedId={callback.setSelectedId!}
-      /> }
+      {callback.hasMapping !== undefined && callback.hasMapping(process.id) && (
+        <ViewMappingbutton
+          modelType={callback.modelType}
+          id={process.id}
+          setSelectedId={callback.setSelectedId!}
+        />
+      )}
       {actor !== null && (
         <FirstLabel key={process.id + '#ActorLabel'}>
           {actorIcon}
@@ -107,16 +111,19 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
       <PB
         content={approval.name === '' ? approval.id : approval.name}
         pid={approval.id}
-        style={callback.getMapStyleById(approval.id)}        
+        style={callback.getMapStyleById(approval.id)}
         setMapping={callback.setMapping}
         uiref={approval.uiref}
       />
       <Handle type="target" position={Position.Top} style={handlecss} />
-      { callback.hasMapping !== undefined && callback.hasMapping(approval.id) && (<ViewMappingbutton
-        modelType={callback.modelType}
-        id={approval.id}
-        setSelectedId={callback.setSelectedId!}
-      />) }
+      {callback.hasMapping !== undefined &&
+        callback.hasMapping(approval.id) && (
+          <ViewMappingbutton
+            modelType={callback.modelType}
+            id={approval.id}
+            setSelectedId={callback.setSelectedId!}
+          />
+        )}
       {actor !== null ? (
         approver !== null ? (
           <>
@@ -209,31 +216,29 @@ export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
 const ViewMappingbutton: React.FC<{
   modelType: ModelType;
   id: string;
-  setSelectedId: (id:string) => void
-}> = function ({
-  modelType,
-  id,
-  setSelectedId
-}) {
-  if (modelType == ModelType.IMP || modelType === ModelType.REF) {
-    return (      
-      <div style={{
-        position: 'fixed',
-        left: '-10px',
-        top: '-10px',
-      }}>
-        <Tooltip2 content={MapViewButtonToolTip[modelType]} position='top'>
+  setSelectedId: (id: string) => void;
+}> = function ({ modelType, id, setSelectedId }) {
+  if (modelType === ModelType.IMP || modelType === ModelType.REF) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          left: '-10px',
+          top: '-10px',
+        }}
+      >
+        <Tooltip2 content={MapViewButtonToolTip[modelType]} position="top">
           <Button
             key={id + '#viewmapbutton'}
-            icon='link'
+            icon="link"
             onClick={() => setSelectedId!(id)}
-          />            
+          />
         </Tooltip2>
-      </div>      
+      </div>
     );
-  }  
-  return <></>
-}
+  }
+  return <></>;
+};
 
 const ShortLabel = styled.div`
   position: absolute;
@@ -253,7 +258,7 @@ const LongLabel = styled.div`
   font-size: 10px;
 `;
 
-const MyButton = styled.button`  
+const MyButton = styled.button`
   font-size: 14px;
   color: green;
 `;

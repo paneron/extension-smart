@@ -28,7 +28,7 @@ import {
 
 export const ProcessQuickEdit: React.FC<
   NodeCallBack & {
-    process: EditorProcess;    
+    process: EditorProcess;
     onSubprocessClick: (pid: string) => void;
     getRoleById: (id: string) => MMELRole | null;
     getRefById: (id: string) => MMELReference | null;
@@ -36,7 +36,7 @@ export const ProcessQuickEdit: React.FC<
     setDialog: (
       nodeType: EditableNodeTypes | DeletableNodeTypes,
       action: EditAction,
-      id: string,      
+      id: string
     ) => void;
   }
 > = ({
@@ -45,7 +45,7 @@ export const ProcessQuickEdit: React.FC<
   getProvisionById,
   getRefById,
   getRoleById,
-  setDialog,  
+  setDialog,
   onSubprocessClick,
 }) => {
   return (
@@ -54,39 +54,24 @@ export const ProcessQuickEdit: React.FC<
         <ButtonGroup>
           <EditButton
             callback={() =>
-              setDialog(
-                DataType.PROCESS,
-                EditAction.EDIT,
-                process.id,                
-              )
+              setDialog(DataType.PROCESS, EditAction.EDIT, process.id)
             }
           />
           {process.page === '' && (
-            <AddSubprocessButton callback={() => onSubprocessClick(process.id)} />
+            <AddSubprocessButton
+              callback={() => onSubprocessClick(process.id)}
+            />
           )}
           <RemoveButton
             callback={() =>
-              setDialog(
-                DataType.PROCESS,
-                EditAction.DELETE,
-                process.id,
-              )
+              setDialog(DataType.PROCESS, EditAction.DELETE, process.id)
             }
           />
         </ButtonGroup>
       )}
-      <DescriptionItem
-        label="Process"
-        value={process.id}
-      />
-      <DescriptionItem
-        label="Name"
-        value={process.name}
-      />
-      <ActorDescription
-        role={getRoleById(process.actor)}
-        label="Actor"
-      />
+      <DescriptionItem label="Process" value={process.id} />
+      <DescriptionItem label="Name" value={process.name} />
+      <ActorDescription role={getRoleById(process.actor)} label="Actor" />
       <ProvisionList
         provisions={process.provision}
         getProvisionById={getProvisionById}
@@ -142,18 +127,9 @@ const DescribeProvision: React.FC<{
   }
   return (
     <>
-      <DescriptionItem
-        label="Statement"
-        value={provision.condition}
-      />
-      <NonEmptyFieldDescription
-        label="Modality"
-        value={provision.modality}
-      />
-      <ReferenceList
-        refs={provision.ref}
-        getRefById={getRefById}
-      />
+      <DescriptionItem label="Statement" value={provision.condition} />
+      <NonEmptyFieldDescription label="Modality" value={provision.modality} />
+      <ReferenceList refs={provision.ref} getRefById={getRefById} />
     </>
   );
 };

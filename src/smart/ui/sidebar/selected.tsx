@@ -3,11 +3,7 @@
 
 import { jsx, css } from '@emotion/react';
 import React, { CSSProperties } from 'react';
-import {
-  useStoreState,
-  Elements,
-  isNode  
-} from 'react-flow-renderer';
+import { useStoreState, Elements, isNode } from 'react-flow-renderer';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import {
@@ -50,10 +46,11 @@ import { Button, ButtonGroup } from '@blueprintjs/core';
 
 export const SelectedNodeDescription: React.FC<{
   model: EditorModel;
+  pageid: string;
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,    
+    id: string
   ) => void;
   onSubprocessClick?: (pid: string) => void;
 }> = function ({
@@ -62,6 +59,7 @@ export const SelectedNodeDescription: React.FC<{
   onSubprocessClick = () => {
     alert('Not implemented');
   },
+  pageid,
 }) {
   const selected = useStoreState(store => store.selectedElements);
 
@@ -73,8 +71,17 @@ export const SelectedNodeDescription: React.FC<{
     if (selected !== null && selected.length > 0) {
       const s = selected[0];
       const elm = model.elements[s.id];
-      if (isNode(s) && elm !== undefined) {
-        return {...s.data as EdtiorNodeWithInfoCallback, ...model.elements[s.id]};
+      const page = model.pages[pageid];
+      if (
+        isNode(s) &&
+        page !== undefined &&
+        page.childs[s.id] !== undefined &&
+        elm !== undefined
+      ) {
+        return {
+          ...(s.data as EdtiorNodeWithInfoCallback),
+          ...model.elements[s.id],
+        };
       }
     }
     return null;
@@ -84,7 +91,7 @@ export const SelectedNodeDescription: React.FC<{
     <div style={{ maxHeight: '70vh' }}>
       {elm !== null ? (
         <Describe
-          node={elm}          
+          node={elm}
           model={model}
           setDialog={setDialog}
           onSubprocessClick={onSubprocessClick}
@@ -99,7 +106,7 @@ export const SelectedNodeDescription: React.FC<{
 const NODE_DETAIL_VIEWS: Record<
   SelectableNodeTypes,
   React.FC<{
-    node: EdtiorNodeWithInfoCallback;    
+    node: EdtiorNodeWithInfoCallback;
     getRefById: (id: string) => MMELReference | null;
     getRegistryById: (id: string) => EditorRegistry | null;
     getDCById: (id: string) => EditorDataClass | null;
@@ -107,7 +114,7 @@ const NODE_DETAIL_VIEWS: Record<
     setDialog?: (
       nodeType: EditableNodeTypes | DeletableNodeTypes,
       action: EditAction,
-      id: string,      
+      id: string
     ) => void;
     onSubprocessClick: (pid: string) => void;
   }>
@@ -130,59 +137,42 @@ const NODE_DETAIL_VIEWS: Record<
     ),
   [DataType.STARTEVENT]: () => <DescribeStart />,
   [DataType.ENDEVENT]: ({
-    node,    
+    node,
     setDialog = () => alert('Not implemeted'),
-  }) => (
-    <DescribeEnd
-      end={node}      
-      setDialog={setDialog}
-    />
-  ),
+  }) => <DescribeEnd end={node} setDialog={setDialog} />,
   [DataType.TIMEREVENT]: ({
-    node,    
+    node,
     setDialog = () => alert('Not implemeted'),
   }) =>
     isEditorTimerEvent(node) ? (
-      <DescribeTimer
-        timer={node}        
-        setDialog={setDialog}
-      />
+      <DescribeTimer timer={node} setDialog={setDialog} />
     ) : (
       <></>
     ),
   [DataType.SIGNALCATCHEVENT]: ({
-    node,    
+    node,
     setDialog = () => alert('Not implemeted'),
   }) =>
     isEditorSignalEvent(node) ? (
-      <DescribeSignalCatch
-        scEvent={node}        
-        setDialog={setDialog}
-      />
+      <DescribeSignalCatch scEvent={node} setDialog={setDialog} />
     ) : (
       <></>
     ),
-  [DataType.EGATE]: ({
-    node,    
-    setDialog = () => alert('Not implemeted'),
-  }) =>
+  [DataType.EGATE]: ({ node, setDialog = () => alert('Not implemeted') }) =>
     isEditorEgate(node) ? (
-      <DescribeEGate
-        egate={node}        
-        setDialog={setDialog}
-      />
+      <DescribeEGate egate={node} setDialog={setDialog} />
     ) : (
       <></>
     ),
   [DataType.APPROVAL]: ({
-    node,    
+    node,
     getRefById,
     getRegistryById,
     setDialog = () => alert('Not implemeted'),
   }) =>
     isEditorApproval(node) ? (
       <DescribeApproval
-        app={node}        
+        app={node}
         getRefById={getRefById}
         getRegistryById={getRegistryById}
         getRoleById={node.getRoleById}
@@ -191,8 +181,8 @@ const NODE_DETAIL_VIEWS: Record<
     ) : (
       <></>
     ),
-  [DataType.PROCESS]: ({ 
-    node,    
+  [DataType.PROCESS]: ({
+    node,
     getProvisionById,
     getRefById,
     setDialog = () => alert('Not implemeted'),
@@ -202,7 +192,7 @@ const NODE_DETAIL_VIEWS: Record<
       <ProcessQuickEdit
         process={node}
         getProvisionById={getProvisionById}
-        getRefById={getRefById}        
+        getRefById={getRefById}
         setDialog={setDialog}
         onSubprocessClick={onSubprocessClick}
         {...node}
@@ -214,11 +204,11 @@ const NODE_DETAIL_VIEWS: Record<
 
 export const Describe: React.FC<{
   node: EdtiorNodeWithInfoCallback;
-  model: EditorModel;  
+  model: EditorModel;
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,    
+    id: string
   ) => void;
   onSubprocessClick: (pid: string) => void;
 }> = function ({ node, model, setDialog, onSubprocessClick }) {
@@ -241,7 +231,7 @@ export const Describe: React.FC<{
   const View = NODE_DETAIL_VIEWS[node.datatype as SelectableNodeTypes];
   return (
     <View
-      node={node}      
+      node={node}
       getRefById={getRefById}
       getRegistryById={getRegistryById}
       getDCById={getDCById}
@@ -255,27 +245,13 @@ export const Describe: React.FC<{
 export const RemoveButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
-  return (
-    <Button
-      small
-      intent="danger"
-      icon="cross"
-      onClick={callback}
-    />
-  );
+  return <Button small intent="danger" icon="cross" onClick={callback} />;
 };
 
 export const EditButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
-  return (
-    <Button
-      small
-      icon="edit"
-      text="Edit"
-      onClick={callback}
-    />
-  );
+  return <Button small icon="edit" text="Edit" onClick={callback} />;
 };
 
 const ApprovalRecordList: React.FC<{
@@ -328,9 +304,8 @@ export const ReferenceList: React.FC<{
 
 const AttributeList: React.FC<{
   attributes: Record<string, MMELDataAttribute>;
-  dcid: string;
   getRefById: (id: string) => MMELReference | null;
-}> = function ({ attributes, dcid, getRefById }) {
+}> = function ({ attributes, getRefById }) {
   return (
     <>
       {Object.keys(attributes).length > 0 ? (
@@ -403,11 +378,11 @@ const DescribeStart: React.FC = function () {
 };
 
 const DescribeEnd: React.FC<{
-  end: EditorEndEvent & NodeCallBack;  
+  end: EditorEndEvent & NodeCallBack;
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,    
+    id: string
   ) => void;
 }> = function ({ end, setDialog }): JSX.Element {
   return (
@@ -415,11 +390,7 @@ const DescribeEnd: React.FC<{
       {end.modelType === ModelType.EDIT && (
         <RemoveButton
           callback={() =>
-            setDialog(
-              DataType.ENDEVENT,
-              EditAction.DELETE,
-              end.id,              
-            )
+            setDialog(DataType.ENDEVENT, EditAction.DELETE, end.id)
           }
         />
       )}
@@ -432,19 +403,13 @@ const DescribeApproval: React.FC<{
   app: EditorApproval & NodeCallBack;
   getRoleById: (id: string) => MMELRole | null;
   getRefById: (id: string) => MMELReference | null;
-  getRegistryById: (id: string) => EditorRegistry | null;  
+  getRegistryById: (id: string) => EditorRegistry | null;
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,    
+    id: string
   ) => void;
-}> = function ({
-  app,
-  getRoleById,
-  getRefById,
-  getRegistryById,  
-  setDialog,
-}) {
+}> = function ({ app, getRoleById, getRefById, getRegistryById, setDialog }) {
   const regs: EditorRegistry[] = [];
   app.records.forEach(r => {
     const ret = getRegistryById(r);
@@ -455,47 +420,28 @@ const DescribeApproval: React.FC<{
   return (
     <>
       {app.modelType === ModelType.EDIT && (
-        <ButtonGroup css={css`margin-bottom: 10px;`}>
+        <ButtonGroup
+          css={css`
+            margin-bottom: 10px;
+          `}
+        >
           <EditButton
             callback={() =>
-              setDialog(
-                DataType.APPROVAL,
-                EditAction.EDIT,
-                app.id,                
-              )
+              setDialog(DataType.APPROVAL, EditAction.EDIT, app.id)
             }
           />
           <RemoveButton
             callback={() =>
-              setDialog(
-                DataType.APPROVAL,
-                EditAction.DELETE,
-                app.id,                
-              )
+              setDialog(DataType.APPROVAL, EditAction.DELETE, app.id)
             }
           />
         </ButtonGroup>
       )}
-      <DescriptionItem
-        label="Approval"
-        value={app.id}
-      />
-      <DescriptionItem
-        label="Name"
-        value={app.name}
-      />
-      <ActorDescription
-        role={getRoleById(app.actor)}
-        label="Actor"
-      />
-      <ActorDescription
-        role={getRoleById(app.approver)}
-        label="Approver"
-      />
-      <NonEmptyFieldDescription
-        label="Modality"
-        value={app.modality}
-      />
+      <DescriptionItem label="Approval" value={app.id} />
+      <DescriptionItem label="Name" value={app.name} />
+      <ActorDescription role={getRoleById(app.actor)} label="Actor" />
+      <ActorDescription role={getRoleById(app.approver)} label="Approver" />
+      <NonEmptyFieldDescription label="Modality" value={app.modality} />
       <ApprovalRecordList regs={regs} />
       <ReferenceList refs={app.ref} getRefById={getRefById} />
     </>
@@ -503,11 +449,11 @@ const DescribeApproval: React.FC<{
 };
 
 const DescribeEGate: React.FC<{
-  egate: EditorEGate & NodeCallBack;  
+  egate: EditorEGate & NodeCallBack;
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,    
+    id: string
   ) => void;
 }> = function ({ egate, setDialog }) {
   return (
@@ -516,42 +462,28 @@ const DescribeEGate: React.FC<{
         <ButtonGroup>
           <EditButton
             callback={() =>
-              setDialog(
-                DataType.EGATE,
-                EditAction.EDIT,
-                egate.id,                
-              )
+              setDialog(DataType.EGATE, EditAction.EDIT, egate.id)
             }
           />
           <RemoveButton
             callback={() =>
-              setDialog(
-                DataType.EGATE,
-                EditAction.DELETE,
-                egate.id,                
-              )
+              setDialog(DataType.EGATE, EditAction.DELETE, egate.id)
             }
           />
         </ButtonGroup>
       )}
-      <DescriptionItem
-        label="Exclusive Gateway"
-        value={egate.id}
-      />
-      <DescriptionItem
-        label="Contents"
-        value={egate.label}
-      />
+      <DescriptionItem label="Exclusive Gateway" value={egate.id} />
+      <DescriptionItem label="Contents" value={egate.label} />
     </>
   );
 };
 
 const DescribeSignalCatch: React.FC<{
-  scEvent: EditorSignalEvent & NodeCallBack;  
+  scEvent: EditorSignalEvent & NodeCallBack;
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,    
+    id: string
   ) => void;
 }> = function ({ scEvent, setDialog }) {
   return (
@@ -560,11 +492,7 @@ const DescribeSignalCatch: React.FC<{
         <ButtonGroup>
           <EditButton
             callback={() =>
-              setDialog(
-                DataType.SIGNALCATCHEVENT,
-                EditAction.EDIT,
-                scEvent.id,                
-              )
+              setDialog(DataType.SIGNALCATCHEVENT, EditAction.EDIT, scEvent.id)
             }
           />
           <RemoveButton
@@ -572,30 +500,24 @@ const DescribeSignalCatch: React.FC<{
               setDialog(
                 DataType.SIGNALCATCHEVENT,
                 EditAction.DELETE,
-                scEvent.id,                
+                scEvent.id
               )
             }
           />
         </ButtonGroup>
       )}
-      <DescriptionItem
-        label="Signal Catch Event"
-        value={scEvent.id}
-      />
-      <DescriptionItem
-        label="Signal"
-        value={scEvent.signal}
-      />
+      <DescriptionItem label="Signal Catch Event" value={scEvent.id} />
+      <DescriptionItem label="Signal" value={scEvent.signal} />
     </>
   );
 };
 
 const DescribeTimer: React.FC<{
-  timer: EditorTimerEvent & NodeCallBack;  
+  timer: EditorTimerEvent & NodeCallBack;
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,    
+    id: string
   ) => void;
 }> = function ({ timer, setDialog }) {
   return (
@@ -604,36 +526,19 @@ const DescribeTimer: React.FC<{
         <ButtonGroup>
           <EditButton
             callback={() =>
-              setDialog(
-                DataType.TIMEREVENT,
-                EditAction.EDIT,
-                timer.id,                
-              )
+              setDialog(DataType.TIMEREVENT, EditAction.EDIT, timer.id)
             }
           />
           <RemoveButton
             callback={() =>
-              setDialog(
-                DataType.TIMEREVENT,
-                EditAction.DELETE,
-                timer.id,
-              )
+              setDialog(DataType.TIMEREVENT, EditAction.DELETE, timer.id)
             }
           />
         </ButtonGroup>
       )}
-      <DescriptionItem
-        label="Timer Event"
-        value={timer.id}
-      />
-      <NonEmptyFieldDescription
-        label="Type"
-        value={timer.modelType}
-      />
-      <NonEmptyFieldDescription
-        label="Parameter"
-        value={timer.para}
-      />
+      <DescriptionItem label="Timer Event" value={timer.id} />
+      <NonEmptyFieldDescription label="Type" value={timer.modelType} />
+      <NonEmptyFieldDescription label="Parameter" value={timer.para} />
     </>
   );
 };
@@ -646,10 +551,7 @@ const DescribeRegistry: React.FC<{
   const dc = getDataClassById(reg.data);
   return (
     <>
-      <DescriptionItem
-        label="Title"
-        value={reg.title}
-      />
+      <DescriptionItem label="Title" value={reg.title} />
       {dc !== null && <DescribeDC dc={dc} getRefById={getRefById} />}
     </>
   );
@@ -661,11 +563,7 @@ const DescribeDC: React.FC<{
 }> = function ({ dc, getRefById }) {
   return (
     <>
-      <AttributeList
-        attributes={dc.attributes}
-        dcid={dc.id}
-        getRefById={getRefById}
-      />
+      <AttributeList attributes={dc.attributes} getRefById={getRefById} />
     </>
   );
 };
@@ -680,16 +578,8 @@ const DescribeAttribute: React.FC<{
   }
   return (
     <>
-      <DescriptionItem
-        css={css}
-        label="Attribute ID"
-        value={att.id}
-      />
-      <NonEmptyFieldDescription
-        css={css}
-        label="Type"
-        value={att.type}
-      />
+      <DescriptionItem css={css} label="Attribute ID" value={att.id} />
+      <NonEmptyFieldDescription css={css} label="Type" value={att.type} />
       <NonEmptyFieldDescription
         css={css}
         label="Cardinality"

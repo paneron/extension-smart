@@ -128,9 +128,9 @@ export const ProcessBox: Record<
   React.FC<{
     content: string;
     pid: string;
-    style: CSSProperties;    
+    style: CSSProperties;
     setMapping?: (fromid: string, toid: string) => void;
-    uiref?: RefObject<HTMLDivElement>
+    uiref?: RefObject<HTMLDivElement>;
   }>
 > = {
   [ModelType.EDIT]: ({ content }) => (
@@ -146,13 +146,7 @@ export const ProcessBox: Record<
       <div>{content}</div>
     </InternalProcessBox>
   ),
-  [ModelType.REF]: ({    
-    content,
-    pid,
-    style,
-    setMapping = () => {},
-    uiref
-  }) => (
+  [ModelType.REF]: ({ content, pid, style, setMapping = () => {}, uiref }) => (
     <InternalProcessBox
       ref={uiref}
       style={style}
@@ -168,7 +162,7 @@ function onDragStart(event: React.DragEvent<any>, fromid: string): void {
 }
 
 function onDrop(
-  event: React.DragEvent<any>,  
+  event: React.DragEvent<any>,
   toid: string,
   setMapping: (fromid: string, toid: string) => void
 ): void {

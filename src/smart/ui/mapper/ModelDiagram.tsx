@@ -67,7 +67,7 @@ const ModelDiagram: React.FC<{
   mapResult = {},
   onModelChanged,
   setSelected,
-  onMove
+  onMove,
 }) => {
   const { logger, useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
@@ -81,10 +81,10 @@ const ModelDiagram: React.FC<{
     []
   );
 
-  function setSelectedId(id:string) {
+  function setSelectedId(id: string) {
     setSelected({
       modelType: modelProps.modelType,
-      selected: id
+      selected: id,
     });
   }
 
@@ -190,7 +190,10 @@ const ModelDiagram: React.FC<{
           key: 'selected-node',
           title: 'Selected node',
           content: (
-            <SelectedNodeDescription model={modelProps.modelWrapper.model} />
+            <SelectedNodeDescription
+              model={modelProps.modelWrapper.model}
+              pageid={modelProps.modelWrapper.page}
+            />
           ),
         },
       ]}
@@ -232,7 +235,7 @@ const ModelDiagram: React.FC<{
             snapGrid={[10, 10]}
             nodeTypes={NodeTypes}
             edgeTypes={EdgeTypes}
-            nodesDraggable={false}            
+            nodesDraggable={false}
           ></ReactFlow>
           {viewOption.legVisible && (
             <MappingLegendPane

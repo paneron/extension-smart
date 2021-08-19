@@ -20,7 +20,7 @@ const EditSignalEventPage: React.FC<{
   setModel: (m: EditorModel) => void;
   id: string;
   closeDialog: () => void;
-}> = function ({ modelwrapper, setModel, id, closeDialog }) {  
+}> = function ({ modelwrapper, setModel, id, closeDialog }) {
   const model = modelwrapper.model;
   const scEvent = model.elements[id] as EditorSignalEvent;
 
@@ -30,7 +30,7 @@ const EditSignalEventPage: React.FC<{
 
   function onUpdateClick() {
     const updated = save(id, editing, modelwrapper.page, model);
-    if (updated !== null) {      
+    if (updated !== null) {
       setModel({ ...updated });
       closeDialog();
     }

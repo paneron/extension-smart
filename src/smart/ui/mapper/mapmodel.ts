@@ -1,5 +1,10 @@
 import React from 'react';
-import { EditorModel, isEditorApproval, isEditorProcess, ModelType } from '../../model/editormodel';
+import {
+  EditorModel,
+  isEditorApproval,
+  isEditorProcess,
+  ModelType,
+} from '../../model/editormodel';
 
 // Mappingtype[fromid][toid] = MappingMeta
 export type MappingType = Record<string, Record<string, MappingMeta>>;

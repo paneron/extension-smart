@@ -25,7 +25,7 @@ const EditEGatePage: React.FC<{
   setModel: (m: EditorModel) => void;
   id: string;
   closeDialog: () => void;
-}> = function ({ modelwrapper, setModel, id, closeDialog }) {  
+}> = function ({ modelwrapper, setModel, id, closeDialog }) {
   const model = modelwrapper.model;
   const page = model.pages[modelwrapper.page];
 
@@ -39,7 +39,7 @@ const EditEGatePage: React.FC<{
 
   function onUpdateClick() {
     const updated = save(id, editing, modelwrapper.page, model, edges);
-    if (updated !== null) {      
+    if (updated !== null) {
       setModel({ ...updated });
       closeDialog();
     }

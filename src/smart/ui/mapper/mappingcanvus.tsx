@@ -4,13 +4,13 @@
 import { jsx } from '@emotion/react';
 import React from 'react';
 import styled from '@emotion/styled';
-import { EdgeText } from 'react-flow-renderer'
+import { EdgeText } from 'react-flow-renderer';
 import { MapEdgeResult } from './MappingCalculator';
 
 const MappingCanvus: React.FC<{
   mapEdges: MapEdgeResult[];
-  onMappingEdit: (from:string, to:string) => void;
-}> = function ({ mapEdges, onMappingEdit }) {  
+  onMappingEdit: (from: string, to: string) => void;
+}> = function ({ mapEdges, onMappingEdit }) {
   return (
     <Canvus>
       <svg width="100%" height="99%">
@@ -28,15 +28,12 @@ const MappingCanvus: React.FC<{
             <path d="M 0 0 L 10 5 L 0 10 z" fill="black" />
           </marker>
         </defs>
-        {mapEdges.map(r => 
-          <MappingEdge 
-            {...r}
-            onMappingEdit={onMappingEdit}
-          />
-        )}
+        {mapEdges.map(r => (
+          <MappingEdge {...r} onMappingEdit={onMappingEdit} />
+        ))}
       </svg>
     </Canvus>
-  );    
+  );
 };
 
 const Canvus = styled.div`
@@ -49,20 +46,14 @@ const Canvus = styled.div`
   pointer-events: none;
 `;
 
-const MappingEdge: React.FC<MapEdgeResult & {
-  onMappingEdit: (from:string, to:string) => void;
-}> = function ({
-  fromref,
-  toref,
-  fromPos,
-  toPos,
-  fromid,
-  toid,
-  onMappingEdit
-}) {
-  if (fromPos === undefined || toPos == undefined) {
+const MappingEdge: React.FC<
+  MapEdgeResult & {
+    onMappingEdit: (from: string, to: string) => void;
+  }
+> = function ({ fromref, toref, fromPos, toPos, fromid, toid, onMappingEdit }) {
+  if (fromPos === undefined || toPos === undefined) {
     if (fromref.current === null || toref.current === null) {
-      return <></>
+      return <></>;
     }
     fromPos = fromref.current.getBoundingClientRect();
     toPos = toref.current.getBoundingClientRect();
@@ -71,11 +62,11 @@ const MappingEdge: React.FC<MapEdgeResult & {
   const fy = fromPos.y + fromPos.height / 2;
   const tx = toPos.x - 5;
   const ty = toPos.y + toPos.height / 2;
-  const cx = (fx + tx) / 2
-  const cy = (fy + ty) / 2
+  const cx = (fx + tx) / 2;
+  const cy = (fy + ty) / 2;
   return (
     <>
-      <path 
+      <path
         key={'ui#mapline#' + fromid + '#' + toid}
         d={'M' + fx + ',' + fy + ' L' + tx + ',' + ty}
         strokeWidth="1"
@@ -83,44 +74,44 @@ const MappingEdge: React.FC<MapEdgeResult & {
         fill="#f00"
         markerEnd="url(#triangle)"
       />
-      <MappingEdgeRegion 
+      <MappingEdgeRegion
         key={'ui#mapping#removebutton#' + fromid + '#' + toid}
         x={cx}
-        y={cy}          
+        y={cy}
         source={fromid}
         target={toid}
         onMappingEdit={onMappingEdit}
       />
     </>
   );
-}
+};
 
 const MappingEdgeRegion: React.FC<{
-  x:number,
-  y:number,
-  source:string,
-  target:string,
-  onMappingEdit: (from:string, to:string) => void;  
+  x: number;
+  y: number;
+  source: string;
+  target: string;
+  onMappingEdit: (from: string, to: string) => void;
 }> = function ({ x, y, source, target, onMappingEdit }) {
-  return (    
+  return (
     <EdgeText
       x={x}
       y={y}
-      label='✎'
+      label="✎"
       labelStyle={{
         display: 'block',
         margin: 'auto',
-        fontSize: '16px'
+        fontSize: '16px',
       }}
       labelBgStyle={{
-          width: '20px',
-          height: '20px',        
+        width: '20px',
+        height: '20px',
       }}
       labelBgBorderRadius={10}
       labelBgPadding={[3, 1]}
       onClick={() => onMappingEdit(source, target)}
-    />          
-  )
-}
+    />
+  );
+};
 
 export default MappingCanvus;

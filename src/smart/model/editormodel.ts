@@ -65,7 +65,7 @@ export type EditorProcess = MMELProcess & EditorNode;
 export interface EditorNodeChild extends EditorBaseObjectType {
   added: boolean;
   pages: Set<string>;
-  uiref?: RefObject<HTMLDivElement>
+  uiref?: RefObject<HTMLDivElement>;
 }
 
 export interface EditorDataClassReference extends EditorBaseObjectType {

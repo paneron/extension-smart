@@ -27,13 +27,13 @@ export type EdtiorNodeWithInfoCallback = EditorNode & NodeCallBack;
 
 export interface NodeCallBack {
   modelType: ModelType;
-  style?: CSSProperties;  
+  style?: CSSProperties;
   onProcessClick: (pageid: string, processid: string) => void;
   getRoleById: (id: string) => MMELRole | null;
   setMapping: (fromid: string, toid: string) => void;
   getMapStyleById: (id: string) => CSSProperties;
-  setSelectedId?: (id:string) => void;
-  hasMapping?: (id:string) => boolean;
+  setSelectedId?: (id: string) => void;
+  hasMapping?: (id: string) => boolean;
 }
 
 export interface EdgePackage {
@@ -122,9 +122,9 @@ export function getEditorNodeCallBack(props: {
   model: EditorModel;
   onProcessClick: (pageid: string, processid: string) => void;
   setMapping?: (fromid: string, toid: string) => void;
-  getMapStyleById: (id: string) => CSSProperties;  
+  getMapStyleById: (id: string) => CSSProperties;
   setSelectedId?: (id: string) => void;
-  hasMapping?: (id:string) => boolean;
+  hasMapping?: (id: string) => boolean;
 }): NodeCallBack {
   const {
     type,
@@ -133,7 +133,7 @@ export function getEditorNodeCallBack(props: {
     setMapping = () => {},
     getMapStyleById = () => ({}),
     setSelectedId,
-    hasMapping
+    hasMapping,
   } = props;
 
   function getRoleById(id: string): MMELRole | null {
@@ -141,12 +141,12 @@ export function getEditorNodeCallBack(props: {
   }
 
   return {
-    modelType: type,    
+    modelType: type,
     getRoleById: getRoleById,
     onProcessClick: onProcessClick,
     setMapping: setMapping,
     getMapStyleById: getMapStyleById,
     setSelectedId: setSelectedId,
-    hasMapping: hasMapping
+    hasMapping: hasMapping,
   };
 }

@@ -5,7 +5,12 @@ import { jsx, css } from '@emotion/react';
 import React, { useContext, useState } from 'react';
 
 import ModelDiagram from './mapper/ModelDiagram';
-import { EditorApproval, EditorModel, EditorProcess, ModelType } from '../model/editormodel';
+import {
+  EditorApproval,
+  EditorModel,
+  EditorProcess,
+  ModelType,
+} from '../model/editormodel';
 import {
   createMapProfile,
   createNewMapSet,
@@ -15,7 +20,13 @@ import {
   MapSet,
 } from './mapper/mapmodel';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
-import { Button, ControlGroup, Dialog } from '@blueprintjs/core';
+import {
+  Button,
+  ControlGroup,
+  Dialog,
+  HotkeyConfig,
+  HotkeysTarget2,
+} from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import MapperFileMenu from './menu/mapperfile';
 import { createPageHistory } from '../model/history';
@@ -26,7 +37,13 @@ import {
 } from '../model/state';
 import { createNewEditorModel } from '../utils/EditorFactory';
 import { createEditorModelWrapper } from '../model/modelwrapper';
-import { calculateMapping, MapEdgeResult, MapResultType, updateMapEdges, updatePosMapEdges } from './mapper/MappingCalculator';
+import {
+  calculateMapping,
+  MapEdgeResult,
+  MapResultType,
+  updateMapEdges,
+  updatePosMapEdges,
+} from './mapper/MappingCalculator';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { Logger } from '../utils/commonfunctions';
 import MappingCanvus from './mapper/mappingCanvus';
@@ -41,7 +58,7 @@ const ModelMapper: React.FC<{
   isVisible: boolean;
   className?: string;
 }> = ({ isVisible, className }) => {
-  const { logger } = useContext(DatasetContext);  
+  const { logger } = useContext(DatasetContext);
 
   Logger.logger = logger!;
 
@@ -66,11 +83,11 @@ const ModelMapper: React.FC<{
   });
   const [mapResult, setMapResult] = useState<MapResultType>({});
 
-  const [mapEdges, setMapEdges] = useState<MapEdgeResult[]>([])
+  const [mapEdges, setMapEdges] = useState<MapEdgeResult[]>([]);
 
   const [editMappingProps, setEditMProps] = useState<editMPropsInterface>({
     from: '',
-    to: ''
+    to: '',
   });
 
   const refmodel = referenceProps.modelWrapper.model;
@@ -90,20 +107,32 @@ const ModelMapper: React.FC<{
       id: mapProfile.id,
       mapSet: { ...mapProfile.mapSet, [ms.id]: ms },
     };
-    setMapProfile(newProfile);    
+    setMapProfile(newProfile);
     updateMapStyle({ mp: newProfile });
-    updateMapEdges(referenceProps.modelWrapper, implementProps.modelWrapper, newProfile, selected, setMapEdges);
+    updateMapEdges(
+      referenceProps.modelWrapper,
+      implementProps.modelWrapper,
+      newProfile,
+      selected,
+      setMapEdges
+    );
   }
 
   function onRefModelChanged(model: EditorModel) {
     referenceProps.modelWrapper.model = model;
-    updateMapStyle({ model: model });    
+    updateMapStyle({ model: model });
   }
 
   function onMapProfileChanged(mp: MapProfile) {
     setMapProfile(mp);
-    updateMapStyle({ mp: mp });    
-    updateMapEdges(referenceProps.modelWrapper, implementProps.modelWrapper, mp, selected, setMapEdges);
+    updateMapStyle({ mp: mp });
+    updateMapEdges(
+      referenceProps.modelWrapper,
+      implementProps.modelWrapper,
+      mp,
+      selected,
+      setMapEdges
+    );
   }
 
   function onImpModelChanged(model: EditorModel) {
@@ -111,42 +140,50 @@ const ModelMapper: React.FC<{
     implementProps.modelWrapper.model = model;
   }
 
-  function onSelectionChange(select:MapperSelectedInterface) {
+  function onSelectionChange(select: MapperSelectedInterface) {
     setSelected(select);
-    updateMapEdges(referenceProps.modelWrapper, implementProps.modelWrapper, mapProfile, select, setMapEdges);
+    updateMapEdges(
+      referenceProps.modelWrapper,
+      implementProps.modelWrapper,
+      mapProfile,
+      select,
+      setMapEdges
+    );
   }
 
-  function onImpPropsChange(state:MapperState) {
-    setImplProps(state);    
+  function onImpPropsChange(state: MapperState) {
+    setImplProps(state);
   }
 
-  function onRefPropsChange(state:MapperState) {
-    setRefProps(state);    
+  function onRefPropsChange(state: MapperState) {
+    setRefProps(state);
   }
 
   function onMove() {
     setMapEdges(updatePosMapEdges(mapEdges));
   }
 
-  function onMappingEdit(from:string, to:string) {
-    setEditMProps({ from, to })
+  function onMappingEdit(from: string, to: string) {
+    setEditMProps({ from, to });
   }
 
-  function onMappingChange(update:MappingMeta | null) {
+  function onMappingChange(update: MappingMeta | null) {
     if (update !== null) {
-      mapProfile.mapSet[referenceProps.modelWrapper.model.meta.namespace].mappings[editMappingProps.from][editMappingProps.to] = update
-      setMapProfile({...mapProfile});
+      mapProfile.mapSet[
+        referenceProps.modelWrapper.model.meta.namespace
+      ].mappings[editMappingProps.from][editMappingProps.to] = update;
+      setMapProfile({ ...mapProfile });
     }
     setEditMProps({
       from: '',
-      to: ''
-    })
+      to: '',
+    });
   }
 
   if (!isVisible && selected.selected !== '') {
-    setSelected({
+    onSelectionChange({
       modelType: ModelType.IMP,
-      selected: ''
+      selected: '',
     });
   }
 
@@ -179,72 +216,104 @@ const ModelMapper: React.FC<{
     </ControlGroup>
   );
 
-  const mapEditPage = editMappingProps.from !== '' && editMappingProps.to !== '' 
-    ? <MappingEditPage
-        from={implementProps.modelWrapper.model.elements[editMappingProps.from] as EditorProcess | EditorApproval}
-        to={referenceProps.modelWrapper.model.elements[editMappingProps.to] as EditorProcess | EditorApproval}
-        data={mapProfile.mapSet[refns].mappings[editMappingProps.from][editMappingProps.to]}
+  const mapEditPage =
+    editMappingProps.from !== '' && editMappingProps.to !== '' ? (
+      <MappingEditPage
+        from={
+          implementProps.modelWrapper.model.elements[editMappingProps.from] as
+            | EditorProcess
+            | EditorApproval
+        }
+        to={
+          referenceProps.modelWrapper.model.elements[editMappingProps.to] as
+            | EditorProcess
+            | EditorApproval
+        }
+        data={
+          mapProfile.mapSet[refns].mappings[editMappingProps.from][
+            editMappingProps.to
+          ]
+        }
         onChange={onMappingChange}
       />
-    : <></>
+    ) : (
+      <></>
+    );
+
+  const hotkeys: HotkeyConfig[] = [
+    {
+      combo: 'esc',
+      global: true,
+      label: 'cancel view mapping',
+      onKeyDown: () =>
+        onSelectionChange({
+          modelType: ModelType.IMP,
+          selected: '',
+        }),
+    },
+  ];
 
   if (isVisible) {
     return (
-      <Workspace className={className} toolbar={toolbar}>
-        <Dialog
-          isOpen={editMappingProps.from !== ''}
-          title='Edit Mapping'
-          css={css`
-            width: calc(100vw - 60px);
-            min-height: calc(100vh - 60px);
-            padding-bottom: 0;
-            & > :last-child {
-              overflow-y: auto;
-              padding: 20px;
+      <HotkeysTarget2 hotkeys={hotkeys}>
+        <Workspace className={className} toolbar={toolbar}>
+          <Dialog
+            isOpen={editMappingProps.from !== ''}
+            title="Edit Mapping"
+            css={css`
+              width: calc(100vw - 60px);
+              min-height: calc(100vh - 60px);
+              padding-bottom: 0;
+              & > :last-child {
+                overflow-y: auto;
+                padding: 20px;
+              }
+            `}
+            onClose={() =>
+              setEditMProps({
+                from: '',
+                to: '',
+              })
             }
-          `}
-          onClose={() => setEditMProps({
-            from: '',
-            to: ''
-          })}
-          canEscapeKeyClose={false}
-          canOutsideClickClose={false}
-        >
-          {mapEditPage}
-        </Dialog>
-        <div
-          style={{
-            display: 'flex',
-            width: '100%',
-            height: '100%',
-          }}
-        >
-          <ModelDiagram
-            modelProps={implementProps}
-            viewOption={viewOption}
-            setProps={onImpPropsChange}
-            className={className}
-            mapSet={mapSet}
-            onMapSetChanged={onMapSetChanged}
-            onModelChanged={onImpModelChanged}            
-            setSelected={onSelectionChange}
-            onMove={onMove}
-          />
-          <ModelDiagram
-            modelProps={referenceProps}
-            viewOption={viewOption}
-            setProps={onRefPropsChange}
-            className={className}
-            mapSet={mapSet}
-            onMapSetChanged={onMapSetChanged}
-            mapResult={mapResult}
-            onModelChanged={onRefModelChanged}
-            setSelected={onSelectionChange}
-            onMove={onMove}
-          />
-        </div>
-        <MappingCanvus mapEdges={mapEdges} onMappingEdit={onMappingEdit}/>
-      </Workspace>
+            canEscapeKeyClose={false}
+            canOutsideClickClose={false}
+          >
+            {mapEditPage}
+          </Dialog>
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            <ModelDiagram
+              modelProps={implementProps}
+              viewOption={viewOption}
+              setProps={onImpPropsChange}
+              className={className}
+              mapSet={mapSet}
+              onMapSetChanged={onMapSetChanged}
+              onModelChanged={onImpModelChanged}
+              setSelected={onSelectionChange}
+              onMove={onMove}
+            />
+            <ModelDiagram
+              modelProps={referenceProps}
+              viewOption={viewOption}
+              setProps={onRefPropsChange}
+              className={className}
+              mapSet={mapSet}
+              onMapSetChanged={onMapSetChanged}
+              mapResult={mapResult}
+              onModelChanged={onRefModelChanged}
+              setSelected={onSelectionChange}
+              onMove={onMove}
+            />
+          </div>
+          <MappingCanvus mapEdges={mapEdges} onMappingEdit={onMappingEdit} />
+        </Workspace>
+      </HotkeysTarget2>
     );
   }
   return <></>;

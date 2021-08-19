@@ -76,7 +76,7 @@ const EditProcessPage: React.FC<{
   setModel: (m: EditorModel) => void;
   id: string;
   closeDialog: () => void;
-}> = function ({ model, setModel, id, closeDialog }) {  
+}> = function ({ model, setModel, id, closeDialog }) {
   const process = model.elements[id] as EditorProcess;
 
   const [editing, setEditing] = useState<EditorProcess>({ ...process });

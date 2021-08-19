@@ -39,12 +39,12 @@ export interface MapEdgeResult {
   toid: string;
 }
 
-export type MapperModels = ModelType.IMP | ModelType.REF
+export type MapperModels = ModelType.IMP | ModelType.REF;
 
 export const MapViewButtonToolTip: Record<MapperModels, string> = {
   [ModelType.IMP]: 'View outgoing mappings',
   [ModelType.REF]: 'View incoming mappings',
-}
+};
 
 export const MappingResultStyles: Record<MapCoverType, MapStyleInterface> = {
   [MapCoverType.FULL]: { label: 'Fully covered', color: 'lightgreen' },
@@ -61,7 +61,7 @@ export const MappingSourceStyles: Record<MapSourceType, MapStyleInterface> = {
 // MapResultType[nodeid] = MapCoverType
 export type MapResultType = Record<string, MapCoverType>;
 
-export function calculateMapping (
+export function calculateMapping(
   model: EditorModel,
   mapping: MappingType
 ): MapResultType {
@@ -167,7 +167,7 @@ function explorePage(
   return somethingCovered ? MapCoverType.PARTIAL : MapCoverType.NONE;
 }
 
-export function getMapStyleById (
+export function getMapStyleById(
   mapResult: MapResultType,
   id: string
 ): CSSProperties {
@@ -194,38 +194,56 @@ export function getSourceStyleById(mapSet: MapSet, id: string): CSSProperties {
   };
 }
 
-export function filterMappings(map:MapSet, impPage: EditorSubprocess, refPage: EditorSubprocess, selected: MapperSelectedInterface, impElms: Record<string, EditorNode>, refElms: Record<string, EditorNode>):MapEdgeResult[] {
+export function filterMappings(
+  map: MapSet,
+  impPage: EditorSubprocess,
+  refPage: EditorSubprocess,
+  selected: MapperSelectedInterface,
+  impElms: Record<string, EditorNode>,
+  refElms: Record<string, EditorNode>
+): MapEdgeResult[] {
   const id = selected.selected;
-  const result:MapEdgeResult[] = [];
-  if (selected.modelType === ModelType.IMP && impPage.childs[id] !== undefined) {
+  const result: MapEdgeResult[] = [];
+  if (
+    selected.modelType === ModelType.IMP &&
+    impPage.childs[id] !== undefined
+  ) {
     const maps = map.mappings[id];
     if (maps !== undefined) {
       Object.keys(maps).forEach(x => {
         if (refPage.childs[x] !== undefined) {
           result.push(getFilterMapRecord(impElms, refElms, id, x));
         }
-      });    
+      });
     }
-  } else if (selected.modelType === ModelType.REF && refPage.childs[id] !== undefined) {
+  } else if (
+    selected.modelType === ModelType.REF &&
+    refPage.childs[id] !== undefined
+  ) {
     for (const [key, maps] of Object.entries(map.mappings)) {
       if (maps[id] !== undefined) {
         result.push(getFilterMapRecord(impElms, refElms, key, id));
       }
     }
   }
-  return result
+  return result;
 }
 
-function getFilterMapRecord(impElms: Record<string, EditorNode>, refElms: Record<string, EditorNode>, impId: string, refId: string):MapEdgeResult {
+function getFilterMapRecord(
+  impElms: Record<string, EditorNode>,
+  refElms: Record<string, EditorNode>,
+  impId: string,
+  refId: string
+): MapEdgeResult {
   const impNode = impElms[impId];
-  const refNode = refElms[refId];  
+  const refNode = refElms[refId];
   return {
     fromref: impNode.uiref!,
     toref: refNode.uiref!,
     fromPos: impNode.uiref!.current?.getBoundingClientRect(),
     toPos: refNode.uiref!.current?.getBoundingClientRect(),
     fromid: impNode.id,
-    toid: refNode.id
+    toid: refNode.id,
   };
 }
 
@@ -234,15 +252,22 @@ export function updateMapEdges(
   impMW: ModelWrapper,
   mp: MapProfile,
   selected: MapperSelectedInterface,
-  setMapEdges: (me:MapEdgeResult[]) => void
+  setMapEdges: (me: MapEdgeResult[]) => void
 ) {
   if (selected.selected !== '') {
     const mapSet = mp.mapSet[refMW.model.meta.namespace];
-    if (mapSet !== undefined) {      
+    if (mapSet !== undefined) {
       const impPage = impMW.model.pages[impMW.page];
       const refPage = refMW.model.pages[refMW.page];
 
-      const filtered = filterMappings(mapSet, impPage, refPage, selected, impMW.model.elements, refMW.model.elements);
+      const filtered = filterMappings(
+        mapSet,
+        impPage,
+        refPage,
+        selected,
+        impMW.model.elements,
+        refMW.model.elements
+      );
       setMapEdges(filtered);
     }
   } else {
@@ -250,16 +275,19 @@ export function updateMapEdges(
   }
 }
 
-export function updatePosMapEdges(edges:MapEdgeResult[]):MapEdgeResult[] {
+export function updatePosMapEdges(edges: MapEdgeResult[]): MapEdgeResult[] {
   return edges.map(e => ({
     ...e,
     fromPos: e.fromref.current?.getBoundingClientRect(),
-    toPos: e.toref.current?.getBoundingClientRect()
+    toPos: e.toref.current?.getBoundingClientRect(),
   }));
 }
 
-export function isParentMapFullCovered(history: PageHistory, mr: MapResultType):boolean {
-  for (const [index, item] of history.items.entries()) {  
+export function isParentMapFullCovered(
+  history: PageHistory,
+  mr: MapResultType
+): boolean {
+  for (const [index, item] of history.items.entries()) {
     if (index > 0 && mr[item.pathtext] === MapCoverType.FULL) {
       return true;
     }
@@ -267,7 +295,7 @@ export function isParentMapFullCovered(history: PageHistory, mr: MapResultType):
   return false;
 }
 
-export function getMappedList(mapSet:MapSet):Set<string> {
+export function getMappedList(mapSet: MapSet): Set<string> {
   const set = new Set<string>();
   for (const x in mapSet.mappings) {
     const map = mapSet.mappings[x];
@@ -275,5 +303,5 @@ export function getMappedList(mapSet:MapSet):Set<string> {
       set.add(y);
     }
   }
-  return set
+  return set;
 }

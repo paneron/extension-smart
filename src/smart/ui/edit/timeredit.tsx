@@ -20,7 +20,7 @@ const EditTimerPage: React.FC<{
   setModel: (m: EditorModel) => void;
   id: string;
   closeDialog: () => void;
-}> = function ({ modelwrapper, setModel, id, closeDialog }) {  
+}> = function ({ modelwrapper, setModel, id, closeDialog }) {
   const model = modelwrapper.model;
   const timer = model.elements[id] as EditorTimerEvent;
 
@@ -28,7 +28,7 @@ const EditTimerPage: React.FC<{
 
   function onUpdateClick() {
     const updated = save(id, editing, modelwrapper.page, model);
-    if (updated !== null) {      
+    if (updated !== null) {
       setModel({ ...updated });
       closeDialog();
     }

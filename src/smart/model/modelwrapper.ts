@@ -198,7 +198,7 @@ export function getMapperReactFlowElementsFrom(
   setMapping: (fromid: string, toid: string) => void,
   mapSet: MapSet,
   mapResult: MapResultType,
-  setSelectedId: (id:string) => void,
+  setSelectedId: (id: string) => void,
   isParentFull: boolean
 ): Elements {
   const destinationList = getMappedList(mapSet);
@@ -209,17 +209,17 @@ export function getMapperReactFlowElementsFrom(
     setMapping,
     getMapStyleById:
       type === ModelType.REF
-        ? ( isParentFull 
+        ? isParentFull
           ? () => ({
-            backgroundColor: MappingResultStyles[MapCoverType.FULL].color,
-          })
-          : id => getMapStyleById(mapResult, id))
+              backgroundColor: MappingResultStyles[MapCoverType.FULL].color,
+            })
+          : id => getMapStyleById(mapResult, id)
         : id => getSourceStyleById(mapSet, id),
     setSelectedId,
     hasMapping:
       type === ModelType.REF
-      ? id => destinationList.has(id)
-      : id => mapSet.mappings[id] !== undefined
+        ? id => destinationList.has(id)
+        : id => mapSet.mappings[id] !== undefined,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }

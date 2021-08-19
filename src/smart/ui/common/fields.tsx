@@ -153,10 +153,10 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
   const reflist: RefObject<HTMLSelectElement> = React.createRef();
 
   const [filter, setFilter] = useState('');
-  
+
   const smallfilter = filter.toLowerCase();
-  const elms:string[] = [];  
-  const options:string[] = [];
+  const elms: string[] = [];
+  const options: string[] = [];
 
   for (const x of f.values) {
     if (x.toLowerCase().indexOf(smallfilter) !== -1) {
@@ -165,7 +165,7 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
   }
   for (const x of f.options) {
     if (x.toLowerCase().indexOf(smallfilter) !== -1 && !f.values.has(x)) {
-      options.push(x);      
+      options.push(x);
     }
   }
 
@@ -185,16 +185,16 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
         </div>
         <div style={column}>
           <Button
-            alignText='left'
-            icon='chevron-left'            
-            text='Add'
-            onClick = {() => f.add(extractOptions(reflist))}
+            alignText="left"
+            icon="chevron-left"
+            text="Add"
+            onClick={() => f.add(extractOptions(reflist))}
           />
           <Button
-            alignText='right'                 
-            rightIcon='chevron-right'
-            text='Remove'
-            onClick = {() => f.remove(extractOptions(mainlist))}
+            alignText="right"
+            rightIcon="chevron-right"
+            text="Remove"
+            onClick={() => f.remove(extractOptions(mainlist))}
           />
         </div>
         <div style={column}>
@@ -223,9 +223,9 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
 
   const [filter, setFilter] = useState('');
 
-  const smallfilter = filter.toLowerCase();    
-  
-  const options:[string, number][] = [];  
+  const smallfilter = filter.toLowerCase();
+
+  const options: [string, number][] = [];
   f.options.forEach((x, index) => {
     if (x.toLowerCase().indexOf(smallfilter) !== -1 && x !== f.value) {
       if (x === '') {
@@ -234,7 +234,7 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
         options.push([x, index]);
       }
     }
-  });  
+  });
 
   function handleOnClick() {
     const selected = extractOption(optionlist);
@@ -258,11 +258,11 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
             }
           }}
         />
-        <Button          
-          icon='double-chevron-left'
-          text='Select'
-          onClick = {() => handleOnClick()}
-        />        
+        <Button
+          icon="double-chevron-left"
+          text="Select"
+          onClick={() => handleOnClick()}
+        />
         <div style={column}>
           <div>
             {' '}
