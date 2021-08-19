@@ -217,8 +217,7 @@ function save(
   provisions: Record<string, MMELProvision>,
   measurements: Record<string, IMeasure>,
   model: EditorModel
-): EditorModel | null {
-  process.provision = new Set(Object.values(provisions).map(p => p.id));
+): EditorModel | null {  
   process.measure = Object.values(measurements).map(m => m.measure);
   const oldProcess = model.elements[oldId] as EditorProcess;
   if (oldId !== process.id) {
@@ -228,25 +227,21 @@ function save(
         const page = model.pages[p];
         updatePageElement(page, oldId, process);
       }
-      model.elements[process.id] = process;
-      model.provisions = updateProvisions(
-        model.provisions,
-        oldProcess.provision,
-        provisions
-      );
+      model.elements[process.id] = process;       
       checkPage(model, oldProcess.page, process);
     } else {
       return null;
     }
   } else {
-    model.elements[oldId] = process;
-    model.provisions = updateProvisions(
-      model.provisions,
-      oldProcess.provision,
-      provisions
-    );
+    model.elements[oldId] = process;    
     checkPage(model, oldProcess.page, process);
   }
+  model.provisions = updateProvisions(
+    model.provisions,
+    oldProcess.provision,
+    provisions
+  );
+  process.provision = new Set(Object.values(provisions).map(p => p.id));     
   return model;
 }
 

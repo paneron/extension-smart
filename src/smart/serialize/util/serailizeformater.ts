@@ -323,7 +323,7 @@ export function toProcessModel(process: MMELProcess): string {
   }
   if (process.provision.size > 0) {
     out += '  validate_provision {\n';
-    for (const r in process.provision) {
+    for (const r of process.provision) {
       out += '    ' + r + '\n';
     }
     out += '  }\n';
