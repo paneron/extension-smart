@@ -1,6 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
 import { NormalTextField } from '../common/fields';
@@ -10,7 +11,7 @@ const MetaEditPage: React.FC<{
   setMetadata: (meta: MMELMetadata) => void;
 }> = ({ meta, setMetadata }) => {
   return (
-    <div>
+    <FormGroup>
       <NormalTextField
         key="field#modelschema"
         text="Data Model Schema"
@@ -51,7 +52,7 @@ const MetaEditPage: React.FC<{
           setMetadata({ ...meta, namespace: x.replaceAll(/\s+/g, '') });
         }}
       />
-    </div>
+    </FormGroup>
   );
 };
 

@@ -1,9 +1,9 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
-import { useStoreActions } from 'react-flow-renderer';
 import { EditorModel, EditorSignalEvent } from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
 import {
@@ -20,9 +20,7 @@ const EditSignalEventPage: React.FC<{
   setModel: (m: EditorModel) => void;
   id: string;
   closeDialog: () => void;
-}> = function ({ modelwrapper, setModel, id, closeDialog }) {
-  const setElm = useStoreActions(act => act.setSelectedElements);
-
+}> = function ({ modelwrapper, setModel, id, closeDialog }) {  
   const model = modelwrapper.model;
   const scEvent = model.elements[id] as EditorSignalEvent;
 
@@ -32,15 +30,14 @@ const EditSignalEventPage: React.FC<{
 
   function onUpdateClick() {
     const updated = save(id, editing, modelwrapper.page, model);
-    if (updated !== null) {
-      setElm([]);
+    if (updated !== null) {      
       setModel({ ...updated });
       closeDialog();
     }
   }
 
   return (
-    <>
+    <FormGroup>
       <EditPageButtons
         onUpdateClick={onUpdateClick}
         onCancelClick={closeDialog}
@@ -61,7 +58,7 @@ const EditSignalEventPage: React.FC<{
         editable={true}
         onChange={x => setEditing({ ...editing, signal: x })}
       />
-    </>
+    </FormGroup>
   );
 };
 

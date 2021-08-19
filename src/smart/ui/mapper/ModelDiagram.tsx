@@ -39,6 +39,7 @@ import {
   MapSet,
 } from './mapmodel';
 import {
+  isParentMapFullCovered,
   MappingResultStyles,
   MappingSourceStyles,
   MapResultType,
@@ -80,6 +81,13 @@ const ModelDiagram: React.FC<{
     []
   );
 
+  function setSelectedId(id:string) {
+    setSelected({
+      modelType: modelProps.modelType,
+      selected: id
+    });
+  }
+
   function onLoad(params: OnLoadParams) {
     params.fitView();
   }
@@ -91,6 +99,7 @@ const ModelDiagram: React.FC<{
       modelWrapper: mw,
     });
     onModelChanged(mw.model);
+    setSelectedId('');
   }
 
   function onDragOver(event: React.DragEvent<HTMLDivElement>) {
@@ -110,12 +119,14 @@ const ModelDiagram: React.FC<{
     logger?.log('Go to page', pageid);
     addToHistory(modelProps.history, mw.page, processid);
     setProps({ ...modelProps });
+    setSelectedId('');
   }
 
   function drillUp(): void {
     if (modelProps.history.items.length > 0) {
       modelProps.modelWrapper.page = popPage(modelProps.history);
       setProps({ ...modelProps });
+      setSelectedId('');
     }
   }
 
@@ -209,7 +220,9 @@ const ModelDiagram: React.FC<{
               onProcessClick,
               setMapping,
               mapSet,
-              mapResult
+              mapResult,
+              setSelectedId,
+              isParentMapFullCovered(modelProps.history, mapResult)
             )}
             onLoad={onLoad}
             onDragOver={onDragOver}
@@ -219,20 +232,7 @@ const ModelDiagram: React.FC<{
             snapGrid={[10, 10]}
             nodeTypes={NodeTypes}
             edgeTypes={EdgeTypes}
-            nodesDraggable={false}
-            onSelectionChange={elms => {
-              if (elms === null || elms.length === 0) {
-                setSelected({
-                  modelType: modelType,
-                  selected: '',
-                });
-              } else {
-                setSelected({
-                  modelType: modelType,
-                  selected: elms[0].id,
-                });
-              }
-            }}
+            nodesDraggable={false}            
           ></ReactFlow>
           {viewOption.legVisible && (
             <MappingLegendPane

@@ -49,6 +49,19 @@ export interface EditorDiagProps {
   fullscreen: boolean;
 }
 
+export interface IDiagAction {
+  nodeType: DeletableNodeTypes | EditableNodeTypes;
+  model: EditorModel;
+  page: string;
+  id: string;
+  setModelAfterDelete: (model: EditorModel) => void;
+}
+
+export interface editMPropsInterface {
+  from: string;
+  to: string;
+}
+
 export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.SETTING]: {
     title: 'Setting',
@@ -140,14 +153,6 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
     ),
   },
 };
-
-export interface IDiagAction {
-  nodeType: DeletableNodeTypes | EditableNodeTypes;
-  model: EditorModel;
-  page: string;
-  id: string;
-  setModelAfterDelete: (model: EditorModel) => void;
-}
 
 export const SetDiagAction: Record<
   EditAction,

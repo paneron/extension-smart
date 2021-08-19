@@ -1,6 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import {
@@ -82,7 +83,7 @@ const AttributeItem: React.FC<{
     .map(r => r.id);
 
   return (
-    <>
+    <FormGroup>
       <NormalTextField
         key="field#attributeid"
         text="Attribute ID"
@@ -146,7 +147,7 @@ const AttributeItem: React.FC<{
           setObject({ ...att });
         }}
       />
-    </>
+    </FormGroup>
   );
 };
 

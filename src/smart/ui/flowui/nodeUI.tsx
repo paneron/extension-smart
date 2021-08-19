@@ -8,6 +8,7 @@ import {
   EditorProcess,
   EditorSignalEvent,
   isEditorRegistry,
+  ModelType,
 } from '../../model/editormodel';
 import { NodeCallBack } from './container';
 import React from 'react';
@@ -20,6 +21,9 @@ import {
   StartShape,
   TimerShape,
 } from './shapes';
+import { Tooltip2 } from '@blueprintjs/popover2';
+import { Button } from '@blueprintjs/core';
+import { MapViewButtonToolTip } from '../mapper/MappingCalculator';
 
 const handlecss: CSSProperties = {
   borderRadius: '5px!important',
@@ -50,7 +54,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
   const PB = ProcessBox[callback.modelType];
   return (
     <>
-      <Handle type="source" position={Position.Bottom} style={handlecss} />
+      <Handle type='source' position={Position.Bottom} style={handlecss} />
       <PB
         content={process.name === '' ? process.id : process.name}
         pid={process.id}
@@ -58,16 +62,29 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
         setMapping={callback.setMapping}
         uiref={process.uiref}
       />
-      <Handle type="target" position={Position.Top} style={handlecss} />
+      <Handle type='target' position={Position.Top} style={handlecss} />
       {process.page !== '' && (
-        <MyButton
-          key={process.id + '#subprocessbutton'}
-          onClick={() => callback.onProcessClick(process.page, process.id)}
-        >
-          {' '}
-          +
-        </MyButton>
+        <div style={{
+          position: 'fixed',
+          right: '-10px',
+          top: '-10px',
+        }}>
+          <Tooltip2 content='View subprocess' position='top'>
+            <MyButton
+              key={process.id + '#subprocessbutton'}
+              onClick={() => callback.onProcessClick(process.page, process.id)}            
+            >
+              {' '}
+              +
+            </MyButton>
+          </Tooltip2>
+        </div>
       )}
+      <ViewMappingbutton
+        modelType={callback.modelType}
+        id={process.id}
+        setSelectedId={callback.setSelectedId!}
+      />      
       {actor !== null && (
         <FirstLabel key={process.id + '#ActorLabel'}>
           {actorIcon}
@@ -95,6 +112,11 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
         uiref={approval.uiref}
       />
       <Handle type="target" position={Position.Top} style={handlecss} />
+      <ViewMappingbutton
+        modelType={callback.modelType}
+        id={approval.id}
+        setSelectedId={callback.setSelectedId!}
+      />
       {actor !== null ? (
         approver !== null ? (
           <>
@@ -184,6 +206,35 @@ export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
   );
 };
 
+const ViewMappingbutton: React.FC<{
+  modelType: ModelType;
+  id: string;
+  setSelectedId: (id:string) => void
+}> = function ({
+  modelType,
+  id,
+  setSelectedId
+}) {
+  if (modelType == ModelType.IMP || modelType === ModelType.REF) {
+    return (      
+      <div style={{
+        position: 'fixed',
+        left: '-10px',
+        top: '-10px',
+      }}>
+        <Tooltip2 content={MapViewButtonToolTip[modelType]} position='top'>
+          <Button
+            key={id + '#viewmapbutton'}
+            icon='link'
+            onClick={() => setSelectedId!(id)}
+          />            
+        </Tooltip2>
+      </div>      
+    );
+  }  
+  return <></>
+}
+
 const ShortLabel = styled.div`
   position: absolute;
   left: 0px;
@@ -202,10 +253,7 @@ const LongLabel = styled.div`
   font-size: 10px;
 `;
 
-const MyButton = styled.button`
-  position: fixed;
-  right: -10px;
-  top: -10px;
+const MyButton = styled.button`  
   font-size: 14px;
   color: green;
 `;

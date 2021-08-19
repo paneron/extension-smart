@@ -1,4 +1,4 @@
-import { Button } from '@blueprintjs/core';
+import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
 import { MMELObject } from '../../serialize/interface/baseinterface';
@@ -25,7 +25,7 @@ export const MeasurementItem: React.FC<{
   const types = Object.values(model.vars).map(v => v.id);
 
   return (
-    <>
+    <FormGroup>
       <ReferenceSelector
         key="field#measurementText"
         text="Measurement validation"
@@ -49,7 +49,7 @@ export const MeasurementItem: React.FC<{
         text="Expression Validator"
         onClick={() => validCheck(measure.measure, model.vars)}
       />
-    </>
+    </FormGroup>
   );
 };
 

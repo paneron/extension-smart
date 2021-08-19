@@ -1,6 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import {
@@ -116,7 +117,7 @@ const RoleEditItemPage: React.FC<{
 }> = ({ object, setObject }) => {
   const role = object as MMELRole;
   return (
-    <>
+    <FormGroup>
       <NormalTextField
         key="field#roleid"
         text="Role ID"
@@ -135,7 +136,7 @@ const RoleEditItemPage: React.FC<{
           setObject({ ...role });
         }}
       />
-    </>
+    </FormGroup>
   );
 };
 

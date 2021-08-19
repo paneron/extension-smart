@@ -6,8 +6,7 @@ import React, { CSSProperties } from 'react';
 import {
   useStoreState,
   Elements,
-  isNode,
-  useStoreActions,
+  isNode  
 } from 'react-flow-renderer';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
@@ -54,8 +53,7 @@ export const SelectedNodeDescription: React.FC<{
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,
-    resetSelection: () => void
+    id: string,    
   ) => void;
   onSubprocessClick?: (pid: string) => void;
 }> = function ({
@@ -66,9 +64,7 @@ export const SelectedNodeDescription: React.FC<{
   },
 }) {
   const selected = useStoreState(store => store.selectedElements);
-  const setSelectedElements = useStoreActions(
-    actions => actions.setSelectedElements
-  );
+
   const elm: EdtiorNodeWithInfoCallback | null = getSelectedElement(selected);
 
   function getSelectedElement(
@@ -76,23 +72,19 @@ export const SelectedNodeDescription: React.FC<{
   ): EdtiorNodeWithInfoCallback | null {
     if (selected !== null && selected.length > 0) {
       const s = selected[0];
-      if (isNode(s)) {
-        return s.data as EdtiorNodeWithInfoCallback;
+      const elm = model.elements[s.id];
+      if (isNode(s) && elm !== undefined) {
+        return {...s.data as EdtiorNodeWithInfoCallback, ...model.elements[s.id]};
       }
     }
     return null;
-  }
-
-  function resetSelection() {
-    setSelectedElements([]);
   }
 
   return (
     <div style={{ maxHeight: '70vh' }}>
       {elm !== null ? (
         <Describe
-          node={elm}
-          resetSelection={resetSelection}
+          node={elm}          
           model={model}
           setDialog={setDialog}
           onSubprocessClick={onSubprocessClick}
@@ -107,8 +99,7 @@ export const SelectedNodeDescription: React.FC<{
 const NODE_DETAIL_VIEWS: Record<
   SelectableNodeTypes,
   React.FC<{
-    node: EdtiorNodeWithInfoCallback;
-    resetSelection: () => void;
+    node: EdtiorNodeWithInfoCallback;    
     getRefById: (id: string) => MMELReference | null;
     getRegistryById: (id: string) => EditorRegistry | null;
     getDCById: (id: string) => EditorDataClass | null;
@@ -116,8 +107,7 @@ const NODE_DETAIL_VIEWS: Record<
     setDialog?: (
       nodeType: EditableNodeTypes | DeletableNodeTypes,
       action: EditAction,
-      id: string,
-      resetSelection: () => void
+      id: string,      
     ) => void;
     onSubprocessClick: (pid: string) => void;
   }>
@@ -140,69 +130,59 @@ const NODE_DETAIL_VIEWS: Record<
     ),
   [DataType.STARTEVENT]: () => <DescribeStart />,
   [DataType.ENDEVENT]: ({
-    node,
-    resetSelection,
+    node,    
     setDialog = () => alert('Not implemeted'),
   }) => (
     <DescribeEnd
-      end={node}
-      resetSelection={resetSelection}
+      end={node}      
       setDialog={setDialog}
     />
   ),
   [DataType.TIMEREVENT]: ({
-    node,
-    resetSelection,
+    node,    
     setDialog = () => alert('Not implemeted'),
   }) =>
     isEditorTimerEvent(node) ? (
       <DescribeTimer
-        timer={node}
-        resetSelection={resetSelection}
+        timer={node}        
         setDialog={setDialog}
       />
     ) : (
       <></>
     ),
   [DataType.SIGNALCATCHEVENT]: ({
-    node,
-    resetSelection,
+    node,    
     setDialog = () => alert('Not implemeted'),
   }) =>
     isEditorSignalEvent(node) ? (
       <DescribeSignalCatch
-        scEvent={node}
-        resetSelection={resetSelection}
+        scEvent={node}        
         setDialog={setDialog}
       />
     ) : (
       <></>
     ),
   [DataType.EGATE]: ({
-    node,
-    resetSelection,
+    node,    
     setDialog = () => alert('Not implemeted'),
   }) =>
     isEditorEgate(node) ? (
       <DescribeEGate
-        egate={node}
-        resetSelection={resetSelection}
+        egate={node}        
         setDialog={setDialog}
       />
     ) : (
       <></>
     ),
   [DataType.APPROVAL]: ({
-    node,
-    resetSelection,
+    node,    
     getRefById,
     getRegistryById,
     setDialog = () => alert('Not implemeted'),
   }) =>
     isEditorApproval(node) ? (
       <DescribeApproval
-        app={node}
-        resetSelection={resetSelection}
+        app={node}        
         getRefById={getRefById}
         getRegistryById={getRegistryById}
         getRoleById={node.getRoleById}
@@ -212,8 +192,7 @@ const NODE_DETAIL_VIEWS: Record<
       <></>
     ),
   [DataType.PROCESS]: ({ 
-    node,
-    resetSelection,
+    node,    
     getProvisionById,
     getRefById,
     setDialog = () => alert('Not implemeted'),
@@ -223,8 +202,7 @@ const NODE_DETAIL_VIEWS: Record<
       <ProcessQuickEdit
         process={node}
         getProvisionById={getProvisionById}
-        getRefById={getRefById}
-        resetSelection={resetSelection}
+        getRefById={getRefById}        
         setDialog={setDialog}
         onSubprocessClick={onSubprocessClick}
         {...node}
@@ -236,16 +214,14 @@ const NODE_DETAIL_VIEWS: Record<
 
 export const Describe: React.FC<{
   node: EdtiorNodeWithInfoCallback;
-  model: EditorModel;
-  resetSelection: () => void;
+  model: EditorModel;  
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,
-    resetSelection: () => void
+    id: string,    
   ) => void;
   onSubprocessClick: (pid: string) => void;
-}> = function ({ node, model, resetSelection, setDialog, onSubprocessClick }) {
+}> = function ({ node, model, setDialog, onSubprocessClick }) {
   function getRefById(id: string): MMELReference | null {
     return getEditorRefById(model, id);
   }
@@ -265,8 +241,7 @@ export const Describe: React.FC<{
   const View = NODE_DETAIL_VIEWS[node.datatype as SelectableNodeTypes];
   return (
     <View
-      node={node}
-      resetSelection={resetSelection}
+      node={node}      
       getRefById={getRefById}
       getRegistryById={getRegistryById}
       getDCById={getDCById}
@@ -428,15 +403,13 @@ const DescribeStart: React.FC = function () {
 };
 
 const DescribeEnd: React.FC<{
-  end: EditorEndEvent & NodeCallBack;
-  resetSelection: () => void;
+  end: EditorEndEvent & NodeCallBack;  
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,
-    resetSelection: () => void
+    id: string,    
   ) => void;
-}> = function ({ end, resetSelection, setDialog }): JSX.Element {
+}> = function ({ end, setDialog }): JSX.Element {
   return (
     <>
       {end.modelType === ModelType.EDIT && (
@@ -445,8 +418,7 @@ const DescribeEnd: React.FC<{
             setDialog(
               DataType.ENDEVENT,
               EditAction.DELETE,
-              end.id,
-              resetSelection
+              end.id,              
             )
           }
         />
@@ -460,20 +432,17 @@ const DescribeApproval: React.FC<{
   app: EditorApproval & NodeCallBack;
   getRoleById: (id: string) => MMELRole | null;
   getRefById: (id: string) => MMELReference | null;
-  getRegistryById: (id: string) => EditorRegistry | null;
-  resetSelection: () => void;
+  getRegistryById: (id: string) => EditorRegistry | null;  
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,
-    resetSelection: () => void
+    id: string,    
   ) => void;
 }> = function ({
   app,
   getRoleById,
   getRefById,
-  getRegistryById,
-  resetSelection,
+  getRegistryById,  
   setDialog,
 }) {
   const regs: EditorRegistry[] = [];
@@ -492,8 +461,7 @@ const DescribeApproval: React.FC<{
               setDialog(
                 DataType.APPROVAL,
                 EditAction.EDIT,
-                app.id,
-                resetSelection
+                app.id,                
               )
             }
           />
@@ -502,8 +470,7 @@ const DescribeApproval: React.FC<{
               setDialog(
                 DataType.APPROVAL,
                 EditAction.DELETE,
-                app.id,
-                resetSelection
+                app.id,                
               )
             }
           />
@@ -536,15 +503,13 @@ const DescribeApproval: React.FC<{
 };
 
 const DescribeEGate: React.FC<{
-  egate: EditorEGate & NodeCallBack;
-  resetSelection: () => void;
+  egate: EditorEGate & NodeCallBack;  
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,
-    resetSelection: () => void
+    id: string,    
   ) => void;
-}> = function ({ egate, resetSelection, setDialog }) {
+}> = function ({ egate, setDialog }) {
   return (
     <>
       {egate.modelType === ModelType.EDIT && (
@@ -554,8 +519,7 @@ const DescribeEGate: React.FC<{
               setDialog(
                 DataType.EGATE,
                 EditAction.EDIT,
-                egate.id,
-                resetSelection
+                egate.id,                
               )
             }
           />
@@ -564,8 +528,7 @@ const DescribeEGate: React.FC<{
               setDialog(
                 DataType.EGATE,
                 EditAction.DELETE,
-                egate.id,
-                resetSelection
+                egate.id,                
               )
             }
           />
@@ -584,15 +547,13 @@ const DescribeEGate: React.FC<{
 };
 
 const DescribeSignalCatch: React.FC<{
-  scEvent: EditorSignalEvent & NodeCallBack;
-  resetSelection: () => void;
+  scEvent: EditorSignalEvent & NodeCallBack;  
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,
-    resetSelection: () => void
+    id: string,    
   ) => void;
-}> = function ({ scEvent, resetSelection, setDialog }) {
+}> = function ({ scEvent, setDialog }) {
   return (
     <>
       {scEvent.modelType === ModelType.EDIT && (
@@ -602,8 +563,7 @@ const DescribeSignalCatch: React.FC<{
               setDialog(
                 DataType.SIGNALCATCHEVENT,
                 EditAction.EDIT,
-                scEvent.id,
-                resetSelection
+                scEvent.id,                
               )
             }
           />
@@ -612,8 +572,7 @@ const DescribeSignalCatch: React.FC<{
               setDialog(
                 DataType.SIGNALCATCHEVENT,
                 EditAction.DELETE,
-                scEvent.id,
-                resetSelection
+                scEvent.id,                
               )
             }
           />
@@ -632,15 +591,13 @@ const DescribeSignalCatch: React.FC<{
 };
 
 const DescribeTimer: React.FC<{
-  timer: EditorTimerEvent & NodeCallBack;
-  resetSelection: () => void;
+  timer: EditorTimerEvent & NodeCallBack;  
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,
-    resetSelection: () => void
+    id: string,    
   ) => void;
-}> = function ({ timer, resetSelection, setDialog }) {
+}> = function ({ timer, setDialog }) {
   return (
     <>
       {timer.modelType === ModelType.EDIT && (
@@ -650,8 +607,7 @@ const DescribeTimer: React.FC<{
               setDialog(
                 DataType.TIMEREVENT,
                 EditAction.EDIT,
-                timer.id,
-                resetSelection
+                timer.id,                
               )
             }
           />
@@ -661,7 +617,6 @@ const DescribeTimer: React.FC<{
                 DataType.TIMEREVENT,
                 EditAction.DELETE,
                 timer.id,
-                resetSelection
               )
             }
           />

@@ -121,8 +121,7 @@ const ModelEditor: React.FC<{
   function setDiag(
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
-    id: string,
-    resetSelection: () => void
+    id: string,    
   ) {
     const props: IDiagAction = {
       nodeType: nodeType,
@@ -130,8 +129,7 @@ const ModelEditor: React.FC<{
       page: state.modelWrapper.page,
       id: id,
       setModelAfterDelete: (model: EditorModel) => {
-        setModelAfterDelete(model);
-        resetSelection();
+        setModelAfterDelete(model);        
       },
     };
     saveLayout();
@@ -209,10 +207,10 @@ const ModelEditor: React.FC<{
   }
 
   function onSubprocessClick(pid: string): void {
-    const model = state.modelWrapper.model;
+    const model = {...state.modelWrapper.model};
     const process = model.elements[pid] as EditorProcess;
     process.page = createNewPage(model);
-    setState({ ...state });
+    setState({ ...state, modelWrapper: {...state.modelWrapper, model: model} });
   }
 
   function removeEdge(id: string) {

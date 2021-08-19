@@ -1,3 +1,4 @@
+import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
 import { MMELObject } from '../../serialize/interface/baseinterface';
@@ -27,7 +28,7 @@ export const ProvisonItem: React.FC<{
   const refs = getModelAllRefs(model);
 
   return (
-    <>
+    <FormGroup>
       <NormalTextField
         key="field#provisionText"
         text="Provision Text"
@@ -62,6 +63,6 @@ export const ProvisonItem: React.FC<{
           setObject({ ...provision });
         }}
       />
-    </>
+    </FormGroup>
   );
 };

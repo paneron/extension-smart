@@ -28,8 +28,7 @@ import {
 
 export const ProcessQuickEdit: React.FC<
   NodeCallBack & {
-    process: EditorProcess;
-    resetSelection: () => void;
+    process: EditorProcess;    
     onSubprocessClick: (pid: string) => void;
     getRoleById: (id: string) => MMELRole | null;
     getRefById: (id: string) => MMELReference | null;
@@ -37,8 +36,7 @@ export const ProcessQuickEdit: React.FC<
     setDialog: (
       nodeType: EditableNodeTypes | DeletableNodeTypes,
       action: EditAction,
-      id: string,
-      resetSelection: () => void
+      id: string,      
     ) => void;
   }
 > = ({
@@ -47,8 +45,7 @@ export const ProcessQuickEdit: React.FC<
   getProvisionById,
   getRefById,
   getRoleById,
-  setDialog,
-  resetSelection,
+  setDialog,  
   onSubprocessClick,
 }) => {
   return (
@@ -60,8 +57,7 @@ export const ProcessQuickEdit: React.FC<
               setDialog(
                 DataType.PROCESS,
                 EditAction.EDIT,
-                process.id,
-                resetSelection
+                process.id,                
               )
             }
           />
@@ -74,7 +70,6 @@ export const ProcessQuickEdit: React.FC<
                 DataType.PROCESS,
                 EditAction.DELETE,
                 process.id,
-                resetSelection
               )
             }
           />

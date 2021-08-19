@@ -1,6 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import {
@@ -198,7 +199,7 @@ const RegistryEditItemPage: React.FC<{
 }> = ({ object, model, setObject }) => {
   const reg = object as RegistryCombined;
   return (
-    <>
+    <FormGroup>
       <NormalTextField
         key="field#registryid"
         text="Registry ID"
@@ -226,7 +227,7 @@ const RegistryEditItemPage: React.FC<{
           setObject({ ...reg });
         }}
       />
-    </>
+    </FormGroup>
   );
 };
 

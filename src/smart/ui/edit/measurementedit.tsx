@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Button } from '@blueprintjs/core';
+import { Button, FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
@@ -106,7 +106,7 @@ const MeasureEditItemPage: React.FC<{
 
   const types = Object.values(model.vars).map(v => v.id);
   return (
-    <>
+    <FormGroup>
       <div key="ui#measurement#introtext">
         Measurement types:
         <ul>
@@ -183,7 +183,7 @@ const MeasureEditItemPage: React.FC<{
           setObject({ ...mea });
         }}
       />
-    </>
+    </FormGroup>
   );
 };
 

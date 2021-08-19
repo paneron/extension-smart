@@ -35,6 +35,8 @@ import { fillRDCS } from '../utils/commonfunctions';
 import {
   getMapStyleById,
   getSourceStyleById,
+  MapCoverType,
+  MappingResultStyles,
   MapResultType,
 } from '../ui/mapper/MappingCalculator';
 import { MapSet } from '../ui/mapper/mapmodel';
@@ -194,7 +196,9 @@ export function getMapperReactFlowElementsFrom(
   onProcessClick: (pageid: string, processid: string) => void,
   setMapping: (fromid: string, toid: string) => void,
   mapSet: MapSet,
-  mapResult: MapResultType
+  mapResult: MapResultType,
+  setSelectedId: (id:string) => void,
+  isParentFull: boolean
 ): Elements {
   const callback = getEditorNodeCallBack({
     type,
@@ -203,8 +207,13 @@ export function getMapperReactFlowElementsFrom(
     setMapping,
     getMapStyleById:
       type === ModelType.REF
-        ? id => getMapStyleById(mapResult, id)
+        ? ( isParentFull 
+          ? () => ({
+            backgroundColor: MappingResultStyles[MapCoverType.FULL].color,
+          })
+          : id => getMapStyleById(mapResult, id))
         : id => getSourceStyleById(mapSet, id),
+    setSelectedId
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }

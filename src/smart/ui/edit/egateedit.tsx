@@ -1,10 +1,9 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Button } from '@blueprintjs/core';
+import { Button, FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
-import { useStoreActions } from 'react-flow-renderer';
 import {
   EditorEGate,
   EditorModel,
@@ -26,9 +25,7 @@ const EditEGatePage: React.FC<{
   setModel: (m: EditorModel) => void;
   id: string;
   closeDialog: () => void;
-}> = function ({ modelwrapper, setModel, id, closeDialog }) {
-  const setElm = useStoreActions(act => act.setSelectedElements);
-
+}> = function ({ modelwrapper, setModel, id, closeDialog }) {  
   const model = modelwrapper.model;
   const page = model.pages[modelwrapper.page];
 
@@ -42,15 +39,14 @@ const EditEGatePage: React.FC<{
 
   function onUpdateClick() {
     const updated = save(id, editing, modelwrapper.page, model, edges);
-    if (updated !== null) {
-      setElm([]);
+    if (updated !== null) {      
       setModel({ ...updated });
       closeDialog();
     }
   }
 
   return (
-    <>
+    <FormGroup>
       <EditPageButtons
         onUpdateClick={onUpdateClick}
         onCancelClick={closeDialog}
@@ -78,7 +74,7 @@ const EditEGatePage: React.FC<{
           }}
         />
       ))}
-    </>
+    </FormGroup>
   );
 };
 

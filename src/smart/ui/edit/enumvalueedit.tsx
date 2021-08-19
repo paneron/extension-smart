@@ -1,6 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
@@ -43,7 +44,7 @@ const EnumValueItem: React.FC<{
   const ev = object as MMELEnumValue;
 
   return (
-    <>
+    <FormGroup>
       <NormalTextField
         key="field#valueid"
         text="Enumeration item ID"
@@ -62,7 +63,7 @@ const EnumValueItem: React.FC<{
           setObject({ ...ev });
         }}
       />
-    </>
+    </FormGroup>
   );
 };
 

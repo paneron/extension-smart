@@ -8,6 +8,7 @@ import {
   isEditorProcess,
   ModelType,
 } from '../../model/editormodel';
+import { PageHistory } from '../../model/history';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { MapperSelectedInterface } from '../../model/state';
 import { MappingType, MapProfile, MapSet } from './mapmodel';
@@ -38,6 +39,13 @@ export interface MapEdgeResult {
   toid: string;
 }
 
+export type MapperModels = ModelType.IMP | ModelType.REF
+
+export const MapViewButtonToolTip: Record<MapperModels, string> = {
+  [ModelType.IMP]: 'View outgoing mappings',
+  [ModelType.REF]: 'View incoming mappings',
+}
+
 export const MappingResultStyles: Record<MapCoverType, MapStyleInterface> = {
   [MapCoverType.FULL]: { label: 'Fully covered', color: 'lightgreen' },
   [MapCoverType.PASS]: { label: 'Minimal covered', color: 'lightblue' },
@@ -53,7 +61,7 @@ export const MappingSourceStyles: Record<MapSourceType, MapStyleInterface> = {
 // MapResultType[nodeid] = MapCoverType
 export type MapResultType = Record<string, MapCoverType>;
 
-export function calculateMapping(
+export function calculateMapping (
   model: EditorModel,
   mapping: MappingType
 ): MapResultType {
@@ -159,7 +167,7 @@ function explorePage(
   return somethingCovered ? MapCoverType.PARTIAL : MapCoverType.NONE;
 }
 
-export function getMapStyleById(
+export function getMapStyleById (
   mapResult: MapResultType,
   id: string
 ): CSSProperties {
@@ -237,6 +245,8 @@ export function updateMapEdges(
       const filtered = filterMappings(mapSet, impPage, refPage, selected, impMW.model.elements, refMW.model.elements);
       setMapEdges(filtered);
     }
+  } else {
+    setMapEdges([]);
   }
 }
 
@@ -246,4 +256,13 @@ export function updatePosMapEdges(edges:MapEdgeResult[]):MapEdgeResult[] {
     fromPos: e.fromref.current?.getBoundingClientRect(),
     toPos: e.toref.current?.getBoundingClientRect()
   }));
+}
+
+export function isParentMapFullCovered(history: PageHistory, mr: MapResultType):boolean {
+  for (const [index, item] of history.items.entries()) {  
+    if (index > 0 && mr[item.pathtext] === MapCoverType.FULL) {
+      return true;
+    }
+  }
+  return false;
 }

@@ -1,9 +1,9 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
-import { useStoreActions } from 'react-flow-renderer';
 import { EditorModel, EditorProcess } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELProvision } from '../../serialize/interface/supportinterface';
@@ -76,9 +76,7 @@ const EditProcessPage: React.FC<{
   setModel: (m: EditorModel) => void;
   id: string;
   closeDialog: () => void;
-}> = function ({ model, setModel, id, closeDialog }) {
-  const setElm = useStoreActions(act => act.setSelectedElements);
-
+}> = function ({ model, setModel, id, closeDialog }) {  
   const process = model.elements[id] as EditorProcess;
 
   const [editing, setEditing] = useState<EditorProcess>({ ...process });
@@ -103,14 +101,13 @@ const EditProcessPage: React.FC<{
   function onUpdateClick() {
     const updated = save(id, editing, provisions, measurements, model);
     if (updated !== null) {
-      setElm([]);
       setModel({ ...updated });
       closeDialog();
     }
   }
 
   return (
-    <>
+    <FormGroup>
       <EditPageButtons
         onUpdateClick={onUpdateClick}
         onCancelClick={closeDialog}
@@ -210,7 +207,7 @@ const EditProcessPage: React.FC<{
         size={7}
         requireUniqueId={false}
       />
-    </>
+    </FormGroup>
   );
 };
 

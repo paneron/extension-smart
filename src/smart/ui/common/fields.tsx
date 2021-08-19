@@ -1,7 +1,7 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/react';
-import { FormGroup, IconName, TextArea } from '@blueprintjs/core';
+import { Button, FormGroup, IconName, TextArea } from '@blueprintjs/core';
 import React, { CSSProperties, RefObject, useState } from 'react';
 import { MMELObject } from '../../serialize/interface/baseinterface';
 import { EditorModel } from '../../model/editormodel';
@@ -153,26 +153,19 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
   const reflist: RefObject<HTMLSelectElement> = React.createRef();
 
   const [filter, setFilter] = useState('');
-
-  const elms: Array<JSX.Element> = [];
+  
   const smallfilter = filter.toLowerCase();
+  const elms:string[] = [];  
+  const options:string[] = [];
+
   for (const x of f.values) {
     if (x.toLowerCase().indexOf(smallfilter) !== -1) {
-      elms.push(
-        <option key={'ui#selector#values#' + x} value={x}>
-          {x}
-        </option>
-      );
+      elms.push(x);
     }
   }
-  const options: Array<JSX.Element> = [];
   for (const x of f.options) {
     if (x.toLowerCase().indexOf(smallfilter) !== -1 && !f.values.has(x)) {
-      options.push(
-        <option key={'ui#selector#options#' + x} value={x}>
-          {x}
-        </option>
-      );
+      options.push(x);      
     }
   }
 
@@ -183,17 +176,27 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
         <div style={column}>
           {f.text}
           <select style={list} ref={mainlist} multiple>
-            {' '}
-            {elms}{' '}
+            {elms.map((x, index) => (
+              <option key={'ui#selector#values#' + index} value={x}>
+                {x}
+              </option>
+            ))}
           </select>
         </div>
-        <button onClick={() => f.add(extractOptions(reflist))}>
-          {' '}
-          &lt;- Add
-        </button>
-        <button onClick={() => f.remove(extractOptions(mainlist))}>
-          Remove -&gt;{' '}
-        </button>
+        <div style={column}>
+          <Button
+            alignText='left'
+            icon='chevron-left'            
+            text='Add'
+            onClick = {() => f.add(extractOptions(reflist))}
+          />
+          <Button
+            alignText='right'                 
+            rightIcon='chevron-right'
+            text='Remove'
+            onClick = {() => f.remove(extractOptions(mainlist))}
+          />
+        </div>
         <div style={column}>
           <div>
             {' '}
@@ -201,7 +204,11 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
             <input type="text" onChange={e => setFilter(e.target.value)} />{' '}
           </div>
           <select style={list} ref={reflist} multiple>
-            {options}
+            {options.map((x, index) => (
+              <option key={'ui#selector#options#' + index} value={x}>
+                {x}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -216,8 +223,18 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
 
   const [filter, setFilter] = useState('');
 
-  const smallfilter = filter.toLowerCase();
-  const options: Array<JSX.Element> = [];
+  const smallfilter = filter.toLowerCase();    
+  
+  const options:[string, number][] = [];  
+  f.options.forEach((x, index) => {
+    if (x.toLowerCase().indexOf(smallfilter) !== -1 && x !== f.value) {
+      if (x === '') {
+        options.push(['(Empty - not specified)', index]);
+      } else {
+        options.push([x, index]);
+      }
+    }
+  });  
 
   function handleOnClick() {
     const selected = extractOption(optionlist);
@@ -226,23 +243,6 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
     }
   }
 
-  f.options.forEach((x, index) => {
-    if (x.toLowerCase().indexOf(smallfilter) !== -1 && x !== f.value) {
-      if (x === '') {
-        options.push(
-          <option key={'ui#selector#options#empty'} value={0}>
-            (Empty - not specified)
-          </option>
-        );
-      } else {
-        options.push(
-          <option key={'ui#selector#options#' + x} value={index}>
-            {x}
-          </option>
-        );
-      }
-    }
-  });
   return (
     <fieldset>
       <legend>{f.text}</legend>
@@ -258,7 +258,11 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
             }
           }}
         />
-        <button onClick={() => handleOnClick()}> &lt;- Select </button>
+        <Button          
+          icon='double-chevron-left'
+          text='Select'
+          onClick = {() => handleOnClick()}
+        />        
         <div style={column}>
           <div>
             {' '}
@@ -266,8 +270,11 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
             <input type="text" onChange={e => setFilter(e.target.value)} />{' '}
           </div>
           <select style={list} ref={optionlist} multiple>
-            {' '}
-            {options}{' '}
+            {options.map(([x, index]) => (
+              <option key={'ui#selector#options#' + index} value={index}>
+                {x}
+              </option>
+            ))}
           </select>
         </div>
       </div>

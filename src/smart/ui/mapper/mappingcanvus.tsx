@@ -8,8 +8,9 @@ import { EdgeText } from 'react-flow-renderer'
 import { MapEdgeResult } from './MappingCalculator';
 
 const MappingCanvus: React.FC<{
-  mapEdges: MapEdgeResult[]  
-}> = function ({ mapEdges }) {  
+  mapEdges: MapEdgeResult[];
+  onMappingEdit: (from:string, to:string) => void;
+}> = function ({ mapEdges, onMappingEdit }) {  
   return (
     <Canvus>
       <svg width="100%" height="99%">
@@ -30,6 +31,7 @@ const MappingCanvus: React.FC<{
         {mapEdges.map(r => 
           <MappingEdge 
             {...r}
+            onMappingEdit={onMappingEdit}
           />
         )}
       </svg>
@@ -47,13 +49,16 @@ const Canvus = styled.div`
   pointer-events: none;
 `;
 
-const MappingEdge: React.FC<MapEdgeResult> = function ({
+const MappingEdge: React.FC<MapEdgeResult & {
+  onMappingEdit: (from:string, to:string) => void;
+}> = function ({
   fromref,
   toref,
   fromPos,
   toPos,
   fromid,
-  toid
+  toid,
+  onMappingEdit
 }) {
   if (fromPos === undefined || toPos == undefined) {
     if (fromref.current === null || toref.current === null) {
@@ -78,41 +83,43 @@ const MappingEdge: React.FC<MapEdgeResult> = function ({
         fill="#f00"
         markerEnd="url(#triangle)"
       />
-      <MyDeleteMappingButton 
+      <MappingEdgeRegion 
         key={'ui#mapping#removebutton#' + fromid + '#' + toid}
         x={cx}
         y={cy}          
         source={fromid}
         target={toid}
+        onMappingEdit={onMappingEdit}
       />
     </>
   );
 }
 
-const MyDeleteMappingButton: React.FC<{
+const MappingEdgeRegion: React.FC<{
   x:number,
   y:number,
   source:string,
-  target:string,  
-}> = function ({ x, y, source, target }) {
-  return (
+  target:string,
+  onMappingEdit: (from:string, to:string) => void;  
+}> = function ({ x, y, source, target, onMappingEdit }) {
+  return (    
     <EdgeText
-        x={x}
-        y={y}
-        label="X"
-        labelStyle={{
-          display: 'block',
-          margin: 'auto'
-        }}
-        labelBgStyle={{
+      x={x}
+      y={y}
+      label='✎'
+      labelStyle={{
+        display: 'block',
+        margin: 'auto',
+        fontSize: '16px'
+      }}
+      labelBgStyle={{
           width: '20px',
-          height: '20px',
-          stroke: 'black'
-        }}
-        labelBgBorderRadius={10}
-        labelBgPadding={[7, 5]}
-        onClick={() => alert('not implemented')}
-      />
+          height: '20px',        
+      }}
+      labelBgBorderRadius={10}
+      labelBgPadding={[3, 1]}
+      onClick={() => onMappingEdit(source, target)}
+    />          
   )
 }
 

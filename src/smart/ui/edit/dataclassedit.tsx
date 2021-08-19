@@ -1,6 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import {
@@ -145,7 +146,7 @@ const DataClassItemPage: React.FC<{
 }> = ({ object, model, setObject }) => {
   const dc = object as EditorDataClass;
   return (
-    <>
+    <FormGroup>
       <NormalTextField
         key="field#dataclassid"
         text="Dataclass ID"
@@ -164,7 +165,7 @@ const DataClassItemPage: React.FC<{
           setObject({ ...dc });
         }}
       />
-    </>
+    </FormGroup>
   );
 };
 

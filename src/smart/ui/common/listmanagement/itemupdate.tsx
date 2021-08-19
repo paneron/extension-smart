@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
+import { Button, ButtonGroup, FormGroup, Intent } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { IUpdateInterface } from '../fields';
@@ -17,7 +17,7 @@ const ItemUpdatePane: React.FC<IUpdateInterface> = ({
   cancelClicked,
 }) => {
   return (
-    <>
+    <FormGroup>
       <Content object={object} setObject={setObject} model={model} />
       <ButtonGroup>
         <Button
@@ -35,7 +35,7 @@ const ItemUpdatePane: React.FC<IUpdateInterface> = ({
           onClick={() => cancelClicked()}
         />
       </ButtonGroup>
-    </>
+    </FormGroup>
   );
 };
 

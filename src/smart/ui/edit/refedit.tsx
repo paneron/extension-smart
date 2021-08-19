@@ -1,6 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import {
@@ -146,7 +147,7 @@ const ReferenceEditItemPage: React.FC<{
 }> = ({ object, setObject }) => {
   const ref = object as MMELReference;
   return (
-    <>
+    <FormGroup>
       <p>
         You may insert multiple clauses at once. Seperate the cluase by ",". IDs
         of the references will be automatically generated according to the
@@ -180,7 +181,7 @@ const ReferenceEditItemPage: React.FC<{
           setObject({ ...ref });
         }}
       />
-    </>
+    </FormGroup>
   );
 };
 
