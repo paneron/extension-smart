@@ -1,3 +1,4 @@
+import { RefObject } from 'react';
 import { MMELNode } from '../serialize/interface/baseinterface';
 import {
   MMELDataClass,
@@ -64,6 +65,7 @@ export type EditorProcess = MMELProcess & EditorNode;
 export interface EditorNodeChild extends EditorBaseObjectType {
   added: boolean;
   pages: Set<string>;
+  uiref?: RefObject<HTMLDivElement>
 }
 
 export interface EditorDataClassReference extends EditorBaseObjectType {
@@ -73,7 +75,7 @@ export interface EditorDataClassReference extends EditorBaseObjectType {
 
 export interface EditorPage extends EditorBaseObjectType {
   start: string;
-  neighbor: Record<string, Set<string>>  
+  neighbor: Record<string, Set<string>>;
 }
 
 export interface EditorModel {
@@ -102,7 +104,7 @@ export function isEditorRegistry(x: EditorNode): x is EditorRegistry {
   return isRegistry(x);
 }
 
-export function isEditorAppproval(x: EditorNode): x is EditorApproval {
+export function isEditorApproval(x: EditorNode): x is EditorApproval {
   return isApproval(x);
 }
 

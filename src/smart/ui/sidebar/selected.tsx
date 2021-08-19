@@ -29,8 +29,8 @@ import {
   getEditorDataClassById,
   getEditorProvisionById,
   getEditorRefById,
-  getEditorRegistryById,  
-  isEditorAppproval,
+  getEditorRegistryById,
+  isEditorApproval,
   isEditorDataClass,
   isEditorEgate,
   isEditorProcess,
@@ -41,7 +41,12 @@ import {
 } from '../../model/editormodel';
 import { ProcessQuickEdit } from './processquickedit';
 import { toRefSummary } from '../../utils/commonfunctions';
-import { DeletableNodeTypes, EditableNodeTypes, EditAction, SelectableNodeTypes } from '../../utils/constants';
+import {
+  DeletableNodeTypes,
+  EditableNodeTypes,
+  EditAction,
+  SelectableNodeTypes,
+} from '../../utils/constants';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 
 export const SelectedNodeDescription: React.FC<{
@@ -52,11 +57,13 @@ export const SelectedNodeDescription: React.FC<{
     id: string,
     resetSelection: () => void
   ) => void;
-  onSubprocessClick?: (pid: string) => void;  
+  onSubprocessClick?: (pid: string) => void;
 }> = function ({
   model,
   setDialog,
-  onSubprocessClick = () => {alert('Not implemented')},  
+  onSubprocessClick = () => {
+    alert('Not implemented');
+  },
 }) {
   const selected = useStoreState(store => store.selectedElements);
   const setSelectedElements = useStoreActions(
@@ -81,14 +88,15 @@ export const SelectedNodeDescription: React.FC<{
   }
 
   return (
-    <div style={{maxHeight: '70vh' }}>
-      {elm !== null ? (                
-        <Describe node={elm} 
+    <div style={{ maxHeight: '70vh' }}>
+      {elm !== null ? (
+        <Describe
+          node={elm}
           resetSelection={resetSelection}
           model={model}
           setDialog={setDialog}
           onSubprocessClick={onSubprocessClick}
-        />                
+        />
       ) : (
         'Nothing is selected'
       )}
@@ -100,7 +108,7 @@ const NODE_DETAIL_VIEWS: Record<
   SelectableNodeTypes,
   React.FC<{
     node: EdtiorNodeWithInfoCallback;
-    resetSelection: () => void;    
+    resetSelection: () => void;
     getRefById: (id: string) => MMELReference | null;
     getRegistryById: (id: string) => EditorRegistry | null;
     getDCById: (id: string) => EditorDataClass | null;
@@ -121,34 +129,80 @@ const NODE_DETAIL_VIEWS: Record<
       <></>
     ),
   [DataType.REGISTRY]: ({ node, getRefById, getDCById }) =>
-    isEditorRegistry(node) ? <DescribeRegistry reg={node} getRefById={getRefById} getDataClassById={getDCById} /> : <></>,
+    isEditorRegistry(node) ? (
+      <DescribeRegistry
+        reg={node}
+        getRefById={getRefById}
+        getDataClassById={getDCById}
+      />
+    ) : (
+      <></>
+    ),
   [DataType.STARTEVENT]: () => <DescribeStart />,
-  [DataType.ENDEVENT]: ({ node, resetSelection, setDialog=()=>alert('Not implemeted') }) => (
-    <DescribeEnd end={node} resetSelection={resetSelection} setDialog={setDialog} />
+  [DataType.ENDEVENT]: ({
+    node,
+    resetSelection,
+    setDialog = () => alert('Not implemeted'),
+  }) => (
+    <DescribeEnd
+      end={node}
+      resetSelection={resetSelection}
+      setDialog={setDialog}
+    />
   ),
-  [DataType.TIMEREVENT]: ({ node, resetSelection, setDialog=()=>alert('Not implemeted') }) =>
+  [DataType.TIMEREVENT]: ({
+    node,
+    resetSelection,
+    setDialog = () => alert('Not implemeted'),
+  }) =>
     isEditorTimerEvent(node) ? (
-      <DescribeTimer timer={node} resetSelection={resetSelection} setDialog={setDialog} />
+      <DescribeTimer
+        timer={node}
+        resetSelection={resetSelection}
+        setDialog={setDialog}
+      />
     ) : (
       <></>
     ),
-  [DataType.SIGNALCATCHEVENT]: ({ node, resetSelection, setDialog=()=>alert('Not implemeted') }) =>
+  [DataType.SIGNALCATCHEVENT]: ({
+    node,
+    resetSelection,
+    setDialog = () => alert('Not implemeted'),
+  }) =>
     isEditorSignalEvent(node) ? (
-      <DescribeSignalCatch scEvent={node} resetSelection={resetSelection} setDialog={setDialog}/>
+      <DescribeSignalCatch
+        scEvent={node}
+        resetSelection={resetSelection}
+        setDialog={setDialog}
+      />
     ) : (
       <></>
     ),
-  [DataType.EGATE]: ({ node, resetSelection, setDialog=()=>alert('Not implemeted') }) =>
+  [DataType.EGATE]: ({
+    node,
+    resetSelection,
+    setDialog = () => alert('Not implemeted'),
+  }) =>
     isEditorEgate(node) ? (
-      <DescribeEGate egate={node} resetSelection={resetSelection} setDialog={setDialog} />
+      <DescribeEGate
+        egate={node}
+        resetSelection={resetSelection}
+        setDialog={setDialog}
+      />
     ) : (
       <></>
     ),
-  [DataType.APPROVAL]: ({ node, resetSelection, getRefById, getRegistryById, setDialog=()=>alert('Not implemeted') }) =>
-    isEditorAppproval(node) ? (
-      <DescribeApproval 
-        app={node} 
-        resetSelection={resetSelection} 
+  [DataType.APPROVAL]: ({
+    node,
+    resetSelection,
+    getRefById,
+    getRegistryById,
+    setDialog = () => alert('Not implemeted'),
+  }) =>
+    isEditorApproval(node) ? (
+      <DescribeApproval
+        app={node}
+        resetSelection={resetSelection}
         getRefById={getRefById}
         getRegistryById={getRegistryById}
         getRoleById={node.getRoleById}
@@ -162,17 +216,17 @@ const NODE_DETAIL_VIEWS: Record<
     resetSelection,
     getProvisionById,
     getRefById,
-    setDialog=()=>alert('Not implemeted'),
-    onSubprocessClick
+    setDialog = () => alert('Not implemeted'),
+    onSubprocessClick,
   }) =>
     isEditorProcess(node) ? (
       <ProcessQuickEdit
         process={node}
         getProvisionById={getProvisionById}
-        getRefById={getRefById}        
+        getRefById={getRefById}
         resetSelection={resetSelection}
         setDialog={setDialog}
-        onSubprocessClick={onSubprocessClick}   
+        onSubprocessClick={onSubprocessClick}
         {...node}
       />
     ) : (
@@ -182,7 +236,7 @@ const NODE_DETAIL_VIEWS: Record<
 
 export const Describe: React.FC<{
   node: EdtiorNodeWithInfoCallback;
-  model: EditorModel
+  model: EditorModel;
   resetSelection: () => void;
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
@@ -192,7 +246,6 @@ export const Describe: React.FC<{
   ) => void;
   onSubprocessClick: (pid: string) => void;
 }> = function ({ node, model, resetSelection, setDialog, onSubprocessClick }) {
-
   function getRefById(id: string): MMELReference | null {
     return getEditorRefById(model, id);
   }
@@ -207,11 +260,11 @@ export const Describe: React.FC<{
 
   function getProvisionById(id: string): MMELProvision | null {
     return getEditorProvisionById(model, id);
-  }  
+  }
 
   const View = NODE_DETAIL_VIEWS[node.datatype as SelectableNodeTypes];
   return (
-    <View 
+    <View
       node={node}
       resetSelection={resetSelection}
       getRefById={getRefById}
@@ -220,7 +273,8 @@ export const Describe: React.FC<{
       getProvisionById={getProvisionById}
       setDialog={setDialog}
       onSubprocessClick={onSubprocessClick}
-    />);
+    />
+  );
 };
 
 export const RemoveButton: React.FC<{
@@ -420,7 +474,7 @@ const DescribeApproval: React.FC<{
   getRefById,
   getRegistryById,
   resetSelection,
-  setDialog
+  setDialog,
 }) {
   const regs: EditorRegistry[] = [];
   app.records.forEach(r => {

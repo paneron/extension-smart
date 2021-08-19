@@ -1,10 +1,10 @@
 import { CSSProperties } from 'react';
 import { XYPosition } from 'react-flow-renderer';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
-import {  
+import {
   EditorModel,
-  EditorNode,  
-  getEditorRoleById,  
+  EditorNode,
+  getEditorRoleById,
   isEditorData,
   ModelType,
 } from '../../model/editormodel';
@@ -27,9 +27,8 @@ export type EdtiorNodeWithInfoCallback = EditorNode & NodeCallBack;
 
 export interface NodeCallBack {
   modelType: ModelType;
-  style?: CSSProperties;
-  namespace: string;
-  onProcessClick: (pageid: string, processid: string) => void;  
+  style?: CSSProperties;  
+  onProcessClick: (pageid: string, processid: string) => void;
   getRoleById: (id: string) => MMELRole | null;
   setMapping: (fromid: string, toid: string) => void;
   getMapStyleById: (id: string) => CSSProperties;
@@ -95,7 +94,7 @@ export function createDataLinkContainer(
 export function createNodeContainer(
   x: EditorNode,
   pos: { x: number; y: number },
-  callback: NodeCallBack,  
+  callback: NodeCallBack
 ): NodeContainer {
   return {
     id: x.id,
@@ -118,29 +117,28 @@ function conditionExtract(l: string): string {
 
 export function getEditorNodeCallBack(props: {
   type: ModelType;
-  model: EditorModel;  
-  onProcessClick: (pageid: string, processid: string) => void;    
-  setMapping?: (fromid: string, toid: string) => void;  
-  getMapStyleById: (id:string) => CSSProperties;
+  model: EditorModel;
+  onProcessClick: (pageid: string, processid: string) => void;
+  setMapping?: (fromid: string, toid: string) => void;
+  getMapStyleById: (id: string) => CSSProperties;
 }): NodeCallBack {
   const {
     type,
-    model,    
+    model,
     onProcessClick,
     setMapping = () => {},
-    getMapStyleById = () => ({})
-  } = props;  
+    getMapStyleById = () => ({}),
+  } = props;
 
   function getRoleById(id: string): MMELRole | null {
     return getEditorRoleById(model, id);
   }
 
   return {
-    modelType: type,
-    namespace: model.meta.namespace,
+    modelType: type,    
     getRoleById: getRoleById,
-    onProcessClick: onProcessClick,    
+    onProcessClick: onProcessClick,
     setMapping: setMapping,
-    getMapStyleById: getMapStyleById
+    getMapStyleById: getMapStyleById,
   };
 }

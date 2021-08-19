@@ -12,7 +12,7 @@ import { IListItem } from '../ui/common/fields';
 
 // temp class for debug, global console logger
 export class Logger {
-  static logger:{log:(...args: any[])=>void};
+  static logger: { log: (...args: any[]) => void };
 }
 
 export function replaceSet(

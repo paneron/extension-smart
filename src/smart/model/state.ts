@@ -28,10 +28,15 @@ export interface MapperViewOption {
   legVisible: boolean; // visibility of legends
 }
 
-export interface MapperState {  
+export interface MapperState {
   history: PageHistory;
   modelWrapper: ModelWrapper;
   modelType: ModelType;
+}
+
+export interface MapperSelectedInterface {
+  modelType: ModelType;
+  selected: string;
 }
 
 export interface MMELtoFlowEntry {

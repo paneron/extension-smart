@@ -7,7 +7,7 @@ import {
   EditorNode,
   EditorProcess,
   EditorSignalEvent,
-  isEditorRegistry,  
+  isEditorRegistry,
 } from '../../model/editormodel';
 import { NodeCallBack } from './container';
 import React from 'react';
@@ -54,9 +54,9 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
       <PB
         content={process.name === '' ? process.id : process.name}
         pid={process.id}
-        style={callback.getMapStyleById(process.id)}
-        namespace={callback.namespace}
+        style={callback.getMapStyleById(process.id)}        
         setMapping={callback.setMapping}
+        uiref={process.uiref}
       />
       <Handle type="target" position={Position.Top} style={handlecss} />
       {process.page !== '' && (
@@ -90,9 +90,9 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
       <PB
         content={approval.name === '' ? approval.id : approval.name}
         pid={approval.id}
-        style={callback.getMapStyleById(approval.id)}
-        namespace={callback.namespace}
+        style={callback.getMapStyleById(approval.id)}        
         setMapping={callback.setMapping}
+        uiref={approval.uiref}
       />
       <Handle type="target" position={Position.Top} style={handlecss} />
       {actor !== null ? (

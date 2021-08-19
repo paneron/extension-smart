@@ -102,11 +102,11 @@ function parseModel(
   data: string,
   setNewModelWrapper: (m: ModelWrapper) => void,
   logger?: LoggerInterface,
-  indexModel?: (model:EditorModel) => void
+  indexModel?: (model: EditorModel) => void
 ) {
   logger?.log('Importing model');
   try {
-    const model = textToMMEL(data);    
+    const model = textToMMEL(data);
     const mw = createEditorModelWrapper(model);
     if (indexModel !== undefined) {
       indexModel(mw.model);
@@ -122,14 +122,14 @@ export async function handleModelOpen(prop: {
   useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
   logger?: LoggerInterface;
-  indexModel?: (model:EditorModel) => void;
+  indexModel?: (model: EditorModel) => void;
 }) {
   const {
     setNewModelWrapper,
     useDecodedBlob,
     requestFileFromFilesystem,
     logger,
-    indexModel
+    indexModel,
   } = prop;
   if (requestFileFromFilesystem && useDecodedBlob) {
     logger?.log('Requesting file');

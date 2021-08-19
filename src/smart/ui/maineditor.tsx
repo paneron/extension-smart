@@ -76,8 +76,8 @@ const ModelEditor: React.FC<{
   isVisible: boolean;
   className?: string;
 }> = ({ isVisible, className }) => {
-  const { logger } = useContext(DatasetContext);            
-  
+  const { logger } = useContext(DatasetContext);
+
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
@@ -295,12 +295,13 @@ const ModelEditor: React.FC<{
         {
           key: 'selected-node',
           title: 'Selected node',
-          content: 
-            <SelectedNodeDescription 
-              model={state.modelWrapper.model} 
+          content: (
+            <SelectedNodeDescription
+              model={state.modelWrapper.model}
               setDialog={setDiag}
               onSubprocessClick={onSubprocessClick}
-            />,
+            />
+          ),
         },
         {
           key: 'create-node',
@@ -366,9 +367,9 @@ const ModelEditor: React.FC<{
                 state.modelWrapper,
                 state.dvisible,
                 state.edgeDeleteVisible,
-                onProcessClick,                
-                removeEdge,                
-              )}              
+                onProcessClick,
+                removeEdge
+              )}
               onLoad={onLoad}
               onDrop={onDrop}
               onDragOver={onDragOver}

@@ -7,7 +7,7 @@ import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { CSSProperties, useContext, useMemo } from 'react';
-import ReactFlow, {  
+import ReactFlow, {
   OnLoadParams,
   ReactFlowProvider,
 } from 'react-flow-renderer';
@@ -23,16 +23,26 @@ import {
   getMapperReactFlowElementsFrom,
   ModelWrapper,
 } from '../../model/modelwrapper';
-import { EdgeTypes, MapperState, MapperViewOption, NodeTypes } from '../../model/state';
+import {
+  EdgeTypes,
+  MapperSelectedInterface,
+  MapperState,
+  MapperViewOption,
+  NodeTypes,
+} from '../../model/state';
 import { handleModelOpen } from '../menu/file';
 import { SelectedNodeDescription } from '../sidebar/selected';
-import {  
+import {
   indexModel,
   MapperModelLabel,
-  MapperModelType,  
+  MapperModelType,
   MapSet,
 } from './mapmodel';
-import { MappingResultStyles, MappingSourceStyles, MapResultType } from './MappingCalculator';
+import {
+  MappingResultStyles,
+  MappingSourceStyles,
+  MapResultType,
+} from './MappingCalculator';
 import MappingLegendPane from './mappinglegend';
 
 const ModelDiagram: React.FC<{
@@ -43,15 +53,25 @@ const ModelDiagram: React.FC<{
   modelProps: MapperState;
   setProps: (mp: MapperState) => void;
   mapResult?: MapResultType;
-  onModelChanged: (model:EditorModel) => void;
-}> = ({ className, viewOption, mapSet, onMapSetChanged, modelProps, setProps, mapResult = {}, onModelChanged }) => {
-  const {
-    logger, 
-    useDecodedBlob, 
-    requestFileFromFilesystem 
-  } = useContext(DatasetContext);  
+  onModelChanged: (model: EditorModel) => void;
+  setSelected: (s: MapperSelectedInterface) => void;
+  onMove: () => void;
+}> = ({
+  className,
+  viewOption,
+  mapSet,
+  onMapSetChanged,
+  modelProps,
+  setProps,
+  mapResult = {},
+  onModelChanged,
+  setSelected,
+  onMove
+}) => {
+  const { logger, useDecodedBlob, requestFileFromFilesystem } =
+    useContext(DatasetContext);
 
-  const modelType = modelProps.modelType;  
+  const modelType = modelProps.modelType;
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
@@ -62,7 +82,7 @@ const ModelDiagram: React.FC<{
 
   function onLoad(params: OnLoadParams) {
     params.fitView();
-  }  
+  }
 
   function setNewModelWrapper(mw: ModelWrapper) {
     setProps({
@@ -99,15 +119,15 @@ const ModelDiagram: React.FC<{
     }
   }
 
-  function setMapping(fromid: string, toid: string) {    
-    logger?.log(`Update mapping from ${fromid} to ${toid}`);        
+  function setMapping(fromid: string, toid: string) {
+    logger?.log(`Update mapping from ${fromid} to ${toid}`);
     if (mapSet.mappings[fromid] === undefined) {
       mapSet.mappings[fromid] = {};
     }
     mapSet.mappings[fromid][toid] = { description: '' };
     onMapSetChanged({ ...mapSet });
   }
-  
+
   const toolbar = (
     <ControlGroup>
       <Button
@@ -120,8 +140,8 @@ const ModelDiagram: React.FC<{
             useDecodedBlob,
             requestFileFromFilesystem,
             logger,
-            indexModel
-          });          
+            indexModel,
+          });
         }}
       />
       <Button
@@ -133,13 +153,13 @@ const ModelDiagram: React.FC<{
   );
 
   const breadcrumbs = getBreadcrumbs(modelProps.history, onPageChange);
-  const legendcss:CSSProperties = {
+  const legendcss: CSSProperties = {
     position: 'absolute',
-    top: '20px',              
-    fontSize: '12px',                
+    top: '20px',
+    fontSize: '12px',
     overflowY: 'auto',
-    zIndex: 90,                
-  } 
+    zIndex: 90,
+  };
   if (modelType === ModelType.REF) {
     legendcss.right = '1%';
   } else {
@@ -158,10 +178,9 @@ const ModelDiagram: React.FC<{
         {
           key: 'selected-node',
           title: 'Selected node',
-          content: 
-            <SelectedNodeDescription
-              model={modelProps.modelWrapper.model}              
-            />,
+          content: (
+            <SelectedNodeDescription model={modelProps.modelWrapper.model} />
+          ),
         },
       ]}
     />
@@ -190,22 +209,41 @@ const ModelDiagram: React.FC<{
               onProcessClick,
               setMapping,
               mapSet,
-              mapResult              
-            )}            
+              mapResult
+            )}
             onLoad={onLoad}
             onDragOver={onDragOver}
+            onMove={onMove}
             nodesConnectable={false}
             snapToGrid={true}
             snapGrid={[10, 10]}
             nodeTypes={NodeTypes}
             edgeTypes={EdgeTypes}
             nodesDraggable={false}
-          >            
-          </ReactFlow>
-          {viewOption.legVisible && <MappingLegendPane 
-            list={modelType === ModelType.REF ? MappingResultStyles : MappingSourceStyles } 
-            style={legendcss}
-          />}
+            onSelectionChange={elms => {
+              if (elms === null || elms.length === 0) {
+                setSelected({
+                  modelType: modelType,
+                  selected: '',
+                });
+              } else {
+                setSelected({
+                  modelType: modelType,
+                  selected: elms[0].id,
+                });
+              }
+            }}
+          ></ReactFlow>
+          {viewOption.legVisible && (
+            <MappingLegendPane
+              list={
+                modelType === ModelType.REF
+                  ? MappingResultStyles
+                  : MappingSourceStyles
+              }
+              style={legendcss}
+            />
+          )}
         </div>
       </Workspace>
     </ReactFlowProvider>

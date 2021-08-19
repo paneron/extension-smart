@@ -11,7 +11,11 @@ import {
   MMELReference,
   MMELRole,
 } from '../../serialize/interface/supportinterface';
-import { DeletableNodeTypes, EditableNodeTypes, EditAction } from '../../utils/constants';
+import {
+  DeletableNodeTypes,
+  EditableNodeTypes,
+  EditAction,
+} from '../../utils/constants';
 import { NodeCallBack } from '../flowui/container';
 import {
   ActorDescription,
@@ -28,7 +32,7 @@ export const ProcessQuickEdit: React.FC<
     resetSelection: () => void;
     onSubprocessClick: (pid: string) => void;
     getRoleById: (id: string) => MMELRole | null;
-    getRefById: (id: string) => MMELReference | null;        
+    getRefById: (id: string) => MMELReference | null;
     getProvisionById: (id: string) => MMELProvision | null;
     setDialog: (
       nodeType: EditableNodeTypes | DeletableNodeTypes,
@@ -87,7 +91,7 @@ export const ProcessQuickEdit: React.FC<
       <ActorDescription
         role={getRoleById(process.actor)}
         label="Actor"
-      />      
+      />
       <ProvisionList
         provisions={process.provision}
         getProvisionById={getProvisionById}

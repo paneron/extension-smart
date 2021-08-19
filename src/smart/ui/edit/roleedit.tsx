@@ -5,7 +5,7 @@ import { jsx } from '@emotion/react';
 import React from 'react';
 import {
   EditorModel,
-  isEditorAppproval,
+  isEditorApproval,
   isEditorProcess,
 } from '../../model/editormodel';
 import { MMELObject } from '../../serialize/interface/baseinterface';
@@ -37,7 +37,7 @@ const RoleEditPage: React.FC<{
   function replaceReferences(matchid: string, replaceid: string) {
     for (const x in model.elements) {
       const elm = model.elements[x];
-      if (isEditorAppproval(elm)) {
+      if (isEditorApproval(elm)) {
         if (elm.actor === matchid) {
           elm.actor = replaceid;
         }

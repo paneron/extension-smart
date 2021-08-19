@@ -1,7 +1,8 @@
-import { EditorModel, ModelType } from '../../model/editormodel';
+import React from 'react';
+import { EditorModel, isEditorApproval, isEditorProcess, ModelType } from '../../model/editormodel';
 
 // Mappingtype[fromid][toid] = MappingMeta
-export type MappingType = Record<string, Record<string, MappingMeta>>
+export type MappingType = Record<string, Record<string, MappingMeta>>;
 
 export interface MapProfile {
   id: string; // namespace of the implementation model
@@ -38,20 +39,26 @@ export const MapperModelLabel: Record<MapperModelType, string> = {
   [ModelType.REF]: 'Reference Model',
 };
 
-export function getMappings(mp:MapProfile, refns:string):MappingType {
+export function getMappings(mp: MapProfile, refns: string): MappingType {
   return mp.mapSet[refns] === undefined ? {} : mp.mapSet[refns].mappings;
 }
 
-export function indexModel(model:EditorModel) {  
+export function indexModel(model: EditorModel) {
   for (const p in model.pages) {
-    const page = model.pages[p];    
-    const neighbor:Record<string, Set<string>> = {};
+    const page = model.pages[p];
+    const neighbor: Record<string, Set<string>> = {};
     Object.values(page.edges).forEach(e => {
       if (neighbor[e.from] === undefined) {
         neighbor[e.from] = new Set<string>();
       }
       neighbor[e.from].add(e.to);
     });
-    page.neighbor = neighbor;    
+    page.neighbor = neighbor;
+  }
+  for (const e in model.elements) {
+    const node = model.elements[e];
+    if (isEditorApproval(node) || isEditorProcess(node)) {
+      node.uiref = React.createRef();
+    }
   }
 }

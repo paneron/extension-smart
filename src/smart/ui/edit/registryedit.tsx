@@ -7,7 +7,7 @@ import {
   EditorDataClass,
   EditorModel,
   EditorRegistry,
-  isEditorAppproval,
+  isEditorApproval,
   isEditorDataClass,
   isEditorProcess,
   isEditorRegistry,
@@ -64,7 +64,7 @@ const RegistryEditPage: React.FC<{
       if (isEditorProcess(elm)) {
         replaceSet(elm.input, matchregid, replaceid);
         replaceSet(elm.output, matchregid, replaceid);
-      } else if (isEditorAppproval(elm)) {
+      } else if (isEditorApproval(elm)) {
         replaceSet(elm.records, matchregid, replaceid);
       } else if (isEditorDataClass(elm)) {
         for (const dc of elm.rdcs) {

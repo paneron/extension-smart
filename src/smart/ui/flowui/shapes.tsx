@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, RefObject } from 'react';
 import { ModelType } from '../../model/editormodel';
 
 export const DatacubeShape: React.FC<{ color?: string }> = function ({
@@ -128,16 +128,17 @@ export const ProcessBox: Record<
   React.FC<{
     content: string;
     pid: string;
-    style: CSSProperties;
-    namespace: string;
+    style: CSSProperties;    
     setMapping?: (fromid: string, toid: string) => void;
+    uiref?: RefObject<HTMLDivElement>
   }>
 > = {
   [ModelType.EDIT]: ({ content }) => (
     <InternalProcessBox>{content}</InternalProcessBox>
   ),
-  [ModelType.IMP]: ({ content, pid, style }) => (
+  [ModelType.IMP]: ({ content, pid, style, uiref }) => (
     <InternalProcessBox
+      ref={uiref}
       style={style}
       draggable={true}
       onDragStart={event => onDragStart(event, pid)}
@@ -145,10 +146,17 @@ export const ProcessBox: Record<
       <div>{content}</div>
     </InternalProcessBox>
   ),
-  [ModelType.REF]: ({ namespace, content, pid, style, setMapping = () => {} }) => (
+  [ModelType.REF]: ({    
+    content,
+    pid,
+    style,
+    setMapping = () => {},
+    uiref
+  }) => (
     <InternalProcessBox
+      ref={uiref}
       style={style}
-      onDrop={event => onDrop(event, namespace, pid, setMapping)}
+      onDrop={event => onDrop(event, pid, setMapping)}
     >
       <div>{content}</div>
     </InternalProcessBox>
@@ -160,8 +168,7 @@ function onDragStart(event: React.DragEvent<any>, fromid: string): void {
 }
 
 function onDrop(
-  event: React.DragEvent<any>,
-  ns: string,
+  event: React.DragEvent<any>,  
   toid: string,
   setMapping: (fromid: string, toid: string) => void
 ): void {

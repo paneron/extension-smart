@@ -11,7 +11,7 @@ import {
   EditorNode,
   EditorRegistry,
   EditorSubprocess,
-  isEditorAppproval,
+  isEditorApproval,
   isEditorDataClass,
   isEditorProcess,
   isEditorRegistry,
@@ -32,7 +32,11 @@ import {
   NodeCallBack,
 } from '../ui/flowui/container';
 import { fillRDCS } from '../utils/commonfunctions';
-import { getMapStyleById, getSourceStyleById, MapResultType } from '../ui/mapper/MappingCalculator';
+import {
+  getMapStyleById,
+  getSourceStyleById,
+  MapResultType,
+} from '../ui/mapper/MappingCalculator';
 import { MapSet } from '../ui/mapper/mapmodel';
 
 export interface ModelWrapper {
@@ -132,11 +136,11 @@ function resetAdded(model: EditorModel) {
   }
 }
 
-export function createEditorModelWrapper(m: MMELModel): ModelWrapper {  
+export function createEditorModelWrapper(m: MMELModel): ModelWrapper {
   const convertedElms = convertElms(m.elements);
-  const converedPages = convertPages(m.pages, convertedElms);  
+  const converedPages = convertPages(m.pages, convertedElms);
   return buildStructure({
-    model: { ...m, elements: convertedElms, pages: converedPages },    
+    model: { ...m, elements: convertedElms, pages: converedPages },
     page: m.root,
   });
 }
@@ -169,14 +173,14 @@ export function getReactFlowElementsFrom(
   mw: ModelWrapper,
   dvisible: boolean,
   edgeDelete: boolean,
-  onProcessClick: (pageid: string, processid: string) => void,  
-  removeEdge: (id: string) => void,  
+  onProcessClick: (pageid: string, processid: string) => void,
+  removeEdge: (id: string) => void
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
     model: mw.model,
     onProcessClick,
-    getMapStyleById: () => ({})
+    getMapStyleById: () => ({}),
   });
   return getElements(mw, dvisible, callback, e =>
     createEdgeContainer(e, edgeDelete, removeEdge)
@@ -190,14 +194,17 @@ export function getMapperReactFlowElementsFrom(
   onProcessClick: (pageid: string, processid: string) => void,
   setMapping: (fromid: string, toid: string) => void,
   mapSet: MapSet,
-  mapResult: MapResultType,  
+  mapResult: MapResultType
 ): Elements {
   const callback = getEditorNodeCallBack({
     type,
     model: mw.model,
     onProcessClick,
     setMapping,
-    getMapStyleById: type === ModelType.REF ? id => getMapStyleById(mapResult, id) : id => getSourceStyleById(mapSet, id)
+    getMapStyleById:
+      type === ModelType.REF
+        ? id => getMapStyleById(mapResult, id)
+        : id => getSourceStyleById(mapSet, id),
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }
@@ -238,7 +245,7 @@ function getElements(
           child.input.forEach(r => exploreDataNode(r, true));
           child.output.forEach(r => exploreDataNode(r, false));
         }
-        if (isEditorAppproval(child)) {
+        if (isEditorApproval(child)) {
           child.records.forEach(r => exploreDataNode(r, false));
         }
       }

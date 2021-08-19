@@ -5,7 +5,7 @@ import { jsx } from '@emotion/react';
 import React from 'react';
 import {
   EditorModel,
-  isEditorAppproval,
+  isEditorApproval,
   isEditorDataClass,
 } from '../../model/editormodel';
 import { MMELObject } from '../../serialize/interface/baseinterface';
@@ -46,7 +46,7 @@ const ReferenceEditPage: React.FC<{
     }
     for (const a in model.elements) {
       const elm = model.elements[a];
-      if (isEditorAppproval(elm)) {
+      if (isEditorApproval(elm)) {
         replaceSet(elm.ref, matchid, replaceid);
       } else if (isEditorDataClass(elm)) {
         for (const x in elm.attributes) {
