@@ -69,20 +69,19 @@ export const SelectedNodeDescription: React.FC<{
     selected: Elements<any> | null
   ): EdtiorNodeWithInfoCallback | null {
     if (selected !== null && selected.length > 0) {
-      const s = selected[0];
-      const elm = model.elements[s.id];
+      const s = selected[0];      
       const page = model.pages[pageid];
       if (
         isNode(s) &&
         page !== undefined &&
-        page.childs[s.id] !== undefined &&
-        elm !== undefined
+        (page.childs[s.id] !== undefined || page.data[s.id] !== undefined) &&
+        model.elements[s.id] !== undefined
       ) {
         return {
           ...(s.data as EdtiorNodeWithInfoCallback),
           ...model.elements[s.id],
         };
-      }
+      } 
     }
     return null;
   }
