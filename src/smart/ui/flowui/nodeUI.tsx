@@ -80,11 +80,11 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           </Tooltip2>
         </div>
       )}
-      <ViewMappingbutton
+      {callback.hasMapping !== undefined && callback.hasMapping(process.id) && <ViewMappingbutton
         modelType={callback.modelType}
         id={process.id}
         setSelectedId={callback.setSelectedId!}
-      />      
+      /> }
       {actor !== null && (
         <FirstLabel key={process.id + '#ActorLabel'}>
           {actorIcon}
@@ -112,11 +112,11 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
         uiref={approval.uiref}
       />
       <Handle type="target" position={Position.Top} style={handlecss} />
-      <ViewMappingbutton
+      { callback.hasMapping !== undefined && callback.hasMapping(approval.id) && (<ViewMappingbutton
         modelType={callback.modelType}
         id={approval.id}
         setSelectedId={callback.setSelectedId!}
-      />
+      />) }
       {actor !== null ? (
         approver !== null ? (
           <>

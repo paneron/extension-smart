@@ -266,3 +266,14 @@ export function isParentMapFullCovered(history: PageHistory, mr: MapResultType):
   }
   return false;
 }
+
+export function getMappedList(mapSet:MapSet):Set<string> {
+  const set = new Set<string>();
+  for (const x in mapSet.mappings) {
+    const map = mapSet.mappings[x];
+    for (const y in map) {
+      set.add(y);
+    }
+  }
+  return set
+}

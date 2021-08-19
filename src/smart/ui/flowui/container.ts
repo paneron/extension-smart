@@ -33,6 +33,7 @@ export interface NodeCallBack {
   setMapping: (fromid: string, toid: string) => void;
   getMapStyleById: (id: string) => CSSProperties;
   setSelectedId?: (id:string) => void;
+  hasMapping?: (id:string) => boolean;
 }
 
 export interface EdgePackage {
@@ -121,8 +122,9 @@ export function getEditorNodeCallBack(props: {
   model: EditorModel;
   onProcessClick: (pageid: string, processid: string) => void;
   setMapping?: (fromid: string, toid: string) => void;
-  getMapStyleById: (id: string) => CSSProperties;
-  setSelectedId?: (id: string) => void
+  getMapStyleById: (id: string) => CSSProperties;  
+  setSelectedId?: (id: string) => void;
+  hasMapping?: (id:string) => boolean;
 }): NodeCallBack {
   const {
     type,
@@ -130,7 +132,8 @@ export function getEditorNodeCallBack(props: {
     onProcessClick,
     setMapping = () => {},
     getMapStyleById = () => ({}),
-    setSelectedId
+    setSelectedId,
+    hasMapping
   } = props;
 
   function getRoleById(id: string): MMELRole | null {
@@ -143,6 +146,7 @@ export function getEditorNodeCallBack(props: {
     onProcessClick: onProcessClick,
     setMapping: setMapping,
     getMapStyleById: getMapStyleById,
-    setSelectedId: setSelectedId
+    setSelectedId: setSelectedId,
+    hasMapping: hasMapping
   };
 }

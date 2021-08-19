@@ -33,6 +33,7 @@ import {
 } from '../ui/flowui/container';
 import { fillRDCS } from '../utils/commonfunctions';
 import {
+  getMappedList,
   getMapStyleById,
   getSourceStyleById,
   MapCoverType,
@@ -200,6 +201,7 @@ export function getMapperReactFlowElementsFrom(
   setSelectedId: (id:string) => void,
   isParentFull: boolean
 ): Elements {
+  const destinationList = getMappedList(mapSet);
   const callback = getEditorNodeCallBack({
     type,
     model: mw.model,
@@ -213,7 +215,11 @@ export function getMapperReactFlowElementsFrom(
           })
           : id => getMapStyleById(mapResult, id))
         : id => getSourceStyleById(mapSet, id),
-    setSelectedId
+    setSelectedId,
+    hasMapping:
+      type === ModelType.REF
+      ? id => destinationList.has(id)
+      : id => mapSet.mappings[id] !== undefined
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }
