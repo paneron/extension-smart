@@ -1,6 +1,6 @@
 # To-do list
 
-* Must
+* MustCancel changes
   * Document generation (mapping report)
   * Evidence (external documents) management and storage
   * Data entry/management (data kept in the repository, internal)
@@ -26,3 +26,15 @@
   * Move/copy components to another layer
   * Group components
   * Role combine
+
+# Toolchain
+
+1. Developing a model / Transforming a standard to a model 
+* Editor (for reference model)
+2. Developing an implementation model
+* Editor (for implementation model)
+* Component librabry
+3. Mapping implementation model to reference model
+* Mapper
+4. Evidence management
+5. Auditing
