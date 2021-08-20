@@ -106,6 +106,7 @@ function traverse(
     visited[id] = false;
     return false;
   }
+  visited[id] = true;
   if (isEditorEgate(node)) {
     let result = false;
     for (const elm of page.neighbor![id]) {
@@ -164,6 +165,7 @@ function explorePage(
   if (traverse(page.start, page, mr, model, {})) {
     return MapCoverType.PASS;
   }
+
   return somethingCovered ? MapCoverType.PARTIAL : MapCoverType.NONE;
 }
 
