@@ -5,6 +5,7 @@
   * Evidence (external documents) management and storage
   * Data entry/management (data kept in the repository, internal)
   * Saving/loading mapping (and related files) as a whole
+  * Integrate BSI-style design (from Ed)
 
 * Functional features or features of the web version
   * Importing/copying components of another model
@@ -16,6 +17,7 @@
   * Quick edit of components
   * Support BIM and other data structures
   * Automatically translate XML file into model (AI)
+  * Translate selected text from document to model (not AI, just automation)
 
 * Qaulity of life features  
   * Undo
