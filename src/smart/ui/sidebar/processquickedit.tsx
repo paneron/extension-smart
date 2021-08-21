@@ -110,9 +110,7 @@ const ProvisionList: React.FC<{
             ))}
           </ul>
         </>
-      ) : (
-        ''
-      )}
+      ) : null}
     </>
   );
 };
