@@ -48,8 +48,9 @@ import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { Logger } from '../utils/commonfunctions';
 import MappingCanvus from './mapper/mappingCanvus';
 import MapperOptionMenu from './menu/mapperOptionMenu';
-import { editMPropsInterface } from './dialog/dialogs';
+import { EditMPropsInterface } from './dialog/dialogs';
 import MappingEditPage from './edit/mappingedit';
+import DocTemplatePane from './doctemplate/doctemplatepane';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -66,6 +67,7 @@ const ModelMapper: React.FC<{
   const [viewOption, setViewOption] = useState<MapperViewOption>({
     dataVisible: true,
     legVisible: true,
+    docVisible: false,
   });
   const [implementProps, setImplProps] = useState<MapperState>({
     modelWrapper: { ...initModelWrapper },
@@ -85,7 +87,7 @@ const ModelMapper: React.FC<{
 
   const [mapEdges, setMapEdges] = useState<MapEdgeResult[]>([]);
 
-  const [editMappingProps, setEditMProps] = useState<editMPropsInterface>({
+  const [editMappingProps, setEditMProps] = useState<EditMPropsInterface>({
     from: '',
     to: '',
   });
@@ -104,7 +106,7 @@ const ModelMapper: React.FC<{
 
   function onMapSetChanged(ms: MapSet) {
     const newProfile: MapProfile = {
-      id: mapProfile.id,
+      ...mapProfile,
       mapSet: { ...mapProfile.mapSet, [ms.id]: ms },
     };
     setMapProfile(newProfile);
@@ -136,7 +138,7 @@ const ModelMapper: React.FC<{
   }
 
   function onImpModelChanged(model: EditorModel) {
-    onMapProfileChanged({ id: model.meta.namespace, mapSet: {} });
+    onMapProfileChanged({ id: model.meta.namespace, mapSet: {}, docs: {} });
     implementProps.modelWrapper.model = model;
   }
 
@@ -180,7 +182,7 @@ const ModelMapper: React.FC<{
     });
   }
 
-  function onMappingDelte() {
+  function onMappingDelete() {
     const { from, to } = editMappingProps;
     const mapSet =
       mapProfile.mapSet[referenceProps.modelWrapper.model.meta.namespace];
@@ -236,8 +238,14 @@ const ModelMapper: React.FC<{
       >
         <Button text="View" />
       </Popover2>
+      <Button
+        text="Report"
+        onClick={() => setViewOption({ ...viewOption, docVisible: true })}
+      />
     </ControlGroup>
   );
+
+  logger?.log('viewOption', viewOption);
 
   const mapEditPage =
     editMappingProps.from !== '' && editMappingProps.to !== '' ? (
@@ -257,7 +265,7 @@ const ModelMapper: React.FC<{
             editMappingProps.to
           ]
         }
-        onDelete={onMappingDelte}
+        onDelete={onMappingDelete}
         onChange={onMappingChange}
       />
     ) : (
@@ -282,8 +290,10 @@ const ModelMapper: React.FC<{
       <HotkeysTarget2 hotkeys={hotkeys}>
         <Workspace className={className} toolbar={toolbar}>
           <Dialog
-            isOpen={editMappingProps.from !== ''}
-            title="Edit Mapping"
+            isOpen={editMappingProps.from !== '' || viewOption.docVisible}
+            title={
+              editMappingProps.from !== '' ? 'Edit Mapping' : 'Report template'
+            }
             css={css`
               width: calc(100vw - 60px);
               min-height: calc(100vh - 60px);
@@ -293,16 +303,28 @@ const ModelMapper: React.FC<{
                 padding: 20px;
               }
             `}
-            onClose={() =>
-              setEditMProps({
-                from: '',
-                to: '',
-              })
+            onClose={
+              editMappingProps.from !== ''
+                ? () =>
+                    setEditMProps({
+                      from: '',
+                      to: '',
+                    })
+                : () => setViewOption({ ...viewOption, docVisible: false })
             }
             canEscapeKeyClose={false}
             canOutsideClickClose={false}
           >
-            {mapEditPage}
+            {editMappingProps.from !== '' ? (
+              mapEditPage
+            ) : (
+              <DocTemplatePane
+                mapProfile={mapProfile}
+                setMapProfile={setMapProfile}
+                refModel={referenceProps.modelWrapper.model}
+                impModel={implementProps.modelWrapper.model}
+              />
+            )}
           </Dialog>
           <div
             style={{

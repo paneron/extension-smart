@@ -26,6 +26,7 @@ export interface EditorState {
 export interface MapperViewOption {
   dataVisible: boolean; // visibility of data nodes
   legVisible: boolean; // visibility of legends
+  docVisible: boolean; // visibility of document templates
 }
 
 export interface MapperState {

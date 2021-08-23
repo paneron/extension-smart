@@ -1,7 +1,6 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
-import { MMELObject } from '../../serialize/interface/baseinterface';
 import { MMELVariable } from '../../serialize/interface/supportinterface';
 import { ReferenceSelector } from '../common/fields';
 import { IObject } from '../common/listmanagement/listPopoverItem';
@@ -16,13 +15,13 @@ export function matchMeasurementFilter(x: IObject, filter: string): boolean {
 }
 
 export const MeasurementItem: React.FC<{
-  object: MMELObject;
-  model: EditorModel;
-  setObject: (obj: MMELObject) => void;
+  object: Object;
+  model?: EditorModel;
+  setObject: (obj: Object) => void;
 }> = ({ object, model, setObject }) => {
   const measure = object as IMeasure;
 
-  const types = Object.values(model.vars).map(v => v.id);
+  const types = Object.values(model!.vars).map(v => v.id);
 
   return (
     <FormGroup>
@@ -47,7 +46,7 @@ export const MeasurementItem: React.FC<{
         key="ui#itemupdate#checkbutton"
         icon="diagnosis"
         text="Expression Validator"
-        onClick={() => validCheck(measure.measure, model.vars)}
+        onClick={() => validCheck(measure.measure, model!.vars)}
       />
     </FormGroup>
   );

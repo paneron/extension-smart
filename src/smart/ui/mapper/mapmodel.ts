@@ -6,12 +6,19 @@ import {
   ModelType,
 } from '../../model/editormodel';
 
+export interface MappingDoc {
+  id: string;
+  title: string;
+  content: string;
+}
+
 // Mappingtype[fromid][toid] = MappingMeta
 export type MappingType = Record<string, Record<string, MappingMeta>>;
 
 export interface MapProfile {
   id: string; // namespace of the implementation model
   mapSet: Record<string, MapSet>;
+  docs: Record<string, MappingDoc>;
 }
 
 export interface MapSet {
@@ -28,6 +35,7 @@ export function createMapProfile(): MapProfile {
   return {
     id: '',
     mapSet: {},
+    docs: {},
   };
 }
 

@@ -28,9 +28,9 @@ export interface PopListInterface {
   filterName: string;
   getListItem?: (x: IObject) => IListItem;
   Content: React.FC<{
-    object: MMELObject;
-    model: EditorModel;
-    setObject: (obj: MMELObject) => void;
+    object: Object;
+    model?: EditorModel;
+    setObject: (obj: Object) => void;
   }>;
   label: string;
   size?: number;

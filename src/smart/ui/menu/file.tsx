@@ -55,7 +55,7 @@ const FileMenu: React.FC<{
         await writeFileToFilesystem({
           dialogOpts: {
             prompt: 'Choose location to save',
-            filters: [{ name: 'All files', extensions: ['*'] }],
+            filters: [{ name: 'MMEL files', extensions: ['mmel'] }],
           },
           bufferData: blob,
         });

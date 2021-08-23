@@ -35,7 +35,7 @@ const MapperFileMenu: React.FC<{
         await writeFileToFilesystem({
           dialogOpts: {
             prompt: 'Choose location to save',
-            filters: [{ name: 'All files', extensions: ['*'] }],
+            filters: [{ name: 'MAP files', extensions: ['map'] }],
           },
           bufferData: blob,
         });

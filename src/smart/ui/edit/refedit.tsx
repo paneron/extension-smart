@@ -9,7 +9,6 @@ import {
   isEditorApproval,
   isEditorDataClass,
 } from '../../model/editormodel';
-import { MMELObject } from '../../serialize/interface/baseinterface';
 import { MMELReference } from '../../serialize/interface/supportinterface';
 import {
   checkId,
@@ -142,8 +141,8 @@ const ReferenceEditPage: React.FC<{
 };
 
 const ReferenceEditItemPage: React.FC<{
-  object: MMELObject;
-  setObject: (obj: MMELObject) => void;
+  object: Object;
+  setObject: (obj: Object) => void;
 }> = ({ object, setObject }) => {
   const ref = object as MMELReference;
   return (

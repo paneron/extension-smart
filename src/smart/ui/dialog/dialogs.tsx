@@ -29,6 +29,16 @@ export enum DiagTypes {
   EDITEGATE = 'gate',
 }
 
+export enum MapperDiagTypes {
+  EDITMAPPING = 'map',
+  DOCUMENT = 'document',
+}
+
+export interface MapperDiagPackage {
+  type: MapperDiagTypes | null;
+  payload: EditMPropsInterface;
+}
+
 export interface DiagPackage {
   type: DiagTypes | null;
   callback: () => void;
@@ -57,7 +67,7 @@ export interface IDiagAction {
   setModelAfterDelete: (model: EditorModel) => void;
 }
 
-export interface editMPropsInterface {
+export interface EditMPropsInterface {
   from: string;
   to: string;
 }

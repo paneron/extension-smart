@@ -9,7 +9,6 @@ import {
   isEditorDataClass,
   isEditorRegistry,
 } from '../../model/editormodel';
-import { MMELObject } from '../../serialize/interface/baseinterface';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import {
   getReferenceDCTypeName,
@@ -56,15 +55,15 @@ const AttributeEditPage: React.FC<{
 };
 
 const AttributeItem: React.FC<{
-  object: MMELObject;
-  model: EditorModel;
-  setObject: (obj: MMELObject) => void;
+  object: Object;
+  model?: EditorModel;
+  setObject: (obj: Object) => void;
 }> = ({ object, model, setObject }) => {
   const att = object as MMELDataAttribute;
 
   const types = [...DATATYPE];
-  for (const x in model.elements) {
-    const elm = model.elements[x];
+  for (const x in model!.elements) {
+    const elm = model!.elements[x];
     if (isEditorRegistry(elm)) {
       types.push(elm.data);
       types.push(getReferenceDCTypeName(elm.data));
@@ -73,12 +72,12 @@ const AttributeItem: React.FC<{
     }
   }
 
-  for (const x in model.enums) {
-    const en = model.enums[x];
+  for (const x in model!.enums) {
+    const en = model!.enums[x];
     types.push(en.id);
   }
 
-  const refs = Object.values(model.refs)
+  const refs = Object.values(model!.refs)
     .sort(referenceSorter)
     .map(r => r.id);
 

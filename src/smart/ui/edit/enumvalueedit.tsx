@@ -5,7 +5,6 @@ import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
-import { MMELObject } from '../../serialize/interface/baseinterface';
 import { MMELEnumValue } from '../../serialize/interface/datainterface';
 import { createEnumValue } from '../../utils/EditorFactory';
 import { NormalTextField } from '../common/fields';
@@ -37,9 +36,8 @@ const EnumValueEditPage: React.FC<{
 };
 
 const EnumValueItem: React.FC<{
-  object: MMELObject;
-  model: EditorModel;
-  setObject: (obj: MMELObject) => void;
+  object: Object;
+  setObject: (obj: Object) => void;
 }> = ({ object, setObject }) => {
   const ev = object as MMELEnumValue;
 

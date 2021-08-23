@@ -9,7 +9,6 @@ import {
   isEditorApproval,
   isEditorProcess,
 } from '../../model/editormodel';
-import { MMELObject } from '../../serialize/interface/baseinterface';
 import { MMELRole } from '../../serialize/interface/supportinterface';
 import { checkId, defaultItemSorter } from '../../utils/commonfunctions';
 import { createRole } from '../../utils/EditorFactory';
@@ -112,8 +111,8 @@ const RoleEditPage: React.FC<{
 };
 
 const RoleEditItemPage: React.FC<{
-  object: MMELObject;
-  setObject: (obj: MMELObject) => void;
+  object: Object;
+  setObject: (obj: Object) => void;
 }> = ({ object, setObject }) => {
   const role = object as MMELRole;
   return (

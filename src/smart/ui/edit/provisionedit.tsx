@@ -1,7 +1,6 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
-import { MMELObject } from '../../serialize/interface/baseinterface';
 import { MMELProvision } from '../../serialize/interface/supportinterface';
 import { getModelAllRefs } from '../../utils/commonfunctions';
 import { MODAILITYOPTIONS } from '../../utils/constants';
@@ -20,12 +19,12 @@ export function matchProvisionFilter(x: IObject, filter: string): boolean {
 }
 
 export const ProvisonItem: React.FC<{
-  object: MMELObject;
-  model: EditorModel;
-  setObject: (obj: MMELObject) => void;
+  object: Object;
+  model?: EditorModel;
+  setObject: (obj: Object) => void;
 }> = ({ object, model, setObject }) => {
   const provision = object as MMELProvision;
-  const refs = getModelAllRefs(model);
+  const refs = getModelAllRefs(model!);
 
   return (
     <FormGroup>

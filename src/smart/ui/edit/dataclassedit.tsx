@@ -9,7 +9,6 @@ import {
   EditorModel,
   isEditorDataClass,
 } from '../../model/editormodel';
-import { MMELObject } from '../../serialize/interface/baseinterface';
 import {
   checkId,
   defaultItemSorter,
@@ -140,9 +139,9 @@ const DataClassEditPage: React.FC<{
 };
 
 const DataClassItemPage: React.FC<{
-  object: MMELObject;
-  model: EditorModel;
-  setObject: (obj: MMELObject) => void;
+  object: Object;
+  model?: EditorModel;
+  setObject: (obj: Object) => void;
 }> = ({ object, model, setObject }) => {
   const dc = object as EditorDataClass;
   return (
@@ -159,7 +158,7 @@ const DataClassItemPage: React.FC<{
       <AttributeEditPage
         key={'ui#dataclass#attributeEditPage'}
         attributes={{ ...dc.attributes }}
-        model={model}
+        model={model!}
         setAtts={x => {
           dc.attributes = x;
           setObject({ ...dc });

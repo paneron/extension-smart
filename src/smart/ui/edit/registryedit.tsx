@@ -13,7 +13,6 @@ import {
   isEditorProcess,
   isEditorRegistry,
 } from '../../model/editormodel';
-import { MMELObject } from '../../serialize/interface/baseinterface';
 import {
   checkId,
   defaultItemSorter,
@@ -193,9 +192,9 @@ const RegistryEditPage: React.FC<{
 };
 
 const RegistryEditItemPage: React.FC<{
-  object: MMELObject;
-  model: EditorModel;
-  setObject: (obj: MMELObject) => void;
+  object: Object;
+  model?: EditorModel;
+  setObject: (obj: Object) => void;
 }> = ({ object, model, setObject }) => {
   const reg = object as RegistryCombined;
   return (
@@ -221,7 +220,7 @@ const RegistryEditItemPage: React.FC<{
       <AttributeEditPage
         key={'ui#registry#attributeEditPage'}
         attributes={{ ...reg.attributes }}
-        model={model}
+        model={model!}
         setAtts={x => {
           reg.attributes = x;
           setObject({ ...reg });

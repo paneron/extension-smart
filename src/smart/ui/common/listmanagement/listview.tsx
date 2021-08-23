@@ -15,6 +15,7 @@ const ListViewPane: React.FC<IViewListInterface> = ({
   addClicked,
   updateClicked,
   size,
+  buttons,
 }) => {
   const selectbox: RefObject<HTMLSelectElement> = React.createRef();
   const [filter, setFilter] = useState<string>('');
@@ -64,19 +65,29 @@ const ListViewPane: React.FC<IViewListInterface> = ({
           key="ui#listview#updatebutton"
           icon="edit"
           text="Update"
-          onClick={() => {
-            if (
-              selectbox.current !== null &&
-              selectbox.current.selectedOptions.length > 0
-            ) {
-              updateClicked(selectbox.current.selectedOptions[0].value);
-            }
-          }}
+          onClick={() => actIfSelected(selectbox.current, updateClicked)}
         />
+        {buttons?.map((b, index) => (
+          <Button
+            key={'ui#listview#additionbutton#' + index}
+            text={b.text}
+            icon={b.icon}
+            onClick={() => actIfSelected(selectbox.current, b.onClick)}
+          />
+        ))}
       </ButtonGroup>
     </>
   );
 };
+
+function actIfSelected(
+  elm: HTMLSelectElement | null,
+  callback: (selected: string) => void
+) {
+  if (elm !== null && elm.selectedOptions.length > 0) {
+    callback(elm.selectedOptions[0].value);
+  }
+}
 
 function extractOptions(ref: React.RefObject<HTMLSelectElement>): string[] {
   if (ref.current !== null) {

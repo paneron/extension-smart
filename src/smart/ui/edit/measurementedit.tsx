@@ -5,7 +5,6 @@ import { Button, FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
-import { MMELObject } from '../../serialize/interface/baseinterface';
 import {
   MMELVariable,
   VarType,
@@ -98,13 +97,13 @@ const MeasurementEditPage: React.FC<{
 };
 
 const MeasureEditItemPage: React.FC<{
-  object: MMELObject;
-  model: EditorModel;
-  setObject: (obj: MMELObject) => void;
+  object: Object;
+  model?: EditorModel;
+  setObject: (obj: Object) => void;
 }> = ({ object, model, setObject }) => {
   const mea = object as MMELVariable;
 
-  const types = Object.values(model.vars).map(v => v.id);
+  const types = Object.values(model!.vars).map(v => v.id);
   return (
     <FormGroup>
       <div key="ui#measurement#introtext">
@@ -164,7 +163,7 @@ const MeasureEditItemPage: React.FC<{
           key="ui#measurement#builderbutton#holder"
           icon="derive-column"
           text="Definition validity check"
-          onClick={() => validCheck(mea.definition, model)}
+          onClick={() => validCheck(mea.definition, model!)}
         />
       )}
       <ReferenceSelector

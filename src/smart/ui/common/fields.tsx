@@ -3,14 +3,20 @@
 import { jsx, css } from '@emotion/react';
 import { Button, FormGroup, IconName, TextArea } from '@blueprintjs/core';
 import React, { CSSProperties, RefObject, useState } from 'react';
-import { MMELObject } from '../../serialize/interface/baseinterface';
 import { EditorModel } from '../../model/editormodel';
+
+export interface IAdditionalListButton {
+  text: string;
+  icon?: IconName;
+  onClick: (id: string) => void;
+}
 
 export interface IField {
   text: string;
   value: string;
   onChange: (x: string) => void;
   extend?: JSX.Element;
+  rows?: number;
 }
 
 export interface IComboField {
@@ -44,17 +50,18 @@ export type IManageHandler = {
   filterName: string;
   itemName: string;
   Content: React.FC<{
-    object: MMELObject;
-    model: EditorModel;
-    setObject: (obj: MMELObject) => void;
+    object: Object;
+    model?: EditorModel;
+    setObject: (obj: Object) => void;
   }>;
-  initObj: MMELObject;
-  model: EditorModel;
+  initObj: Object;
+  model?: EditorModel;
   getItems: (filter: string) => IListItem[];
   removeItems: (ids: Array<string>) => void;
-  addItem: (obj: MMELObject) => boolean;
-  updateItem: (oldid: string, obj: MMELObject) => boolean;
-  getObjById: (id: string) => MMELObject;
+  addItem: (obj: Object) => boolean;
+  updateItem: (oldid: string, obj: Object) => boolean;
+  getObjById: (id: string) => Object;
+  buttons?: IAdditionalListButton[];
 };
 
 export interface IViewListInterface {
@@ -65,6 +72,7 @@ export interface IViewListInterface {
   addClicked: () => void;
   updateClicked: (selected: string) => void;
   size: number;
+  buttons?: IAdditionalListButton[];
 }
 
 export interface IListItem {
@@ -74,13 +82,13 @@ export interface IListItem {
 
 export interface IUpdateInterface {
   Content: React.FC<{
-    object: MMELObject;
-    model: EditorModel;
-    setObject: (obj: MMELObject) => void;
+    object: Object;
+    model?: EditorModel;
+    setObject: (obj: Object) => void;
   }>;
-  object: MMELObject;
-  model: EditorModel;
-  setObject: (obj: MMELObject) => void;
+  object: Object;
+  model?: EditorModel;
+  setObject: (obj: Object) => void;
   updateButtonLabel: string;
   updateButtonIcon: IconName;
   updateClicked: () => void;
@@ -92,6 +100,7 @@ export const NormalTextField: React.FC<IField> = (f: IField) => {
     <FormGroup label={f.text} helperText={f.extend}>
       <TextArea
         onChange={e => f.onChange(e.target.value)}
+        rows={f.rows}
         value={f.value}
         css={css`
           padding: 5px !important;

@@ -3,7 +3,6 @@
 
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
-import { MMELObject } from '../../../serialize/interface/baseinterface';
 import {
   IManageHandler,
   IUpdateInterface,
@@ -29,8 +28,9 @@ const ListManagePage: React.FC<IManageHandler> = ({
   addItem,
   updateItem,
   getObjById,
+  buttons,
 }) => {
-  const [selected, setSelected] = useState<MMELObject>(initObj);
+  const [selected, setSelected] = useState<Object>(initObj);
   const [oldid, setOldId] = useState<string>('');
 
   const [mode, setMode] = useState<ListManagePageType>(ListManagePageType.VIEW);
@@ -84,6 +84,7 @@ const ListManagePage: React.FC<IManageHandler> = ({
       setMode(ListManagePageType.UPDATE);
     },
     size: 15,
+    buttons: buttons,
   };
 
   const ActionPage: Record<ListManagePageType, JSX.Element> = {
