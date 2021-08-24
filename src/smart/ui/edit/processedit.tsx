@@ -4,6 +4,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
+import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel, EditorProcess } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELProvision } from '../../serialize/interface/supportinterface';
@@ -107,107 +108,109 @@ const EditProcessPage: React.FC<{
   }
 
   return (
-    <FormGroup>
-      <EditPageButtons
-        onUpdateClick={onUpdateClick}
-        onCancelClick={closeDialog}
-      />
-      <NormalTextField
-        key="field#processID"
-        text="Process ID"
-        value={editing.id}
-        onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
-      />
-      <NormalTextField
-        key="field#processName"
-        text="Process Name"
-        value={editing.name}
-        onChange={x => setEditing({ ...editing, name: x })}
-      />
-      <NormalComboBox
-        key="field#processStart"
-        text="Subprocess"
-        value={editing.page === '' ? SUBPROCESSNO : SUBPROCESSYES}
-        options={SUBPROCESSOPTIONS}
-        onChange={setPStart}
-      />
-      <ReferenceSelector
-        key="field#Actor"
-        text="Actor"
-        filterName="Actor filter"
-        value={editing.actor}
-        options={roles}
-        update={x => setEditing({ ...editing, actor: roles[x] })}
-      />
-      <MultiReferenceSelector
-        key="field#inputSelector"
-        text="Input data registry"
-        options={regs}
-        values={editing.input}
-        filterName="Input Registry filter"
-        add={x => {
-          editing.input = new Set([...editing.input, ...x]);
-          setEditing({ ...editing });
-        }}
-        remove={x => {
-          editing.input = new Set([...editing.input].filter(s => !x.has(s)));
-          setEditing({ ...editing });
-        }}
-      />
-      <MultiReferenceSelector
-        key="field#outputSelector"
-        text="Output data registry"
-        options={regs}
-        values={editing.output}
-        filterName="Output Registry filter"
-        add={x => {
-          editing.output = new Set([...editing.output, ...x]);
-          setEditing({ ...editing });
-        }}
-        remove={x => {
-          editing.output = new Set([...editing.output].filter(s => !x.has(s)));
-          setEditing({ ...editing });
-        }}
-      />
-      <ListWithPopoverItem
-        items={{ ...provisions }}
-        setItems={x => setProvisions(x as Record<string, MMELProvision>)}
-        model={model}
-        initObject={createProvision('')}
-        matchFilter={matchProvisionFilter}
-        getListItem={x => {
-          const pro = x as MMELProvision;
-          return {
-            id: x.id,
-            text: `${pro.modality}: ${pro.condition}`,
-          };
-        }}
-        filterName="Provision filter"
-        Content={ProvisonItem}
-        label="Provisions"
-        size={7}
-        requireUniqueId={false}
-      />
-      <ListWithPopoverItem
-        items={{ ...measurements }}
-        setItems={x => setMeasurements(x as Record<string, IMeasure>)}
-        model={model}
-        initObject={{ ...emptyMeasurement }}
-        matchFilter={matchMeasurementFilter}
-        getListItem={x => {
-          const m = x as IMeasure;
-          return {
-            id: m.id,
-            text: m.measure,
-          };
-        }}
-        filterName="Measurement filter"
-        Content={MeasurementItem}
-        label="Measurements"
-        size={7}
-        requireUniqueId={false}
-      />
-    </FormGroup>
+    <MGDDisplayPane>
+      <FormGroup>
+        <EditPageButtons
+          onUpdateClick={onUpdateClick}
+          onCancelClick={closeDialog}
+        />
+        <NormalTextField
+          key="field#processID"
+          text="Process ID"
+          value={editing.id}
+          onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
+        />
+        <NormalTextField
+          key="field#processName"
+          text="Process Name"
+          value={editing.name}
+          onChange={x => setEditing({ ...editing, name: x })}
+        />
+        <NormalComboBox
+          key="field#processStart"
+          text="Subprocess"
+          value={editing.page === '' ? SUBPROCESSNO : SUBPROCESSYES}
+          options={SUBPROCESSOPTIONS}
+          onChange={setPStart}
+        />
+        <ReferenceSelector
+          key="field#Actor"
+          text="Actor"
+          filterName="Actor filter"
+          value={editing.actor}
+          options={roles}
+          update={x => setEditing({ ...editing, actor: roles[x] })}
+        />
+        <MultiReferenceSelector
+          key="field#inputSelector"
+          text="Input data registry"
+          options={regs}
+          values={editing.input}
+          filterName="Input Registry filter"
+          add={x => {
+            editing.input = new Set([...editing.input, ...x]);
+            setEditing({ ...editing });
+          }}
+          remove={x => {
+            editing.input = new Set([...editing.input].filter(s => !x.has(s)));
+            setEditing({ ...editing });
+          }}
+        />
+        <MultiReferenceSelector
+          key="field#outputSelector"
+          text="Output data registry"
+          options={regs}
+          values={editing.output}
+          filterName="Output Registry filter"
+          add={x => {
+            editing.output = new Set([...editing.output, ...x]);
+            setEditing({ ...editing });
+          }}
+          remove={x => {
+            editing.output = new Set([...editing.output].filter(s => !x.has(s)));
+            setEditing({ ...editing });
+          }}
+        />
+        <ListWithPopoverItem
+          items={{ ...provisions }}
+          setItems={x => setProvisions(x as Record<string, MMELProvision>)}
+          model={model}
+          initObject={createProvision('')}
+          matchFilter={matchProvisionFilter}
+          getListItem={x => {
+            const pro = x as MMELProvision;
+            return {
+              id: x.id,
+              text: `${pro.modality}: ${pro.condition}`,
+            };
+          }}
+          filterName="Provision filter"
+          Content={ProvisonItem}
+          label="Provisions"
+          size={7}
+          requireUniqueId={false}
+        />
+        <ListWithPopoverItem
+          items={{ ...measurements }}
+          setItems={x => setMeasurements(x as Record<string, IMeasure>)}
+          model={model}
+          initObject={{ ...emptyMeasurement }}
+          matchFilter={matchMeasurementFilter}
+          getListItem={x => {
+            const m = x as IMeasure;
+            return {
+              id: m.id,
+              text: m.measure,
+            };
+          }}
+          filterName="Measurement filter"
+          Content={MeasurementItem}
+          label="Measurements"
+          size={7}
+          requireUniqueId={false}
+        />
+      </FormGroup>
+    </MGDDisplayPane>
   );
 };
 

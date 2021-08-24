@@ -1,26 +1,27 @@
-import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import React from 'react';
+import MGDButton from '../../MGDComponents/MGDButton';
+import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 
 export const EditPageButtons: React.FC<{
   onUpdateClick: () => void;
   onCancelClick: () => void;
 }> = function ({ onUpdateClick, onCancelClick }) {
   return (
-    <ButtonGroup style={{ textAlign: 'right' }}>
-      <Button
+    <MGDButtonGroup>
+      <MGDButton
         key="ui#itemupdate#savebutton"
-        icon="floppy-disk"
-        intent={Intent.SUCCESS}
-        text="Save"
+        icon="floppy-disk"        
         onClick={() => onUpdateClick()}
-      />
-      <Button
-        key="ui#itemupdate#cancelbutton"
-        icon="disable"
-        intent={Intent.WARNING}
-        text="Cancel"
+      >
+        Save
+      </MGDButton>
+      <MGDButton
+        key="ui#itemupdate#cancelbutton"        
+        icon="disable"        
         onClick={() => onCancelClick()}
-      />
-    </ButtonGroup>
+      >
+        Cancel
+      </MGDButton>
+    </MGDButtonGroup>
   );
 };

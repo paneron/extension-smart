@@ -1,6 +1,9 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import { Handle, NodeProps, Position } from 'react-flow-renderer';
-import styled from '@emotion/styled';
-import { CSSProperties, FC } from 'react';
+import { FC } from 'react';
 import {
   EditorApproval,
   EditorEGate,
@@ -11,7 +14,6 @@ import {
   ModelType,
 } from '../../model/editormodel';
 import { NodeCallBack } from './container';
-import React from 'react';
 import {
   DatacubeShape,
   EgateShape,
@@ -22,16 +24,11 @@ import {
   TimerShape,
 } from './shapes';
 import { Tooltip2 } from '@blueprintjs/popover2';
-import { Button } from '@blueprintjs/core';
 import { MapViewButtonToolTip } from '../mapper/MappingCalculator';
-
-const handlecss: CSSProperties = {
-  borderRadius: '5px!important',
-  width: '19px!important',
-  height: '19px!important',
-  background: 'whitesmoke!important',
-  border: '1px solid black!important',
-};
+import MGDButton from '../../MGDComponents/MGDButton';
+import React from 'react';
+import { handlecss } from '../../../css/visual';
+import { shame__approver_deco, shame__label, shame__label__long, shame__label__nudge, shame__label__short } from '../../../css/shame';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -39,10 +36,10 @@ export const Datacube: FC<NodeProps> = function ({ data }) {
   const color = 'none';
   return (
     <>
-      <Handle type="source" position={Position.Bottom} style={handlecss} />
-      <Handle type="target" position={Position.Top} style={handlecss} />
+      <Handle type="source" position={Position.Bottom} css={handlecss} />
+      <Handle type="target" position={Position.Top} css={handlecss} />
       <DatacubeShape color={color} />
-      <LongLabel>{label}</LongLabel>
+      <div css={[shame__label, shame__label__long]}>{label}</div>  
     </>
   );
 };
@@ -51,18 +48,18 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
   const process = data as EditorProcess;
   const callback = data as NodeCallBack;
   const actor = callback.getRoleById(process.actor);
-  const PB = ProcessBox[callback.modelType];
+  const PB = ProcessBox[callback.modelType];  
   return (
     <>
-      <Handle type="source" position={Position.Bottom} style={handlecss} />
+      <Handle type="source" position={Position.Bottom} css={handlecss} />
       <PB
         content={process.name === '' ? process.id : process.name}
         pid={process.id}
-        style={callback.getMapStyleById(process.id)}
+        styleClass={callback.getMapStyleClassById?callback.getMapStyleClassById(process.id):undefined}
         setMapping={callback.setMapping}
         uiref={process.uiref}
       />
-      <Handle type="target" position={Position.Top} style={handlecss} />
+      <Handle type="target" position={Position.Top} css={handlecss} />
       {process.page !== '' && (
         <div
           style={{
@@ -72,13 +69,11 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           }}
         >
           <Tooltip2 content="View subprocess" position="top">
-            <MyButton
+            <MGDButton
               key={process.id + '#subprocessbutton'}
               onClick={() => callback.onProcessClick(process.page, process.id)}
-            >
-              {' '}
-              +
-            </MyButton>
+              icon='plus'
+            />            
           </Tooltip2>
         </div>
       )}
@@ -90,10 +85,10 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
         />
       )}
       {actor !== null && (
-        <FirstLabel key={process.id + '#ActorLabel'}>
+        <div css={[shame__label]} key={process.id + '#ActorLabel'}>
           {actorIcon}
           {actor.name}
-        </FirstLabel>
+        </div>
       )}
     </>
   );
@@ -104,18 +99,18 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
   const callback = data as NodeCallBack;
   const actor = callback.getRoleById(approval.actor);
   const approver = callback.getRoleById(approval.approver);
-  const PB = ProcessBox[callback.modelType];
+  const PB = ProcessBox[callback.modelType];  
   return (
     <>
-      <Handle type="source" position={Position.Bottom} style={handlecss} />
+      <Handle type="source" position={Position.Bottom} css={handlecss} />
       <PB
         content={approval.name === '' ? approval.id : approval.name}
         pid={approval.id}
-        style={callback.getMapStyleById(approval.id)}
+        styleClass={callback.getMapStyleClassById?callback.getMapStyleClassById(approval.id):undefined}
         setMapping={callback.setMapping}
         uiref={approval.uiref}
       />
-      <Handle type="target" position={Position.Top} style={handlecss} />
+      <Handle type="target" position={Position.Top} css={handlecss} />
       {callback.hasMapping !== undefined &&
         callback.hasMapping(approval.id) && (
           <ViewMappingbutton
@@ -127,26 +122,26 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
       {actor !== null ? (
         approver !== null ? (
           <>
-            <FirstLabel key={approval.id + '#ActorLabel'}>
+            <div css={[shame__label]} key={approval.id + '#ActorLabel'}>            
               {actorIcon}
               {actor.name}
-            </FirstLabel>
-            <SecondLabel key={approval.id + '#ApproverLabel'}>
+            </div>
+            <div css={[shame__label, shame__label__nudge]} key={approval.id + '#ApproverLabel'}>            
               {approverIcon}
               {approver.name}
-            </SecondLabel>
+            </div>
           </>
         ) : (
-          <FirstLabel key={approval.id + '#ActorLabel'}>
+          <div css={[shame__label]} key={approval.id + '#ActorLabel'}>
             {actorIcon}
             {actor.name}
-          </FirstLabel>
+          </div>
         )
       ) : approver !== null ? (
-        <FirstLabel key={approval.id + '#ApproverLabel'}>
+        <div css={[shame__label]} key={approval.id + '#ApproverLabel'}>
           {approverIcon}
           {approver.name}
-        </FirstLabel>
+        </div>
       ) : (
         <></>
       )}
@@ -158,7 +153,7 @@ export const StartComponent: FC<NodeProps> = function () {
   const color = 'none';
   return (
     <>
-      <Handle type="source" position={Position.Bottom} style={handlecss} />
+      <Handle type="source" position={Position.Bottom} css={handlecss} />
       <StartShape color={color} />
     </>
   );
@@ -168,9 +163,9 @@ export const EndComponent: FC<NodeProps> = function () {
   const color = 'none';
   return (
     <>
-      <Handle type="target" position={Position.Top} style={handlecss} />
+      <Handle type="target" position={Position.Top} css={handlecss} />
       <EndShape color={color} />
-      <ShortLabel>end</ShortLabel>
+      <div css={[shame__label, shame__label__short]}>end</div> 
     </>
   );
 };
@@ -179,10 +174,10 @@ export const TimerComponent: FC<NodeProps> = function () {
   const color = 'none';
   return (
     <>
-      <Handle type="source" position={Position.Bottom} style={handlecss} />
-      <Handle type="target" position={Position.Top} style={handlecss} />
+      <Handle type="source" position={Position.Bottom} css={handlecss} />
+      <Handle type="target" position={Position.Top} css={handlecss} />
       <TimerShape color={color} />
-      <ShortLabel>timer</ShortLabel>
+      <div css={[shame__label, shame__label__short]}>timer</div>      
     </>
   );
 };
@@ -192,10 +187,10 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
   const egate = data as EditorEGate;
   return (
     <>
-      <Handle type="source" position={Position.Bottom} style={handlecss} />
-      <Handle type="target" position={Position.Top} style={handlecss} />
+      <Handle type="source" position={Position.Bottom} css={handlecss} />
+      <Handle type="target" position={Position.Top} css={handlecss} />
       <EgateShape color={color} />
-      <LongLabel>{egate.label}</LongLabel>
+      <div css={[shame__label, shame__label__long]}>{egate.label}</div>      
     </>
   );
 };
@@ -205,10 +200,10 @@ export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
   const color = 'none';
   return (
     <>
-      <Handle type="source" position={Position.Bottom} style={handlecss} />
-      <Handle type="target" position={Position.Top} style={handlecss} />
+      <Handle type="source" position={Position.Bottom} css={handlecss} />
+      <Handle type="target" position={Position.Top} css={handlecss} />
       <SignalCatchShape color={color} />
-      <LongLabel>{scevent.id}</LongLabel>
+      <div css={[shame__label, shame__label__long]}>{scevent.id}</div>
     </>
   );
 };
@@ -228,10 +223,10 @@ const ViewMappingbutton: React.FC<{
         }}
       >
         <Tooltip2 content={MapViewButtonToolTip[modelType]} position="top">
-          <Button
+          <MGDButton
             key={id + '#viewmapbutton'}
             icon="link"
-            onClick={() => setSelectedId!(id)}
+            onClick={() => setSelectedId(id)}
           />
         </Tooltip2>
       </div>
@@ -240,52 +235,6 @@ const ViewMappingbutton: React.FC<{
   return <></>;
 };
 
-const ShortLabel = styled.div`
-  position: absolute;
-  left: 0px;
-  top: 45px;
-  width: 40px;
-  text-align: center;
-  font-size: 10px;
-`;
-
-const LongLabel = styled.div`
-  position: absolute;
-  left: -50px;
-  top: 45px;
-  width: 140px;
-  text-align: center;
-  font-size: 10px;
-`;
-
-const MyButton = styled.button`
-  font-size: 14px;
-  color: green;
-`;
-
-const FirstLabel = styled.div`
-  position: absolute;
-  left: 0px;
-  top: 45px;
-  width: 140px;
-  text-align: center;
-  font-size: 10px;
-`;
-
-const SecondLabel = styled.div`
-  position: absolute;
-  left: 0px;
-  top: 65px;
-  width: 140px;
-  text-align: center;
-  font-size: 10px;
-`;
-
-const ApproverDeco = styled.span`
-  font-size: 14px;
-  color: green;
-`;
-
 const actorIcon = (
   <svg height="15" width="15">
     <circle cx="8" cy="15" r="6" stroke="black" strokeWidth="1" fill="none" />
@@ -293,4 +242,4 @@ const actorIcon = (
   </svg>
 );
 
-const approverIcon = <ApproverDeco>{'\u2611'}</ApproverDeco>;
+const approverIcon = <span css={shame__approver_deco}>{'\u2611'}</span>;

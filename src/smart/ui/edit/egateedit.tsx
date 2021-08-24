@@ -1,9 +1,11 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Button, FormGroup } from '@blueprintjs/core';
+import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
+import MGDButton from '../../MGDComponents/MGDButton';
+import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import {
   EditorEGate,
   EditorModel,
@@ -46,35 +48,37 @@ const EditEGatePage: React.FC<{
   }
 
   return (
-    <FormGroup>
-      <EditPageButtons
-        onUpdateClick={onUpdateClick}
-        onCancelClick={closeDialog}
-      />
-      <NormalTextField
-        key="field#egateID"
-        text="Exclusive Gateway ID"
-        value={editing.id}
-        onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
-      />
-      <NormalTextField
-        key="field#egateLabel"
-        text="Label"
-        value={editing.label}
-        onChange={x => setEditing({ ...editing, label: x })}
-      />
-      {edges.map((edge, index) => (
-        <EditEdgePage
-          edge={edge}
-          index={index}
-          types={measures}
-          setEdge={(x, edge) => {
-            edges[x] = edge;
-            setEdges([...edges]);
-          }}
+    <MGDDisplayPane>
+      <FormGroup>
+        <EditPageButtons
+          onUpdateClick={onUpdateClick}
+          onCancelClick={closeDialog}
         />
-      ))}
-    </FormGroup>
+        <NormalTextField
+          key="field#egateID"
+          text="Exclusive Gateway ID"
+          value={editing.id}
+          onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
+        />
+        <NormalTextField
+          key="field#egateLabel"
+          text="Label"
+          value={editing.label}
+          onChange={x => setEditing({ ...editing, label: x })}
+        />
+        {edges.map((edge, index) => (
+          <EditEdgePage
+            edge={edge}
+            index={index}
+            types={measures}
+            setEdge={(x, edge) => {
+              edges[x] = edge;
+              setEdges([...edges]);
+            }}
+          />
+        ))}
+      </FormGroup>
+    </MGDDisplayPane>
   );
 };
 
@@ -109,9 +113,8 @@ const EditEdgePage: React.FC<{
           }
           onChange={x => setEdge(index, { ...edge, condition: x })}
         />
-        <Button
+        <MGDButton
           key={'defaultbutton#edgeCondition#' + index}
-          text="Set default"
           onClick={() =>
             setEdge(index, {
               ...edge,
@@ -119,14 +122,17 @@ const EditEdgePage: React.FC<{
               condition: 'default',
             })
           }
-        />
-        <Button
+        >
+          Set default
+        </MGDButton>
+        <MGDButton
           key={'emptybutton#edgeCondition#' + index}
-          text="Set empty"
           onClick={() =>
             setEdge(index, { ...edge, description: '', condition: '' })
           }
-        />
+        >
+          Set empty
+        </MGDButton>
       </div>
     </fieldset>
   );

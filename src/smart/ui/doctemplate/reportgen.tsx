@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
-import { Button, ButtonGroup, FormGroup, Text } from '@blueprintjs/core';
+import { FormGroup, Text } from '@blueprintjs/core';
 import { EditorModel } from '../../model/editormodel';
 import { MapProfile } from '../mapper/mapmodel';
 import { genReport } from './reportFunctions';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
+import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
+import MGDButton from '../../MGDComponents/MGDButton';
 
 const ReportGen: React.FC<{
   mapProfile: MapProfile;
@@ -37,20 +39,22 @@ const ReportGen: React.FC<{
   return (
     <FormGroup>
       <Text>{report}</Text>
-      <ButtonGroup>
-        <Button
+      <MGDButtonGroup>
+        <MGDButton
           key="ui#report#save"
           icon="floppy-disk"
-          text="Save"
           onClick={handleSave()}
-        />
-        <Button
+        >
+          Save
+        </MGDButton>
+        <MGDButton
           key="ui#listview#removebutton"
           icon="disable"
-          text="Cancel"
           onClick={onClose}
-        />
-      </ButtonGroup>
+        >
+          Cancel
+        </MGDButton>
+      </MGDButtonGroup>
     </FormGroup>
   );
 };

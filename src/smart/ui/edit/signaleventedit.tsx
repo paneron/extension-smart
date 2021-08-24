@@ -4,6 +4,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
+import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel, EditorSignalEvent } from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
 import {
@@ -37,28 +38,30 @@ const EditSignalEventPage: React.FC<{
   }
 
   return (
-    <FormGroup>
-      <EditPageButtons
-        onUpdateClick={onUpdateClick}
-        onCancelClick={closeDialog}
-      />
-      <NormalTextField
-        key="field#scEventID"
-        text="Signal Catch Event ID"
-        value={editing.id}
-        onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
-      />
-      <ReferenceSelector
-        key="field#scEventSignal"
-        text="Signal"
-        filterName="Signal filter"
-        value={editing.signal}
-        options={signals}
-        update={x => setEditing({ ...editing, signal: signals[x] })}
-        editable={true}
-        onChange={x => setEditing({ ...editing, signal: x })}
-      />
-    </FormGroup>
+    <MGDDisplayPane>
+      <FormGroup>
+        <EditPageButtons
+          onUpdateClick={onUpdateClick}
+          onCancelClick={closeDialog}
+        />
+        <NormalTextField
+          key="field#scEventID"
+          text="Signal Catch Event ID"
+          value={editing.id}
+          onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
+        />
+        <ReferenceSelector
+          key="field#scEventSignal"
+          text="Signal"
+          filterName="Signal filter"
+          value={editing.signal}
+          options={signals}
+          update={x => setEditing({ ...editing, signal: signals[x] })}
+          editable={true}
+          onChange={x => setEditing({ ...editing, signal: x })}
+        />
+      </FormGroup>
+    </MGDDisplayPane>
   );
 };
 

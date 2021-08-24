@@ -1,9 +1,11 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Button, FormGroup } from '@blueprintjs/core';
+import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
+import { mgd_label } from '../../../css/form';
+import MGDButton from '../../MGDComponents/MGDButton';
 import { EditorModel } from '../../model/editormodel';
 import {
   MMELVariable,
@@ -107,17 +109,23 @@ const MeasureEditItemPage: React.FC<{
   return (
     <FormGroup>
       <div key="ui#measurement#introtext">
-        Measurement types:
+        <label css={mgd_label}> Measurement types: </label>
         <ul>
           <li>
-            {' '}
-            {VarType.DATA} : A single measurement value given by the user{' '}
+            <label css={mgd_label}>
+              {VarType.DATA} : A single measurement value given by the user
+            </label>
           </li>
           <li>
-            {' '}
-            {VarType.LISTDATA} : A list of data items provided by the user
+            <label css={mgd_label}>
+              {VarType.LISTDATA} : A list of data items provided by the user
+            </label>
           </li>
-          <li> {VarType.DERIVED} : Calulated from other measurement values </li>
+          <li>
+            <label css={mgd_label}>
+              {VarType.DERIVED} : Calulated from other measurement values
+            </label>
+          </li>
         </ul>
         The definition field is applicable to {VarType.DERIVED} only. Example
         definitions:
@@ -159,12 +167,13 @@ const MeasureEditItemPage: React.FC<{
         }}
       />
       {mea.type === VarType.DERIVED && (
-        <Button
+        <MGDButton
           key="ui#measurement#builderbutton#holder"
           icon="derive-column"
-          text="Definition validity check"
           onClick={() => validCheck(mea.definition, model!)}
-        />
+        >
+          Definition validity check
+        </MGDButton>
       )}
       <ReferenceSelector
         key="field#vardefinition"

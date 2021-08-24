@@ -6,8 +6,11 @@ import React, { useState } from 'react';
 import { EditorApproval, EditorProcess } from '../../model/editormodel';
 import { NormalTextField } from '../common/fields';
 import { MappingMeta } from '../mapper/mapmodel';
-import { Button, FormGroup, Intent, Text } from '@blueprintjs/core';
+import { FormGroup } from '@blueprintjs/core';
 import { EditPageButtons } from './commons';
+import MGDButton from '../../MGDComponents/MGDButton';
+import { mgd_label } from '../../../css/form';
+import { MGDButtonType } from '../../../css/MGDButton';
 
 const MappingEditPage: React.FC<{
   from: EditorProcess | EditorApproval;
@@ -29,22 +32,10 @@ const MappingEditPage: React.FC<{
           onUpdateClick={() => onChange(editing)}
           onCancelClick={() => onChange(null)}
         />
-        <Button
-          style={{
-            position: 'absolute',
-            top: '0px',
-            right: '0px',
-          }}
-          icon="delete"
-          intent={Intent.DANGER}
-          text="Delete"
-          onClick={() => onDelete()}
-        />
       </div>
-      <Text>
-        {' '}
-        Mapping: {from.name} ( {from.id} ) to {to.name} ( {to.id} ){' '}
-      </Text>
+      <label css={mgd_label}>
+        Mapping: {from.name} ( {from.id} ) to {to.name} ( {to.id} )
+      </label>
       <NormalTextField
         text="Information"
         value={editing.description}
@@ -59,6 +50,13 @@ const MappingEditPage: React.FC<{
           setEditing({ ...editing, justification: x });
         }}
       />
+      <MGDButton
+        icon="delete"
+        type={MGDButtonType.Primary}
+        onClick={() => onDelete()}
+      >
+        Delete
+      </MGDButton>
     </FormGroup>
   );
 };

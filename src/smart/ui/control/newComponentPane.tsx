@@ -4,6 +4,9 @@
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled';
 import React from 'react';
+import { mgd_label } from '../../../css/form';
+import MGDComponentBar from '../../MGDComponents/MGDComponentBar';
+import MGDProcessBox from '../../MGDComponents/MGDProcessBox';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
   DragAndDropFormatType,
@@ -12,31 +15,28 @@ import {
 import {
   EgateShape,
   EndShape,
-  InternalProcessBox,
   SignalCatchShape,
   TimerShape,
 } from '../flowui/shapes';
 
 const NewComponentPane: React.FC = function () {
   return (
-    <>
+    <MGDComponentBar>      
       <Unit>
-        <InternalProcessBox
+        <MGDProcessBox
           onDragStart={event => onDragStart(event, DataType.PROCESS)}
           draggable
         >
-          {' '}
-          Process
-        </InternalProcessBox>
+          <label css={mgd_label}> Process </label>
+        </MGDProcessBox>
       </Unit>
       <Unit>
-        <InternalProcessBox
+        <MGDProcessBox
           onDragStart={event => onDragStart(event, DataType.APPROVAL)}
           draggable
         >
-          {' '}
-          Approval
-        </InternalProcessBox>
+          <label css={mgd_label}> Approval </label>
+        </MGDProcessBox>
       </Unit>
       <Unit>
         <span
@@ -69,8 +69,8 @@ const NewComponentPane: React.FC = function () {
         >
           <EgateShape />
         </span>
-      </Unit>
-    </>
+      </Unit>      
+    </MGDComponentBar>
   );
 };
 

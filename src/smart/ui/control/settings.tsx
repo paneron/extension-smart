@@ -5,6 +5,14 @@ import { Tab, Tabs } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useState } from 'react';
+import { mgd_label } from '../../../css/form';
+import {
+  mgd_tabs,
+  mgd_tabs__item,
+  mgd_tabs__item__selected,
+  mgd_tabs__item__unselected,
+} from '../../../css/MGDTabs';
+import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel } from '../../model/editormodel';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
 import DataClassEditPage from '../edit/dataclassedit';
@@ -92,19 +100,34 @@ const BasicSettingPane: React.FC<{
 
   logger?.log('Enter setting page: ', page);
   return (
-    <Tabs
-      id="TabsExample"
-      onChange={x => setPage(x as SETTINGPAGE)}
-      selectedTabId={page}
-    >
-      {Object.entries(tabs).map(([key, props]) => (
-        <Tab
-          id={key}
-          title={props.title}
-          panel={<props.Panel model={model} setModel={setModel}></props.Panel>}
-        />
-      ))}
-    </Tabs>
+    <MGDDisplayPane>
+      <Tabs
+        css={mgd_tabs}
+        id="TabsExample"
+        onChange={x => setPage(x as SETTINGPAGE)}
+        selectedTabId={page}
+        animate={false}
+      >
+        {Object.entries(tabs).map(([key, props]) => (
+          <Tab
+            id={key}
+            title={
+              <span
+                css={[
+                  mgd_tabs__item,
+                  key === page
+                    ? mgd_tabs__item__selected
+                    : mgd_tabs__item__unselected,
+                ]}
+              >
+                <label css={mgd_label}> {props.title} </label>
+              </span>
+            }
+            panel={<props.Panel model={model} setModel={setModel}></props.Panel>}
+          />
+        ))}
+      </Tabs>
+    </MGDDisplayPane>
   );
 };
 

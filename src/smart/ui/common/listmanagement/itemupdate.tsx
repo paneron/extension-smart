@@ -1,9 +1,11 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Button, ButtonGroup, FormGroup, Intent } from '@blueprintjs/core';
+import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
+import MGDButton from '../../../MGDComponents/MGDButton';
+import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
 import { IUpdateInterface } from '../fields';
 
 const ItemUpdatePane: React.FC<IUpdateInterface> = ({
@@ -19,22 +21,20 @@ const ItemUpdatePane: React.FC<IUpdateInterface> = ({
   return (
     <FormGroup>
       <Content object={object} setObject={setObject} model={model} />
-      <ButtonGroup>
-        <Button
-          key="ui#itemupdate#updatebutton"
-          icon={updateButtonIcon}
-          intent={Intent.SUCCESS}
-          text={updateButtonLabel}
+      <MGDButtonGroup>
+        <MGDButton
+          icon={updateButtonIcon}          
           onClick={() => updateClicked()}
-        />
-        <Button
-          key="ui#itemupdate#cancelbutton"
-          icon="disable"
-          intent={Intent.DANGER}
-          text="Cancel"
+        >
+          {updateButtonLabel}
+        </MGDButton>
+        <MGDButton          
+          icon="disable"          
           onClick={() => cancelClicked()}
-        />
-      </ButtonGroup>
+        >
+          Cancel
+        </MGDButton>
+      </MGDButtonGroup>
     </FormGroup>
   );
 };

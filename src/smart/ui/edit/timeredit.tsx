@@ -4,6 +4,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
+import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel, EditorTimerEvent } from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
 import {
@@ -35,31 +36,33 @@ const EditTimerPage: React.FC<{
   }
 
   return (
-    <FormGroup>
-      <EditPageButtons
-        onUpdateClick={onUpdateClick}
-        onCancelClick={closeDialog}
-      />
-      <NormalTextField
-        key="field#timerID"
-        text="Timer ID"
-        value={editing.id}
-        onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
-      />
-      <NormalComboBox
-        key="field#timerType"
-        text="Timer Type"
-        value={editing.type}
-        options={TimerType}
-        onChange={x => setEditing({ ...editing, type: x })}
-      />
-      <NormalTextField
-        key="field#timerPara"
-        text="Timer parameter"
-        value={editing.para}
-        onChange={x => setEditing({ ...editing, para: x })}
-      />
-    </FormGroup>
+    <MGDDisplayPane>
+      <FormGroup>
+        <EditPageButtons
+          onUpdateClick={onUpdateClick}
+          onCancelClick={closeDialog}
+        />
+        <NormalTextField
+          key="field#timerID"
+          text="Timer ID"
+          value={editing.id}
+          onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
+        />
+        <NormalComboBox
+          key="field#timerType"
+          text="Timer Type"
+          value={editing.type}
+          options={TimerType}
+          onChange={x => setEditing({ ...editing, type: x })}
+        />
+        <NormalTextField
+          key="field#timerPara"
+          text="Timer parameter"
+          value={editing.para}
+          onChange={x => setEditing({ ...editing, para: x })}
+        />
+      </FormGroup>
+    </MGDDisplayPane>
   );
 };
 

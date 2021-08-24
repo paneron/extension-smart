@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Button, ControlGroup } from '@blueprintjs/core';
+import { ControlGroup } from '@blueprintjs/core';
 import { jsx, css } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
@@ -11,6 +11,8 @@ import ReactFlow, {
   OnLoadParams,
   ReactFlowProvider,
 } from 'react-flow-renderer';
+import { MGDButtonType } from '../../../css/MGDButton';
+import MGDButton from '../../MGDComponents/MGDButton';
 import { EditorModel, ModelType } from '../../model/editormodel';
 import {
   addToHistory,
@@ -144,10 +146,7 @@ const ModelDiagram: React.FC<{
 
   const toolbar = (
     <ControlGroup>
-      <Button
-        text={
-          'Open ' + MapperModelLabel[modelProps.modelType as MapperModelType]
-        }
+      <MGDButton
         onClick={() => {
           handleModelOpen({
             setNewModelWrapper,
@@ -157,12 +156,16 @@ const ModelDiagram: React.FC<{
             indexModel,
           });
         }}
-      />
-      <Button
+      >
+        {'Open' + MapperModelLabel[modelProps.modelType as MapperModelType]}
+      </MGDButton>
+      <MGDButton
+        type={MGDButtonType.Secondary}
         disabled={modelProps.history.items.length <= 1}
         onClick={drillUp}
-        text="Drill up"
-      />
+      >
+        Drill up
+      </MGDButton>
     </ControlGroup>
   );
 

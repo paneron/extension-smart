@@ -2,7 +2,6 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import { Button, ButtonGroup } from '@blueprintjs/core';
 import React, { CSSProperties } from 'react';
 import { EditorProcess, ModelType } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
@@ -25,6 +24,8 @@ import {
   ReferenceList,
   RemoveButton,
 } from './selected';
+import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
+import MGDButton from '../../MGDComponents/MGDButton';
 
 export const ProcessQuickEdit: React.FC<
   NodeCallBack & {
@@ -51,23 +52,25 @@ export const ProcessQuickEdit: React.FC<
   return (
     <>
       {modelType === ModelType.EDIT && (
-        <ButtonGroup>
+        <MGDButtonGroup>
           <EditButton
             callback={() =>
               setDialog(DataType.PROCESS, EditAction.EDIT, process.id)
             }
           />
-          {process.page === '' && (
+          {process.page === '' ? (
             <AddSubprocessButton
               callback={() => onSubprocessClick(process.id)}
             />
+          ) : (
+            <></>
           )}
           <RemoveButton
             callback={() =>
               setDialog(DataType.PROCESS, EditAction.DELETE, process.id)
             }
           />
-        </ButtonGroup>
+        </MGDButtonGroup>
       )}
       <DescriptionItem label="Process" value={process.id} />
       <DescriptionItem label="Name" value={process.name} />
@@ -101,11 +104,10 @@ const ProvisionList: React.FC<{
           <ul>
             {pros.map((provision: MMELProvision) => (
               <li key={provision.id}>
-                {' '}
                 <DescribeProvision
                   provision={provision}
                   getRefById={getRefById}
-                />{' '}
+                />
               </li>
             ))}
           </ul>
@@ -135,9 +137,5 @@ const DescribeProvision: React.FC<{
 export const AddSubprocessButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
-  return (
-    <Button small onClick={() => callback()}>
-      Add subprocess
-    </Button>
-  );
+  return <MGDButton onClick={() => callback()}>Add subprocess</MGDButton>;
 };

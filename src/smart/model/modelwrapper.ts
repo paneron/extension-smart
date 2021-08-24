@@ -36,11 +36,11 @@ import {
   getMappedList,
   getMapStyleById,
   getSourceStyleById,
-  MapCoverType,
-  MappingResultStyles,
+  MapCoverType,  
   MapResultType,
 } from '../ui/mapper/MappingCalculator';
 import { MapSet } from '../ui/mapper/mapmodel';
+import { map_style__coverage } from '../../css/visual';
 
 export interface ModelWrapper {
   model: EditorModel;
@@ -182,8 +182,7 @@ export function getReactFlowElementsFrom(
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
     model: mw.model,
-    onProcessClick,
-    getMapStyleById: () => ({}),
+    onProcessClick,    
   });
   return getElements(mw, dvisible, callback, e =>
     createEdgeContainer(e, edgeDelete, removeEdge)
@@ -207,12 +206,10 @@ export function getMapperReactFlowElementsFrom(
     model: mw.model,
     onProcessClick,
     setMapping,
-    getMapStyleById:
+    getMapStyleClassById:
       type === ModelType.REF
         ? isParentFull
-          ? () => ({
-              backgroundColor: MappingResultStyles[MapCoverType.FULL].color,
-            })
+          ? () => map_style__coverage(MapCoverType.FULL)
           : id => getMapStyleById(mapResult, id)
         : id => getSourceStyleById(mapSet, id),
     setSelectedId,

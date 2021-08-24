@@ -13,7 +13,7 @@ import ReactFlow, {
   Edge,
 } from 'react-flow-renderer';
 
-import { Button, ControlGroup, Dialog } from '@blueprintjs/core';
+import { ControlGroup, Dialog } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
@@ -68,6 +68,8 @@ import {
 } from '../utils/ModelAddComponentHandler';
 import { EdgePackage } from './flowui/container';
 import { deleteEdge } from '../utils/ModelRemoveComponentHandler';
+import MGDButton from '../MGDComponents/MGDButton';
+import { MGDButtonType } from '../../css/MGDButton';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -274,11 +276,11 @@ const ModelEditor: React.FC<{
           />
         }
       >
-        <Button>Workspace</Button>
+        <MGDButton>Workspace</MGDButton>
       </Popover2>
-      <Button disabled={state.history.items.length <= 1} onClick={drillUp}>
+      <MGDButton type={MGDButtonType.Primary} disabled={state.history.items.length <= 1} onClick={drillUp}>
         Drill up
-      </Button>
+      </MGDButton>
     </ControlGroup>
   );
 

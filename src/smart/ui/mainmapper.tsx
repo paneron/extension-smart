@@ -21,7 +21,6 @@ import {
 } from './mapper/mapmodel';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
-  Button,
   ControlGroup,
   Dialog,
   HotkeyConfig,
@@ -51,6 +50,7 @@ import MapperOptionMenu from './menu/mapperOptionMenu';
 import { EditMPropsInterface } from './dialog/dialogs';
 import MappingEditPage from './edit/mappingedit';
 import DocTemplatePane from './doctemplate/doctemplatepane';
+import MGDButton from '../MGDComponents/MGDButton';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -203,7 +203,7 @@ const ModelMapper: React.FC<{
       selected,
       setMapEdges
     );
-  }
+  }  
 
   if (!isVisible && selected.selected !== '') {
     onSelectionChange({
@@ -224,7 +224,7 @@ const ModelMapper: React.FC<{
           />
         }
       >
-        <Button text="Mapping" />
+        <MGDButton> Mapping </MGDButton>
       </Popover2>
       <Popover2
         minimal
@@ -236,16 +236,15 @@ const ModelMapper: React.FC<{
           />
         }
       >
-        <Button text="View" />
+        <MGDButton> View </MGDButton>
       </Popover2>
-      <Button
-        text="Report"
+      <MGDButton
         onClick={() => setViewOption({ ...viewOption, docVisible: true })}
-      />
+      >
+        Report
+      </MGDButton>
     </ControlGroup>
   );
-
-  logger?.log('viewOption', viewOption);
 
   const mapEditPage =
     editMappingProps.from !== '' && editMappingProps.to !== '' ? (

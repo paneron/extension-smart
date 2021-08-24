@@ -42,7 +42,7 @@ const Canvus = styled.div`
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 100;
+  z-index: 200;
   pointer-events: none;
 `;
 
@@ -50,7 +50,7 @@ const MappingEdge: React.FC<
   MapEdgeResult & {
     onMappingEdit: (from: string, to: string) => void;
   }
-> = function ({ fromref, toref, fromPos, toPos, fromid, toid, onMappingEdit }) {
+> = function ({ fromref, toref, fromPos, toPos, fromid, toid, onMappingEdit }) {  
   if (fromPos === undefined || toPos === undefined) {
     if (fromref.current === null || toref.current === null) {
       return <></>;

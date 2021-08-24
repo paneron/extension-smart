@@ -1,10 +1,17 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Button, ButtonGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { RefObject, useState } from 'react';
+import {
+  mgd_input,
+  mgd_label,
+  mgd_select,
+  mgd_select__restrained,
+} from '../../../../css/form';
+import MGDButton from '../../../MGDComponents/MGDButton';
+import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
 import { IViewListInterface } from '../fields';
 
 const ListViewPane: React.FC<IViewListInterface> = ({
@@ -25,18 +32,17 @@ const ListViewPane: React.FC<IViewListInterface> = ({
   return (
     <>
       <p>
-        {' '}
-        {filterName}
-        <input type="text" onChange={e => setFilter(e.target.value)} />{' '}
+        <label css={mgd_label}>{filterName}</label>
+        <input
+          css={mgd_input}
+          type="text"
+          onChange={e => setFilter(e.target.value)}
+        />
       </p>
 
       <p> {itemName} </p>
       <select
-        style={{
-          minWidth: '100%',
-          maxWidth: '100% !important',
-          width: '100%',
-        }}
+        css={[mgd_select, mgd_select__restrained]}
         size={size}
         ref={selectbox}
         multiple
@@ -48,34 +54,34 @@ const ListViewPane: React.FC<IViewListInterface> = ({
         ))}
       </select>
 
-      <ButtonGroup>
-        <Button
-          key="ui#listview#addbutton"
-          icon="plus"
-          text="Add"
-          onClick={() => addClicked()}
-        />
-        <Button
-          key="ui#listview#removebutton"
+      <MGDButtonGroup>
+        <MGDButton icon="plus" onClick={() => addClicked()}>
+          Add
+        </MGDButton>
+        <MGDButton
           icon="delete"
-          text="Remove"
           onClick={() => removeItems(extractOptions(selectbox))}
-        />
-        <Button
-          key="ui#listview#updatebutton"
+        >
+          Remove
+        </MGDButton>
+        <MGDButton
           icon="edit"
-          text="Update"
           onClick={() => actIfSelected(selectbox.current, updateClicked)}
-        />
-        {buttons?.map((b, index) => (
-          <Button
-            key={'ui#listview#additionbutton#' + index}
-            text={b.text}
-            icon={b.icon}
-            onClick={() => actIfSelected(selectbox.current, b.onClick)}
-          />
-        ))}
-      </ButtonGroup>
+        >
+          Update
+        </MGDButton>
+        <>
+          {buttons?.map((b, index) => (
+            <MGDButton
+              key={'ui#listview#additionbutton#' + index}
+              icon={b.icon}
+              onClick={() => actIfSelected(selectbox.current, b.onClick)}
+            >
+              {b.text}
+            </MGDButton>
+          ))}
+        </>
+      </MGDButtonGroup>
     </>
   );
 };

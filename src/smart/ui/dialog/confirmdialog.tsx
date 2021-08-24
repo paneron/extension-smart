@@ -1,5 +1,7 @@
-import { Button, ButtonGroup } from '@blueprintjs/core';
 import React from 'react';
+import { MGDButtonType } from '../../../css/MGDButton';
+import MGDButton from '../../MGDComponents/MGDButton';
+import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 
 export const ConfirmDialog: React.FC<{
   callback: () => void;
@@ -9,21 +11,23 @@ export const ConfirmDialog: React.FC<{
   return (
     <div style={{ textAlign: 'center' }}>
       <p> {msg} </p>
-      <ButtonGroup>
-        <Button
+      <MGDButtonGroup>
+        <MGDButton
+          type={MGDButtonType.Primary}
           key="ui#dialog#confirmbutton"
-          icon="confirm"
-          intent="danger"
-          text="Confirm"
+          icon="confirm"          
           onClick={() => callback()}
-        />
-        <Button
+        >
+          Confirm
+        </MGDButton>
+        <MGDButton
           key="ui#dialog#confirmbutton"
           icon="disable"
-          text="Cancel"
           onClick={() => cancel()}
-        />
-      </ButtonGroup>
+        >
+          Cancel
+        </MGDButton>
+      </MGDButtonGroup>
     </div>
   );
 };

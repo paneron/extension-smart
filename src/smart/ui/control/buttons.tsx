@@ -1,6 +1,6 @@
 import { Icon, IconName } from '@blueprintjs/core';
-import React, { CSSProperties } from 'react';
-import { ControlButton } from 'react-flow-renderer';
+import React from 'react';
+import MGDControlButton from '../../MGDComponents/MGDControlButton';
 
 export const IconControlButton: React.FC<{
   isOn: boolean;
@@ -8,12 +8,8 @@ export const IconControlButton: React.FC<{
   icon: string;
 }> = function ({ isOn, onClick, icon }) {
   return (
-    <ControlButton style={getStyle(isOn)} onClick={onClick}>
+    <MGDControlButton isActive={isOn} onClick={onClick}>
       <Icon icon={icon as IconName} />
-    </ControlButton>
+    </MGDControlButton>
   );
 };
-
-function getStyle(on: boolean): CSSProperties {
-  return on ? { background: '#3d3' } : {};
-}

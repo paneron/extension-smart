@@ -1,9 +1,17 @@
 /** @jsx jsx */
 
-import { jsx, css } from '@emotion/react';
-import { Button, FormGroup, IconName, TextArea } from '@blueprintjs/core';
+import { jsx } from '@emotion/react';
+import { FormGroup, IconName } from '@blueprintjs/core';
 import React, { CSSProperties, RefObject, useState } from 'react';
 import { EditorModel } from '../../model/editormodel';
+import MGDButton from '../../MGDComponents/MGDButton';
+import MGDTextarea from '../../MGDComponents/MGDTextarea';
+import {
+  mgd_input,
+  mgd_label,
+  mgd_select,
+  mgd_select__constrained,
+} from '../../../css/form';
 
 export interface IAdditionalListButton {
   text: string;
@@ -98,13 +106,11 @@ export interface IUpdateInterface {
 export const NormalTextField: React.FC<IField> = (f: IField) => {
   return (
     <FormGroup label={f.text} helperText={f.extend}>
-      <TextArea
+      <MGDTextarea
+        id="field#text"
         onChange={e => f.onChange(e.target.value)}
         rows={f.rows}
         value={f.value}
-        css={css`
-          padding: 5px !important;
-        `}
         fill
       />
     </FormGroup>
@@ -120,7 +126,11 @@ export const NormalComboBox: React.FC<IComboField> = function ({
 }) {
   return (
     <FormGroup label={text} helperText={extend}>
-      <select value={value} onChange={e => onChange(e.target.value)}>
+      <select
+        css={mgd_select}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+      >
         {options.map((x, index) => (
           <option key={'option' + index} value={x}>
             {x}
@@ -129,11 +139,6 @@ export const NormalComboBox: React.FC<IComboField> = function ({
       </select>
     </FormGroup>
   );
-};
-
-const list: CSSProperties = {
-  minWidth: '100px',
-  minHeight: '200px',
 };
 
 const containercss: CSSProperties = {
@@ -147,12 +152,6 @@ const column: CSSProperties = {
   textAlign: 'center',
   display: 'flex',
   flexFlow: 'column nowrap',
-};
-
-const inputcss: CSSProperties = {
-  resize: 'both',
-  height: '18px',
-  verticalAlign: 'middle',
 };
 
 export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
@@ -184,7 +183,11 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
       <div style={containercss}>
         <div style={column}>
           {f.text}
-          <select style={list} ref={mainlist} multiple>
+          <select
+            css={[mgd_select, mgd_select__constrained]}
+            ref={mainlist}
+            multiple
+          >
             {elms.map((x, index) => (
               <option key={'ui#selector#values#' + index} value={x}>
                 {x}
@@ -193,26 +196,33 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
           </select>
         </div>
         <div style={column}>
-          <Button
-            alignText="left"
+          <MGDButton
             icon="chevron-left"
-            text="Add"
             onClick={() => f.add(extractOptions(reflist))}
-          />
-          <Button
-            alignText="right"
+          >
+            Add
+          </MGDButton>
+          <MGDButton
             rightIcon="chevron-right"
-            text="Remove"
             onClick={() => f.remove(extractOptions(mainlist))}
-          />
+          >
+            Remove
+          </MGDButton>
         </div>
         <div style={column}>
           <div>
-            {' '}
-            {f.filterName}{' '}
-            <input type="text" onChange={e => setFilter(e.target.value)} />{' '}
+            <label css={mgd_label}> {f.filterName} </label>
+            <input
+              css={mgd_input}
+              type="text"
+              onChange={e => setFilter(e.target.value)}
+            />
           </div>
-          <select style={list} ref={reflist} multiple>
+          <select
+            css={[mgd_select, mgd_select__constrained]}
+            ref={reflist}
+            multiple
+          >
             {options.map((x, index) => (
               <option key={'ui#selector#options#' + index} value={x}>
                 {x}
@@ -256,9 +266,9 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
     <fieldset>
       <legend>{f.text}</legend>
       <div style={containercss}>
-        {f.text}
-        <textarea
-          style={inputcss}
+        <label css={mgd_label}>{f.text}</label>
+        <MGDTextarea
+          id="field#text"
           value={f.value}
           readOnly={f.editable !== undefined && !f.editable}
           onChange={e => {
@@ -266,19 +276,25 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
               f.onChange(e.target.value);
             }
           }}
+          rows={1}
         />
-        <Button
-          icon="double-chevron-left"
-          text="Select"
-          onClick={() => handleOnClick()}
-        />
+        <MGDButton icon="double-chevron-left" onClick={() => handleOnClick()}>
+          Select
+        </MGDButton>
         <div style={column}>
           <div>
-            {' '}
-            {f.filterName}{' '}
-            <input type="text" onChange={e => setFilter(e.target.value)} />{' '}
+            <label css={mgd_label}>{f.filterName}</label>
+            <input
+              css={mgd_input}
+              type="text"
+              onChange={e => setFilter(e.target.value)}
+            />
           </div>
-          <select style={list} ref={optionlist} multiple>
+          <select
+            css={[mgd_select, mgd_select__constrained]}
+            ref={optionlist}
+            multiple
+          >
             {options.map(([x, index]) => (
               <option key={'ui#selector#options#' + index} value={index}>
                 {x}

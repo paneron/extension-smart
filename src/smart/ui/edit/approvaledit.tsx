@@ -4,6 +4,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
+import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorApproval, EditorModel } from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
 import {
@@ -48,79 +49,81 @@ const EditApprovalPage: React.FC<{
   }
 
   return (
-    <FormGroup>
-      <EditPageButtons
-        onUpdateClick={onUpdateClick}
-        onCancelClick={closeDialog}
-      />
-      <NormalTextField
-        key="field#approvalID"
-        text="Approval ID"
-        value={editing.id}
-        onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
-      />
-      <NormalTextField
-        key="field#approvalName"
-        text="Approval Process Name"
-        value={editing.name}
-        onChange={x => setEditing({ ...editing, name: x })}
-      />
-      <NormalComboBox
-        key="field#approvalModality"
-        text="Modality"
-        value={editing.modality}
-        options={MODAILITYOPTIONS}
-        onChange={x => setEditing({ ...editing, modality: x })}
-      />
-      <ReferenceSelector
-        key="field#ApprovalActor"
-        text="Actor"
-        filterName="Actor filter"
-        value={editing.actor}
-        options={roles}
-        update={x => setEditing({ ...editing, actor: roles[x] })}
-      />
-      <ReferenceSelector
-        key="field#ApprovalApprover"
-        text="Approver"
-        filterName="Approver filter"
-        value={editing.approver}
-        options={roles}
-        update={x => setEditing({ ...editing, approver: roles[x] })}
-      />
-      <MultiReferenceSelector
-        key="field#recordSelector"
-        text="Approval record registry"
-        options={regs}
-        values={editing.records}
-        filterName="Registry filter"
-        add={x => {
-          editing.records = new Set([...editing.records, ...x]);
-          setEditing({ ...editing });
-        }}
-        remove={x => {
-          editing.records = new Set(
-            [...editing.records].filter(s => !x.has(s))
-          );
-          setEditing({ ...editing });
-        }}
-      />
-      <MultiReferenceSelector
-        key="field#refSelector"
-        text="Reference"
-        options={refs}
-        values={editing.ref}
-        filterName="Reference filter"
-        add={x => {
-          editing.ref = new Set([...editing.ref, ...x]);
-          setEditing({ ...editing });
-        }}
-        remove={x => {
-          editing.ref = new Set([...editing.ref].filter(s => !x.has(s)));
-          setEditing({ ...editing });
-        }}
-      />
-    </FormGroup>
+    <MGDDisplayPane>
+      <FormGroup>
+        <EditPageButtons
+          onUpdateClick={onUpdateClick}
+          onCancelClick={closeDialog}
+        />
+        <NormalTextField
+          key="field#approvalID"
+          text="Approval ID"
+          value={editing.id}
+          onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
+        />
+        <NormalTextField
+          key="field#approvalName"
+          text="Approval Process Name"
+          value={editing.name}
+          onChange={x => setEditing({ ...editing, name: x })}
+        />
+        <NormalComboBox
+          key="field#approvalModality"
+          text="Modality"
+          value={editing.modality}
+          options={MODAILITYOPTIONS}
+          onChange={x => setEditing({ ...editing, modality: x })}
+        />
+        <ReferenceSelector
+          key="field#ApprovalActor"
+          text="Actor"
+          filterName="Actor filter"
+          value={editing.actor}
+          options={roles}
+          update={x => setEditing({ ...editing, actor: roles[x] })}
+        />
+        <ReferenceSelector
+          key="field#ApprovalApprover"
+          text="Approver"
+          filterName="Approver filter"
+          value={editing.approver}
+          options={roles}
+          update={x => setEditing({ ...editing, approver: roles[x] })}
+        />
+        <MultiReferenceSelector
+          key="field#recordSelector"
+          text="Approval record registry"
+          options={regs}
+          values={editing.records}
+          filterName="Registry filter"
+          add={x => {
+            editing.records = new Set([...editing.records, ...x]);
+            setEditing({ ...editing });
+          }}
+          remove={x => {
+            editing.records = new Set(
+              [...editing.records].filter(s => !x.has(s))
+            );
+            setEditing({ ...editing });
+          }}
+        />
+        <MultiReferenceSelector
+          key="field#refSelector"
+          text="Reference"
+          options={refs}
+          values={editing.ref}
+          filterName="Reference filter"
+          add={x => {
+            editing.ref = new Set([...editing.ref, ...x]);
+            setEditing({ ...editing });
+          }}
+          remove={x => {
+            editing.ref = new Set([...editing.ref].filter(s => !x.has(s)));
+            setEditing({ ...editing });
+          }}
+        />
+      </FormGroup>
+    </MGDDisplayPane>
   );
 };
 

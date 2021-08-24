@@ -1,5 +1,10 @@
-import styled from '@emotion/styled';
-import React, { CSSProperties, RefObject } from 'react';
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx, SerializedStyles } from '@emotion/react';
+import { RefObject } from 'react';
+import { mgd_label } from '../../../css/form';
+import MGDProcessBox from '../../MGDComponents/MGDProcessBox';
 import { ModelType } from '../../model/editormodel';
 
 export const DatacubeShape: React.FC<{ color?: string }> = function ({
@@ -110,50 +115,38 @@ export const SignalCatchShape: React.FC<{ color?: string }> = function ({
   );
 };
 
-export const InternalProcessBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  border-radius: 5px;
-  border: 1px;
-  width: 150px;
-  height: 40px;
-  font-size: 10px;
-  border-style: solid;
-`;
-
 export const ProcessBox: Record<
   ModelType,
   React.FC<{
     content: string;
-    pid: string;
-    style: CSSProperties;
+    pid: string;    
+    styleClass?: SerializedStyles;
     setMapping?: (fromid: string, toid: string) => void;
     uiref?: RefObject<HTMLDivElement>;
   }>
 > = {
   [ModelType.EDIT]: ({ content }) => (
-    <InternalProcessBox>{content}</InternalProcessBox>
+    <MGDProcessBox>{content}</MGDProcessBox>
   ),
-  [ModelType.IMP]: ({ content, pid, style, uiref }) => (
-    <InternalProcessBox
-      ref={uiref}
-      style={style}
+  [ModelType.IMP]: ({ content, pid, styleClass, uiref }) => {    
+    return (
+    <MGDProcessBox
+      uiref={uiref}
+      styleClass={styleClass}
       draggable={true}
       onDragStart={event => onDragStart(event, pid)}
     >
-      <div>{content}</div>
-    </InternalProcessBox>
-  ),
-  [ModelType.REF]: ({ content, pid, style, setMapping = () => {}, uiref }) => (
-    <InternalProcessBox
-      ref={uiref}
-      style={style}
+      <label css={mgd_label}>{content}</label>
+    </MGDProcessBox>
+  )},
+  [ModelType.REF]: ({ content, pid, styleClass, setMapping = () => {}, uiref }) => (
+    <MGDProcessBox
+      uiref={uiref}
+      styleClass={styleClass}
       onDrop={event => onDrop(event, pid, setMapping)}
     >
-      <div>{content}</div>
-    </InternalProcessBox>
+      <label css={mgd_label}>{content}</label>
+    </MGDProcessBox>
   ),
 };
 

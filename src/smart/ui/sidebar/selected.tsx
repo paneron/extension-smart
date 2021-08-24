@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { jsx, css } from '@emotion/react';
+import { jsx } from '@emotion/react';
 import React, { CSSProperties } from 'react';
 import { useStoreState, Elements, isNode } from 'react-flow-renderer';
 import { DataType } from '../../serialize/interface/baseinterface';
@@ -42,7 +42,11 @@ import {
   EditAction,
   SelectableNodeTypes,
 } from '../../utils/constants';
-import { Button, ButtonGroup } from '@blueprintjs/core';
+import MGDButton from '../../MGDComponents/MGDButton';
+import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
+import { mgd_label } from '../../../css/form';
+import { MGDButtonType } from '../../../css/MGDButton';
+import MGDSidebar from '../../MGDComponents/MGDSidebar';
 
 export const SelectedNodeDescription: React.FC<{
   model: EditorModel;
@@ -87,7 +91,7 @@ export const SelectedNodeDescription: React.FC<{
   }
 
   return (
-    <div style={{ maxHeight: '70vh' }}>
+    <MGDSidebar>
       {elm !== null ? (
         <Describe
           node={elm}
@@ -98,7 +102,7 @@ export const SelectedNodeDescription: React.FC<{
       ) : (
         'Nothing is selected'
       )}
-    </div>
+    </MGDSidebar>
   );
 };
 
@@ -244,13 +248,15 @@ export const Describe: React.FC<{
 export const RemoveButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
-  return <Button small intent="danger" icon="cross" onClick={callback} />;
+  return <MGDButton type={MGDButtonType.Primary} icon="cross" onClick={callback} />;
 };
 
 export const EditButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
-  return <Button small icon="edit" text="Edit" onClick={callback} />;
+  return (
+    <MGDButton icon="edit" onClick={callback} />    
+  );
 };
 
 const ApprovalRecordList: React.FC<{
@@ -313,8 +319,7 @@ const AttributeList: React.FC<{
           <ul>
             {Object.entries(attributes).map(([v, att]) => (
               <li key={v}>
-                {' '}
-                <DescribeAttribute att={att} getRefById={getRefById} />{' '}
+                <DescribeAttribute att={att} getRefById={getRefById} />
               </li>
             ))}
           </ul>
@@ -333,8 +338,9 @@ export const DescriptionItem: React.FC<{
 }> = function ({ label, value, css }): JSX.Element {
   return (
     <p>
-      {' '}
-      {label}:{css !== undefined ? <span style={css}> {value}</span> : value}{' '}
+      <label css={mgd_label}>
+        {label}:{css !== undefined ? <span style={css}> {value}</span> : value}
+      </label>
     </p>
   );
 };
@@ -345,12 +351,11 @@ export const ActorDescription: React.FC<{
 }> = function ({ role, label }): JSX.Element {
   return (
     <>
-      {' '}
       {role !== null ? (
         <DescriptionItem label={label} value={role.name} />
       ) : (
         <></>
-      )}{' '}
+      )}
     </>
   );
 };
@@ -362,12 +367,11 @@ export const NonEmptyFieldDescription: React.FC<{
 }> = function ({ label, value, css }): JSX.Element {
   return (
     <>
-      {' '}
       {value !== '' ? (
         <DescriptionItem label={label} value={value} css={css} />
       ) : (
         ''
-      )}{' '}
+      )}
     </>
   );
 };
@@ -419,11 +423,7 @@ const DescribeApproval: React.FC<{
   return (
     <>
       {app.modelType === ModelType.EDIT && (
-        <ButtonGroup
-          css={css`
-            margin-bottom: 10px;
-          `}
-        >
+        <MGDButtonGroup>
           <EditButton
             callback={() =>
               setDialog(DataType.APPROVAL, EditAction.EDIT, app.id)
@@ -434,7 +434,7 @@ const DescribeApproval: React.FC<{
               setDialog(DataType.APPROVAL, EditAction.DELETE, app.id)
             }
           />
-        </ButtonGroup>
+        </MGDButtonGroup>
       )}
       <DescriptionItem label="Approval" value={app.id} />
       <DescriptionItem label="Name" value={app.name} />
@@ -458,7 +458,7 @@ const DescribeEGate: React.FC<{
   return (
     <>
       {egate.modelType === ModelType.EDIT && (
-        <ButtonGroup>
+        <MGDButtonGroup>
           <EditButton
             callback={() =>
               setDialog(DataType.EGATE, EditAction.EDIT, egate.id)
@@ -469,7 +469,7 @@ const DescribeEGate: React.FC<{
               setDialog(DataType.EGATE, EditAction.DELETE, egate.id)
             }
           />
-        </ButtonGroup>
+        </MGDButtonGroup>
       )}
       <DescriptionItem label="Exclusive Gateway" value={egate.id} />
       <DescriptionItem label="Contents" value={egate.label} />
@@ -488,7 +488,7 @@ const DescribeSignalCatch: React.FC<{
   return (
     <>
       {scEvent.modelType === ModelType.EDIT && (
-        <ButtonGroup>
+        <MGDButtonGroup>
           <EditButton
             callback={() =>
               setDialog(DataType.SIGNALCATCHEVENT, EditAction.EDIT, scEvent.id)
@@ -503,7 +503,7 @@ const DescribeSignalCatch: React.FC<{
               )
             }
           />
-        </ButtonGroup>
+        </MGDButtonGroup>
       )}
       <DescriptionItem label="Signal Catch Event" value={scEvent.id} />
       <DescriptionItem label="Signal" value={scEvent.signal} />
@@ -522,7 +522,7 @@ const DescribeTimer: React.FC<{
   return (
     <>
       {timer.modelType === ModelType.EDIT && (
-        <ButtonGroup>
+        <MGDButtonGroup>
           <EditButton
             callback={() =>
               setDialog(DataType.TIMEREVENT, EditAction.EDIT, timer.id)
@@ -533,7 +533,7 @@ const DescribeTimer: React.FC<{
               setDialog(DataType.TIMEREVENT, EditAction.DELETE, timer.id)
             }
           />
-        </ButtonGroup>
+        </MGDButtonGroup>
       )}
       <DescriptionItem label="Timer Event" value={timer.id} />
       <NonEmptyFieldDescription label="Type" value={timer.modelType} />

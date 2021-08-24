@@ -10,6 +10,7 @@ import {
 } from '../../model/editormodel';
 import { MMELtoFlowEntries } from '../../model/state';
 import { MMELRole } from '../../serialize/interface/supportinterface';
+import { SerializedStyles } from '@emotion/utils';
 
 export interface EdgeContainer {
   id: string;
@@ -30,8 +31,8 @@ export interface NodeCallBack {
   style?: CSSProperties;
   onProcessClick: (pageid: string, processid: string) => void;
   getRoleById: (id: string) => MMELRole | null;
-  setMapping: (fromid: string, toid: string) => void;
-  getMapStyleById: (id: string) => CSSProperties;
+  setMapping: (fromid: string, toid: string) => void;  
+  getMapStyleClassById?: (id: string) => SerializedStyles;
   setSelectedId?: (id: string) => void;
   hasMapping?: (id: string) => boolean;
 }
@@ -121,8 +122,8 @@ export function getEditorNodeCallBack(props: {
   type: ModelType;
   model: EditorModel;
   onProcessClick: (pageid: string, processid: string) => void;
-  setMapping?: (fromid: string, toid: string) => void;
-  getMapStyleById: (id: string) => CSSProperties;
+  setMapping?: (fromid: string, toid: string) => void;  
+  getMapStyleClassById?: (id: string) => SerializedStyles;
   setSelectedId?: (id: string) => void;
   hasMapping?: (id: string) => boolean;
 }): NodeCallBack {
@@ -130,8 +131,8 @@ export function getEditorNodeCallBack(props: {
     type,
     model,
     onProcessClick,
-    setMapping = () => {},
-    getMapStyleById = () => ({}),
+    setMapping = () => {},    
+    getMapStyleClassById,
     setSelectedId,
     hasMapping,
   } = props;
@@ -144,8 +145,8 @@ export function getEditorNodeCallBack(props: {
     modelType: type,
     getRoleById: getRoleById,
     onProcessClick: onProcessClick,
-    setMapping: setMapping,
-    getMapStyleById: getMapStyleById,
+    setMapping: setMapping,    
+    getMapStyleClassById: getMapStyleClassById,
     setSelectedId: setSelectedId,
     hasMapping: hasMapping,
   };
