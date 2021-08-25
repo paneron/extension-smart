@@ -109,7 +109,7 @@ export const NormalTextField: React.FC<IField> = (f: IField) => {
   return (
     <FormGroup label={f.text} helperText={f.extend}>
       <MGDTextarea
-        readOnly={f.onChange===undefined}
+        readOnly={f.onChange === undefined}
         id="field#text"
         onChange={e => {
           if (f.onChange) {

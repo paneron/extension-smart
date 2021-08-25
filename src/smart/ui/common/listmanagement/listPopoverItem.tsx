@@ -147,7 +147,7 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
   };
 
   const updateHandler: IUpdateInterface = {
-    isVisible: mode === 'Update', 
+    isVisible: mode === 'Update',
     Content: Content,
     object: editing,
     model: model,
@@ -162,7 +162,7 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
     cancelClicked: () => {
       setMode('None');
     },
-  };  
+  };
 
   return (
     <>

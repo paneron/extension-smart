@@ -15,7 +15,7 @@ import MGDButton from '../../../MGDComponents/MGDButton';
 import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
 import { IViewListInterface } from '../fields';
 
-const ListViewPane: React.FC<IViewListInterface> = ({  
+const ListViewPane: React.FC<IViewListInterface> = ({
   filterName,
   itemName,
   getItems,
@@ -24,10 +24,10 @@ const ListViewPane: React.FC<IViewListInterface> = ({
   updateClicked,
   size,
   buttons,
-  isVisible
-}) => {  
+  isVisible,
+}) => {
   const [filter, setFilter] = useState<string>('');
-    
+
   const selectbox: RefObject<HTMLSelectElement> = React.createRef();
   const options = getItems(filter.toLocaleLowerCase());
 
@@ -85,8 +85,8 @@ const ListViewPane: React.FC<IViewListInterface> = ({
         </>
       </MGDButtonGroup>
     </div>
-  );    
-}
+  );
+};
 
 function actIfSelected(
   elm: HTMLSelectElement | null,

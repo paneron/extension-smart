@@ -4,9 +4,10 @@ import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { NormalTextField } from '../common/fields';
+import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 
-const ReportGen: React.FC<{  
-  report: string;  
+const ReportGen: React.FC<{
+  report: string;
   onClose: () => void;
 }> = function ({ report, onClose }) {
   const { getBlob, writeFileToFilesystem } = useContext(DatasetContext);
@@ -29,25 +30,27 @@ const ReportGen: React.FC<{
   }
 
   return (
-    <FormGroup>
-      <NormalTextField value={report} text='Report' rows={20}/>
-      <MGDButtonGroup>
-        <MGDButton
-          key="ui#report#save"
-          icon="floppy-disk"
-          onClick={handleSave()}
-        >
-          Save
-        </MGDButton>
-        <MGDButton
-          key="ui#listview#removebutton"
-          icon="disable"
-          onClick={onClose}
-        >
-          Cancel
-        </MGDButton>
-      </MGDButtonGroup>
-    </FormGroup>
+    <MGDDisplayPane>
+      <FormGroup>
+        <NormalTextField value={report} text="Report" rows={20} />
+        <MGDButtonGroup>
+          <MGDButton
+            key="ui#report#save"
+            icon="floppy-disk"
+            onClick={handleSave()}
+          >
+            Save
+          </MGDButton>
+          <MGDButton
+            key="ui#listview#removebutton"
+            icon="disable"
+            onClick={onClose}
+          >
+            Cancel
+          </MGDButton>
+        </MGDButtonGroup>
+      </FormGroup>
+    </MGDDisplayPane>
   );
 };
 

@@ -18,7 +18,7 @@ const ItemUpdatePane: React.FC<IUpdateInterface> = ({
   updateButtonIcon,
   updateClicked,
   cancelClicked,
-  isVisible
+  isVisible,
 }) => {
   if (isVisible) {
     return (
@@ -37,7 +37,7 @@ const ItemUpdatePane: React.FC<IUpdateInterface> = ({
       </MGDDisplayPane>
     );
   } else {
-    return <></>
+    return <></>;
   }
 };
 

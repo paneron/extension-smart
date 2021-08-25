@@ -1,5 +1,9 @@
-import { EditorModel, isEditorApproval, isEditorProcess } from '../../model/editormodel';
-import { Logger, referenceSorter } from '../../utils/commonfunctions';
+import {
+  EditorModel,
+  isEditorApproval,
+  isEditorProcess,
+} from '../../model/editormodel';
+import { referenceSorter } from '../../utils/commonfunctions';
 import { MapProfile } from '../mapper/mapmodel';
 
 export function genReport(
@@ -8,24 +12,25 @@ export function genReport(
   ref: EditorModel,
   imp: EditorModel
 ): string {
+  // hardcoded template at the moment
   if (text === 'main' || text === 'annex') {
     const mapSet = mapProfile.mapSet[ref.meta.namespace];
     if (ref.meta.namespace === '' || mapSet === undefined) {
-      alert(`Mapping to implementation model (ns: ${ref.meta.namespace}) is not defined`);
+      alert(
+        `Mapping to implementation model (ns: ${ref.meta.namespace}) is not defined`
+      );
       return text;
     }
-    const records:RefRecord[] = Object.values(ref.refs)      
+    const records: RefRecord[] = Object.values(ref.refs)
       .sort(referenceSorter)
-      .map(x => (
-        { 
-          id: x.id,
-          clause: x.clause, 
-          title: x.title, 
-          description: '',
-          justfication: new Set<string>()
-        }
-      ));
-    const refMap:Record<string, RefRecord> = {};
+      .map(x => ({
+        id: x.id,
+        clause: x.clause,
+        title: x.title,
+        description: '',
+        justfication: new Set<string>(),
+      }));
+    const refMap: Record<string, RefRecord> = {};
     for (const r of records) {
       refMap[r.id] = r;
     }
@@ -33,10 +38,10 @@ export function genReport(
     for (const from in mapSet.mappings) {
       const maps = mapSet.mappings[from];
       for (const to in maps) {
-        const map = maps[to];      
+        const map = maps[to];
         const pto = ref.elements[to];
         const clause = new Set<string>();
-        let statement = '';      
+        let statement = '';
         if (isEditorProcess(pto)) {
           for (const p of pto.provision) {
             const prov = ref.provisions[p];
@@ -49,17 +54,18 @@ export function genReport(
           for (const r of pto.ref) {
             clause.add(r);
           }
-        }      
-        for (const r of clause) {        
-          if (map.description !== '') {                    
-            refMap[r].description += statement;          
+        }
+        for (const r of clause) {
+          if (map.description !== '') {
+            refMap[r].description += statement;
             refMap[r].justfication.add(map.description);
           }
-        }      
+        }
       }
     }
-    
-    let out = '.Statement of applicability\n' +
+
+    let out =
+      '.Statement of applicability\n' +
       '[cols="1,1,1,1"]\n' +
       '|===\n' +
       '|Clause\n' +
@@ -67,51 +73,54 @@ export function genReport(
       '|Description\n' +
       '|Justification\n\n';
 
-    for (const r of records) {    
-      if ((r.clause.charAt(0) === 'A' && text === 'annex') || 
-        (r.clause.charAt(0) !== 'A' && text === 'main')) {    
+    for (const r of records) {
+      if (
+        (r.clause.charAt(0) === 'A' && text === 'annex') ||
+        (r.clause.charAt(0) !== 'A' && text === 'main')
+      ) {
         if (r.justfication.size === 0) {
           out += `4+|Clause ${r.clause} ${r.title}\n`;
-        } else {    
-          for (const just of r.justfication) {        
-            out += `|${r.clause}\n` +
+        } else {
+          for (const just of r.justfication) {
+            out +=
+              `|${r.clause}\n` +
               `|${r.title}\n` +
-              `|${r.clause.charAt(0) === 'A' ? r.description: ''}\n` +
+              `|${r.clause.charAt(0) === 'A' ? r.description : ''}\n` +
               `|${just}\n\n`;
           }
         }
       }
     }
-    out+='|===\n';
+    out += '|===\n';
     return out;
   } else {
-    return genReport2(text, mapProfile, ref, imp);
+    return customGenReport(text, mapProfile, ref, imp);
   }
 }
 
-function genReport2(
+function customGenReport(
   text: string,
   mapProfile: MapProfile,
   ref: EditorModel,
   imp: EditorModel
-):string {
+): string {
   const mapSet = mapProfile.mapSet[ref.meta.namespace];
   if (ref.meta.namespace === '' || mapSet === undefined) {
-    alert(`Mapping to implementation model (ns: ${ref.meta.namespace}) is not defined`);
+    alert(
+      `Mapping to implementation model (ns: ${ref.meta.namespace}) is not defined`
+    );
     return text;
   }
-  const records:RefRecord[] = Object.values(ref.refs)      
+  const records: RefRecord[] = Object.values(ref.refs)
     .sort(referenceSorter)
-    .map(x => (
-      { 
-        id: x.id,
-        clause: x.clause, 
-        title: x.title, 
-        description: '',
-        justfication: new Set<string>()
-      }
-    ));
-  const refMap:Record<string, RefRecord> = {};
+    .map(x => ({
+      id: x.id,
+      clause: x.clause,
+      title: x.title,
+      description: '',
+      justfication: new Set<string>(),
+    }));
+  const refMap: Record<string, RefRecord> = {};
   for (const r of records) {
     refMap[r.id] = r;
   }
@@ -119,10 +128,10 @@ function genReport2(
   for (const from in mapSet.mappings) {
     const maps = mapSet.mappings[from];
     for (const to in maps) {
-      const map = maps[to];      
+      const map = maps[to];
       const pto = ref.elements[to];
       const clause = new Set<string>();
-      let statement = '';      
+      let statement = '';
       if (isEditorProcess(pto)) {
         for (const p of pto.provision) {
           const prov = ref.provisions[p];
@@ -135,13 +144,13 @@ function genReport2(
         for (const r of pto.ref) {
           clause.add(r);
         }
-      }      
-      for (const r of clause) {        
-        if (map.description !== '') {                    
-          refMap[r].description += statement;          
+      }
+      for (const r of clause) {
+        if (map.description !== '') {
+          refMap[r].description += statement;
           refMap[r].justfication.add(map.description);
         }
-      }      
+      }
     }
   }
   try {
@@ -151,23 +160,16 @@ function genReport2(
     	  ${text}
       }
   	  return f;
-    `;
-    Logger.logger.log(program);
+    `;        
     const out = Function(program)()(records);
     return out;
-  } catch (e) {
-    if (e instanceof TypeError) {
-      return `Type error: ${e.message}`;
-    } else if (e instanceof RangeError) {
-      return `Range error: ${e.message}`;
-    } else if (e instanceof EvalError) {
-      return `Eval error: ${e.message}`;
-    } else if (typeof e === "string") {
-      return `Error: ${e}`;
-    } else {      
+  } catch (e:any) {
+    if (e.messgae && e.stack) {
+      return e.message + '\n' + e.stack;
+    } else {
       return 'Unknown error';
-    }    
-  }  
+    }
+  }
 }
 
 interface RefRecord {

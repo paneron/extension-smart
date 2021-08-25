@@ -111,30 +111,28 @@ const DocTemplatePane: React.FC<{
   };
 
   return (
-    <FormGroup>
-      <ListManagePage {...dochandler} />
-      <Dialog
-        isOpen={report !== null}
-        title={'Report'}
-        css={css`
-          width: calc(100vw - 60px);
-          min-height: calc(100vh - 60px);
-          padding-bottom: 0;
-          & > :last-child {
-            overflow-y: auto;
-            padding: 20px;
-          }
-        `}
-        onClose={() => setReport(null)}
-        canEscapeKeyClose={false}
-        canOutsideClickClose={false}
-      >
-        <ReportGen
-          report={report??''}          
+    <MGDDisplayPane>
+      <FormGroup>
+        <ListManagePage {...dochandler} />
+        <Dialog
+          isOpen={report !== null}
+          title={'Report'}
+          css={css`
+            width: calc(100vw - 60px);            
+            padding-bottom: 0;
+            & > :last-child {
+              overflow-y: auto;
+              padding: 20px;
+            }
+          `}
           onClose={() => setReport(null)}
-        />
-      </Dialog>
-    </FormGroup>
+          canEscapeKeyClose={false}
+          canOutsideClickClose={false}
+        >
+          <ReportGen report={report ?? ''} onClose={() => setReport(null)} />
+        </Dialog>
+      </FormGroup>
+    </MGDDisplayPane>
   );
 };
 

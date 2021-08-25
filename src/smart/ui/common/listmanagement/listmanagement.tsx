@@ -88,7 +88,7 @@ const ListManagePage: React.FC<IManageHandler> = ({
     },
     size: 15,
     buttons: buttons,
-  };  
+  };
 
   return (
     <>

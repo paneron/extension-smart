@@ -157,7 +157,7 @@ const ModelDiagram: React.FC<{
           });
         }}
       >
-        {'Open' + MapperModelLabel[modelProps.modelType as MapperModelType]}
+        {'Open ' + MapperModelLabel[modelProps.modelType as MapperModelType]}
       </MGDButton>
       <MGDButton
         type={MGDButtonType.Secondary}

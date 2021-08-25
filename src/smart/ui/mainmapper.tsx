@@ -294,8 +294,7 @@ const ModelMapper: React.FC<{
               editMappingProps.from !== '' ? 'Edit Mapping' : 'Report template'
             }
             css={css`
-              width: calc(100vw - 60px);
-              min-height: calc(100vh - 60px);
+              width: calc(100vw - 60px);              
               padding-bottom: 0;
               & > :last-child {
                 overflow-y: auto;

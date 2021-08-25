@@ -135,8 +135,8 @@ export const AddSubprocessButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
   return (
-    <Tooltip2 content='Add subprocess'>
-      <MGDButton icon='map-create' onClick={() => callback()} />;
+    <Tooltip2 content="Add subprocess">
+      <MGDButton icon="map-create" onClick={() => callback()} />;
     </Tooltip2>
-  )
+  );
 };

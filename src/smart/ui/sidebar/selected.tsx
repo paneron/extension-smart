@@ -250,7 +250,7 @@ export const RemoveButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
   return (
-    <Tooltip2 content='Remove Component'>
+    <Tooltip2 content="Remove Component">
       <MGDButton type={MGDButtonType.Primary} icon="cross" onClick={callback} />
     </Tooltip2>
   );
@@ -260,10 +260,10 @@ export const EditButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
   return (
-    <Tooltip2 content='Edit Component'>
+    <Tooltip2 content="Edit Component">
       <MGDButton icon="edit" onClick={callback} />;
     </Tooltip2>
-  )
+  );
 };
 
 const ApprovalRecordList: React.FC<{
