@@ -36,6 +36,7 @@ const ListManagePage: React.FC<IManageHandler> = ({
   const [mode, setMode] = useState<ListManagePageType>(ListManagePageType.VIEW);
 
   const addHandler: IUpdateInterface = {
+    isVisible: mode === ListManagePageType.ADD,
     Content: Content,
     object: selected,
     model: model,
@@ -53,6 +54,7 @@ const ListManagePage: React.FC<IManageHandler> = ({
   };
 
   const updateHandler: IUpdateInterface = {
+    isVisible: mode === ListManagePageType.UPDATE,
     Content: Content,
     object: selected,
     model: model,
@@ -70,6 +72,7 @@ const ListManagePage: React.FC<IManageHandler> = ({
   };
 
   const viewHandler: IViewListInterface = {
+    isVisible: mode === ListManagePageType.VIEW,
     filterName: filterName,
     itemName: itemName,
     getItems: getItems,
@@ -85,17 +88,15 @@ const ListManagePage: React.FC<IManageHandler> = ({
     },
     size: 15,
     buttons: buttons,
-  };
+  };  
 
-  const ActionPage: Record<ListManagePageType, JSX.Element> = {
-    [ListManagePageType.VIEW]: <ListViewPane {...viewHandler} />,
-    [ListManagePageType.ADD]: <ItemUpdatePane {...addHandler} />,
-    [ListManagePageType.UPDATE]: <ItemUpdatePane {...updateHandler} />,
-  };
-
-  const page = ActionPage[mode];
-
-  return <>{page}</>;
+  return (
+    <>
+      <ListViewPane {...viewHandler} />
+      <ItemUpdatePane {...addHandler} />
+      <ItemUpdatePane {...updateHandler} />
+    </>
+  );
 };
 
 export default ListManagePage;

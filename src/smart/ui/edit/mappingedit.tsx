@@ -11,6 +11,7 @@ import { EditPageButtons } from './commons';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { mgd_label } from '../../../css/form';
 import { MGDButtonType } from '../../../css/MGDButton';
+import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 
 const MappingEditPage: React.FC<{
   from: EditorProcess | EditorApproval;
@@ -22,42 +23,44 @@ const MappingEditPage: React.FC<{
   const [editing, setEditing] = useState<MappingMeta>({ ...data });
 
   return (
-    <FormGroup>
-      <div
-        style={{
-          position: 'relative',
-        }}
-      >
-        <EditPageButtons
-          onUpdateClick={() => onChange(editing)}
-          onCancelClick={() => onChange(null)}
+    <MGDDisplayPane>
+      <FormGroup>
+        <div
+          style={{
+            position: 'relative',
+          }}
+        >
+          <EditPageButtons
+            onUpdateClick={() => onChange(editing)}
+            onCancelClick={() => onChange(null)}
+          />
+        </div>
+        <label css={mgd_label}>
+          Mapping: {from.name} ( {from.id} ) to {to.name} ( {to.id} )
+        </label>
+        <NormalTextField
+          text="Information"
+          value={editing.description}
+          onChange={x => {
+            setEditing({ ...editing, description: x });
+          }}
         />
-      </div>
-      <label css={mgd_label}>
-        Mapping: {from.name} ( {from.id} ) to {to.name} ( {to.id} )
-      </label>
-      <NormalTextField
-        text="Information"
-        value={editing.description}
-        onChange={x => {
-          setEditing({ ...editing, description: x });
-        }}
-      />
-      <NormalTextField
-        text="Justification"
-        value={editing.justification}
-        onChange={x => {
-          setEditing({ ...editing, justification: x });
-        }}
-      />
-      <MGDButton
-        icon="delete"
-        type={MGDButtonType.Primary}
-        onClick={() => onDelete()}
-      >
-        Delete
-      </MGDButton>
-    </FormGroup>
+        <NormalTextField
+          text="Justification"
+          value={editing.justification}
+          onChange={x => {
+            setEditing({ ...editing, justification: x });
+          }}
+        />
+        <MGDButton
+          icon="delete"
+          type={MGDButtonType.Primary}
+          onClick={() => onDelete()}
+        >
+          Delete
+        </MGDButton>
+      </FormGroup>
+    </MGDDisplayPane>
   );
 };
 

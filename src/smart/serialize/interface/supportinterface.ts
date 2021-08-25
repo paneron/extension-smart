@@ -19,6 +19,7 @@ export interface MMELReference extends MMELObject {
   id: string;
   document: string;
   clause: string;
+  title: string;
 }
 
 export interface MMELProvision extends MMELObject {

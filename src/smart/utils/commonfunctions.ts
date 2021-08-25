@@ -32,7 +32,7 @@ export function toRefSummary(r: MMELReference): string {
   if (r.clause === '') {
     return r.document;
   }
-  return r.document + ' (' + r.clause + ')';
+  return r.document + ' (' + r.clause + ')' + (r.title ? ' : ' + r.title:'');
 }
 
 export function genDCIdByRegId(id: string) {

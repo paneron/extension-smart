@@ -96,6 +96,7 @@ export function parseReference(id: string, data: string): MMELReference {
     id: id,
     document: '',
     clause: '',
+    title: '',
     datatype: DataType.REFERENCE,
   };
 
@@ -109,6 +110,8 @@ export function parseReference(id: string, data: string): MMELReference {
           ref.document = MMELremovePackage(t[i++]);
         } else if (command === 'clause') {
           ref.clause = MMELremovePackage(t[i++]);
+        } else if (command === 'title') {
+          ref.title = MMELremovePackage(t[i++]);
         } else {
           throw new Error(
             'Parsing error: reference. ID ' +

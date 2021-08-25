@@ -4,6 +4,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
+import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel } from '../../model/editormodel';
 import { MMELEnumValue } from '../../serialize/interface/datainterface';
 import { createEnumValue } from '../../utils/EditorFactory';
@@ -42,26 +43,28 @@ const EnumValueItem: React.FC<{
   const ev = object as MMELEnumValue;
 
   return (
-    <FormGroup>
-      <NormalTextField
-        key="field#valueid"
-        text="Enumeration item ID"
-        value={ev.id}
-        onChange={x => {
-          ev.id = x.replaceAll(/\s+/g, '');
-          setObject({ ...ev });
-        }}
-      />
-      <NormalTextField
-        key="field#valuecontent"
-        text="Enumeration item value"
-        value={ev.value}
-        onChange={x => {
-          ev.value = x;
-          setObject({ ...ev });
-        }}
-      />
-    </FormGroup>
+    <MGDDisplayPane>
+      <FormGroup>
+        <NormalTextField
+          key="field#valueid"
+          text="Enumeration item ID"
+          value={ev.id}
+          onChange={x => {
+            ev.id = x.replaceAll(/\s+/g, '');
+            setObject({ ...ev });
+          }}
+        />
+        <NormalTextField
+          key="field#valuecontent"
+          text="Enumeration item value"
+          value={ev.value}
+          onChange={x => {
+            ev.value = x;
+            setObject({ ...ev });
+          }}
+        />
+      </FormGroup>
+    </MGDDisplayPane>
   );
 };
 

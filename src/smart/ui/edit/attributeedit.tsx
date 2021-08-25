@@ -4,6 +4,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
+import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import {
   EditorModel,
   isEditorDataClass,
@@ -82,71 +83,73 @@ const AttributeItem: React.FC<{
     .map(r => r.id);
 
   return (
-    <FormGroup>
-      <NormalTextField
-        key="field#attributeid"
-        text="Attribute ID"
-        value={att.id}
-        onChange={(x: string) => {
-          att.id = x.replaceAll(/\s+/g, '');
-          setObject({ ...att });
-        }}
-      />
-      <NormalTextField
-        key="field#attributedefinition"
-        text="Attribute Definition"
-        value={att.definition}
-        onChange={(x: string) => {
-          att.definition = x;
-          setObject({ ...att });
-        }}
-      />
-      <NormalTextField
-        key="field#attributeCardinality"
-        text="Attribute Cardinality"
-        value={att.cardinality}
-        onChange={x => {
-          att.cardinality = x;
-          setObject({ ...att });
-        }}
-      />
-      <NormalComboBox
-        key="field#attributeModality"
-        text="Attribute Modality"
-        value={att.modality}
-        options={MODAILITYOPTIONS}
-        onChange={x => {
-          att.modality = x;
-          setObject({ ...att });
-        }}
-      />
-      <ReferenceSelector
-        key="field#attributeType"
-        text="Attribute Type"
-        filterName="Type filter"
-        value={att.type}
-        options={types}
-        update={(x: number) => {
-          att.type = types[x];
-          setObject({ ...att });
-        }}
-      />
-      <MultiReferenceSelector
-        key="field#attributeReference"
-        text="Reference"
-        options={refs}
-        values={att.ref}
-        filterName="Reference filter"
-        add={x => {
-          att.ref = new Set([...att.ref, ...x]);
-          setObject({ ...att });
-        }}
-        remove={x => {
-          att.ref = new Set([...att.ref].filter(s => !x.has(s)));
-          setObject({ ...att });
-        }}
-      />
-    </FormGroup>
+    <MGDDisplayPane>
+      <FormGroup>
+        <NormalTextField
+          key="field#attributeid"
+          text="Attribute ID"
+          value={att.id}
+          onChange={(x: string) => {
+            att.id = x.replaceAll(/\s+/g, '');
+            setObject({ ...att });
+          }}
+        />
+        <NormalTextField
+          key="field#attributedefinition"
+          text="Attribute Definition"
+          value={att.definition}
+          onChange={(x: string) => {
+            att.definition = x;
+            setObject({ ...att });
+          }}
+        />
+        <NormalTextField
+          key="field#attributeCardinality"
+          text="Attribute Cardinality"
+          value={att.cardinality}
+          onChange={x => {
+            att.cardinality = x;
+            setObject({ ...att });
+          }}
+        />
+        <NormalComboBox
+          key="field#attributeModality"
+          text="Attribute Modality"
+          value={att.modality}
+          options={MODAILITYOPTIONS}
+          onChange={x => {
+            att.modality = x;
+            setObject({ ...att });
+          }}
+        />
+        <ReferenceSelector
+          key="field#attributeType"
+          text="Attribute Type"
+          filterName="Type filter"
+          value={att.type}
+          options={types}
+          update={(x: number) => {
+            att.type = types[x];
+            setObject({ ...att });
+          }}
+        />
+        <MultiReferenceSelector
+          key="field#attributeReference"
+          text="Reference"
+          options={refs}
+          values={att.ref}
+          filterName="Reference filter"
+          add={x => {
+            att.ref = new Set([...att.ref, ...x]);
+            setObject({ ...att });
+          }}
+          remove={x => {
+            att.ref = new Set([...att.ref].filter(s => !x.has(s)));
+            setObject({ ...att });
+          }}
+        />
+      </FormGroup>
+    </MGDDisplayPane>
   );
 };
 

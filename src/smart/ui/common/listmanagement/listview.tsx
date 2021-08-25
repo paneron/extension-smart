@@ -10,11 +10,12 @@ import {
   mgd_select,
   mgd_select__restrained,
 } from '../../../../css/form';
+import { u__display__block, u__display__none } from '../../../../css/utility';
 import MGDButton from '../../../MGDComponents/MGDButton';
 import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
 import { IViewListInterface } from '../fields';
 
-const ListViewPane: React.FC<IViewListInterface> = ({
+const ListViewPane: React.FC<IViewListInterface> = ({  
   filterName,
   itemName,
   getItems,
@@ -23,14 +24,15 @@ const ListViewPane: React.FC<IViewListInterface> = ({
   updateClicked,
   size,
   buttons,
-}) => {
-  const selectbox: RefObject<HTMLSelectElement> = React.createRef();
+  isVisible
+}) => {  
   const [filter, setFilter] = useState<string>('');
-
-  const options = getItems(filter);
+    
+  const selectbox: RefObject<HTMLSelectElement> = React.createRef();
+  const options = getItems(filter.toLocaleLowerCase());
 
   return (
-    <>
+    <div css={isVisible ? u__display__block : u__display__none}>
       <p>
         <label css={mgd_label}>{filterName}</label>
         <input
@@ -82,9 +84,9 @@ const ListViewPane: React.FC<IViewListInterface> = ({
           ))}
         </>
       </MGDButtonGroup>
-    </>
-  );
-};
+    </div>
+  );    
+}
 
 function actIfSelected(
   elm: HTMLSelectElement | null,

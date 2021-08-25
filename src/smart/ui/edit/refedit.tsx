@@ -180,6 +180,15 @@ const ReferenceEditItemPage: React.FC<{
           setObject({ ...ref });
         }}
       />
+      <NormalTextField
+        key="field#title"
+        text="Title"
+        value={ref.title}
+        onChange={(x: string) => {
+          ref.title = x;
+          setObject({ ...ref });
+        }}
+      />
     </FormGroup>
   );
 };

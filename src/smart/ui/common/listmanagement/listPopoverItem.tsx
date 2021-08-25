@@ -87,6 +87,7 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
   }
 
   const viewHandler: IViewListInterface = {
+    isVisible: true,
     filterName: filterName,
     itemName: '',
     getItems: getItems,
@@ -128,6 +129,7 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
   }
 
   const addHandler: IUpdateInterface = {
+    isVisible: mode === 'Add',
     Content: Content,
     object: editing,
     model: model,
@@ -145,6 +147,7 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
   };
 
   const updateHandler: IUpdateInterface = {
+    isVisible: mode === 'Update', 
     Content: Content,
     object: editing,
     model: model,
@@ -159,10 +162,7 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
     cancelClicked: () => {
       setMode('None');
     },
-  };
-
-  const addPane = <ItemUpdatePane {...addHandler} />;
-  const updatePane = <ItemUpdatePane {...updateHandler} />;
+  };  
 
   return (
     <>
@@ -181,7 +181,8 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
         canEscapeKeyClose={false}
         canOutsideClickClose={false}
       >
-        {mode === 'Add' ? addPane : updatePane}
+        <ItemUpdatePane {...addHandler} />
+        <ItemUpdatePane {...updateHandler} />
       </Dialog>
       <fieldset>
         <legend>{label}:</legend>

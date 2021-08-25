@@ -253,7 +253,7 @@ export function toProvisionModel(pro: MMELProvision): string {
   }
   if (pro.ref.size > 0) {
     out += '  reference {\n';
-    for (const r in pro.ref) {
+    for (const r of pro.ref) {
       out += '    ' + r + '\n';
     }
     out += '  }\n';
@@ -266,6 +266,7 @@ export function toReferenceModel(ref: MMELReference): string {
   let out: string = 'reference ' + ref.id + ' {\n';
   out += '  document "' + ref.document + '"\n';
   out += '  clause "' + ref.clause + '"\n';
+  out += '  title "' + ref.title + '"\n';
   out += '}\n';
   return out;
 }
@@ -289,14 +290,14 @@ function toApprovalModel(app: MMELApproval): string {
   }
   if (app.records.size > 0) {
     out += '  approval_record {\n';
-    for (const dr in app.records) {
+    for (const dr of app.records) {
       out += '    ' + dr + '\n';
     }
     out += '  }\n';
   }
   if (app.ref.size > 0) {
     out += '  reference {\n';
-    for (const r in app.ref) {
+    for (const r of app.ref) {
       out += '    ' + r + '\n';
     }
     out += '  }\n';
@@ -316,7 +317,7 @@ export function toProcessModel(process: MMELProcess): string {
   }
   if (process.input.size > 0) {
     out += '  reference_data_registry {\n';
-    for (const dr in process.input) {
+    for (const dr of process.input) {
       out += '    ' + dr + '\n';
     }
     out += '  }\n';
@@ -337,7 +338,7 @@ export function toProcessModel(process: MMELProcess): string {
   }
   if (process.output.size > 0) {
     out += '  output {\n';
-    for (const c in process.output) {
+    for (const c of process.output) {
       out += '    ' + c + '\n';
     }
     out += '  }\n';

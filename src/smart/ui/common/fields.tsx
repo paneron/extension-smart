@@ -73,6 +73,7 @@ export type IManageHandler = {
 };
 
 export interface IViewListInterface {
+  isVisible: boolean;
   filterName: string;
   itemName: string;
   getItems: (filter: string) => IListItem[];
@@ -89,6 +90,7 @@ export interface IListItem {
 }
 
 export interface IUpdateInterface {
+  isVisible: boolean;
   Content: React.FC<{
     object: Object;
     model?: EditorModel;

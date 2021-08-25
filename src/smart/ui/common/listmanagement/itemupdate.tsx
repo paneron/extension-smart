@@ -6,6 +6,7 @@ import { jsx } from '@emotion/react';
 import React from 'react';
 import MGDButton from '../../../MGDComponents/MGDButton';
 import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
+import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
 import { IUpdateInterface } from '../fields';
 
 const ItemUpdatePane: React.FC<IUpdateInterface> = ({
@@ -17,20 +18,27 @@ const ItemUpdatePane: React.FC<IUpdateInterface> = ({
   updateButtonIcon,
   updateClicked,
   cancelClicked,
+  isVisible
 }) => {
-  return (
-    <FormGroup>
-      <Content object={object} setObject={setObject} model={model} />
-      <MGDButtonGroup>
-        <MGDButton icon={updateButtonIcon} onClick={() => updateClicked()}>
-          {updateButtonLabel}
-        </MGDButton>
-        <MGDButton icon="disable" onClick={() => cancelClicked()}>
-          Cancel
-        </MGDButton>
-      </MGDButtonGroup>
-    </FormGroup>
-  );
+  if (isVisible) {
+    return (
+      <MGDDisplayPane>
+        <FormGroup>
+          <Content object={object} setObject={setObject} model={model} />
+          <MGDButtonGroup>
+            <MGDButton icon={updateButtonIcon} onClick={() => updateClicked()}>
+              {updateButtonLabel}
+            </MGDButton>
+            <MGDButton icon="disable" onClick={() => cancelClicked()}>
+              Cancel
+            </MGDButton>
+          </MGDButtonGroup>
+        </FormGroup>
+      </MGDDisplayPane>
+    );
+  } else {
+    return <></>
+  }
 };
 
 export default ItemUpdatePane;

@@ -93,6 +93,7 @@ export function createReference(id: string): MMELReference {
     id: id,
     document: '',
     clause: '',
+    title: '',
     datatype: DataType.REFERENCE,
   };
 }
