@@ -167,7 +167,9 @@ const EditProcessPage: React.FC<{
             setEditing({ ...editing });
           }}
           remove={x => {
-            editing.output = new Set([...editing.output].filter(s => !x.has(s)));
+            editing.output = new Set(
+              [...editing.output].filter(s => !x.has(s))
+            );
             setEditing({ ...editing });
           }}
         />

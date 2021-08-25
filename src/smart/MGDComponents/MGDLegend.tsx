@@ -3,23 +3,32 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import { mgd_sidebar } from '../../css/MGDSidebar';
+import {
+  mgd_legend,
+  mgd_legend__left,
+  mgd_legend__right,
+} from '../../css/MGDLegend';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 interface OwnProps {
-  children: any;
+  children: JSX.Element[];
+  onLeft: boolean;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function MGDSidebar(props: OwnProps) {
-  const { children } = props;
-  return <aside css={mgd_sidebar}>{children}</aside>;
+function MGDLegend(props: OwnProps) {
+  const { children, onLeft } = props;
+  return (
+    <aside css={[mgd_legend, onLeft ? mgd_legend__left : mgd_legend__right]}>
+      {children}
+    </aside>
+  );
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-export default MGDSidebar;
+export default MGDLegend;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

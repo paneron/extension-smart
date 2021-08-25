@@ -119,27 +119,32 @@ export const ProcessBox: Record<
   ModelType,
   React.FC<{
     content: string;
-    pid: string;    
+    pid: string;
     styleClass?: SerializedStyles;
     setMapping?: (fromid: string, toid: string) => void;
     uiref?: RefObject<HTMLDivElement>;
   }>
 > = {
-  [ModelType.EDIT]: ({ content }) => (
-    <MGDProcessBox>{content}</MGDProcessBox>
-  ),
-  [ModelType.IMP]: ({ content, pid, styleClass, uiref }) => {    
+  [ModelType.EDIT]: ({ content }) => <MGDProcessBox>{content}</MGDProcessBox>,
+  [ModelType.IMP]: ({ content, pid, styleClass, uiref }) => {
     return (
-    <MGDProcessBox
-      uiref={uiref}
-      styleClass={styleClass}
-      draggable={true}
-      onDragStart={event => onDragStart(event, pid)}
-    >
-      <label css={mgd_label}>{content}</label>
-    </MGDProcessBox>
-  )},
-  [ModelType.REF]: ({ content, pid, styleClass, setMapping = () => {}, uiref }) => (
+      <MGDProcessBox
+        uiref={uiref}
+        styleClass={styleClass}
+        draggable={true}
+        onDragStart={event => onDragStart(event, pid)}
+      >
+        <label css={mgd_label}>{content}</label>
+      </MGDProcessBox>
+    );
+  },
+  [ModelType.REF]: ({
+    content,
+    pid,
+    styleClass,
+    setMapping = () => {},
+    uiref,
+  }) => (
     <MGDProcessBox
       uiref={uiref}
       styleClass={styleClass}

@@ -36,7 +36,7 @@ import {
   getMappedList,
   getMapStyleById,
   getSourceStyleById,
-  MapCoverType,  
+  MapCoverType,
   MapResultType,
 } from '../ui/mapper/MappingCalculator';
 import { MapSet } from '../ui/mapper/mapmodel';
@@ -182,7 +182,7 @@ export function getReactFlowElementsFrom(
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
     model: mw.model,
-    onProcessClick,    
+    onProcessClick,
   });
   return getElements(mw, dvisible, callback, e =>
     createEdgeContainer(e, edgeDelete, removeEdge)

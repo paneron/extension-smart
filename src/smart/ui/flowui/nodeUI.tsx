@@ -28,7 +28,14 @@ import { MapViewButtonToolTip } from '../mapper/MappingCalculator';
 import MGDButton from '../../MGDComponents/MGDButton';
 import React from 'react';
 import { handlecss } from '../../../css/visual';
-import { shame__approver_deco, shame__label, shame__label__long, shame__label__nudge, shame__label__short } from '../../../css/shame';
+import {
+  shame__approver_deco,
+  shame__label,
+  shame__label__long,
+  shame__label__nudge,
+  shame__label__short,
+} from '../../../css/shame';
+import { Text } from '@blueprintjs/core';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -39,7 +46,7 @@ export const Datacube: FC<NodeProps> = function ({ data }) {
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
       <DatacubeShape color={color} />
-      <div css={[shame__label, shame__label__long]}>{label}</div>  
+      <div css={[shame__label, shame__label__long]}>{label}</div>
     </>
   );
 };
@@ -48,14 +55,18 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
   const process = data as EditorProcess;
   const callback = data as NodeCallBack;
   const actor = callback.getRoleById(process.actor);
-  const PB = ProcessBox[callback.modelType];  
+  const PB = ProcessBox[callback.modelType];
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <PB
         content={process.name === '' ? process.id : process.name}
         pid={process.id}
-        styleClass={callback.getMapStyleClassById?callback.getMapStyleClassById(process.id):undefined}
+        styleClass={
+          callback.getMapStyleClassById
+            ? callback.getMapStyleClassById(process.id)
+            : undefined
+        }
         setMapping={callback.setMapping}
         uiref={process.uiref}
       />
@@ -72,8 +83,8 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
             <MGDButton
               key={process.id + '#subprocessbutton'}
               onClick={() => callback.onProcessClick(process.page, process.id)}
-              icon='plus'
-            />            
+              icon="plus"
+            />
           </Tooltip2>
         </div>
       )}
@@ -99,14 +110,18 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
   const callback = data as NodeCallBack;
   const actor = callback.getRoleById(approval.actor);
   const approver = callback.getRoleById(approval.approver);
-  const PB = ProcessBox[callback.modelType];  
+  const PB = ProcessBox[callback.modelType];
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <PB
         content={approval.name === '' ? approval.id : approval.name}
         pid={approval.id}
-        styleClass={callback.getMapStyleClassById?callback.getMapStyleClassById(approval.id):undefined}
+        styleClass={
+          callback.getMapStyleClassById
+            ? callback.getMapStyleClassById(approval.id)
+            : undefined
+        }
         setMapping={callback.setMapping}
         uiref={approval.uiref}
       />
@@ -122,11 +137,14 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
       {actor !== null ? (
         approver !== null ? (
           <>
-            <div css={[shame__label]} key={approval.id + '#ActorLabel'}>            
+            <div css={[shame__label]} key={approval.id + '#ActorLabel'}>
               {actorIcon}
               {actor.name}
             </div>
-            <div css={[shame__label, shame__label__nudge]} key={approval.id + '#ApproverLabel'}>            
+            <div
+              css={[shame__label, shame__label__nudge]}
+              key={approval.id + '#ApproverLabel'}
+            >
               {approverIcon}
               {approver.name}
             </div>
@@ -165,7 +183,7 @@ export const EndComponent: FC<NodeProps> = function () {
     <>
       <Handle type="target" position={Position.Top} css={handlecss} />
       <EndShape color={color} />
-      <div css={[shame__label, shame__label__short]}>end</div> 
+      <div css={[shame__label, shame__label__short]}>end</div>
     </>
   );
 };
@@ -177,7 +195,7 @@ export const TimerComponent: FC<NodeProps> = function () {
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
       <TimerShape color={color} />
-      <div css={[shame__label, shame__label__short]}>timer</div>      
+      <div css={[shame__label, shame__label__short]}>timer</div>
     </>
   );
 };
@@ -190,7 +208,9 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
       <EgateShape color={color} />
-      <div css={[shame__label, shame__label__long]}>{egate.label}</div>      
+      <div css={[shame__label, shame__label__long]}>
+        <Text ellipsize={true}>{egate.label}</Text>
+      </div>
     </>
   );
 };

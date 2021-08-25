@@ -23,7 +23,7 @@ export const mgd_tabs__item__unselected = css`
   border-color: ${CSSROOTVARIABLES['--colour--30-percent-black']};
   :hover {
     background-color: ${CSSROOTVARIABLES['--colour--10-percent-black']};
-  };
+  }
 `;
 
 /* selected */

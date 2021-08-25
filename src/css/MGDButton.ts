@@ -29,24 +29,40 @@ export enum MGDButtonSize {
 
 export const mgd_button_type: Record<MGDButtonType, SerializedStyles> = {
   [MGDButtonType.Primary]: css`
-    background-color: ${CSSROOTVARIABLES['--colour--bsi-darker-red']} !important;
+    background-color: ${CSSROOTVARIABLES[
+      '--colour--bsi-darker-red'
+    ]} !important;
     color: ${CSSROOTVARIABLES['--colour--white']} !important;
-    :focus, :hover, :active {
-      background-color: ${CSSROOTVARIABLES['--colour--bsi-dark-red']} !important;
-    };    
+    :focus,
+    :hover,
+    :active {
+      background-color: ${CSSROOTVARIABLES[
+        '--colour--bsi-dark-red'
+      ]} !important;
+    }
   `,
   [MGDButtonType.Secondary]: css`
-    background-color: ${CSSROOTVARIABLES['--colour--bsi-teal--a11y']} !important;
+    background-color: ${CSSROOTVARIABLES[
+      '--colour--bsi-teal--a11y'
+    ]} !important;
     color: ${CSSROOTVARIABLES['--colour--white']} !important;
-    :focus, :hover, :active {
+    :focus,
+    :hover,
+    :active {
       background-color: ${CSSROOTVARIABLES['--colour--bsi-teal']} !important;
     }
   `,
   [MGDButtonType.Tertiary]: css`
-    background-color: ${CSSROOTVARIABLES['--colour--30-percent-black']} !important;
+    background-color: ${CSSROOTVARIABLES[
+      '--colour--30-percent-black'
+    ]} !important;
     color: ${CSSROOTVARIABLES['--colour--black']} !important;
-    :focus, :hover, :active {
-      background-color: ${CSSROOTVARIABLES['--colour--50-percent-black']} !important;
+    :focus,
+    :hover,
+    :active {
+      background-color: ${CSSROOTVARIABLES[
+        '--colour--50-percent-black'
+      ]} !important;
     }
   `,
 };

@@ -1,41 +1,22 @@
-import React, { CSSProperties } from 'react';
+import React from 'react';
+import MGDLegend from '../../MGDComponents/MGDLegend';
+import MGDLegendEntry from '../../MGDComponents/MGDLegendEntry';
 import { MapStyleInterface } from './MappingCalculator';
 
 const MappingLegendPane: React.FC<{
   list: Record<string, MapStyleInterface>;
-  style?: CSSProperties;
-}> = function ({ list, style = {} }) {
+  onLeft: boolean;
+}> = function ({ list, onLeft }) {
   return (
-    <div style={style}>
+    <MGDLegend onLeft={onLeft}>
       {Object.values(list).map((value, index) => (
-        <Legend
+        <MGDLegendEntry
           key={'ui#maplegend#' + index}
-          color={value.color}
+          backgroundColor={value.color}
           text={value.label}
         />
       ))}
-    </div>
-  );
-};
-
-const Legend: React.FC<{
-  color: string;
-  text: string;
-}> = ({ color, text }) => {
-  return (
-    <div>
-      <div
-        style={{
-          backgroundColor: color,
-          height: '12px',
-          float: 'left',
-          width: '12px',
-          border: '1px solid black',
-          borderRadius: '3px',
-        }}
-      />
-      {text}
-    </div>
+    </MGDLegend>
   );
 };
 

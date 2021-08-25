@@ -50,7 +50,7 @@ const MappingEdge: React.FC<
   MapEdgeResult & {
     onMappingEdit: (from: string, to: string) => void;
   }
-> = function ({ fromref, toref, fromPos, toPos, fromid, toid, onMappingEdit }) {  
+> = function ({ fromref, toref, fromPos, toPos, fromid, toid, onMappingEdit }) {
   if (fromPos === undefined || toPos === undefined) {
     if (fromref.current === null || toref.current === null) {
       return <></>;

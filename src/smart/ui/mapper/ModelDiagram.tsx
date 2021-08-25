@@ -6,7 +6,7 @@ import { jsx, css } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
-import React, { CSSProperties, useContext, useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import ReactFlow, {
   OnLoadParams,
   ReactFlowProvider,
@@ -170,18 +170,6 @@ const ModelDiagram: React.FC<{
   );
 
   const breadcrumbs = getBreadcrumbs(modelProps.history, onPageChange);
-  const legendcss: CSSProperties = {
-    position: 'absolute',
-    top: '20px',
-    fontSize: '12px',
-    overflowY: 'auto',
-    zIndex: 90,
-  };
-  if (modelType === ModelType.REF) {
-    legendcss.right = '1%';
-  } else {
-    legendcss.left = '1%';
-  }
 
   const sidebar = (
     <Sidebar
@@ -250,7 +238,7 @@ const ModelDiagram: React.FC<{
                   ? MappingResultStyles
                   : MappingSourceStyles
               }
-              style={legendcss}
+              onLeft={modelType === ModelType.IMP}
             />
           )}
         </div>

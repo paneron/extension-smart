@@ -278,7 +278,11 @@ const ModelEditor: React.FC<{
       >
         <MGDButton>Workspace</MGDButton>
       </Popover2>
-      <MGDButton type={MGDButtonType.Primary} disabled={state.history.items.length <= 1} onClick={drillUp}>
+      <MGDButton
+        type={MGDButtonType.Primary}
+        disabled={state.history.items.length <= 1}
+        onClick={drillUp}
+      >
         Drill up
       </MGDButton>
     </ControlGroup>

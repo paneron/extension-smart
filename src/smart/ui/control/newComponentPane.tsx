@@ -21,7 +21,7 @@ import {
 
 const NewComponentPane: React.FC = function () {
   return (
-    <MGDComponentBar>      
+    <MGDComponentBar>
       <Unit>
         <MGDProcessBox
           onDragStart={event => onDragStart(event, DataType.PROCESS)}
@@ -69,7 +69,7 @@ const NewComponentPane: React.FC = function () {
         >
           <EgateShape />
         </span>
-      </Unit>      
+      </Unit>
     </MGDComponentBar>
   );
 };

@@ -10,14 +10,14 @@ export const EditPageButtons: React.FC<{
     <MGDButtonGroup>
       <MGDButton
         key="ui#itemupdate#savebutton"
-        icon="floppy-disk"        
+        icon="floppy-disk"
         onClick={() => onUpdateClick()}
       >
         Save
       </MGDButton>
       <MGDButton
-        key="ui#itemupdate#cancelbutton"        
-        icon="disable"        
+        key="ui#itemupdate#cancelbutton"
+        icon="disable"
         onClick={() => onCancelClick()}
       >
         Cancel

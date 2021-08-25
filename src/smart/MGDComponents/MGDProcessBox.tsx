@@ -25,10 +25,10 @@ function MGDProcessBox(props: OwnProps) {
     onDrop = undefined,
     draggable = false,
     uiref = null,
-    styleClass
-  } = props;  
+    styleClass,
+  } = props;
   return (
-    <div      
+    <div
       css={[mgd_process_box, styleClass]}
       onDragStart={onDragStart}
       onDrop={onDrop}

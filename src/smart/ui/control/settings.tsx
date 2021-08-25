@@ -123,7 +123,9 @@ const BasicSettingPane: React.FC<{
                 <label css={mgd_label}> {props.title} </label>
               </span>
             }
-            panel={<props.Panel model={model} setModel={setModel}></props.Panel>}
+            panel={
+              <props.Panel model={model} setModel={setModel}></props.Panel>
+            }
           />
         ))}
       </Tabs>

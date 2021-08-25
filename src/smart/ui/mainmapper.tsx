@@ -203,7 +203,7 @@ const ModelMapper: React.FC<{
       selected,
       setMapEdges
     );
-  }  
+  }
 
   if (!isVisible && selected.selected !== '') {
     onSelectionChange({

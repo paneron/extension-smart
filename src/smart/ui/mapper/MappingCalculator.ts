@@ -1,4 +1,3 @@
-import { SerializedStyles } from '@emotion/utils';
 import { RefObject } from 'react';
 import { CSSROOTVARIABLES } from '../../../css/root.css';
 import { map_style__coverage, map_style__source } from '../../../css/visual';
@@ -15,6 +14,7 @@ import { PageHistory } from '../../model/history';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { MapperSelectedInterface } from '../../model/state';
 import { MappingType, MapProfile, MapSet } from './mapmodel';
+import { SerializedStyles } from '@emotion/react';
 
 export enum MapCoverType {
   FULL = 'full',
@@ -58,7 +58,10 @@ export const MappingResultStyles: Record<MapCoverType, MapStyleInterface> = {
 
 export const MappingSourceStyles: Record<MapSourceType, MapStyleInterface> = {
   [MapSourceType.HASMAP]: { label: 'Has mapping', color: 'lightblue' },
-  [MapSourceType.NOMAP]: { label: 'No mapping', color: CSSROOTVARIABLES['--plain-node-color'] },
+  [MapSourceType.NOMAP]: {
+    label: 'No mapping',
+    color: CSSROOTVARIABLES['--plain-node-color'],
+  },
 };
 
 // MapResultType[nodeid] = MapCoverType
@@ -183,7 +186,10 @@ export function getMapStyleById(
   return map_style__coverage(result);
 }
 
-export function getSourceStyleById(mapSet: MapSet, id: string): SerializedStyles {
+export function getSourceStyleById(
+  mapSet: MapSet,
+  id: string
+): SerializedStyles {
   if (
     mapSet.mappings[id] === undefined ||
     Object.keys(mapSet.mappings[id]).length === 0

@@ -22,16 +22,10 @@ const ItemUpdatePane: React.FC<IUpdateInterface> = ({
     <FormGroup>
       <Content object={object} setObject={setObject} model={model} />
       <MGDButtonGroup>
-        <MGDButton
-          icon={updateButtonIcon}          
-          onClick={() => updateClicked()}
-        >
+        <MGDButton icon={updateButtonIcon} onClick={() => updateClicked()}>
           {updateButtonLabel}
         </MGDButton>
-        <MGDButton          
-          icon="disable"          
-          onClick={() => cancelClicked()}
-        >
+        <MGDButton icon="disable" onClick={() => cancelClicked()}>
           Cancel
         </MGDButton>
       </MGDButtonGroup>

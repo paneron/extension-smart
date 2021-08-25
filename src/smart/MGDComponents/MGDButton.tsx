@@ -23,7 +23,7 @@ interface OwnProps {
   rightIcon?: IconName;
   id?: string;
   onClick?: (e: any) => void;
-  disabled?: boolean;  
+  disabled?: boolean;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -35,7 +35,7 @@ function MGDButton(props: OwnProps) {
     children,
     id = '',
     onClick,
-    disabled,    
+    disabled,
     icon,
     rightIcon,
   } = props;
@@ -46,13 +46,13 @@ function MGDButton(props: OwnProps) {
   ];
   const textClasses = [mgd_button__text];
   return (
-    <Button      
+    <Button
       outlined
       small={size === MGDButtonSize.Small}
       id={id}
       css={buttonClasses}
       onClick={onClick}
-      disabled={disabled}      
+      disabled={disabled}
       icon={icon}
       rightIcon={rightIcon}
     >

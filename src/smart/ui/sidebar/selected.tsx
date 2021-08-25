@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import React, { CSSProperties } from 'react';
+import React from 'react';
 import { useStoreState, Elements, isNode } from 'react-flow-renderer';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
@@ -248,15 +248,15 @@ export const Describe: React.FC<{
 export const RemoveButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
-  return <MGDButton type={MGDButtonType.Primary} icon="cross" onClick={callback} />;
+  return (
+    <MGDButton type={MGDButtonType.Primary} icon="cross" onClick={callback} />
+  );
 };
 
 export const EditButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
-  return (
-    <MGDButton icon="edit" onClick={callback} />    
-  );
+  return <MGDButton icon="edit" onClick={callback} />;
 };
 
 const ApprovalRecordList: React.FC<{
@@ -334,12 +334,11 @@ const AttributeList: React.FC<{
 export const DescriptionItem: React.FC<{
   label: string;
   value: string;
-  css?: CSSProperties;
-}> = function ({ label, value, css }): JSX.Element {
+}> = function ({ label, value }): JSX.Element {
   return (
     <p>
       <label css={mgd_label}>
-        {label}:{css !== undefined ? <span style={css}> {value}</span> : value}
+        {label}: {value}
       </label>
     </p>
   );
@@ -363,16 +362,9 @@ export const ActorDescription: React.FC<{
 export const NonEmptyFieldDescription: React.FC<{
   label: string;
   value: string;
-  css?: CSSProperties;
-}> = function ({ label, value, css }): JSX.Element {
+}> = function ({ label, value }): JSX.Element {
   return (
-    <>
-      {value !== '' ? (
-        <DescriptionItem label={label} value={value} css={css} />
-      ) : (
-        ''
-      )}
-    </>
+    <>{value !== '' ? <DescriptionItem label={label} value={value} /> : ''}</>
   );
 };
 
@@ -571,29 +563,13 @@ const DescribeAttribute: React.FC<{
   att: MMELDataAttribute;
   getRefById: (id: string) => MMELReference | null;
 }> = function ({ att, getRefById }) {
-  const css: CSSProperties = {};
-  if (att.modality === 'SHALL') {
-    css.textDecorationLine = 'underline';
-  }
   return (
     <>
-      <DescriptionItem css={css} label="Attribute ID" value={att.id} />
-      <NonEmptyFieldDescription css={css} label="Type" value={att.type} />
-      <NonEmptyFieldDescription
-        css={css}
-        label="Cardinality"
-        value={att.cardinality}
-      />
-      <NonEmptyFieldDescription
-        css={css}
-        label="Modality"
-        value={att.modality}
-      />
-      <NonEmptyFieldDescription
-        css={css}
-        label="Definition"
-        value={att.definition}
-      />
+      <DescriptionItem label="Attribute ID" value={att.id} />
+      <NonEmptyFieldDescription label="Type" value={att.type} />
+      <NonEmptyFieldDescription label="Cardinality" value={att.cardinality} />
+      <NonEmptyFieldDescription label="Modality" value={att.modality} />
+      <NonEmptyFieldDescription label="Definition" value={att.definition} />
       <ReferenceList refs={att.ref} getRefById={getRefById} />
     </>
   );

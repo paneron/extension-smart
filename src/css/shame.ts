@@ -1,9 +1,9 @@
-import { css } from "@emotion/react";
+import { css } from '@emotion/react';
+import { CSSROOTVARIABLES } from './root.css';
 
 export const shame__label = css`
-  font-family: var(--font-family--primary);
-  font-weight: var(--font-weight--regular);
-  font-size: var(--font-size--regular);
+  font-weight: ${CSSROOTVARIABLES['--font-weight--regular']};
+  font-size: ${CSSROOTVARIABLES['--font-size--regular']};
   text-align: center;
   position: absolute;
   top: 45px;

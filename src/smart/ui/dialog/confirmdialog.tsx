@@ -15,7 +15,7 @@ export const ConfirmDialog: React.FC<{
         <MGDButton
           type={MGDButtonType.Primary}
           key="ui#dialog#confirmbutton"
-          icon="confirm"          
+          icon="confirm"
           onClick={() => callback()}
         >
           Confirm

@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import React, { CSSProperties } from 'react';
+import React from 'react';
 import { EditorProcess, ModelType } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
@@ -121,10 +121,6 @@ const DescribeProvision: React.FC<{
   provision: MMELProvision;
   getRefById: (id: string) => MMELReference | null;
 }> = function ({ provision, getRefById }) {
-  const css: CSSProperties = {};
-  if (provision.modality === 'SHALL') {
-    css.textDecorationLine = 'underline';
-  }
   return (
     <>
       <DescriptionItem label="Statement" value={provision.condition} />

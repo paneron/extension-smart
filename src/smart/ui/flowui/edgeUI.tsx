@@ -1,3 +1,7 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
 import React from 'react';
 
 import {
@@ -9,6 +13,7 @@ import {
   getSmoothStepPath,
   Position,
 } from 'react-flow-renderer';
+import { mgd_edge_container } from '../../../css/MGDEdgeContainer';
 import { EdgePackage } from './container';
 
 export const SelfLoopEdge: React.FC<EdgeProps> = function ({
@@ -23,7 +28,6 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
   targetPosition,
   label,
   data,
-  style = {},
   markerEndId,
 }) {
   const p1x: number = sourceX + 40;
@@ -77,25 +81,25 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
     <>
       <path
         id={id}
-        style={style}
+        css={mgd_edge_container}
         className="react-flow__edge-path"
         d={edgePath1}
       />
       <path
         id={id + 2}
-        style={style}
+        css={mgd_edge_container}
         className="react-flow__edge-path"
         d={edgePath2}
       />
       <path
         id={id + 3}
-        style={style}
+        css={mgd_edge_container}
         className="react-flow__edge-path"
         d={edgePath3}
       />
       <path
         id={id + 4}
-        style={style}
+        css={mgd_edge_container}
         className="react-flow__edge-path"
         d={edgePath4}
         markerEnd={markerEnd}
@@ -121,7 +125,6 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
   targetY,
   sourcePosition,
   targetPosition,
-  style = {},
   data,
   label,
   markerEndId,
@@ -146,7 +149,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
       <>
         <path
           id={id}
-          style={style}
+          css={mgd_edge_container}
           className="react-flow__edge-path"
           d={edgePath1}
           markerEnd={markerEnd}
@@ -223,25 +226,25 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
     <>
       <path
         id={id}
-        style={style}
+        css={mgd_edge_container}
         className="react-flow__edge-path"
         d={edgePath1}
       />
       <path
         id={id + 2}
-        style={style}
+        css={mgd_edge_container}
         className="react-flow__edge-path"
         d={edgePath2}
       />
       <path
         id={id + 3}
-        style={style}
+        css={mgd_edge_container}
         className="react-flow__edge-path"
         d={edgePath3}
       />
       <path
         id={id + 4}
-        style={style}
+        css={mgd_edge_container}
         className="react-flow__edge-path"
         d={edgePath4}
         markerEnd={markerEnd}

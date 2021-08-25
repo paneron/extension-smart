@@ -14,7 +14,7 @@ export const CSSROOTVARIABLES = {
   '--colour--bsi-teal': '#00a3ad',
   '--colour--bsi-teal--a11y': '#29828c',
   '--colour--platinum': '#ebebeb',
-  '--colour--cultured': '#f2f2f2',  
+  '--colour--cultured': '#f2f2f2',
   // '--font-family--primary' : 'Gesta, Tahoma, sans-serif',
   // '--font-size--small': '12px',
   // '--font-size--regular': '16px',
@@ -26,5 +26,5 @@ export const CSSROOTVARIABLES = {
   '--font-weight--regular': '400',
   '--font-weight--medium': '500',
   '--transition-time': '0.22s',
-  '--plain-node-color' : 'lavender'
+  '--plain-node-color': 'lavender',
 };
