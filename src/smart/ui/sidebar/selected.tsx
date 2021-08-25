@@ -47,6 +47,7 @@ import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import { mgd_label } from '../../../css/form';
 import { MGDButtonType } from '../../../css/MGDButton';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
+import { Tooltip2 } from '@blueprintjs/popover2';
 
 export const SelectedNodeDescription: React.FC<{
   model: EditorModel;
@@ -249,14 +250,20 @@ export const RemoveButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
   return (
-    <MGDButton type={MGDButtonType.Primary} icon="cross" onClick={callback} />
+    <Tooltip2 content='Remove Component'>
+      <MGDButton type={MGDButtonType.Primary} icon="cross" onClick={callback} />
+    </Tooltip2>
   );
 };
 
 export const EditButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
-  return <MGDButton icon="edit" onClick={callback} />;
+  return (
+    <Tooltip2 content='Edit Component'>
+      <MGDButton icon="edit" onClick={callback} />;
+    </Tooltip2>
+  )
 };
 
 const ApprovalRecordList: React.FC<{

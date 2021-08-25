@@ -26,6 +26,7 @@ import {
 } from './selected';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import MGDButton from '../../MGDComponents/MGDButton';
+import { Tooltip2 } from '@blueprintjs/popover2';
 
 export const ProcessQuickEdit: React.FC<
   NodeCallBack & {
@@ -133,5 +134,9 @@ const DescribeProvision: React.FC<{
 export const AddSubprocessButton: React.FC<{
   callback: () => void;
 }> = function ({ callback }) {
-  return <MGDButton onClick={() => callback()}>Add subprocess</MGDButton>;
+  return (
+    <Tooltip2 content='Add subprocess'>
+      <MGDButton icon='map-create' onClick={() => callback()} />;
+    </Tooltip2>
+  )
 };
