@@ -1,23 +1,15 @@
 import React, { useContext } from 'react';
-import { FormGroup, Text } from '@blueprintjs/core';
-import { EditorModel } from '../../model/editormodel';
-import { MapProfile } from '../mapper/mapmodel';
-import { genReport } from './reportFunctions';
+import { FormGroup } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import MGDButton from '../../MGDComponents/MGDButton';
+import { NormalTextField } from '../common/fields';
 
-const ReportGen: React.FC<{
-  mapProfile: MapProfile;
-  selected: string;
-  refModel: EditorModel;
-  impModel: EditorModel;
+const ReportGen: React.FC<{  
+  report: string;  
   onClose: () => void;
-}> = function ({ mapProfile, selected, refModel, impModel, onClose }) {
+}> = function ({ report, onClose }) {
   const { getBlob, writeFileToFilesystem } = useContext(DatasetContext);
-
-  const content = mapProfile.docs[selected];
-  const report = genReport(content.content, refModel, impModel);
 
   function handleSave() {
     return async () => {
@@ -38,7 +30,7 @@ const ReportGen: React.FC<{
 
   return (
     <FormGroup>
-      <Text>{report}</Text>
+      <NormalTextField value={report} text='Report' rows={20}/>
       <MGDButtonGroup>
         <MGDButton
           key="ui#report#save"

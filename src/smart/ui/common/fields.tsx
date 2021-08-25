@@ -22,7 +22,7 @@ export interface IAdditionalListButton {
 export interface IField {
   text: string;
   value: string;
-  onChange: (x: string) => void;
+  onChange?: (x: string) => void;
   extend?: JSX.Element;
   rows?: number;
 }
@@ -109,8 +109,13 @@ export const NormalTextField: React.FC<IField> = (f: IField) => {
   return (
     <FormGroup label={f.text} helperText={f.extend}>
       <MGDTextarea
+        readOnly={f.onChange===undefined}
         id="field#text"
-        onChange={e => f.onChange(e.target.value)}
+        onChange={e => {
+          if (f.onChange) {
+            f.onChange(e.target.value);
+          }
+        }}
         rows={f.rows}
         value={f.value}
         fill

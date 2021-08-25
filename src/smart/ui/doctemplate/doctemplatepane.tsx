@@ -4,6 +4,7 @@
 import { Dialog, FormGroup } from '@blueprintjs/core';
 import { jsx, css } from '@emotion/react';
 import React, { useState } from 'react';
+import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel } from '../../model/editormodel';
 import { checkId, defaultItemSorter } from '../../utils/commonfunctions';
 import {
@@ -14,6 +15,7 @@ import {
 } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
 import { MappingDoc, MapProfile } from '../mapper/mapmodel';
+import { genReport } from './reportFunctions';
 import ReportGen from './reportgen';
 
 const DocTemplatePane: React.FC<{
@@ -22,7 +24,7 @@ const DocTemplatePane: React.FC<{
   refModel: EditorModel;
   impModel: EditorModel;
 }> = function ({ mapProfile, setMapProfile, refModel, impModel }) {
-  const [genDocId, setGenDocId] = useState<string | null>(null);
+  const [report, setReport] = useState<string | null>(null);
 
   function matchFilter(doc: MappingDoc, filter: string) {
     return filter === '' || doc.title.toLowerCase().indexOf(filter) !== -1;
@@ -79,14 +81,16 @@ const DocTemplatePane: React.FC<{
     return doc;
   }
 
-  function genReport(id: string) {
-    setGenDocId(id);
+  function onGenReportClick(id: string) {
+    const content = mapProfile.docs[id];
+    const report = genReport(content.content, mapProfile, refModel, impModel);
+    setReport(report);
   }
 
   const genButtonProps: IAdditionalListButton = {
     text: 'Generate',
     icon: 'build',
-    onClick: genReport,
+    onClick: onGenReportClick,
   };
 
   const dochandler: IManageHandler = {
@@ -110,7 +114,7 @@ const DocTemplatePane: React.FC<{
     <FormGroup>
       <ListManagePage {...dochandler} />
       <Dialog
-        isOpen={genDocId !== null}
+        isOpen={report !== null}
         title={'Report'}
         css={css`
           width: calc(100vw - 60px);
@@ -121,16 +125,13 @@ const DocTemplatePane: React.FC<{
             padding: 20px;
           }
         `}
-        onClose={() => setGenDocId(null)}
+        onClose={() => setReport(null)}
         canEscapeKeyClose={false}
         canOutsideClickClose={false}
       >
         <ReportGen
-          mapProfile={mapProfile}
-          selected={genDocId ?? ''}
-          refModel={refModel}
-          impModel={impModel}
-          onClose={() => setGenDocId(null)}
+          report={report??''}          
+          onClose={() => setReport(null)}
         />
       </Dialog>
     </FormGroup>
@@ -143,36 +144,38 @@ const DocEditItemPage: React.FC<{
 }> = ({ object, setObject }) => {
   const doc = object as MappingDoc;
   return (
-    <FormGroup>
-      <NormalTextField
-        key="field#docid"
-        text="Document ID"
-        value={doc.id}
-        onChange={(x: string) => {
-          doc.id = x.replaceAll(/\s+/g, '');
-          setObject({ ...doc });
-        }}
-      />
-      <NormalTextField
-        key="field#doctitle"
-        text="Document title"
-        value={doc.title}
-        onChange={(x: string) => {
-          doc.title = x;
-          setObject({ ...doc });
-        }}
-      />
-      <NormalTextField
-        key="field#doccontent"
-        text="Document Content"
-        rows={30}
-        value={doc.content}
-        onChange={(x: string) => {
-          doc.content = x;
-          setObject({ ...doc });
-        }}
-      />
-    </FormGroup>
+    <MGDDisplayPane>
+      <FormGroup>
+        <NormalTextField
+          key="field#docid"
+          text="Document ID"
+          value={doc.id}
+          onChange={(x: string) => {
+            doc.id = x.replaceAll(/\s+/g, '');
+            setObject({ ...doc });
+          }}
+        />
+        <NormalTextField
+          key="field#doctitle"
+          text="Document title"
+          value={doc.title}
+          onChange={(x: string) => {
+            doc.title = x;
+            setObject({ ...doc });
+          }}
+        />
+        <NormalTextField
+          key="field#doccontent"
+          text="Document Content"
+          rows={30}
+          value={doc.content}
+          onChange={(x: string) => {
+            doc.content = x;
+            setObject({ ...doc });
+          }}
+        />
+      </FormGroup>
+    </MGDDisplayPane>
   );
 };
 
