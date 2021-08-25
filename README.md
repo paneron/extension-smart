@@ -1,6 +1,6 @@
 # To-do list
 
-* MustCancel changes
+* Must
   * Document generation (mapping report)
   * Evidence (external documents) management and storage
   * Data entry/management (data kept in the repository, internal)
