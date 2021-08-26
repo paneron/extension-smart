@@ -22,6 +22,10 @@ export const BOOLEANTYPE = 'boolean';
 export const DATETIMETYPE = 'datetime';
 export const ROLETYPE = 'role';
 
+const REPORTSTARTTAGTEXT = 'SMARTScript';
+export const REPORTSTARTTAG = `<${REPORTSTARTTAGTEXT}>`;
+export const REPORTENDTAG = `</${REPORTSTARTTAGTEXT}>`;
+
 export const DATATYPE: Array<string> = [
   EMPTYTYPE,
   STRINGTYPE,
