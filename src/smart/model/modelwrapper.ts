@@ -41,6 +41,7 @@ import {
 } from '../ui/mapper/MappingCalculator';
 import { MapSet } from '../ui/mapper/mapmodel';
 import { map_style__coverage } from '../../css/visual';
+import React from 'react';
 
 export interface ModelWrapper {
   model: EditorModel;
@@ -198,7 +199,8 @@ export function getMapperReactFlowElementsFrom(
   mapSet: MapSet,
   mapResult: MapResultType,
   setSelectedId: (id: string) => void,
-  isParentFull: boolean
+  isParentFull: boolean,
+  ComponentShortDescription: React.FC<{id:string}>
 ): Elements {
   const destinationList = getMappedList(mapSet);
   const callback = getEditorNodeCallBack({
@@ -217,6 +219,7 @@ export function getMapperReactFlowElementsFrom(
       type === ModelType.REF
         ? id => destinationList.has(id)
         : id => mapSet.mappings[id] !== undefined,
+    ComponentShortDescription
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }

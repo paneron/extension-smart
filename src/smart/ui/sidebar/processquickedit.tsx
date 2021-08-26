@@ -16,17 +16,12 @@ import {
   EditAction,
 } from '../../utils/constants';
 import { NodeCallBack } from '../flowui/container';
-import {
-  ActorDescription,
-  DescriptionItem,
-  EditButton,
-  NonEmptyFieldDescription,
-  ReferenceList,
-  RemoveButton,
-} from './selected';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { Tooltip2 } from '@blueprintjs/popover2';
+import { EditButton, RemoveButton } from '../common/description/buttons';
+import { ActorDescription, DescriptionItem } from '../common/description/fields';
+import { ProvisionList } from '../common/description/ComponentList';
 
 export const ProcessQuickEdit: React.FC<
   NodeCallBack & {
@@ -81,52 +76,6 @@ export const ProcessQuickEdit: React.FC<
         getProvisionById={getProvisionById}
         getRefById={getRefById}
       />
-    </>
-  );
-};
-
-const ProvisionList: React.FC<{
-  provisions: Set<string>;
-  getProvisionById: (id: string) => MMELProvision | null;
-  getRefById: (id: string) => MMELReference | null;
-}> = function ({ provisions, getProvisionById, getRefById }) {
-  const pros: MMELProvision[] = [];
-  provisions.forEach(r => {
-    const ret = getProvisionById(r);
-    if (ret !== null) {
-      pros.push(ret);
-    }
-  });
-  return (
-    <>
-      {provisions.size > 0 ? (
-        <>
-          <p>Provisions</p>
-          <ul>
-            {pros.map((provision: MMELProvision) => (
-              <li key={provision.id}>
-                <DescribeProvision
-                  provision={provision}
-                  getRefById={getRefById}
-                />
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : null}
-    </>
-  );
-};
-
-const DescribeProvision: React.FC<{
-  provision: MMELProvision;
-  getRefById: (id: string) => MMELReference | null;
-}> = function ({ provision, getRefById }) {
-  return (
-    <>
-      <DescriptionItem label="Statement" value={provision.condition} />
-      <NonEmptyFieldDescription label="Modality" value={provision.modality} />
-      <ReferenceList refs={provision.ref} getRefById={getRefById} />
     </>
   );
 };

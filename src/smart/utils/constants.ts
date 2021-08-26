@@ -53,16 +53,19 @@ export type NewComponentTypes =
   | DataType.SIGNALCATCHEVENT
   | DataType.EGATE;
 
-export type SelectableNodeTypes =
+export type DescribableNodeTypes = 
   | DataType.PROCESS
-  | DataType.APPROVAL
-  | DataType.ENDEVENT
+  | DataType.APPROVAL  
   | DataType.TIMEREVENT
   | DataType.SIGNALCATCHEVENT
   | DataType.DATACLASS
-  | DataType.REGISTRY
-  | DataType.STARTEVENT
+  | DataType.REGISTRY  
   | DataType.EGATE;
+
+export type SelectableNodeTypes =  
+  | DescribableNodeTypes
+  | DataType.ENDEVENT  
+  | DataType.STARTEVENT;  
 
 export type EditableNodeTypes =
   | DataType.PROCESS

@@ -4,16 +4,14 @@
 import { ControlGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import ReactFlow, {
   OnLoadParams,
   ReactFlowProvider,
 } from 'react-flow-renderer';
 import {
-  react_flow_container_layout,
-  sidebar_layout,
+  react_flow_container_layout,  
 } from '../../../css/layout';
 import { MGDButtonType } from '../../../css/MGDButton';
 import MGDButton from '../../MGDComponents/MGDButton';
@@ -37,7 +35,7 @@ import {
   NodeTypes,
 } from '../../model/state';
 import { handleModelOpen } from '../menu/file';
-import { SelectedNodeDescription } from '../sidebar/selected';
+import ComponentSummary from '../popover/ComponentSummary';
 import {
   indexModel,
   MapperModelLabel,
@@ -78,14 +76,7 @@ const ModelDiagram: React.FC<{
   const { logger, useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
 
-  const modelType = modelProps.modelType;
-
-  const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
-
-  const Sidebar = useMemo(
-    () => makeSidebar(usePersistentDatasetStateReducer!),
-    []
-  );
+  const modelType = modelProps.modelType;  
 
   function setSelectedId(id: string) {
     setSelected({
@@ -134,7 +125,7 @@ const ModelDiagram: React.FC<{
       setProps({ ...modelProps });
       setSelectedId('');
     }
-  }
+  }  
 
   function setMapping(fromid: string, toid: string) {
     logger?.log(`Update mapping from ${fromid} to ${toid}`);
@@ -173,34 +164,17 @@ const ModelDiagram: React.FC<{
     </ControlGroup>
   );
 
-  const breadcrumbs = getBreadcrumbs(modelProps.history, onPageChange);
+  const ComponentShortDescription: React.FC<{id: string}> = function ({id}) {
+    return <ComponentSummary id={id} model={modelProps.modelWrapper.model} />
+  }
 
-  const sidebar = (
-    <Sidebar
-      stateKey="opened-register-item"
-      css={sidebar_layout}
-      title="Item metadata"
-      blocks={[
-        {
-          key: 'selected-node',
-          title: 'Selected node',
-          content: (
-            <SelectedNodeDescription
-              model={modelProps.modelWrapper.model}
-              pageid={modelProps.modelWrapper.page}
-            />
-          ),
-        },
-      ]}
-    />
-  );
+  const breadcrumbs = getBreadcrumbs(modelProps.history, onPageChange);
 
   return (
     <ReactFlowProvider>
       <Workspace
         className={className}
-        toolbar={toolbar}
-        sidebar={sidebar}
+        toolbar={toolbar}        
         navbarProps={{ breadcrumbs }}
       >
         <div css={react_flow_container_layout}>
@@ -215,7 +189,8 @@ const ModelDiagram: React.FC<{
               mapSet,
               mapResult,
               setSelectedId,
-              isParentMapFullCovered(modelProps.history, mapResult)
+              isParentMapFullCovered(modelProps.history, mapResult),
+              ComponentShortDescription
             )}
             onLoad={onLoad}
             onDragOver={onDragOver}
@@ -226,7 +201,7 @@ const ModelDiagram: React.FC<{
             nodeTypes={NodeTypes}
             edgeTypes={EdgeTypes}
             nodesDraggable={false}
-          ></ReactFlow>
+          ></ReactFlow>          
           {viewOption.legVisible && (
             <MappingLegendPane
               list={

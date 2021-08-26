@@ -40,16 +40,21 @@ import {
   view_mapping_button_layout,
   view_subprocess_button_layout,
 } from '../../../css/layout';
+import PopoverWrapper from '../popover/PopoverWrapper';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
+  const callback = data as NodeCallBack;
+  const SD = callback.ComponentShortDescription;
   const label = isEditorRegistry(node) ? node.title : node.id;
   const color = 'none';
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
-      <DatacubeShape color={color} />
+      <PopoverWrapper id={node.id} SD={SD}>
+        <DatacubeShape color={color} />
+      </PopoverWrapper>
       <div css={[shame__label, shame__label__long]}>{label}</div>
     </>
   );
@@ -59,21 +64,25 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
   const process = data as EditorProcess;
   const callback = data as NodeCallBack;
   const actor = callback.getRoleById(process.actor);
-  const PB = ProcessBox[callback.modelType];
+  const PB = ProcessBox[callback.modelType];  
+  const SD = callback.ComponentShortDescription;
+
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
-      <PB
-        content={process.name === '' ? process.id : process.name}
-        pid={process.id}
-        styleClass={
-          callback.getMapStyleClassById
-            ? callback.getMapStyleClassById(process.id)
-            : undefined
-        }
-        setMapping={callback.setMapping}
-        uiref={process.uiref}
-      />
+      <PopoverWrapper id={process.id} SD={SD}>
+        <PB
+          content={process.name === '' ? process.id : process.name}
+          pid={process.id}
+          styleClass={
+            callback.getMapStyleClassById
+              ? callback.getMapStyleClassById(process.id)
+              : undefined
+          }
+          setMapping={callback.setMapping}
+          uiref={process.uiref}
+        />
+      </PopoverWrapper>
       <Handle type="target" position={Position.Top} css={handlecss} />
       {process.page !== '' && (
         <div css={view_subprocess_button_layout}>
@@ -109,20 +118,24 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
   const actor = callback.getRoleById(approval.actor);
   const approver = callback.getRoleById(approval.approver);
   const PB = ProcessBox[callback.modelType];
+  const SD = callback.ComponentShortDescription;
+
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
-      <PB
-        content={approval.name === '' ? approval.id : approval.name}
-        pid={approval.id}
-        styleClass={
-          callback.getMapStyleClassById
-            ? callback.getMapStyleClassById(approval.id)
-            : undefined
-        }
-        setMapping={callback.setMapping}
-        uiref={approval.uiref}
-      />
+      <PopoverWrapper id={approval.id} SD={SD}>
+        <PB
+          content={approval.name === '' ? approval.id : approval.name}
+          pid={approval.id}
+          styleClass={
+            callback.getMapStyleClassById
+              ? callback.getMapStyleClassById(approval.id)
+              : undefined
+          }
+          setMapping={callback.setMapping}
+          uiref={approval.uiref}
+        />
+      </PopoverWrapper>        
       <Handle type="target" position={Position.Top} css={handlecss} />
       {callback.hasMapping !== undefined &&
         callback.hasMapping(approval.id) && (
@@ -186,26 +199,35 @@ export const EndComponent: FC<NodeProps> = function () {
   );
 };
 
-export const TimerComponent: FC<NodeProps> = function () {
+export const TimerComponent: FC<NodeProps> = function ({ data }) {
+  const callback = data as NodeCallBack;
   const color = 'none';
+  const SD = callback.ComponentShortDescription;  
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
-      <TimerShape color={color} />
+      <PopoverWrapper id={data.id} SD={SD}>
+        <TimerShape color={color} />
+      </PopoverWrapper>       
       <div css={[shame__label, shame__label__short]}>timer</div>
     </>
   );
 };
 
 export const EgateComponent: FC<NodeProps> = function ({ data }) {
-  const color = 'none';
   const egate = data as EditorEGate;
+  const callback = data as NodeCallBack;
+  const SD = callback.ComponentShortDescription;
+  const color = 'none';  
+  
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
-      <EgateShape color={color} />
+      <PopoverWrapper id={egate.id} SD={SD}>
+        <EgateShape color={color} />
+      </PopoverWrapper>      
       <div css={[shame__label, shame__label__long]}>
         <Text ellipsize={true}>{egate.label}</Text>
       </div>
@@ -215,12 +237,16 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
 
 export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
   const scevent = data as EditorSignalEvent;
+  const callback = data as NodeCallBack;
+  const SD = callback.ComponentShortDescription;
   const color = 'none';
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
-      <SignalCatchShape color={color} />
+      <PopoverWrapper id={scevent.id} SD={SD}>
+        <SignalCatchShape color={color} />
+      </PopoverWrapper>          
       <div css={[shame__label, shame__label__long]}>{scevent.id}</div>
     </>
   );

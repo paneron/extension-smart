@@ -11,9 +11,8 @@ import {
   ModelType,
 } from '../../model/editormodel';
 import { PageHistory } from '../../model/history';
-import { ModelWrapper } from '../../model/modelwrapper';
 import { MapperSelectedInterface } from '../../model/state';
-import { MappingType, MapProfile, MapSet } from './mapmodel';
+import { MappingType, MapSet } from './mapmodel';
 import { SerializedStyles } from '@emotion/react';
 
 export enum MapCoverType {
@@ -70,7 +69,7 @@ export type MapResultType = Record<string, MapCoverType>;
 export function calculateMapping(
   model: EditorModel,
   mapping: MappingType
-): MapResultType {
+): MapResultType {  
   const mr: MapResultType = {};
   Object.values(mapping).forEach(m =>
     Object.keys(m).forEach(k => (mr[k] = MapCoverType.FULL))
@@ -178,7 +177,7 @@ function explorePage(
 export function getMapStyleById(
   mapResult: MapResultType,
   id: string
-): SerializedStyles {
+): SerializedStyles {  
   const result = mapResult[id];
   if (result === undefined) {
     return map_style__coverage(MapCoverType.NONE);
@@ -206,7 +205,7 @@ export function filterMappings(
   selected: MapperSelectedInterface,
   impElms: Record<string, EditorNode>,
   refElms: Record<string, EditorNode>
-): MapEdgeResult[] {
+): MapEdgeResult[] {  
   const id = selected.selected;
   const result: MapEdgeResult[] = [];
   if (
@@ -252,46 +251,10 @@ function getFilterMapRecord(
   };
 }
 
-export function updateMapEdges(
-  refMW: ModelWrapper,
-  impMW: ModelWrapper,
-  mp: MapProfile,
-  selected: MapperSelectedInterface,
-  setMapEdges: (me: MapEdgeResult[]) => void
-) {
-  if (selected.selected !== '') {
-    const mapSet = mp.mapSet[refMW.model.meta.namespace];
-    if (mapSet !== undefined) {
-      const impPage = impMW.model.pages[impMW.page];
-      const refPage = refMW.model.pages[refMW.page];
-
-      const filtered = filterMappings(
-        mapSet,
-        impPage,
-        refPage,
-        selected,
-        impMW.model.elements,
-        refMW.model.elements
-      );
-      setMapEdges(filtered);
-    }
-  } else {
-    setMapEdges([]);
-  }
-}
-
-export function updatePosMapEdges(edges: MapEdgeResult[]): MapEdgeResult[] {
-  return edges.map(e => ({
-    ...e,
-    fromPos: e.fromref.current?.getBoundingClientRect(),
-    toPos: e.toref.current?.getBoundingClientRect(),
-  }));
-}
-
 export function isParentMapFullCovered(
   history: PageHistory,
   mr: MapResultType
-): boolean {
+): boolean {  
   for (const [index, item] of history.items.entries()) {
     if (index > 0 && mr[item.pathtext] === MapCoverType.FULL) {
       return true;

@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import React, { useContext, useState } from 'react';
+import React, { RefObject, useContext, useMemo, useState } from 'react';
 
 import ModelDiagram from './mapper/ModelDiagram';
 import {
@@ -37,11 +37,9 @@ import {
 import { createNewEditorModel } from '../utils/EditorFactory';
 import { createEditorModelWrapper } from '../model/modelwrapper';
 import {
-  calculateMapping,
-  MapEdgeResult,
-  MapResultType,
-  updateMapEdges,
-  updatePosMapEdges,
+  calculateMapping,  
+  filterMappings,  
+  MapResultType,  
 } from './mapper/MappingCalculator';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { Logger } from '../utils/commonfunctions';
@@ -52,9 +50,12 @@ import MappingEditPage from './edit/mappingedit';
 import DocTemplatePane from './doctemplate/doctemplatepane';
 import MGDButton from '../MGDComponents/MGDButton';
 import { dialog_layout, mappper_container } from '../../css/layout';
+import { vertical_line } from '../../css/components';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
+
+const lineref: RefObject<HTMLDivElement> = React.createRef();
 
 const ModelMapper: React.FC<{
   isVisible: boolean;
@@ -84,9 +85,7 @@ const ModelMapper: React.FC<{
     modelType: ModelType.IMP,
     selected: '',
   });
-  const [mapResult, setMapResult] = useState<MapResultType>({});
-
-  const [mapEdges, setMapEdges] = useState<MapEdgeResult[]>([]);
+  const [mapResult, setMapResult] = useState<MapResultType>({});  
 
   const [editMappingProps, setEditMProps] = useState<EditMPropsInterface>({
     from: '',
@@ -94,12 +93,24 @@ const ModelMapper: React.FC<{
   });
 
   const refmodel = referenceProps.modelWrapper.model;
+  const impmodel = implementProps.modelWrapper.model;
   const refns =
     refmodel.meta.namespace === '' ? 'defaultns' : refmodel.meta.namespace;
   if (mapProfile.mapSet[refns] === undefined) {
     mapProfile.mapSet[refns] = createNewMapSet(refns);
   }
   const mapSet = mapProfile.mapSet[refns];
+  const impPage = impmodel.pages[implementProps.modelWrapper.page];
+  const refPage = refmodel.pages[referenceProps.modelWrapper.page];
+
+  const mapEdges = useMemo (() => filterMappings(
+    mapSet,
+    impPage,
+    refPage,
+    selected,
+    impmodel.elements,
+    refmodel.elements
+  ), [mapSet, impPage, refPage, selected]);
 
   function updateMapStyle({ model = refmodel, mp = mapProfile }) {
     setMapResult(calculateMapping(model, getMappings(mp, refns)));
@@ -111,14 +122,7 @@ const ModelMapper: React.FC<{
       mapSet: { ...mapProfile.mapSet, [ms.id]: ms },
     };
     setMapProfile(newProfile);
-    updateMapStyle({ mp: newProfile });
-    updateMapEdges(
-      referenceProps.modelWrapper,
-      implementProps.modelWrapper,
-      newProfile,
-      selected,
-      setMapEdges
-    );
+    updateMapStyle({ mp: newProfile });    
   }
 
   function onRefModelChanged(model: EditorModel) {
@@ -128,14 +132,7 @@ const ModelMapper: React.FC<{
 
   function onMapProfileChanged(mp: MapProfile) {
     setMapProfile(mp);
-    updateMapStyle({ mp: mp });
-    updateMapEdges(
-      referenceProps.modelWrapper,
-      implementProps.modelWrapper,
-      mp,
-      selected,
-      setMapEdges
-    );
+    updateMapStyle({ mp: mp });    
   }
 
   function onImpModelChanged(model: EditorModel) {
@@ -144,14 +141,7 @@ const ModelMapper: React.FC<{
   }
 
   function onSelectionChange(select: MapperSelectedInterface) {
-    setSelected(select);
-    updateMapEdges(
-      referenceProps.modelWrapper,
-      implementProps.modelWrapper,
-      mapProfile,
-      select,
-      setMapEdges
-    );
+    setSelected(select);    
   }
 
   function onImpPropsChange(state: MapperState) {
@@ -162,8 +152,13 @@ const ModelMapper: React.FC<{
     setRefProps(state);
   }
 
-  function onMove() {
-    setMapEdges(updatePosMapEdges(mapEdges));
+  function selectionCancel() {
+    if (selected.selected !== '') {
+      onSelectionChange({
+        modelType: ModelType.IMP,
+        selected: '',
+      });
+    }
   }
 
   function onMappingEdit(from: string, to: string) {
@@ -196,14 +191,7 @@ const ModelMapper: React.FC<{
       from: '',
       to: '',
     });
-    updateMapStyle({ mp: mapProfile });
-    updateMapEdges(
-      referenceProps.modelWrapper,
-      implementProps.modelWrapper,
-      mapProfile,
-      selected,
-      setMapEdges
-    );
+    updateMapStyle({ mp: mapProfile });    
   }
 
   if (!isVisible && selected.selected !== '') {
@@ -277,11 +265,7 @@ const ModelMapper: React.FC<{
       combo: 'esc',
       global: true,
       label: 'cancel view mapping',
-      onKeyDown: () =>
-        onSelectionChange({
-          modelType: ModelType.IMP,
-          selected: '',
-        }),
+      onKeyDown: selectionCancel,
     },
   ];
 
@@ -328,8 +312,9 @@ const ModelMapper: React.FC<{
               onMapSetChanged={onMapSetChanged}
               onModelChanged={onImpModelChanged}
               setSelected={onSelectionChange}
-              onMove={onMove}
+              onMove={selectionCancel}
             />
+            <div ref={lineref} css={vertical_line} />
             <ModelDiagram
               modelProps={referenceProps}
               viewOption={viewOption}
@@ -340,10 +325,10 @@ const ModelMapper: React.FC<{
               mapResult={mapResult}
               onModelChanged={onRefModelChanged}
               setSelected={onSelectionChange}
-              onMove={onMove}
-            />
+              onMove={selectionCancel}
+            />            
           </div>
-          <MappingCanvus mapEdges={mapEdges} onMappingEdit={onMappingEdit} />
+          <MappingCanvus mapEdges={mapEdges} onMappingEdit={onMappingEdit} line={lineref}/>
         </Workspace>
       </HotkeysTarget2>
     );

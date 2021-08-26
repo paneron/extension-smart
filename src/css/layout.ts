@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { CSSROOTVARIABLES } from './root.css';
 
 export const view_subprocess_button_layout = css`
   position: fixed;
@@ -53,4 +54,15 @@ export const dialog_layout__full = css`
 
 export const wrapper_container = css`
   position: relative;
+`;
+
+export const popover_panel_container = css`
+  font-weight: ${CSSROOTVARIABLES['--font-weight--regular']};
+  font-size: ${CSSROOTVARIABLES['--font-size--regular']};
+  color: ${CSSROOTVARIABLES['--colour--black']};
+  background-color: ${CSSROOTVARIABLES['--colour--bsi-pale-teal']};  
+  padding: 1rem;
+  max-width: 30vw;
+  max-height: 45vh;
+  overflow-y: auto;
 `;
