@@ -36,6 +36,10 @@ import {
   shame__label__short,
 } from '../../../css/shame';
 import { Text } from '@blueprintjs/core';
+import {
+  view_mapping_button_layout,
+  view_subprocess_button_layout,
+} from '../../../css/layout';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -72,13 +76,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
       />
       <Handle type="target" position={Position.Top} css={handlecss} />
       {process.page !== '' && (
-        <div
-          style={{
-            position: 'fixed',
-            right: '-10px',
-            top: '-10px',
-          }}
-        >
+        <div css={view_subprocess_button_layout}>
           <Tooltip2 content="View subprocess" position="top">
             <MGDButton
               key={process.id + '#subprocessbutton'}
@@ -235,13 +233,7 @@ const ViewMappingbutton: React.FC<{
 }> = function ({ modelType, id, setSelectedId }) {
   if (modelType === ModelType.IMP || modelType === ModelType.REF) {
     return (
-      <div
-        style={{
-          position: 'fixed',
-          left: '-10px',
-          top: '-10px',
-        }}
-      >
+      <div css={view_mapping_button_layout}>
         <Tooltip2 content={MapViewButtonToolTip[modelType]} position="top">
           <MGDButton
             key={id + '#viewmapbutton'}

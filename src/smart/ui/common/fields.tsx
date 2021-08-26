@@ -2,7 +2,7 @@
 
 import { jsx } from '@emotion/react';
 import { FormGroup, IconName } from '@blueprintjs/core';
-import React, { CSSProperties, RefObject, useState } from 'react';
+import React, { RefObject, useState } from 'react';
 import { EditorModel } from '../../model/editormodel';
 import MGDButton from '../../MGDComponents/MGDButton';
 import MGDTextarea from '../../MGDComponents/MGDTextarea';
@@ -12,6 +12,10 @@ import {
   mgd_select,
   mgd_select__constrained,
 } from '../../../css/form';
+import {
+  shame__mystery_container,
+  shame__mystery_container__column,
+} from '../../../css/shame';
 
 export interface IAdditionalListButton {
   text: string;
@@ -148,19 +152,6 @@ export const NormalComboBox: React.FC<IComboField> = function ({
   );
 };
 
-const containercss: CSSProperties = {
-  overflow: 'hidden',
-  display: 'flex',
-  flexFlow: 'row wrap',
-  alignItems: 'center',
-};
-
-const column: CSSProperties = {
-  textAlign: 'center',
-  display: 'flex',
-  flexFlow: 'column nowrap',
-};
-
 export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
   f: IMultiRefSelectField
 ) => {
@@ -187,8 +178,8 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
   return (
     <fieldset>
       <legend>{f.text}</legend>
-      <div style={containercss}>
-        <div style={column}>
+      <div css={shame__mystery_container}>
+        <div css={shame__mystery_container__column}>
           {f.text}
           <select
             css={[mgd_select, mgd_select__constrained]}
@@ -202,7 +193,7 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
             ))}
           </select>
         </div>
-        <div style={column}>
+        <div css={shame__mystery_container__column}>
           <MGDButton
             icon="chevron-left"
             onClick={() => f.add(extractOptions(reflist))}
@@ -216,7 +207,7 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
             Remove
           </MGDButton>
         </div>
-        <div style={column}>
+        <div css={shame__mystery_container__column}>
           <div>
             <label css={mgd_label}> {f.filterName} </label>
             <input
@@ -272,7 +263,7 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
   return (
     <fieldset>
       <legend>{f.text}</legend>
-      <div style={containercss}>
+      <div css={shame__mystery_container}>
         <label css={mgd_label}>{f.text}</label>
         <MGDTextarea
           id="field#text"
@@ -288,7 +279,7 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
         <MGDButton icon="double-chevron-left" onClick={() => handleOnClick()}>
           Select
         </MGDButton>
-        <div style={column}>
+        <div css={shame__mystery_container__column}>
           <div>
             <label css={mgd_label}>{f.filterName}</label>
             <input

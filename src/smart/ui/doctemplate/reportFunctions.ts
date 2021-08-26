@@ -68,23 +68,35 @@ export function genReport(
   do {
     const index1 = remain.indexOf(REPORTSTARTTAG);
     const index2 = remain.indexOf(REPORTENDTAG);
-    if (index1 != -1 && index2 > index1) {      
+    if (index1 !== -1 && index2 > index1) {
       out += remain.substr(0, index1);
       try {
-        out += parseCode(remain.substring(index1+REPORTSTARTTAG.length, index2), records, mapProfile, imp, ref);
+        out += parseCode(
+          remain.substring(index1 + REPORTSTARTTAG.length, index2),
+          records,
+          mapProfile,
+          imp,
+          ref
+        );
       } catch (e) {
         return e as string;
       }
-      remain = remain.substring(index2+REPORTENDTAG.length);      
+      remain = remain.substring(index2 + REPORTENDTAG.length);
     } else {
       out += remain;
       remain = '';
     }
   } while (remain.trim() !== '');
-  return out;    
+  return out;
 }
 
-function parseCode(code:string, records:RefRecord[], rawMapping: MapProfile, imp: EditorModel, ref: EditorModel):string {
+function parseCode(
+  code: string,
+  records: RefRecord[],
+  rawMapping: MapProfile,
+  imp: EditorModel,
+  ref: EditorModel
+): string {
   try {
     const program = `
       "use strict";      
@@ -95,7 +107,7 @@ function parseCode(code:string, records:RefRecord[], rawMapping: MapProfile, imp
     `;
     const out = Function(program)()(records, rawMapping, imp, ref);
     return out;
-  } catch (e:any) {
+  } catch (e: any) {
     throw e.message + '\n' + e.stack;
   }
 }

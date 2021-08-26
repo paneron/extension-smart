@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { jsx, css } from '@emotion/react';
+import { jsx } from '@emotion/react';
 import React, { useContext, useState } from 'react';
 
 import ModelDiagram from './mapper/ModelDiagram';
@@ -51,6 +51,7 @@ import { EditMPropsInterface } from './dialog/dialogs';
 import MappingEditPage from './edit/mappingedit';
 import DocTemplatePane from './doctemplate/doctemplatepane';
 import MGDButton from '../MGDComponents/MGDButton';
+import { dialog_layout, mappper_container } from '../../css/layout';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -293,14 +294,7 @@ const ModelMapper: React.FC<{
             title={
               editMappingProps.from !== '' ? 'Edit Mapping' : 'Report template'
             }
-            css={css`
-              width: calc(100vw - 60px);              
-              padding-bottom: 0;
-              & > :last-child {
-                overflow-y: auto;
-                padding: 20px;
-              }
-            `}
+            css={dialog_layout}
             onClose={
               editMappingProps.from !== ''
                 ? () =>
@@ -324,13 +318,7 @@ const ModelMapper: React.FC<{
               />
             )}
           </Dialog>
-          <div
-            style={{
-              display: 'flex',
-              width: '100%',
-              height: '100%',
-            }}
-          >
+          <div css={mappper_container}>
             <ModelDiagram
               modelProps={implementProps}
               viewOption={viewOption}

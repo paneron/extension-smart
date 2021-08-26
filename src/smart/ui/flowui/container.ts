@@ -1,4 +1,3 @@
-import { CSSProperties } from 'react';
 import { XYPosition } from 'react-flow-renderer';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
 import {
@@ -17,18 +16,33 @@ export interface EdgeContainer {
   source: string;
   target: string;
   type: string;
-  label: string;
   data: EdgePackage;
-
   animated: boolean;
-  style: CSSProperties;
+  label: string;
+}
+
+export interface EdgePackage {
+  id: string;
+  removeEdge: (id: string) => void;
+}
+
+export interface DataLinkContainer {
+  id: string;
+  source: string;
+  target: string;
+  data: DataLinkNodeData;
+  type: string;
+  animated: boolean;
+}
+
+export interface DataLinkNodeData {
+  isLinkBetweenData: boolean;
 }
 
 export type EdtiorNodeWithInfoCallback = EditorNode & NodeCallBack;
 
 export interface NodeCallBack {
   modelType: ModelType;
-  style?: CSSProperties;
   onProcessClick: (pageid: string, processid: string) => void;
   getRoleById: (id: string) => MMELRole | null;
   setMapping: (fromid: string, toid: string) => void;
@@ -37,26 +51,11 @@ export interface NodeCallBack {
   hasMapping?: (id: string) => boolean;
 }
 
-export interface EdgePackage {
-  id: string;
-  removeEdge: (id: string) => void;
-}
-
 export interface NodeContainer {
   id: string;
   data: EdtiorNodeWithInfoCallback;
   type: string;
   position: XYPosition;
-}
-
-export interface DataLinkContainer {
-  id: string;
-  source: string;
-  target: string;
-  type: string;
-  animated: boolean;
-  label: string;
-  style: CSSProperties;
 }
 
 export function createEdgeContainer(
@@ -75,7 +74,6 @@ export function createEdgeContainer(
       removeEdge: removeEdge,
     },
     animated: false,
-    style: { stroke: 'black' },
   };
 }
 
@@ -87,10 +85,11 @@ export function createDataLinkContainer(
     id: s.id + '#datato#' + t.id,
     source: s.id,
     target: t.id,
-    type: 'default',
+    type: 'datalink',
     animated: true,
-    label: '',
-    style: isEditorData(s) && isEditorData(t) ? { stroke: '#f6ab6c' } : {},
+    data: {
+      isLinkBetweenData: isEditorData(s) && isEditorData(t),
+    },
   };
 }
 

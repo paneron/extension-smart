@@ -2,10 +2,10 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import styled from '@emotion/styled';
 import React from 'react';
 import { mgd_label } from '../../../css/form';
 import MGDComponentBar from '../../MGDComponents/MGDComponentBar';
+import MGDContainer from '../../MGDComponents/MGDContainer';
 import MGDProcessBox from '../../MGDComponents/MGDProcessBox';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
@@ -22,54 +22,54 @@ import {
 const NewComponentPane: React.FC = function () {
   return (
     <MGDComponentBar>
-      <Unit>
+      <MGDContainer>
         <MGDProcessBox
           onDragStart={event => onDragStart(event, DataType.PROCESS)}
           draggable
         >
           <label css={mgd_label}> Process </label>
         </MGDProcessBox>
-      </Unit>
-      <Unit>
+      </MGDContainer>
+      <MGDContainer>
         <MGDProcessBox
           onDragStart={event => onDragStart(event, DataType.APPROVAL)}
           draggable
         >
           <label css={mgd_label}> Approval </label>
         </MGDProcessBox>
-      </Unit>
-      <Unit>
+      </MGDContainer>
+      <MGDContainer>
         <span
           onDragStart={event => onDragStart(event, DataType.ENDEVENT)}
           draggable
         >
           <EndShape />
         </span>
-      </Unit>
-      <Unit>
+      </MGDContainer>
+      <MGDContainer>
         <span
           onDragStart={event => onDragStart(event, DataType.TIMEREVENT)}
           draggable
         >
           <TimerShape />
         </span>
-      </Unit>
-      <Unit>
+      </MGDContainer>
+      <MGDContainer>
         <span
           onDragStart={event => onDragStart(event, DataType.SIGNALCATCHEVENT)}
           draggable
         >
           <SignalCatchShape />
         </span>
-      </Unit>
-      <Unit>
+      </MGDContainer>
+      <MGDContainer>
         <span
           onDragStart={event => onDragStart(event, DataType.EGATE)}
           draggable
         >
           <EgateShape />
         </span>
-      </Unit>
+      </MGDContainer>
     </MGDComponentBar>
   );
 };
@@ -83,12 +83,5 @@ function onDragStart(
     event.dataTransfer.effectAllowed = 'move';
   }
 }
-
-const Unit = styled.div`
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 export default NewComponentPane;

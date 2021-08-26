@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 
 import { ControlGroup } from '@blueprintjs/core';
-import { jsx, css } from '@emotion/react';
+import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
@@ -11,6 +11,10 @@ import ReactFlow, {
   OnLoadParams,
   ReactFlowProvider,
 } from 'react-flow-renderer';
+import {
+  react_flow_container_layout,
+  sidebar_layout,
+} from '../../../css/layout';
 import { MGDButtonType } from '../../../css/MGDButton';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { EditorModel, ModelType } from '../../model/editormodel';
@@ -174,10 +178,7 @@ const ModelDiagram: React.FC<{
   const sidebar = (
     <Sidebar
       stateKey="opened-register-item"
-      css={css`
-        width: 280px;
-        z-index: 1;
-      `}
+      css={sidebar_layout}
       title="Item metadata"
       blocks={[
         {
@@ -202,12 +203,7 @@ const ModelDiagram: React.FC<{
         sidebar={sidebar}
         navbarProps={{ breadcrumbs }}
       >
-        <div
-          css={css`
-            flex: 1;
-            position: relative;
-          `}
-        >
+        <div css={react_flow_container_layout}>
           <ReactFlow
             key="MMELModel"
             elements={getMapperReactFlowElementsFrom(

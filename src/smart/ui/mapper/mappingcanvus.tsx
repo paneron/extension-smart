@@ -3,16 +3,16 @@
 
 import { jsx } from '@emotion/react';
 import React from 'react';
-import styled from '@emotion/styled';
 import { EdgeText } from 'react-flow-renderer';
 import { MapEdgeResult } from './MappingCalculator';
+import { mgd_canvas } from '../../../css/layout';
 
 const MappingCanvus: React.FC<{
   mapEdges: MapEdgeResult[];
   onMappingEdit: (from: string, to: string) => void;
 }> = function ({ mapEdges, onMappingEdit }) {
   return (
-    <Canvus>
+    <div css={mgd_canvas}>
       <svg width="100%" height="99%">
         <defs>
           <marker
@@ -32,19 +32,9 @@ const MappingCanvus: React.FC<{
           <MappingEdge {...r} onMappingEdit={onMappingEdit} />
         ))}
       </svg>
-    </Canvus>
+    </div>
   );
 };
-
-const Canvus = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 200;
-  pointer-events: none;
-`;
 
 const MappingEdge: React.FC<
   MapEdgeResult & {

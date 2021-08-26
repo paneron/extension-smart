@@ -26,3 +26,16 @@ export const shame__label__nudge = css`
 export const shame__approver_deco = css`
   color: green;
 `;
+
+export const shame__mystery_container = css`
+  overflow: hidden;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+`;
+
+export const shame__mystery_container__column = css`
+  text-align: center;
+  display: flex;
+  flex-flow: column nowrap;
+`;

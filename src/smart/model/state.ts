@@ -3,7 +3,7 @@ import { NodeProps } from 'react-flow-renderer';
 import { PageHistory } from './history';
 import { ModelWrapper } from './modelwrapper';
 import { DataType } from '../serialize/interface/baseinterface';
-import { NormalEdge, SelfLoopEdge } from '../ui/flowui/edgeUI';
+import { DataLinkEdge, NormalEdge, SelfLoopEdge } from '../ui/flowui/edgeUI';
 import {
   ApprovalComponent,
   Datacube,
@@ -65,6 +65,7 @@ export const NodeTypes = gatherNodeTypes(MMELtoFlowEntries);
 export const EdgeTypes = {
   self: SelfLoopEdge,
   normal: NormalEdge,
+  datalink: DataLinkEdge,
 };
 
 function gatherNodeTypes(

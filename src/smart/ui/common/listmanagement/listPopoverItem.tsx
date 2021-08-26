@@ -2,8 +2,9 @@
 /** @jsxFrag React.Fragment */
 
 import { Dialog } from '@blueprintjs/core';
-import { jsx, css } from '@emotion/react';
+import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
+import { dialog_layout } from '../../../../css/layout';
 import { EditorModel } from '../../../model/editormodel';
 import { MMELObject } from '../../../serialize/interface/baseinterface';
 import {
@@ -169,14 +170,7 @@ const ListWithPopoverItem: React.FC<PopListInterface> = function ({
       <Dialog
         isOpen={mode !== 'None'}
         title="Attribute details"
-        css={css`
-          width: calc(100vw - 60px);
-          padding-bottom: 0;
-          & > :last-child {
-            overflow-y: auto;
-            padding: 20px;
-          }
-        `}
+        css={dialog_layout}
         onClose={() => setMode('None')}
         canEscapeKeyClose={false}
         canOutsideClickClose={false}

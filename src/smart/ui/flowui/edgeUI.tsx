@@ -5,16 +5,53 @@ import { jsx } from '@emotion/react';
 import React from 'react';
 
 import {
-  ArrowHeadType,
   EdgeProps,
   EdgeText,
   getEdgeCenter,
-  getMarkerEnd,
   getSmoothStepPath,
+  getBezierPath,
   Position,
 } from 'react-flow-renderer';
-import { mgd_edge_container } from '../../../css/MGDEdgeContainer';
-import { EdgePackage } from './container';
+import { CSSROOTVARIABLES } from '../../../css/root.css';
+import { DataLinkNodeData, EdgePackage } from './container';
+
+const SandyBrown = CSSROOTVARIABLES['--colour--sandy-brown'];
+const Black = CSSROOTVARIABLES['--colour--black'];
+
+const MARKERHALFWIDTH = 3;
+const MARKERHEIGHT = 4;
+
+export const DataLinkEdge: React.FC<EdgeProps> = function ({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  data,
+}) {
+  const dldata = data as DataLinkNodeData;
+  const edgePath = getBezierPath({
+    sourceX,
+    sourceY,
+    sourcePosition,
+    targetX,
+    targetY,
+    targetPosition,
+  });
+  const color = dldata.isLinkBetweenData ? SandyBrown : Black;
+  return (
+    <>
+      <path
+        style={{ stroke: color }}
+        id={id}
+        className="react-flow__edge-path"
+        d={edgePath}
+      />
+    </>
+  );
+};
 
 export const SelfLoopEdge: React.FC<EdgeProps> = function ({
   id,
@@ -28,7 +65,6 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
   targetPosition,
   label,
   data,
-  markerEndId,
 }) {
   const p1x: number = sourceX + 40;
   const p1y: number = sourceY + 30;
@@ -70,7 +106,6 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
     targetY: p4y,
     targetPosition,
   });
-  const markerEnd = getMarkerEnd(ArrowHeadType.ArrowClosed, markerEndId);
   const [centerX, centerY] = getEdgeCenter({
     sourceX,
     sourceY: p1y,
@@ -81,29 +116,29 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
     <>
       <path
         id={id}
-        css={mgd_edge_container}
+        style={{ stroke: Black }}
         className="react-flow__edge-path"
         d={edgePath1}
       />
       <path
         id={id + 2}
-        css={mgd_edge_container}
+        style={{ stroke: Black }}
         className="react-flow__edge-path"
         d={edgePath2}
       />
       <path
         id={id + 3}
-        css={mgd_edge_container}
+        style={{ stroke: Black }}
         className="react-flow__edge-path"
         d={edgePath3}
       />
       <path
         id={id + 4}
-        css={mgd_edge_container}
+        style={{ stroke: Black }}
         className="react-flow__edge-path"
         d={edgePath4}
-        markerEnd={markerEnd}
       />
+      <Marker x={targetX} y={targetY} />
       <EdgeLabel
         payload={data as EdgePackage}
         x={centerX}
@@ -127,9 +162,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
   targetPosition,
   data,
   label,
-  markerEndId,
 }) {
-  const markerEnd = getMarkerEnd(ArrowHeadType.ArrowClosed, markerEndId);
   if (targetY > sourceY) {
     const edgePath1 = getSmoothStepPath({
       sourceX,
@@ -149,10 +182,9 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
       <>
         <path
           id={id}
-          css={mgd_edge_container}
+          style={{ stroke: Black }}
           className="react-flow__edge-path"
           d={edgePath1}
-          markerEnd={markerEnd}
         />
         <EdgeLabel
           payload={data as EdgePackage}
@@ -161,6 +193,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
           label={label}
           keytext={source + '#' + target}
         />
+        <Marker x={targetX} y={targetY} />
       </>
     );
   }
@@ -226,29 +259,29 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
     <>
       <path
         id={id}
-        css={mgd_edge_container}
+        style={{ stroke: Black }}
         className="react-flow__edge-path"
         d={edgePath1}
       />
       <path
         id={id + 2}
-        css={mgd_edge_container}
+        style={{ stroke: Black }}
         className="react-flow__edge-path"
         d={edgePath2}
       />
       <path
         id={id + 3}
-        css={mgd_edge_container}
+        style={{ stroke: Black }}
         className="react-flow__edge-path"
         d={edgePath3}
       />
       <path
         id={id + 4}
-        css={mgd_edge_container}
+        style={{ stroke: Black }}
         className="react-flow__edge-path"
         d={edgePath4}
-        markerEnd={markerEnd}
       />
+      <Marker x={targetX} y={targetY} />
       <EdgeLabel
         payload={data as EdgePackage}
         x={centerX}
@@ -293,5 +326,22 @@ const EdgeLabel: React.FC<{
         />
       )}
     </>
+  );
+};
+
+const Marker: React.FC<{
+  x: number;
+  y: number;
+  color?: string;
+}> = function ({ x, y, color = Black }) {
+  return (
+    <polygon
+      points={`
+      ${x - MARKERHALFWIDTH},${y - MARKERHEIGHT}
+      ${x + MARKERHALFWIDTH},${y - MARKERHEIGHT}
+      ${x},${y}
+    `}
+      style={{ fill: color }}
+    />
   );
 };

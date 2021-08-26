@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { jsx, css } from '@emotion/react';
+import { jsx } from '@emotion/react';
 import React, { RefObject, useContext, useMemo, useState } from 'react';
 
 import ReactFlow, {
@@ -70,6 +70,12 @@ import { EdgePackage } from './flowui/container';
 import { deleteEdge } from '../utils/ModelRemoveComponentHandler';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
+import {
+  dialog_layout,
+  dialog_layout__full,
+  react_flow_container_layout,
+  sidebar_layout,
+} from '../../css/layout';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -293,10 +299,7 @@ const ModelEditor: React.FC<{
   const sidebar = (
     <Sidebar
       stateKey="opened-register-item"
-      css={css`
-        width: 280px;
-        z-index: 1;
-      `}
+      css={sidebar_layout}
       title="Item metadata"
       blocks={[
         {
@@ -320,27 +323,16 @@ const ModelEditor: React.FC<{
     />
   );
 
-  let ret: JSX.Element;
   if (isVisible) {
     const diagProps = dialogPack.type === null ? null : MyDiag[dialogPack.type];
-    ret = (
+    return (
       <ReactFlowProvider>
         {diagProps !== null && (
           <Dialog
             isOpen={dialogPack !== null}
             title={diagProps.title}
             css={
-              diagProps.fullscreen
-                ? css`
-                    width: calc(100vw - 60px);
-                    min-height: calc(100vh - 60px);
-                    padding-bottom: 0;
-                    & > :last-child {
-                      overflow-y: auto;
-                      padding: 20px;
-                    }
-                  `
-                : ''
+              diagProps.fullscreen ? [dialog_layout, dialog_layout__full] : ''
             }
             onClose={() => setDialogType(null)}
             canEscapeKeyClose={false}
@@ -363,12 +355,7 @@ const ModelEditor: React.FC<{
           sidebar={sidebar}
           navbarProps={{ breadcrumbs }}
         >
-          <div
-            css={css`
-              flex: 1;
-              position: relative;
-            `}
-          >
+          <div css={react_flow_container_layout}>
             <ReactFlow
               key="MMELModel"
               elements={getReactFlowElementsFrom(
@@ -406,10 +393,8 @@ const ModelEditor: React.FC<{
         </Workspace>
       </ReactFlowProvider>
     );
-  } else {
-    ret = <div></div>;
   }
-  return ret;
+  return <div></div>;
 };
 
 export default ModelEditor;

@@ -12,6 +12,7 @@ import MGDButton from '../../MGDComponents/MGDButton';
 import { mgd_label } from '../../../css/form';
 import { MGDButtonType } from '../../../css/MGDButton';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
+import { wrapper_container } from '../../../css/layout';
 
 const MappingEditPage: React.FC<{
   from: EditorProcess | EditorApproval;
@@ -25,11 +26,7 @@ const MappingEditPage: React.FC<{
   return (
     <MGDDisplayPane>
       <FormGroup>
-        <div
-          style={{
-            position: 'relative',
-          }}
-        >
+        <div css={wrapper_container}>
           <EditPageButtons
             onUpdateClick={() => onChange(editing)}
             onCancelClick={() => onChange(null)}
