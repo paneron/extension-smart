@@ -10,7 +10,7 @@ import { mgd_textarea } from '../../css/form';
 
 interface OwnProps {
   value: any;
-  id: string;
+  id?: string;
   readOnly?: boolean;
   onChange: (e: any) => void;
   rows?: number;

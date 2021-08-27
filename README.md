@@ -1,9 +1,6 @@
 # To-do list
 
-* Must
-  * Liquid coding template
-  * integrate metanorma binary
-  * Document generation (mapping report)
+* Must  
   * Evidence (external documents) management and storage
   * Data entry/management (data kept in the repository, internal)
   * Saving/loading mapping (and related files) as a whole
@@ -20,6 +17,8 @@
   * Support BIM and other data structures
   * Automatically translate XML file into model (AI)
   * Translate selected text from document to model (not AI, just automation)
+  * Liquid coding template in report generation
+  * Integrate metanorma binary
 
 * Qaulity of life features  
   * Undo

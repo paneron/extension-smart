@@ -37,6 +37,7 @@ import {
 import { handleModelOpen } from '../menu/file';
 import ComponentSummary from '../popover/ComponentSummary';
 import {
+  buildHistoryMap,
   indexModel,
   MapperModelLabel,
   MapperModelType,
@@ -94,11 +95,12 @@ const ModelDiagram: React.FC<{
     params.fitView();
   }
 
-  function setNewModelWrapper(mw: ModelWrapper) {
+  function setNewModelWrapper(mw: ModelWrapper) {    
     setProps({
       ...modelProps,
       history: createPageHistory(mw),
       modelWrapper: mw,
+      historyMap: buildHistoryMap(mw)
     });
     onModelChanged(mw.model);
     setSelectedId('');
@@ -142,7 +144,7 @@ const ModelDiagram: React.FC<{
       justification: '',
     };
     onMapSetChanged({ ...mapSet });
-  }
+  }  
 
   const toolbar = (
     <ControlGroup>
@@ -153,7 +155,7 @@ const ModelDiagram: React.FC<{
             useDecodedBlob,
             requestFileFromFilesystem,
             logger,
-            indexModel,
+            indexModel            
           });
         }}
       >

@@ -42,7 +42,7 @@ import {
   MapResultType,  
 } from '../utils/MappingCalculator';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { findPageContainingElement, Logger } from '../utils/ModelFunctions';
+import { Logger } from '../utils/ModelFunctions';
 import MappingCanvus from './mapper/mappingCanvus';
 import MapperOptionMenu from './menu/mapperOptionMenu';
 import { EditMPropsInterface } from './dialog/dialogs';
@@ -51,6 +51,7 @@ import DocTemplatePane from './reporttemplate/doctemplatepane';
 import MGDButton from '../MGDComponents/MGDButton';
 import { dialog_layout, mappper_container } from '../../css/layout';
 import { vertical_line } from '../../css/components';
+import { findPageContainingElement } from '../utils/SearchFunctions';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -75,11 +76,13 @@ const ModelMapper: React.FC<{
     modelWrapper: { ...initModelWrapper },
     history: createPageHistory(initModelWrapper),
     modelType: ModelType.IMP,
+    historyMap: {}
   });
   const [referenceProps, setRefProps] = useState<MapperState>({
     modelWrapper: { ...initModelWrapper },
     history: createPageHistory(initModelWrapper),
     modelType: ModelType.REF,
+    historyMap: {}
   });
   const [selected, setSelected] = useState<MapperSelectedInterface>({
     modelType: ModelType.IMP,
@@ -190,13 +193,13 @@ const ModelMapper: React.FC<{
 
   function onImpNavigate(id: string) {
     const page = findPageContainingElement(impmodel, id);
-    const hm = implementProps.modelWrapper.historyMap;
+    const hm = implementProps.historyMap;
     processNavigate(page, setImplProps, implementProps, hm);
   }
 
   function onRefNavigate(id: string) {
     const page = findPageContainingElement(refmodel, id);
-    const hm = referenceProps.modelWrapper.historyMap;        
+    const hm = referenceProps.historyMap;        
     processNavigate(page, setRefProps, referenceProps, hm);
   }
 

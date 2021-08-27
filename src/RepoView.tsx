@@ -15,9 +15,10 @@ import { Tooltip2 } from '@blueprintjs/popover2';
 import ModelEditor from './smart/ui/maineditor';
 import ModelMapper from './smart/ui/mainmapper';
 import { BSI_WHITE_TEXT } from './css/BSI.logos';
+import ModelViewer from './smart/ui/mainviewer';
 
 const RepositoryView: React.FC<Record<never, never>> = function () {
-  const [selectedModule, selectModule] = useState<ModuleName>('modelEditor');
+  const [selectedModule, selectModule] = useState<ModuleName>('modelViewer');
 
   const toolbar = (
     <ControlGroup
@@ -92,7 +93,7 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
 
 export default RepositoryView;
 
-const MODULES = ['modelEditor', 'modelMapper'] as const;
+const MODULES = ['modelViewer', 'modelEditor', 'modelMapper'] as const;
 
 type ModuleName = typeof MODULES[number];
 
@@ -105,6 +106,13 @@ interface ModuleConfiguration {
 }
 
 const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {
+  modelViewer: {
+    title: <>View</>,
+    description: <>Model viewer</>,
+    tooltip: 'Model viewer',
+    icon: 'eye-open',
+    view: ModelViewer,
+  },
   modelEditor: {
     title: <>Edit</>,
     description: <>Model editor</>,
@@ -118,7 +126,7 @@ const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {
     tooltip: 'Model mapper',
     icon: 'data-lineage',
     view: ModelMapper,
-  },
+  }, 
 };
 
 const ModuleButton: React.FC<{

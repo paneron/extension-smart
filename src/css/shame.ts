@@ -39,3 +39,11 @@ export const shame__mystery_container__column = css`
   display: flex;
   flex-flow: column nowrap;
 `;
+
+export const search_result_entry_row = css`
+  display: block;
+  text-align: left;
+`;
+
+export const search_result_container = css`
+`;

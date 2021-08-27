@@ -14,6 +14,7 @@ import { MMELToText, textToMMEL } from '../../serialize/MMEL';
 import { DiagTypes } from '../dialog/dialogs';
 import { LoggerInterface, OpenFileInterface } from '../../utils/constants';
 import { Hooks } from '@riboseinc/paneron-extension-kit/types';
+import { EditorModel } from '../../model/editormodel';
 
 const FileMenu: React.FC<{
   setNewModelWrapper: (m: ModelWrapper) => void;
@@ -97,18 +98,24 @@ const FileMenu: React.FC<{
 };
 
 // Open
-function parseModel(
-  data: string,
-  setNewModelWrapper: (m: ModelWrapper) => void,
-  logger?: LoggerInterface,
-  indexModel?: (mw: ModelWrapper) => void
-) {
+function parseModel(props:{
+  data: string;
+  setNewModelWrapper: (m: ModelWrapper) => void;
+  logger?: LoggerInterface;
+  indexModel?: (model: EditorModel) => void;  
+}) {
+  const {
+    data,
+    setNewModelWrapper,
+    logger,
+    indexModel    
+  } = props;
   logger?.log('Importing model');
   try {
     const model = textToMMEL(data);
     const mw = createEditorModelWrapper(model);
     if (indexModel !== undefined) {
-      indexModel(mw);
+      indexModel(mw.model);
     }
     setNewModelWrapper(mw);
   } catch (e) {
@@ -121,14 +128,14 @@ export async function handleModelOpen(prop: {
   useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
   logger?: LoggerInterface;
-  indexModel?: (mw: ModelWrapper) => void;
+  indexModel?: (model: EditorModel) => void;  
 }) {
   const {
     setNewModelWrapper,
     useDecodedBlob,
     requestFileFromFilesystem,
     logger,
-    indexModel,
+    indexModel    
   } = prop;
   if (requestFileFromFilesystem && useDecodedBlob) {
     logger?.log('Requesting file');
@@ -150,7 +157,12 @@ export async function handleModelOpen(prop: {
             'Requesting file: Decoded blob',
             fileDataAsString.substr(0, 20)
           );
-          parseModel(fileDataAsString, setNewModelWrapper, logger, indexModel);
+          parseModel({
+            data:fileDataAsString, 
+            setNewModelWrapper, 
+            logger, 
+            indexModel
+          });
         } else {
           logger?.log('Requesting file: No file data received');
           console.error('Import file: no file data received');

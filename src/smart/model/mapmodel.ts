@@ -1,5 +1,6 @@
 import React from 'react';
 import {  
+  EditorModel,
   EditorNode,
   EditorSubprocess,
   isEditorApproval,
@@ -60,8 +61,7 @@ export function getMappings(mp: MapProfile, refns: string): MappingType {
   return mp.mapSet[refns] === undefined ? {} : mp.mapSet[refns].mappings;
 }
 
-export function indexModel(mw: ModelWrapper) {
-  const model = mw.model;
+export function indexModel(model: EditorModel) {  
   for (const p in model.pages) {
     const page = model.pages[p];
     const neighbor: Record<string, Set<string>> = {};
@@ -79,10 +79,15 @@ export function indexModel(mw: ModelWrapper) {
       node.uiref = React.createRef();
     }
   }  
+}
+
+export function buildHistoryMap(mw: ModelWrapper): Record<string, PageHistory> {  
+  const model = mw.model;
   const history = createPageHistory(mw);
-  const page = model.pages[mw.page];
-  mw.historyMap = { [mw.page] : history };
-  fillPageHistory(page, history, mw.historyMap, model.elements, model.pages);
+  const page = model.pages[model.root];
+  const hm = {[mw.page]: history};
+  fillPageHistory(page, history, hm, model.elements, model.pages);
+  return hm;
 }
 
 function fillPageHistory(

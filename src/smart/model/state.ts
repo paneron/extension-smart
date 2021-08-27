@@ -33,6 +33,7 @@ export interface MapperState {
   history: PageHistory;
   modelWrapper: ModelWrapper;
   modelType: ModelType;
+  historyMap: Record<string, PageHistory>;
 }
 
 export interface MapperSelectedInterface {

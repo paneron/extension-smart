@@ -42,12 +42,10 @@ import {
 import { MapSet } from './mapmodel';
 import { map_style__coverage } from '../../css/visual';
 import React from 'react';
-import { PageHistory } from './history';
 
 export interface ModelWrapper {
   model: EditorModel;
   page: string;
-  historyMap?: Record<string, PageHistory>
 }
 
 function exploreData(

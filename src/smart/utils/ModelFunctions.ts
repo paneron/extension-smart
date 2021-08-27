@@ -180,13 +180,3 @@ export function getModelAllSignals(model: EditorModel): string[] {
     .sort((a, b) => a.id.localeCompare(b.id))
     .flatMap(r => [r.id + 'CREATED', r.id + 'UPDATED', r.id + 'DELETED']);
 }
-
-export function findPageContainingElement(model: EditorModel, id: string): EditorSubprocess | null {
-  for (const x in model.pages) {
-    const page = model.pages[x];
-    if (page.childs[id] !== undefined) {
-      return page;
-    }
-  }
-  return null;
-}

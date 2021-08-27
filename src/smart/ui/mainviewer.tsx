@@ -2,15 +2,13 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import React, { RefObject, useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 
 import ReactFlow, {
   Controls,
   OnLoadParams,
   ReactFlowProvider,
-  isNode,
-  Connection,
-  Edge,
+  isNode,  
 } from 'react-flow-renderer';
 
 import { ControlGroup, Dialog } from '@blueprintjs/core';
@@ -52,22 +50,14 @@ import {
   MyDiag,
   SetDiagAction,
 } from './dialog/dialogs';
-import { DataVisibilityButton, EdgeEditButton } from './control/buttons';
-import NewComponentPane from './control/newComponentPane';
 import {
-  DeletableNodeTypes,
-  DragAndDropFormatType,
+  DeletableNodeTypes,  
   EditableNodeTypes,
-  EditAction,
-  NewComponentTypes,
+  EditAction,  
 } from '../utils/constants';
-import {
-  addComponentToModel,
-  addEdge,
+import {  
   createNewPage,
 } from '../utils/ModelAddComponentHandler';
-import { EdgePackage } from '../model/FlowContainer';
-import { deleteEdge } from '../utils/ModelRemoveComponentHandler';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
 import {
@@ -76,18 +66,16 @@ import {
   react_flow_container_layout,
   sidebar_layout,
 } from '../../css/layout';
-import SearchComponentPane from './sidebar/search';
+import { DataVisibilityButton } from './control/buttons';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
 
-const ModelEditor: React.FC<{
+const ModelViewer: React.FC<{
   isVisible: boolean;
   className?: string;
 }> = ({ isVisible, className }) => {
   const { logger } = useContext(DatasetContext);
-
-  const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
@@ -180,11 +168,7 @@ const ModelEditor: React.FC<{
       saveLayout();
     }
     setState({ ...state, dvisible: !state.dvisible });
-  }
-
-  function toggleEdgeDelete() {
-    setState({ ...state, edgeDeleteVisible: !state.edgeDeleteVisible });
-  }
+  }  
 
   function setNewModelWrapper(mw: ModelWrapper) {
     setState({ ...state, history: createPageHistory(mw), modelWrapper: mw });
@@ -192,11 +176,6 @@ const ModelEditor: React.FC<{
 
   function setModelWrapper(mw: ModelWrapper) {
     setState({ ...state, modelWrapper: mw });
-  }
-
-  function onDragOver(event: React.DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
   }
 
   function onPageChange(updated: PageHistory, newPage: string) {
@@ -223,12 +202,7 @@ const ModelEditor: React.FC<{
       ...state,
       modelWrapper: { ...state.modelWrapper, model: model },
     });
-  }
-
-  function removeEdge(id: string) {
-    deleteEdge(state.modelWrapper.model, state.modelWrapper.page, id);
-    setState({ ...state });
-  }
+  }  
 
   function drillUp(): void {
     if (state.history.items.length > 0) {
@@ -236,42 +210,6 @@ const ModelEditor: React.FC<{
       state.modelWrapper.page = popPage(state.history);
       setState({ ...state });
     }
-  }
-
-  function onDrop(event: React.DragEvent<any>) {
-    event.preventDefault();
-    if (canvusRef.current !== null && rfInstance !== null) {
-      const reactFlowBounds = canvusRef.current.getBoundingClientRect();
-      const type = event.dataTransfer.getData(DragAndDropFormatType);
-      const pos = rfInstance.project({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
-      });
-      const model = addComponentToModel(
-        state.modelWrapper,
-        type as NewComponentTypes,
-        pos
-      );
-      setState({ ...state, modelWrapper: { ...state.modelWrapper, model } });
-    }
-  }
-
-  function connectHandle(x: Edge<EdgePackage> | Connection) {
-    if (x.source !== null && x.target !== null) {
-      const mw = state.modelWrapper;
-      const page = mw.model.pages[mw.page];
-      mw.model.pages[mw.page] = addEdge(
-        page,
-        mw.model.elements,
-        x.source,
-        x.target
-      );
-      setState({ ...state });
-    }
-  }
-
-  function onPageAndHistroyChange(pageid: string, history: PageHistory) {
-    setState({...state, history, modelWrapper:{...state.modelWrapper, page: pageid}})
   }
 
   const toolbar = (
@@ -318,20 +256,7 @@ const ModelEditor: React.FC<{
               onSubprocessClick={onSubprocessClick}
             />
           ),
-        },
-        {
-          key: 'create-node',
-          title: 'Add components',
-          content: <NewComponentPane />,
-        },
-        {
-          key: 'search-node',
-          title: 'Search components',
-          content: <SearchComponentPane 
-            model={state.modelWrapper.model}
-            onChange={onPageAndHistroyChange}
-          />,
-        }
+        },        
       ]}
     />
   );
@@ -376,28 +301,20 @@ const ModelEditor: React.FC<{
                 state.dvisible,
                 state.edgeDeleteVisible,
                 onProcessClick,
-                removeEdge
+                ()=>{}
               )}
-              onLoad={onLoad}
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-              onConnect={connectHandle}
-              nodesConnectable={true}
+              onLoad={onLoad}                    
+              nodesConnectable={false}
               snapToGrid={true}
               snapGrid={[10, 10]}
               nodeTypes={NodeTypes}
-              edgeTypes={EdgeTypes}
-              ref={canvusRef}
+              edgeTypes={EdgeTypes}              
             >
               <Controls>
                 <DataVisibilityButton
                   isOn={state.dvisible}
                   onClick={toggleDataVisibility}                  
-                />
-                <EdgeEditButton
-                  isOn={state.edgeDeleteVisible}
-                  onClick={toggleEdgeDelete}
-                />
+                />                
               </Controls>
             </ReactFlow>
           </div>
@@ -408,4 +325,4 @@ const ModelEditor: React.FC<{
   return <div></div>;
 };
 
-export default ModelEditor;
+export default ModelViewer;

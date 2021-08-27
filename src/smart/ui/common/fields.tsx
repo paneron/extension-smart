@@ -24,7 +24,7 @@ export interface IAdditionalListButton {
 }
 
 export interface IField {
-  text: string;
+  text?: string;
   value: string;
   onChange?: (x: string) => void;
   extend?: JSX.Element;
