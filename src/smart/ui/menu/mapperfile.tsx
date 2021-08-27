@@ -5,7 +5,7 @@ import { jsx } from '@emotion/react';
 import React, { useContext } from 'react';
 import { Menu, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { createMapProfile, MapProfile } from '../mapper/mapmodel';
+import { createMapProfile, MapProfile } from '../../model/mapmodel';
 
 const MapperFileMenu: React.FC<{
   mapProfile: MapProfile;

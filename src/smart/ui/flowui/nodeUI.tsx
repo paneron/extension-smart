@@ -10,10 +10,9 @@ import {
   EditorNode,
   EditorProcess,
   EditorSignalEvent,
-  isEditorRegistry,
-  ModelType,
+  isEditorRegistry,  
 } from '../../model/editormodel';
-import { NodeCallBack } from './container';
+import { NodeCallBack } from '../../model/FlowContainer';
 import {
   DatacubeShape,
   EgateShape,
@@ -24,7 +23,6 @@ import {
   TimerShape,
 } from './shapes';
 import { Tooltip2 } from '@blueprintjs/popover2';
-import { MapViewButtonToolTip } from '../mapper/MappingCalculator';
 import MGDButton from '../../MGDComponents/MGDButton';
 import React from 'react';
 import { handlecss } from '../../../css/visual';
@@ -36,11 +34,11 @@ import {
   shame__label__short,
 } from '../../../css/shame';
 import { Text } from '@blueprintjs/core';
-import {
-  view_mapping_button_layout,
+import {  
   view_subprocess_button_layout,
 } from '../../../css/layout';
 import PopoverWrapper from '../popover/PopoverWrapper';
+import ViewMappingbutton from '../mapper/viewmapbutton';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -95,11 +93,12 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           </Tooltip2>
         </div>
       )}
-      {callback.hasMapping !== undefined && callback.hasMapping(process.id) && (
+      {callback.hasMapping !== undefined && callback.hasMapping(process.id) && callback.MappingList !== undefined && (
         <ViewMappingbutton
           modelType={callback.modelType}
           id={process.id}
           setSelectedId={callback.setSelectedId!}
+          MappingList={callback.MappingList}
         />
       )}
       {actor !== null && (
@@ -138,11 +137,13 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
       </PopoverWrapper>        
       <Handle type="target" position={Position.Top} css={handlecss} />
       {callback.hasMapping !== undefined &&
-        callback.hasMapping(approval.id) && (
+        callback.hasMapping(approval.id) && 
+        callback.MappingList !== undefined && (
           <ViewMappingbutton
             modelType={callback.modelType}
             id={approval.id}
             setSelectedId={callback.setSelectedId!}
+            MappingList={callback.MappingList}
           />
         )}
       {actor !== null ? (
@@ -250,27 +251,6 @@ export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
       <div css={[shame__label, shame__label__long]}>{scevent.id}</div>
     </>
   );
-};
-
-const ViewMappingbutton: React.FC<{
-  modelType: ModelType;
-  id: string;
-  setSelectedId: (id: string) => void;
-}> = function ({ modelType, id, setSelectedId }) {
-  if (modelType === ModelType.IMP || modelType === ModelType.REF) {
-    return (
-      <div css={view_mapping_button_layout}>
-        <Tooltip2 content={MapViewButtonToolTip[modelType]} position="top">
-          <MGDButton
-            key={id + '#viewmapbutton'}
-            icon="link"
-            onClick={() => setSelectedId(id)}
-          />
-        </Tooltip2>
-      </div>
-    );
-  }
-  return <></>;
 };
 
 const actorIcon = (

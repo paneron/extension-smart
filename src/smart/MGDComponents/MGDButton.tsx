@@ -24,6 +24,9 @@ interface OwnProps {
   id?: string;
   onClick?: (e: any) => void;
   disabled?: boolean;
+  onMouseEnter?: (e: any) => void;
+  onMouseLeave?: (e: any) => void;
+  className?: string;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -38,6 +41,9 @@ function MGDButton(props: OwnProps) {
     disabled,
     icon,
     rightIcon,
+    onMouseEnter,
+    onMouseLeave,
+    className
   } = props;
   const buttonClasses = [
     mgd_button,
@@ -46,15 +52,18 @@ function MGDButton(props: OwnProps) {
   ];
   const textClasses = [mgd_button__text];
   return (
-    <Button
+    <Button    
       outlined
       small={size === MGDButtonSize.Small}
       id={id}
       css={buttonClasses}
       onClick={onClick}
       disabled={disabled}
+      className={className}
       icon={icon}
       rightIcon={rightIcon}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       {children ? <span css={textClasses}>{children.trim()}</span> : null}
     </Button>

@@ -1,14 +1,14 @@
 import { XYPosition } from 'react-flow-renderer';
-import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
+import { MMELEdge } from '../serialize/interface/flowcontrolinterface';
 import {
   EditorModel,
   EditorNode,
   getEditorRoleById,
   isEditorData,
   ModelType,
-} from '../../model/editormodel';
-import { MMELtoFlowEntries } from '../../model/state';
-import { MMELRole } from '../../serialize/interface/supportinterface';
+} from './editormodel';
+import { MMELtoFlowEntries } from './state';
+import { MMELRole } from '../serialize/interface/supportinterface';
 import { SerializedStyles } from '@emotion/react';
 import React from 'react';
 
@@ -51,6 +51,7 @@ export interface NodeCallBack {
   setSelectedId?: (id: string) => void;
   hasMapping?: (id: string) => boolean;
   ComponentShortDescription?: React.FC<{id: string}>
+  MappingList?: React.FC<{id: string}>
 }
 
 export interface NodeContainer {
@@ -128,6 +129,7 @@ export function getEditorNodeCallBack(props: {
   setSelectedId?: (id: string) => void;
   hasMapping?: (id: string) => boolean;
   ComponentShortDescription?: React.FC<{id: string}>;
+  MappingList?: React.FC<{id: string}>;
 }): NodeCallBack {
   const {
     type,
@@ -137,7 +139,8 @@ export function getEditorNodeCallBack(props: {
     getMapStyleClassById,
     setSelectedId,
     hasMapping,
-    ComponentShortDescription
+    ComponentShortDescription,
+    MappingList
   } = props;
 
   function getRoleById(id: string): MMELRole | null {
@@ -152,6 +155,7 @@ export function getEditorNodeCallBack(props: {
     getMapStyleClassById,
     setSelectedId,
     hasMapping,
-    ComponentShortDescription
+    ComponentShortDescription,
+    MappingList
   };
 }

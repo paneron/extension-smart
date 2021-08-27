@@ -11,7 +11,7 @@ import {
   checkId,
   defaultItemSorter,
   findUniqueID,
-} from '../../../utils/commonfunctions';
+} from '../../../utils/ModelFunctions';
 import { IListItem, IUpdateInterface, IViewListInterface } from '../fields';
 import ItemUpdatePane from './itemupdate';
 import ListViewPane from './listview';

@@ -11,7 +11,7 @@ import {
   MMELVariable,
   VarType,
 } from '../../serialize/interface/supportinterface';
-import { checkId, defaultItemSorter } from '../../utils/commonfunctions';
+import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
 import { MEASUREMENTTYPES } from '../../utils/constants';
 import { createVariable } from '../../utils/EditorFactory';
 import {

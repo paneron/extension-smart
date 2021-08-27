@@ -6,7 +6,7 @@ import { jsx } from '@emotion/react';
 import React from 'react';
 import { EditorModel, isEditorDataClass } from '../../model/editormodel';
 import { MMELEnum } from '../../serialize/interface/datainterface';
-import { checkId, defaultItemSorter } from '../../utils/commonfunctions';
+import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
 import { createEnum } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';

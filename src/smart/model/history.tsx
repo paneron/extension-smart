@@ -15,6 +15,12 @@ export interface PageHistory {
   items: HistoryItem[];
 }
 
+export function cloneHistory(history: PageHistory):PageHistory {  
+  return {
+    items: history.items.map(item => ({page: item.page, pathtext:item.pathtext}))
+  };
+}
+
 export function createPageHistory(mw: ModelWrapper): PageHistory {
   return {
     items: [
@@ -44,10 +50,10 @@ export function getBreadcrumbs(
   return breadcrumbs;
 }
 
-export function addToHistory(ph: PageHistory, x: string, y: string) {
+export function addToHistory(ph: PageHistory, pageid: string, label: string):void {
   ph.items.push({
-    page: x,
-    pathtext: y,
+    page: pageid,
+    pathtext: label,
   });
 }
 

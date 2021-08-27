@@ -14,7 +14,7 @@ import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import {
   getReferenceDCTypeName,
   referenceSorter,
-} from '../../utils/commonfunctions';
+} from '../../utils/ModelFunctions';
 import { DATATYPE, MODAILITYOPTIONS } from '../../utils/constants';
 import { createDataAttribute } from '../../utils/EditorFactory';
 import {

@@ -13,7 +13,7 @@ import {
   checkId,
   defaultItemSorter,
   fillRDCS,
-} from '../../utils/commonfunctions';
+} from '../../utils/ModelFunctions';
 import { createDataClass } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';

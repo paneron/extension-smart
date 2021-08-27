@@ -18,7 +18,7 @@ import {
   getModelAllMeasures,
   removeSpace,
   updatePageElement,
-} from '../../utils/commonfunctions';
+} from '../../utils/ModelFunctions';
 import { NormalTextField, ReferenceSelector } from '../common/fields';
 import { EditPageButtons } from './commons';
 

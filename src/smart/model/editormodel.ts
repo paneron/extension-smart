@@ -136,6 +136,17 @@ export function isEditorEgate(x: EditorNode): x is EditorEGate {
   return isEGate(x);
 }
 
+export function getEditorNodeById(
+  model: EditorModel,
+  id: string
+): EditorNode | null {
+  if (id === '') {
+    return null;
+  }
+  const r = model.elements[id];
+  return r??null;  
+}
+
 export function getEditorRoleById(
   model: EditorModel,
   id: string
@@ -144,10 +155,7 @@ export function getEditorRoleById(
     return null;
   }
   const r = model.roles[id];
-  if (r !== undefined) {
-    return r;
-  }
-  return null;
+  return r??null;
 }
 
 export function getEditorRefById(
@@ -158,10 +166,7 @@ export function getEditorRefById(
     return null;
   }
   const r = model.refs[id];
-  if (r !== undefined) {
-    return r;
-  }
-  return null;
+  return r??null;
 }
 
 export function getEditorRegistryById(
@@ -200,8 +205,5 @@ export function getEditorProvisionById(
     return null;
   }
   const r = model.provisions[id];
-  if (r !== undefined) {
-    return r;
-  }
-  return null;
+  return r??null;
 }

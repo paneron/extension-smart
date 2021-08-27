@@ -3,9 +3,11 @@
 
 import { jsx } from '@emotion/react';
 import React, { RefObject } from 'react';
-import { EdgeText } from 'react-flow-renderer';
-import { MapEdgeResult } from './MappingCalculator';
+import { MapEdgeResult } from '../../utils/MappingCalculator';
 import { mgd_canvas } from '../../../css/layout';
+import { CSSROOTVARIABLES } from '../../../css/root.css';
+
+const color = CSSROOTVARIABLES['--colour--green'];
 
 interface IMappingEdge {
   fx: number;
@@ -13,33 +15,28 @@ interface IMappingEdge {
   fromid: string;  
   tx: number;
   ty: number;
-  toid: string;
-  onMappingEdit: (from: string, to: string) => void;
+  toid: string;  
 }
 
-function computePos(edgeResult: MapEdgeResult, onMappingEdit: (from: string, to: string) => void):IMappingEdge {
-  const {
-    fromPos,
-    toPos,
+function computePos(edgeResult: MapEdgeResult):IMappingEdge {
+  const {    
     fromref,
     toref,
     fromid,
     toid,
   } = edgeResult;
-  if ((fromPos === undefined && fromref.current === null) 
-    || (toPos === undefined && toref.current === null)) {
+  if (fromref.current === null || toref.current === null) {
     return {
       fx: 0,
       fy: 0,
       fromid,
       tx: 0,
       ty: 0,
-      toid,
-      onMappingEdit
+      toid      
     }
   }
-  const fPos = fromPos??fromref.current!.getBoundingClientRect();
-  const tPos = toPos??toref.current!.getBoundingClientRect();  
+  const fPos = fromref.current.getBoundingClientRect();
+  const tPos = toref.current.getBoundingClientRect();
   const fx = fPos.x + fPos.width;
   const fy = fPos.y + fPos.height / 2;
   const tx = tPos.x - 5;
@@ -50,8 +47,7 @@ function computePos(edgeResult: MapEdgeResult, onMappingEdit: (from: string, to:
     fromid,
     tx,
     ty,
-    toid,
-    onMappingEdit
+    toid    
   }
 }
 
@@ -61,15 +57,13 @@ function filterResult(edgeResult: IMappingEdge, threshold: number):boolean {
 }
 
 const MappingCanvus: React.FC<{
-  mapEdges: MapEdgeResult[];
-  onMappingEdit: (from: string, to: string) => void;
+  mapEdges: MapEdgeResult[];  
   line: RefObject<HTMLDivElement>;
-}> = function ({ mapEdges, onMappingEdit, line }) {
+}> = function ({ mapEdges, line }) {
   const threshold = line.current ? line.current.getBoundingClientRect().x : 0;
   const edges = mapEdges
-    .map(r => computePos(r, onMappingEdit))
-    .filter(r => filterResult(r, threshold))
-
+    .map(r => computePos(r))
+    .filter(r => filterResult(r, threshold))  
   return (
     <div css={mgd_canvas}>
       <svg width="100%" height="99%">
@@ -83,6 +77,7 @@ const MappingCanvus: React.FC<{
             markerWidth="5"
             markerHeight="5"
             orient="auto"
+            style={ {stroke: color }}
           >
             <path d="M 0 0 L 10 5 L 0 10 z" fill="black" />
           </marker>
@@ -96,57 +91,19 @@ const MappingCanvus: React.FC<{
 };
 
 const MappingEdge: React.FC<IMappingEdge> = function ({ 
-  fx, fy, tx, ty, fromid, toid, onMappingEdit 
-}) { 
-  const cx = (fx + tx) / 2;
-  const cy = (fy + ty) / 2;
+  fx, fy, tx, ty, fromid, toid 
+}) {   
   return (
     <>
       <path
         key={'ui#mapline#' + fromid + '#' + toid}
         d={'M' + fx + ',' + fy + ' L' + tx + ',' + ty}
         strokeWidth="1"
-        stroke="black"
+        stroke={color}
         fill="#f00"
         markerEnd="url(#triangle)"
-      />
-      <MappingEdgeRegion
-        key={'ui#mapping#removebutton#' + fromid + '#' + toid}
-        x={cx}
-        y={cy}
-        source={fromid}
-        target={toid}
-        onMappingEdit={onMappingEdit}
-      />
+      />      
     </>
-  );
-};
-
-const MappingEdgeRegion: React.FC<{
-  x: number;
-  y: number;
-  source: string;
-  target: string;
-  onMappingEdit: (from: string, to: string) => void;
-}> = function ({ x, y, source, target, onMappingEdit }) {
-  return (
-    <EdgeText
-      x={x}
-      y={y}
-      label="✎"
-      labelStyle={{
-        display: 'block',
-        margin: 'auto',
-        fontSize: '16px',
-      }}
-      labelBgStyle={{
-        width: '20px',
-        height: '20px',
-      }}
-      labelBgBorderRadius={10}
-      labelBgPadding={[3, 1]}
-      onClick={() => onMappingEdit(source, target)}
-    />
   );
 };
 

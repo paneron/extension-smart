@@ -14,7 +14,7 @@ import {
   getModelAllRolesWithEmpty,
   removeSpace,
   updatePageElement,
-} from '../../utils/commonfunctions';
+} from '../../utils/ModelFunctions';
 import { MODAILITYOPTIONS } from '../../utils/constants';
 import {
   MultiReferenceSelector,

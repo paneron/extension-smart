@@ -15,7 +15,7 @@ import {
 } from '../../../css/layout';
 import { MGDButtonType } from '../../../css/MGDButton';
 import MGDButton from '../../MGDComponents/MGDButton';
-import { EditorModel, ModelType } from '../../model/editormodel';
+import { EditorModel, EditorNode, ModelType } from '../../model/editormodel';
 import {
   addToHistory,
   createPageHistory,
@@ -41,14 +41,15 @@ import {
   MapperModelLabel,
   MapperModelType,
   MapSet,
-} from './mapmodel';
+} from '../../model/mapmodel';
 import {
   isParentMapFullCovered,
   MappingResultStyles,
   MappingSourceStyles,
   MapResultType,
-} from './MappingCalculator';
+} from '../../utils/MappingCalculator';
 import MappingLegendPane from './mappinglegend';
+import MappingPartyList from './mappartylist';
 
 const ModelDiagram: React.FC<{
   className?: string;
@@ -59,8 +60,10 @@ const ModelDiagram: React.FC<{
   setProps: (mp: MapperState) => void;
   mapResult?: MapResultType;
   onModelChanged: (model: EditorModel) => void;
-  setSelected: (s: MapperSelectedInterface) => void;
-  onMove: () => void;
+  setSelected: (s: MapperSelectedInterface) => void;  
+  onMappingEdit: (from: string, to: string) => void;
+  issueNavigationRequest: (id: string) => void;
+  getPartnerModelElementById: (id:string) => EditorNode | null;
 }> = ({
   className,
   viewOption,
@@ -71,12 +74,14 @@ const ModelDiagram: React.FC<{
   mapResult = {},
   onModelChanged,
   setSelected,
-  onMove,
+  onMappingEdit,
+  issueNavigationRequest,
+  getPartnerModelElementById
 }) => {
   const { logger, useDecodedBlob, requestFileFromFilesystem } =
-    useContext(DatasetContext);
+    useContext(DatasetContext);  
 
-  const modelType = modelProps.modelType;  
+  const modelType = modelProps.modelType;    
 
   function setSelectedId(id: string) {
     setSelected({
@@ -168,6 +173,19 @@ const ModelDiagram: React.FC<{
     return <ComponentSummary id={id} model={modelProps.modelWrapper.model} />
   }
 
+  const MappingList: React.FC<{id: string}> = function ({id}) {
+    return (
+      <MappingPartyList 
+        id={id}
+        type={modelProps.modelType}
+        mapping={mapSet.mappings}        
+        onMappingEdit={onMappingEdit}
+        issueNavigationRequest={issueNavigationRequest}
+        getNodeById={getPartnerModelElementById}
+      />
+    );
+  }
+
   const breadcrumbs = getBreadcrumbs(modelProps.history, onPageChange);
 
   return (
@@ -190,11 +208,11 @@ const ModelDiagram: React.FC<{
               mapResult,
               setSelectedId,
               isParentMapFullCovered(modelProps.history, mapResult),
-              ComponentShortDescription
+              ComponentShortDescription,
+              MappingList
             )}
             onLoad={onLoad}
-            onDragOver={onDragOver}
-            onMove={onMove}
+            onDragOver={onDragOver}            
             nodesConnectable={false}
             snapToGrid={true}
             snapGrid={[10, 10]}

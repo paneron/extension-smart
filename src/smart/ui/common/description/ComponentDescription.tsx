@@ -9,8 +9,8 @@ import { DataType } from "../../../serialize/interface/baseinterface";
 import { MMELDataAttribute } from "../../../serialize/interface/datainterface";
 import { MMELProvision, MMELReference, MMELRole } from "../../../serialize/interface/supportinterface";
 import { DeletableNodeTypes, EditableNodeTypes, EditAction } from "../../../utils/constants";
-import { NodeCallBack } from "../../flowui/container";
-import { EditButton, RemoveButton } from "./buttons";
+import { NodeCallBack } from "../../../model/FlowContainer";
+import { EditButton, RemoveButton } from "../buttons";
 import { ApprovalRecordList, AttributeList, ReferenceList } from "./ComponentList";
 import { ActorDescription, DescriptionItem, NonEmptyFieldDescription } from "./fields";
 
@@ -30,7 +30,7 @@ export const DescribeEnd: React.FC<{
     <>
       {end.modelType === ModelType.EDIT && (
         <RemoveButton
-          callback={() =>
+          onClick={() =>
             setDialog(DataType.ENDEVENT, EditAction.DELETE, end.id)
           }
         />
@@ -63,12 +63,12 @@ export const DescribeApproval: React.FC<{
       {app.modelType === ModelType.EDIT && (
         <MGDButtonGroup>
           <EditButton
-            callback={() =>
+            onClick={() =>
               setDialog(DataType.APPROVAL, EditAction.EDIT, app.id)
             }
           />
           <RemoveButton
-            callback={() =>
+            onClick={() =>
               setDialog(DataType.APPROVAL, EditAction.DELETE, app.id)
             }
           />
@@ -98,12 +98,12 @@ export const DescribeEGate: React.FC<{
       {egate.modelType === ModelType.EDIT && (
         <MGDButtonGroup>
           <EditButton
-            callback={() =>
+            onClick={() =>
               setDialog(DataType.EGATE, EditAction.EDIT, egate.id)
             }
           />
           <RemoveButton
-            callback={() =>
+            onClick={() =>
               setDialog(DataType.EGATE, EditAction.DELETE, egate.id)
             }
           />
@@ -128,12 +128,12 @@ export const DescribeSignalCatch: React.FC<{
       {scEvent.modelType === ModelType.EDIT && (
         <MGDButtonGroup>
           <EditButton
-            callback={() =>
+            onClick={() =>
               setDialog(DataType.SIGNALCATCHEVENT, EditAction.EDIT, scEvent.id)
             }
           />
           <RemoveButton
-            callback={() =>
+            onClick={() =>
               setDialog(
                 DataType.SIGNALCATCHEVENT,
                 EditAction.DELETE,
@@ -162,12 +162,12 @@ export const DescribeTimer: React.FC<{
       {timer.modelType === ModelType.EDIT && (
         <MGDButtonGroup>
           <EditButton
-            callback={() =>
+            onClick={() =>
               setDialog(DataType.TIMEREVENT, EditAction.EDIT, timer.id)
             }
           />
           <RemoveButton
-            callback={() =>
+            onClick={() =>
               setDialog(DataType.TIMEREVENT, EditAction.DELETE, timer.id)
             }
           />
@@ -212,24 +212,24 @@ export const DescribeAttribute: React.FC<{
   const minimal = getRefById === undefined;
   return (
     <>
-      <DescriptionItem minimal={minimal} label="Attribute ID" value={att.id} />
-      {!minimal && <NonEmptyFieldDescription label="Type" value={att.type} />} 
-      {!minimal && <NonEmptyFieldDescription label="Cardinality" value={att.cardinality} />}
-      {!minimal && <NonEmptyFieldDescription label="Modality" value={att.modality} />}
-      {!minimal && <NonEmptyFieldDescription label="Definition" value={att.definition} />}
+      <DescriptionItem label={minimal?undefined:'Attribute ID'} value={att.id} />
+      {!minimal && <NonEmptyFieldDescription label='Type' value={att.type} />} 
+      {!minimal && <NonEmptyFieldDescription label='Cardinality' value={att.cardinality} />}
+      {!minimal && <NonEmptyFieldDescription label='Modality' value={att.modality} />}
+      {!minimal && <NonEmptyFieldDescription label='Definition' value={att.definition} />}
       {getRefById !== undefined && <ReferenceList refs={att.ref} getRefById={getRefById} />}
     </>
   );
 };
 
-export const DescribeProvision: React.FC<{  
+export const DescribeProvision: React.FC<{
   provision: MMELProvision;
   getRefById?: (id: string) => MMELReference | null;
 }> = function ({ provision, getRefById }) {
   const minimal = getRefById === undefined;
   return (
     <>
-      <DescriptionItem minimal={minimal} label='Statement' value={provision.condition} />
+      <DescriptionItem label={minimal?undefined:'Statement'} value={provision.condition} />
       {!minimal && <NonEmptyFieldDescription label='Modality' value={provision.modality} /> }
       {getRefById !== undefined && <ReferenceList refs={provision.ref} getRefById={getRefById} /> }
     </>

@@ -9,7 +9,7 @@ const PopoverWrapper: React.FC<{
   if (SD !== undefined) {
     const content = <SD id={id} />
     return (
-      <Popover2 content={content} position='top'>
+      <Popover2 content={content} position='top' hasBackdrop={true}>
         <Tooltip2 content={content} position='top'>
           {children}
         </Tooltip2>

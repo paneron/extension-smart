@@ -11,7 +11,7 @@ import {
   checkId,
   removeSpace,
   updatePageElement,
-} from '../../utils/commonfunctions';
+} from '../../utils/ModelFunctions';
 import { TimerType } from '../../utils/constants';
 import { NormalComboBox, NormalTextField } from '../common/fields';
 import { EditPageButtons } from './commons';

@@ -5,7 +5,7 @@ import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
 import { EditorApproval, EditorProcess } from '../../model/editormodel';
 import { NormalTextField } from '../common/fields';
-import { MappingMeta } from '../mapper/mapmodel';
+import { MappingMeta } from '../../model/mapmodel';
 import { FormGroup } from '@blueprintjs/core';
 import { EditPageButtons } from './commons';
 import MGDButton from '../../MGDComponents/MGDButton';

@@ -14,7 +14,7 @@ import {
   getModelAllRolesWithEmpty,
   removeSpace,
   updatePageElement,
-} from '../../utils/commonfunctions';
+} from '../../utils/ModelFunctions';
 import { createProvision } from '../../utils/EditorFactory';
 import { createNewPage } from '../../utils/ModelAddComponentHandler';
 import { deletePage } from '../../utils/ModelRemoveComponentHandler';

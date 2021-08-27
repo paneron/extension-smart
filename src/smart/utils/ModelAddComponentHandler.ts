@@ -13,7 +13,7 @@ import {
 } from '../model/editormodel';
 import { ModelWrapper } from '../model/modelwrapper';
 import { DataType } from '../serialize/interface/baseinterface';
-import { findUniqueID } from './commonfunctions';
+import { findUniqueID } from './ModelFunctions';
 import { NewComponentTypes } from './constants';
 import {
   createApproval,

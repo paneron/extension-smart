@@ -2,7 +2,7 @@ import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
 import { MMELProvision } from '../../serialize/interface/supportinterface';
-import { getModelAllRefs } from '../../utils/commonfunctions';
+import { getModelAllRefs } from '../../utils/ModelFunctions';
 import { MODAILITYOPTIONS } from '../../utils/constants';
 import {
   MultiReferenceSelector,

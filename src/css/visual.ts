@@ -4,7 +4,7 @@ import {
   MappingResultStyles,
   MappingSourceStyles,
   MapSourceType,
-} from '../smart/ui/mapper/MappingCalculator';
+} from '../smart/utils/MappingCalculator';
 
 export const handlecss = css`
   border-radius: '5px!important',

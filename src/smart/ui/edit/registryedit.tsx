@@ -20,7 +20,7 @@ import {
   genDCIdByRegId,
   getReferenceDCTypeName,
   replaceSet,
-} from '../../utils/commonfunctions';
+} from '../../utils/ModelFunctions';
 import { createDataClass, createRegistry } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';

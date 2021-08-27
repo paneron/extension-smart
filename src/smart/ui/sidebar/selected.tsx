@@ -9,7 +9,7 @@ import {
   MMELProvision,
   MMELReference,  
 } from '../../serialize/interface/supportinterface';
-import { EdtiorNodeWithInfoCallback } from '../flowui/container';
+import { EdtiorNodeWithInfoCallback } from '../../model/FlowContainer';
 import {  
   EditorDataClass,  
   EditorModel,

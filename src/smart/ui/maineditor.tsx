@@ -66,7 +66,7 @@ import {
   addEdge,
   createNewPage,
 } from '../utils/ModelAddComponentHandler';
-import { EdgePackage } from './flowui/container';
+import { EdgePackage } from '../model/FlowContainer';
 import { deleteEdge } from '../utils/ModelRemoveComponentHandler';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';

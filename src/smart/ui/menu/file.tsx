@@ -14,7 +14,6 @@ import { MMELToText, textToMMEL } from '../../serialize/MMEL';
 import { DiagTypes } from '../dialog/dialogs';
 import { LoggerInterface, OpenFileInterface } from '../../utils/constants';
 import { Hooks } from '@riboseinc/paneron-extension-kit/types';
-import { EditorModel } from '../../model/editormodel';
 
 const FileMenu: React.FC<{
   setNewModelWrapper: (m: ModelWrapper) => void;
@@ -102,14 +101,14 @@ function parseModel(
   data: string,
   setNewModelWrapper: (m: ModelWrapper) => void,
   logger?: LoggerInterface,
-  indexModel?: (model: EditorModel) => void
+  indexModel?: (mw: ModelWrapper) => void
 ) {
   logger?.log('Importing model');
   try {
     const model = textToMMEL(data);
     const mw = createEditorModelWrapper(model);
     if (indexModel !== undefined) {
-      indexModel(mw.model);
+      indexModel(mw);
     }
     setNewModelWrapper(mw);
   } catch (e) {
@@ -122,7 +121,7 @@ export async function handleModelOpen(prop: {
   useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
   logger?: LoggerInterface;
-  indexModel?: (model: EditorModel) => void;
+  indexModel?: (mw: ModelWrapper) => void;
 }) {
   const {
     setNewModelWrapper,

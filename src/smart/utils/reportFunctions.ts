@@ -2,10 +2,10 @@ import {
   EditorModel,
   isEditorApproval,
   isEditorProcess,
-} from '../../model/editormodel';
-import { referenceSorter } from '../../utils/commonfunctions';
-import { REPORTENDTAG, REPORTSTARTTAG } from '../../utils/constants';
-import { MapProfile } from '../mapper/mapmodel';
+} from '../model/editormodel';
+import { referenceSorter } from './ModelFunctions';
+import { REPORTENDTAG, REPORTSTARTTAG } from './constants';
+import { MapProfile } from '../model/mapmodel';
 
 export function genReport(
   text: string,

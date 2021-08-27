@@ -6,15 +6,14 @@ import React from "react";
 import { mgd_label } from "../../../../css/form";
 import { MMELRole } from "../../../serialize/interface/supportinterface";
 
-export const DescriptionItem: React.FC<{
-  minimal?: boolean;
-  label: string;
+export const DescriptionItem: React.FC<{  
+  label?: string;
   value: string;
-}> = function ({ minimal = false, label, value }): JSX.Element {
+}> = function ({ label, value }): JSX.Element {
   return (
     <p>
       <label css={mgd_label}>
-        {minimal ? value : `${label}: ${value}`}
+        {label === undefined ? value : `${label}: ${value}`}
       </label>
     </p>
   );

@@ -10,7 +10,7 @@ import {
   isEditorProcess,
 } from '../../model/editormodel';
 import { MMELRole } from '../../serialize/interface/supportinterface';
-import { checkId, defaultItemSorter } from '../../utils/commonfunctions';
+import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
 import { createRole } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';

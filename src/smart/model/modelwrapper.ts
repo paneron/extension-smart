@@ -30,22 +30,24 @@ import {
   EdgeContainer,
   getEditorNodeCallBack,
   NodeCallBack,
-} from '../ui/flowui/container';
-import { fillRDCS } from '../utils/commonfunctions';
+} from './FlowContainer';
+import { fillRDCS } from '../utils/ModelFunctions';
 import {
   getMappedList,
   getMapStyleById,
   getSourceStyleById,
   MapCoverType,
   MapResultType,
-} from '../ui/mapper/MappingCalculator';
-import { MapSet } from '../ui/mapper/mapmodel';
+} from '../utils/MappingCalculator';
+import { MapSet } from './mapmodel';
 import { map_style__coverage } from '../../css/visual';
 import React from 'react';
+import { PageHistory } from './history';
 
 export interface ModelWrapper {
   model: EditorModel;
   page: string;
+  historyMap?: Record<string, PageHistory>
 }
 
 function exploreData(
@@ -200,7 +202,8 @@ export function getMapperReactFlowElementsFrom(
   mapResult: MapResultType,
   setSelectedId: (id: string) => void,
   isParentFull: boolean,
-  ComponentShortDescription: React.FC<{id:string}>
+  ComponentShortDescription: React.FC<{id:string}>,
+  MappingList: React.FC<{id: string}>
 ): Elements {
   const destinationList = getMappedList(mapSet);
   const callback = getEditorNodeCallBack({
@@ -219,7 +222,8 @@ export function getMapperReactFlowElementsFrom(
       type === ModelType.REF
         ? id => destinationList.has(id)
         : id => mapSet.mappings[id] !== undefined,
-    ComponentShortDescription
+    ComponentShortDescription,
+    MappingList
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }

@@ -2,7 +2,7 @@ import React from "react";
 import { EditorRegistry } from "../../../model/editormodel";
 import { MMELDataAttribute } from "../../../serialize/interface/datainterface";
 import { MMELProvision, MMELReference } from "../../../serialize/interface/supportinterface";
-import { toRefSummary } from "../../../utils/commonfunctions";
+import { toRefSummary } from "../../../utils/ModelFunctions";
 import { DescribeAttribute, DescribeProvision } from "./ComponentDescription";
 
 export const ApprovalRecordList: React.FC<{

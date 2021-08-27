@@ -16,6 +16,7 @@ export const CSSROOTVARIABLES = {
   '--colour--platinum': '#ebebeb',
   '--colour--cultured': '#f2f2f2',
   '--colour--sandy-brown': '#f6ab6c',
+  '--colour--green': 'green',
   // '--font-family--primary' : 'Gesta, Tahoma, sans-serif',
   // '--font-size--small': '12px',
   // '--font-size--regular': '16px',

@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
-import { CSSROOTVARIABLES } from '../../../css/root.css';
-import { map_style__coverage, map_style__source } from '../../../css/visual';
+import { CSSROOTVARIABLES } from '../../css/root.css';
+import { map_style__coverage, map_style__source } from '../../css/visual';
 import {
   EditorModel,
   EditorNode,
@@ -9,10 +9,10 @@ import {
   isEditorEgate,
   isEditorProcess,
   ModelType,
-} from '../../model/editormodel';
-import { PageHistory } from '../../model/history';
-import { MapperSelectedInterface } from '../../model/state';
-import { MappingType, MapSet } from './mapmodel';
+} from '../model/editormodel';
+import { PageHistory } from '../model/history';
+import { MapperSelectedInterface } from '../model/state';
+import { MappingType, MapSet } from '../model/mapmodel';
 import { SerializedStyles } from '@emotion/react';
 
 export enum MapCoverType {
@@ -34,9 +34,7 @@ export interface MapStyleInterface {
 
 export interface MapEdgeResult {
   fromref: RefObject<HTMLDivElement>;
-  toref: RefObject<HTMLDivElement>;
-  fromPos?: DOMRect;
-  toPos?: DOMRect;
+  toref: RefObject<HTMLDivElement>;  
   fromid: string;
   toid: string;
 }
@@ -243,9 +241,7 @@ function getFilterMapRecord(
   const refNode = refElms[refId];
   return {
     fromref: impNode.uiref!,
-    toref: refNode.uiref!,
-    fromPos: impNode.uiref!.current?.getBoundingClientRect(),
-    toPos: refNode.uiref!.current?.getBoundingClientRect(),
+    toref: refNode.uiref!,    
     fromid: impNode.id,
     toid: refNode.id,
   };
@@ -272,4 +268,23 @@ export function getMappedList(mapSet: MapSet): Set<string> {
     }
   }
   return set;
+}
+
+export function findImpMapPartners(id: string, mapping: MappingType): string[] {
+  const result:string[] = [];
+  for (const x in mapping) {
+    const map = mapping[x];
+    if (map[id] !== undefined) {
+      result.push(x);
+    }
+  }
+  return result;
+}
+
+export function findRefMapPartners(id: string, mapping: MappingType): string[] {
+  const map = mapping[id];
+  if (map === undefined) {
+    return [];
+  }
+  return Object.keys(map);
 }

@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { dialog_layout } from '../../../css/layout';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel } from '../../model/editormodel';
-import { checkId, defaultItemSorter } from '../../utils/commonfunctions';
+import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
 import {
   IAdditionalListButton,
   IListItem,
@@ -15,8 +15,8 @@ import {
   NormalTextField,
 } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
-import { MappingDoc, MapProfile } from '../mapper/mapmodel';
-import { genReport } from './reportFunctions';
+import { MappingDoc, MapProfile } from '../../model/mapmodel';
+import { genReport } from '../../utils/reportFunctions';
 import ReportGen from './reportgen';
 
 const DocTemplatePane: React.FC<{

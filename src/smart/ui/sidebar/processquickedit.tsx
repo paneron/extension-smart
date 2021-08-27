@@ -15,11 +15,11 @@ import {
   EditableNodeTypes,
   EditAction,
 } from '../../utils/constants';
-import { NodeCallBack } from '../flowui/container';
+import { NodeCallBack } from '../../model/FlowContainer';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { Tooltip2 } from '@blueprintjs/popover2';
-import { EditButton, RemoveButton } from '../common/description/buttons';
+import { EditButton, RemoveButton } from '../common/buttons';
 import { ActorDescription, DescriptionItem } from '../common/description/fields';
 import { ProvisionList } from '../common/description/ComponentList';
 
@@ -50,7 +50,7 @@ export const ProcessQuickEdit: React.FC<
       {modelType === ModelType.EDIT && (
         <MGDButtonGroup>
           <EditButton
-            callback={() =>
+            onClick={() =>
               setDialog(DataType.PROCESS, EditAction.EDIT, process.id)
             }
           />
@@ -62,7 +62,7 @@ export const ProcessQuickEdit: React.FC<
             <></>
           )}
           <RemoveButton
-            callback={() =>
+            onClick={() =>
               setDialog(DataType.PROCESS, EditAction.DELETE, process.id)
             }
           />

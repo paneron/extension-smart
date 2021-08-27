@@ -1,7 +1,7 @@
 import React from 'react';
 import MGDLegend from '../../MGDComponents/MGDLegend';
 import MGDLegendEntry from '../../MGDComponents/MGDLegendEntry';
-import { MapStyleInterface } from './MappingCalculator';
+import { MapStyleInterface } from '../../utils/MappingCalculator';
 
 const MappingLegendPane: React.FC<{
   list: Record<string, MapStyleInterface>;
