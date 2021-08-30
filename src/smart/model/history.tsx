@@ -15,9 +15,12 @@ export interface PageHistory {
   items: HistoryItem[];
 }
 
-export function cloneHistory(history: PageHistory):PageHistory {  
+export function cloneHistory(history: PageHistory): PageHistory {
   return {
-    items: history.items.map(item => ({page: item.page, pathtext:item.pathtext}))
+    items: history.items.map(item => ({
+      page: item.page,
+      pathtext: item.pathtext,
+    })),
   };
 }
 
@@ -50,7 +53,11 @@ export function getBreadcrumbs(
   return breadcrumbs;
 }
 
-export function addToHistory(ph: PageHistory, pageid: string, label: string):void {
+export function addToHistory(
+  ph: PageHistory,
+  pageid: string,
+  label: string
+): void {
   ph.items.push({
     page: pageid,
     pathtext: label,

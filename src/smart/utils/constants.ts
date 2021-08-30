@@ -45,6 +45,16 @@ export const MEASUREMENTTYPES = [
   VarType.DERIVED,
 ];
 
+export const searchableNodeDataTypes = [
+  DataType.PROCESS,
+  DataType.APPROVAL,
+  DataType.TIMEREVENT,
+  DataType.SIGNALCATCHEVENT,
+  DataType.EGATE,
+] as const;
+
+export type SearchableNodeTypes = typeof searchableNodeDataTypes[number];
+
 export type NewComponentTypes =
   | DataType.PROCESS
   | DataType.APPROVAL
@@ -53,19 +63,19 @@ export type NewComponentTypes =
   | DataType.SIGNALCATCHEVENT
   | DataType.EGATE;
 
-export type DescribableNodeTypes = 
+export type DescribableNodeTypes =
   | DataType.PROCESS
-  | DataType.APPROVAL  
+  | DataType.APPROVAL
   | DataType.TIMEREVENT
   | DataType.SIGNALCATCHEVENT
   | DataType.DATACLASS
-  | DataType.REGISTRY  
+  | DataType.REGISTRY
   | DataType.EGATE;
 
-export type SelectableNodeTypes =  
+export type SelectableNodeTypes =
   | DescribableNodeTypes
-  | DataType.ENDEVENT  
-  | DataType.STARTEVENT;  
+  | DataType.ENDEVENT
+  | DataType.STARTEVENT;
 
 export type EditableNodeTypes =
   | DataType.PROCESS

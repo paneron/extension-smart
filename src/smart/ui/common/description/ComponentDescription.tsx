@@ -1,18 +1,43 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { jsx } from "@emotion/react";
-import React from "react";
-import MGDButtonGroup from "../../../MGDComponents/MGDButtonGroup";
-import { EditorApproval, EditorDataClass, EditorEGate, EditorEndEvent, EditorRegistry, EditorSignalEvent, EditorTimerEvent, ModelType } from "../../../model/editormodel";
-import { DataType } from "../../../serialize/interface/baseinterface";
-import { MMELDataAttribute } from "../../../serialize/interface/datainterface";
-import { MMELProvision, MMELReference, MMELRole } from "../../../serialize/interface/supportinterface";
-import { DeletableNodeTypes, EditableNodeTypes, EditAction } from "../../../utils/constants";
-import { NodeCallBack } from "../../../model/FlowContainer";
-import { EditButton, RemoveButton } from "../buttons";
-import { ApprovalRecordList, AttributeList, ReferenceList } from "./ComponentList";
-import { ActorDescription, DescriptionItem, NonEmptyFieldDescription } from "./fields";
+import { jsx } from '@emotion/react';
+import React from 'react';
+import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
+import {
+  EditorApproval,
+  EditorDataClass,
+  EditorEGate,
+  EditorEndEvent,
+  EditorRegistry,
+  EditorSignalEvent,
+  EditorTimerEvent,
+  ModelType,
+} from '../../../model/editormodel';
+import { DataType } from '../../../serialize/interface/baseinterface';
+import { MMELDataAttribute } from '../../../serialize/interface/datainterface';
+import {
+  MMELProvision,
+  MMELReference,
+  MMELRole,
+} from '../../../serialize/interface/supportinterface';
+import {
+  DeletableNodeTypes,
+  EditableNodeTypes,
+  EditAction,
+} from '../../../utils/constants';
+import { NodeCallBack } from '../../../model/FlowContainer';
+import { EditButton, RemoveButton } from '../buttons';
+import {
+  ApprovalRecordList,
+  AttributeList,
+  ReferenceList,
+} from './ComponentList';
+import {
+  ActorDescription,
+  DescriptionItem,
+  NonEmptyFieldDescription,
+} from './fields';
 
 export const DescribeStart: React.FC = function () {
   return <span> Start event </span>;
@@ -98,9 +123,7 @@ export const DescribeEGate: React.FC<{
       {egate.modelType === ModelType.EDIT && (
         <MGDButtonGroup>
           <EditButton
-            onClick={() =>
-              setDialog(DataType.EGATE, EditAction.EDIT, egate.id)
-            }
+            onClick={() => setDialog(DataType.EGATE, EditAction.EDIT, egate.id)}
           />
           <RemoveButton
             onClick={() =>
@@ -212,12 +235,23 @@ export const DescribeAttribute: React.FC<{
   const minimal = getRefById === undefined;
   return (
     <>
-      <DescriptionItem label={minimal?undefined:'Attribute ID'} value={att.id} />
-      {!minimal && <NonEmptyFieldDescription label='Type' value={att.type} />} 
-      {!minimal && <NonEmptyFieldDescription label='Cardinality' value={att.cardinality} />}
-      {!minimal && <NonEmptyFieldDescription label='Modality' value={att.modality} />}
-      {!minimal && <NonEmptyFieldDescription label='Definition' value={att.definition} />}
-      {getRefById !== undefined && <ReferenceList refs={att.ref} getRefById={getRefById} />}
+      <DescriptionItem
+        label={minimal ? undefined : 'Attribute ID'}
+        value={att.id}
+      />
+      {!minimal && <NonEmptyFieldDescription label="Type" value={att.type} />}
+      {!minimal && (
+        <NonEmptyFieldDescription label="Cardinality" value={att.cardinality} />
+      )}
+      {!minimal && (
+        <NonEmptyFieldDescription label="Modality" value={att.modality} />
+      )}
+      {!minimal && (
+        <NonEmptyFieldDescription label="Definition" value={att.definition} />
+      )}
+      {getRefById !== undefined && (
+        <ReferenceList refs={att.ref} getRefById={getRefById} />
+      )}
     </>
   );
 };
@@ -229,9 +263,16 @@ export const DescribeProvision: React.FC<{
   const minimal = getRefById === undefined;
   return (
     <>
-      <DescriptionItem label={minimal?undefined:'Statement'} value={provision.condition} />
-      {!minimal && <NonEmptyFieldDescription label='Modality' value={provision.modality} /> }
-      {getRefById !== undefined && <ReferenceList refs={provision.ref} getRefById={getRefById} /> }
+      <DescriptionItem
+        label={minimal ? undefined : 'Statement'}
+        value={provision.condition}
+      />
+      {!minimal && (
+        <NonEmptyFieldDescription label="Modality" value={provision.modality} />
+      )}
+      {getRefById !== undefined && (
+        <ReferenceList refs={provision.ref} getRefById={getRefById} />
+      )}
     </>
   );
 };

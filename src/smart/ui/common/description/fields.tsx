@@ -1,12 +1,12 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { jsx } from "@emotion/react";
-import React from "react";
-import { mgd_label } from "../../../../css/form";
-import { MMELRole } from "../../../serialize/interface/supportinterface";
+import { jsx } from '@emotion/react';
+import React from 'react';
+import { mgd_label } from '../../../../css/form';
+import { MMELRole } from '../../../serialize/interface/supportinterface';
 
-export const DescriptionItem: React.FC<{  
+export const DescriptionItem: React.FC<{
   label?: string;
   value: string;
 }> = function ({ label, value }): JSX.Element {
@@ -34,7 +34,7 @@ export const ActorDescription: React.FC<{
   );
 };
 
-export const NonEmptyFieldDescription: React.FC<{  
+export const NonEmptyFieldDescription: React.FC<{
   label: string;
   value: string;
 }> = function ({ label, value }): JSX.Element {

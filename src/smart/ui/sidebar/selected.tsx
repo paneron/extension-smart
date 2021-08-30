@@ -7,13 +7,13 @@ import { useStoreState, Elements, isNode } from 'react-flow-renderer';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
   MMELProvision,
-  MMELReference,  
+  MMELReference,
 } from '../../serialize/interface/supportinterface';
 import { EdtiorNodeWithInfoCallback } from '../../model/FlowContainer';
-import {  
-  EditorDataClass,  
+import {
+  EditorDataClass,
   EditorModel,
-  EditorRegistry,  
+  EditorRegistry,
   getEditorDataClassById,
   getEditorProvisionById,
   getEditorRefById,
@@ -24,7 +24,7 @@ import {
   isEditorProcess,
   isEditorRegistry,
   isEditorSignalEvent,
-  isEditorTimerEvent,  
+  isEditorTimerEvent,
 } from '../../model/editormodel';
 import { ProcessQuickEdit } from './processquickedit';
 import {
@@ -34,7 +34,16 @@ import {
   SelectableNodeTypes,
 } from '../../utils/constants';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
-import { DescribeApproval, DescribeDC, DescribeEGate, DescribeEnd, DescribeRegistry, DescribeSignalCatch, DescribeStart, DescribeTimer } from '../common/description/ComponentDescription';
+import {
+  DescribeApproval,
+  DescribeDC,
+  DescribeEGate,
+  DescribeEnd,
+  DescribeRegistry,
+  DescribeSignalCatch,
+  DescribeStart,
+  DescribeTimer,
+} from '../common/description/ComponentDescription';
 
 export const SelectedNodeDescription: React.FC<{
   model: EditorModel;

@@ -11,7 +11,7 @@ import {
   ModelType,
 } from '../model/editormodel';
 import { PageHistory } from '../model/history';
-import { MapperSelectedInterface } from '../model/state';
+import { LegendInterface, MapperSelectedInterface } from '../model/state';
 import { MappingType, MapSet } from '../model/mapmodel';
 import { SerializedStyles } from '@emotion/react';
 
@@ -27,14 +27,9 @@ export enum MapSourceType {
   NOMAP = 'no',
 }
 
-export interface MapStyleInterface {
-  label: string;
-  color: string;
-}
-
 export interface MapEdgeResult {
   fromref: RefObject<HTMLDivElement>;
-  toref: RefObject<HTMLDivElement>;  
+  toref: RefObject<HTMLDivElement>;
   fromid: string;
   toid: string;
 }
@@ -46,14 +41,14 @@ export const MapViewButtonToolTip: Record<MapperModels, string> = {
   [ModelType.REF]: 'View incoming mappings',
 };
 
-export const MappingResultStyles: Record<MapCoverType, MapStyleInterface> = {
+export const MappingResultStyles: Record<MapCoverType, LegendInterface> = {
   [MapCoverType.FULL]: { label: 'Fully covered', color: 'lightgreen' },
   [MapCoverType.PASS]: { label: 'Minimal covered', color: 'lightblue' },
   [MapCoverType.PARTIAL]: { label: 'Partially covered', color: 'lightyellow' },
   [MapCoverType.NONE]: { label: 'Not covered', color: '#E9967A' },
 };
 
-export const MappingSourceStyles: Record<MapSourceType, MapStyleInterface> = {
+export const MappingSourceStyles: Record<MapSourceType, LegendInterface> = {
   [MapSourceType.HASMAP]: { label: 'Has mapping', color: 'lightblue' },
   [MapSourceType.NOMAP]: {
     label: 'No mapping',
@@ -67,7 +62,7 @@ export type MapResultType = Record<string, MapCoverType>;
 export function calculateMapping(
   model: EditorModel,
   mapping: MappingType
-): MapResultType {  
+): MapResultType {
   const mr: MapResultType = {};
   Object.values(mapping).forEach(m =>
     Object.keys(m).forEach(k => (mr[k] = MapCoverType.FULL))
@@ -175,7 +170,7 @@ function explorePage(
 export function getMapStyleById(
   mapResult: MapResultType,
   id: string
-): SerializedStyles {  
+): SerializedStyles {
   const result = mapResult[id];
   if (result === undefined) {
     return map_style__coverage(MapCoverType.NONE);
@@ -203,7 +198,7 @@ export function filterMappings(
   selected: MapperSelectedInterface,
   impElms: Record<string, EditorNode>,
   refElms: Record<string, EditorNode>
-): MapEdgeResult[] {  
+): MapEdgeResult[] {
   const id = selected.selected;
   const result: MapEdgeResult[] = [];
   if (
@@ -241,7 +236,7 @@ function getFilterMapRecord(
   const refNode = refElms[refId];
   return {
     fromref: impNode.uiref!,
-    toref: refNode.uiref!,    
+    toref: refNode.uiref!,
     fromid: impNode.id,
     toid: refNode.id,
   };
@@ -250,7 +245,7 @@ function getFilterMapRecord(
 export function isParentMapFullCovered(
   history: PageHistory,
   mr: MapResultType
-): boolean {  
+): boolean {
   for (const [index, item] of history.items.entries()) {
     if (index > 0 && mr[item.pathtext] === MapCoverType.FULL) {
       return true;
@@ -271,7 +266,7 @@ export function getMappedList(mapSet: MapSet): Set<string> {
 }
 
 export function findImpMapPartners(id: string, mapping: MappingType): string[] {
-  const result:string[] = [];
+  const result: string[] = [];
   for (const x in mapping) {
     const map = mapping[x];
     if (map[id] !== undefined) {

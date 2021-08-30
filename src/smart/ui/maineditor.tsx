@@ -77,6 +77,13 @@ import {
   sidebar_layout,
 } from '../../css/layout';
 import SearchComponentPane from './sidebar/search';
+import { Logger } from '../utils/ModelFunctions';
+import LegendPane from './common/description/LegendPane';
+import {
+  getHighlightedStyleById,
+  getHighlightedSVGColorById,
+  SearchResultStyles,
+} from '../utils/SearchFunctions';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -86,6 +93,8 @@ const ModelEditor: React.FC<{
   className?: string;
 }> = ({ isVisible, className }) => {
   const { logger } = useContext(DatasetContext);
+
+  Logger.logger = logger!;
 
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
@@ -108,6 +117,10 @@ const ModelEditor: React.FC<{
     callback: () => {},
     msg: '',
   });
+  const [selected, setSelected] = useState<string | null>(null);
+  const [searchResult, setSearchResult] = useState<Set<string>>(
+    new Set<string>()
+  );
 
   function onLoad(params: OnLoadParams) {
     logger?.log('flow loaded');
@@ -270,8 +283,30 @@ const ModelEditor: React.FC<{
     }
   }
 
-  function onPageAndHistroyChange(pageid: string, history: PageHistory) {
-    setState({...state, history, modelWrapper:{...state.modelWrapper, page: pageid}})
+  function onPageAndHistroyChange(
+    selected: string,
+    pageid: string,
+    history: PageHistory
+  ) {
+    setSelected(selected);
+    setState({
+      ...state,
+      history,
+      modelWrapper: { ...state.modelWrapper, page: pageid },
+    });
+  }
+
+  function getStyleById(id: string) {
+    return getHighlightedStyleById(id, selected, searchResult);
+  }
+
+  function getSVGColorById(id: string) {
+    return getHighlightedSVGColorById(id, selected, searchResult);
+  }
+
+  function resetSearchElements(set: Set<string>) {
+    setSelected(null);
+    setSearchResult(set);
   }
 
   const toolbar = (
@@ -327,11 +362,14 @@ const ModelEditor: React.FC<{
         {
           key: 'search-node',
           title: 'Search components',
-          content: <SearchComponentPane 
-            model={state.modelWrapper.model}
-            onChange={onPageAndHistroyChange}
-          />,
-        }
+          content: (
+            <SearchComponentPane
+              model={state.modelWrapper.model}
+              onChange={onPageAndHistroyChange}
+              resetSearchElements={resetSearchElements}
+            />
+          ),
+        },
       ]}
     />
   );
@@ -376,7 +414,9 @@ const ModelEditor: React.FC<{
                 state.dvisible,
                 state.edgeDeleteVisible,
                 onProcessClick,
-                removeEdge
+                removeEdge,
+                getStyleById,
+                getSVGColorById
               )}
               onLoad={onLoad}
               onDrop={onDrop}
@@ -392,7 +432,7 @@ const ModelEditor: React.FC<{
               <Controls>
                 <DataVisibilityButton
                   isOn={state.dvisible}
-                  onClick={toggleDataVisibility}                  
+                  onClick={toggleDataVisibility}
                 />
                 <EdgeEditButton
                   isOn={state.edgeDeleteVisible}
@@ -400,6 +440,9 @@ const ModelEditor: React.FC<{
                 />
               </Controls>
             </ReactFlow>
+            {searchResult.size > 0 && (
+              <LegendPane list={SearchResultStyles} onLeft={false} />
+            )}
           </div>
         </Workspace>
       </ReactFlowProvider>

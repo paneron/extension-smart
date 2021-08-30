@@ -128,6 +128,26 @@ export const NormalTextField: React.FC<IField> = (f: IField) => {
   );
 };
 
+export const NumericComboBox: React.FC<{
+  options: Array<number>;
+  value: number;
+  onChange: (x: number) => void;
+}> = function ({ options, value, onChange }) {
+  return (
+    <select
+      css={mgd_select}
+      value={value}
+      onChange={e => onChange(parseInt(e.target.value))}
+    >
+      {options.map((x, index) => (
+        <option key={'option' + index} value={x}>
+          {x}
+        </option>
+      ))}
+    </select>
+  );
+};
+
 export const NormalComboBox: React.FC<IComboField> = function ({
   text,
   options,

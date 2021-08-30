@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import React, { RefObject, useContext, useMemo, useState } from 'react';
+import React, { RefObject, useMemo, useState } from 'react';
 
 import ModelDiagram from './mapper/ModelDiagram';
 import {
@@ -22,10 +22,7 @@ import {
   MapSet,
 } from '../model/mapmodel';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
-import {
-  ControlGroup,
-  Dialog,  
-} from '@blueprintjs/core';
+import { ControlGroup, Dialog } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import MapperFileMenu from './menu/mapperfile';
 import { createPageHistory, PageHistory } from '../model/history';
@@ -37,12 +34,10 @@ import {
 import { createNewEditorModel } from '../utils/EditorFactory';
 import { createEditorModelWrapper } from '../model/modelwrapper';
 import {
-  calculateMapping,  
-  filterMappings,  
-  MapResultType,  
+  calculateMapping,
+  filterMappings,
+  MapResultType,
 } from '../utils/MappingCalculator';
-import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { Logger } from '../utils/ModelFunctions';
 import MappingCanvus from './mapper/mappingCanvus';
 import MapperOptionMenu from './menu/mapperOptionMenu';
 import { EditMPropsInterface } from './dialog/dialogs';
@@ -62,10 +57,6 @@ const ModelMapper: React.FC<{
   isVisible: boolean;
   className?: string;
 }> = ({ isVisible, className }) => {
-  const { logger } = useContext(DatasetContext);
-
-  Logger.logger = logger!;
-
   const [mapProfile, setMapProfile] = useState<MapProfile>(createMapProfile());
   const [viewOption, setViewOption] = useState<MapperViewOption>({
     dataVisible: true,
@@ -76,19 +67,19 @@ const ModelMapper: React.FC<{
     modelWrapper: { ...initModelWrapper },
     history: createPageHistory(initModelWrapper),
     modelType: ModelType.IMP,
-    historyMap: {}
+    historyMap: {},
   });
   const [referenceProps, setRefProps] = useState<MapperState>({
     modelWrapper: { ...initModelWrapper },
     history: createPageHistory(initModelWrapper),
     modelType: ModelType.REF,
-    historyMap: {}
+    historyMap: {},
   });
   const [selected, setSelected] = useState<MapperSelectedInterface>({
     modelType: ModelType.IMP,
     selected: '',
   });
-  const [mapResult, setMapResult] = useState<MapResultType>({});  
+  const [mapResult, setMapResult] = useState<MapResultType>({});
 
   const [editMappingProps, setEditMProps] = useState<EditMPropsInterface>({
     from: '',
@@ -106,14 +97,18 @@ const ModelMapper: React.FC<{
   const impPage = impmodel.pages[implementProps.modelWrapper.page];
   const refPage = refmodel.pages[referenceProps.modelWrapper.page];
 
-  const mapEdges = useMemo (() => filterMappings(
-    mapSet,
-    impPage,
-    refPage,
-    selected,
-    impmodel.elements,
-    refmodel.elements
-  ), [mapSet, impPage, refPage, selected]);  
+  const mapEdges = useMemo(
+    () =>
+      filterMappings(
+        mapSet,
+        impPage,
+        refPage,
+        selected,
+        impmodel.elements,
+        refmodel.elements
+      ),
+    [mapSet, impPage, refPage, selected]
+  );
 
   function updateMapStyle({ model = refmodel, mp = mapProfile }) {
     setMapResult(calculateMapping(model, getMappings(mp, refns)));
@@ -125,7 +120,7 @@ const ModelMapper: React.FC<{
       mapSet: { ...mapProfile.mapSet, [ms.id]: ms },
     };
     setMapProfile(newProfile);
-    updateMapStyle({ mp: newProfile });    
+    updateMapStyle({ mp: newProfile });
   }
 
   function onRefModelChanged(model: EditorModel) {
@@ -135,13 +130,13 @@ const ModelMapper: React.FC<{
 
   function onMapProfileChanged(mp: MapProfile) {
     setMapProfile(mp);
-    updateMapStyle({ mp: mp });    
+    updateMapStyle({ mp: mp });
   }
 
   function onImpModelChanged(model: EditorModel) {
     onMapProfileChanged({ id: model.meta.namespace, mapSet: {}, docs: {} });
     implementProps.modelWrapper.model = model;
-  }  
+  }
 
   function onImpPropsChange(state: MapperState) {
     setImplProps(state);
@@ -181,7 +176,7 @@ const ModelMapper: React.FC<{
       from: '',
       to: '',
     });
-    updateMapStyle({ mp: mapProfile });    
+    updateMapStyle({ mp: mapProfile });
   }
 
   if (!isVisible && selected.selected !== '') {
@@ -199,18 +194,22 @@ const ModelMapper: React.FC<{
 
   function onRefNavigate(id: string) {
     const page = findPageContainingElement(refmodel, id);
-    const hm = referenceProps.historyMap;        
+    const hm = referenceProps.historyMap;
     processNavigate(page, setRefProps, referenceProps, hm);
   }
 
   function processNavigate(
-    page: EditorSubprocess|null, 
-    setProps: (s:MapperState) => void,
+    page: EditorSubprocess | null,
+    setProps: (s: MapperState) => void,
     props: MapperState,
     hm?: Record<string, PageHistory>
-  ) {    
+  ) {
     if (page !== null && hm !== undefined && hm[page.id] !== undefined) {
-      setProps({...props, modelWrapper:{...props.modelWrapper, page: page.id}, history: hm[page.id]});
+      setProps({
+        ...props,
+        modelWrapper: { ...props.modelWrapper, page: page.id },
+        history: hm[page.id],
+      });
     } else {
       alert('Target not found');
     }
@@ -276,7 +275,7 @@ const ModelMapper: React.FC<{
     );
 
   if (isVisible) {
-    return (      
+    return (
       <Workspace className={className} toolbar={toolbar}>
         <Dialog
           isOpen={editMappingProps.from !== '' || viewOption.docVisible}
@@ -316,7 +315,7 @@ const ModelMapper: React.FC<{
             mapSet={mapSet}
             onMapSetChanged={onMapSetChanged}
             onModelChanged={onImpModelChanged}
-            setSelected={setSelected}    
+            setSelected={setSelected}
             onMappingEdit={onMappingEdit}
             issueNavigationRequest={onRefNavigate}
             getPartnerModelElementById={id => getEditorNodeById(refmodel, id)}
@@ -331,14 +330,14 @@ const ModelMapper: React.FC<{
             onMapSetChanged={onMapSetChanged}
             mapResult={mapResult}
             onModelChanged={onRefModelChanged}
-            setSelected={setSelected}   
+            setSelected={setSelected}
             onMappingEdit={onMappingEdit}
             issueNavigationRequest={onImpNavigate}
             getPartnerModelElementById={id => getEditorNodeById(impmodel, id)}
-          />            
+          />
         </div>
-        <MappingCanvus mapEdges={mapEdges} line={lineref}/>
-      </Workspace>      
+        <MappingCanvus mapEdges={mapEdges} line={lineref} />
+      </Workspace>
     );
   }
   return <></>;

@@ -12,19 +12,14 @@ const color = CSSROOTVARIABLES['--colour--green'];
 interface IMappingEdge {
   fx: number;
   fy: number;
-  fromid: string;  
+  fromid: string;
   tx: number;
   ty: number;
-  toid: string;  
+  toid: string;
 }
 
-function computePos(edgeResult: MapEdgeResult):IMappingEdge {
-  const {    
-    fromref,
-    toref,
-    fromid,
-    toid,
-  } = edgeResult;
+function computePos(edgeResult: MapEdgeResult): IMappingEdge {
+  const { fromref, toref, fromid, toid } = edgeResult;
   if (fromref.current === null || toref.current === null) {
     return {
       fx: 0,
@@ -32,8 +27,8 @@ function computePos(edgeResult: MapEdgeResult):IMappingEdge {
       fromid,
       tx: 0,
       ty: 0,
-      toid      
-    }
+      toid,
+    };
   }
   const fPos = fromref.current.getBoundingClientRect();
   const tPos = toref.current.getBoundingClientRect();
@@ -47,23 +42,23 @@ function computePos(edgeResult: MapEdgeResult):IMappingEdge {
     fromid,
     tx,
     ty,
-    toid    
-  }
+    toid,
+  };
 }
 
-function filterResult(edgeResult: IMappingEdge, threshold: number):boolean {
-  const { fx, tx } = edgeResult;  
+function filterResult(edgeResult: IMappingEdge, threshold: number): boolean {
+  const { fx, tx } = edgeResult;
   return fx < threshold && tx > threshold;
 }
 
 const MappingCanvus: React.FC<{
-  mapEdges: MapEdgeResult[];  
+  mapEdges: MapEdgeResult[];
   line: RefObject<HTMLDivElement>;
 }> = function ({ mapEdges, line }) {
   const threshold = line.current ? line.current.getBoundingClientRect().x : 0;
   const edges = mapEdges
     .map(r => computePos(r))
-    .filter(r => filterResult(r, threshold))  
+    .filter(r => filterResult(r, threshold));
   return (
     <div css={mgd_canvas}>
       <svg width="100%" height="99%">
@@ -77,7 +72,7 @@ const MappingCanvus: React.FC<{
             markerWidth="5"
             markerHeight="5"
             orient="auto"
-            style={ {stroke: color }}
+            style={{ stroke: color }}
           >
             <path d="M 0 0 L 10 5 L 0 10 z" fill="black" />
           </marker>
@@ -90,9 +85,14 @@ const MappingCanvus: React.FC<{
   );
 };
 
-const MappingEdge: React.FC<IMappingEdge> = function ({ 
-  fx, fy, tx, ty, fromid, toid 
-}) {   
+const MappingEdge: React.FC<IMappingEdge> = function ({
+  fx,
+  fy,
+  tx,
+  ty,
+  fromid,
+  toid,
+}) {
   return (
     <>
       <path
@@ -102,7 +102,7 @@ const MappingEdge: React.FC<IMappingEdge> = function ({
         stroke={color}
         fill="#f00"
         markerEnd="url(#triangle)"
-      />      
+      />
     </>
   );
 };

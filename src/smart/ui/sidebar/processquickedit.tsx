@@ -20,7 +20,10 @@ import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import { EditButton, RemoveButton } from '../common/buttons';
-import { ActorDescription, DescriptionItem } from '../common/description/fields';
+import {
+  ActorDescription,
+  DescriptionItem,
+} from '../common/description/fields';
 import { ProvisionList } from '../common/description/ComponentList';
 
 export const ProcessQuickEdit: React.FC<

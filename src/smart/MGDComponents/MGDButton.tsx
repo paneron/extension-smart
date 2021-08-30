@@ -43,7 +43,7 @@ function MGDButton(props: OwnProps) {
     rightIcon,
     onMouseEnter,
     onMouseLeave,
-    className
+    className,
   } = props;
   const buttonClasses = [
     mgd_button,
@@ -52,7 +52,7 @@ function MGDButton(props: OwnProps) {
   ];
   const textClasses = [mgd_button__text];
   return (
-    <Button    
+    <Button
       outlined
       small={size === MGDButtonSize.Small}
       id={id}

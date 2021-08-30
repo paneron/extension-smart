@@ -1,14 +1,14 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { jsx } from '@emotion/react';
+import { css, jsx } from '@emotion/react';
 import React, { useContext, useMemo, useState } from 'react';
 
 import ReactFlow, {
   Controls,
   OnLoadParams,
   ReactFlowProvider,
-  isNode,  
+  isNode,
 } from 'react-flow-renderer';
 
 import { ControlGroup, Dialog } from '@blueprintjs/core';
@@ -51,13 +51,11 @@ import {
   SetDiagAction,
 } from './dialog/dialogs';
 import {
-  DeletableNodeTypes,  
+  DeletableNodeTypes,
   EditableNodeTypes,
-  EditAction,  
+  EditAction,
 } from '../utils/constants';
-import {  
-  createNewPage,
-} from '../utils/ModelAddComponentHandler';
+import { createNewPage } from '../utils/ModelAddComponentHandler';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
 import {
@@ -168,7 +166,7 @@ const ModelViewer: React.FC<{
       saveLayout();
     }
     setState({ ...state, dvisible: !state.dvisible });
-  }  
+  }
 
   function setNewModelWrapper(mw: ModelWrapper) {
     setState({ ...state, history: createPageHistory(mw), modelWrapper: mw });
@@ -202,7 +200,7 @@ const ModelViewer: React.FC<{
       ...state,
       modelWrapper: { ...state.modelWrapper, model: model },
     });
-  }  
+  }
 
   function drillUp(): void {
     if (state.history.items.length > 0) {
@@ -256,7 +254,7 @@ const ModelViewer: React.FC<{
               onSubprocessClick={onSubprocessClick}
             />
           ),
-        },        
+        },
       ]}
     />
   );
@@ -301,20 +299,22 @@ const ModelViewer: React.FC<{
                 state.dvisible,
                 state.edgeDeleteVisible,
                 onProcessClick,
-                ()=>{}
+                () => {},
+                () => css``,
+                () => ''
               )}
-              onLoad={onLoad}                    
+              onLoad={onLoad}
               nodesConnectable={false}
               snapToGrid={true}
               snapGrid={[10, 10]}
               nodeTypes={NodeTypes}
-              edgeTypes={EdgeTypes}              
+              edgeTypes={EdgeTypes}
             >
               <Controls>
                 <DataVisibilityButton
                   isOn={state.dvisible}
-                  onClick={toggleDataVisibility}                  
-                />                
+                  onClick={toggleDataVisibility}
+                />
               </Controls>
             </ReactFlow>
           </div>

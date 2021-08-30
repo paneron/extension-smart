@@ -47,11 +47,12 @@ export interface NodeCallBack {
   onProcessClick: (pageid: string, processid: string) => void;
   getRoleById: (id: string) => MMELRole | null;
   setMapping: (fromid: string, toid: string) => void;
-  getMapStyleClassById?: (id: string) => SerializedStyles;
+  getStyleClassById?: (id: string) => SerializedStyles;
+  getSVGColorById?: (id: string) => string;
   setSelectedId?: (id: string) => void;
   hasMapping?: (id: string) => boolean;
-  ComponentShortDescription?: React.FC<{id: string}>
-  MappingList?: React.FC<{id: string}>
+  ComponentShortDescription?: React.FC<{ id: string }>;
+  MappingList?: React.FC<{ id: string }>;
 }
 
 export interface NodeContainer {
@@ -125,22 +126,24 @@ export function getEditorNodeCallBack(props: {
   model: EditorModel;
   onProcessClick: (pageid: string, processid: string) => void;
   setMapping?: (fromid: string, toid: string) => void;
-  getMapStyleClassById?: (id: string) => SerializedStyles;
+  getStyleClassById?: (id: string) => SerializedStyles;
   setSelectedId?: (id: string) => void;
   hasMapping?: (id: string) => boolean;
-  ComponentShortDescription?: React.FC<{id: string}>;
-  MappingList?: React.FC<{id: string}>;
+  ComponentShortDescription?: React.FC<{ id: string }>;
+  MappingList?: React.FC<{ id: string }>;
+  getSVGColorById?: (id: string) => string;
 }): NodeCallBack {
   const {
     type,
     model,
     onProcessClick,
     setMapping = () => {},
-    getMapStyleClassById,
+    getStyleClassById,
+    getSVGColorById,
     setSelectedId,
     hasMapping,
     ComponentShortDescription,
-    MappingList
+    MappingList,
   } = props;
 
   function getRoleById(id: string): MMELRole | null {
@@ -152,10 +155,11 @@ export function getEditorNodeCallBack(props: {
     getRoleById,
     onProcessClick,
     setMapping,
-    getMapStyleClassById,
+    getStyleClassById,
+    getSVGColorById,
     setSelectedId,
     hasMapping,
     ComponentShortDescription,
-    MappingList
+    MappingList,
   };
 }

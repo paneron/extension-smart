@@ -144,7 +144,7 @@ export function getEditorNodeById(
     return null;
   }
   const r = model.elements[id];
-  return r??null;  
+  return r ?? null;
 }
 
 export function getEditorRoleById(
@@ -155,7 +155,7 @@ export function getEditorRoleById(
     return null;
   }
   const r = model.roles[id];
-  return r??null;
+  return r ?? null;
 }
 
 export function getEditorRefById(
@@ -166,7 +166,7 @@ export function getEditorRefById(
     return null;
   }
   const r = model.refs[id];
-  return r??null;
+  return r ?? null;
 }
 
 export function getEditorRegistryById(
@@ -205,5 +205,5 @@ export function getEditorProvisionById(
     return null;
   }
   const r = model.provisions[id];
-  return r??null;
+  return r ?? null;
 }

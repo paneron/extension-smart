@@ -45,5 +45,4 @@ export const search_result_entry_row = css`
   text-align: left;
 `;
 
-export const search_result_container = css`
-`;
+export const search_result_container = css``;

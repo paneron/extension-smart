@@ -126,7 +126,7 @@ const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {
     tooltip: 'Model mapper',
     icon: 'data-lineage',
     view: ModelMapper,
-  }, 
+  },
 };
 
 const ModuleButton: React.FC<{

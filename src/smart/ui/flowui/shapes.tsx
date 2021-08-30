@@ -125,7 +125,9 @@ export const ProcessBox: Record<
     uiref?: RefObject<HTMLDivElement>;
   }>
 > = {
-  [ModelType.EDIT]: ({ content }) => <MGDProcessBox>{content}</MGDProcessBox>,
+  [ModelType.EDIT]: ({ content, styleClass }) => (
+    <MGDProcessBox styleClass={styleClass}>{content}</MGDProcessBox>
+  ),
   [ModelType.IMP]: ({ content, pid, styleClass, uiref }) => {
     return (
       <MGDProcessBox

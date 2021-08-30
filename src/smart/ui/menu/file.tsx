@@ -98,18 +98,13 @@ const FileMenu: React.FC<{
 };
 
 // Open
-function parseModel(props:{
+function parseModel(props: {
   data: string;
   setNewModelWrapper: (m: ModelWrapper) => void;
   logger?: LoggerInterface;
-  indexModel?: (model: EditorModel) => void;  
+  indexModel?: (model: EditorModel) => void;
 }) {
-  const {
-    data,
-    setNewModelWrapper,
-    logger,
-    indexModel    
-  } = props;
+  const { data, setNewModelWrapper, logger, indexModel } = props;
   logger?.log('Importing model');
   try {
     const model = textToMMEL(data);
@@ -128,14 +123,14 @@ export async function handleModelOpen(prop: {
   useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
   logger?: LoggerInterface;
-  indexModel?: (model: EditorModel) => void;  
+  indexModel?: (model: EditorModel) => void;
 }) {
   const {
     setNewModelWrapper,
     useDecodedBlob,
     requestFileFromFilesystem,
     logger,
-    indexModel    
+    indexModel,
   } = prop;
   if (requestFileFromFilesystem && useDecodedBlob) {
     logger?.log('Requesting file');
@@ -158,10 +153,10 @@ export async function handleModelOpen(prop: {
             fileDataAsString.substr(0, 20)
           );
           parseModel({
-            data:fileDataAsString, 
-            setNewModelWrapper, 
-            logger, 
-            indexModel
+            data: fileDataAsString,
+            setNewModelWrapper,
+            logger,
+            indexModel,
           });
         } else {
           logger?.log('Requesting file: No file data received');

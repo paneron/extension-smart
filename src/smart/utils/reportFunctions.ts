@@ -107,8 +107,12 @@ function parseCode(
     `;
     const out = Function(program)()(records, rawMapping, imp, ref);
     return out;
-  } catch (e: any) {
-    throw e.message + '\n' + e.stack;
+  } catch (e: unknown) {
+    if (typeof e === 'object') {
+      const error = e as Error;
+      throw error.message + '\n' + error.stack;
+    }
+    throw 'Unknown error';
   }
 }
 

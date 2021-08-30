@@ -10,9 +10,7 @@ import ReactFlow, {
   OnLoadParams,
   ReactFlowProvider,
 } from 'react-flow-renderer';
-import {
-  react_flow_container_layout,  
-} from '../../../css/layout';
+import { react_flow_container_layout } from '../../../css/layout';
 import { MGDButtonType } from '../../../css/MGDButton';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { EditorModel, EditorNode, ModelType } from '../../model/editormodel';
@@ -49,7 +47,7 @@ import {
   MappingSourceStyles,
   MapResultType,
 } from '../../utils/MappingCalculator';
-import MappingLegendPane from './mappinglegend';
+import LegendPane from '../common/description/LegendPane';
 import MappingPartyList from './mappartylist';
 
 const ModelDiagram: React.FC<{
@@ -61,10 +59,10 @@ const ModelDiagram: React.FC<{
   setProps: (mp: MapperState) => void;
   mapResult?: MapResultType;
   onModelChanged: (model: EditorModel) => void;
-  setSelected: (s: MapperSelectedInterface) => void;  
+  setSelected: (s: MapperSelectedInterface) => void;
   onMappingEdit: (from: string, to: string) => void;
   issueNavigationRequest: (id: string) => void;
-  getPartnerModelElementById: (id:string) => EditorNode | null;
+  getPartnerModelElementById: (id: string) => EditorNode | null;
 }> = ({
   className,
   viewOption,
@@ -77,12 +75,12 @@ const ModelDiagram: React.FC<{
   setSelected,
   onMappingEdit,
   issueNavigationRequest,
-  getPartnerModelElementById
+  getPartnerModelElementById,
 }) => {
   const { logger, useDecodedBlob, requestFileFromFilesystem } =
-    useContext(DatasetContext);  
+    useContext(DatasetContext);
 
-  const modelType = modelProps.modelType;    
+  const modelType = modelProps.modelType;
 
   function setSelectedId(id: string) {
     setSelected({
@@ -95,12 +93,12 @@ const ModelDiagram: React.FC<{
     params.fitView();
   }
 
-  function setNewModelWrapper(mw: ModelWrapper) {    
+  function setNewModelWrapper(mw: ModelWrapper) {
     setProps({
       ...modelProps,
       history: createPageHistory(mw),
       modelWrapper: mw,
-      historyMap: buildHistoryMap(mw)
+      historyMap: buildHistoryMap(mw),
     });
     onModelChanged(mw.model);
     setSelectedId('');
@@ -132,7 +130,7 @@ const ModelDiagram: React.FC<{
       setProps({ ...modelProps });
       setSelectedId('');
     }
-  }  
+  }
 
   function setMapping(fromid: string, toid: string) {
     logger?.log(`Update mapping from ${fromid} to ${toid}`);
@@ -144,7 +142,7 @@ const ModelDiagram: React.FC<{
       justification: '',
     };
     onMapSetChanged({ ...mapSet });
-  }  
+  }
 
   const toolbar = (
     <ControlGroup>
@@ -155,7 +153,7 @@ const ModelDiagram: React.FC<{
             useDecodedBlob,
             requestFileFromFilesystem,
             logger,
-            indexModel            
+            indexModel,
           });
         }}
       >
@@ -171,22 +169,24 @@ const ModelDiagram: React.FC<{
     </ControlGroup>
   );
 
-  const ComponentShortDescription: React.FC<{id: string}> = function ({id}) {
-    return <ComponentSummary id={id} model={modelProps.modelWrapper.model} />
-  }
+  const ComponentShortDescription: React.FC<{ id: string }> = function ({
+    id,
+  }) {
+    return <ComponentSummary id={id} model={modelProps.modelWrapper.model} />;
+  };
 
-  const MappingList: React.FC<{id: string}> = function ({id}) {
+  const MappingList: React.FC<{ id: string }> = function ({ id }) {
     return (
-      <MappingPartyList 
+      <MappingPartyList
         id={id}
         type={modelProps.modelType}
-        mapping={mapSet.mappings}        
+        mapping={mapSet.mappings}
         onMappingEdit={onMappingEdit}
         issueNavigationRequest={issueNavigationRequest}
         getNodeById={getPartnerModelElementById}
       />
     );
-  }
+  };
 
   const breadcrumbs = getBreadcrumbs(modelProps.history, onPageChange);
 
@@ -194,7 +194,7 @@ const ModelDiagram: React.FC<{
     <ReactFlowProvider>
       <Workspace
         className={className}
-        toolbar={toolbar}        
+        toolbar={toolbar}
         navbarProps={{ breadcrumbs }}
       >
         <div css={react_flow_container_layout}>
@@ -214,16 +214,16 @@ const ModelDiagram: React.FC<{
               MappingList
             )}
             onLoad={onLoad}
-            onDragOver={onDragOver}            
+            onDragOver={onDragOver}
             nodesConnectable={false}
             snapToGrid={true}
             snapGrid={[10, 10]}
             nodeTypes={NodeTypes}
             edgeTypes={EdgeTypes}
             nodesDraggable={false}
-          ></ReactFlow>          
+          ></ReactFlow>
           {viewOption.legVisible && (
-            <MappingLegendPane
+            <LegendPane
               list={
                 modelType === ModelType.REF
                   ? MappingResultStyles

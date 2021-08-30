@@ -1,5 +1,5 @@
 import React from 'react';
-import {  
+import {
   EditorModel,
   EditorNode,
   EditorSubprocess,
@@ -7,7 +7,12 @@ import {
   isEditorProcess,
   ModelType,
 } from './editormodel';
-import { addToHistory, cloneHistory, createPageHistory, PageHistory } from './history';
+import {
+  addToHistory,
+  cloneHistory,
+  createPageHistory,
+  PageHistory,
+} from './history';
 import { ModelWrapper } from './modelwrapper';
 
 export interface MappingDoc {
@@ -61,7 +66,7 @@ export function getMappings(mp: MapProfile, refns: string): MappingType {
   return mp.mapSet[refns] === undefined ? {} : mp.mapSet[refns].mappings;
 }
 
-export function indexModel(model: EditorModel) {  
+export function indexModel(model: EditorModel) {
   for (const p in model.pages) {
     const page = model.pages[p];
     const neighbor: Record<string, Set<string>> = {};
@@ -78,14 +83,14 @@ export function indexModel(model: EditorModel) {
     if (isEditorApproval(node) || isEditorProcess(node)) {
       node.uiref = React.createRef();
     }
-  }  
+  }
 }
 
-export function buildHistoryMap(mw: ModelWrapper): Record<string, PageHistory> {  
+export function buildHistoryMap(mw: ModelWrapper): Record<string, PageHistory> {
   const model = mw.model;
   const history = createPageHistory(mw);
   const page = model.pages[model.root];
-  const hm = {[mw.page]: history};
+  const hm = { [mw.page]: history };
   fillPageHistory(page, history, hm, model.elements, model.pages);
   return hm;
 }
@@ -102,7 +107,7 @@ function fillPageHistory(
     const node = elements[id];
     if (isEditorProcess(node) && node.page !== '') {
       const nextPage = pages[node.page];
-      const nextHistory = cloneHistory(history);      
+      const nextHistory = cloneHistory(history);
       addToHistory(nextHistory, node.page, id);
       if (map[node.page] === undefined) {
         map[node.page] = nextHistory;

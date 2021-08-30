@@ -5,6 +5,10 @@ import {
   MappingSourceStyles,
   MapSourceType,
 } from '../smart/utils/MappingCalculator';
+import {
+  SearchHighlightType,
+  SearchResultStyles,
+} from '../smart/utils/SearchFunctions';
 
 export const handlecss = css`
   border-radius: '5px!important',
@@ -24,4 +28,16 @@ export function map_style__source(result: MapSourceType): SerializedStyles {
   return css`
     background-color: ${MappingSourceStyles[result].color};
   `;
+}
+
+export function search_style__highlight(
+  result: SearchHighlightType
+): SerializedStyles {
+  if (result !== SearchHighlightType.NONE) {
+    return css`
+      background-color: ${SearchResultStyles[result].color};
+    `;
+  } else {
+    return css``;
+  }
 }

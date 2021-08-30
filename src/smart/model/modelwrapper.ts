@@ -1,3 +1,6 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
 import { Elements } from 'react-flow-renderer';
 import { MMELNode } from '../serialize/interface/baseinterface';
 import { MMELModel } from '../serialize/interface/model';
@@ -42,6 +45,7 @@ import {
 import { MapSet } from './mapmodel';
 import { map_style__coverage } from '../../css/visual';
 import React from 'react';
+import { SerializedStyles } from '@emotion/react';
 
 export interface ModelWrapper {
   model: EditorModel;
@@ -178,12 +182,16 @@ export function getReactFlowElementsFrom(
   dvisible: boolean,
   edgeDelete: boolean,
   onProcessClick: (pageid: string, processid: string) => void,
-  removeEdge: (id: string) => void
+  removeEdge: (id: string) => void,
+  getStyleById: (id: string) => SerializedStyles,
+  getSVGColorById: (id: string) => string
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
     model: mw.model,
     onProcessClick,
+    getStyleClassById: getStyleById,
+    getSVGColorById,
   });
   return getElements(mw, dvisible, callback, e =>
     createEdgeContainer(e, edgeDelete, removeEdge)
@@ -200,8 +208,8 @@ export function getMapperReactFlowElementsFrom(
   mapResult: MapResultType,
   setSelectedId: (id: string) => void,
   isParentFull: boolean,
-  ComponentShortDescription: React.FC<{id:string}>,
-  MappingList: React.FC<{id: string}>
+  ComponentShortDescription: React.FC<{ id: string }>,
+  MappingList: React.FC<{ id: string }>
 ): Elements {
   const destinationList = getMappedList(mapSet);
   const callback = getEditorNodeCallBack({
@@ -209,7 +217,7 @@ export function getMapperReactFlowElementsFrom(
     model: mw.model,
     onProcessClick,
     setMapping,
-    getMapStyleClassById:
+    getStyleClassById:
       type === ModelType.REF
         ? isParentFull
           ? () => map_style__coverage(MapCoverType.FULL)
@@ -221,7 +229,7 @@ export function getMapperReactFlowElementsFrom(
         ? id => destinationList.has(id)
         : id => mapSet.mappings[id] !== undefined,
     ComponentShortDescription,
-    MappingList
+    MappingList,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }

@@ -10,7 +10,7 @@ import {
   EditorNode,
   EditorProcess,
   EditorSignalEvent,
-  isEditorRegistry,  
+  isEditorRegistry,
 } from '../../model/editormodel';
 import { NodeCallBack } from '../../model/FlowContainer';
 import {
@@ -34,18 +34,20 @@ import {
   shame__label__short,
 } from '../../../css/shame';
 import { Text } from '@blueprintjs/core';
-import {  
-  view_subprocess_button_layout,
-} from '../../../css/layout';
+import { view_subprocess_button_layout } from '../../../css/layout';
 import PopoverWrapper from '../popover/PopoverWrapper';
 import ViewMappingbutton from '../mapper/viewmapbutton';
+import { Logger } from '../../utils/ModelFunctions';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
   const callback = data as NodeCallBack;
   const SD = callback.ComponentShortDescription;
   const label = isEditorRegistry(node) ? node.title : node.id;
-  const color = 'none';
+  const color =
+    callback.getSVGColorById !== undefined
+      ? callback.getSVGColorById(data.id)
+      : 'none';
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
@@ -62,7 +64,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
   const process = data as EditorProcess;
   const callback = data as NodeCallBack;
   const actor = callback.getRoleById(process.actor);
-  const PB = ProcessBox[callback.modelType];  
+  const PB = ProcessBox[callback.modelType];
   const SD = callback.ComponentShortDescription;
 
   return (
@@ -73,8 +75,8 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           content={process.name === '' ? process.id : process.name}
           pid={process.id}
           styleClass={
-            callback.getMapStyleClassById
-              ? callback.getMapStyleClassById(process.id)
+            callback.getStyleClassById
+              ? callback.getStyleClassById(process.id)
               : undefined
           }
           setMapping={callback.setMapping}
@@ -93,14 +95,16 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           </Tooltip2>
         </div>
       )}
-      {callback.hasMapping !== undefined && callback.hasMapping(process.id) && callback.MappingList !== undefined && (
-        <ViewMappingbutton
-          modelType={callback.modelType}
-          id={process.id}
-          setSelectedId={callback.setSelectedId!}
-          MappingList={callback.MappingList}
-        />
-      )}
+      {callback.hasMapping !== undefined &&
+        callback.hasMapping(process.id) &&
+        callback.MappingList !== undefined && (
+          <ViewMappingbutton
+            modelType={callback.modelType}
+            id={process.id}
+            setSelectedId={callback.setSelectedId!}
+            MappingList={callback.MappingList}
+          />
+        )}
       {actor !== null && (
         <div css={[shame__label]} key={process.id + '#ActorLabel'}>
           {actorIcon}
@@ -127,17 +131,17 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
           content={approval.name === '' ? approval.id : approval.name}
           pid={approval.id}
           styleClass={
-            callback.getMapStyleClassById
-              ? callback.getMapStyleClassById(approval.id)
+            callback.getStyleClassById
+              ? callback.getStyleClassById(approval.id)
               : undefined
           }
           setMapping={callback.setMapping}
           uiref={approval.uiref}
         />
-      </PopoverWrapper>        
+      </PopoverWrapper>
       <Handle type="target" position={Position.Top} css={handlecss} />
       {callback.hasMapping !== undefined &&
-        callback.hasMapping(approval.id) && 
+        callback.hasMapping(approval.id) &&
         callback.MappingList !== undefined && (
           <ViewMappingbutton
             modelType={callback.modelType}
@@ -202,15 +206,19 @@ export const EndComponent: FC<NodeProps> = function () {
 
 export const TimerComponent: FC<NodeProps> = function ({ data }) {
   const callback = data as NodeCallBack;
-  const color = 'none';
-  const SD = callback.ComponentShortDescription;  
+  const color =
+    callback.getSVGColorById !== undefined
+      ? callback.getSVGColorById(data.id)
+      : 'none';
+  const SD = callback.ComponentShortDescription;
+  Logger.logger.log(data.id, color);
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
       <PopoverWrapper id={data.id} SD={SD}>
         <TimerShape color={color} />
-      </PopoverWrapper>       
+      </PopoverWrapper>
       <div css={[shame__label, shame__label__short]}>timer</div>
     </>
   );
@@ -220,15 +228,18 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
   const egate = data as EditorEGate;
   const callback = data as NodeCallBack;
   const SD = callback.ComponentShortDescription;
-  const color = 'none';  
-  
+  const color =
+    callback.getSVGColorById !== undefined
+      ? callback.getSVGColorById(data.id)
+      : 'none';
+
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
       <PopoverWrapper id={egate.id} SD={SD}>
         <EgateShape color={color} />
-      </PopoverWrapper>      
+      </PopoverWrapper>
       <div css={[shame__label, shame__label__long]}>
         <Text ellipsize={true}>{egate.label}</Text>
       </div>
@@ -240,14 +251,17 @@ export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
   const scevent = data as EditorSignalEvent;
   const callback = data as NodeCallBack;
   const SD = callback.ComponentShortDescription;
-  const color = 'none';
+  const color =
+    callback.getSVGColorById !== undefined
+      ? callback.getSVGColorById(data.id)
+      : 'none';
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
       <PopoverWrapper id={scevent.id} SD={SD}>
         <SignalCatchShape color={color} />
-      </PopoverWrapper>          
+      </PopoverWrapper>
       <div css={[shame__label, shame__label__long]}>{scevent.id}</div>
     </>
   );

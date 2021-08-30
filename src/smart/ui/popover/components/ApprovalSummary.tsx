@@ -1,9 +1,9 @@
-import React from "react";
-import { EditorApproval } from "../../../model/editormodel";
-import { DescriptionItem } from "../../common/description/fields";
+import React from 'react';
+import { EditorApproval } from '../../../model/editormodel';
+import { DescriptionItem } from '../../common/description/fields';
 
-const ApprovalSummary:React.FC<{
-  approval: EditorApproval;  
+const ApprovalSummary: React.FC<{
+  approval: EditorApproval;
 }> = function ({ approval }) {
   return (
     <>
@@ -11,6 +11,6 @@ const ApprovalSummary:React.FC<{
       <DescriptionItem label="Name" value={approval.name} />
     </>
   );
-}
+};
 
 export default ApprovalSummary;

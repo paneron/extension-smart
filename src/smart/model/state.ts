@@ -46,6 +46,11 @@ export interface MMELtoFlowEntry {
   component: React.FC<NodeProps>;
 }
 
+export interface LegendInterface {
+  label: string;
+  color: string;
+}
+
 export const MMELtoFlowEntries: Record<string, MMELtoFlowEntry> = {
   [DataType.STARTEVENT]: { flowName: 'start', component: StartComponent },
   [DataType.ENDEVENT]: { flowName: 'end', component: EndComponent },

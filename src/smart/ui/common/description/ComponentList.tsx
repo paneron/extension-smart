@@ -1,9 +1,12 @@
-import React from "react";
-import { EditorRegistry } from "../../../model/editormodel";
-import { MMELDataAttribute } from "../../../serialize/interface/datainterface";
-import { MMELProvision, MMELReference } from "../../../serialize/interface/supportinterface";
-import { toRefSummary } from "../../../utils/ModelFunctions";
-import { DescribeAttribute, DescribeProvision } from "./ComponentDescription";
+import React from 'react';
+import { EditorRegistry } from '../../../model/editormodel';
+import { MMELDataAttribute } from '../../../serialize/interface/datainterface';
+import {
+  MMELProvision,
+  MMELReference,
+} from '../../../serialize/interface/supportinterface';
+import { toRefSummary } from '../../../utils/ModelFunctions';
+import { DescribeAttribute, DescribeProvision } from './ComponentDescription';
 
 export const ApprovalRecordList: React.FC<{
   regs: EditorRegistry[];
@@ -77,7 +80,7 @@ export const AttributeList: React.FC<{
   );
 };
 
-export const ProvisionList: React.FC<{  
+export const ProvisionList: React.FC<{
   provisions: Set<string>;
   getProvisionById: (id: string) => MMELProvision | null;
   getRefById?: (id: string) => MMELReference | null;
@@ -97,7 +100,7 @@ export const ProvisionList: React.FC<{
           <ul>
             {pros.map((provision: MMELProvision) => (
               <li key={provision.id}>
-                <DescribeProvision                  
+                <DescribeProvision
                   provision={provision}
                   getRefById={getRefById}
                 />

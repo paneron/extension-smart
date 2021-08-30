@@ -93,7 +93,7 @@ export function referenceSorter(a: MMELReference, b: MMELReference): number {
   return a.document.localeCompare(b.document);
 }
 
-export function checkId(id: string, ids: Record<string, any>): boolean {
+export function checkId(id: string, ids: Record<string, unknown>): boolean {
   if (id === '') {
     alert('New ID is empty');
     return false;
