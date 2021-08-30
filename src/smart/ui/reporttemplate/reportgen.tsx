@@ -5,6 +5,7 @@ import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { NormalTextField } from '../common/fields';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
+import { FILE_TYPE, saveToFileSystem } from '../../utils/IOFunctions';
 
 const ReportGen: React.FC<{
   report: string;
@@ -12,21 +13,13 @@ const ReportGen: React.FC<{
 }> = function ({ report, onClose }) {
   const { getBlob, writeFileToFilesystem } = useContext(DatasetContext);
 
-  function handleSave() {
-    return async () => {
-      if (getBlob && writeFileToFilesystem) {
-        const blob = await getBlob(report);
-        await writeFileToFilesystem({
-          dialogOpts: {
-            prompt: 'Choose location to save',
-            filters: [{ name: 'All files', extensions: ['*'] }],
-          },
-          bufferData: blob,
-        });
-      } else {
-        throw new Error('File export function(s) are not provided');
-      }
-    };
+  async function handleSave() {
+    await saveToFileSystem({
+      getBlob, 
+      writeFileToFilesystem, 
+      fileData: report, 
+      type: FILE_TYPE.Report
+    });
   }
 
   return (
@@ -37,7 +30,7 @@ const ReportGen: React.FC<{
           <MGDButton
             key="ui#report#save"
             icon="floppy-disk"
-            onClick={handleSave()}
+            onClick={handleSave}
           >
             Save
           </MGDButton>

@@ -32,7 +32,6 @@ import {
   MapperViewOption,
   NodeTypes,
 } from '../../model/state';
-import { handleModelOpen } from '../menu/file';
 import ComponentSummary from '../popover/ComponentSummary';
 import {
   buildHistoryMap,
@@ -49,6 +48,7 @@ import {
 } from '../../utils/MappingCalculator';
 import LegendPane from '../common/description/LegendPane';
 import MappingPartyList from './mappartylist';
+import { handleModelOpen } from '../../utils/IOFunctions';
 
 const ModelDiagram: React.FC<{
   className?: string;
@@ -93,7 +93,7 @@ const ModelDiagram: React.FC<{
     params.fitView();
   }
 
-  function setNewModelWrapper(mw: ModelWrapper) {
+  function setModelWrapper(mw: ModelWrapper) {
     setProps({
       ...modelProps,
       history: createPageHistory(mw),
@@ -149,7 +149,7 @@ const ModelDiagram: React.FC<{
       <MGDButton
         onClick={() => {
           handleModelOpen({
-            setNewModelWrapper,
+            setModelWrapper,
             useDecodedBlob,
             requestFileFromFilesystem,
             logger,

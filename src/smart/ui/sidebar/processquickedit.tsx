@@ -3,7 +3,7 @@
 
 import { jsx } from '@emotion/react';
 import React from 'react';
-import { EditorProcess, ModelType } from '../../model/editormodel';
+import { EditorProcess } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
   MMELProvision,
@@ -29,11 +29,11 @@ import { ProvisionList } from '../common/description/ComponentList';
 export const ProcessQuickEdit: React.FC<
   NodeCallBack & {
     process: EditorProcess;
-    onSubprocessClick: (pid: string) => void;
+    onSubprocessClick?: (pid: string) => void;
     getRoleById: (id: string) => MMELRole | null;
     getRefById: (id: string) => MMELReference | null;
     getProvisionById: (id: string) => MMELProvision | null;
-    setDialog: (
+    setDialog?: (
       nodeType: EditableNodeTypes | DeletableNodeTypes,
       action: EditAction,
       id: string
@@ -50,7 +50,7 @@ export const ProcessQuickEdit: React.FC<
 }) => {
   return (
     <>
-      {modelType === ModelType.EDIT && (
+      {setDialog !== undefined && onSubprocessClick !== undefined && (        
         <MGDButtonGroup>
           <EditButton
             onClick={() =>

@@ -15,6 +15,7 @@ import {
   TimerComponent,
 } from '../ui/flowui/nodeUI';
 import { ModelType } from './editormodel';
+import { SMARTWorkspace } from './workspace';
 
 export interface EditorState {
   dvisible: boolean; // visibility of data nodes
@@ -34,6 +35,13 @@ export interface MapperState {
   modelWrapper: ModelWrapper;
   modelType: ModelType;
   historyMap: Record<string, PageHistory>;
+}
+
+export interface ActionState {
+  dvisible: boolean; // visibility of data nodes  
+  history: PageHistory;
+  modelWrapper: ModelWrapper;
+  workspace: SMARTWorkspace;
 }
 
 export interface MapperSelectedInterface {

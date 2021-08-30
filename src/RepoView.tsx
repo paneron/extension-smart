@@ -16,6 +16,7 @@ import ModelEditor from './smart/ui/maineditor';
 import ModelMapper from './smart/ui/mainmapper';
 import { BSI_WHITE_TEXT } from './css/BSI.logos';
 import ModelViewer from './smart/ui/mainviewer';
+import ModelWorkspace from './smart/ui/modelAction';
 
 const RepositoryView: React.FC<Record<never, never>> = function () {
   const [selectedModule, selectModule] = useState<ModuleName>('modelViewer');
@@ -93,7 +94,7 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
 
 export default RepositoryView;
 
-const MODULES = ['modelViewer', 'modelEditor', 'modelMapper'] as const;
+const MODULES = ['modelViewer', 'modelEditor', 'modelMapper', 'modelImplement'] as const;
 
 type ModuleName = typeof MODULES[number];
 
@@ -127,6 +128,13 @@ const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {
     icon: 'data-lineage',
     view: ModelMapper,
   },
+  modelImplement: {
+    title: <>Implementation</>,
+    description: <>Model implementation</>,
+    tooltip: 'Model implementation',
+    icon: 'unarchive',
+    view: ModelWorkspace,
+  }
 };
 
 const ModuleButton: React.FC<{

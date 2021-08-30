@@ -8,10 +8,10 @@ import ReactFlow, {
   Controls,
   OnLoadParams,
   ReactFlowProvider,
-  isNode,
+  isNode,  
 } from 'react-flow-renderer';
 
-import { ControlGroup, Dialog } from '@blueprintjs/core';
+import { ControlGroup } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
@@ -20,7 +20,7 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
 import {
   createEditorModelWrapper,
-  getReactFlowElementsFrom,
+  getActionReactFlowElementsFrom,  
   ModelWrapper,
 } from '../model/modelwrapper';
 import {
@@ -34,48 +34,37 @@ import {
   createNewEditorModel,
   createSubprocessComponent,
 } from '../utils/EditorFactory';
-import { EdgeTypes, EditorState, NodeTypes } from '../model/state';
+import { ActionState, EdgeTypes, NodeTypes } from '../model/state';
 import {
-  EditorModel,
-  EditorProcess,
   isEditorData,
   isEditorNode,
 } from '../model/editormodel';
-import EditorFileMenu from './menu/EditorFileMenu';
 import { SelectedNodeDescription } from './sidebar/selected';
-import {
-  DiagPackage,
-  DiagTypes,
-  IDiagAction,
-  MyDiag,
-  SetDiagAction,
-} from './dialog/dialogs';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-} from '../utils/constants';
-import { createNewPage } from '../utils/ModelAddComponentHandler';
+import { DataVisibilityButton } from './control/buttons';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
-import {
-  dialog_layout,
-  dialog_layout__full,
+import {  
   react_flow_container_layout,
   sidebar_layout,
 } from '../../css/layout';
-import { DataVisibilityButton } from './control/buttons';
 import SearchComponentPane from './sidebar/search';
-import { getHighlightedStyleById, getHighlightedSVGColorById } from '../utils/SearchFunctions';
+import LegendPane from './common/description/LegendPane';
+import {
+  getHighlightedStyleById,
+  getHighlightedSVGColorById,
+  SearchResultStyles,
+} from '../utils/SearchFunctions';
+import { createNewSMARTWorkspace, SMARTWorkspace } from '../model/workspace';
+import WorkspaceFileMenu from './menu/WorkspaceFileMenu';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
 
-const ModelViewer: React.FC<{
+const ModelWorkspace: React.FC<{
   isVisible: boolean;
   className?: string;
 }> = ({ isVisible, className }) => {
-  const { logger } = useContext(DatasetContext);
+  const { logger } = useContext(DatasetContext);  
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
@@ -84,18 +73,14 @@ const ModelViewer: React.FC<{
     []
   );
 
-  const [state, setState] = useState<EditorState>({
+  const [state, setState] = useState<ActionState>({
     dvisible: true,
     modelWrapper: initModelWrapper,
     history: createPageHistory(initModelWrapper),
-    edgeDeleteVisible: false,
+    workspace: createNewSMARTWorkspace(),
   });
   const [rfInstance, setRfInstance] = useState<OnLoadParams | null>(null);
-  const [dialogPack, setDialogPack] = useState<DiagPackage>({
-    type: null,
-    callback: () => {},
-    msg: '',
-  });
+
   const [selected, setSelected] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<Set<string>>(
     new Set<string>()
@@ -105,36 +90,6 @@ const ModelViewer: React.FC<{
     logger?.log('flow loaded');
     setRfInstance(params);
     params.fitView();
-  }
-
-  function setDialogType(x: DiagTypes | null) {
-    setDialogPack({ ...dialogPack, type: x });
-  }
-
-  function setModelAfterDelete(model: EditorModel) {
-    setState({
-      ...state,
-      modelWrapper: { ...state.modelWrapper, model: model },
-    });
-    setDialogType(null);
-  }
-
-  function setDiag(
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) {
-    const props: IDiagAction = {
-      nodeType: nodeType,
-      model: state.modelWrapper.model,
-      page: state.modelWrapper.page,
-      id: id,
-      setModelAfterDelete: (model: EditorModel) => {
-        setModelAfterDelete(model);
-      },
-    };
-    saveLayout();
-    setDialogPack(SetDiagAction[action](props));
   }
 
   function saveLayout() {
@@ -172,14 +127,14 @@ const ModelViewer: React.FC<{
       saveLayout();
     }
     setState({ ...state, dvisible: !state.dvisible });
-  }
-
-  function setNewModelWrapper(mw: ModelWrapper) {
-    setState({ ...state, history: createPageHistory(mw), modelWrapper: mw });
-  }
+  }  
 
   function setModelWrapper(mw: ModelWrapper) {
-    setState({ ...state, modelWrapper: mw });
+    setState({ ...state, history: createPageHistory(mw), modelWrapper: mw });
+  }  
+
+  function setWorkspace(ws: SMARTWorkspace) {
+    setState({ ...state, workspace: ws});
   }
 
   function onPageChange(updated: PageHistory, newPage: string) {
@@ -196,16 +151,6 @@ const ModelViewer: React.FC<{
     logger?.log('Go to page', pageid);
     addToHistory(state.history, mw.page, processid);
     setState({ ...state });
-  }
-
-  function onSubprocessClick(pid: string): void {
-    const model = { ...state.modelWrapper.model };
-    const process = model.elements[pid] as EditorProcess;
-    process.page = createNewPage(model);
-    setState({
-      ...state,
-      modelWrapper: { ...state.modelWrapper, model: model },
-    });
   }
 
   function drillUp(): void {
@@ -248,14 +193,14 @@ const ModelViewer: React.FC<{
         minimal
         placement="bottom-start"
         content={
-          <EditorFileMenu
-            setModelWrapper={setNewModelWrapper}
-            getLatestLayout={saveLayout}
-            setDialogType={setDialogType}
+          <WorkspaceFileMenu
+            workspace={state.workspace}
+            setModelWrapper={setModelWrapper}
+            setWorkspace={setWorkspace}
           />
         }
       >
-        <MGDButton>Model</MGDButton>
+        <MGDButton>Workspace</MGDButton>
       </Popover2>
       <MGDButton
         type={MGDButtonType.Primary}
@@ -281,12 +226,10 @@ const ModelViewer: React.FC<{
           content: (
             <SelectedNodeDescription
               model={state.modelWrapper.model}
-              pageid={state.modelWrapper.page}
-              setDialog={setDiag}
-              onSubprocessClick={onSubprocessClick}
+              pageid={state.modelWrapper.page}              
             />
           ),
-        },
+        },       
         {
           key: 'search-node',
           title: 'Search components',
@@ -302,32 +245,9 @@ const ModelViewer: React.FC<{
     />
   );
 
-  if (isVisible) {
-    const diagProps = dialogPack.type === null ? null : MyDiag[dialogPack.type];
+  if (isVisible) {    
     return (
-      <ReactFlowProvider>
-        {diagProps !== null && (
-          <Dialog
-            isOpen={dialogPack !== null}
-            title={diagProps.title}
-            css={
-              diagProps.fullscreen ? [dialog_layout, dialog_layout__full] : ''
-            }
-            onClose={() => setDialogType(null)}
-            canEscapeKeyClose={false}
-            canOutsideClickClose={false}
-          >
-            <diagProps.Panel
-              modelwrapper={state.modelWrapper}
-              setModelWrapper={setModelWrapper}
-              callback={dialogPack.callback}
-              cancel={() => {
-                setDialogType(null);
-              }}
-              msg={dialogPack.msg}
-            />
-          </Dialog>
-        )}
+      <ReactFlowProvider>        
         <Workspace
           className={className}
           toolbar={toolbar}
@@ -337,21 +257,19 @@ const ModelViewer: React.FC<{
           <div css={react_flow_container_layout}>
             <ReactFlow
               key="MMELModel"
-              elements={getReactFlowElementsFrom(
+              elements={getActionReactFlowElementsFrom(
                 state.modelWrapper,
-                state.dvisible,
-                state.edgeDeleteVisible,
-                onProcessClick,
-                () => {},
+                state.dvisible,                
+                onProcessClick,                
                 getStyleById,
                 getSVGColorById
               )}
-              onLoad={onLoad}
+              onLoad={onLoad}                            
               nodesConnectable={false}
               snapToGrid={true}
               snapGrid={[10, 10]}
               nodeTypes={NodeTypes}
-              edgeTypes={EdgeTypes}
+              edgeTypes={EdgeTypes}              
             >
               <Controls>
                 <DataVisibilityButton
@@ -360,6 +278,9 @@ const ModelViewer: React.FC<{
                 />
               </Controls>
             </ReactFlow>
+            {searchResult.size > 0 && (
+              <LegendPane list={SearchResultStyles} onLeft={false} />
+            )}
           </div>
         </Workspace>
       </ReactFlowProvider>
@@ -368,4 +289,4 @@ const ModelViewer: React.FC<{
   return <div></div>;
 };
 
-export default ModelViewer;
+export default ModelWorkspace;

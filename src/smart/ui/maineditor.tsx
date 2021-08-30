@@ -43,7 +43,7 @@ import {
   isEditorData,
   isEditorNode,
 } from '../model/editormodel';
-import FileMenu from './menu/file';
+import EditorFileMenu from './menu/EditorFileMenu';
 import { SelectedNodeDescription } from './sidebar/selected';
 import {
   DiagPackage,
@@ -315,14 +315,14 @@ const ModelEditor: React.FC<{
         minimal
         placement="bottom-start"
         content={
-          <FileMenu
-            setNewModelWrapper={setNewModelWrapper}
+          <EditorFileMenu
+            setModelWrapper={setNewModelWrapper}
             getLatestLayout={saveLayout}
             setDialogType={setDialogType}
           />
         }
       >
-        <MGDButton>Workspace</MGDButton>
+        <MGDButton>Model</MGDButton>
       </Popover2>
       <MGDButton
         type={MGDButtonType.Primary}

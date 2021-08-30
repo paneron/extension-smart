@@ -11,8 +11,7 @@ import {
   EditorEndEvent,
   EditorRegistry,
   EditorSignalEvent,
-  EditorTimerEvent,
-  ModelType,
+  EditorTimerEvent,  
 } from '../../../model/editormodel';
 import { DataType } from '../../../serialize/interface/baseinterface';
 import { MMELDataAttribute } from '../../../serialize/interface/datainterface';
@@ -45,7 +44,7 @@ export const DescribeStart: React.FC = function () {
 
 export const DescribeEnd: React.FC<{
   end: EditorEndEvent & NodeCallBack;
-  setDialog: (
+  setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
     id: string
@@ -53,7 +52,7 @@ export const DescribeEnd: React.FC<{
 }> = function ({ end, setDialog }): JSX.Element {
   return (
     <>
-      {end.modelType === ModelType.EDIT && (
+      {setDialog !== undefined && (
         <RemoveButton
           onClick={() =>
             setDialog(DataType.ENDEVENT, EditAction.DELETE, end.id)
@@ -70,7 +69,7 @@ export const DescribeApproval: React.FC<{
   getRoleById: (id: string) => MMELRole | null;
   getRefById: (id: string) => MMELReference | null;
   getRegistryById: (id: string) => EditorRegistry | null;
-  setDialog: (
+  setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
     id: string
@@ -85,7 +84,7 @@ export const DescribeApproval: React.FC<{
   });
   return (
     <>
-      {app.modelType === ModelType.EDIT && (
+      {setDialog !== undefined && (
         <MGDButtonGroup>
           <EditButton
             onClick={() =>
@@ -112,7 +111,7 @@ export const DescribeApproval: React.FC<{
 
 export const DescribeEGate: React.FC<{
   egate: EditorEGate & NodeCallBack;
-  setDialog: (
+  setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
     id: string
@@ -120,7 +119,7 @@ export const DescribeEGate: React.FC<{
 }> = function ({ egate, setDialog }) {
   return (
     <>
-      {egate.modelType === ModelType.EDIT && (
+      {setDialog !== undefined && (
         <MGDButtonGroup>
           <EditButton
             onClick={() => setDialog(DataType.EGATE, EditAction.EDIT, egate.id)}
@@ -140,7 +139,7 @@ export const DescribeEGate: React.FC<{
 
 export const DescribeSignalCatch: React.FC<{
   scEvent: EditorSignalEvent & NodeCallBack;
-  setDialog: (
+  setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
     id: string
@@ -148,7 +147,7 @@ export const DescribeSignalCatch: React.FC<{
 }> = function ({ scEvent, setDialog }) {
   return (
     <>
-      {scEvent.modelType === ModelType.EDIT && (
+      {setDialog !== undefined && (
         <MGDButtonGroup>
           <EditButton
             onClick={() =>
@@ -174,7 +173,7 @@ export const DescribeSignalCatch: React.FC<{
 
 export const DescribeTimer: React.FC<{
   timer: EditorTimerEvent & NodeCallBack;
-  setDialog: (
+  setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
     id: string
@@ -182,7 +181,7 @@ export const DescribeTimer: React.FC<{
 }> = function ({ timer, setDialog }) {
   return (
     <>
-      {timer.modelType === ModelType.EDIT && (
+      {setDialog !== undefined && (
         <MGDButtonGroup>
           <EditButton
             onClick={() =>

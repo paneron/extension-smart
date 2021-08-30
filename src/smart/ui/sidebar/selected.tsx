@@ -57,9 +57,7 @@ export const SelectedNodeDescription: React.FC<{
 }> = function ({
   model,
   setDialog,
-  onSubprocessClick = () => {
-    alert('Not implemented');
-  },
+  onSubprocessClick,
   pageid,
 }) {
   const selected = useStoreState(store => store.selectedElements);
@@ -116,7 +114,7 @@ const NODE_DETAIL_VIEWS: Record<
       action: EditAction,
       id: string
     ) => void;
-    onSubprocessClick: (pid: string) => void;
+    onSubprocessClick?: (pid: string) => void;
   }>
 > = {
   [DataType.DATACLASS]: ({ node, getRefById }) =>
@@ -136,29 +134,20 @@ const NODE_DETAIL_VIEWS: Record<
       <></>
     ),
   [DataType.STARTEVENT]: () => <DescribeStart />,
-  [DataType.ENDEVENT]: ({
-    node,
-    setDialog = () => alert('Not implemeted'),
-  }) => <DescribeEnd end={node} setDialog={setDialog} />,
-  [DataType.TIMEREVENT]: ({
-    node,
-    setDialog = () => alert('Not implemeted'),
-  }) =>
+  [DataType.ENDEVENT]: ({ node, setDialog }) => <DescribeEnd end={node} setDialog={setDialog} />,
+  [DataType.TIMEREVENT]: ({ node, setDialog }) =>
     isEditorTimerEvent(node) ? (
       <DescribeTimer timer={node} setDialog={setDialog} />
     ) : (
       <></>
     ),
-  [DataType.SIGNALCATCHEVENT]: ({
-    node,
-    setDialog = () => alert('Not implemeted'),
-  }) =>
+  [DataType.SIGNALCATCHEVENT]: ({ node, setDialog }) =>
     isEditorSignalEvent(node) ? (
       <DescribeSignalCatch scEvent={node} setDialog={setDialog} />
     ) : (
       <></>
     ),
-  [DataType.EGATE]: ({ node, setDialog = () => alert('Not implemeted') }) =>
+  [DataType.EGATE]: ({ node, setDialog }) =>
     isEditorEgate(node) ? (
       <DescribeEGate egate={node} setDialog={setDialog} />
     ) : (
@@ -168,7 +157,7 @@ const NODE_DETAIL_VIEWS: Record<
     node,
     getRefById,
     getRegistryById,
-    setDialog = () => alert('Not implemeted'),
+    setDialog,
   }) =>
     isEditorApproval(node) ? (
       <DescribeApproval
@@ -185,7 +174,7 @@ const NODE_DETAIL_VIEWS: Record<
     node,
     getProvisionById,
     getRefById,
-    setDialog = () => alert('Not implemeted'),
+    setDialog,
     onSubprocessClick,
   }) =>
     isEditorProcess(node) ? (
@@ -210,7 +199,7 @@ export const Describe: React.FC<{
     action: EditAction,
     id: string
   ) => void;
-  onSubprocessClick: (pid: string) => void;
+  onSubprocessClick?: (pid: string) => void;
 }> = function ({ node, model, setDialog, onSubprocessClick }) {
   function getRefById(id: string): MMELReference | null {
     return getEditorRefById(model, id);

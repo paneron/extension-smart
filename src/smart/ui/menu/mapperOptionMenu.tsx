@@ -3,7 +3,7 @@
 
 import { jsx } from '@emotion/react';
 import React from 'react';
-import { Menu, MenuItem } from '@blueprintjs/core';
+import { IconName, Menu, MenuItem } from '@blueprintjs/core';
 import { MapperViewOption } from '../../model/state';
 
 const MapperOptionMenu: React.FC<{
@@ -23,15 +23,19 @@ const MapperOptionMenu: React.FC<{
       <MenuItem
         text="Show data"
         onClick={onDataVisibilityChanged}
-        icon={viewOption.dataVisible ? 'tick' : 'blank'}
+        icon={getVisibilityIconName(viewOption.dataVisible)}
       />
       <MenuItem
         text="Show legends"
         onClick={onLegendVisibilityChanged}
-        icon={viewOption.legVisible ? 'tick' : 'blank'}
+        icon={getVisibilityIconName(viewOption.legVisible)}
       />
     </Menu>
   );
 };
+
+function getVisibilityIconName(isVisible: boolean):IconName {
+  return isVisible?'tick' : 'blank';
+}
 
 export default MapperOptionMenu;
