@@ -1,13 +1,13 @@
 import { css } from '@emotion/react';
 import { CSSROOTVARIABLES } from './root.css';
 
-export const view_subprocess_button_layout = css`
+export const flownode_top_left_button_layout = css`
   position: fixed;
   right: -10px;
   top: -10px;
 `;
 
-export const view_mapping_button_layout = css`
+export const flownode_top_right_button_layout = css`
   position: fixed;
   left: -10px;
   top: -10px;

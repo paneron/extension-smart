@@ -26,6 +26,7 @@ import {
 import ListWithPopoverItem, {
   IObject,
 } from '../common/listmanagement/listPopoverItem';
+import { CardinalityField } from './components/CardinalityEdit';
 
 const AttributeEditPage: React.FC<{
   attributes: Record<string, MMELDataAttribute>;
@@ -65,7 +66,7 @@ const AttributeItem: React.FC<{
   const types: string[] = [...DATATYPE];
   for (const x in model!.elements) {
     const elm = model!.elements[x];
-    if (isEditorRegistry(elm)) {      
+    if (isEditorRegistry(elm)) {
       types.push(getReferenceDCTypeName(elm.id));
     } else if (isEditorDataClass(elm) && elm.mother === '') {
       types.push(elm.id);
@@ -85,7 +86,6 @@ const AttributeItem: React.FC<{
     <MGDDisplayPane>
       <FormGroup>
         <NormalTextField
-          key="field#attributeid"
           text="Attribute ID"
           value={att.id}
           onChange={(x: string) => {
@@ -94,7 +94,6 @@ const AttributeItem: React.FC<{
           }}
         />
         <NormalTextField
-          key="field#attributedefinition"
           text="Attribute Definition"
           value={att.definition}
           onChange={(x: string) => {
@@ -102,9 +101,7 @@ const AttributeItem: React.FC<{
             setObject({ ...att });
           }}
         />
-        <NormalTextField
-          key="field#attributeCardinality"
-          text="Attribute Cardinality"
+        <CardinalityField
           value={att.cardinality}
           onChange={x => {
             att.cardinality = x;
@@ -112,7 +109,6 @@ const AttributeItem: React.FC<{
           }}
         />
         <NormalComboBox
-          key="field#attributeModality"
           text="Attribute Modality"
           value={att.modality}
           options={MODAILITYOPTIONS}
@@ -122,7 +118,6 @@ const AttributeItem: React.FC<{
           }}
         />
         <ReferenceSelector
-          key="field#attributeType"
           text="Attribute Type"
           filterName="Type filter"
           value={att.type}
@@ -133,7 +128,6 @@ const AttributeItem: React.FC<{
           }}
         />
         <MultiReferenceSelector
-          key="field#attributeReference"
           text="Reference"
           options={refs}
           values={att.ref}

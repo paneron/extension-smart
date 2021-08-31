@@ -26,7 +26,6 @@ import { LegendInterface } from '../model/state';
 import { DataType } from '../serialize/interface/baseinterface';
 import { isRegistry } from '../serialize/util/validation';
 import { SearchableNodeTypes } from './constants';
-import { Logger } from './ModelFunctions';
 import { isSearchableNodeTypes } from './typecheckings';
 
 type SearchResultType = 'Process' | 'Approval' | 'Data' | 'Event' | 'Gateway';
@@ -328,7 +327,6 @@ export function getHighlightedSVGColorById(
   selected: string | null,
   set: Set<string>
 ): string {
-  Logger.logger.log(id, selected, set.size, set);
   if (id === selected) {
     return SearchResultStyles.selected.color;
   } else if (set.has(id)) {

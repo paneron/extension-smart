@@ -19,7 +19,7 @@ const RegistryDocManagement: React.FC<{
   store: SMARTDocumentStore;
   regid: string;
   setStore: (s: SMARTDocumentStore) => void;
-  onBack: () => void;
+  onBack?: () => void;
   workspace: Record<string, SMARTDocumentStore>;
 }> = function ({ model, store, regid, setStore, onBack, workspace }) {
   const initObj: DocumentEditInterface = {
@@ -68,15 +68,18 @@ const RegistryDocManagement: React.FC<{
     return { ...store.docs[id], regid } ?? { ...initObj };
   }
 
-  const backButton: IAdditionalListButton = {
-    text: 'Back',
-    icon: 'arrow-left',
-    requireSelected: false,
-    onClick: onBack,
-  };
+  const backButton: IAdditionalListButton | undefined =
+    onBack === undefined
+      ? undefined
+      : {
+          text: 'Back',
+          icon: 'arrow-left',
+          requireSelected: false,
+          onClick: onBack,
+        };
 
-  const CallbackDocumentEdit:React.FC<{
-    object: Object;    
+  const CallbackDocumentEdit: React.FC<{
+    object: Object;
     setObject: (obj: Object) => void;
   }> = function ({ object, setObject }) {
     return (
@@ -87,7 +90,7 @@ const RegistryDocManagement: React.FC<{
         workspace={workspace}
       />
     );
-  }
+  };
 
   const reghandler: IManageHandler = {
     filterName: 'Document filter',
@@ -101,7 +104,7 @@ const RegistryDocManagement: React.FC<{
     updateItem: (oldid, obj) =>
       updateDoc(oldid, cleanDocument(obj as DocumentEditInterface)),
     getObjById: getDocById,
-    buttons: [backButton],
+    buttons: backButton === undefined ? undefined : [backButton],
   };
 
   return <ListManagePage {...reghandler} />;

@@ -6,7 +6,10 @@ import React from 'react';
 import { EditorDataClass, EditorModel } from '../../model/editormodel';
 import { SMARTDocumentStore } from '../../model/workspace';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
-import { getModelAllRolesWithEmpty, getRegistryReference } from '../../utils/ModelFunctions';
+import {
+  getModelAllRolesWithEmpty,
+  getRegistryReference,
+} from '../../utils/ModelFunctions';
 import { isBasicType, isDCClass, isEnum } from '../../utils/typecheckings';
 import { NormalTextField } from '../common/fields';
 import BasicTypeAttribute from './BasicTypeAttribute';
@@ -25,13 +28,13 @@ const DCDocumentAttributes: React.FC<{
   const roles = getModelAllRolesWithEmpty(model);
   return (
     <>
-      {isRoot && 
+      {isRoot && (
         <NormalTextField
           text="Document name"
           value={doc.name}
           onChange={x => setDoc({ ...doc, name: x })}
         />
-      }
+      )}
       {Object.values(dc.attributes).map(a => (
         <DocumentAttribute
           attribute={a}
@@ -86,22 +89,25 @@ const DocumentAttribute: React.FC<{
     return (
       <fieldset>
         <legend>{attribute.definition}</legend>
-          <DCDocumentAttributes
-            dc={dc}
-            model={model}
-            doc={doc}
-            setDoc={setDoc}
-            isRoot={false}
-            workspace={workspace}
-          />
+        <DCDocumentAttributes
+          dc={dc}
+          model={model}
+          doc={doc}
+          setDoc={setDoc}
+          isRoot={false}
+          workspace={workspace}
+        />
       </fieldset>
     );
-  }  
+  }
   const reg = getRegistryReference(type, model.elements);
   if (reg !== null) {
-    const regstore:SMARTDocumentStore = workspace[reg.id]??{id:reg.id, docs:{}};
+    const regstore: SMARTDocumentStore = workspace[reg.id] ?? {
+      id: reg.id,
+      docs: {},
+    };
     return (
-      <ReferenceAttributes        
+      <ReferenceAttributes
         value={value}
         title={attribute.definition}
         onChange={onChange}
@@ -109,7 +115,7 @@ const DocumentAttribute: React.FC<{
         regtitle={reg.title}
       />
     );
-  }  
+  }
   // unknown type (maybe the model has changed), ignore this attribute
   return <></>;
 };

@@ -203,7 +203,8 @@ export function getActionReactFlowElementsFrom(
   dvisible: boolean,
   onProcessClick: (pageid: string, processid: string) => void,
   getStyleById: (id: string) => SerializedStyles,
-  getSVGColorById: (id: string) => string
+  getSVGColorById: (id: string) => string,
+  onDataWorkspaceActive: (id: string) => void
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
@@ -211,6 +212,7 @@ export function getActionReactFlowElementsFrom(
     onProcessClick,
     getStyleClassById: getStyleById,
     getSVGColorById,
+    onDataWorkspaceActive,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }

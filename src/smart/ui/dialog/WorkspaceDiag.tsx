@@ -13,6 +13,7 @@ import WorkspaceRegistryList from '../workspace/RegistryList';
 
 export interface WorkspaceDiagPackage {
   regid: string;
+  isFromReactNode: boolean;
 }
 
 export const WorkspaceDialog: React.FC<{
@@ -49,7 +50,7 @@ export const WorkspaceDialog: React.FC<{
           modelStore.store[regid] = s;
           setModelStore({ ...modelStore });
         }}
-        onBack={() => setRegistry('')}
+        onBack={diagProps.isFromReactNode ? undefined : () => setRegistry('')}
         workspace={modelStore.store}
       />
     );

@@ -3,8 +3,8 @@ import {
   EditorModel,
   EditorNode,
   EditorRegistry,
-  EditorSubprocess,  
-  isEditorDataClass,  
+  EditorSubprocess,
+  isEditorDataClass,
   isEditorRegistry,
 } from '../model/editormodel';
 import { MMELObject } from '../serialize/interface/baseinterface';
@@ -58,8 +58,11 @@ export function getRegistryReference(
     return null;
   }
   const head = type.substr(0, TypeReferenceHead.length);
-  const content = type.substring(TypeReferenceHead.length, type.length-TypeReferenceTail.length);
-  const tail = type.substr(type.length-TypeReferenceTail.length);  
+  const content = type.substring(
+    TypeReferenceHead.length,
+    type.length - TypeReferenceTail.length
+  );
+  const tail = type.substr(type.length - TypeReferenceTail.length);
   if (head === TypeReferenceHead && tail === TypeReferenceTail) {
     const reg = elements[content];
     if (reg !== undefined && isEditorRegistry(reg)) {

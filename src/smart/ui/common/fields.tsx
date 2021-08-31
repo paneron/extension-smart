@@ -33,11 +33,12 @@ export interface IField {
 }
 
 export interface IComboField {
-  text: string;
+  text?: string;
   options: Array<string>;
   value: string;
   onChange: (x: string) => void;
   extend?: JSX.Element;
+  noContainer?: boolean;
 }
 
 export interface IMultiRefSelectField {
@@ -156,20 +157,26 @@ export const NormalComboBox: React.FC<IComboField> = function ({
   value,
   onChange,
   extend,
+  noContainer = false,
 }) {
-  return (
+  const content = (
+    <select
+      css={mgd_select}
+      value={value}
+      onChange={e => onChange(e.target.value)}
+    >
+      {options.map((x, index) => (
+        <option key={'option' + index} value={x}>
+          {x}
+        </option>
+      ))}
+    </select>
+  );
+  return noContainer ? (
+    content
+  ) : (
     <FormGroup label={text} helperText={extend}>
-      <select
-        css={mgd_select}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-      >
-        {options.map((x, index) => (
-          <option key={'option' + index} value={x}>
-            {x}
-          </option>
-        ))}
-      </select>
+      {content}
     </FormGroup>
   );
 };

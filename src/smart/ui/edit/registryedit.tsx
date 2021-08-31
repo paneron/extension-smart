@@ -18,7 +18,7 @@ import {
   defaultItemSorter,
   fillRDCS,
   genDCIdByRegId,
-  getReferenceDCTypeName,  
+  getReferenceDCTypeName,
   replaceSet,
 } from '../../utils/ModelFunctions';
 import { createDataClass, createRegistry } from '../../utils/EditorFactory';
@@ -115,7 +115,7 @@ const RegistryEditPage: React.FC<{
     const dcid = genDCIdByRegId(reg.id);
     if (checkId(reg.id, model.elements) && checkId(dcid, model.elements)) {
       const newreg = createRegistry(reg.id);
-      const newdc = getDCFromCombined(dcid, reg);              
+      const newdc = getDCFromCombined(dcid, reg);
       newreg.data = dcid;
       newreg.title = reg.title;
       model.elements[reg.id] = newreg;
@@ -140,7 +140,7 @@ const RegistryEditPage: React.FC<{
           newreg.data = dcid;
           newreg.title = reg.title;
           model.elements[reg.id] = newreg;
-          model.elements[dcid] = newdc;          
+          model.elements[dcid] = newdc;
           fillRDCS(newdc, model.elements);
           replaceReferences(oldid, old.data, reg.id, dcid);
           setModel(model);
@@ -227,8 +227,11 @@ const RegistryEditItemPage: React.FC<{
   );
 };
 
-function getDCFromCombined(dcid: string, reg: RegistryCombined): EditorDataClass {
-  return { 
+function getDCFromCombined(
+  dcid: string,
+  reg: RegistryCombined
+): EditorDataClass {
+  return {
     attributes: reg.attributes,
     id: dcid,
     datatype: DataType.DATACLASS,
@@ -236,8 +239,8 @@ function getDCFromCombined(dcid: string, reg: RegistryCombined): EditorDataClass
     pages: reg.pages,
     objectVersion: reg.objectVersion,
     rdcs: reg.rdcs,
-    mother: reg.id
-  }
+    mother: reg.id,
+  };
 }
 
 export default RegistryEditPage;

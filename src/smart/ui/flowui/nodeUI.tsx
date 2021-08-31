@@ -34,10 +34,10 @@ import {
   shame__label__short,
 } from '../../../css/shame';
 import { Text } from '@blueprintjs/core';
-import { view_subprocess_button_layout } from '../../../css/layout';
+import { flownode_top_left_button_layout } from '../../../css/layout';
 import PopoverWrapper from '../popover/PopoverWrapper';
 import ViewMappingbutton from '../mapper/viewmapbutton';
-import { Logger } from '../../utils/ModelFunctions';
+import ViewWorkspaceButton from '../workspace/ViewDataWorkspaceButton';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -48,10 +48,14 @@ export const Datacube: FC<NodeProps> = function ({ data }) {
     callback.getSVGColorById !== undefined
       ? callback.getSVGColorById(data.id)
       : 'none';
+  const onDataWorkspaceActive = callback.onDataWorkspaceActive;
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
+      {isEditorRegistry(node) && onDataWorkspaceActive !== undefined && (
+        <ViewWorkspaceButton onClick={() => onDataWorkspaceActive(node.id)} />
+      )}
       <PopoverWrapper id={node.id} SD={SD}>
         <DatacubeShape color={color} />
       </PopoverWrapper>
@@ -85,7 +89,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
       </PopoverWrapper>
       <Handle type="target" position={Position.Top} css={handlecss} />
       {process.page !== '' && (
-        <div css={view_subprocess_button_layout}>
+        <div css={flownode_top_left_button_layout}>
           <Tooltip2 content="View subprocess" position="top">
             <MGDButton
               key={process.id + '#subprocessbutton'}
@@ -211,7 +215,6 @@ export const TimerComponent: FC<NodeProps> = function ({ data }) {
       ? callback.getSVGColorById(data.id)
       : 'none';
   const SD = callback.ComponentShortDescription;
-  Logger.logger.log(data.id, color);
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />

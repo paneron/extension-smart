@@ -152,6 +152,13 @@ const ModelWorkspace: React.FC<{
     setSearchResult(set);
   }
 
+  function onDataWorkspaceActive(id: string) {
+    setDiagProps({
+      regid: id,
+      isFromReactNode: true,
+    });
+  }
+
   function setModelStore(doc: SMARTModelStore) {
     const workspace = { ...state.workspace };
     workspace.docs[namespace] = doc;
@@ -173,7 +180,14 @@ const ModelWorkspace: React.FC<{
       >
         <MGDButton>Workspace</MGDButton>
       </Popover2>
-      <MGDButton onClick={() => setDiagProps({ regid: '' })}>
+      <MGDButton
+        onClick={() =>
+          setDiagProps({
+            regid: '',
+            isFromReactNode: false,
+          })
+        }
+      >
         Data Registry
       </MGDButton>
       <MGDButton
@@ -229,7 +243,12 @@ const ModelWorkspace: React.FC<{
             modelStore={modelStore}
             setModelStore={setModelStore}
             model={model}
-            setRegistry={id => setDiagProps({ regid: id })}
+            setRegistry={id =>
+              setDiagProps({
+                regid: id,
+                isFromReactNode: false,
+              })
+            }
           />
         )}
         <Workspace
@@ -246,7 +265,8 @@ const ModelWorkspace: React.FC<{
                 state.dvisible,
                 onProcessClick,
                 getStyleById,
-                getSVGColorById
+                getSVGColorById,
+                onDataWorkspaceActive
               )}
               onLoad={onLoad}
               nodesConnectable={false}

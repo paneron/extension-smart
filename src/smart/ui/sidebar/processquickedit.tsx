@@ -41,7 +41,6 @@ export const ProcessQuickEdit: React.FC<
   }
 > = ({
   process,
-  modelType,
   getProvisionById,
   getRefById,
   getRoleById,

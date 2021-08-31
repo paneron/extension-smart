@@ -53,6 +53,7 @@ export interface NodeCallBack {
   hasMapping?: (id: string) => boolean;
   ComponentShortDescription?: React.FC<{ id: string }>;
   MappingList?: React.FC<{ id: string }>;
+  onDataWorkspaceActive?: (id: string) => void;
 }
 
 export interface NodeContainer {
@@ -132,6 +133,7 @@ export function getEditorNodeCallBack(props: {
   ComponentShortDescription?: React.FC<{ id: string }>;
   MappingList?: React.FC<{ id: string }>;
   getSVGColorById?: (id: string) => string;
+  onDataWorkspaceActive?: (id: string) => void;
 }): NodeCallBack {
   const {
     type,
@@ -144,6 +146,7 @@ export function getEditorNodeCallBack(props: {
     hasMapping,
     ComponentShortDescription,
     MappingList,
+    onDataWorkspaceActive,
   } = props;
 
   function getRoleById(id: string): MMELRole | null {
@@ -161,5 +164,6 @@ export function getEditorNodeCallBack(props: {
     hasMapping,
     ComponentShortDescription,
     MappingList,
+    onDataWorkspaceActive,
   };
 }

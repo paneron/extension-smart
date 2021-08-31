@@ -30,7 +30,10 @@ export function isEnum(type: string, enums: Record<string, MMELEnum>): boolean {
   return enums[type] !== undefined;
 }
 
-export function isDCClass(type: string, elements: Record<string, EditorNode>): boolean {
+export function isDCClass(
+  type: string,
+  elements: Record<string, EditorNode>
+): boolean {
   const elm = elements[type];
   return elm !== undefined && isEditorDataClass(elm);
 }

@@ -194,7 +194,7 @@ export const DescribeTimer: React.FC<{
             }
           />
         </MGDButtonGroup>
-      )}      
+      )}
       <DescriptionItem label="Timer Event" value={timer.id} />
       <NonEmptyFieldDescription label="Type" value={timer.modelType} />
       <NonEmptyFieldDescription label="Parameter" value={timer.para} />
