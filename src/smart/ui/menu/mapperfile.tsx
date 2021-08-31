@@ -6,7 +6,11 @@ import React, { useContext } from 'react';
 import { Menu, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { createMapProfile, MapProfile } from '../../model/mapmodel';
-import { FILE_TYPE, handleMappingOpen, saveToFileSystem } from '../../utils/IOFunctions';
+import {
+  FILE_TYPE,
+  handleMappingOpen,
+  saveToFileSystem,
+} from '../../utils/IOFunctions';
 
 const MapperFileMenu: React.FC<{
   mapProfile: MapProfile;
@@ -26,14 +30,14 @@ const MapperFileMenu: React.FC<{
     onMapProfileChanged(createMapProfile());
   }
 
-  async function handleSave() {    
+  async function handleSave() {
     const fileData = JSON.stringify(mapProfile);
-    
+
     await saveToFileSystem({
-      getBlob, 
-      writeFileToFilesystem, 
-      fileData, 
-      type: FILE_TYPE.Map
+      getBlob,
+      writeFileToFilesystem,
+      fileData,
+      type: FILE_TYPE.Map,
     });
   }
 
@@ -43,11 +47,13 @@ const MapperFileMenu: React.FC<{
       <MenuItem
         text="Open…"
         disabled={!canOpen}
-        onClick={() => handleMappingOpen({
-          onMapProfileChanged,
-          useDecodedBlob,
-          requestFileFromFilesystem
-        })}
+        onClick={() =>
+          handleMappingOpen({
+            onMapProfileChanged,
+            useDecodedBlob,
+            requestFileFromFilesystem,
+          })
+        }
         icon="document-open"
       />
       <MenuItem

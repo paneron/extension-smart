@@ -26,13 +26,17 @@ const REPORTSTARTTAGTEXT = 'SMARTScript';
 export const REPORTSTARTTAG = `<${REPORTSTARTTAGTEXT}>`;
 export const REPORTENDTAG = `</${REPORTSTARTTAGTEXT}>`;
 
-export const DATATYPE: Array<string> = [
+export const DATATYPE = [
   EMPTYTYPE,
   STRINGTYPE,
   BOOLEANTYPE,
   DATETIMETYPE,
   ROLETYPE,
-];
+] as const;
+
+export type BASICTYPES = typeof DATATYPE[number];
+
+export const BooleanOptions = ['', 'True', 'False'];
 
 export enum EditAction {
   EDIT = 'edit',

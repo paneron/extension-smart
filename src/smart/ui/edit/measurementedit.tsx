@@ -30,8 +30,8 @@ const MeasurementEditPage: React.FC<{
   function matchFilter(x: MMELVariable, filter: string) {
     return (
       filter === '' ||
-      x.id.toLowerCase().indexOf(filter) !== -1 ||
-      x.definition.toLowerCase().indexOf(filter) !== -1
+      x.id.toLowerCase().includes(filter) ||
+      x.definition.toLowerCase().includes(filter)
     );
   }
 

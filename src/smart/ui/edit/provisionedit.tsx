@@ -13,9 +13,7 @@ import { IObject } from '../common/listmanagement/listPopoverItem';
 
 export function matchProvisionFilter(x: IObject, filter: string): boolean {
   const provision = x as MMELProvision;
-  return (
-    filter === '' || provision.condition.toLowerCase().indexOf(filter) !== -1
-  );
+  return filter === '' || provision.condition.toLowerCase().includes(filter);
 }
 
 export const ProvisonItem: React.FC<{

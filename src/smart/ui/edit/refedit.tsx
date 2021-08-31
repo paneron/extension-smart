@@ -27,9 +27,9 @@ const ReferenceEditPage: React.FC<{
   function matchFilter(ref: MMELReference, filter: string) {
     return (
       filter === '' ||
-      ref.id.toLowerCase().indexOf(filter) !== -1 ||
-      ref.document.toLowerCase().indexOf(filter) !== -1 ||
-      ref.clause.toLowerCase().indexOf(filter) !== -1
+      ref.id.toLowerCase().includes(filter) ||
+      ref.document.toLowerCase().includes(filter) ||
+      ref.clause.toLowerCase().includes(filter)
     );
   }
 
@@ -65,7 +65,7 @@ const ReferenceEditPage: React.FC<{
   }
 
   function addRef(ref: MMELReference): boolean {
-    if (ref.clause.indexOf(',') !== -1) {
+    if (ref.clause.includes(',')) {
       const failed: string[] = [];
       const clauses = ref.clause.split(',');
       for (let c of clauses) {

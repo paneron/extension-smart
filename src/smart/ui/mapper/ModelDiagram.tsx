@@ -7,6 +7,7 @@ import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useContext } from 'react';
 import ReactFlow, {
+  Controls,
   OnLoadParams,
   ReactFlowProvider,
 } from 'react-flow-renderer';
@@ -221,7 +222,9 @@ const ModelDiagram: React.FC<{
             nodeTypes={NodeTypes}
             edgeTypes={EdgeTypes}
             nodesDraggable={false}
-          ></ReactFlow>
+          >
+            <Controls showInteractive={false} />
+          </ReactFlow>
           {viewOption.legVisible && (
             <LegendPane
               list={

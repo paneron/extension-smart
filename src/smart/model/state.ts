@@ -38,7 +38,7 @@ export interface MapperState {
 }
 
 export interface ActionState {
-  dvisible: boolean; // visibility of data nodes  
+  dvisible: boolean; // visibility of data nodes
   history: PageHistory;
   modelWrapper: ModelWrapper;
   workspace: SMARTWorkspace;

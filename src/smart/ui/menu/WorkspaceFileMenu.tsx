@@ -7,14 +7,19 @@ import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { createNewSMARTWorkspace, SMARTWorkspace } from '../../model/workspace';
-import { FILE_TYPE, handleModelOpen, handleWSOpen, saveToFileSystem } from '../../utils/IOFunctions';
+import {
+  FILE_TYPE,
+  handleModelOpen,
+  handleWSOpen,
+  saveToFileSystem,
+} from '../../utils/IOFunctions';
 
 const WorkspaceFileMenu: React.FC<{
   workspace: SMARTWorkspace;
   setModelWrapper: (m: ModelWrapper) => void;
-  setWorkspace: (ws: SMARTWorkspace) => void;  
+  setWorkspace: (ws: SMARTWorkspace) => void;
 }> = function ({ workspace, setModelWrapper, setWorkspace }) {
-  const {    
+  const {
     getBlob,
     useDecodedBlob,
     writeFileToFilesystem,
@@ -22,52 +27,59 @@ const WorkspaceFileMenu: React.FC<{
   } = useContext(DatasetContext);
 
   const canOpen = requestFileFromFilesystem && useDecodedBlob;
-  const canSave = getBlob && writeFileToFilesystem;  
-  
+  const canSave = getBlob && writeFileToFilesystem;
+
   function handleNewWorkspace() {
     setWorkspace(createNewSMARTWorkspace());
-  }  
-  
-  async function handleWSSave() {    
+  }
+
+  async function handleWSSave() {
     const fileData = JSON.stringify(workspace);
 
     await saveToFileSystem({
-      getBlob, 
-      writeFileToFilesystem, 
-      fileData, 
-      type: FILE_TYPE.Workspace
+      getBlob,
+      writeFileToFilesystem,
+      fileData,
+      type: FILE_TYPE.Workspace,
     });
   }
 
   return (
     <Menu>
-      <MenuItem text='New Workspace' onClick={handleNewWorkspace} icon="projects" />
       <MenuItem
-        text='Open Workspace'
+        text="New Workspace"
+        onClick={handleNewWorkspace}
+        icon="projects"
+      />
+      <MenuItem
+        text="Open Workspace"
         disabled={!canOpen}
-        onClick={() => 
+        onClick={() =>
           handleWSOpen({
             setWorkspace,
             useDecodedBlob,
-            requestFileFromFilesystem
-          }) }
-        icon='folder-shared-open'
+            requestFileFromFilesystem,
+          })
+        }
+        icon="folder-shared-open"
       />
       <MenuItem
-        text='Save Workspace'
+        text="Save Workspace"
         onClick={handleWSSave}
         disabled={!canSave}
-        icon='floppy-disk'
+        icon="floppy-disk"
       />
       <MenuDivider />
       <MenuItem
-        text='Open Model'
-        onClick={() => handleModelOpen({
-          setModelWrapper,
-          useDecodedBlob,
-          requestFileFromFilesystem,          
-        })}
-        icon='graph'
+        text="Open Model"
+        onClick={() =>
+          handleModelOpen({
+            setModelWrapper,
+            useDecodedBlob,
+            requestFileFromFilesystem,
+          })
+        }
+        icon="graph"
       />
     </Menu>
   );

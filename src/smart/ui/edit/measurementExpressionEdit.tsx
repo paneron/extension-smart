@@ -12,7 +12,7 @@ export interface IMeasure extends IObject {
 
 export function matchMeasurementFilter(x: IObject, filter: string): boolean {
   const m = x as IMeasure;
-  return filter === '' || m.measure.toLowerCase().indexOf(filter) !== -1;
+  return filter === '' || m.measure.toLowerCase().includes(filter);
 }
 
 export const MeasurementItem: React.FC<{

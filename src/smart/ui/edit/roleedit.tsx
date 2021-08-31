@@ -22,8 +22,8 @@ const RoleEditPage: React.FC<{
   function matchFilter(role: MMELRole, filter: string) {
     return (
       filter === '' ||
-      role.id.toLowerCase().indexOf(filter) !== -1 ||
-      role.name.toLowerCase().indexOf(filter) !== -1
+      role.id.toLowerCase().includes(filter) ||
+      role.name.toLowerCase().includes(filter)
     );
   }
 

@@ -26,7 +26,7 @@ const DataClassEditPage: React.FC<{
   setModel: (model: EditorModel) => void;
 }> = function ({ model, setModel }) {
   function matchFilter(x: EditorDataClass, filter: string) {
-    return filter === '' || x.id.toLowerCase().indexOf(filter) !== -1;
+    return filter === '' || x.id.toLowerCase().includes(filter);
   }
 
   function getDCListItems(filter: string): IListItem[] {

@@ -50,7 +50,7 @@ export const ProcessQuickEdit: React.FC<
 }) => {
   return (
     <>
-      {setDialog !== undefined && onSubprocessClick !== undefined && (        
+      {setDialog !== undefined && onSubprocessClick !== undefined && (
         <MGDButtonGroup>
           <EditButton
             onClick={() =>

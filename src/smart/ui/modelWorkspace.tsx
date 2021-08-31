@@ -8,7 +8,6 @@ import ReactFlow, {
   Controls,
   OnLoadParams,
   ReactFlowProvider,
-  isNode,  
 } from 'react-flow-renderer';
 
 import { ControlGroup } from '@blueprintjs/core';
@@ -20,7 +19,7 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
 import {
   createEditorModelWrapper,
-  getActionReactFlowElementsFrom,  
+  getActionReactFlowElementsFrom,
   ModelWrapper,
 } from '../model/modelwrapper';
 import {
@@ -30,23 +29,13 @@ import {
   PageHistory,
   popPage,
 } from '../model/history';
-import {
-  createNewEditorModel,
-  createSubprocessComponent,
-} from '../utils/EditorFactory';
+import { createNewEditorModel } from '../utils/EditorFactory';
 import { ActionState, EdgeTypes, NodeTypes } from '../model/state';
-import {
-  isEditorData,
-  isEditorNode,
-} from '../model/editormodel';
 import { SelectedNodeDescription } from './sidebar/selected';
 import { DataVisibilityButton } from './control/buttons';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
-import {  
-  react_flow_container_layout,
-  sidebar_layout,
-} from '../../css/layout';
+import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
 import SearchComponentPane from './sidebar/search';
 import LegendPane from './common/description/LegendPane';
 import {
@@ -54,8 +43,13 @@ import {
   getHighlightedSVGColorById,
   SearchResultStyles,
 } from '../utils/SearchFunctions';
-import { createNewSMARTWorkspace, SMARTWorkspace } from '../model/workspace';
+import {
+  createNewSMARTWorkspace,
+  SMARTModelStore,
+  SMARTWorkspace,
+} from '../model/workspace';
 import WorkspaceFileMenu from './menu/WorkspaceFileMenu';
+import { WorkspaceDiagPackage, WorkspaceDialog } from './dialog/WorkspaceDiag';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -64,7 +58,7 @@ const ModelWorkspace: React.FC<{
   isVisible: boolean;
   className?: string;
 }> = ({ isVisible, className }) => {
-  const { logger } = useContext(DatasetContext);  
+  const { logger } = useContext(DatasetContext);
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
@@ -79,73 +73,45 @@ const ModelWorkspace: React.FC<{
     history: createPageHistory(initModelWrapper),
     workspace: createNewSMARTWorkspace(),
   });
-  const [rfInstance, setRfInstance] = useState<OnLoadParams | null>(null);
 
   const [selected, setSelected] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<Set<string>>(
     new Set<string>()
   );
 
+  const [diagProps, setDiagProps] = useState<WorkspaceDiagPackage | null>(null);
+
   function onLoad(params: OnLoadParams) {
     logger?.log('flow loaded');
-    setRfInstance(params);
     params.fitView();
   }
 
-  function saveLayout() {
-    logger?.log('Save Layout');
-    if (rfInstance !== null) {
-      for (const x of rfInstance.getElements()) {
-        const data = x.data;
-        const mw = state.modelWrapper;
-        const page = mw.model.pages[mw.page];
-        if (isNode(x) && isEditorNode(data)) {
-          const node = isEditorData(data)
-            ? page.data[data.id]
-            : page.childs[data.id];
-          if (node !== undefined) {
-            node.x = x.position.x;
-            node.y = x.position.y;
-          } else {
-            const nc = createSubprocessComponent(data.id);
-            if (isEditorData(data)) {
-              page.data[data.id] = nc;
-            } else {
-              page.childs[data.id] = nc;
-            }
-            nc.x = x.position.x;
-            nc.y = x.position.y;
-          }
-        }
-      }
-    }
-    return state.modelWrapper;
-  }
+  const model = state.modelWrapper.model;
+  const namespace = model.meta.namespace;
+  const modelStore: SMARTModelStore = state.workspace.docs[namespace] ?? {
+    id: namespace,
+    store: {},
+  };
 
   function toggleDataVisibility() {
-    if (state.dvisible) {
-      saveLayout();
-    }
     setState({ ...state, dvisible: !state.dvisible });
-  }  
+  }
 
   function setModelWrapper(mw: ModelWrapper) {
     setState({ ...state, history: createPageHistory(mw), modelWrapper: mw });
-  }  
+  }
 
   function setWorkspace(ws: SMARTWorkspace) {
-    setState({ ...state, workspace: ws});
+    setState({ ...state, workspace: ws });
   }
 
   function onPageChange(updated: PageHistory, newPage: string) {
-    saveLayout();
     state.history = updated;
     state.modelWrapper.page = newPage;
     setState({ ...state });
   }
 
   function onProcessClick(pageid: string, processid: string): void {
-    saveLayout();
     const mw = state.modelWrapper;
     mw.page = pageid;
     logger?.log('Go to page', pageid);
@@ -155,7 +121,6 @@ const ModelWorkspace: React.FC<{
 
   function drillUp(): void {
     if (state.history.items.length > 0) {
-      saveLayout();
       state.modelWrapper.page = popPage(state.history);
       setState({ ...state });
     }
@@ -187,6 +152,12 @@ const ModelWorkspace: React.FC<{
     setSearchResult(set);
   }
 
+  function setModelStore(doc: SMARTModelStore) {
+    const workspace = { ...state.workspace };
+    workspace.docs[namespace] = doc;
+    setState({ ...state, workspace });
+  }
+
   const toolbar = (
     <ControlGroup>
       <Popover2
@@ -202,6 +173,9 @@ const ModelWorkspace: React.FC<{
       >
         <MGDButton>Workspace</MGDButton>
       </Popover2>
+      <MGDButton onClick={() => setDiagProps({ regid: '' })}>
+        Data Registry
+      </MGDButton>
       <MGDButton
         type={MGDButtonType.Primary}
         disabled={state.history.items.length <= 1}
@@ -225,17 +199,17 @@ const ModelWorkspace: React.FC<{
           title: 'Selected node',
           content: (
             <SelectedNodeDescription
-              model={state.modelWrapper.model}
-              pageid={state.modelWrapper.page}              
+              model={model}
+              pageid={state.modelWrapper.page}
             />
           ),
-        },       
+        },
         {
           key: 'search-node',
           title: 'Search components',
           content: (
             <SearchComponentPane
-              model={state.modelWrapper.model}
+              model={model}
               onChange={onPageAndHistroyChange}
               resetSearchElements={resetSearchElements}
             />
@@ -245,9 +219,19 @@ const ModelWorkspace: React.FC<{
     />
   );
 
-  if (isVisible) {    
+  if (isVisible) {
     return (
-      <ReactFlowProvider>        
+      <ReactFlowProvider>
+        {diagProps !== null && (
+          <WorkspaceDialog
+            diagProps={diagProps}
+            onClose={() => setDiagProps(null)}
+            modelStore={modelStore}
+            setModelStore={setModelStore}
+            model={model}
+            setRegistry={id => setDiagProps({ regid: id })}
+          />
+        )}
         <Workspace
           className={className}
           toolbar={toolbar}
@@ -259,19 +243,20 @@ const ModelWorkspace: React.FC<{
               key="MMELModel"
               elements={getActionReactFlowElementsFrom(
                 state.modelWrapper,
-                state.dvisible,                
-                onProcessClick,                
+                state.dvisible,
+                onProcessClick,
                 getStyleById,
                 getSVGColorById
               )}
-              onLoad={onLoad}                            
+              onLoad={onLoad}
               nodesConnectable={false}
               snapToGrid={true}
               snapGrid={[10, 10]}
               nodeTypes={NodeTypes}
-              edgeTypes={EdgeTypes}              
+              edgeTypes={EdgeTypes}
+              nodesDraggable={false}
             >
-              <Controls>
+              <Controls showInteractive={false}>
                 <DataVisibilityButton
                   isOn={state.dvisible}
                   onClick={toggleDataVisibility}

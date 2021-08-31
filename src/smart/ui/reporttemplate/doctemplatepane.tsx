@@ -28,7 +28,7 @@ const DocTemplatePane: React.FC<{
   const [report, setReport] = useState<string | null>(null);
 
   function matchFilter(doc: MappingDoc, filter: string) {
-    return filter === '' || doc.title.toLowerCase().indexOf(filter) !== -1;
+    return filter === '' || doc.title.toLowerCase().includes(filter);
   }
 
   function getDocListItems(filter: string): IListItem[] {

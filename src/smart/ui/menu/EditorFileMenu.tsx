@@ -10,9 +10,13 @@ import {
   ModelWrapper,
 } from '../../model/modelwrapper';
 import { createNewEditorModel } from '../../utils/EditorFactory';
-import { MMELToText} from '../../serialize/MMEL';
+import { MMELToText } from '../../serialize/MMEL';
 import { DiagTypes } from '../dialog/dialogs';
-import { FILE_TYPE, handleModelOpen, saveToFileSystem } from '../../utils/IOFunctions';
+import {
+  FILE_TYPE,
+  handleModelOpen,
+  saveToFileSystem,
+} from '../../utils/IOFunctions';
 
 const EditorFileMenu: React.FC<{
   setModelWrapper: (m: ModelWrapper) => void;
@@ -43,16 +47,16 @@ const EditorFileMenu: React.FC<{
   }
 
   // Export
-  async function handleSave() {    
+  async function handleSave() {
     const mw = getLatestLayout();
     const fileData = MMELToText(mw.model);
 
     await saveToFileSystem({
-      getBlob, 
-      writeFileToFilesystem, 
-      fileData, 
-      type: FILE_TYPE.Model
-    });    
+      getBlob,
+      writeFileToFilesystem,
+      fileData,
+      type: FILE_TYPE.Model,
+    });
   }
 
   return (
@@ -66,7 +70,7 @@ const EditorFileMenu: React.FC<{
             setModelWrapper,
             useDecodedBlob,
             requestFileFromFilesystem,
-            logger,            
+            logger,
           })
         }
         icon="document-open"

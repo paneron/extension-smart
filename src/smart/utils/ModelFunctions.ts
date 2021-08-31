@@ -2,13 +2,17 @@ import {
   EditorDataClass,
   EditorModel,
   EditorNode,
-  EditorSubprocess,
-  isEditorDataClass,
+  EditorRegistry,
+  EditorSubprocess,  
+  isEditorDataClass,  
   isEditorRegistry,
 } from '../model/editormodel';
 import { MMELObject } from '../serialize/interface/baseinterface';
 import { MMELReference } from '../serialize/interface/supportinterface';
 import { IListItem } from '../ui/common/fields';
+
+const TypeReferenceHead = 'reference(';
+const TypeReferenceTail = ')';
 
 // temp class for debug, global console logger
 export class Logger {
@@ -43,7 +47,26 @@ export function getReferenceDCTypeName(dcid: string) {
   if (dcid === '') {
     return '';
   }
-  return 'reference(' + dcid + ')';
+  return TypeReferenceHead + dcid + TypeReferenceTail;
+}
+
+export function getRegistryReference(
+  type: string,
+  elements: Record<string, EditorNode>
+): EditorRegistry | null {
+  if (type.length <= TypeReferenceTail.length + TypeReferenceHead.length) {
+    return null;
+  }
+  const head = type.substr(0, TypeReferenceHead.length);
+  const content = type.substring(TypeReferenceHead.length, type.length-TypeReferenceTail.length);
+  const tail = type.substr(type.length-TypeReferenceTail.length);  
+  if (head === TypeReferenceHead && tail === TypeReferenceTail) {
+    const reg = elements[content];
+    if (reg !== undefined && isEditorRegistry(reg)) {
+      return reg;
+    }
+  }
+  return null;
 }
 
 export function fillRDCS(
@@ -53,16 +76,13 @@ export function fillRDCS(
   data.rdcs.clear();
   for (const a in data.attributes) {
     const att = data.attributes[a];
-    let type = att.type;
-    const i1 = type.indexOf('(');
-    const i2 = type.indexOf(')');
-    if (i1 !== -1 && i2 !== -1) {
-      type = type.substr(i1 + 1, i2 - i1 - 1);
-    }
-    if (type !== '') {
-      const ret = elements[type];
-      if (ret !== undefined && isEditorDataClass(ret)) {
-        data.rdcs.add(type);
+    const dc = elements[att.type];
+    if (dc !== undefined && isEditorDataClass(dc)) {
+      data.rdcs.add(dc.id);
+    } else {
+      const reg = getRegistryReference(att.type, elements);
+      if (reg !== null) {
+        data.rdcs.add(reg.data);
       }
     }
   }
@@ -107,6 +127,10 @@ export function checkId(id: string, ids: Record<string, unknown>): boolean {
 
 export function defaultItemSorter(a: IListItem, b: IListItem): number {
   return a.id.localeCompare(b.id);
+}
+
+export function itemSorterByText(a: IListItem, b: IListItem): number {
+  return a.text.localeCompare(b.text);
 }
 
 export function removeSpace(id: string) {

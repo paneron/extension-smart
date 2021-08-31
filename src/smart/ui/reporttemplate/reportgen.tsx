@@ -15,10 +15,10 @@ const ReportGen: React.FC<{
 
   async function handleSave() {
     await saveToFileSystem({
-      getBlob, 
-      writeFileToFilesystem, 
-      fileData: report, 
-      type: FILE_TYPE.Report
+      getBlob,
+      writeFileToFilesystem,
+      fileData: report,
+      type: FILE_TYPE.Report,
     });
   }
 

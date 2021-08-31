@@ -19,7 +19,7 @@ const EnumValueEditPage: React.FC<{
   setValues: (x: Record<string, MMELEnumValue>) => void;
 }> = ({ values, model, setValues }) => {
   function matchFilter(x: IObject, filter: string) {
-    return filter === '' || x.id.toLowerCase().indexOf(filter) !== -1;
+    return filter === '' || x.id.toLowerCase().includes(filter);
   }
 
   return (

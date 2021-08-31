@@ -20,6 +20,7 @@ import {
 export interface IAdditionalListButton {
   text: string;
   icon?: IconName;
+  requireSelected?: boolean;
   onClick: (id: string) => void;
 }
 
@@ -81,10 +82,11 @@ export interface IViewListInterface {
   filterName: string;
   itemName: string;
   getItems: (filter: string) => IListItem[];
-  removeItems: (ids: Array<string>) => void;
-  addClicked: () => void;
-  updateClicked: (selected: string) => void;
+  removeItems?: (ids: Array<string>) => void;
+  addClicked?: () => void;
+  updateClicked?: (selected: string) => void;
   size: number;
+  requireDefaultButtons?: boolean;
   buttons?: IAdditionalListButton[];
 }
 
@@ -172,6 +174,23 @@ export const NormalComboBox: React.FC<IComboField> = function ({
   );
 };
 
+export const DataTimeTextField: React.FC<IField> = (f: IField) => {
+  return (
+    <FormGroup label={f.text} helperText={f.extend}>
+      <input
+        type="datetime-local"
+        readOnly={f.onChange === undefined}
+        onChange={e => {
+          if (f.onChange) {
+            f.onChange(e.target.value);
+          }
+        }}
+        value={f.value}
+      />
+    </FormGroup>
+  );
+};
+
 export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
   f: IMultiRefSelectField
 ) => {
@@ -185,12 +204,12 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
   const options: string[] = [];
 
   for (const x of f.values) {
-    if (x.toLowerCase().indexOf(smallfilter) !== -1) {
+    if (x.toLowerCase().includes(smallfilter)) {
       elms.push(x);
     }
   }
   for (const x of f.options) {
-    if (x.toLowerCase().indexOf(smallfilter) !== -1 && !f.values.has(x)) {
+    if (x.toLowerCase().includes(smallfilter) && !f.values.has(x)) {
       options.push(x);
     }
   }
@@ -264,7 +283,7 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
 
   const options: [string, number][] = [];
   f.options.forEach((x, index) => {
-    if (x.toLowerCase().indexOf(smallfilter) !== -1 && x !== f.value) {
+    if (x.toLowerCase().includes(smallfilter) && x !== f.value) {
       if (x === '') {
         options.push(['(Empty - not specified)', index]);
       } else {

@@ -19,7 +19,7 @@ const EnumEditPage: React.FC<{
   setModel: (model: EditorModel) => void;
 }> = function ({ model, setModel }) {
   function matchFilter(x: MMELEnum, filter: string) {
-    return filter === '' || x.id.toLowerCase().indexOf(filter) !== -1;
+    return filter === '' || x.id.toLowerCase().includes(filter);
   }
 
   function getEnumListItems(filter: string): IListItem[] {

@@ -36,8 +36,8 @@ const AttributeEditPage: React.FC<{
     const att = x as MMELDataAttribute;
     return (
       filter === '' ||
-      att.id.toLowerCase().indexOf(filter) !== -1 ||
-      att.definition.toLowerCase().indexOf(filter) !== -1
+      att.id.toLowerCase().includes(filter) ||
+      att.definition.toLowerCase().includes(filter)
     );
   }
 
@@ -62,12 +62,11 @@ const AttributeItem: React.FC<{
 }> = ({ object, model, setObject }) => {
   const att = object as MMELDataAttribute;
 
-  const types = [...DATATYPE];
+  const types: string[] = [...DATATYPE];
   for (const x in model!.elements) {
     const elm = model!.elements[x];
-    if (isEditorRegistry(elm)) {
-      types.push(elm.data);
-      types.push(getReferenceDCTypeName(elm.data));
+    if (isEditorRegistry(elm)) {      
+      types.push(getReferenceDCTypeName(elm.id));
     } else if (isEditorDataClass(elm) && elm.mother === '') {
       types.push(elm.id);
     }

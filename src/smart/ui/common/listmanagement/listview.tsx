@@ -57,27 +57,43 @@ const ListViewPane: React.FC<IViewListInterface> = ({
       </select>
 
       <MGDButtonGroup>
-        <MGDButton icon="plus" onClick={() => addClicked()}>
-          Add
-        </MGDButton>
-        <MGDButton
-          icon="delete"
-          onClick={() => removeItems(extractOptions(selectbox))}
-        >
-          Remove
-        </MGDButton>
-        <MGDButton
-          icon="edit"
-          onClick={() => actIfSelected(selectbox.current, updateClicked)}
-        >
-          Update
-        </MGDButton>
+        {addClicked !== undefined ? (
+          <MGDButton icon="plus" onClick={() => addClicked()}>
+            Add
+          </MGDButton>
+        ) : (
+          <></>
+        )}
+        {removeItems !== undefined ? (
+          <MGDButton
+            icon="delete"
+            onClick={() => removeItems(extractOptions(selectbox))}
+          >
+            Remove
+          </MGDButton>
+        ) : (
+          <></>
+        )}
+        {updateClicked !== undefined ? (
+          <MGDButton
+            icon="edit"
+            onClick={() => actIfSelected(selectbox.current, updateClicked)}
+          >
+            Update
+          </MGDButton>
+        ) : (
+          <></>
+        )}
         <>
           {buttons?.map((b, index) => (
             <MGDButton
               key={'ui#listview#additionbutton#' + index}
               icon={b.icon}
-              onClick={() => actIfSelected(selectbox.current, b.onClick)}
+              onClick={() =>
+                b.requireSelected === undefined || b.requireSelected
+                  ? actIfSelected(selectbox.current, b.onClick)
+                  : b.onClick('')
+              }
             >
               {b.text}
             </MGDButton>

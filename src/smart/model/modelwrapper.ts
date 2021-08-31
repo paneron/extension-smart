@@ -200,8 +200,8 @@ export function getReactFlowElementsFrom(
 
 export function getActionReactFlowElementsFrom(
   mw: ModelWrapper,
-  dvisible: boolean,  
-  onProcessClick: (pageid: string, processid: string) => void,  
+  dvisible: boolean,
+  onProcessClick: (pageid: string, processid: string) => void,
   getStyleById: (id: string) => SerializedStyles,
   getSVGColorById: (id: string) => string
 ): Elements {
@@ -212,9 +212,7 @@ export function getActionReactFlowElementsFrom(
     getStyleClassById: getStyleById,
     getSVGColorById,
   });
-  return getElements(mw, dvisible, callback, e =>
-    createEdgeContainer(e)
-  );
+  return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }
 
 export function getMapperReactFlowElementsFrom(

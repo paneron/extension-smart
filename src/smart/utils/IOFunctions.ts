@@ -1,45 +1,48 @@
-import { Hooks, SaveDialogProps } from "@riboseinc/paneron-extension-kit/types";
-import { EditorModel } from "../model/editormodel";
-import { MapProfile } from "../model/mapmodel";
-import { createEditorModelWrapper, ModelWrapper } from "../model/modelwrapper";
-import { SMARTWorkspace } from "../model/workspace";
-import { textToMMEL } from "../serialize/MMEL";
-import { LoggerInterface, OpenFileInterface } from "./constants";
+import { Hooks, SaveDialogProps } from '@riboseinc/paneron-extension-kit/types';
+import { EditorModel } from '../model/editormodel';
+import { MapProfile } from '../model/mapmodel';
+import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
+import { SMARTWorkspace } from '../model/workspace';
+import { textToMMEL } from '../serialize/MMEL';
+import { LoggerInterface, OpenFileInterface } from './constants';
 
 export interface FileTypeDescriptionInterface {
-  filtername: string,
-  extension: string,
-  openPrompt?: string,
+  filtername: string;
+  extension: string;
+  openPrompt?: string;
 }
 
 export enum FILE_TYPE {
   Model = 'model',
   Report = 'report',
   Map = 'mapping',
-  Workspace = 'workspace'
+  Workspace = 'workspace',
 }
 
-export const FileTypeDescription: Record<FILE_TYPE, FileTypeDescriptionInterface> = {
-  [FILE_TYPE.Model] : { 
+export const FileTypeDescription: Record<
+  FILE_TYPE,
+  FileTypeDescriptionInterface
+> = {
+  [FILE_TYPE.Model]: {
     filtername: 'MMEL files',
     extension: 'mmel',
-    openPrompt: 'Choose a model file to open'
+    openPrompt: 'Choose a model file to open',
   },
-  [FILE_TYPE.Report] : {
+  [FILE_TYPE.Report]: {
     filtername: 'All files',
-    extension: '*'
+    extension: '*',
   },
-  [FILE_TYPE.Map] : { 
+  [FILE_TYPE.Map]: {
     filtername: 'MAP files',
     extension: 'map',
-    openPrompt: 'Choose a mapping file to open'
+    openPrompt: 'Choose a mapping file to open',
   },
-  [FILE_TYPE.Workspace] : { 
+  [FILE_TYPE.Workspace]: {
     filtername: 'Workspace files',
     extension: 'sws',
-    openPrompt: 'Choose a SMART workspace file to open'
+    openPrompt: 'Choose a SMART workspace file to open',
   },
-}
+};
 
 // Open
 function parseModel(props: {
@@ -62,57 +65,54 @@ function parseModel(props: {
   }
 }
 
-export function handleModelOpen(props:{
+export function handleModelOpen(props: {
   setModelWrapper: (m: ModelWrapper) => void;
   useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
   logger?: LoggerInterface;
   indexModel?: (model: EditorModel) => void;
 }) {
-  const {
-    setModelWrapper,       
-    logger,
-    indexModel
-  } = props;
+  const { setModelWrapper, logger, indexModel } = props;
   handleFileOpen({
-    ...props, 
-    type: FILE_TYPE.Model, 
-    postProcessing: data => parseModel({
-      data,
-      setModelWrapper,
-      logger,
-      indexModel,
-    })
+    ...props,
+    type: FILE_TYPE.Model,
+    postProcessing: data =>
+      parseModel({
+        data,
+        setModelWrapper,
+        logger,
+        indexModel,
+      }),
   });
 }
 
-export function handleWSOpen(props:{
+export function handleWSOpen(props: {
   setWorkspace: (ws: SMARTWorkspace) => void;
   useDecodedBlob?: Hooks.UseDecodedBlob;
-  requestFileFromFilesystem?: OpenFileInterface;  
-}) {  
+  requestFileFromFilesystem?: OpenFileInterface;
+}) {
   const { setWorkspace } = props;
   handleFileOpen({
-    ...props, 
-    type: FILE_TYPE.Workspace, 
-    postProcessing: data => setWorkspace(JSON.parse(data) as SMARTWorkspace)      
+    ...props,
+    type: FILE_TYPE.Workspace,
+    postProcessing: data => setWorkspace(JSON.parse(data) as SMARTWorkspace),
   });
 }
 
 export function handleMappingOpen(props: {
   onMapProfileChanged: (mp: MapProfile) => void;
   useDecodedBlob?: Hooks.UseDecodedBlob;
-  requestFileFromFilesystem?: OpenFileInterface;  
+  requestFileFromFilesystem?: OpenFileInterface;
 }) {
   const { onMapProfileChanged } = props;
   handleFileOpen({
-    ...props, 
-    type: FILE_TYPE.Map, 
-    postProcessing: data => onMapProfileChanged(JSON.parse(data) as MapProfile) 
-  });  
+    ...props,
+    type: FILE_TYPE.Map,
+    postProcessing: data => onMapProfileChanged(JSON.parse(data) as MapProfile),
+  });
 }
 
-export async function handleFileOpen(props: {    
+export async function handleFileOpen(props: {
   useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
   logger?: LoggerInterface;
@@ -120,19 +120,19 @@ export async function handleFileOpen(props: {
   type: FILE_TYPE;
   postProcessing: (data: string) => void;
 }) {
-  const {        
+  const {
     useDecodedBlob,
     requestFileFromFilesystem,
-    logger,    
+    logger,
     type,
-    postProcessing
+    postProcessing,
   } = props;
   if (requestFileFromFilesystem && useDecodedBlob) {
     const desc = FileTypeDescription[type];
     logger?.log('Requesting file');
     requestFileFromFilesystem(
       {
-        prompt: desc.openPrompt??'',
+        prompt: desc.openPrompt ?? '',
         allowMultiple: false,
         filters: [{ name: desc.filtername, extensions: [desc.extension] }],
       },
@@ -148,7 +148,7 @@ export async function handleFileOpen(props: {
             'Requesting file: Decoded blob',
             fileDataAsString.substr(0, 20)
           );
-          postProcessing(fileDataAsString);          
+          postProcessing(fileDataAsString);
         } else {
           logger?.log('Requesting file: No file data received');
           console.error('Import file: no file data received');
@@ -165,19 +165,14 @@ export async function saveToFileSystem(props: {
   writeFileToFilesystem?: (opts: {
     dialogOpts: SaveDialogProps;
     bufferData: Uint8Array;
-}) => Promise<{
+  }) => Promise<{
     success: true;
     savedToFileAtPath: string;
-}>;
+  }>;
   fileData: string;
   type: FILE_TYPE;
 }) {
-  const {
-    getBlob,
-    writeFileToFilesystem,
-    fileData,
-    type
-  } = props;  
+  const { getBlob, writeFileToFilesystem, fileData, type } = props;
   if (getBlob && writeFileToFilesystem) {
     const desc = FileTypeDescription[type];
     const blob = await getBlob(fileData);

@@ -54,12 +54,7 @@ export const SelectedNodeDescription: React.FC<{
     id: string
   ) => void;
   onSubprocessClick?: (pid: string) => void;
-}> = function ({
-  model,
-  setDialog,
-  onSubprocessClick,
-  pageid,
-}) {
+}> = function ({ model, setDialog, onSubprocessClick, pageid }) {
   const selected = useStoreState(store => store.selectedElements);
 
   const elm: EdtiorNodeWithInfoCallback | null = getSelectedElement(selected);
@@ -134,7 +129,9 @@ const NODE_DETAIL_VIEWS: Record<
       <></>
     ),
   [DataType.STARTEVENT]: () => <DescribeStart />,
-  [DataType.ENDEVENT]: ({ node, setDialog }) => <DescribeEnd end={node} setDialog={setDialog} />,
+  [DataType.ENDEVENT]: ({ node, setDialog }) => (
+    <DescribeEnd end={node} setDialog={setDialog} />
+  ),
   [DataType.TIMEREVENT]: ({ node, setDialog }) =>
     isEditorTimerEvent(node) ? (
       <DescribeTimer timer={node} setDialog={setDialog} />
@@ -153,12 +150,7 @@ const NODE_DETAIL_VIEWS: Record<
     ) : (
       <></>
     ),
-  [DataType.APPROVAL]: ({
-    node,
-    getRefById,
-    getRegistryById,
-    setDialog,
-  }) =>
+  [DataType.APPROVAL]: ({ node, getRefById, getRegistryById, setDialog }) =>
     isEditorApproval(node) ? (
       <DescribeApproval
         app={node}

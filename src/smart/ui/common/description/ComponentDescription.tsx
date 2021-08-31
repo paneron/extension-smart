@@ -11,7 +11,7 @@ import {
   EditorEndEvent,
   EditorRegistry,
   EditorSignalEvent,
-  EditorTimerEvent,  
+  EditorTimerEvent,
 } from '../../../model/editormodel';
 import { DataType } from '../../../serialize/interface/baseinterface';
 import { MMELDataAttribute } from '../../../serialize/interface/datainterface';
@@ -194,7 +194,7 @@ export const DescribeTimer: React.FC<{
             }
           />
         </MGDButtonGroup>
-      )}
+      )}      
       <DescriptionItem label="Timer Event" value={timer.id} />
       <NonEmptyFieldDescription label="Type" value={timer.modelType} />
       <NonEmptyFieldDescription label="Parameter" value={timer.para} />
@@ -210,6 +210,7 @@ export const DescribeRegistry: React.FC<{
   const dc = getDataClassById(reg.data);
   return (
     <>
+      <DescriptionItem label="ID" value={reg.id} />
       <DescriptionItem label="Title" value={reg.title} />
       {dc !== null && <DescribeDC dc={dc} getRefById={getRefById} />}
     </>

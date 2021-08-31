@@ -66,7 +66,10 @@ import {
 } from '../../css/layout';
 import { DataVisibilityButton } from './control/buttons';
 import SearchComponentPane from './sidebar/search';
-import { getHighlightedStyleById, getHighlightedSVGColorById } from '../utils/SearchFunctions';
+import {
+  getHighlightedStyleById,
+  getHighlightedSVGColorById,
+} from '../utils/SearchFunctions';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);

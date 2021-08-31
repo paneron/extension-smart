@@ -34,8 +34,8 @@ const MapperOptionMenu: React.FC<{
   );
 };
 
-function getVisibilityIconName(isVisible: boolean):IconName {
-  return isVisible?'tick' : 'blank';
+function getVisibilityIconName(isVisible: boolean): IconName {
+  return isVisible ? 'tick' : 'blank';
 }
 
 export default MapperOptionMenu;
