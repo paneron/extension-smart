@@ -1,4 +1,5 @@
 import React from 'react';
+import { getRootName } from '../utils/ModelFunctions';
 import { ModelWrapper } from './modelwrapper';
 
 interface Breadcrumb {
@@ -25,12 +26,12 @@ export function cloneHistory(history: PageHistory): PageHistory {
 }
 
 export function createPageHistory(mw: ModelWrapper): PageHistory {
+  const meta = mw.model.meta;  
   return {
     items: [
       {
         page: mw.model.root,
-        pathtext:
-          mw.model.meta.namespace === '' ? 'root' : mw.model.meta.namespace,
+        pathtext: getRootName(meta)          
       },
     ],
   };

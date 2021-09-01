@@ -77,14 +77,14 @@ function toDataAttributeModel(a: MMELDataAttribute): string {
   }
   if (a.satisfy.size > 0) {
     out += '    satisfy {\n';
-    for (const s in a.satisfy) {
+    for (const s of a.satisfy) {
       out += '      ' + s + '\n';
     }
     out += '    }\n';
   }
   if (a.ref.size > 0) {
     out += '    reference {\n';
-    for (const r in a.ref) {
+    for (const r of a.ref) {
       out += '      ' + r + '\n';
     }
     out += '    }\n';
@@ -237,6 +237,7 @@ export function toMetaDataModel(meta: MMELMetadata): string {
   out += '  schema "' + meta.schema + '"\n';
   out += '  edition "' + meta.edition + '"\n';
   out += '  author "' + meta.author + '"\n';
+  out += '  shortname "' + meta.shortname + '"\n';
   out += '  namespace "' + meta.namespace + '"\n';
   out += '}\n';
   return out;

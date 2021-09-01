@@ -77,13 +77,14 @@ import {
   sidebar_layout,
 } from '../../css/layout';
 import SearchComponentPane from './sidebar/search';
-import { Logger } from '../utils/ModelFunctions';
+import { getRootName, Logger } from '../utils/ModelFunctions';
 import LegendPane from './common/description/LegendPane';
 import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,
   SearchResultStyles,
 } from '../utils/SearchFunctions';
+import { MMELMetadata } from '../serialize/interface/supportinterface';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -205,6 +206,12 @@ const ModelEditor: React.FC<{
 
   function setModelWrapper(mw: ModelWrapper) {
     setState({ ...state, modelWrapper: mw });
+  }
+
+  function onMetaChanged(meta: MMELMetadata) {
+    state.history.items[0].pathtext = getRootName(meta);
+    state.modelWrapper.model.meta = meta;    
+    setState({ ...state });
   }
 
   function onDragOver(event: React.DragEvent<HTMLDivElement>) {
@@ -392,6 +399,7 @@ const ModelEditor: React.FC<{
             <diagProps.Panel
               modelwrapper={state.modelWrapper}
               setModelWrapper={setModelWrapper}
+              onMetaChanged={onMetaChanged}
               callback={dialogPack.callback}
               cancel={() => {
                 setDialogType(null);

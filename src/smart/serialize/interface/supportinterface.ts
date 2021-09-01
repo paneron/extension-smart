@@ -11,6 +11,7 @@ export interface MMELMetadata extends MMELObject {
   schema: string;
   author: string;
   title: string;
+  shortname: string;
   edition: string;
   namespace: string;
 }

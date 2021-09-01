@@ -8,7 +8,7 @@ import {
   isEditorRegistry,
 } from '../model/editormodel';
 import { MMELObject } from '../serialize/interface/baseinterface';
-import { MMELReference } from '../serialize/interface/supportinterface';
+import { MMELMetadata, MMELReference } from '../serialize/interface/supportinterface';
 import { IListItem } from '../ui/common/fields';
 
 const TypeReferenceHead = 'reference(';
@@ -17,6 +17,16 @@ const TypeReferenceTail = ')';
 // temp class for debug, global console logger
 export class Logger {
   static logger: { log: (...args: any[]) => void };
+}
+
+export function getRootName(meta:MMELMetadata): string {
+  if (meta.shortname !== '') {
+    return meta.shortname;
+  }
+  if (meta.namespace !== '') {
+    return meta.namespace;
+  }
+  return 'root';
 }
 
 export function replaceSet(

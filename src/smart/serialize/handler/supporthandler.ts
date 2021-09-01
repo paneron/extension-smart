@@ -20,6 +20,7 @@ export function parseMetaData(x: string): MMELMetadata {
     title: '',
     edition: '',
     namespace: '',
+    shortname: '',
     datatype: DataType.METADATA,
   };
   if (x !== '') {
@@ -38,6 +39,8 @@ export function parseMetaData(x: string): MMELMetadata {
           meta.author = MMELremovePackage(t[i++]);
         } else if (command === 'namespace') {
           meta.namespace = MMELremovePackage(t[i++]);
+        } else if (command === 'shortname') {
+          meta.shortname = MMELremovePackage(t[i++]);
         } else {
           throw new Error(
             'Parsing error: metadata. Unknown keyword ' + command

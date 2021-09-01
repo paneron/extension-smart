@@ -38,17 +38,18 @@ interface TabProps {
   Panel: React.FC<{
     model: EditorModel;
     setModel: (m: EditorModel) => void;
+    onMetaChanged: (meta: MMELMetadata) => void;
   }>;
 }
 
 const tabs: Record<SETTINGPAGE, TabProps> = {
   [SETTINGPAGE.METAPAGE]: {
     title: 'Metadata',
-    Panel: ({ model, setModel }) => (
+    Panel: ({ model, onMetaChanged }) => (
       <MetaEditPage
         meta={model.meta}
-        setMetadata={(meta: MMELMetadata) => {
-          setModel({ ...model, meta: meta });
+        setMetadata={(meta: MMELMetadata) => {          
+          onMetaChanged(meta);
         }}
       />
     ),
@@ -94,7 +95,8 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
 const BasicSettingPane: React.FC<{
   model: EditorModel;
   setModel: (m: EditorModel) => void;
-}> = ({ model, setModel }) => {
+  onMetaChanged: (meta: MMELMetadata) => void;
+}> = ({ model, setModel, onMetaChanged }) => {
   const { logger } = useContext(DatasetContext);
   const [page, setPage] = useState<SETTINGPAGE>(SETTINGPAGE.METAPAGE);
 
@@ -124,7 +126,7 @@ const BasicSettingPane: React.FC<{
               </span>
             }
             panel={
-              <props.Panel model={model} setModel={setModel}></props.Panel>
+              <props.Panel model={model} setModel={setModel} onMetaChanged={onMetaChanged}></props.Panel>
             }
           />
         ))}

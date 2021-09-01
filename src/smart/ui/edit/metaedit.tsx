@@ -1,57 +1,89 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { FormGroup } from '@blueprintjs/core';
+import { FormGroup, IToaster, Toaster } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
+import { useState } from 'react';
+import MGDButton from '../../MGDComponents/MGDButton';
+import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
 import { NormalTextField } from '../common/fields';
 
 const MetaEditPage: React.FC<{
   meta: MMELMetadata;
-  setMetadata: (meta: MMELMetadata) => void;
+  setMetadata: (meta: MMELMetadata) => void;  
 }> = ({ meta, setMetadata }) => {
+  const [editing, setEditing] = useState<MMELMetadata>({...meta});
+  const [toaster] = useState<IToaster>(Toaster.create());
+
+  function save() {    
+    setMetadata(editing);
+    toaster.show({ 
+      message: 'Save done',
+      intent: 'success'
+    });
+  }
+
+  function cancel() {
+    setEditing({...meta});
+    toaster.show({ 
+      message: 'Reset metadata',
+      intent: 'primary'
+    });    
+  }
+
   return (
     <FormGroup>
-      <NormalTextField
-        key="field#modelschema"
-        text="Data Model Schema"
-        value={meta.schema}
-        onChange={(x: string) => {
-          setMetadata({ ...meta, schema: x });
+      <NormalTextField        
+        text='Data Model Schema'
+        value={editing.schema}
+        onChange={x => {
+          setEditing({ ...editing, schema: x });
         }}
       />
-      <NormalTextField
-        key="field#metaauthor"
-        text="Author"
-        value={meta.author}
+      <NormalTextField        
+        text='Author'
+        value={editing.author}
         onChange={(x: string) => {
-          setMetadata({ ...meta, author: x });
+          setEditing({ ...editing, author: x });
         }}
       />
-      <NormalTextField
-        key="field#modeltitle"
-        text="Title of the Data Model"
-        value={meta.title}
+      <NormalTextField        
+        text='Title of the Data Model'
+        value={editing.title}
         onChange={(x: string) => {
-          setMetadata({ ...meta, title: x });
+          setEditing({ ...editing, title: x });
         }}
       />
-      <NormalTextField
-        key="field#modeledition"
-        text="Edition of the Data Model"
-        value={meta.edition}
+      <NormalTextField        
+        text='Edition of the Data Model'
+        value={editing.edition}
         onChange={(x: string) => {
-          setMetadata({ ...meta, edition: x });
+          setEditing({ ...editing, edition: x });
         }}
       />
-      <NormalTextField
-        key="field#modelnamespace"
-        text="Globally unique identifier of the Data Model (Namespace)"
-        value={meta.namespace}
+      <NormalTextField        
+        text='Short name of the Data Model'
+        value={editing.shortname}
         onChange={(x: string) => {
-          setMetadata({ ...meta, namespace: x.replaceAll(/\s+/g, '') });
+          setEditing({ ...editing, shortname: x });
         }}
       />
+      <NormalTextField        
+        text='Globally unique identifier of the Data Model (Namespace)'
+        value={editing.namespace}
+        onChange={(x: string) => {
+          setEditing({ ...editing, namespace: x.replaceAll(/\s+/g, '') });
+        }}
+      />
+      <MGDButtonGroup>
+        <MGDButton icon='floppy-disk' onClick={save}>
+          Save
+        </MGDButton>
+        <MGDButton icon="disable" onClick={cancel}>
+          Cancel
+        </MGDButton>
+      </MGDButtonGroup>     
     </FormGroup>
   );
 };

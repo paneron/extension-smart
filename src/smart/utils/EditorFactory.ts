@@ -73,6 +73,7 @@ export function createMetaData(): MMELMetadata {
     title: '',
     edition: '',
     namespace: '',
+    shortname: '',
     datatype: DataType.METADATA,
   };
 }
