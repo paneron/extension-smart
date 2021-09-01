@@ -33,6 +33,7 @@ const DocumentEdit: React.FC<{
             doc={doc}
             setDoc={doc => setDoc({ ...doc })}
             workspace={workspace}
+            prefix=''
           />
         </FormGroup>
       </MGDDisplayPane>

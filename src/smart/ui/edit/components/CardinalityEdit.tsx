@@ -4,15 +4,14 @@
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import MGDLabel from '../../../MGDComponents/MGDLabel';
+import { cardinalityToString, parseCardinality } from '../../../utils/ModelFunctions';
 import { NormalComboBox } from '../../common/fields';
 
 export const CardinalityField: React.FC<{
   value: string;
   onChange: (x: string) => void;
 }> = function ({ value, onChange }) {
-  const index = value.indexOf('..');
-  const low = index === -1 ? '' : value.substring(0, index);
-  const high = index === -1 ? '' : value.substr(index + 2);
+  const [low, high] = parseCardinality(value);
 
   const LOW_OPTIONS = ['', '0', '1'];
   const HIGH_OPTIONS = ['', '1', '*'];
@@ -37,5 +36,5 @@ export const CardinalityField: React.FC<{
 };
 
 function setValue(low: string, high: string) {
-  return `${low}..${high}`;
+  return cardinalityToString(low, high);
 }

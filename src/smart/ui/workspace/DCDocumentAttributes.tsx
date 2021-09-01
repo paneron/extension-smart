@@ -24,7 +24,8 @@ const DCDocumentAttributes: React.FC<{
   setDoc: (doc: DocumentEditInterface) => void;
   isRoot?: boolean;
   workspace: Record<string, SMARTDocumentStore>;
-}> = function ({ isRoot = true, dc, model, doc, setDoc, workspace }) {
+  prefix: string;
+}> = function ({ isRoot = true, dc, model, doc, setDoc, workspace, prefix }) {
   const roles = getModelAllRolesWithEmpty(model);
   return (
     <>
@@ -43,6 +44,7 @@ const DCDocumentAttributes: React.FC<{
           setDoc={setDoc}
           roles={roles}
           workspace={workspace}
+          prefix={prefix}
         />
       ))}
     </>
@@ -56,12 +58,14 @@ const DocumentAttribute: React.FC<{
   setDoc: (doc: DocumentEditInterface) => void;
   roles: string[];
   workspace: Record<string, SMARTDocumentStore>;
-}> = function ({ attribute, model, doc, setDoc, roles, workspace }) {
+  prefix: string;
+}> = function ({ attribute, model, doc, setDoc, roles, workspace, prefix }) {
   const type = attribute.type;
-  const value = doc.attributes[attribute.id] ?? '';
+  const attributeid = prefix+attribute.id;
+  const value = doc.attributes[attributeid] ?? '';
 
   function onChange(x: string) {
-    doc.attributes[attribute.id] = x;
+    doc.attributes[attributeid] = x;
     setDoc({ ...doc });
   }
 
@@ -96,6 +100,7 @@ const DocumentAttribute: React.FC<{
           setDoc={setDoc}
           isRoot={false}
           workspace={workspace}
+          prefix={prefix+attributeid+'#'}
         />
       </fieldset>
     );
@@ -121,35 +126,3 @@ const DocumentAttribute: React.FC<{
 };
 
 export default DCDocumentAttributes;
-
-//     } else {
-//       const mw = functionCollection.getStateMan().state.modelWrapper
-//       const u = a.type.indexOf('(')
-//       const v = a.type.indexOf(')')
-//       if (u !== -1 && v !== -1) {
-//         const type = a.type.substr(u + 1, v - u - 1)
-//         const opts:Array<string> = []
-//         const obj = mw.idman.nodes.get(type)
-//         if (obj?.datatype === DataType.DATACLASS) {
-//           const r = obj as MMELDataClass
-//           const mother = mw.dlman.get(r).mother
-//           if (mother != null) {
-//             this.store.get(mother).docs.forEach((d) => {
-//               opts.push(descDocument(d))
-//             })
-//             elms.push(<ReferenceSelector
-//               key={'field#' + prefix + a.id}
-//               text={a.definition}
-//               filterName={type + ' filter'}
-//               value={getAttributeValue(this.data, a.id)}
-//               options = {opts}
-//               update={
-//                 (x: number) => {
-//                   if (x !== -1) {
-//                     this.data.attributes.set(a.id, opts[x])
-//                     this.setData({ ...this.data })
-//                   }
-//                 }
-//               } />)
-//           }
-//         }

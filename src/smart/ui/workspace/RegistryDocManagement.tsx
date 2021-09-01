@@ -27,7 +27,7 @@ const RegistryDocManagement: React.FC<{
     name: 'New Document',
     attributes: {},
     regid: regid,
-  };
+  };  
 
   function matchFilter(doc: SMARTDocument, filter: string) {
     return filter === '' || doc.name.toLowerCase().includes(filter);

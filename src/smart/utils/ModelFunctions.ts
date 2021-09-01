@@ -121,6 +121,10 @@ export function checkId(id: string, ids: Record<string, unknown>): boolean {
     alert('New ID is empty');
     return false;
   }
+  if (id.includes('#')) {
+    alert('New ID contains symbols #');
+    return false;
+  }
   if (ids[id] !== undefined) {
     alert('New ID already exists');
     return false;
@@ -138,6 +142,17 @@ export function itemSorterByText(a: IListItem, b: IListItem): number {
 
 export function removeSpace(id: string) {
   return id.replaceAll(/\s+/g, '');
+}
+
+export function parseCardinality(text:string): [string, string] {
+  const index = text.indexOf('..');
+  const low = index === -1 ? '' : text.substring(0, index);
+  const high = index === -1 ? '' : text.substr(index + 2);
+  return [low, high];
+}
+
+export function cardinalityToString(low:string, high:string):string {
+  return `${low}..${high}`;
 }
 
 export function findUniqueID(prefix: string, ids: Record<string, MMELObject>) {
