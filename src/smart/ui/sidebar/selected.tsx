@@ -60,7 +60,7 @@ export const SelectedNodeDescription: React.FC<{
   const elm: EdtiorNodeWithInfoCallback | null = getSelectedElement(selected);
 
   function getSelectedElement(
-    selected: Elements<any> | null
+    selected: Elements<unknown> | null
   ): EdtiorNodeWithInfoCallback | null {
     if (selected !== null && selected.length > 0) {
       const s = selected[0];

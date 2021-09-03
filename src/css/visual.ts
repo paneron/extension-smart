@@ -18,26 +18,28 @@ export const handlecss = css`
   border: '1px solid black!important',
 `;
 
+export const no_highlight = css``;
+
 export function map_style__coverage(result: MapCoverType): SerializedStyles {
-  return css`
-    background-color: ${MappingResultStyles[result].color};
-  `;
+  return flow_node__highlighed(MappingResultStyles[result].color);
 }
 
 export function map_style__source(result: MapSourceType): SerializedStyles {
-  return css`
-    background-color: ${MappingSourceStyles[result].color};
-  `;
+  return flow_node__highlighed(MappingSourceStyles[result].color);
 }
 
 export function search_style__highlight(
   result: SearchHighlightType
 ): SerializedStyles {
   if (result !== SearchHighlightType.NONE) {
-    return css`
-      background-color: ${SearchResultStyles[result].color};
-    `;
+    return flow_node__highlighed(SearchResultStyles[result].color);
   } else {
-    return css``;
+    return no_highlight;
   }
+}
+
+export function flow_node__highlighed(color: string) {
+  return css`
+    background-color: ${color};
+  `;
 }

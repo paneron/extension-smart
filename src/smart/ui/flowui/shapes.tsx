@@ -157,12 +157,12 @@ export const ProcessBox: Record<
   ),
 };
 
-function onDragStart(event: React.DragEvent<any>, fromid: string): void {
+function onDragStart(event: React.DragEvent<unknown>, fromid: string): void {
   event.dataTransfer.setData('text', fromid);
 }
 
 function onDrop(
-  event: React.DragEvent<any>,
+  event: React.DragEvent<unknown>,
   toid: string,
   setMapping: (fromid: string, toid: string) => void
 ): void {

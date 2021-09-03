@@ -1,3 +1,5 @@
+import { isSpace } from '../../utils/ModelFunctions';
+
 export function MMELtokenize(x: string): Array<string> {
   const set: Array<string> = [];
   let t = '';
@@ -55,7 +57,7 @@ export function MMELtokenizeSet(x: string): Set<string> {
 
 export function MMELremovePackage(x: string): string {
   if (x.length >= 2) {
-    return x.substr(1, x.length - 2);
+    return x.substring(1, x.length - 1);
   } else {
     return x;
   }
@@ -98,8 +100,4 @@ export function MMELtokenizeAttributes(x: string): Array<string> {
     }
   }
   return set;
-}
-
-function isSpace(x: string): boolean {
-  return /\s/.test(x);
 }

@@ -2,7 +2,7 @@ import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { EditorModel } from '../../model/editormodel';
-import { MMELVariable } from '../../serialize/interface/supportinterface';
+import { measurementValidCheck } from '../../utils/measurement/BasicFunctions';
 import { ReferenceSelector } from '../common/fields';
 import { IObject } from '../common/listmanagement/listPopoverItem';
 
@@ -34,7 +34,7 @@ export const MeasurementItem: React.FC<{
         value={measure.measure}
         options={types}
         update={(x: number) => {
-          measure.measure = '[' + types[x] + ']';
+          measure.measure += '[' + types[x] + ']';
           setObject({ ...measure });
         }}
         onChange={(x: string) => {
@@ -45,25 +45,10 @@ export const MeasurementItem: React.FC<{
       <MGDButton
         key="ui#itemupdate#checkbutton"
         icon="diagnosis"
-        onClick={() => validCheck(measure.measure, model!.vars)}
+        onClick={() => measurementValidCheck(measure.measure, model!.vars)}
       >
         Expression Validator
       </MGDButton>
     </FormGroup>
   );
 };
-
-function validCheck(def: string, types: Record<string, MMELVariable>) {
-  const results = Array.from(def.matchAll(/\[.*?\]/g));
-  let ok = true;
-  for (const r of results) {
-    const name = r[0].substr(1, r[0].length - 2);
-    if (types[name] === undefined) {
-      alert(name + ' is not a measurement');
-      ok = false;
-    }
-  }
-  if (ok) {
-    alert('All measurement names can be resolved');
-  }
-}

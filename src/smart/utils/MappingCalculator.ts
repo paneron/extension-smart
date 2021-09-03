@@ -11,7 +11,7 @@ import {
   ModelType,
 } from '../model/editormodel';
 import { PageHistory } from '../model/history';
-import { LegendInterface, MapperSelectedInterface } from '../model/state';
+import { LegendInterface, MapperSelectedInterface } from '../model/States';
 import { MappingType, MapSet } from '../model/mapmodel';
 import { SerializedStyles } from '@emotion/react';
 

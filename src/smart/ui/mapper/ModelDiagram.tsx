@@ -32,7 +32,7 @@ import {
   MapperState,
   MapperViewOption,
   NodeTypes,
-} from '../../model/state';
+} from '../../model/States';
 import ComponentSummary from '../popover/ComponentSummary';
 import {
   buildHistoryMap,

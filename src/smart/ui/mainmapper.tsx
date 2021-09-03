@@ -30,7 +30,7 @@ import {
   MapperSelectedInterface,
   MapperState,
   MapperViewOption,
-} from '../model/state';
+} from '../model/States';
 import { createNewEditorModel } from '../utils/EditorFactory';
 import { createEditorModelWrapper } from '../model/modelwrapper';
 import {

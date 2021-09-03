@@ -3,7 +3,7 @@ import { CSSROOTVARIABLES } from './root.css';
 
 export const shame__label = css`
   font-weight: ${CSSROOTVARIABLES['--font-weight--regular']};
-  font-size: ${CSSROOTVARIABLES['--font-size--regular']};
+  font-size: ${CSSROOTVARIABLES['--font-size--small']};
   text-align: center;
   position: absolute;
   top: 45px;

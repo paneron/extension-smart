@@ -13,7 +13,13 @@ import ReactFlow, {
   Edge,
 } from 'react-flow-renderer';
 
-import { ControlGroup, Dialog } from '@blueprintjs/core';
+import {
+  ControlGroup,
+  Dialog,
+  IToaster,
+  IToastProps,
+  Toaster,
+} from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
@@ -36,7 +42,7 @@ import {
   createNewEditorModel,
   createSubprocessComponent,
 } from '../utils/EditorFactory';
-import { EdgeTypes, EditorState, NodeTypes } from '../model/state';
+import { EdgeTypes, EditorState, NodeTypes } from '../model/States';
 import {
   EditorModel,
   EditorProcess,
@@ -122,6 +128,11 @@ const ModelEditor: React.FC<{
   const [searchResult, setSearchResult] = useState<Set<string>>(
     new Set<string>()
   );
+  const [toaster] = useState<IToaster>(Toaster.create());
+
+  function showMsg(msg: IToastProps) {
+    toaster.show(msg);
+  }
 
   function onLoad(params: OnLoadParams) {
     logger?.log('flow loaded');
@@ -151,9 +162,7 @@ const ModelEditor: React.FC<{
       model: state.modelWrapper.model,
       page: state.modelWrapper.page,
       id: id,
-      setModelAfterDelete: (model: EditorModel) => {
-        setModelAfterDelete(model);
-      },
+      setModelAfterDelete,
     };
     saveLayout();
     setDialogPack(SetDiagAction[action](props));
@@ -210,7 +219,7 @@ const ModelEditor: React.FC<{
 
   function onMetaChanged(meta: MMELMetadata) {
     state.history.items[0].pathtext = getRootName(meta);
-    state.modelWrapper.model.meta = meta;    
+    state.modelWrapper.model.meta = meta;
     setState({ ...state });
   }
 
@@ -258,7 +267,7 @@ const ModelEditor: React.FC<{
     }
   }
 
-  function onDrop(event: React.DragEvent<any>) {
+  function onDrop(event: React.DragEvent<unknown>) {
     event.preventDefault();
     if (canvusRef.current !== null && rfInstance !== null) {
       const reactFlowBounds = canvusRef.current.getBoundingClientRect();
@@ -405,6 +414,7 @@ const ModelEditor: React.FC<{
                 setDialogType(null);
               }}
               msg={dialogPack.msg}
+              showMsg={showMsg}
             />
           </Dialog>
         )}

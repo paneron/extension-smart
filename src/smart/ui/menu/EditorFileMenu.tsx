@@ -32,7 +32,7 @@ const EditorFileMenu: React.FC<{
   } = useContext(DatasetContext);
 
   const canOpen = requestFileFromFilesystem && useDecodedBlob;
-  const canSave = getBlob && writeFileToFilesystem;  
+  const canSave = getBlob && writeFileToFilesystem;
 
   // Settings
   function handleOpenSettings() {
@@ -90,6 +90,5 @@ const EditorFileMenu: React.FC<{
     </Menu>
   );
 };
-
 
 export default EditorFileMenu;

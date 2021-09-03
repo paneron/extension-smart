@@ -22,6 +22,7 @@ import {
   ReferenceSelector,
 } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
+import { measurementValidCheck } from '../../utils/measurement/BasicFunctions';
 
 const MeasurementEditPage: React.FC<{
   model: EditorModel;
@@ -170,7 +171,7 @@ const MeasureEditItemPage: React.FC<{
         <MGDButton
           key="ui#measurement#builderbutton#holder"
           icon="derive-column"
-          onClick={() => validCheck(mea.definition, model!)}
+          onClick={() => measurementValidCheck(mea.definition, model!.vars)}
         >
           Definition validity check
         </MGDButton>
@@ -194,20 +195,5 @@ const MeasureEditItemPage: React.FC<{
     </FormGroup>
   );
 };
-
-function validCheck(def: string, model: EditorModel) {
-  const results = Array.from(def.matchAll(/\[.*?\]/g));
-  let ok = true;
-  for (const r of results) {
-    const name = r[0].substr(1, r[0].length - 2);
-    if (model.vars[name] === undefined) {
-      alert(name + ' is not a measurement');
-      ok = false;
-    }
-  }
-  if (ok) {
-    alert('All measurement names can be resolved');
-  }
-}
 
 export default MeasurementEditPage;

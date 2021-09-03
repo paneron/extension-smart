@@ -24,6 +24,12 @@ export interface EditorState {
   modelWrapper: ModelWrapper;
 }
 
+export interface ViewerState {
+  dvisible: boolean; // visibility of data nodes
+  history: PageHistory;
+  modelWrapper: ModelWrapper;
+}
+
 export interface MapperViewOption {
   dataVisible: boolean; // visibility of data nodes
   legVisible: boolean; // visibility of legends

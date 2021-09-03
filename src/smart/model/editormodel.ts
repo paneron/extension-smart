@@ -90,9 +90,12 @@ export interface EditorModel {
   root: string;
 }
 
-export function isEditorNode(x: any): x is EditorNode {
+export function isEditorNode(x: unknown): x is EditorNode {
+  const test = x as EditorNode;
   return (
-    x !== null && x.objectVersion !== undefined && x.objectVersion === 'Editor'
+    test !== null &&
+    test.objectVersion !== undefined &&
+    test.objectVersion === 'Editor'
   );
 }
 

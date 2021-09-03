@@ -198,6 +198,23 @@ export function getReactFlowElementsFrom(
   );
 }
 
+export function getViewerReactFlowElementsFrom(
+  mw: ModelWrapper,
+  dvisible: boolean,
+  onProcessClick: (pageid: string, processid: string) => void,
+  getStyleById: (id: string) => SerializedStyles,
+  getSVGColorById: (id: string) => string
+): Elements {
+  const callback = getEditorNodeCallBack({
+    type: ModelType.EDIT,
+    model: mw.model,
+    onProcessClick,
+    getStyleClassById: getStyleById,
+    getSVGColorById,
+  });
+  return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
+}
+
 export function getActionReactFlowElementsFrom(
   mw: ModelWrapper,
   dvisible: boolean,

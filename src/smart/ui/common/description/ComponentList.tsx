@@ -112,3 +112,22 @@ export const ProvisionList: React.FC<{
     </>
   );
 };
+
+export const MeasurementList: React.FC<{
+  measurements: string[];
+}> = function ({ measurements }) {
+  return (
+    <>
+      {measurements.length > 0 ? (
+        <>
+          <p>Measurement tests</p>
+          <ul>
+            {measurements.map((mea, index) => (
+              <li key={`measurement#${index}`}>{mea}</li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+    </>
+  );
+};

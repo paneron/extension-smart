@@ -24,7 +24,10 @@ import {
   ActorDescription,
   DescriptionItem,
 } from '../common/description/fields';
-import { ProvisionList } from '../common/description/ComponentList';
+import {
+  MeasurementList,
+  ProvisionList,
+} from '../common/description/ComponentList';
 
 export const ProcessQuickEdit: React.FC<
   NodeCallBack & {
@@ -78,6 +81,7 @@ export const ProcessQuickEdit: React.FC<
         getProvisionById={getProvisionById}
         getRefById={getRefById}
       />
+      <MeasurementList measurements={process.measure} />
     </>
   );
 };

@@ -24,10 +24,10 @@ const RegistryDocManagement: React.FC<{
 }> = function ({ model, store, regid, setStore, onBack, workspace }) {
   const initObj: DocumentEditInterface = {
     id: 0,
-    name: 'New Document',
+    name: 'New item',
     attributes: {},
     regid: regid,
-  };  
+  };
 
   function matchFilter(doc: SMARTDocument, filter: string) {
     return filter === '' || doc.name.toLowerCase().includes(filter);
@@ -93,8 +93,8 @@ const RegistryDocManagement: React.FC<{
   };
 
   const reghandler: IManageHandler = {
-    filterName: 'Document filter',
-    itemName: 'Documents',
+    filterName: 'Date item filter',
+    itemName: 'Data items',
     Content: CallbackDocumentEdit,
     initObj: { ...initObj },
     model: model,

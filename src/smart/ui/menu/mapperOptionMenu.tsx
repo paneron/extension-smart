@@ -4,7 +4,7 @@
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { IconName, Menu, MenuItem } from '@blueprintjs/core';
-import { MapperViewOption } from '../../model/state';
+import { MapperViewOption } from '../../model/States';
 
 const MapperOptionMenu: React.FC<{
   viewOption: MapperViewOption;

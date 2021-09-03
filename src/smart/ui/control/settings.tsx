@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Tab, Tabs } from '@blueprintjs/core';
+import { IToastProps, Tab, Tabs } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useState } from 'react';
@@ -39,18 +39,20 @@ interface TabProps {
     model: EditorModel;
     setModel: (m: EditorModel) => void;
     onMetaChanged: (meta: MMELMetadata) => void;
+    showMsg: (msg: IToastProps) => void;
   }>;
 }
 
 const tabs: Record<SETTINGPAGE, TabProps> = {
   [SETTINGPAGE.METAPAGE]: {
     title: 'Metadata',
-    Panel: ({ model, onMetaChanged }) => (
+    Panel: ({ model, onMetaChanged, showMsg }) => (
       <MetaEditPage
         meta={model.meta}
-        setMetadata={(meta: MMELMetadata) => {          
+        setMetadata={(meta: MMELMetadata) => {
           onMetaChanged(meta);
         }}
+        showMsg={showMsg}
       />
     ),
   },
@@ -96,7 +98,8 @@ const BasicSettingPane: React.FC<{
   model: EditorModel;
   setModel: (m: EditorModel) => void;
   onMetaChanged: (meta: MMELMetadata) => void;
-}> = ({ model, setModel, onMetaChanged }) => {
+  showMsg: (msg: IToastProps) => void;
+}> = ({ model, setModel, onMetaChanged, showMsg }) => {
   const { logger } = useContext(DatasetContext);
   const [page, setPage] = useState<SETTINGPAGE>(SETTINGPAGE.METAPAGE);
 
@@ -126,7 +129,12 @@ const BasicSettingPane: React.FC<{
               </span>
             }
             panel={
-              <props.Panel model={model} setModel={setModel} onMetaChanged={onMetaChanged}></props.Panel>
+              <props.Panel
+                model={model}
+                setModel={setModel}
+                onMetaChanged={onMetaChanged}
+                showMsg={showMsg}
+              />
             }
           />
         ))}

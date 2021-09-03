@@ -7,7 +7,7 @@ import {
   isEditorData,
   ModelType,
 } from './editormodel';
-import { MMELtoFlowEntries } from './state';
+import { MMELtoFlowEntries } from './States';
 import { MMELRole } from '../serialize/interface/supportinterface';
 import { SerializedStyles } from '@emotion/react';
 import React from 'react';

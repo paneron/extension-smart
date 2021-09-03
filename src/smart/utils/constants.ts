@@ -97,7 +97,7 @@ export type DeletableNodeTypes =
   | DataType.ENDEVENT;
 
 export interface LoggerInterface {
-  log: (...args: any[]) => void;
+  log: (...args: unknown[]) => void;
 }
 
 export type OpenFileInterface = (

@@ -4,7 +4,10 @@
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import MGDLabel from '../../../MGDComponents/MGDLabel';
-import { cardinalityToString, parseCardinality } from '../../../utils/ModelFunctions';
+import {
+  cardinalityToString,
+  parseCardinality,
+} from '../../../utils/ModelFunctions';
 import { NormalComboBox } from '../../common/fields';
 
 export const CardinalityField: React.FC<{

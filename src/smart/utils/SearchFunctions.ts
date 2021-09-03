@@ -22,7 +22,7 @@ import {
   createPageHistory,
   PageHistory,
 } from '../model/history';
-import { LegendInterface } from '../model/state';
+import { LegendInterface } from '../model/States';
 import { DataType } from '../serialize/interface/baseinterface';
 import { isRegistry } from '../serialize/util/validation';
 import { SearchableNodeTypes } from './constants';

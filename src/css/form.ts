@@ -3,9 +3,14 @@
 import { css } from '@emotion/react';
 import { CSSROOTVARIABLES } from './root.css';
 
-const font_style = css`
+const normal_font_style = css`
   font-weight: ${CSSROOTVARIABLES['--font-weight--regular']};
   font-size: ${CSSROOTVARIABLES['--font-size--regular']};
+`;
+
+const heading_font_style = css`
+  font-weight: ${CSSROOTVARIABLES['--font-weight--regular']};
+  font-size: ${CSSROOTVARIABLES['--font-size--large']};
 `;
 
 const background_style = css`
@@ -15,20 +20,27 @@ const background_style = css`
 `;
 
 export const mgd_input = css`
-  ${font_style};
+  ${normal_font_style};
   ${background_style};
 `;
+
 export const mgd_textarea = css`
-  ${font_style};
+  ${normal_font_style};
   ${background_style};
   resize: both;
   vertical-align: middle;
 `;
+
 export const mgd_label = css`
-  ${font_style};
+  ${normal_font_style};
 `;
+
+export const mgd_heading = css`
+  ${heading_font_style};
+`;
+
 export const mgd_select = css`
-  ${font_style};
+  ${normal_font_style};
   ${background_style};
 `;
 

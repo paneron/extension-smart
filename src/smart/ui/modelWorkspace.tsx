@@ -30,7 +30,7 @@ import {
   popPage,
 } from '../model/history';
 import { createNewEditorModel } from '../utils/EditorFactory';
-import { ActionState, EdgeTypes, NodeTypes } from '../model/state';
+import { ActionState, EdgeTypes, NodeTypes } from '../model/States';
 import { SelectedNodeDescription } from './sidebar/selected';
 import { DataVisibilityButton } from './control/buttons';
 import MGDButton from '../MGDComponents/MGDButton';

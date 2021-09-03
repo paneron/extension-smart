@@ -61,7 +61,7 @@ const DocumentAttribute: React.FC<{
   prefix: string;
 }> = function ({ attribute, model, doc, setDoc, roles, workspace, prefix }) {
   const type = attribute.type;
-  const attributeid = prefix+attribute.id;
+  const attributeid = prefix + attribute.id;
   const value = doc.attributes[attributeid] ?? '';
 
   function onChange(x: string) {
@@ -100,7 +100,7 @@ const DocumentAttribute: React.FC<{
           setDoc={setDoc}
           isRoot={false}
           workspace={workspace}
-          prefix={prefix+attributeid+'#'}
+          prefix={prefix + attributeid + '#'}
         />
       </fieldset>
     );

@@ -30,15 +30,13 @@ export function parseDataAttribute(
 
   let index = basic.indexOf('[');
   if (index !== -1) {
-    attribute.cardinality = basic
-      .substr(index + 1, basic.length - index - 2)
-      .trim();
-    basic = basic.substr(0, index);
+    attribute.cardinality = basic.substring(index + 1, basic.length - 1).trim();
+    basic = basic.substring(0, index);
   }
   index = basic.indexOf(':');
   if (index !== -1) {
-    attribute.type = basic.substr(index + 1, basic.length - index - 1).trim();
-    basic = basic.substr(0, index);
+    attribute.type = basic.substring(index + 1).trim();
+    basic = basic.substring(0, index);
   }
   attribute.id = basic.trim();
   if (details !== '') {

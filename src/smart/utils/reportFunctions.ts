@@ -69,7 +69,7 @@ export function genReport(
     const index1 = remain.indexOf(REPORTSTARTTAG);
     const index2 = remain.indexOf(REPORTENDTAG);
     if (index1 !== -1 && index2 > index1) {
-      out += remain.substr(0, index1);
+      out += remain.substring(0, index1);
       try {
         out += parseCode(
           remain.substring(index1 + REPORTSTARTTAG.length, index2),

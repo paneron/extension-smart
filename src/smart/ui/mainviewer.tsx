@@ -7,17 +7,22 @@ import React, { useContext, useMemo, useState } from 'react';
 import ReactFlow, {
   Controls,
   OnLoadParams,
-  ReactFlowProvider,  
+  ReactFlowProvider,
 } from 'react-flow-renderer';
 
-import { ControlGroup } from '@blueprintjs/core';
+import {
+  ControlGroup,
+  IToaster,
+  IToastProps,
+  Toaster,
+} from '@blueprintjs/core';
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
 import {
   createEditorModelWrapper,
-  getReactFlowElementsFrom,
+  getViewerReactFlowElementsFrom,
   ModelWrapper,
 } from '../model/modelwrapper';
 import {
@@ -27,17 +32,12 @@ import {
   PageHistory,
   popPage,
 } from '../model/history';
-import {
-  createNewEditorModel,  
-} from '../utils/EditorFactory';
-import { EdgeTypes, EditorState, NodeTypes } from '../model/state';
+import { createNewEditorModel } from '../utils/EditorFactory';
+import { EdgeTypes, NodeTypes, ViewerState } from '../model/States';
 import { SelectedNodeDescription } from './sidebar/selected';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
-import {
-  react_flow_container_layout,
-  sidebar_layout,
-} from '../../css/layout';
+import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
 import { DataVisibilityButton } from './control/buttons';
 import SearchComponentPane from './sidebar/search';
 import {
@@ -48,6 +48,10 @@ import { handleModelOpen } from '../utils/IOFunctions';
 import { SidebarBlockConfig } from '@riboseinc/paneron-extension-kit/widgets/Sidebar/Block';
 import { Popover2 } from '@blueprintjs/popover2';
 import ViewToolMenu from './menu/ViewToolMenu';
+import Application2060 from './application/pas2060/Main';
+import MeasureCheckPane from './measurement/MeasurementValidationPane';
+import { ViewFunctionInterface } from '../model/ViewFunctionModel';
+import LegendPane from './common/description/LegendPane';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -56,57 +60,22 @@ export enum FunctionPage {
   Simulation = 'simulation',
   Measurement = 'measurement',
   Filter = 'filter',
-  Checklist = 'checklist'
+  Checklist = 'checklist',
 }
 
 export const FuntionNames: Record<FunctionPage, string> = {
-  [FunctionPage.Simulation]: 'Simulation',    
-  [FunctionPage.Measurement]: 'Measurement validation',    
-  [FunctionPage.Filter]: 'Filtering',    
-  [FunctionPage.Checklist]: 'Self-assessment checklist'    
-}
-
-const FunPages: Record<FunctionPage, SidebarBlockConfig> = {
-  [FunctionPage.Simulation]: {
-    key: 'simulation',
-    title: FuntionNames[FunctionPage.Simulation],
-    collapsedByDefault: false,
-    content: (
-      <>Simulation</>
-    )
-    
-  },
-  [FunctionPage.Measurement]: {
-    key: 'measurement',
-    title: FuntionNames[FunctionPage.Measurement],
-    collapsedByDefault: false,
-    content: (
-      <>Measurement</>
-    )
-  },
-  [FunctionPage.Filter]: {
-    key: 'filter',
-    title: FuntionNames[FunctionPage.Filter],
-    collapsedByDefault: false,
-    content: (
-      <>Filter</>
-    )
-  },
-  [FunctionPage.Checklist]: {
-    key: 'checklist',
-    title: FuntionNames[FunctionPage.Checklist],
-    collapsedByDefault: false,
-    content: (
-      <>Checklist</>
-    )
-  },
-}
+  [FunctionPage.Simulation]: 'Simulation',
+  [FunctionPage.Measurement]: 'Measurement validation',
+  [FunctionPage.Filter]: 'Filtering',
+  [FunctionPage.Checklist]: 'Self-assessment checklist',
+};
 
 const ModelViewer: React.FC<{
   isVisible: boolean;
   className?: string;
 }> = ({ isVisible, className }) => {
-  const { logger, useDecodedBlob, requestFileFromFilesystem } = useContext(DatasetContext);
+  const { logger, useDecodedBlob, requestFileFromFilesystem } =
+    useContext(DatasetContext);
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
@@ -115,24 +84,33 @@ const ModelViewer: React.FC<{
     []
   );
 
-  const [state, setState] = useState<EditorState>({
+  const [state, setState] = useState<ViewerState>({
     dvisible: true,
     modelWrapper: initModelWrapper,
     history: createPageHistory(initModelWrapper),
-    edgeDeleteVisible: false,
   });
   const [selected, setSelected] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<Set<string>>(
     new Set<string>()
   );
-  const [funPage, setFunPage] = useState<FunctionPage>(FunctionPage.Measurement);
+  const [funPage, setFunPage] = useState<FunctionPage>(
+    FunctionPage.Measurement
+  );
+  const [view, setView] = useState<ViewFunctionInterface | undefined>(
+    undefined
+  );
+  const [toaster] = useState<IToaster>(Toaster.create());
+
+  function showMsg(msg: IToastProps) {
+    toaster.show(msg);
+  }
 
   function onLoad(params: OnLoadParams) {
-    logger?.log('flow loaded');    
+    logger?.log('flow loaded');
     params.fitView();
   }
 
-  function toggleDataVisibility() {    
+  function toggleDataVisibility() {
     setState({ ...state, dvisible: !state.dvisible });
   }
 
@@ -140,13 +118,13 @@ const ModelViewer: React.FC<{
     setState({ ...state, history: createPageHistory(mw), modelWrapper: mw });
   }
 
-  function onPageChange(updated: PageHistory, newPage: string) {    
+  function onPageChange(updated: PageHistory, newPage: string) {
     state.history = updated;
     state.modelWrapper.page = newPage;
     setState({ ...state });
   }
 
-  function onProcessClick(pageid: string, processid: string): void {    
+  function onProcessClick(pageid: string, processid: string): void {
     const mw = state.modelWrapper;
     mw.page = pageid;
     logger?.log('Go to page', pageid);
@@ -155,7 +133,7 @@ const ModelViewer: React.FC<{
   }
 
   function drillUp(): void {
-    if (state.history.items.length > 0) {      
+    if (state.history.items.length > 0) {
       state.modelWrapper.page = popPage(state.history);
       setState({ ...state });
     }
@@ -175,11 +153,15 @@ const ModelViewer: React.FC<{
   }
 
   function getStyleById(id: string) {
-    return getHighlightedStyleById(id, selected, searchResult);
+    return view !== undefined
+      ? view.getStyleById(id, mw.page, view.data)
+      : getHighlightedStyleById(id, selected, searchResult);
   }
 
   function getSVGColorById(id: string) {
-    return getHighlightedSVGColorById(id, selected, searchResult);
+    return view !== undefined
+      ? view.getSVGColorById(id, mw.page, view.data)
+      : getHighlightedSVGColorById(id, selected, searchResult);
   }
 
   function resetSearchElements(set: Set<string>) {
@@ -187,30 +169,60 @@ const ModelViewer: React.FC<{
     setSearchResult(set);
   }
 
+  const mw = state.modelWrapper;
+  const model = mw.model;
+  const namespace = model.meta.namespace;
+
+  const FunPages: Record<FunctionPage, SidebarBlockConfig> = {
+    [FunctionPage.Simulation]: {
+      key: 'simulation',
+      title: FuntionNames[FunctionPage.Simulation],
+      collapsedByDefault: false,
+      content: <>Simulation</>,
+    },
+    [FunctionPage.Measurement]: {
+      key: 'measurement',
+      title: FuntionNames[FunctionPage.Measurement],
+      collapsedByDefault: false,
+      content: (
+        <MeasureCheckPane model={model} setView={setView} showMsg={showMsg} />
+      ),
+    },
+    [FunctionPage.Filter]: {
+      key: 'filter',
+      title: FuntionNames[FunctionPage.Filter],
+      collapsedByDefault: false,
+      content: <>Filter</>,
+    },
+    [FunctionPage.Checklist]: {
+      key: 'checklist',
+      title: FuntionNames[FunctionPage.Checklist],
+      collapsedByDefault: false,
+      content: <>Checklist</>,
+    },
+  };
+
   const toolbar = (
-    <ControlGroup>      
+    <ControlGroup>
       <MGDButton
-        onClick={() => handleModelOpen({
-          setModelWrapper,
-          useDecodedBlob,
-          requestFileFromFilesystem,
-          logger          
-        })}
-      >        
+        onClick={() =>
+          handleModelOpen({
+            setModelWrapper,
+            useDecodedBlob,
+            requestFileFromFilesystem,
+            logger,
+          })
+        }
+      >
         Open Model
       </MGDButton>
       <Popover2
         minimal
         placement="bottom-start"
-        content={
-          <ViewToolMenu
-            funPage={funPage}
-            setFunPage={setFunPage}
-          />
-        }
+        content={<ViewToolMenu funPage={funPage} setFunPage={setFunPage} />}
       >
         <MGDButton>Tools</MGDButton>
-      </Popover2>   
+      </Popover2>
       <MGDButton
         type={MGDButtonType.Primary}
         disabled={state.history.items.length <= 1}
@@ -223,18 +235,18 @@ const ModelViewer: React.FC<{
 
   const breadcrumbs = getBreadcrumbs(state.history, onPageChange);
 
-  const selectedSideBlockConfig:SidebarBlockConfig = {
+  const selectedSideBlockConfig: SidebarBlockConfig = {
     key: 'selected-node',
     title: 'Selected node',
     content: (
       <SelectedNodeDescription
         model={state.modelWrapper.model}
-        pageid={state.modelWrapper.page}              
+        pageid={state.modelWrapper.page}
       />
     ),
   };
-  
-  const searchSideBlockConfig:SidebarBlockConfig = {
+
+  const searchSideBlockConfig: SidebarBlockConfig = {
     key: 'search-node',
     title: 'Search components',
     content: (
@@ -246,18 +258,34 @@ const ModelViewer: React.FC<{
     ),
   };
 
+  const PAS2060Application: SidebarBlockConfig = {
+    key: 'pas2060',
+    title: 'PAS 2060 application',
+    content: <Application2060 model={state.modelWrapper.model} />,
+  };
+
+  const normalblocks = [
+    selectedSideBlockConfig,
+    FunPages[funPage],
+    searchSideBlockConfig,
+  ];
+  const addonblocks =
+    namespace === 'PAS2060Application'
+      ? [PAS2060Application, ...normalblocks]
+      : normalblocks;
+
   const sidebar = (
     <Sidebar
       stateKey="opened-register-item"
       css={sidebar_layout}
       title="Item metadata"
-      blocks={[selectedSideBlockConfig, FunPages[funPage], searchSideBlockConfig]}
+      blocks={addonblocks}
     />
   );
 
-  if (isVisible) {    
+  if (isVisible) {
     return (
-      <ReactFlowProvider>       
+      <ReactFlowProvider>
         <Workspace
           className={className}
           toolbar={toolbar}
@@ -265,13 +293,11 @@ const ModelViewer: React.FC<{
           navbarProps={{ breadcrumbs }}
         >
           <div css={react_flow_container_layout}>
-            <ReactFlow              
-              elements={getReactFlowElementsFrom(
+            <ReactFlow
+              elements={getViewerReactFlowElementsFrom(
                 state.modelWrapper,
                 state.dvisible,
-                state.edgeDeleteVisible,
                 onProcessClick,
-                () => {},
                 getStyleById,
                 getSVGColorById
               )}
@@ -290,6 +316,9 @@ const ModelViewer: React.FC<{
                 />
               </Controls>
             </ReactFlow>
+            {view !== undefined && (
+              <LegendPane list={view.legendList} onLeft={false} />
+            )}
           </div>
         </Workspace>
       </ReactFlowProvider>

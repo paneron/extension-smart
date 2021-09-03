@@ -1,7 +1,7 @@
 import React from 'react';
 import MGDLegend from '../../../MGDComponents/MGDLegend';
 import MGDLegendEntry from '../../../MGDComponents/MGDLegendEntry';
-import { LegendInterface } from '../../../model/state';
+import { LegendInterface } from '../../../model/States';
 
 const LegendPane: React.FC<{
   list: Record<string, LegendInterface>;

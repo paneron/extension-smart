@@ -8,7 +8,14 @@ import {
   isEditorRegistry,
 } from '../model/editormodel';
 import { MMELObject } from '../serialize/interface/baseinterface';
-import { MMELMetadata, MMELReference } from '../serialize/interface/supportinterface';
+import {
+  MMELEdge,
+  MMELSubprocess,
+} from '../serialize/interface/flowcontrolinterface';
+import {
+  MMELMetadata,
+  MMELReference,
+} from '../serialize/interface/supportinterface';
 import { IListItem } from '../ui/common/fields';
 
 const TypeReferenceHead = 'reference(';
@@ -16,10 +23,14 @@ const TypeReferenceTail = ')';
 
 // temp class for debug, global console logger
 export class Logger {
-  static logger: { log: (...args: any[]) => void };
+  static logger: { log: (...args: unknown[]) => void };
 }
 
-export function getRootName(meta:MMELMetadata): string {
+export function isSpace(x: string): boolean {
+  return /\s/.test(x);
+}
+
+export function getRootName(meta: MMELMetadata): string {
   if (meta.shortname !== '') {
     return meta.shortname;
   }
@@ -67,12 +78,12 @@ export function getRegistryReference(
   if (type.length <= TypeReferenceTail.length + TypeReferenceHead.length) {
     return null;
   }
-  const head = type.substr(0, TypeReferenceHead.length);
+  const head = type.substring(0, TypeReferenceHead.length);
   const content = type.substring(
     TypeReferenceHead.length,
     type.length - TypeReferenceTail.length
   );
-  const tail = type.substr(type.length - TypeReferenceTail.length);
+  const tail = type.substring(type.length - TypeReferenceTail.length);
   if (head === TypeReferenceHead && tail === TypeReferenceTail) {
     const reg = elements[content];
     if (reg !== undefined && isEditorRegistry(reg)) {
@@ -126,6 +137,33 @@ export function referenceSorter(a: MMELReference, b: MMELReference): number {
   return a.document.localeCompare(b.document);
 }
 
+export function buildModelLinks(model: EditorModel) {
+  for (const p in model.pages) {
+    const page = model.pages[p];
+    const neighbor: Record<string, Set<string>> = {};
+    Object.values(page.edges).forEach(e => {
+      if (neighbor[e.from] === undefined) {
+        neighbor[e.from] = new Set<string>();
+      }
+      neighbor[e.from].add(e.to);
+    });
+    page.neighbor = neighbor;
+  }
+}
+
+export function buildEdgeConnections(
+  page: MMELSubprocess
+): Record<string, MMELEdge[]> {
+  const result: Record<string, MMELEdge[]> = {};
+  Object.values(page.edges).forEach(e => {
+    if (result[e.from] === undefined) {
+      result[e.from] = [];
+    }
+    result[e.from].push(e);
+  });
+  return result;
+}
+
 export function checkId(id: string, ids: Record<string, unknown>): boolean {
   if (id === '') {
     alert('New ID is empty');
@@ -154,14 +192,14 @@ export function removeSpace(id: string) {
   return id.replaceAll(/\s+/g, '');
 }
 
-export function parseCardinality(text:string): [string, string] {
+export function parseCardinality(text: string): [string, string] {
   const index = text.indexOf('..');
   const low = index === -1 ? '' : text.substring(0, index);
-  const high = index === -1 ? '' : text.substr(index + 2);
+  const high = index === -1 ? '' : text.substring(index + 2);
   return [low, high];
 }
 
-export function cardinalityToString(low:string, high:string):string {
+export function cardinalityToString(low: string, high: string): string {
   return `${low}..${high}`;
 }
 

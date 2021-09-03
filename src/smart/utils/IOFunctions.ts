@@ -146,7 +146,7 @@ export async function handleFileOpen(props: {
           }).asString;
           logger?.log(
             'Requesting file: Decoded blob',
-            fileDataAsString.substr(0, 20)
+            fileDataAsString.substring(0, Math.min(20, fileDataAsString.length))
           );
           postProcessing(fileDataAsString);
         } else {
