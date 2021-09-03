@@ -115,6 +115,7 @@ const ModelViewer: React.FC<{
   }
 
   function setModelWrapper(mw: ModelWrapper) {
+    setView(undefined);
     setState({ ...state, history: createPageHistory(mw), modelWrapper: mw });
   }
 
@@ -201,6 +202,17 @@ const ModelViewer: React.FC<{
       content: <>Checklist</>,
     },
   };
+
+  const ViewStyleComponentDesc: React.FC<{id:string}> = function ({id}) {
+    const SD = view!.ComponentToolTip;
+    return (
+      <SD 
+        id={id}
+        pageid={mw.page}
+        data={view!.data}
+      />
+    );
+  }
 
   const toolbar = (
     <ControlGroup>
@@ -299,7 +311,10 @@ const ModelViewer: React.FC<{
                 state.dvisible,
                 onProcessClick,
                 getStyleById,
-                getSVGColorById
+                getSVGColorById,
+                view !== undefined && view.ComponentToolTip !== undefined 
+                  ? ViewStyleComponentDesc
+                  : undefined
               )}
               onLoad={onLoad}
               nodesConnectable={false}

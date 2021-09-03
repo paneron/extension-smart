@@ -15,7 +15,18 @@ export enum MeasureRType {
   CONTAINERROR = 'contain',
 }
 
+export type MTestReport = MTestItem[];
+
+export interface MTestItem {
+  cond: string;
+  left: number;
+  right: number;
+  result: boolean;
+  description: string;
+}
+
 export interface MeasureResult {
   overall: boolean;
   items: Record<string, Record<string, MeasureRType>>; // items[pageid][componentid]
+  reports: Record<string, MTestReport>; // reports[processid]
 }

@@ -1,6 +1,7 @@
 import {
   EnviromentValues,
   EnviromentVariables,
+  MTestReport,
   MTreeNode,
 } from '../../model/Measurement';
 import { isBinaryOperator, isListOperator } from './BasicFunctions';
@@ -68,10 +69,20 @@ export function resolveMTNode(
 
 export function evaluateCondition(
   cond: string,
-  values: EnviromentValues
+  values: EnviromentValues,
+  report: MTestReport,
+  reportTitle: string,
 ): boolean {
   const [left, op, right] = parseCondition(cond);
   const a = getValueFromNode(resolveMTNode(left, values, {}), values, {});
   const b = getValueFromNode(resolveMTNode(right, values, {}), values, {});
-  return MComparison[op](a, b);
+  const result = MComparison[op](a, b);
+  report.push({
+    cond,
+    left: a,
+    right: b,
+    result,
+    description: reportTitle
+  });
+  return result;
 }

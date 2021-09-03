@@ -12,11 +12,13 @@ import {
   EnviromentVariables,
   MeasureResult,
   MeasureRType,
+  MTestReport,
 } from '../../model/Measurement';
 import { LegendInterface } from '../../model/States';
 import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
 import { VarType } from '../../serialize/interface/supportinterface';
+import MeasurementTooltip from '../../ui/measurement/MeasurementTooltip';
 import { buildEdgeConnections } from '../ModelFunctions';
 import { evaluateCondition, resolveMTNode } from './Evaluator';
 import { parseMeasurement } from './Parser';
@@ -65,6 +67,7 @@ export function measureTest(
       getSVGColorById,
       legendList: MeasureResultStyles,
       data: result,
+      ComponentToolTip: MeasurementTooltip
     });
   } catch (e: unknown) {
     alert(e);
@@ -124,6 +127,7 @@ function computeResult(
   const items: Record<string, Record<string, MeasureRType>> = {};
   if (root !== undefined) {
     const snode = model.elements[root.start];
+    const reports:Record<string, MTestReport> = {}
     items[model.root] = {};
     const ret = computeNode(
       snode,
@@ -134,11 +138,12 @@ function computeResult(
       items,
       items[model.root],
       {},
-      {}
+      {},
+      reports
     )[0];
-    return { overall: ret, items };
+    return { overall: ret, items, reports };
   }
-  return { overall: true, items: {} };
+  return { overall: true, items: {}, reports: {} };
 }
 
 function computeNode(
@@ -150,7 +155,8 @@ function computeNode(
   items: Record<string, Record<string, MeasureRType>>,
   pageresult: Record<string, MeasureRType>,
   visited: Record<string, [boolean, boolean]>, // keep computed result to avoid loop
-  flatresult: Record<string, MeasureRType> // for keeping the computed results of processes, due to multiple appearance
+  flatresult: Record<string, MeasureRType>, // for keeping the computed results of processes, due to multiple appearance
+  reports: Record<string, MTestReport> // for keeping individual test records for process
 ): [boolean, boolean] {
   if (visited[node.id] !== undefined) {
     if (isEditorProcess(node) && pageresult[node.id] === undefined) {
@@ -182,7 +188,8 @@ function computeNode(
             items,
             pageresult,
             visited,
-            flatresult
+            flatresult,
+            reports
           );
           if (cresult[0]) {
             result = true;
@@ -196,11 +203,14 @@ function computeNode(
     } else {
       // go to exactly one path
       let defaultoption: MMELEdge | null = null;
+      if (edges.length > 0) {
+        reports[node.id] = [];
+      }
       for (const c of edges) {
         if (c.condition === 'default') {
           defaultoption = c;
-        } else {
-          if (evaluateCondition(c.condition, values)) {
+        } else {          
+          if (evaluateCondition(c.condition, values, reports[node.id], `Egde to: ${c.to}`)) {            
             const next = model.elements[c.to];
             const result = computeNode(
               next,
@@ -211,7 +221,8 @@ function computeNode(
               items,
               pageresult,
               visited,
-              flatresult
+              flatresult,
+              reports
             );
             visited[node.id] = result;
             pageresult[node.id] = MeasureRType.NOTEST;
@@ -231,7 +242,8 @@ function computeNode(
           items,
           pageresult,
           visited,
-          flatresult
+          flatresult,
+          reports
         );
         visited[node.id] = result;
         pageresult[node.id] = MeasureRType.NOTEST;
@@ -245,11 +257,14 @@ function computeNode(
   }
   if (isEditorProcess(node)) {
     let mresult = true;
-    for (const m of node.measure) {
-      if (!evaluateCondition(m, values)) {
+    if (node.measure.length > 0) {
+      reports[node.id] = [];
+    }
+    node.measure.forEach((m, index) => {
+      if (!evaluateCondition(m, values, reports[node.id], `Test ${index+1}`)) {
         mresult = false;
       }
-    }
+    });
     const hasTest = node.measure.length > 0;
     let childHasTest = false;
     visited[node.id] = [mresult, hasTest];
@@ -269,7 +284,8 @@ function computeNode(
             items,
             items[node.page],
             visited,
-            flatresult
+            flatresult,
+            reports
           );
           childHasTest = cresult;
           if (!result) {
@@ -309,7 +325,8 @@ function computeNode(
         items,
         pageresult,
         visited,
-        flatresult
+        flatresult,
+        reports
       );
       result[0] &&= cresult[0];
       result[1] ||= cresult[1];
