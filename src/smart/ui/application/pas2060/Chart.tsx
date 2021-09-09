@@ -12,12 +12,12 @@ const ChartItem: React.FC<{
   percentage: number;
   textcolor: string;
   title: string;
-}> = function ({ color, percentage, textcolor, title }) {  
+}> = function ({ color, percentage, textcolor, title }) {
   return (
     <div
       style={{
         width: '40%',
-        textAlign: 'center',        
+        textAlign: 'center',
       }}
     >
       <MGDLabel>{title}</MGDLabel>
@@ -58,8 +58,8 @@ const Chart: React.FC<{
           fontSize: '0.5em',
           textAnchor: 'middle',
         }}
-        x='18'
-        y='20.35'
+        x="18"
+        y="20.35"
       >
         {isNaN(percentage) ? 'No data' : `${percentage.toFixed(2)}%`}
       </text>

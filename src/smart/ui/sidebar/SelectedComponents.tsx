@@ -3,13 +3,46 @@
 
 import { jsx } from '@emotion/react';
 import React from 'react';
-import { EditorDataClass, EditorModel, EditorRegistry, EditorSubprocess, getEditorDataClassById, getEditorProvisionById, getEditorRefById, getEditorRegistryById, isEditorApproval, isEditorDataClass, isEditorEgate, isEditorProcess, isEditorRegistry, isEditorSignalEvent, isEditorTimerEvent } from '../../model/editormodel';
+import {
+  EditorDataClass,
+  EditorModel,
+  EditorRegistry,
+  EditorSubprocess,
+  getEditorDataClassById,
+  getEditorProvisionById,
+  getEditorRefById,
+  getEditorRegistryById,
+  isEditorApproval,
+  isEditorDataClass,
+  isEditorEgate,
+  isEditorProcess,
+  isEditorRegistry,
+  isEditorSignalEvent,
+  isEditorTimerEvent,
+} from '../../model/editormodel';
 import { EdtiorNodeWithInfoCallback } from '../../model/FlowContainer';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
-import { MMELProvision, MMELReference } from '../../serialize/interface/supportinterface';
-import { DeletableNodeTypes, EditableNodeTypes, EditAction, SelectableNodeTypes } from '../../utils/constants';
-import { DescribeApproval, DescribeDC, DescribeEGate, DescribeEnd, DescribeRegistry, DescribeSignalCatch, DescribeStart, DescribeTimer } from '../common/description/ComponentDescription';
+import {
+  MMELProvision,
+  MMELReference,
+} from '../../serialize/interface/supportinterface';
+import {
+  DeletableNodeTypes,
+  EditableNodeTypes,
+  EditAction,
+  SelectableNodeTypes,
+} from '../../utils/constants';
+import {
+  DescribeApproval,
+  DescribeDC,
+  DescribeEGate,
+  DescribeEnd,
+  DescribeRegistry,
+  DescribeSignalCatch,
+  DescribeStart,
+  DescribeTimer,
+} from '../common/description/ComponentDescription';
 import { ProcessQuickEdit } from './processquickedit';
 
 const NODE_DETAIL_VIEWS: Record<
@@ -26,7 +59,7 @@ const NODE_DETAIL_VIEWS: Record<
       action: EditAction,
       id: string
     ) => void;
-    onSubprocessClick?: (pid: string) => void;    
+    onSubprocessClick?: (pid: string) => void;
   }>
 > = {
   [DataType.DATACLASS]: ({ node, getRefById }) =>
@@ -63,7 +96,11 @@ const NODE_DETAIL_VIEWS: Record<
     ),
   [DataType.EGATE]: ({ node, setDialog, getOutgoingEdgesById }) =>
     isEditorEgate(node) ? (
-      <DescribeEGate egate={node} setDialog={setDialog} getOutgoingEdgesById={getOutgoingEdgesById}/>
+      <DescribeEGate
+        egate={node}
+        setDialog={setDialog}
+        getOutgoingEdgesById={getOutgoingEdgesById}
+      />
     ) : (
       <></>
     ),

@@ -91,7 +91,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
       <Handle type="target" position={Position.Top} css={handlecss} />
       {process.page !== '' && (
         <div css={flownode_top_left_button_layout}>
-          <Tooltip2 content='View subprocess' position='top'>
+          <Tooltip2 content="View subprocess" position="top">
             <MGDButton
               key={process.id + '#subprocessbutton'}
               onClick={() => callback.onProcessClick(process.page, process.id)}
@@ -239,17 +239,19 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
 
   return (
     <>
-      <Handle type='source' position={Position.Bottom} css={handlecss} />
-      <Handle type='target' position={Position.Top} css={handlecss} />
+      <Handle type="source" position={Position.Bottom} css={handlecss} />
+      <Handle type="target" position={Position.Top} css={handlecss} />
       <PopoverWrapper id={egate.id} SD={SD}>
         <EgateShape color={color} />
-      </PopoverWrapper>      
-      <Tooltip2 
+      </PopoverWrapper>
+      <Tooltip2
         content={<div css={tooltip__label}>{egate.label}</div>}
         css={[shame__label, shame__label__long]}
-        position='top'
+        position="top"
       >
-        <Text title='' ellipsize>{egate.label}</Text>
+        <Text title="" ellipsize>
+          {egate.label}
+        </Text>
       </Tooltip2>
     </>
   );
@@ -265,8 +267,8 @@ export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
       : 'none';
   return (
     <>
-      <Handle type='source' position={Position.Bottom} css={handlecss} />
-      <Handle type='target' position={Position.Top} css={handlecss} />
+      <Handle type="source" position={Position.Bottom} css={handlecss} />
+      <Handle type="target" position={Position.Top} css={handlecss} />
       <PopoverWrapper id={scevent.id} SD={SD}>
         <SignalCatchShape color={color} />
       </PopoverWrapper>
@@ -276,9 +278,9 @@ export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
 };
 
 const actorIcon = (
-  <svg height='15' width='15'>
-    <circle cx='8' cy='15' r='6' stroke='black' strokeWidth='1' fill='none' />
-    <circle cx='8' cy='6' r='3' stroke='black' strokeWidth='1' fill='none' />
+  <svg height="15" width="15">
+    <circle cx="8" cy="15" r="6" stroke="black" strokeWidth="1" fill="none" />
+    <circle cx="8" cy="6" r="3" stroke="black" strokeWidth="1" fill="none" />
   </svg>
 );
 

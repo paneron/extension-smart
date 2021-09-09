@@ -17,7 +17,7 @@ export enum FILE_TYPE {
   Report = 'report',
   Map = 'mapping',
   Workspace = 'workspace',
-  JSON = 'json'
+  JSON = 'json',
 }
 
 export const FileTypeDescription: Record<
@@ -47,7 +47,7 @@ export const FileTypeDescription: Record<
     filtername: 'JSON files',
     extension: 'json',
     openPrompt: 'Choose a JSON file to open',
-  }
+  },
 };
 
 // Open

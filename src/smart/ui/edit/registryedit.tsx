@@ -113,7 +113,10 @@ const RegistryEditPage: React.FC<{
 
   function addRegistry(reg: RegistryCombined): boolean {
     const dcid = genDCIdByRegId(reg.id);
-    if (checkId(reg.id, model.elements) && checkId(dcid, model.elements, true)) {
+    if (
+      checkId(reg.id, model.elements) &&
+      checkId(dcid, model.elements, true)
+    ) {
       const newreg = createRegistry(reg.id);
       const newdc = getDCFromCombined(dcid, reg);
       newreg.data = dcid;
@@ -132,7 +135,10 @@ const RegistryEditPage: React.FC<{
     const old = model.elements[oldid];
     if (isEditorRegistry(old)) {
       if (oldid !== reg.id) {
-        if (checkId(reg.id, model.elements) && checkId(dcid, model.elements, true)) {
+        if (
+          checkId(reg.id, model.elements) &&
+          checkId(dcid, model.elements, true)
+        ) {
           delete model.elements[oldid];
           delete model.elements[old.data];
           const newreg = createRegistry(reg.id);

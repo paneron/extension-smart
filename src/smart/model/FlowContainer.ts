@@ -18,7 +18,7 @@ export interface EdgeContainer {
   target: string;
   type: string;
   data: EdgePackage;
-  animated: boolean;  
+  animated: boolean;
 }
 
 export interface EdgePackage {

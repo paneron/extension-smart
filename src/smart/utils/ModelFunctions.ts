@@ -164,7 +164,11 @@ export function buildEdgeConnections(
   return result;
 }
 
-export function checkId(id: string, ids: Record<string, unknown>, isRegistryData:boolean = false): boolean {
+export function checkId(
+  id: string,
+  ids: Record<string, unknown>,
+  isRegistryData = false
+): boolean {
   if (id === '') {
     alert('New ID is empty');
     return false;

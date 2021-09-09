@@ -33,14 +33,20 @@ export const MeasureResultStyles: Record<MeasureRType, LegendInterface> = {
   },
 };
 
-export function checkModelMeasurement(model: EditorModel, nums: EnviromentValues):MeasureResult {
-  const parsedTrees = parseAllDerived(model, nums);  
-  fillValues(parsedTrees, nums);  
+export function checkModelMeasurement(
+  model: EditorModel,
+  nums: EnviromentValues
+): MeasureResult {
+  const parsedTrees = parseAllDerived(model, nums);
+  fillValues(parsedTrees, nums);
   const result = computeResult(model, nums);
   return result;
 }
 
-export function updateView(result: MeasureResult, setView: (view: ViewFunctionInterface) => void) {
+export function updateView(
+  result: MeasureResult,
+  setView: (view: ViewFunctionInterface) => void
+) {
   setView({
     getStyleById,
     getSVGColorById,
@@ -63,7 +69,7 @@ export function measureTest(
     nums[x] = parsed;
   }
 
-  try {    
+  try {
     const result = checkModelMeasurement(model, nums);
     if (result.overall) {
       showMsg({
@@ -77,7 +83,7 @@ export function measureTest(
       });
     }
 
-    updateView(result, setView);    
+    updateView(result, setView);
   } catch (e: unknown) {
     alert(e);
   }

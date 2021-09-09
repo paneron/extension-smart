@@ -68,7 +68,7 @@ const DescribeReport: React.FC<{ report: MTestItem }> = function ({ report }) {
         label="Evaluated value (right)"
         value={Number(report.right.toFixed(5)).toString()}
       />
-      <DescriptionItem label="Result" value={report.result ? 'pass' : 'fail'} />
+      <DescriptionItem label="Result" value={report.result ? 'Pass' : 'Fail'} />
     </>
   );
 };

@@ -284,12 +284,14 @@ export const DescribeProvision: React.FC<{
 };
 
 export const DescribeEdge: React.FC<{
-  edge: MMELEdge;  
+  edge: MMELEdge;
 }> = function ({ edge }) {
   return (
     <>
       <MGDLabel>To {edge.to}</MGDLabel>
-      {edge.description !== '' && <DescriptionItem label='Condition' value={edge.description} />}
+      {edge.description !== '' && (
+        <DescriptionItem label="Condition" value={edge.description} />
+      )}
     </>
-  );  
+  );
 };

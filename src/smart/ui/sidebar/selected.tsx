@@ -5,7 +5,7 @@ import { jsx } from '@emotion/react';
 import React from 'react';
 import { useStoreState, Elements, isNode } from 'react-flow-renderer';
 import { EdtiorNodeWithInfoCallback } from '../../model/FlowContainer';
-import { EditorModel } from '../../model/editormodel';
+import { EditorModel, isEditorData } from '../../model/editormodel';
 import {
   DeletableNodeTypes,
   EditableNodeTypes,
@@ -34,16 +34,19 @@ export const SelectedNodeDescription: React.FC<{
     if (selected !== null && selected.length > 0) {
       const s = selected[0];
       const page = model.pages[pageid];
-      if (
-        isNode(s) &&
-        page !== undefined &&
-        (page.childs[s.id] !== undefined || page.data[s.id] !== undefined) &&
-        model.elements[s.id] !== undefined
-      ) {
-        return {
-          ...(s.data as EdtiorNodeWithInfoCallback),
-          ...model.elements[s.id],
-        };
+      const elm = model.elements[s.id];
+      if (isNode(s)) {
+        if (
+          (page !== undefined &&
+            page.childs[s.id] !== undefined &&
+            elm !== undefined) ||
+          isEditorData(elm)
+        ) {
+          return {
+            ...(s.data as EdtiorNodeWithInfoCallback),
+            ...model.elements[s.id],
+          };
+        }
       }
     }
     return null;

@@ -62,7 +62,7 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
   targetX,
   targetY,
   sourcePosition,
-  targetPosition,  
+  targetPosition,
   data,
 }) {
   const p1x: number = sourceX + 40;
@@ -141,7 +141,7 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
       <EdgeLabel
         payload={data as EdgePackage}
         x={centerX}
-        y={centerY}        
+        y={centerY}
         keytext={source + '#' + target}
       />
     </>
@@ -158,7 +158,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
   targetY,
   sourcePosition,
   targetPosition,
-  data,  
+  data,
 }) {
   if (targetY > sourceY) {
     const edgePath1 = getSmoothStepPath({
@@ -186,7 +186,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
         <EdgeLabel
           payload={data as EdgePackage}
           x={centerX}
-          y={centerY}          
+          y={centerY}
           keytext={source + '#' + target}
         />
         <Marker x={targetX} y={targetY} />
@@ -281,7 +281,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
       <EdgeLabel
         payload={data as EdgePackage}
         x={centerX}
-        y={centerY}        
+        y={centerY}
         keytext={source + '#' + target}
       />
     </>
@@ -292,24 +292,24 @@ const EdgeLabel: React.FC<{
   payload: EdgePackage;
   keytext: string;
   x: number;
-  y: number;  
+  y: number;
 }> = function ({ payload, keytext, x, y }) {
   const { id, removeEdge } = payload;
   return (
     <>
-      {id === '' ? (        
-        <EdgeText 
-          key={'ui#edge#label#' + keytext} 
+      {id === '' ? (
+        <EdgeText
+          key={'ui#edge#label#' + keytext}
           x={x}
-          y={y}          
+          y={y}
           label={getEdgeLabel(payload.condition)}
-        />        
+        />
       ) : (
         <EdgeText
           key={'ui#edge#deletebutton#' + keytext}
           x={x}
           y={y}
-          label='X'
+          label="X"
           labelStyle={{
             width: '20px',
             height: '20px',
@@ -349,9 +349,9 @@ const edgeDefaultTexts = new Set(['true', 'false', 'yes', 'no', '', 'default']);
 
 function getEdgeLabel(text: string): string {
   const lower = text.trim().toLowerCase();
-  if (edgeDefaultTexts.has(lower)) {      
+  if (edgeDefaultTexts.has(lower)) {
     return text;
   } else {
-    return 'condition'
+    return 'condition';
   }
 }

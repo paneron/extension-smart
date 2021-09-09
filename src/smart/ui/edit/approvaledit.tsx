@@ -55,37 +55,37 @@ const EditApprovalPage: React.FC<{
           onUpdateClick={onUpdateClick}
           onCancelClick={closeDialog}
         />
-        <NormalTextField          
+        <NormalTextField
           text="Approval ID"
           value={editing.id}
           onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
         />
-        <NormalTextField          
+        <NormalTextField
           text="Approval Process Name"
           value={editing.name}
           onChange={x => setEditing({ ...editing, name: x })}
         />
-        <NormalComboBox          
+        <NormalComboBox
           text="Modality"
           value={editing.modality}
           options={MODAILITYOPTIONS}
           onChange={x => setEditing({ ...editing, modality: x })}
         />
-        <ReferenceSelector          
+        <ReferenceSelector
           text="Actor"
           filterName="Actor filter"
           value={editing.actor}
           options={roles}
           update={x => setEditing({ ...editing, actor: roles[x] })}
         />
-        <ReferenceSelector          
+        <ReferenceSelector
           text="Approver"
           filterName="Approver filter"
           value={editing.approver}
           options={roles}
           update={x => setEditing({ ...editing, approver: roles[x] })}
         />
-        <MultiReferenceSelector          
+        <MultiReferenceSelector
           text="Approval record registry"
           options={regs}
           values={editing.records}
@@ -101,7 +101,7 @@ const EditApprovalPage: React.FC<{
             setEditing({ ...editing });
           }}
         />
-        <MultiReferenceSelector          
+        <MultiReferenceSelector
           text="Reference"
           options={refs}
           values={editing.ref}

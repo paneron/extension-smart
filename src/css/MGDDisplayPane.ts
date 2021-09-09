@@ -12,4 +12,3 @@ export const application2060_display_pane = css`
   overflow-y: auto;
   padding: 1em 2em 1em 1em;
 `;
-

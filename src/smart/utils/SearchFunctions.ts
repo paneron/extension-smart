@@ -140,7 +140,7 @@ function searchPageForComponent(
             model,
             search,
             result,
-            visited,
+            new Set<string>(),
             nextHistory
           );
         }
@@ -200,7 +200,7 @@ function searchProcess(
   ) {
     return 'Process';
   }
-  for (const x in process.provision) {
+  for (const x of process.provision) {
     const pro = model.provisions[x];
     if (pro.condition.toLowerCase().includes(search)) {
       return 'Process';

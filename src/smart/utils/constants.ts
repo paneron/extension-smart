@@ -59,13 +59,13 @@ export const searchableNodeDataTypes = [
 
 export type SearchableNodeTypes = typeof searchableNodeDataTypes[number];
 
-export const NewComponents = [ 
+export const NewComponents = [
   DataType.PROCESS,
   DataType.APPROVAL,
   DataType.ENDEVENT,
   DataType.TIMEREVENT,
   DataType.SIGNALCATCHEVENT,
-  DataType.EGATE
+  DataType.EGATE,
 ] as const;
 
 export const DescribableNodes = [
@@ -75,13 +75,13 @@ export const DescribableNodes = [
   DataType.SIGNALCATCHEVENT,
   DataType.DATACLASS,
   DataType.REGISTRY,
-  DataType.EGATE
+  DataType.EGATE,
 ] as const;
 
 export const SelectableNodes = [
   ...DescribableNodes,
   DataType.ENDEVENT,
-  DataType.STARTEVENT
+  DataType.STARTEVENT,
 ] as const;
 
 export const EditableNodes = [
@@ -89,7 +89,7 @@ export const EditableNodes = [
   DataType.APPROVAL,
   DataType.TIMEREVENT,
   DataType.SIGNALCATCHEVENT,
-  DataType.EGATE
+  DataType.EGATE,
 ] as const;
 
 export const DeletableNodes = [
@@ -98,13 +98,13 @@ export const DeletableNodes = [
   DataType.TIMEREVENT,
   DataType.SIGNALCATCHEVENT,
   DataType.EGATE,
-  DataType.ENDEVENT
+  DataType.ENDEVENT,
 ] as const;
 
 export type NewComponentTypes = typeof NewComponents[number];
 export type DescribableNodeTypes = typeof DescribableNodes[number];
 export type SelectableNodeTypes = typeof SelectableNodes[number];
-export type EditableNodeTypes = typeof EditableNodes[number];  
+export type EditableNodeTypes = typeof EditableNodes[number];
 export type DeletableNodeTypes = typeof DeletableNodes[number];
 
 export interface LoggerInterface {

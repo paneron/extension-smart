@@ -161,7 +161,7 @@ export const NormalComboBox: React.FC<IComboField> = function ({
 }) {
   const content = (
     <HTMLSelect
-      className='bp3-html-select'      
+      className="bp3-html-select"
       value={value}
       onChange={e => onChange(e.target.value)}
     >

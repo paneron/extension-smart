@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 
 import {
-  ControlGroup,  
+  ControlGroup,
   IToaster,
   IToastProps,
   Toaster,
@@ -37,10 +37,7 @@ import { EdgeTypes, NodeTypes, ViewerState } from '../model/States';
 import { SelectedNodeDescription } from './sidebar/selected';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
-import {
-  react_flow_container_layout,
-  sidebar_layout,
-} from '../../css/layout';
+import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
 import { DataVisibilityButton } from './control/buttons';
 import SearchComponentPane from './sidebar/search';
 import {
@@ -102,7 +99,7 @@ const ModelViewer: React.FC<{
   const [view, setView] = useState<ViewFunctionInterface | undefined>(
     undefined
   );
-  const [toaster] = useState<IToaster>(Toaster.create());  
+  const [toaster] = useState<IToaster>(Toaster.create());
 
   function showMsg(msg: IToastProps) {
     toaster.show(msg);
@@ -300,7 +297,7 @@ const ModelViewer: React.FC<{
 
   if (isVisible) {
     return (
-      <ReactFlowProvider>        
+      <ReactFlowProvider>
         <Workspace
           className={className}
           toolbar={toolbar}

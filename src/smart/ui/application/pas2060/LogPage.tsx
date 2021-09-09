@@ -17,20 +17,17 @@ import { Log2060, LogRecord } from './model';
 const options = ['No filter', 'Pass', 'Fail'] as const;
 type ResultType = typeof options[number];
 
-const centerAlign:CSSProperties = {
+const centerAlign: CSSProperties = {
   textAlign: 'center',
-  verticalAlign: 'middle'
-}
+  verticalAlign: 'middle',
+};
 
-const ApplicationLogPage: React.FC<{  
+const ApplicationLogPage: React.FC<{
   setView: (view: ViewFunctionInterface) => void;
   logs: Log2060;
   clearAlert?: () => void;
 }> = function ({ setView, logs, clearAlert }) {
-  const {
-    getBlob,
-    writeFileToFilesystem
-  } = useContext(DatasetContext);
+  const { getBlob, writeFileToFilesystem } = useContext(DatasetContext);
 
   const [sourceFilter, setSourceFilter] = useState<string>('');
   const [resultFilter, setResultFilter] = useState<ResultType>(options[0]);
@@ -40,10 +37,10 @@ const ApplicationLogPage: React.FC<{
   const records = logs.records;
   const showRec: LogRecord[] = [];
   const sfLower = sourceFilter.toLowerCase();
-  for (let i = records.length - 1; i >= 0 && showRec.length < 10;i--) {
+  for (let i = records.length - 1; i >= 0 && showRec.length < 10; i--) {
     const r = records[i].data;
     if (sfLower === '' || r.source.name.toLowerCase().includes(sfLower)) {
-      if (resultFilter === options[0] || requirePass === r.result?.overall ) {
+      if (resultFilter === options[0] || requirePass === r.result?.overall) {
         showRec.push(records[i]);
       }
     }
@@ -57,15 +54,21 @@ const ApplicationLogPage: React.FC<{
       writeFileToFilesystem,
       fileData,
       type: FILE_TYPE.JSON,
-    });    
+    });
   }
 
   return (
     <MGDDisplayPane isBSI={false}>
       <MGDContainer>
-        <HTMLTable bordered interactive striped condensed style={{
-          fontSize: 14          
-        }}>
+        <HTMLTable
+          bordered
+          interactive
+          striped
+          condensed
+          style={{
+            fontSize: 14,
+          }}
+        >
           <thead>
             <tr>
               <th>Time</th>
@@ -78,10 +81,12 @@ const ApplicationLogPage: React.FC<{
             <tr>
               <td></td>
               <td>
-                <InputGroup                  
-                  onChange={x => setSourceFilter((x.target as HTMLInputElement).value)}
-                  className='bp3-round'
-                  placeholder='Filter source'
+                <InputGroup
+                  onChange={x =>
+                    setSourceFilter((x.target as HTMLInputElement).value)
+                  }
+                  className="bp3-round"
+                  placeholder="Filter source"
                   value={sourceFilter}
                 />
               </td>
@@ -95,46 +100,44 @@ const ApplicationLogPage: React.FC<{
               </td>
               <td></td>
             </tr>
-          {showRec.map((r, index) => (
-            <tr key={`tablerow#${index}`}>
-              <td style={centerAlign}>{r.time.toUTCString()}</td>                
-              <td style={centerAlign}>{r.data.source.name}</td>
-              <td style={centerAlign}>
-                <Button
-                  active                  
-                  large                  
-                  fill
-                  intent={r.data.result?.overall?'success':'danger'}
-                >
-                  {r.data.result?.overall?'Pass':'Fail'}
-                </Button>                
-              </td>
-              <td style={centerAlign}>
-                <ButtonGroup>
-                  <Button 
-                    className={Classes.POPOVER2_DISMISS}
-                    intent='primary'
-                    onClick={() => updateView(r.data.result!, setView)}
+            {showRec.map((r, index) => (
+              <tr key={`tablerow#${index}`}>
+                <td style={centerAlign}>{r.time.toUTCString()}</td>
+                <td style={centerAlign}>{r.data.source.name}</td>
+                <td style={centerAlign}>
+                  <Button
+                    active
+                    large
+                    fill
+                    intent={r.data.result?.overall ? 'success' : 'danger'}
                   >
-                    View
+                    {r.data.result?.overall ? 'Pass' : 'Fail'}
                   </Button>
-                  <Button                    
-                    onClick={()=>onSave(r)}
-                  >
-                    Raw Data
-                  </Button>
-                </ButtonGroup>
-              </td>
-            </tr>
-          ))}
+                </td>
+                <td style={centerAlign}>
+                  <ButtonGroup>
+                    <Button
+                      className={Classes.POPOVER2_DISMISS}
+                      intent="primary"
+                      onClick={() => updateView(r.data.result!, setView)}
+                    >
+                      View
+                    </Button>
+                    <Button onClick={() => onSave(r)}>Raw Data</Button>
+                  </ButtonGroup>
+                </td>
+              </tr>
+            ))}
           </tbody>
-        </HTMLTable>        
-      </MGDContainer>      
-      {clearAlert !== undefined && 
+        </HTMLTable>
+      </MGDContainer>
+      {clearAlert !== undefined && (
         <MGDContainer>
-          <Button intent='warning' onClick={clearAlert}>Clear Alert</Button>
+          <Button intent="warning" onClick={clearAlert}>
+            Clear Alert
+          </Button>
         </MGDContainer>
-      }
+      )}
     </MGDDisplayPane>
   );
 };
