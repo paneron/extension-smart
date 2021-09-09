@@ -33,6 +33,23 @@ export const MeasureResultStyles: Record<MeasureRType, LegendInterface> = {
   },
 };
 
+export function checkModelMeasurement(model: EditorModel, nums: EnviromentValues):MeasureResult {
+  const parsedTrees = parseAllDerived(model, nums);  
+  fillValues(parsedTrees, nums);  
+  const result = computeResult(model, nums);
+  return result;
+}
+
+export function updateView(result: MeasureResult, setView: (view: ViewFunctionInterface) => void) {
+  setView({
+    getStyleById,
+    getSVGColorById,
+    legendList: MeasureResultStyles,
+    data: result,
+    ComponentToolTip: MeasurementTooltip,
+  });
+}
+
 export function measureTest(
   model: EditorModel,
   values: Record<string, string>,
@@ -46,10 +63,8 @@ export function measureTest(
     nums[x] = parsed;
   }
 
-  try {
-    const parsedTrees = parseAllDerived(model, nums);
-    fillValues(parsedTrees, nums);
-    const result = computeResult(model, nums);
+  try {    
+    const result = checkModelMeasurement(model, nums);
     if (result.overall) {
       showMsg({
         message: 'Test passed',
@@ -62,13 +77,7 @@ export function measureTest(
       });
     }
 
-    setView({
-      getStyleById,
-      getSVGColorById,
-      legendList: MeasureResultStyles,
-      data: result,
-      ComponentToolTip: MeasurementTooltip
-    });
+    updateView(result, setView);    
   } catch (e: unknown) {
     alert(e);
   }
@@ -127,7 +136,7 @@ function computeResult(
   const items: Record<string, Record<string, MeasureRType>> = {};
   if (root !== undefined) {
     const snode = model.elements[root.start];
-    const reports:Record<string, MTestReport> = {}
+    const reports: Record<string, MTestReport> = {};
     items[model.root] = {};
     const ret = computeNode(
       snode,
@@ -209,8 +218,15 @@ function computeNode(
       for (const c of edges) {
         if (c.condition === 'default') {
           defaultoption = c;
-        } else {          
-          if (evaluateCondition(c.condition, values, reports[node.id], `Egde to: ${c.to}`)) {            
+        } else {
+          if (
+            evaluateCondition(
+              c.condition,
+              values,
+              reports[node.id],
+              `Egde to: ${c.to}`
+            )
+          ) {
             const next = model.elements[c.to];
             const result = computeNode(
               next,
@@ -261,7 +277,9 @@ function computeNode(
       reports[node.id] = [];
     }
     node.measure.forEach((m, index) => {
-      if (!evaluateCondition(m, values, reports[node.id], `Test ${index+1}`)) {
+      if (
+        !evaluateCondition(m, values, reports[node.id], `Test ${index + 1}`)
+      ) {
         mresult = false;
       }
     });

@@ -48,6 +48,10 @@ export const dialog_layout = css`
   }
 `;
 
+export const application_dialog_layout = css`
+  width: 70vw;
+`;
+
 export const dialog_layout__full = css`
   min-height: calc(100vh - 60px);
 `;

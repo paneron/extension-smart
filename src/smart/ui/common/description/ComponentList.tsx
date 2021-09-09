@@ -1,12 +1,13 @@
 import React from 'react';
 import { EditorRegistry } from '../../../model/editormodel';
 import { MMELDataAttribute } from '../../../serialize/interface/datainterface';
+import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
 import {
   MMELProvision,
   MMELReference,
 } from '../../../serialize/interface/supportinterface';
 import { toRefSummary } from '../../../utils/ModelFunctions';
-import { DescribeAttribute, DescribeProvision } from './ComponentDescription';
+import { DescribeAttribute, DescribeEdge, DescribeProvision } from './ComponentDescription';
 
 export const ApprovalRecordList: React.FC<{
   regs: EditorRegistry[];
@@ -124,6 +125,27 @@ export const MeasurementList: React.FC<{
           <ul>
             {measurements.map((mea, index) => (
               <li key={`measurement#${index}`}>{mea}</li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+    </>
+  );
+};
+
+export const EdgeList: React.FC<{
+  edges: MMELEdge[];
+}> = function ({ edges }) {
+  return (
+    <>
+      {edges.length > 0 ? (
+        <>
+          <p>Outgoing paths</p>
+          <ul>
+            {edges.map((edge, index) => (
+              <li>
+                <DescribeEdge key={`edge#${index}`} edge={edge} />
+              </li>
             ))}
           </ul>
         </>

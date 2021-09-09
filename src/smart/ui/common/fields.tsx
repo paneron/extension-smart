@@ -1,7 +1,7 @@
 /** @jsx jsx */
 
 import { jsx } from '@emotion/react';
-import { FormGroup, IconName } from '@blueprintjs/core';
+import { FormGroup, HTMLSelect, IconName } from '@blueprintjs/core';
 import React, { RefObject, useState } from 'react';
 import { EditorModel } from '../../model/editormodel';
 import MGDButton from '../../MGDComponents/MGDButton';
@@ -34,7 +34,7 @@ export interface IField {
 
 export interface IComboField {
   text?: string;
-  options: Array<string>;
+  options: readonly string[];
   value: string;
   onChange: (x: string) => void;
   extend?: JSX.Element;
@@ -160,8 +160,8 @@ export const NormalComboBox: React.FC<IComboField> = function ({
   noContainer = false,
 }) {
   const content = (
-    <select
-      css={mgd_select}
+    <HTMLSelect
+      className='bp3-html-select'      
       value={value}
       onChange={e => onChange(e.target.value)}
     >
@@ -170,7 +170,7 @@ export const NormalComboBox: React.FC<IComboField> = function ({
           {x}
         </option>
       ))}
-    </select>
+    </HTMLSelect>
   );
   return noContainer ? (
     content

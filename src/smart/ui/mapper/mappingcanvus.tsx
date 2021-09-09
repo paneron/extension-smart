@@ -61,20 +61,20 @@ const MappingCanvus: React.FC<{
     .filter(r => filterResult(r, threshold));
   return (
     <div css={mgd_canvas}>
-      <svg width="100%" height="99%">
+      <svg width='100%' height='99%'>
         <defs>
           <marker
-            id="triangle"
-            viewBox="0 0 10 10"
-            refX="1"
-            refY="5"
-            markerUnits="strokeWidth"
-            markerWidth="5"
-            markerHeight="5"
-            orient="auto"
+            id='triangle'
+            viewBox='0 0 10 10'
+            refX='1'
+            refY='5'
+            markerUnits='strokeWidth'
+            markerWidth='5'
+            markerHeight='5'
+            orient='auto'
             style={{ stroke: color }}
           >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="black" />
+            <path d='M 0 0 L 10 5 L 0 10 z' fill='black' />
           </marker>
         </defs>
         {edges.map(r => (

@@ -17,6 +17,7 @@ export enum FILE_TYPE {
   Report = 'report',
   Map = 'mapping',
   Workspace = 'workspace',
+  JSON = 'json'
 }
 
 export const FileTypeDescription: Record<
@@ -42,6 +43,11 @@ export const FileTypeDescription: Record<
     extension: 'sws',
     openPrompt: 'Choose a SMART workspace file to open',
   },
+  [FILE_TYPE.JSON]: {
+    filtername: 'JSON files',
+    extension: 'json',
+    openPrompt: 'Choose a JSON file to open',
+  }
 };
 
 // Open

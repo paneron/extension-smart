@@ -11,6 +11,10 @@ export const shame__label = css`
   width: 140px;
 `;
 
+export const tooltip__label = css`
+  width: 300px;
+`;
+
 export const shame__label__short = css`
   width: 40px;
 `;

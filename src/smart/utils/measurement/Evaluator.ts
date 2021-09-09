@@ -71,7 +71,7 @@ export function evaluateCondition(
   cond: string,
   values: EnviromentValues,
   report: MTestReport,
-  reportTitle: string,
+  reportTitle: string
 ): boolean {
   const [left, op, right] = parseCondition(cond);
   const a = getValueFromNode(resolveMTNode(left, values, {}), values, {});
@@ -82,7 +82,7 @@ export function evaluateCondition(
     left: a,
     right: b,
     result,
-    description: reportTitle
+    description: reportTitle,
   });
   return result;
 }

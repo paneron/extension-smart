@@ -59,42 +59,53 @@ export const searchableNodeDataTypes = [
 
 export type SearchableNodeTypes = typeof searchableNodeDataTypes[number];
 
-export type NewComponentTypes =
-  | DataType.PROCESS
-  | DataType.APPROVAL
-  | DataType.ENDEVENT
-  | DataType.TIMEREVENT
-  | DataType.SIGNALCATCHEVENT
-  | DataType.EGATE;
+export const NewComponents = [ 
+  DataType.PROCESS,
+  DataType.APPROVAL,
+  DataType.ENDEVENT,
+  DataType.TIMEREVENT,
+  DataType.SIGNALCATCHEVENT,
+  DataType.EGATE
+] as const;
 
-export type DescribableNodeTypes =
-  | DataType.PROCESS
-  | DataType.APPROVAL
-  | DataType.TIMEREVENT
-  | DataType.SIGNALCATCHEVENT
-  | DataType.DATACLASS
-  | DataType.REGISTRY
-  | DataType.EGATE;
+export const DescribableNodes = [
+  DataType.PROCESS,
+  DataType.APPROVAL,
+  DataType.TIMEREVENT,
+  DataType.SIGNALCATCHEVENT,
+  DataType.DATACLASS,
+  DataType.REGISTRY,
+  DataType.EGATE
+] as const;
 
-export type SelectableNodeTypes =
-  | DescribableNodeTypes
-  | DataType.ENDEVENT
-  | DataType.STARTEVENT;
+export const SelectableNodes = [
+  ...DescribableNodes,
+  DataType.ENDEVENT,
+  DataType.STARTEVENT
+] as const;
 
-export type EditableNodeTypes =
-  | DataType.PROCESS
-  | DataType.APPROVAL
-  | DataType.TIMEREVENT
-  | DataType.SIGNALCATCHEVENT
-  | DataType.EGATE;
+export const EditableNodes = [
+  DataType.PROCESS,
+  DataType.APPROVAL,
+  DataType.TIMEREVENT,
+  DataType.SIGNALCATCHEVENT,
+  DataType.EGATE
+] as const;
 
-export type DeletableNodeTypes =
-  | DataType.PROCESS
-  | DataType.APPROVAL
-  | DataType.TIMEREVENT
-  | DataType.SIGNALCATCHEVENT
-  | DataType.EGATE
-  | DataType.ENDEVENT;
+export const DeletableNodes = [
+  DataType.PROCESS,
+  DataType.APPROVAL,
+  DataType.TIMEREVENT,
+  DataType.SIGNALCATCHEVENT,
+  DataType.EGATE,
+  DataType.ENDEVENT
+] as const;
+
+export type NewComponentTypes = typeof NewComponents[number];
+export type DescribableNodeTypes = typeof DescribableNodes[number];
+export type SelectableNodeTypes = typeof SelectableNodes[number];
+export type EditableNodeTypes = typeof EditableNodes[number];  
+export type DeletableNodeTypes = typeof DeletableNodes[number];
 
 export interface LoggerInterface {
   log: (...args: unknown[]) => void;

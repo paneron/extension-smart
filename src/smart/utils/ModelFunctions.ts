@@ -164,12 +164,12 @@ export function buildEdgeConnections(
   return result;
 }
 
-export function checkId(id: string, ids: Record<string, unknown>): boolean {
+export function checkId(id: string, ids: Record<string, unknown>, isRegistryData:boolean = false): boolean {
   if (id === '') {
     alert('New ID is empty');
     return false;
   }
-  if (id.includes('#')) {
+  if (!isRegistryData && id.includes('#')) {
     alert('New ID contains symbols #');
     return false;
   }

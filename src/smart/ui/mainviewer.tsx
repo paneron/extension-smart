@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 
 import {
-  ControlGroup,
+  ControlGroup,  
   IToaster,
   IToastProps,
   Toaster,
@@ -37,7 +37,10 @@ import { EdgeTypes, NodeTypes, ViewerState } from '../model/States';
 import { SelectedNodeDescription } from './sidebar/selected';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
-import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
+import {
+  react_flow_container_layout,
+  sidebar_layout,
+} from '../../css/layout';
 import { DataVisibilityButton } from './control/buttons';
 import SearchComponentPane from './sidebar/search';
 import {
@@ -99,7 +102,7 @@ const ModelViewer: React.FC<{
   const [view, setView] = useState<ViewFunctionInterface | undefined>(
     undefined
   );
-  const [toaster] = useState<IToaster>(Toaster.create());
+  const [toaster] = useState<IToaster>(Toaster.create());  
 
   function showMsg(msg: IToastProps) {
     toaster.show(msg);
@@ -203,16 +206,10 @@ const ModelViewer: React.FC<{
     },
   };
 
-  const ViewStyleComponentDesc: React.FC<{id:string}> = function ({id}) {
+  const ViewStyleComponentDesc: React.FC<{ id: string }> = function ({ id }) {
     const SD = view!.ComponentToolTip;
-    return (
-      <SD 
-        id={id}
-        pageid={mw.page}
-        data={view!.data}
-      />
-    );
-  }
+    return <SD id={id} pageid={mw.page} data={view!.data} />;
+  };
 
   const toolbar = (
     <ControlGroup>
@@ -273,7 +270,13 @@ const ModelViewer: React.FC<{
   const PAS2060Application: SidebarBlockConfig = {
     key: 'pas2060',
     title: 'PAS 2060 application',
-    content: <Application2060 model={state.modelWrapper.model} />,
+    content: (
+      <Application2060
+        model={state.modelWrapper.model}
+        showMsg={showMsg}
+        setView={setView}
+      />
+    ),
   };
 
   const normalblocks = [
@@ -297,7 +300,7 @@ const ModelViewer: React.FC<{
 
   if (isVisible) {
     return (
-      <ReactFlowProvider>
+      <ReactFlowProvider>        
         <Workspace
           className={className}
           toolbar={toolbar}
@@ -312,7 +315,7 @@ const ModelViewer: React.FC<{
                 onProcessClick,
                 getStyleById,
                 getSVGColorById,
-                view !== undefined && view.ComponentToolTip !== undefined 
+                view !== undefined && view.ComponentToolTip !== undefined
                   ? ViewStyleComponentDesc
                   : undefined
               )}

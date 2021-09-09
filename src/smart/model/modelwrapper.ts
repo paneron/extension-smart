@@ -204,7 +204,7 @@ export function getViewerReactFlowElementsFrom(
   onProcessClick: (pageid: string, processid: string) => void,
   getStyleById: (id: string) => SerializedStyles,
   getSVGColorById: (id: string) => string,
-  ComponentDesc?: React.FC<{id: string}>
+  ComponentDesc?: React.FC<{ id: string }>
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
@@ -212,7 +212,7 @@ export function getViewerReactFlowElementsFrom(
     onProcessClick,
     getStyleClassById: getStyleById,
     getSVGColorById,
-    ComponentShortDescription: ComponentDesc
+    ComponentShortDescription: ComponentDesc,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }

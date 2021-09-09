@@ -30,6 +30,7 @@ import { EditButton, RemoveButton } from '../buttons';
 import {
   ApprovalRecordList,
   AttributeList,
+  EdgeList,
   ReferenceList,
 } from './ComponentList';
 import {
@@ -37,6 +38,8 @@ import {
   DescriptionItem,
   NonEmptyFieldDescription,
 } from './fields';
+import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
+import MGDLabel from '../../../MGDComponents/MGDLabel';
 
 export const DescribeStart: React.FC = function () {
   return <span> Start event </span>;
@@ -116,7 +119,9 @@ export const DescribeEGate: React.FC<{
     action: EditAction,
     id: string
   ) => void;
-}> = function ({ egate, setDialog }) {
+  getOutgoingEdgesById: (id: string) => MMELEdge[];
+}> = function ({ egate, setDialog, getOutgoingEdgesById }) {
+  const edges = getOutgoingEdgesById(egate.id);
   return (
     <>
       {setDialog !== undefined && (
@@ -132,7 +137,8 @@ export const DescribeEGate: React.FC<{
         </MGDButtonGroup>
       )}
       <DescriptionItem label="Exclusive Gateway" value={egate.id} />
-      <DescriptionItem label="Contents" value={egate.label} />
+      <DescriptionItem label="Description" value={egate.label} />
+      <EdgeList edges={edges} />
     </>
   );
 };
@@ -275,4 +281,15 @@ export const DescribeProvision: React.FC<{
       )}
     </>
   );
+};
+
+export const DescribeEdge: React.FC<{
+  edge: MMELEdge;  
+}> = function ({ edge }) {
+  return (
+    <>
+      <MGDLabel>To {edge.to}</MGDLabel>
+      {edge.description !== '' && <DescriptionItem label='Condition' value={edge.description} />}
+    </>
+  );  
 };

@@ -18,12 +18,12 @@ export interface EdgeContainer {
   target: string;
   type: string;
   data: EdgePackage;
-  animated: boolean;
-  label: string;
+  animated: boolean;  
 }
 
 export interface EdgePackage {
   id: string;
+  condition: string;
   removeEdge: (id: string) => void;
 }
 
@@ -73,9 +73,9 @@ export function createEdgeContainer(
     source: e.from,
     target: e.to,
     type: e.from === e.to ? 'self' : 'normal',
-    label: conditionExtract(e.description),
     data: {
       id: isDelete ? e.id : '',
+      condition: e.description,
       removeEdge: removeEdge,
     },
     animated: false,
@@ -112,14 +112,6 @@ export function createNodeContainer(
     type: MMELtoFlowEntries[x.datatype].flowName,
     position: pos,
   };
-}
-
-function conditionExtract(l: string): string {
-  if (l === 'default' || l === '') {
-    return l;
-  } else {
-    return 'condition';
-  }
 }
 
 export function getEditorNodeCallBack(props: {

@@ -9,15 +9,15 @@ const path =
 
 const ChartItem: React.FC<{
   color: string;
-  percentage: string;
+  percentage: number;
   textcolor: string;
   title: string;
-}> = function ({ color, percentage, textcolor, title }) {
+}> = function ({ color, percentage, textcolor, title }) {  
   return (
     <div
       style={{
         width: '40%',
-        textAlign: 'center',
+        textAlign: 'center',        
       }}
     >
       <MGDLabel>{title}</MGDLabel>
@@ -28,9 +28,10 @@ const ChartItem: React.FC<{
 
 const Chart: React.FC<{
   color: string;
-  percentage: string;
+  percentage: number;
   textcolor: string;
 }> = function ({ color, percentage, textcolor }) {
+  const reading = (percentage - 90) * 10;
   return (
     <svg viewBox="0 0 36 36">
       <path
@@ -48,7 +49,7 @@ const Chart: React.FC<{
           strokeWidth: 2.8,
           strokeLinecap: 'round',
         }}
-        stroke-dasharray={`${percentage}, 100`}
+        stroke-dasharray={`${reading}, 100`}
         d={path}
       />
       <text
@@ -57,10 +58,10 @@ const Chart: React.FC<{
           fontSize: '0.5em',
           textAnchor: 'middle',
         }}
-        x="18"
-        y="20.35"
+        x='18'
+        y='20.35'
       >
-        {`${percentage}%`}
+        {isNaN(percentage) ? 'No data' : `${percentage.toFixed(2)}%`}
       </text>
     </svg>
   );
