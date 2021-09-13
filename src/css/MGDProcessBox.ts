@@ -15,6 +15,6 @@ export const mgd_process_box = css`
   border-radius: 0.25em;
   border: 1px solid;
   width: 150px;
-  height: 40px;
+  height: 45px;
   padding: 1em;
 `;

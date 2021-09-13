@@ -19,41 +19,41 @@ import MGDContainer from '../../../MGDComponents/MGDContainer';
 import MGDHeading from '../../../MGDComponents/MGDHeading';
 import MGDSidebar from '../../../MGDComponents/MGDSidebar';
 import { EditorModel } from '../../../model/editormodel';
-import Chart from './Chart';
-import ApplicationConfigurePage from './ConfigurePage';
-import ApplicationLogPage from './LogPage';
-import {
-  Application2060Setting,
-  colors2060,
-  Dialog2060Interface,
-  fixedlocalhost,
-  Log2060,
-  ReadingRecord,
-} from './model';
+import Chart27001 from './Chart';
+import Application27001ConfigurePage from './ConfigurePage';
+import Application27001LogPage from './LogPage';
 import { setInterval, clearInterval } from 'timers';
 import { obtainData } from './DataFeeder';
-import {
-  makeRecord,
-  propagateReadings,
-  testMeasurement2060,
-} from './ReadingCalculator';
+import { testMeasurement27001 } from './ReadingCalculator';
 import { Popover2 } from '@blueprintjs/popover2';
 import { ViewFunctionInterface } from '../../../model/ViewFunctionModel';
+import { Application27001Setting, Dialog27001Interface, fixedlocalhost, Log27001 } from './model';
+import LineChart27001 from './LineChart';
 
-const Application2060: React.FC<{
+const Application27001: React.FC<{
   model: EditorModel;
   showMsg: (msg: IToastProps) => void;
   setView: (view: ViewFunctionInterface) => void;
 }> = function ({ model, showMsg, setView }) {
-  const [setting, setSetting] = useState<Application2060Setting>({
+  const [setting, setSetting] = useState<Application27001Setting>({
     source: '',
-    emissions: [],
+    failMonitor: {min: 10, max:50},
+    connectionRefLine: 100
   });
-  const [diagProps, setDiagProps] = useState<Dialog2060Interface | undefined>(
+  const [diagProps, setDiagProps] = useState<Dialog27001Interface | undefined>(
     undefined
   );
   const [liveCount, setLiveCount] = useState<number>(0);
-  const [logs, setLogs] = useState<Log2060>({ hasFail: false, records: [] });
+  const [logs, setLogs] = useState<Log27001>({ hasFail: false, records: [] });
+  const [lineValues, setLineValues] = useState<number[]>([]);  
+
+  function updateLineValues(v: number) {
+    if (lineValues.length > 10) {
+      lineValues.splice(0, 1);
+    }
+    lineValues.push(v);
+    setLineValues([...lineValues]);
+  }
 
   function onClose() {
     setDiagProps(undefined);
@@ -73,47 +73,28 @@ const Application2060: React.FC<{
     });
   }
 
-  const configDiagProps: Dialog2060Interface = {
+  const configDiagProps: Dialog27001Interface = {
     title: 'Configuration',
-    content: ApplicationConfigurePage,
+    content: Application27001ConfigurePage,
     fullscreen: false,
   };
 
   const result = useMemo(() => {
     const readings =
-      setting.source === fixedlocalhost ? obtainData(fixedlocalhost) : [];
-    const [records] = propagateReadings(readings, setting.emissions);
-    testMeasurement2060(model, records);
-    const now = new Date();
-    for (const r of records) {
-      if (r.result !== undefined) {
-        if (!r.result.overall) {
-          logs.hasFail = true;
-        }
-        logs.records.push({
-          time: now,
-          data: r,
-        });
-      }
+      setting.source === fixedlocalhost ? obtainData(fixedlocalhost, liveCount) : undefined;
+    if (readings !== undefined) {            
+      const log = testMeasurement27001(model, readings);      
+      logs.records.push(log);
+      setLogs({ ...logs, hasFail: logs.hasFail || !log.result.overall });
+      updateLineValues(log.data.connections.reduce((max, x) => Math.max(max, x)));      
+      return log;
     }
-    setLogs({ ...logs });
-    return records;
-  }, [liveCount]);
-
-  const resultCombined: ReadingRecord[] = [];
-  for (let i = 0; i < Math.max(setting.emissions.length, result.length); i++) {
-    if (i < result.length && i < setting.emissions.length) {
-      const r = { ...result[i] };
-      r.source = setting.emissions[i];
-      resultCombined.push(r);
-    } else if (i < setting.emissions.length) {
-      resultCombined.push(makeRecord(setting.emissions[i]));
-    }
-  }
+    return undefined;
+  }, [liveCount]);  
 
   useEffect(() => {
-    const interval = setInterval(() => setLiveCount(prev => prev + 1), 5000);
-    return () => clearInterval(interval);
+    const timer = setInterval(() => setLiveCount(prev => prev + 1), 2000);            
+    return () => clearInterval(timer);
   }, []);
 
   return (
@@ -141,7 +122,7 @@ const Application2060: React.FC<{
         </Dialog>
       )}
       <MGDContainer>
-        <MGDHeading> PAS 2060 Dashboard </MGDHeading>
+        <MGDHeading> Ribose 27001 Dashboard </MGDHeading>
       </MGDContainer>
       <MGDContainer>
         <ButtonGroup>
@@ -154,7 +135,7 @@ const Application2060: React.FC<{
           </Button>
           <Popover2
             content={
-              <ApplicationLogPage
+              <Application27001LogPage
                 setView={setView}
                 logs={logs}
                 clearAlert={
@@ -183,21 +164,12 @@ const Application2060: React.FC<{
           justifyContent: 'space-around',
           alignItems: 'center',
         }}
-      >
-        {resultCombined.map((r, index) => (
-          <Chart
-            key={`chart#${index}`}
-            color={colors2060[index % colors2060.length]}
-            percentage={(r.totalinclude * 100) / r.total}
-            textcolor={
-              r.result === undefined || r.result.overall ? 'green' : 'red'
-            }
-            title={r.source.name === '' ? `Source ${index + 1}` : r.source.name}
-          />
-        ))}
+      >        
+        <Chart27001 result={result} range={setting.failMonitor} />
+        <LineChart27001 values={lineValues} lineRef={setting.connectionRefLine} pass={result?.result.overall}/>        
       </div>
     </MGDSidebar>
   );
 };
 
-export default Application2060;
+export default Application27001;

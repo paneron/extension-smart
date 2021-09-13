@@ -68,7 +68,7 @@ export function measureTest(
     const parsed: number[] = text.split(',').map(t => parseFloat(t));
     nums[x] = parsed;
   }
-
+  
   try {
     const result = checkModelMeasurement(model, nums);
     if (result.overall) {

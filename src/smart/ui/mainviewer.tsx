@@ -48,10 +48,10 @@ import { handleModelOpen } from '../utils/IOFunctions';
 import { SidebarBlockConfig } from '@riboseinc/paneron-extension-kit/widgets/Sidebar/Block';
 import { Popover2 } from '@blueprintjs/popover2';
 import ViewToolMenu from './menu/ViewToolMenu';
-import Application2060 from './application/pas2060/Main';
 import MeasureCheckPane from './measurement/MeasurementValidationPane';
 import { ViewFunctionInterface } from '../model/ViewFunctionModel';
 import LegendPane from './common/description/LegendPane';
+import { loadPlugin } from './application/plugin';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -264,27 +264,30 @@ const ModelViewer: React.FC<{
     ),
   };
 
-  const PAS2060Application: SidebarBlockConfig = {
-    key: 'pas2060',
-    title: 'PAS 2060 application',
-    content: (
-      <Application2060
-        model={state.modelWrapper.model}
-        showMsg={showMsg}
-        setView={setView}
-      />
-    ),
-  };
-
   const normalblocks = [
     selectedSideBlockConfig,
     FunPages[funPage],
     searchSideBlockConfig,
   ];
+
+  const psetting = loadPlugin(namespace);
+  const plugin = psetting !== undefined 
+    ? {
+        key: psetting.key,
+        title: psetting.title,
+        content: (
+          <psetting.Content
+            model={state.modelWrapper.model}
+            showMsg={showMsg}
+            setView={setView}
+          /> 
+        ),
+      }
+    : undefined;
   const addonblocks =
-    namespace === 'PAS2060Application'
-      ? [PAS2060Application, ...normalblocks]
-      : normalblocks;
+    plugin !== undefined
+      ? [plugin, ...normalblocks]
+      : normalblocks;  
 
   const sidebar = (
     <Sidebar

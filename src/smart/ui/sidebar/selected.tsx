@@ -34,12 +34,11 @@ export const SelectedNodeDescription: React.FC<{
     if (selected !== null && selected.length > 0) {
       const s = selected[0];
       const page = model.pages[pageid];
-      const elm = model.elements[s.id];
-      if (isNode(s)) {
+      const elm = model.elements[s.id];      
+      if (isNode(s) && elm !== undefined) {
         if (
           (page !== undefined &&
-            page.childs[s.id] !== undefined &&
-            elm !== undefined) ||
+            page.childs[s.id] !== undefined) ||
           isEditorData(elm)
         ) {
           return {
@@ -47,7 +46,7 @@ export const SelectedNodeDescription: React.FC<{
             ...model.elements[s.id],
           };
         }
-      }
+      }      
     }
     return null;
   }

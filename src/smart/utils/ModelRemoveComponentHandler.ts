@@ -17,12 +17,12 @@ export function deleteEdge(
   return model;
 }
 
-function deleteProcess(model: EditorModel, pageid: string, id: string) {
+function deleteProcess(model: EditorModel, pageid: string, id: string) {  
   const page = model.pages[pageid];
-  delete page.childs[id];
-  deleteRelatedEdges(page, id);
+  delete page.childs[id];  
+  deleteRelatedEdges(page, id);  
   const process = model.elements[id] as EditorProcess;
-  process.pages.delete(pageid);
+  process.pages.delete(pageid);  
   if (process.pages.size === 0) {
     delete model.elements[id];
     for (const provision of process.provision) {
@@ -31,7 +31,7 @@ function deleteProcess(model: EditorModel, pageid: string, id: string) {
     if (process.page !== '') {
       deletePage(model, process.page);
     }
-  }
+  }  
   return model;
 }
 
