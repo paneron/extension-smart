@@ -16,28 +16,25 @@ export interface PluginSettingInterface {
   Content: React.FC<PluginInterface>;
 }
 
-const pluginNS = [
-  'PAS2060Application',
-  'RiboseISO27001'
-] as const;
+const pluginNS = ['PAS2060Application', 'RiboseISO27001'] as const;
 
 const pluginSet = new Set<string>(pluginNS);
 type pluginTypes = typeof pluginNS[number];
 
 const Plugins: Record<pluginTypes, PluginSettingInterface> = {
-  'PAS2060Application': {
-    key:'pas2060',
+  PAS2060Application: {
+    key: 'pas2060',
     title: 'PAS 2060 application',
-    Content: Application2060
+    Content: Application2060,
   },
-  'RiboseISO27001': {
-    key:'iso27001',
+  RiboseISO27001: {
+    key: 'iso27001',
     title: 'Ribose ISO 27001 application',
-    Content: Application27001
-  }
-}
+    Content: Application27001,
+  },
+};
 
-function onPlugInList(ns:string): ns is pluginTypes {
+function onPlugInList(ns: string): ns is pluginTypes {
   return pluginSet.has(ns);
 }
 

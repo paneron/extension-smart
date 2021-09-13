@@ -271,23 +271,22 @@ const ModelViewer: React.FC<{
   ];
 
   const psetting = loadPlugin(namespace);
-  const plugin = psetting !== undefined 
-    ? {
-        key: psetting.key,
-        title: psetting.title,
-        content: (
-          <psetting.Content
-            model={state.modelWrapper.model}
-            showMsg={showMsg}
-            setView={setView}
-          /> 
-        ),
-      }
-    : undefined;
+  const plugin =
+    psetting !== undefined
+      ? {
+          key: psetting.key,
+          title: psetting.title,
+          content: (
+            <psetting.Content
+              model={state.modelWrapper.model}
+              showMsg={showMsg}
+              setView={setView}
+            />
+          ),
+        }
+      : undefined;
   const addonblocks =
-    plugin !== undefined
-      ? [plugin, ...normalblocks]
-      : normalblocks;  
+    plugin !== undefined ? [plugin, ...normalblocks] : normalblocks;
 
   const sidebar = (
     <Sidebar

@@ -27,7 +27,12 @@ import { obtainData } from './DataFeeder';
 import { testMeasurement27001 } from './ReadingCalculator';
 import { Popover2 } from '@blueprintjs/popover2';
 import { ViewFunctionInterface } from '../../../model/ViewFunctionModel';
-import { Application27001Setting, Dialog27001Interface, fixedlocalhost, Log27001 } from './model';
+import {
+  Application27001Setting,
+  Dialog27001Interface,
+  fixedlocalhost,
+  Log27001,
+} from './model';
 import LineChart27001 from './LineChart';
 
 const Application27001: React.FC<{
@@ -37,15 +42,15 @@ const Application27001: React.FC<{
 }> = function ({ model, showMsg, setView }) {
   const [setting, setSetting] = useState<Application27001Setting>({
     source: '',
-    failMonitor: {min: 10, max:50},
-    connectionRefLine: 100
+    failMonitor: { min: 10, max: 50 },
+    connectionRefLine: 100,
   });
   const [diagProps, setDiagProps] = useState<Dialog27001Interface | undefined>(
     undefined
   );
   const [liveCount, setLiveCount] = useState<number>(0);
   const [logs, setLogs] = useState<Log27001>({ hasFail: false, records: [] });
-  const [lineValues, setLineValues] = useState<number[]>([]);  
+  const [lineValues, setLineValues] = useState<number[]>([]);
 
   function updateLineValues(v: number) {
     if (lineValues.length > 10) {
@@ -81,19 +86,23 @@ const Application27001: React.FC<{
 
   const result = useMemo(() => {
     const readings =
-      setting.source === fixedlocalhost ? obtainData(fixedlocalhost, liveCount) : undefined;
-    if (readings !== undefined) {            
-      const log = testMeasurement27001(model, readings);      
+      setting.source === fixedlocalhost
+        ? obtainData(fixedlocalhost, liveCount)
+        : undefined;
+    if (readings !== undefined) {
+      const log = testMeasurement27001(model, readings);
       logs.records.push(log);
       setLogs({ ...logs, hasFail: logs.hasFail || !log.result.overall });
-      updateLineValues(log.data.connections.reduce((max, x) => Math.max(max, x)));      
+      updateLineValues(
+        log.data.connections.reduce((max, x) => Math.max(max, x))
+      );
       return log;
     }
     return undefined;
-  }, [liveCount]);  
+  }, [liveCount]);
 
   useEffect(() => {
-    const timer = setInterval(() => setLiveCount(prev => prev + 1), 2000);            
+    const timer = setInterval(() => setLiveCount(prev => prev + 1), 2000);
     return () => clearInterval(timer);
   }, []);
 
@@ -164,9 +173,13 @@ const Application27001: React.FC<{
           justifyContent: 'space-around',
           alignItems: 'center',
         }}
-      >        
+      >
         <Chart27001 result={result} range={setting.failMonitor} />
-        <LineChart27001 values={lineValues} lineRef={setting.connectionRefLine} pass={result?.result.overall}/>        
+        <LineChart27001
+          values={lineValues}
+          lineRef={setting.connectionRefLine}
+          pass={result?.result.overall}
+        />
       </div>
     </MGDSidebar>
   );

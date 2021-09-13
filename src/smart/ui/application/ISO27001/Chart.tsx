@@ -11,9 +11,11 @@ const path =
 const ChartItem: React.FC<{
   result?: Log27001Record;
   range: SettingRange;
-}> = function ({ result, range }) {  
-  const color = result !== undefined && !result.result.overall ? 'red' : 'green';
-  const percentage = result === undefined ? NaN : result.data.failed * 100 / result.data.login;
+}> = function ({ result, range }) {
+  const color =
+    result !== undefined && !result.result.overall ? 'red' : 'green';
+  const percentage =
+    result === undefined ? NaN : (result.data.failed * 100) / result.data.login;
   return (
     <div
       style={{
@@ -22,7 +24,7 @@ const ChartItem: React.FC<{
       }}
     >
       <MGDLabel>Percentage of failed login</MGDLabel>
-      <Chart color={color} percentage={percentage} range={range}/>
+      <Chart color={color} percentage={percentage} range={range} />
     </div>
   );
 };
@@ -32,7 +34,10 @@ const Chart: React.FC<{
   percentage: number;
   range: SettingRange;
 }> = function ({ color, percentage, range }) {
-  const reading = Math.min(Math.max((percentage - range.min) * 100 / (range.max-range.min), 0), 100);  
+  const reading = Math.min(
+    Math.max(((percentage - range.min) * 100) / (range.max - range.min), 0),
+    100
+  );
   return (
     <svg viewBox="0 0 36 36">
       <path

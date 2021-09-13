@@ -28,18 +28,18 @@ const Application27001LogPage: React.FC<{
   clearAlert?: () => void;
 }> = function ({ setView, logs, clearAlert }) {
   const { getBlob, writeFileToFilesystem } = useContext(DatasetContext);
-  
+
   const [resultFilter, setResultFilter] = useState<ResultType>(options[0]);
 
   const requirePass = resultFilter === options[1];
 
   const records = logs.records;
-  const showRec: Log27001Record[] = [];  
+  const showRec: Log27001Record[] = [];
   for (let i = records.length - 1; i >= 0 && showRec.length < 10; i--) {
     const r = records[i];
     if (resultFilter === options[0] || requirePass === r.result.overall) {
       showRec.push(records[i]);
-    }    
+    }
   }
 
   async function onSave(log: Log27001Record) {
@@ -67,14 +67,14 @@ const Application27001LogPage: React.FC<{
         >
           <thead>
             <tr>
-              <th>Time</th>              
+              <th>Time</th>
               <th>Result</th>
               <th>Details</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td></td>              
+              <td></td>
               <td style={centerAlign}>
                 <NormalComboBox
                   options={options}
@@ -87,7 +87,7 @@ const Application27001LogPage: React.FC<{
             </tr>
             {showRec.map((r, index) => (
               <tr key={`tablerow#${index}`}>
-                <td style={centerAlign}>{r.time.toUTCString()}</td>                
+                <td style={centerAlign}>{r.time.toUTCString()}</td>
                 <td style={centerAlign}>
                   <Button
                     active

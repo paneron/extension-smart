@@ -208,7 +208,7 @@ const ModelMapper: React.FC<{
       setProps({
         ...props,
         modelWrapper: { ...props.modelWrapper, page: page.id },
-        history: hm[page.id],
+        history: { items: [...hm[page.id].items] },
       });
     } else {
       alert('Target not found');

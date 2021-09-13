@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import {  
+import {
   Button,
   ControlGroup,
   FormGroup,
@@ -23,21 +23,18 @@ const Application27001ConfigurePage: React.FC<{
   onError: (msg: string) => void;
   onMessage: (msg: string) => void;
 }> = function ({ onClose, setting, setSetting, onError, onMessage }) {
-
-  function onFailRangeChange(value:NumberRange) {
-    setSetting({...setting, failMonitor:{min: value[0], max: value[1]}});
+  function onFailRangeChange(value: NumberRange) {
+    setSetting({ ...setting, failMonitor: { min: value[0], max: value[1] } });
   }
 
   function onRefConnectionChange(x: number) {
-    setSetting({...setting, connectionRefLine: x});
+    setSetting({ ...setting, connectionRefLine: x });
   }
 
   function testConnection() {
     try {
-      obtainData(setting.source);      
-      onMessage(
-        `Connected: ${setting.source}`
-      );
+      obtainData(setting.source);
+      onMessage(`Connected: ${setting.source}`);
     } catch (e) {
       onError(e as string);
     }
@@ -45,7 +42,7 @@ const Application27001ConfigurePage: React.FC<{
 
   return (
     <MGDDisplayPane isBSI={false}>
-      <FormGroup label='Data stream source'>
+      <FormGroup label="Data stream source">
         <ControlGroup fill>
           <InputGroup
             value={setting.source}
@@ -55,9 +52,9 @@ const Application27001ConfigurePage: React.FC<{
           <Button intent="primary" onClick={testConnection}>
             Test
           </Button>
-        </ControlGroup>                
+        </ControlGroup>
       </FormGroup>
-      <FormGroup label='Display range of chart (Failed Login)'>
+      <FormGroup label="Display range of chart (Failed Login)">
         <RangeSlider
           min={0}
           max={100}
@@ -65,20 +62,20 @@ const Application27001ConfigurePage: React.FC<{
           labelStepSize={20}
           onChange={onFailRangeChange}
           value={[setting.failMonitor.min, setting.failMonitor.max]}
-        />    
+        />
       </FormGroup>
-      <FormGroup label='Reference connection number'>          
-        <NumericInput 
+      <FormGroup label="Reference connection number">
+        <NumericInput
           min={0}
-          value={setting.connectionRefLine} 
-          placeholder='Enter a number...' 
+          value={setting.connectionRefLine}
+          placeholder="Enter a number..."
           onValueChange={onRefConnectionChange}
           stepSize={10}
           minorStepSize={1}
-        />     
+        />
       </FormGroup>
       <MGDContainer>
-        <Button intent='success' onClick={() => onClose()}>
+        <Button intent="success" onClick={() => onClose()}>
           Done
         </Button>
       </MGDContainer>
