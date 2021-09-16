@@ -1,12 +1,13 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { IToastProps } from '@blueprintjs/core';
+import { IToastProps, Switch } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import { useState } from 'react';
 import MGDButton from '../../MGDComponents/MGDButton';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import { EditorModel } from '../../model/editormodel';
+import { MeasureResult } from '../../model/Measurement';
 import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
 import {
   MMELVariable,
@@ -14,17 +15,28 @@ import {
 } from '../../serialize/interface/supportinterface';
 import { measureTest } from '../../utils/measurement/Checker';
 import { NormalTextField } from '../common/fields';
+import updateMeasurementView from './MeasurementResultFormatter';
+import updateParaView from './ParameterizedViewFormatter';
+
+function simpleFilter(v: MMELVariable): boolean {
+  return (
+    v.type === VarType.DATA ||
+    v.type === VarType.LISTDATA ||
+    v.type === VarType.TEXT ||
+    v.type === VarType.BOOLEAN
+  );
+}
 
 const MeasureCheckPane: React.FC<{
   model: EditorModel;
-  setView: (view: ViewFunctionInterface) => void;
+  setView: (view: ViewFunctionInterface | undefined) => void;
   showMsg: (msg: IToastProps) => void;
-}> = function ({ model, setView, showMsg }) {
+  branchOnly?: boolean;
+}> = function ({ model, setView, showMsg, branchOnly = false }) {
   const [values, setValues] = useState<Record<string, string>>({});
+  const [result, setResult] = useState<MeasureResult | undefined>(undefined);
 
-  const alldata = Object.values(model.vars).filter(
-    v => v.type === VarType.DATA || v.type === VarType.LISTDATA
-  );
+  const alldata = Object.values(model.vars).filter(simpleFilter);
 
   function getDesc(v: MMELVariable) {
     return (
@@ -33,25 +45,63 @@ const MeasureCheckPane: React.FC<{
     );
   }
 
+  function updateResult(x: MeasureResult | undefined) {
+    setResult(x);
+    if (x !== undefined) {
+      if (branchOnly) {
+        updateParaView(x, setView);
+      } else {
+        updateMeasurementView(x, setView);
+      }
+    } else {
+      setView(undefined);
+    }
+  }
+
   return (
     <MGDSidebar>
-      {alldata.map(v => (
-        <NormalTextField
-          key={'field#measurment#' + v.id}
-          text={getDesc(v)}
-          value={values[v.id] ?? ''}
-          onChange={x => {
-            values[v.id] = x;
-            setValues({ ...values });
-          }}
-        />
-      ))}
+      {alldata.map(v =>
+        v.type === VarType.BOOLEAN ? (
+          <Switch
+            key={(branchOnly ? 'view' : 'measurment') + v.id}
+            checked={
+              values[v.id] !== undefined ? values[v.id] === 'true' : true
+            }
+            label={getDesc(v)}
+            onChange={x => {
+              values[v.id] = x.currentTarget.checked ? 'true' : 'false';
+              setValues({ ...values });
+            }}
+          />
+        ) : (
+          <NormalTextField
+            key={(branchOnly ? 'view' : 'measurment') + v.id}
+            text={getDesc(v)}
+            value={values[v.id] ?? ''}
+            onChange={x => {
+              values[v.id] = x;
+              setValues({ ...values });
+            }}
+          />
+        )
+      )}
       <MGDButton
-        icon="lab-test"
-        onClick={() => measureTest(model, values, setView, showMsg)}
+        icon={branchOnly ? 'filter' : 'lab-test'}
+        onClick={() =>
+          updateResult(measureTest(model, values, showMsg, branchOnly))
+        }
       >
-        Measurement Test
+        {branchOnly ? 'Custom view' : 'Measurement Test'}
       </MGDButton>
+      {result !== undefined && (
+        <MGDButton
+          icon="reset"
+          disabled={result === undefined}
+          onClick={() => updateResult(undefined)}
+        >
+          {branchOnly ? 'Reset view' : 'Reset result'}
+        </MGDButton>
+      )}
     </MGDSidebar>
   );
 };

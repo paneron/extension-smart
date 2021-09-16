@@ -166,7 +166,7 @@ export function parseRole(id: string, data: string): MMELRole {
 export function parseVariable(id: string, data: string): MMELVariable {
   const v: MMELVariable = {
     id: id,
-    type: VarType.EMPTY,
+    type: VarType.DATA,
     definition: '',
     description: '',
     datatype: DataType.VARIABLE,

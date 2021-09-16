@@ -64,13 +64,17 @@ const SearchResultPane: React.FC<{
 }> = function ({ key, result, onChange }) {
   const [page, setPage] = useState<number>(0);
   if (result.length === 0) {
-    return <MGDLabel> No result </MGDLabel>;
+    return (
+      <MGDContainer>
+        <MGDLabel> No result </MGDLabel>
+      </MGDContainer>
+    );
   }
   const records = result.slice(
     page * RECORD_PER_PAGE,
     Math.min((page + 1) * RECORD_PER_PAGE, result.length)
   );
-  const maxpage = Math.floor(result.length / RECORD_PER_PAGE + 1);
+  const maxpage = Math.floor((result.length - 1) / RECORD_PER_PAGE + 1);
   const pageOptions = Array.from(Array(maxpage).keys()).map(v => v + 1);
 
   return (
@@ -80,7 +84,7 @@ const SearchResultPane: React.FC<{
       </MGDContainer>
       {records.map((r, index) => (
         <SearchResultEntry
-          key={`searchentry#${key}#page${page}#${r.id}`}
+          key={`searchentry#${key}#page${page}#${index}`}
           pos={page * RECORD_PER_PAGE + index + 1}
           entry={r}
           onClick={() => onChange(r.id, r.page, r.history)}

@@ -62,15 +62,22 @@ const DescribeReport: React.FC<{ report: MTestItem }> = function ({ report }) {
       <DescriptionItem label="Condition" value={report.cond} />
       <DescriptionItem
         label="Evaluated value (left)"
-        value={Number(report.left.toFixed(5)).toString()}
+        value={showValue(report.left)}
       />
       <DescriptionItem
         label="Evaluated value (right)"
-        value={Number(report.right.toFixed(5)).toString()}
+        value={showValue(report.right)}
       />
       <DescriptionItem label="Result" value={report.result ? 'Pass' : 'Fail'} />
     </>
   );
 };
+
+function showValue(x: number | string): string {
+  if (typeof x === 'string') {
+    return x;
+  }
+  return Number(x.toFixed(5)).toString();
+}
 
 export default MeasurementTooltip;

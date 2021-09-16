@@ -19,7 +19,7 @@ export type ListOperator = (
   trees: EnviromentVariables
 ) => MTreeNode;
 
-export type Comparator = (a: number, b: number) => boolean;
+export type Comparator = (a: number | string, b: number | string) => boolean;
 
 const SumListOp: ListOperator = function (
   a: MTreeNode,
@@ -101,11 +101,11 @@ export const MListOperators = ['sum', 'max', 'min'] as const;
 export const MBinaryOperators = ['+', '-', '*', '/'] as const;
 
 // must place >= before >
-export const comparators = ['>=', '<=', '=', '>', '<'] as const;
+export const MComparators = ['>=', '<=', '=', '>', '<'] as const;
 
 export type MListOperatorTypes = typeof MListOperators[number];
 export type MBinOperatorTypes = typeof MBinaryOperators[number];
-export type MComparatorTypes = typeof comparators[number];
+export type MComparatorTypes = typeof MComparators[number];
 
 export const MLOperators: Record<MListOperatorTypes, ListOperator> = {
   sum: SumListOp,

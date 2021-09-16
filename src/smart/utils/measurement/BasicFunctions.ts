@@ -43,7 +43,7 @@ export function isBinaryOperator(c: string): c is MBinOperatorTypes {
   return false;
 }
 
-export function createMTreeNodeWithValue(value: number[]): MTreeNode {
+export function createMTreeNodeWithValue(value: number[] | string): MTreeNode {
   return {
     action: '',
     isData: true,

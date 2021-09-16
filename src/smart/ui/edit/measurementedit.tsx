@@ -124,6 +124,11 @@ const MeasureEditItemPage: React.FC<{
           </li>
           <li>
             <label css={mgd_label}>
+              {VarType.TEXT} : A text data item provided by the user
+            </label>
+          </li>
+          <li>
+            <label css={mgd_label}>
               {VarType.DERIVED} : Calulated from other measurement values
             </label>
           </li>

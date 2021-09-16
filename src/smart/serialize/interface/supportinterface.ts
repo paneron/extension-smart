@@ -1,10 +1,11 @@
 import { MMELObject } from './baseinterface';
 
 export enum VarType {
-  EMPTY = '',
   DATA = 'DATAITEM',
   LISTDATA = 'DATALIST',
+  TEXT = 'TEXT',
   DERIVED = 'DERIVED',
+  BOOLEAN = 'TRUE/FALSE',
 }
 
 export interface MMELMetadata extends MMELObject {

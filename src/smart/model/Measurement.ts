@@ -1,11 +1,11 @@
 export interface MTreeNode {
-  action: string; // if data is in value, action = ''
+  action: string; // if data is a value, action = ''
   isData: boolean;
   childs: MTreeNode[];
-  value: number[];
+  value: number[] | string;
 }
 
-export type EnviromentValues = Record<string, number[]>;
+export type EnviromentValues = Record<string, number[] | string>;
 export type EnviromentVariables = Record<string, MTreeNode>;
 
 export enum MeasureRType {
@@ -19,8 +19,8 @@ export type MTestReport = MTestItem[];
 
 export interface MTestItem {
   cond: string;
-  left: number;
-  right: number;
+  left: number | string;
+  right: number | string;
   result: boolean;
   description: string;
 }

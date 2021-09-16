@@ -10,8 +10,8 @@ import MGDContainer from '../../../MGDComponents/MGDContainer';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
 import { ViewFunctionInterface } from '../../../model/ViewFunctionModel';
 import { FILE_TYPE, saveToFileSystem } from '../../../utils/IOFunctions';
-import { updateView } from '../../../utils/measurement/Checker';
 import { NormalComboBox } from '../../common/fields';
+import updateMeasurementView from '../../measurement/MeasurementResultFormatter';
 import { Log27001, Log27001Record } from './model';
 
 const options = ['No filter', 'Pass', 'Fail'] as const;
@@ -103,7 +103,7 @@ const Application27001LogPage: React.FC<{
                     <Button
                       className={Classes.POPOVER2_DISMISS}
                       intent="primary"
-                      onClick={() => updateView(r.result, setView)}
+                      onClick={() => updateMeasurementView(r.result, setView)}
                     >
                       View
                     </Button>

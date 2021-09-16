@@ -14,7 +14,7 @@ export const mgd_process_box = css`
   text-align: center;
   border-radius: 0.25em;
   border: 1px solid;
-  width: 150px;
+  width: 140px;
   height: 45px;
   padding: 1em;
 `;

@@ -1,5 +1,4 @@
 import { IToastProps } from '@blueprintjs/core';
-import { flow_node__highlighed, no_highlight } from '../../../css/visual';
 import {
   EditorModel,
   EditorNode,
@@ -15,10 +14,8 @@ import {
   MTestReport,
 } from '../../model/Measurement';
 import { LegendInterface } from '../../model/States';
-import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
 import { VarType } from '../../serialize/interface/supportinterface';
-import MeasurementTooltip from '../../ui/measurement/MeasurementTooltip';
 import { buildEdgeConnections } from '../ModelFunctions';
 import { evaluateCondition, resolveMTNode } from './Evaluator';
 import { parseMeasurement } from './Parser';
@@ -35,78 +32,73 @@ export const MeasureResultStyles: Record<MeasureRType, LegendInterface> = {
 
 export function checkModelMeasurement(
   model: EditorModel,
-  nums: EnviromentValues
+  nums: EnviromentValues,
+  branchOnly = false
 ): MeasureResult {
   const parsedTrees = parseAllDerived(model, nums);
   fillValues(parsedTrees, nums);
-  const result = computeResult(model, nums);
+  const result = computeResult(model, nums, branchOnly);
   return result;
-}
-
-export function updateView(
-  result: MeasureResult,
-  setView: (view: ViewFunctionInterface) => void
-) {
-  setView({
-    getStyleById,
-    getSVGColorById,
-    legendList: MeasureResultStyles,
-    data: result,
-    ComponentToolTip: MeasurementTooltip,
-  });
 }
 
 export function measureTest(
   model: EditorModel,
   values: Record<string, string>,
-  setView: (view: ViewFunctionInterface) => void,
-  showMsg: (msg: IToastProps) => void
-): void {
+  showMsg: (msg: IToastProps) => void,
+  branchOnly = false
+): MeasureResult {
   const nums: EnviromentValues = {};
+  // load default values
+  for (const x in model.vars) {
+    const v = model.vars[x];
+    if (v.type === VarType.DATA || v.type === VarType.LISTDATA) {
+      nums[x] = [0];
+    } else if (v.type === VarType.BOOLEAN) {
+      nums[x] = 'true';
+    } else if (v.type === VarType.TEXT) {
+      nums[x] = '';
+    }
+  }
+
+  // load updated values if any
   for (const x in values) {
-    const text = values[x];
-    const parsed: number[] = text.split(',').map(t => parseFloat(t));
-    nums[x] = parsed;
+    const variable = model.vars[x];
+    if (variable.type === VarType.DATA || variable.type === VarType.LISTDATA) {
+      const text = values[x];
+      const parsed: number[] = text.split(',').map(t => parseFloat(t));
+      nums[x] = parsed;
+    } else if (
+      variable.type === VarType.TEXT ||
+      variable.type === VarType.BOOLEAN
+    ) {
+      nums[x] = values[x];
+    }
   }
 
   try {
-    const result = checkModelMeasurement(model, nums);
-    if (result.overall) {
-      showMsg({
-        message: 'Test passed',
-        intent: 'success',
-      });
-    } else {
-      showMsg({
-        message: 'Test failed',
-        intent: 'danger',
-      });
+    const result = checkModelMeasurement(model, nums, branchOnly);
+    if (!branchOnly) {
+      if (result.overall) {
+        showMsg({
+          message: 'Test passed',
+          intent: 'success',
+        });
+      } else {
+        showMsg({
+          message: 'Test failed',
+          intent: 'danger',
+        });
+      }
     }
-
-    updateView(result, setView);
+    return result;
   } catch (e: unknown) {
     alert(e);
+    return {
+      overall: false,
+      items: {},
+      reports: {},
+    };
   }
-}
-
-function getStyleById(id: string, pageid: string, data: unknown) {
-  const result = data as MeasureResult;
-  const pageresult = result.items[pageid] ?? {};
-  const componentresult = pageresult[id];
-  if (componentresult === undefined) {
-    return no_highlight;
-  }
-  return flow_node__highlighed(MeasureResultStyles[componentresult].color);
-}
-
-function getSVGColorById(id: string, pageid: string, data: unknown) {
-  const result = data as MeasureResult;
-  const pageresult = result.items[pageid] ?? {};
-  const componentresult = pageresult[id];
-  if (componentresult === undefined) {
-    return 'none';
-  }
-  return MeasureResultStyles[componentresult].color;
 }
 
 function parseAllDerived(
@@ -115,7 +107,7 @@ function parseAllDerived(
 ): EnviromentVariables {
   const transformed: EnviromentVariables = {};
   for (const v of Object.values(model.vars)) {
-    if (v.type !== VarType.DATA && v.type !== VarType.LISTDATA) {
+    if (v.type === VarType.DERIVED) {
       transformed[v.id] = parseMeasurement(v.definition);
     } else {
       if (values[v.id] === undefined) {
@@ -136,7 +128,8 @@ function fillValues(trees: EnviromentVariables, values: EnviromentValues) {
 
 function computeResult(
   model: EditorModel,
-  values: EnviromentValues
+  values: EnviromentValues,
+  branchOnly: boolean
 ): MeasureResult {
   const root = model.pages[model.root];
   const items: Record<string, Record<string, MeasureRType>> = {};
@@ -154,7 +147,8 @@ function computeResult(
       items[model.root],
       {},
       {},
-      reports
+      reports,
+      branchOnly
     )[0];
     return { overall: ret, items, reports };
   }
@@ -171,7 +165,8 @@ function computeNode(
   pageresult: Record<string, MeasureRType>,
   visited: Record<string, [boolean, boolean]>, // keep computed result to avoid loop
   flatresult: Record<string, MeasureRType>, // for keeping the computed results of processes, due to multiple appearance
-  reports: Record<string, MTestReport> // for keeping individual test records for process
+  reports: Record<string, MTestReport>, // for keeping individual test records for process
+  branchOnly: boolean
 ): [boolean, boolean] {
   if (visited[node.id] !== undefined) {
     if (isEditorProcess(node) && pageresult[node.id] === undefined) {
@@ -204,7 +199,8 @@ function computeNode(
             pageresult,
             visited,
             flatresult,
-            reports
+            reports,
+            branchOnly
           );
           if (cresult[0]) {
             result = true;
@@ -244,7 +240,8 @@ function computeNode(
               pageresult,
               visited,
               flatresult,
-              reports
+              reports,
+              branchOnly
             );
             visited[node.id] = result;
             pageresult[node.id] = MeasureRType.NOTEST;
@@ -265,7 +262,8 @@ function computeNode(
           pageresult,
           visited,
           flatresult,
-          reports
+          reports,
+          branchOnly
         );
         visited[node.id] = result;
         pageresult[node.id] = MeasureRType.NOTEST;
@@ -279,17 +277,19 @@ function computeNode(
   }
   if (isEditorProcess(node)) {
     let mresult = true;
-    if (node.measure.length > 0) {
+    const hasTest = !branchOnly && node.measure.length > 0;
+    if (hasTest) {
       reports[node.id] = [];
     }
-    node.measure.forEach((m, index) => {
-      if (
-        !evaluateCondition(m, values, reports[node.id], `Test ${index + 1}`)
-      ) {
-        mresult = false;
-      }
-    });
-    const hasTest = node.measure.length > 0;
+    if (!branchOnly) {
+      node.measure.forEach((m, index) => {
+        if (
+          !evaluateCondition(m, values, reports[node.id], `Test ${index + 1}`)
+        ) {
+          mresult = false;
+        }
+      });
+    }
     let childHasTest = false;
     visited[node.id] = [mresult, hasTest];
     let presult = true;
@@ -309,7 +309,8 @@ function computeNode(
             items[node.page],
             visited,
             flatresult,
-            reports
+            reports,
+            branchOnly
           );
           childHasTest = cresult;
           if (!result) {
@@ -350,7 +351,8 @@ function computeNode(
         pageresult,
         visited,
         flatresult,
-        reports
+        reports,
+        branchOnly
       );
       result[0] &&= cresult[0];
       result[1] ||= cresult[1];

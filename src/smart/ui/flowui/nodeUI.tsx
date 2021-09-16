@@ -30,11 +30,11 @@ import {
   shame__approver_deco,
   shame__label,
   shame__label__long,
+  shame__label__noaction,
   shame__label__nudge,
   shame__label__short,
   tooltip__label,
 } from '../../../css/shame';
-import { Text } from '@blueprintjs/core';
 import { flownode_top_left_button_layout } from '../../../css/layout';
 import PopoverWrapper from '../popover/PopoverWrapper';
 import ViewMappingbutton from '../mapper/viewmapbutton';
@@ -111,7 +111,10 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           />
         )}
       {actor !== null && (
-        <div css={[shame__label]} key={process.id + '#ActorLabel'}>
+        <div
+          css={[shame__label, shame__label__noaction]}
+          key={process.id + '#ActorLabel'}
+        >
           {actorIcon}
           {actor.name}
         </div>
@@ -158,12 +161,15 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
       {actor !== null ? (
         approver !== null ? (
           <>
-            <div css={[shame__label]} key={approval.id + '#ActorLabel'}>
+            <div
+              css={[shame__label, shame__label__noaction]}
+              key={approval.id + '#ActorLabel'}
+            >
               {actorIcon}
               {actor.name}
             </div>
             <div
-              css={[shame__label, shame__label__nudge]}
+              css={[shame__label, shame__label__noaction, shame__label__nudge]}
               key={approval.id + '#ApproverLabel'}
             >
               {approverIcon}
@@ -171,13 +177,19 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
             </div>
           </>
         ) : (
-          <div css={[shame__label]} key={approval.id + '#ActorLabel'}>
+          <div
+            css={[shame__label, shame__label__noaction]}
+            key={approval.id + '#ActorLabel'}
+          >
             {actorIcon}
             {actor.name}
           </div>
         )
       ) : approver !== null ? (
-        <div css={[shame__label]} key={approval.id + '#ApproverLabel'}>
+        <div
+          css={[shame__label, shame__label__noaction]}
+          key={approval.id + '#ApproverLabel'}
+        >
           {approverIcon}
           {approver.name}
         </div>
@@ -249,9 +261,17 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
         css={[shame__label, shame__label__long]}
         position="top"
       >
-        <Text title="" ellipsize>
+        <div
+          style={{
+            flex: 1,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            overflow: 'hidden',
+            WebkitBoxOrient: 'vertical',
+          }}
+        >
           {egate.label}
-        </Text>
+        </div>
       </Tooltip2>
     </>
   );

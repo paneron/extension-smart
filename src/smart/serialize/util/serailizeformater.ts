@@ -25,7 +25,6 @@ import {
   MMELReference,
   MMELRole,
   MMELVariable,
-  VarType,
 } from '../interface/supportinterface';
 import {
   isApproval,
@@ -218,9 +217,7 @@ function toEGateModel(egate: MMELEGate): string {
 
 export function toVariableModel(v: MMELVariable): string {
   let out: string = 'measurement ' + v.id + ' {\n';
-  if (v.type !== VarType.EMPTY) {
-    out += '  type ' + v.type + '\n';
-  }
+  out += '  type ' + v.type + '\n';
   if (v.definition !== '') {
     out += '  definition "' + v.definition + '"\n';
   }

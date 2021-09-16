@@ -7,12 +7,12 @@ import {
   isBinaryOperator,
   isListOperator,
 } from './BasicFunctions';
-import { comparators as MComparators, MComparatorTypes } from './Operators';
+import { MComparators, MComparatorTypes } from './Operators';
 
 export interface MToken {
   text: string;
   isData: boolean;
-  value: number;
+  value: number | string;
 }
 
 function mTokenize(x: string): MToken[] {
@@ -21,6 +21,15 @@ function mTokenize(x: string): MToken[] {
     const c = x[i];
     if (isSpace(c)) {
       // space, do nothing
+    } else if (c === "'") {
+      // a string
+      i++;
+      let data = '';
+      while (i < x.length && x[i] !== "'") {
+        data += x[i];
+        i++;
+      }
+      out.push({ text: '', isData: true, value: data });
     } else if (c === '[') {
       // a measurement reference
       i++;
@@ -64,7 +73,11 @@ export function parseMeasurement(x: string): MTreeNode {
     const t = tokens[i];
     if (t.isData) {
       if (t.text === '') {
-        stack.push(createMTreeNodeWithValue([t.value]));
+        stack.push(
+          createMTreeNodeWithValue(
+            typeof t.value === 'string' ? t.value : [t.value]
+          )
+        );
       } else {
         stack.push(createMTreeNodeWithVariable(t.text));
       }

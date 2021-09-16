@@ -8,13 +8,25 @@ import { isBinaryOperator, isListOperator } from './BasicFunctions';
 import { MBOperators, MComparison, MLOperators } from './Operators';
 import { parseCondition } from './Parser';
 
+export function getFinalValueFromNode(a: MTreeNode): string | number {
+  if (Array.isArray(a.value)) {
+    return a.value[0];
+  } else {
+    return a.value;
+  }
+}
+
 export function getValueFromNode(
   a: MTreeNode,
   values: EnviromentValues,
   trees: EnviromentVariables
 ): number {
   if (a.isData && a.action === '') {
-    return a.value[0];
+    if (Array.isArray(a.value)) {
+      return a.value[0];
+    } else {
+      throw `Not a numeric data: ${a}`;
+    }
   }
   return getValueFromNode(resolveMTNode(a, values, trees), values, trees);
 }
@@ -25,7 +37,11 @@ export function getListFromNode(
   trees: EnviromentVariables
 ): number[] {
   if (a.isData && a.action === '') {
-    return a.value;
+    if (Array.isArray(a.value)) {
+      return a.value;
+    } else {
+      throw `Not a list: ${a}`;
+    }
   }
   return getListFromNode(resolveMTNode(a, values, trees), values, trees);
 }
@@ -36,7 +52,10 @@ export function resolveMTNode(
   trees: EnviromentVariables
 ): MTreeNode {
   if (a.isData) {
-    if (a.action === '' && a.value.length > 0) {
+    if (
+      a.action === '' &&
+      (typeof a.value === 'string' || a.value.length > 0)
+    ) {
       return a;
     }
     const v = values[a.action];
@@ -74,8 +93,8 @@ export function evaluateCondition(
   reportTitle: string
 ): boolean {
   const [left, op, right] = parseCondition(cond);
-  const a = getValueFromNode(resolveMTNode(left, values, {}), values, {});
-  const b = getValueFromNode(resolveMTNode(right, values, {}), values, {});
+  const a = getFinalValueFromNode(resolveMTNode(left, values, {}));
+  const b = getFinalValueFromNode(resolveMTNode(right, values, {}));
   const result = MComparison[op](a, b);
   report.push({
     cond,

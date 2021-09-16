@@ -43,11 +43,7 @@ export enum EditAction {
   DELETE = 'delete',
 }
 
-export const MEASUREMENTTYPES = [
-  VarType.DATA,
-  VarType.LISTDATA,
-  VarType.DERIVED,
-];
+export const MEASUREMENTTYPES = Object.values(VarType);
 
 export const searchableNodeDataTypes = [
   DataType.PROCESS,

@@ -76,6 +76,14 @@ export interface EditMPropsInterface {
   to: string;
 }
 
+function updateModel(
+  model: EditorModel,
+  setModelWrapper: (mw: ModelWrapper) => void,
+  mw: ModelWrapper
+) {
+  setModelWrapper({ ...mw, model: { ...model } });
+}
+
 export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.SETTING]: {
     title: 'Setting',
@@ -84,7 +92,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
       <BasicSettingPane
         model={modelwrapper.model}
         setModel={(model: EditorModel) =>
-          setModelWrapper({ ...modelwrapper, model: model })
+          updateModel(model, setModelWrapper, modelwrapper)
         }
         onMetaChanged={onMetaChanged}
         showMsg={showMsg}
@@ -105,7 +113,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
       <EditProcessPage
         model={modelwrapper.model}
         setModel={(m: EditorModel) =>
-          setModelWrapper({ ...modelwrapper, model: m })
+          updateModel(m, setModelWrapper, modelwrapper)
         }
         id={msg}
         closeDialog={cancel}
@@ -119,7 +127,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
       <EditApprovalPage
         modelwrapper={modelwrapper}
         setModel={(m: EditorModel) =>
-          setModelWrapper({ ...modelwrapper, model: m })
+          updateModel(m, setModelWrapper, modelwrapper)
         }
         id={msg}
         closeDialog={cancel}
@@ -133,7 +141,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
       <EditEGatePage
         modelwrapper={modelwrapper}
         setModel={(m: EditorModel) =>
-          setModelWrapper({ ...modelwrapper, model: m })
+          updateModel(m, setModelWrapper, modelwrapper)
         }
         id={msg}
         closeDialog={cancel}
@@ -147,7 +155,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
       <EditTimerPage
         modelwrapper={modelwrapper}
         setModel={(m: EditorModel) =>
-          setModelWrapper({ ...modelwrapper, model: m })
+          updateModel(m, setModelWrapper, modelwrapper)
         }
         id={msg}
         closeDialog={cancel}
@@ -161,7 +169,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
       <EditSignalEventPage
         modelwrapper={modelwrapper}
         setModel={(m: EditorModel) =>
-          setModelWrapper({ ...modelwrapper, model: m })
+          updateModel(m, setModelWrapper, modelwrapper)
         }
         id={msg}
         closeDialog={cancel}

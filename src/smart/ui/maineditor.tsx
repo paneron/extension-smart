@@ -147,7 +147,10 @@ const ModelEditor: React.FC<{
   function setModelAfterDelete(model: EditorModel) {
     setState({
       ...state,
-      modelWrapper: { ...state.modelWrapper, model: model },
+      modelWrapper: {
+        ...state.modelWrapper,
+        model: { ...model },
+      },
     });
     setDialogType(null);
   }
@@ -281,7 +284,13 @@ const ModelEditor: React.FC<{
         type as NewComponentTypes,
         pos
       );
-      setState({ ...state, modelWrapper: { ...state.modelWrapper, model } });
+      setState({
+        ...state,
+        modelWrapper: {
+          ...state.modelWrapper,
+          model: { ...model },
+        },
+      });
     }
   }
 

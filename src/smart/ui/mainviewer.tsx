@@ -58,15 +58,15 @@ const initModelWrapper = createEditorModelWrapper(initModel);
 
 export enum FunctionPage {
   Simulation = 'simulation',
+  Parameterized = 'para',
   Measurement = 'measurement',
-  Filter = 'filter',
   Checklist = 'checklist',
 }
 
 export const FuntionNames: Record<FunctionPage, string> = {
   [FunctionPage.Simulation]: 'Simulation',
   [FunctionPage.Measurement]: 'Measurement validation',
-  [FunctionPage.Filter]: 'Filtering',
+  [FunctionPage.Parameterized]: 'Parameterized view',
   [FunctionPage.Checklist]: 'Self-assessment checklist',
 };
 
@@ -189,11 +189,18 @@ const ModelViewer: React.FC<{
         <MeasureCheckPane model={model} setView={setView} showMsg={showMsg} />
       ),
     },
-    [FunctionPage.Filter]: {
+    [FunctionPage.Parameterized]: {
       key: 'filter',
-      title: FuntionNames[FunctionPage.Filter],
+      title: FuntionNames[FunctionPage.Parameterized],
       collapsedByDefault: false,
-      content: <>Filter</>,
+      content: (
+        <MeasureCheckPane
+          model={model}
+          setView={setView}
+          showMsg={showMsg}
+          branchOnly
+        />
+      ),
     },
     [FunctionPage.Checklist]: {
       key: 'checklist',
@@ -203,10 +210,13 @@ const ModelViewer: React.FC<{
     },
   };
 
-  const ViewStyleComponentDesc: React.FC<{ id: string }> = function ({ id }) {
-    const SD = view!.ComponentToolTip;
-    return <SD id={id} pageid={mw.page} data={view!.data} />;
-  };
+  const ViewStyleComponentDesc: React.FC<{ id: string }> | undefined =
+    view !== undefined && view.ComponentToolTip !== undefined
+      ? function ({ id }) {
+          const SD = view.ComponentToolTip!;
+          return <SD id={id} pageid={mw.page} data={view!.data} />;
+        }
+      : undefined;
 
   const toolbar = (
     <ControlGroup>
