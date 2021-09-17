@@ -237,14 +237,14 @@ export function toViewProfile(v: MMELView): string {
   for (const e in v.profile) {
     out += toVarSettingModel(v.profile[e]);
   }
-  out += '  }\n';  
+  out += '  }\n';
   out += '}\n';
   return out;
 }
 
 export function toVarSettingModel(v: MMELVarSetting): string {
-  let out: string = `    ${v.id} {\n`;
-  out += `      required ${v.isConst?'true':'false'}\n`;
+  let out = `    ${v.id} {\n`;
+  out += `      required ${v.isConst ? 'true' : 'false'}\n`;
   out += `      value "${v.value}"\n`;
   out += '    }\n';
   return out;

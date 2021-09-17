@@ -28,6 +28,7 @@ import {
 } from '../../model/modelwrapper';
 import {
   EdgeTypes,
+  isModelWrapper,
   MapperSelectedInterface,
   MapperState,
   MapperViewOption,
@@ -49,7 +50,7 @@ import {
 } from '../../utils/MappingCalculator';
 import LegendPane from '../common/description/LegendPane';
 import MappingPartyList from './mappartylist';
-import { handleModelOpen } from '../../utils/IOFunctions';
+import { handleDocumentOpen, handleModelOpen } from '../../utils/IOFunctions';
 
 const ModelDiagram: React.FC<{
   className?: string;
@@ -63,7 +64,7 @@ const ModelDiagram: React.FC<{
   setSelected: (s: MapperSelectedInterface) => void;
   onMappingEdit: (from: string, to: string) => void;
   issueNavigationRequest: (id: string) => void;
-  getPartnerModelElementById: (id: string) => EditorNode | null;
+  getPartnerModelElementById?: (id: string) => EditorNode | null;
 }> = ({
   className,
   viewOption,
@@ -82,6 +83,8 @@ const ModelDiagram: React.FC<{
     useContext(DatasetContext);
 
   const modelType = modelProps.modelType;
+  const mw = modelProps.modelWrapper;
+  const isImp = modelType === ModelType.IMP;
 
   function setSelectedId(id: string) {
     setSelected({
@@ -111,25 +114,29 @@ const ModelDiagram: React.FC<{
   }
 
   function onPageChange(updated: PageHistory, newPage: string) {
-    modelProps.history = updated;
-    modelProps.modelWrapper.page = newPage;
-    setProps({ ...modelProps });
+    if (isModelWrapper(mw)) {
+      modelProps.history = updated;
+      mw.page = newPage;
+      setProps({ ...modelProps });
+    }
   }
 
   function onProcessClick(pageid: string, processid: string): void {
-    const mw = modelProps.modelWrapper;
-    mw.page = pageid;
-    logger?.log('Go to page', pageid);
-    addToHistory(modelProps.history, mw.page, processid);
-    setProps({ ...modelProps });
-    setSelectedId('');
+    if (isModelWrapper(mw)) {
+      mw.page = pageid;
+      addToHistory(modelProps.history, mw.page, processid);
+      setProps({ ...modelProps });
+      setSelectedId('');
+    }
   }
 
   function drillUp(): void {
-    if (modelProps.history.items.length > 0) {
-      modelProps.modelWrapper.page = popPage(modelProps.history);
-      setProps({ ...modelProps });
-      setSelectedId('');
+    if (isModelWrapper(mw)) {
+      if (modelProps.history.items.length > 0) {
+        mw.page = popPage(modelProps.history);
+        setProps({ ...modelProps });
+        setSelectedId('');
+      }
     }
   }
 
@@ -160,6 +167,19 @@ const ModelDiagram: React.FC<{
       >
         {'Open ' + MapperModelLabel[modelProps.modelType as MapperModelType]}
       </MGDButton>
+      {!isImp && (
+        <MGDButton
+          onClick={() => {
+            handleDocumentOpen({
+              setDocument: () => {},
+              useDecodedBlob,
+              requestFileFromFilesystem,
+            });
+          }}
+        >
+          Open Document
+        </MGDButton>
+      )}
       <MGDButton
         type={MGDButtonType.Secondary}
         disabled={modelProps.history.items.length <= 1}
@@ -173,11 +193,15 @@ const ModelDiagram: React.FC<{
   const ComponentShortDescription: React.FC<{ id: string }> = function ({
     id,
   }) {
-    return <ComponentSummary id={id} model={modelProps.modelWrapper.model} />;
+    return isModelWrapper(mw) ? (
+      <ComponentSummary id={id} model={mw.model} />
+    ) : (
+      <></>
+    );
   };
 
   const MappingList: React.FC<{ id: string }> = function ({ id }) {
-    return (
+    return getPartnerModelElementById !== undefined ? (
       <MappingPartyList
         id={id}
         type={modelProps.modelType}
@@ -186,6 +210,8 @@ const ModelDiagram: React.FC<{
         issueNavigationRequest={issueNavigationRequest}
         getNodeById={getPartnerModelElementById}
       />
+    ) : (
+      <></>
     );
   };
 
@@ -199,40 +225,40 @@ const ModelDiagram: React.FC<{
         navbarProps={{ breadcrumbs }}
       >
         <div css={react_flow_container_layout}>
-          <ReactFlow
-            key="MMELModel"
-            elements={getMapperReactFlowElementsFrom(
-              modelProps.modelWrapper,
-              modelProps.modelType,
-              viewOption.dataVisible,
-              onProcessClick,
-              setMapping,
-              mapSet,
-              mapResult,
-              setSelectedId,
-              isParentMapFullCovered(modelProps.history, mapResult),
-              ComponentShortDescription,
-              MappingList
-            )}
-            onLoad={onLoad}
-            onDragOver={onDragOver}
-            nodesConnectable={false}
-            snapToGrid={true}
-            snapGrid={[10, 10]}
-            nodeTypes={NodeTypes}
-            edgeTypes={EdgeTypes}
-            nodesDraggable={false}
-          >
-            <Controls showInteractive={false} />
-          </ReactFlow>
+          {isModelWrapper(mw) ? (
+            <ReactFlow
+              key="MMELModel"
+              elements={getMapperReactFlowElementsFrom(
+                mw,
+                modelProps.modelType,
+                viewOption.dataVisible,
+                onProcessClick,
+                setMapping,
+                mapSet,
+                mapResult,
+                setSelectedId,
+                isParentMapFullCovered(modelProps.history, mapResult),
+                ComponentShortDescription,
+                MappingList
+              )}
+              onLoad={onLoad}
+              onDragOver={onDragOver}
+              nodesConnectable={false}
+              snapToGrid={true}
+              snapGrid={[10, 10]}
+              nodeTypes={NodeTypes}
+              edgeTypes={EdgeTypes}
+              nodesDraggable={false}
+            >
+              <Controls showInteractive={false} />
+            </ReactFlow>
+          ) : (
+            <></>
+          )}
           {viewOption.legVisible && (
             <LegendPane
-              list={
-                modelType === ModelType.REF
-                  ? MappingResultStyles
-                  : MappingSourceStyles
-              }
-              onLeft={modelType === ModelType.IMP}
+              list={isImp ? MappingSourceStyles : MappingResultStyles}
+              onLeft={isImp}
             />
           )}
         </div>

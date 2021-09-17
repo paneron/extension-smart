@@ -32,7 +32,7 @@ export enum SETTINGPAGE {
   DATAPAGE = 'dc',
   ENUMPAGE = 'enum',
   MEASUREMENT = 'measure',
-  PROFILE = 'profile'
+  PROFILE = 'profile',
 }
 
 interface TabProps {
@@ -96,10 +96,10 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
   },
   [SETTINGPAGE.PROFILE]: {
     title: 'View profiles',
-    Panel: ({model, setModel}) => (
-      <ViewProfileEditPage model={model} setModel={setModel} />      
+    Panel: ({ model, setModel }) => (
+      <ViewProfileEditPage model={model} setModel={setModel} />
     ),
-  }
+  },
 };
 
 const BasicSettingPane: React.FC<{

@@ -10,7 +10,7 @@ import {
   VarType,
 } from '../interface/supportinterface';
 import {
-  MMELremovePackage,  
+  MMELremovePackage,
   MMELtokenizePackage,
   MMELtokenizeSet,
 } from '../util/tokenizer';
@@ -240,7 +240,7 @@ export function parseView(id: string, data: string): MMELView {
   return v;
 }
 
-function parseSettings(data: string):Record<string, MMELVarSetting> {
+function parseSettings(data: string): Record<string, MMELVarSetting> {
   const profile: Record<string, MMELVarSetting> = {};
 
   if (data !== '') {
@@ -248,11 +248,14 @@ function parseSettings(data: string):Record<string, MMELVarSetting> {
     let i = 0;
     while (i < t.length) {
       const id = t[i++];
-      if (i < t.length) {                
+      if (i < t.length) {
         profile[id] = parseVarSetting(id, t[i++]);
       } else {
         throw new Error(
-          'Parsing error: variable profile setting. ID ' + id + ': Expecting { after ' + id
+          'Parsing error: variable profile setting. ID ' +
+            id +
+            ': Expecting { after ' +
+            id
         );
       }
     }
@@ -260,12 +263,12 @@ function parseSettings(data: string):Record<string, MMELVarSetting> {
   return profile;
 }
 
-function parseVarSetting(id:string , data:string): MMELVarSetting {
-  const setting:MMELVarSetting = {
+function parseVarSetting(id: string, data: string): MMELVarSetting {
+  const setting: MMELVarSetting = {
     id,
     isConst: true,
-    value: ''
-  }
+    value: '',
+  };
   if (data !== '') {
     const t: string[] = MMELtokenizePackage(data);
     let i = 0;
@@ -278,7 +281,10 @@ function parseVarSetting(id:string , data:string): MMELVarSetting {
           setting.value = MMELremovePackage(t[i++]);
         } else {
           throw new Error(
-            'Parsing error: variable setting. ID ' + id + ': Unknown keyword ' + command
+            'Parsing error: variable setting. ID ' +
+              id +
+              ': Unknown keyword ' +
+              command
           );
         }
       } else {

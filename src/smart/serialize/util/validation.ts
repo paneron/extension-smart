@@ -164,7 +164,9 @@ function validateProvision(
 ): void {
   for (const x in pro.ref) {
     if (refs[x] === undefined) {
-      throw new Error(`Error in resolving IDs in reference for provision ${pro.id}`);
+      throw new Error(
+        `Error in resolving IDs in reference for provision ${pro.id}`
+      );
     }
   }
 }
@@ -206,7 +208,7 @@ export function validateModel(model: MMELModel): void {
     }
   }
   for (const v in model.views) {
-    validateView(model.views[v], model.vars);    
+    validateView(model.views[v], model.vars);
   }
 }
 

@@ -86,7 +86,7 @@ function parseModel(input: string): MMELModel {
     enums: {},
     vars: {},
     root: '',
-    views: {}
+    views: {},
   };
 
   const token: Array<string> = MMELtokenize(input);

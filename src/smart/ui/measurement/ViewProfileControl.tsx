@@ -8,66 +8,61 @@ import MGDContainer from '../../MGDComponents/MGDContainer';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import { MMELView } from '../../serialize/interface/supportinterface';
 
-const ProfileControl:React.FC<{
+const ProfileControl: React.FC<{
   values: Record<string, string>;
-  profile: MMELView|undefined;
+  profile: MMELView | undefined;
   profiles: MMELView[];
   setValues: (v: Record<string, string>) => void;
-  setProfile: (x: MMELView|undefined) => void;
-}> = function ({
-  values,
-  profile,
-  profiles,
-  setValues,
-  setProfile
-}) {
-
-  function onProfileLoad(p: MMELView) {            
+  setProfile: (x: MMELView | undefined) => void;
+}> = function ({ values, profile, profiles, setValues, setProfile }) {
+  function onProfileLoad(p: MMELView) {
     for (const x in p.profile) {
       const set = p.profile[x];
       values[x] = set.value;
     }
-    setValues({...values});
-    setProfile({...p});    
+    setValues({ ...values });
+    setProfile({ ...p });
   }
 
   return (
     <MGDContainer>
       <ControlGroup>
-        <Popover2 
+        <Popover2
           content={
-            <MGDSidebar>                  
-              {
-                profiles.map(p => 
-                  <Button 
-                    fill
-                    className={Classes.POPOVER2_DISMISS}
-                    onClick={() => onProfileLoad(p)}
-                  >
-                    {p.name}
-                  </Button>
-                )
-              }                  
+            <MGDSidebar>
+              {profiles.map(p => (
+                <Button
+                  fill
+                  className={Classes.POPOVER2_DISMISS}
+                  onClick={() => onProfileLoad(p)}
+                >
+                  {p.name}
+                </Button>
+              ))}
             </MGDSidebar>
           }
-          position='bottom'>
-          <Button>{profile !== undefined ? profile.name : 'Load Profile'}</Button>
+          position="bottom"
+        >
+          <Button>
+            {profile !== undefined ? profile.name : 'Load Profile'}
+          </Button>
         </Popover2>
-        <Button icon='cross' onClick={() => setProfile(undefined)}></Button>            
+        <Button icon="cross" onClick={() => setProfile(undefined)}></Button>
       </ControlGroup>
       <Tooltip2
-        content={                
+        content={
           <Text>
-            Settings from specific profile are loaded. The concerned settings are highlighted.
+            Settings from specific profile are loaded. The concerned settings
+            are highlighted.
           </Text>
         }
-        position='bottom-right'
+        position="bottom-right"
         minimal
       >
-        <Icon icon='help'/>
+        <Icon icon="help" />
       </Tooltip2>
     </MGDContainer>
-  )
-}
+  );
+};
 
 export default ProfileControl;

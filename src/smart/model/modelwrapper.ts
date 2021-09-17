@@ -50,6 +50,7 @@ import { SerializedStyles } from '@emotion/react';
 export interface ModelWrapper {
   model: EditorModel;
   page: string;
+  type: 'modelwrapper';
 }
 
 function exploreData(
@@ -150,6 +151,7 @@ export function createEditorModelWrapper(m: MMELModel): ModelWrapper {
   return buildStructure({
     model: { ...m, elements: convertedElms, pages: converedPages },
     page: m.root,
+    type: 'modelwrapper',
   });
 }
 

@@ -93,6 +93,7 @@ export function findComponent(
   const history = createPageHistory({
     model: model,
     page: model.root,
+    type: 'modelwrapper',
   });
   if (page !== undefined && search !== '') {
     searchPageForComponent(

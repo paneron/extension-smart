@@ -16,6 +16,7 @@ import {
 } from '../ui/flowui/nodeUI';
 import { ModelType } from './editormodel';
 import { SMARTWorkspace } from './workspace';
+import { MMELDocument } from './document';
 
 export interface EditorState {
   dvisible: boolean; // visibility of data nodes
@@ -36,9 +37,11 @@ export interface MapperViewOption {
   docVisible: boolean; // visibility of document templates
 }
 
+export type MapperContent = ModelWrapper | MMELDocument;
+
 export interface MapperState {
   history: PageHistory;
-  modelWrapper: ModelWrapper;
+  modelWrapper: MapperContent;
   modelType: ModelType;
   historyMap: Record<string, PageHistory>;
 }
@@ -63,6 +66,10 @@ export interface MMELtoFlowEntry {
 export interface LegendInterface {
   label: string;
   color: string;
+}
+
+export function isModelWrapper(x: MapperContent): x is ModelWrapper {
+  return x.type === 'modelwrapper';
 }
 
 export const MMELtoFlowEntries: Record<string, MMELtoFlowEntry> = {

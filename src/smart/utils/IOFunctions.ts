@@ -1,4 +1,5 @@
 import { Hooks, SaveDialogProps } from '@riboseinc/paneron-extension-kit/types';
+import { MMELDocument, textToDoc } from '../model/document';
 import { EditorModel } from '../model/editormodel';
 import { MapProfile } from '../model/mapmodel';
 import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
@@ -18,6 +19,7 @@ export enum FILE_TYPE {
   Map = 'mapping',
   Workspace = 'workspace',
   JSON = 'json',
+  Document = 'doc',
 }
 
 export const FileTypeDescription: Record<
@@ -47,6 +49,11 @@ export const FileTypeDescription: Record<
     filtername: 'JSON files',
     extension: 'json',
     openPrompt: 'Choose a JSON file to open',
+  },
+  [FILE_TYPE.Document]: {
+    filtername: 'SMART document files',
+    extension: 'sdc',
+    openPrompt: 'Choose a SMART document file to open',
   },
 };
 
@@ -89,6 +96,19 @@ export function handleModelOpen(props: {
         logger,
         indexModel,
       }),
+  });
+}
+
+export function handleDocumentOpen(props: {
+  setDocument: (doc: MMELDocument) => void;
+  useDecodedBlob?: Hooks.UseDecodedBlob;
+  requestFileFromFilesystem?: OpenFileInterface;
+}) {
+  const { setDocument } = props;
+  handleFileOpen({
+    ...props,
+    type: FILE_TYPE.Document,
+    postProcessing: data => setDocument(textToDoc(data)),
   });
 }
 

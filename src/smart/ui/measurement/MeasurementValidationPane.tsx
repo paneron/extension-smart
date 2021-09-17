@@ -37,7 +37,7 @@ const MeasureCheckPane: React.FC<{
 }> = function ({ model, setView, showMsg, branchOnly = false }) {
   const [values, setValues] = useState<Record<string, string>>({});
   const [result, setResult] = useState<MeasureResult | undefined>(undefined);
-  const [profile, setProfile] = useState<MMELView|undefined>(undefined);
+  const [profile, setProfile] = useState<MMELView | undefined>(undefined);
 
   const alldata = Object.values(model.vars).filter(simpleFilter);
 
@@ -52,39 +52,39 @@ const MeasureCheckPane: React.FC<{
     } else {
       setView(undefined);
     }
-  }    
+  }
 
   function onValueChange(id: string, value: string) {
     values[id] = value;
     setValues({ ...values });
   }
 
-  const profiles = useMemo(() => Object.values(model.views), [model]);  
+  const profiles = useMemo(() => Object.values(model.views), [model]);
 
   return (
     <MGDSidebar>
-      {branchOnly && profiles.length > 1 && 
-        <ProfileControl 
+      {branchOnly && profiles.length > 1 && (
+        <ProfileControl
           values={values}
           profile={profile}
           profiles={profiles}
           setValues={setValues}
           setProfile={setProfile}
         />
-      }
+      )}
       <FormGroup>
-        {alldata.map(v => 
-          <VariableSettingItem 
+        {alldata.map(v => (
+          <VariableSettingItem
             variable={v}
             value={values[v.id]}
-            profile={profile}          
+            profile={profile}
             branchOnly={branchOnly}
-            onChange={(x:string) => onValueChange(v.id, x)}
-          />          
-        )}
+            onChange={(x: string) => onValueChange(v.id, x)}
+          />
+        ))}
       </FormGroup>
-      {alldata.length > 0
-        ? <MGDButton
+      {alldata.length > 0 ? (
+        <MGDButton
           icon={branchOnly ? 'filter' : 'lab-test'}
           onClick={() =>
             updateResult(measureTest(model, values, showMsg, branchOnly))
@@ -92,8 +92,9 @@ const MeasureCheckPane: React.FC<{
         >
           {branchOnly ? 'Custom view' : 'Measurement Test'}
         </MGDButton>
-        : <Text> No setting detected </Text>
-      }
+      ) : (
+        <Text> No setting detected </Text>
+      )}
       {result !== undefined && (
         <MGDButton
           icon="reset"
@@ -106,7 +107,5 @@ const MeasureCheckPane: React.FC<{
     </MGDSidebar>
   );
 };
-
-
 
 export default MeasureCheckPane;

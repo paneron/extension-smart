@@ -17,12 +17,12 @@ import ModelMapper from './smart/ui/mainmapper';
 import { BSI_WHITE_TEXT } from './css/BSI.logos';
 import ModelViewer from './smart/ui/mainviewer';
 import ModelWorkspace from './smart/ui/modelWorkspace';
-import { FocusStyleManager } from "@blueprintjs/core";
+import { FocusStyleManager } from '@blueprintjs/core';
 
 const RepositoryView: React.FC<Record<never, never>> = function () {
   const [selectedModule, selectModule] = useState<ModuleName>('modelViewer');
   FocusStyleManager.onlyShowFocusOnTabs();
-  
+
   const toolbar = (
     <ControlGroup
       vertical

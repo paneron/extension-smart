@@ -26,7 +26,7 @@ export interface IAdditionalListButton {
 
 export interface IField {
   text?: string;
-  value: string;  
+  value: string;
   onChange?: (x: string) => void;
   extend?: JSX.Element;
   rows?: number;
@@ -39,7 +39,7 @@ export interface IComboField {
   onChange: (x: string) => void;
   extend?: JSX.Element;
   noContainer?: boolean;
-  fill?: boolean;  
+  fill?: boolean;
 }
 
 export interface IMultiRefSelectField {
@@ -116,7 +116,7 @@ export interface IUpdateInterface {
 export const NormalTextField: React.FC<IField> = (f: IField) => {
   return (
     <FormGroup label={f.text} helperText={f.extend}>
-      <MGDTextarea      
+      <MGDTextarea
         readOnly={f.onChange === undefined}
         id="field#text"
         onChange={e => {
@@ -159,11 +159,11 @@ export const NormalComboBox: React.FC<IComboField> = function ({
   onChange,
   extend,
   noContainer = false,
-  fill  
+  fill,
 }) {
   const content = (
     <HTMLSelect
-      className='bp3-html-select'
+      className="bp3-html-select"
       value={value}
       onChange={e => onChange(e.target.value)}
       fill={fill}

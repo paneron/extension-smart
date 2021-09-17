@@ -27,12 +27,13 @@ import { Popover2 } from '@blueprintjs/popover2';
 import MapperFileMenu from './menu/mapperfile';
 import { createPageHistory, PageHistory } from '../model/history';
 import {
+  isModelWrapper,
   MapperSelectedInterface,
   MapperState,
   MapperViewOption,
 } from '../model/States';
 import { createNewEditorModel } from '../utils/EditorFactory';
-import { createEditorModelWrapper } from '../model/modelwrapper';
+import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
 import {
   calculateMapping,
   filterMappings,
@@ -86,31 +87,45 @@ const ModelMapper: React.FC<{
     to: '',
   });
 
-  const refmodel = referenceProps.modelWrapper.model;
-  const impmodel = implementProps.modelWrapper.model;
-  const refns =
-    refmodel.meta.namespace === '' ? 'defaultns' : refmodel.meta.namespace;
+  const impMW = implementProps.modelWrapper as ModelWrapper;
+  const refMW = referenceProps.modelWrapper;
+
+  const impmodel = impMW.model;
+  const refns = isModelWrapper(refMW)
+    ? refMW.model.meta.namespace === ''
+      ? 'defaultns'
+      : refMW.model.meta.namespace
+    : 'doc';
   if (mapProfile.mapSet[refns] === undefined) {
     mapProfile.mapSet[refns] = createNewMapSet(refns);
   }
   const mapSet = mapProfile.mapSet[refns];
-  const impPage = impmodel.pages[implementProps.modelWrapper.page];
-  const refPage = refmodel.pages[referenceProps.modelWrapper.page];
+  const impPage = impmodel.pages[impMW.page];
 
   const mapEdges = useMemo(
     () =>
-      filterMappings(
-        mapSet,
-        impPage,
-        refPage,
-        selected,
-        impmodel.elements,
-        refmodel.elements
-      ),
-    [mapSet, impPage, refPage, selected]
+      isModelWrapper(refMW)
+        ? filterMappings(
+            mapSet,
+            impPage,
+            refMW.model.pages[refMW.page],
+            selected,
+            impmodel.elements,
+            refMW.model.elements
+          )
+        : [],
+    [
+      mapSet,
+      impPage,
+      isModelWrapper(refMW) ? refMW.model.pages[refMW.page] : undefined,
+      selected,
+    ]
   );
 
-  function updateMapStyle({ model = refmodel, mp = mapProfile }) {
+  function updateMapStyle({
+    model = (refMW as ModelWrapper).model,
+    mp = mapProfile,
+  }) {
     setMapResult(calculateMapping(model, getMappings(mp, refns)));
   }
 
@@ -124,8 +139,10 @@ const ModelMapper: React.FC<{
   }
 
   function onRefModelChanged(model: EditorModel) {
-    referenceProps.modelWrapper.model = model;
-    updateMapStyle({ model: model });
+    if (isModelWrapper(refMW)) {
+      refMW.model = model;
+      updateMapStyle({ model: model });
+    }
   }
 
   function onMapProfileChanged(mp: MapProfile) {
@@ -135,7 +152,7 @@ const ModelMapper: React.FC<{
 
   function onImpModelChanged(model: EditorModel) {
     onMapProfileChanged({ id: model.meta.namespace, mapSet: {}, docs: {} });
-    implementProps.modelWrapper.model = model;
+    impMW.model = model;
   }
 
   function onImpPropsChange(state: MapperState) {
@@ -152,9 +169,9 @@ const ModelMapper: React.FC<{
 
   function onMappingChange(update: MappingMeta | null) {
     if (update !== null) {
-      mapProfile.mapSet[
-        referenceProps.modelWrapper.model.meta.namespace
-      ].mappings[editMappingProps.from][editMappingProps.to] = update;
+      mapProfile.mapSet[refns].mappings[editMappingProps.from][
+        editMappingProps.to
+      ] = update;
       setMapProfile({ ...mapProfile });
     }
     setEditMProps({
@@ -165,8 +182,7 @@ const ModelMapper: React.FC<{
 
   function onMappingDelete() {
     const { from, to } = editMappingProps;
-    const mapSet =
-      mapProfile.mapSet[referenceProps.modelWrapper.model.meta.namespace];
+    const mapSet = mapProfile.mapSet[refns];
     delete mapSet.mappings[from][to];
     if (Object.keys(mapSet.mappings[from]).length === 0) {
       delete mapSet.mappings[from];
@@ -193,9 +209,11 @@ const ModelMapper: React.FC<{
   }
 
   function onRefNavigate(id: string) {
-    const page = findPageContainingElement(refmodel, id);
-    const hm = referenceProps.historyMap;
-    processNavigate(page, setRefProps, referenceProps, hm);
+    if (isModelWrapper(refMW)) {
+      const page = findPageContainingElement(refMW.model, id);
+      const hm = referenceProps.historyMap;
+      processNavigate(page, setRefProps, referenceProps, hm);
+    }
   }
 
   function processNavigate(
@@ -204,7 +222,12 @@ const ModelMapper: React.FC<{
     props: MapperState,
     hm?: Record<string, PageHistory>
   ) {
-    if (page !== null && hm !== undefined && hm[page.id] !== undefined) {
+    if (
+      page !== null &&
+      hm !== undefined &&
+      hm[page.id] !== undefined &&
+      isModelWrapper(props.modelWrapper)
+    ) {
       setProps({
         ...props,
         modelWrapper: { ...props.modelWrapper, page: page.id },
@@ -250,15 +273,17 @@ const ModelMapper: React.FC<{
   );
 
   const mapEditPage =
-    editMappingProps.from !== '' && editMappingProps.to !== '' ? (
+    editMappingProps.from !== '' &&
+    editMappingProps.to !== '' &&
+    isModelWrapper(refMW) ? (
       <MappingEditPage
         from={
-          implementProps.modelWrapper.model.elements[editMappingProps.from] as
+          impmodel.elements[editMappingProps.from] as
             | EditorProcess
             | EditorApproval
         }
         to={
-          referenceProps.modelWrapper.model.elements[editMappingProps.to] as
+          refMW.model.elements[editMappingProps.to] as
             | EditorProcess
             | EditorApproval
         }
@@ -295,16 +320,16 @@ const ModelMapper: React.FC<{
           canEscapeKeyClose={false}
           canOutsideClickClose={false}
         >
-          {editMappingProps.from !== '' ? (
-            mapEditPage
-          ) : (
-            <DocTemplatePane
-              mapProfile={mapProfile}
-              setMapProfile={setMapProfile}
-              refModel={referenceProps.modelWrapper.model}
-              impModel={implementProps.modelWrapper.model}
-            />
-          )}
+          {editMappingProps.from !== ''
+            ? mapEditPage
+            : isModelWrapper(refMW) && (
+                <DocTemplatePane
+                  mapProfile={mapProfile}
+                  setMapProfile={setMapProfile}
+                  refModel={refMW.model}
+                  impModel={impmodel}
+                />
+              )}
         </Dialog>
         <div css={mappper_container}>
           <ModelDiagram
@@ -318,7 +343,11 @@ const ModelMapper: React.FC<{
             setSelected={setSelected}
             onMappingEdit={onMappingEdit}
             issueNavigationRequest={onRefNavigate}
-            getPartnerModelElementById={id => getEditorNodeById(refmodel, id)}
+            getPartnerModelElementById={
+              isModelWrapper(refMW)
+                ? id => getEditorNodeById(refMW.model, id)
+                : undefined
+            }
           />
           <div ref={lineref} css={vertical_line} />
           <ModelDiagram

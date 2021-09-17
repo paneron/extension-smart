@@ -20,7 +20,7 @@ export enum DataType {
   METADATA = 'metadata',
   PROVISION = 'provision',
   REFERENCE = 'ref',
-  VIEW = 'view'
+  VIEW = 'view',
 }
 
 // the base interface for all objects in MMEL
