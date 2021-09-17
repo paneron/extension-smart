@@ -51,6 +51,8 @@ import {
 import LegendPane from '../common/description/LegendPane';
 import MappingPartyList from './mappartylist';
 import { handleDocumentOpen, handleModelOpen } from '../../utils/IOFunctions';
+import { MMELDocument } from '../../model/document';
+import SMARTDocumentView from './document/DocumentView';
 
 const ModelDiagram: React.FC<{
   className?: string;
@@ -84,7 +86,7 @@ const ModelDiagram: React.FC<{
 
   const modelType = modelProps.modelType;
   const mw = modelProps.modelWrapper;
-  const isImp = modelType === ModelType.IMP;
+  const isImp = modelType === ModelType.IMP;  
 
   function setSelectedId(id: string) {
     setSelected({
@@ -106,6 +108,15 @@ const ModelDiagram: React.FC<{
     });
     onModelChanged(mw.model);
     setSelectedId('');
+  }
+
+  function onDocumentLoaded(doc: MMELDocument) {    
+    setProps({
+      history: { items:[] },
+      historyMap: {},
+      modelWrapper: doc,      
+      modelType
+    });    
   }
 
   function onDragOver(event: React.DragEvent<HTMLDivElement>) {
@@ -145,11 +156,13 @@ const ModelDiagram: React.FC<{
     if (mapSet.mappings[fromid] === undefined) {
       mapSet.mappings[fromid] = {};
     }
-    mapSet.mappings[fromid][toid] = {
-      description: '',
-      justification: '',
-    };
-    onMapSetChanged({ ...mapSet });
+    if (mapSet.mappings[fromid][toid] === undefined) {
+      mapSet.mappings[fromid][toid] = {
+        description: '',
+        justification: '',
+      };
+      onMapSetChanged({ ...mapSet });
+    }    
   }
 
   const toolbar = (
@@ -171,7 +184,7 @@ const ModelDiagram: React.FC<{
         <MGDButton
           onClick={() => {
             handleDocumentOpen({
-              setDocument: () => {},
+              setDocument: onDocumentLoaded,
               useDecodedBlob,
               requestFileFromFilesystem,
             });
@@ -180,13 +193,15 @@ const ModelDiagram: React.FC<{
           Open Document
         </MGDButton>
       )}
-      <MGDButton
-        type={MGDButtonType.Secondary}
-        disabled={modelProps.history.items.length <= 1}
-        onClick={drillUp}
-      >
-        Drill up
-      </MGDButton>
+      {isModelWrapper(mw) && (
+        <MGDButton
+          type={MGDButtonType.Secondary}
+          disabled={modelProps.history.items.length <= 1}
+          onClick={drillUp}
+        >
+          Drill up
+        </MGDButton>
+      )}
     </ControlGroup>
   );
 
@@ -215,7 +230,9 @@ const ModelDiagram: React.FC<{
     );
   };
 
-  const breadcrumbs = getBreadcrumbs(modelProps.history, onPageChange);
+  const breadcrumbs = isModelWrapper(mw)
+    ? getBreadcrumbs(modelProps.history, onPageChange)
+    : [{ label: <>{mw.id}</> }];
 
   return (
     <ReactFlowProvider>
@@ -253,9 +270,14 @@ const ModelDiagram: React.FC<{
               <Controls showInteractive={false} />
             </ReactFlow>
           ) : (
-            <></>
+            <SMARTDocumentView 
+              document={mw}
+              onDragOver={onDragOver}
+              setMapping={setMapping}
+              mapSet={mapSet}
+            />
           )}
-          {viewOption.legVisible && (
+          {viewOption.legVisible && isModelWrapper(mw) &&(
             <LegendPane
               list={isImp ? MappingSourceStyles : MappingResultStyles}
               onLeft={isImp}

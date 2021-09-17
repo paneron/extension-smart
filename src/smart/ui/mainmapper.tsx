@@ -36,8 +36,7 @@ import { createNewEditorModel } from '../utils/EditorFactory';
 import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
 import {
   calculateMapping,
-  filterMappings,
-  MapResultType,
+  filterMappings,  
 } from '../utils/MappingCalculator';
 import MappingCanvus from './mapper/mappingCanvus';
 import MapperOptionMenu from './menu/mapperOptionMenu';
@@ -79,13 +78,12 @@ const ModelMapper: React.FC<{
   const [selected, setSelected] = useState<MapperSelectedInterface>({
     modelType: ModelType.IMP,
     selected: '',
-  });
-  const [mapResult, setMapResult] = useState<MapResultType>({});
+  });  
 
   const [editMappingProps, setEditMProps] = useState<EditMPropsInterface>({
     from: '',
     to: '',
-  });
+  });  
 
   const impMW = implementProps.modelWrapper as ModelWrapper;
   const refMW = referenceProps.modelWrapper;
@@ -95,7 +93,7 @@ const ModelMapper: React.FC<{
     ? refMW.model.meta.namespace === ''
       ? 'defaultns'
       : refMW.model.meta.namespace
-    : 'doc';
+    : refMW.id;
   if (mapProfile.mapSet[refns] === undefined) {
     mapProfile.mapSet[refns] = createNewMapSet(refns);
   }
@@ -113,7 +111,7 @@ const ModelMapper: React.FC<{
             impmodel.elements,
             refMW.model.elements
           )
-        : [],
+        : [], // to be implemented
     [
       mapSet,
       impPage,
@@ -122,12 +120,9 @@ const ModelMapper: React.FC<{
     ]
   );
 
-  function updateMapStyle({
-    model = (refMW as ModelWrapper).model,
-    mp = mapProfile,
-  }) {
-    setMapResult(calculateMapping(model, getMappings(mp, refns)));
-  }
+  const mapResult = isModelWrapper(refMW) 
+    ? useMemo(() => calculateMapping(refMW.model, getMappings(mapProfile, refns)), [refMW.model, mapProfile]) 
+    : undefined;
 
   function onMapSetChanged(ms: MapSet) {
     const newProfile: MapProfile = {
@@ -135,19 +130,16 @@ const ModelMapper: React.FC<{
       mapSet: { ...mapProfile.mapSet, [ms.id]: ms },
     };
     setMapProfile(newProfile);
-    updateMapStyle({ mp: newProfile });
   }
 
-  function onRefModelChanged(model: EditorModel) {
+  function onRefModelChanged(model: EditorModel) {    
     if (isModelWrapper(refMW)) {
       refMW.model = model;
-      updateMapStyle({ model: model });
     }
   }
 
   function onMapProfileChanged(mp: MapProfile) {
-    setMapProfile(mp);
-    updateMapStyle({ mp: mp });
+    setMapProfile(mp);    
   }
 
   function onImpModelChanged(model: EditorModel) {
@@ -191,8 +183,7 @@ const ModelMapper: React.FC<{
     setEditMProps({
       from: '',
       to: '',
-    });
-    updateMapStyle({ mp: mapProfile });
+    });    
   }
 
   if (!isVisible && selected.selected !== '') {

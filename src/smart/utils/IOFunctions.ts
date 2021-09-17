@@ -1,11 +1,12 @@
 import { Hooks, SaveDialogProps } from '@riboseinc/paneron-extension-kit/types';
-import { MMELDocument, textToDoc } from '../model/document';
+import { MMELDocument } from '../model/document';
 import { EditorModel } from '../model/editormodel';
 import { MapProfile } from '../model/mapmodel';
 import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
 import { SMARTWorkspace } from '../model/workspace';
 import { textToMMEL } from '../serialize/MMEL';
 import { LoggerInterface, OpenFileInterface } from './constants';
+import { textToDoc } from './DocumentFunctions';
 
 export interface FileTypeDescriptionInterface {
   filtername: string;
@@ -74,7 +75,7 @@ function parseModel(props: {
     }
     setModelWrapper(mw);
   } catch (e) {
-    logger?.log('Failed to load model', e);
+    logger?.log('Failed to load model', e);    
   }
 }
 
