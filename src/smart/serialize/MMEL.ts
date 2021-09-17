@@ -4,6 +4,7 @@ import {
   parseReference,
   parseRole,
   parseVariable,
+  parseView,
 } from './handler/supporthandler';
 import { MMELModel } from './interface/model';
 import { MMELtokenize } from './util/tokenizer';
@@ -29,6 +30,7 @@ import {
   toRoleModel,
   toSubprocessModel,
   toVariableModel,
+  toViewProfile,
 } from './util/serailizeformater';
 import { validateModel } from './util/validation';
 
@@ -64,6 +66,9 @@ export function MMELToText(model: MMELModel): string {
   for (const v in model.vars) {
     out += toVariableModel(model.vars[v]) + '\n';
   }
+  for (const v in model.views) {
+    out += toViewProfile(model.views[v]) + '\n';
+  }
   for (const r in model.refs) {
     out += toReferenceModel(model.refs[r]) + '\n';
   }
@@ -81,6 +86,7 @@ function parseModel(input: string): MMELModel {
     enums: {},
     vars: {},
     root: '',
+    views: {}
   };
 
   const token: Array<string> = MMELtokenize(input);
@@ -133,6 +139,9 @@ function parseModel(input: string): MMELModel {
     } else if (command === 'measurement') {
       const v = parseVariable(token[i++], token[i++]);
       model.vars[v.id] = v;
+    } else if (command === 'view') {
+      const v = parseView(token[i++], token[i++]);
+      model.views[v.id] = v;
     } else if (command === 'signal_catch_event') {
       const e = parseSignalCatchEvent(token[i++], token[i++]);
       model.elements[e.id] = e;

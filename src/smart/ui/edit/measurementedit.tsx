@@ -83,7 +83,7 @@ const MeasurementEditPage: React.FC<{
     return role;
   }
 
-  const rolehandler: IManageHandler = {
+  const measureHandler: IManageHandler = {
     filterName: 'Measurement filter',
     itemName: 'Measurements',
     Content: MeasureEditItemPage,
@@ -96,7 +96,7 @@ const MeasurementEditPage: React.FC<{
     getObjById: getMeasureById,
   };
 
-  return <ListManagePage {...rolehandler} />;
+  return <ListManagePage {...measureHandler} />;
 };
 
 const MeasureEditItemPage: React.FC<{

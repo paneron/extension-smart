@@ -94,7 +94,7 @@ const ModelViewer: React.FC<{
     new Set<string>()
   );
   const [funPage, setFunPage] = useState<FunctionPage>(
-    FunctionPage.Measurement
+    FunctionPage.Parameterized
   );
   const [view, setView] = useState<ViewFunctionInterface | undefined>(
     undefined

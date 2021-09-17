@@ -5,10 +5,12 @@ import {
   MMELReference,
   MMELRole,
   MMELVariable,
+  MMELVarSetting,
+  MMELView,
   VarType,
 } from '../interface/supportinterface';
 import {
-  MMELremovePackage,
+  MMELremovePackage,  
   MMELtokenizePackage,
   MMELtokenizeSet,
 } from '../util/tokenizer';
@@ -200,4 +202,94 @@ export function parseVariable(id: string, data: string): MMELVariable {
     }
   }
   return v;
+}
+
+export function parseView(id: string, data: string): MMELView {
+  const v: MMELView = {
+    id: id,
+    name: '',
+    profile: {},
+    datatype: DataType.VIEW,
+  };
+
+  if (data !== '') {
+    const t: string[] = MMELtokenizePackage(data);
+    let i = 0;
+    while (i < t.length) {
+      const command: string = t[i++];
+      if (i < t.length) {
+        if (command === 'name') {
+          v.name = MMELremovePackage(t[i++]);
+        } else if (command === 'variables') {
+          v.profile = parseSettings(t[i++]);
+        } else {
+          throw new Error(
+            'Parsing error: view. ID ' + id + ': Unknown keyword ' + command
+          );
+        }
+      } else {
+        throw new Error(
+          'Parsing error: variable. ID ' +
+            id +
+            ': Expecting value for ' +
+            command
+        );
+      }
+    }
+  }
+  return v;
+}
+
+function parseSettings(data: string):Record<string, MMELVarSetting> {
+  const profile: Record<string, MMELVarSetting> = {};
+
+  if (data !== '') {
+    const t: string[] = MMELtokenizePackage(data);
+    let i = 0;
+    while (i < t.length) {
+      const id = t[i++];
+      if (i < t.length) {                
+        profile[id] = parseVarSetting(id, t[i++]);
+      } else {
+        throw new Error(
+          'Parsing error: variable profile setting. ID ' + id + ': Expecting { after ' + id
+        );
+      }
+    }
+  }
+  return profile;
+}
+
+function parseVarSetting(id:string , data:string): MMELVarSetting {
+  const setting:MMELVarSetting = {
+    id,
+    isConst: true,
+    value: ''
+  }
+  if (data !== '') {
+    const t: string[] = MMELtokenizePackage(data);
+    let i = 0;
+    while (i < t.length) {
+      const command: string = t[i++];
+      if (i < t.length) {
+        if (command === 'required') {
+          setting.isConst = t[i++] === 'true';
+        } else if (command === 'value') {
+          setting.value = MMELremovePackage(t[i++]);
+        } else {
+          throw new Error(
+            'Parsing error: variable setting. ID ' + id + ': Unknown keyword ' + command
+          );
+        }
+      } else {
+        throw new Error(
+          'Parsing error: variable setting. ID ' +
+            id +
+            ': Expecting value for ' +
+            command
+        );
+      }
+    }
+  }
+  return setting;
 }

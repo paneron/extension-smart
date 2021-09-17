@@ -14,6 +14,7 @@ import {
   MMELReference,
   MMELRole,
   MMELVariable,
+  MMELView,
   VarType,
 } from '../serialize/interface/supportinterface';
 import {
@@ -45,6 +46,7 @@ export function createNewEditorModel(): EditorModel {
     refs: {},
     enums: {},
     vars: {},
+    views: {},
     root: page.id,
   };
   return m;
@@ -229,6 +231,15 @@ export function createVariable(id: string): MMELVariable {
     definition: '',
     description: '',
     datatype: DataType.VARIABLE,
+  };
+}
+
+export function createView(id: string): MMELView {
+  return {
+    id: id,
+    name: '',
+    profile: {},
+    datatype: DataType.VIEW,
   };
 }
 

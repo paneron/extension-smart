@@ -1,4 +1,4 @@
-import { MMELObject } from './baseinterface';
+import { DataType, MMELObject } from './baseinterface';
 
 export enum VarType {
   DATA = 'DATAITEM',
@@ -42,4 +42,17 @@ export interface MMELVariable extends MMELObject {
   type: VarType;
   definition: string;
   description: string;
+}
+
+export interface MMELVarSetting {
+  id: string;
+  isConst: boolean;
+  value: string;
+}
+
+export interface MMELView extends MMELObject {
+  datatype: DataType.VIEW;
+  id: string;
+  name: string;
+  profile: Record<string, MMELVarSetting>;
 }

@@ -25,6 +25,7 @@ import {
   MMELReference,
   MMELRole,
   MMELVariable,
+  MMELView,
 } from '../serialize/interface/supportinterface';
 import {
   isApproval,
@@ -87,6 +88,7 @@ export interface EditorModel {
   enums: Record<string, MMELEnum>;
   vars: Record<string, MMELVariable>;
   pages: Record<string, EditorSubprocess>;
+  views: Record<string, MMELView>;
   root: string;
 }
 

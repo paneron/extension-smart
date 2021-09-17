@@ -22,6 +22,8 @@ import {
   MMELProvision,
   MMELReference,
   MMELRole,
+  MMELVariable,
+  MMELView,
 } from '../interface/supportinterface';
 
 function validateAttribute(
@@ -162,9 +164,15 @@ function validateProvision(
 ): void {
   for (const x in pro.ref) {
     if (refs[x] === undefined) {
-      throw new Error(
-        'Error in resolving IDs in reference for provision ' + pro.id
-      );
+      throw new Error(`Error in resolving IDs in reference for provision ${pro.id}`);
+    }
+  }
+}
+
+function validateView(view: MMELView, vars: Record<string, MMELVariable>) {
+  for (const x in view.profile) {
+    if (vars[x] === undefined) {
+      throw new Error(`Error in resolving variable IDs in view ${view.id}`);
     }
   }
 }
@@ -196,6 +204,9 @@ export function validateModel(model: MMELModel): void {
         model.pages
       );
     }
+  }
+  for (const v in model.views) {
+    validateView(model.views[v], model.vars);    
   }
 }
 

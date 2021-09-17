@@ -7,6 +7,7 @@ import {
   MMELReference,
   MMELRole,
   MMELVariable,
+  MMELView,
 } from './supportinterface';
 
 export interface MMELModel {
@@ -18,6 +19,7 @@ export interface MMELModel {
   enums: Record<string, MMELEnum>;
   vars: Record<string, MMELVariable>;
   pages: Record<string, MMELSubprocess>;
+  views: Record<string, MMELView>;
 
   root: string;
 }

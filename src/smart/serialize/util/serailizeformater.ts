@@ -25,6 +25,8 @@ import {
   MMELReference,
   MMELRole,
   MMELVariable,
+  MMELVarSetting,
+  MMELView,
 } from '../interface/supportinterface';
 import {
   isApproval,
@@ -225,6 +227,26 @@ export function toVariableModel(v: MMELVariable): string {
     out += '  description "' + v.description + '"\n';
   }
   out += '}\n';
+  return out;
+}
+
+export function toViewProfile(v: MMELView): string {
+  let out: string = 'view ' + v.id + ' {\n';
+  out += '  name "' + v.name + '"\n';
+  out += '  variables {\n';
+  for (const e in v.profile) {
+    out += toVarSettingModel(v.profile[e]);
+  }
+  out += '  }\n';  
+  out += '}\n';
+  return out;
+}
+
+export function toVarSettingModel(v: MMELVarSetting): string {
+  let out: string = `    ${v.id} {\n`;
+  out += `      required ${v.isConst?'true':'false'}\n`;
+  out += `      value "${v.value}"\n`;
+  out += '    }\n';
   return out;
 }
 

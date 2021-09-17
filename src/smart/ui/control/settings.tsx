@@ -22,6 +22,7 @@ import MetaEditPage from '../edit/metaedit';
 import ReferenceEditPage from '../edit/refedit';
 import RegistryEditPage from '../edit/registryedit';
 import RoleEditPage from '../edit/roleedit';
+import ViewProfileEditPage from '../edit/ViewProfileEdit';
 
 export enum SETTINGPAGE {
   METAPAGE = 'meta',
@@ -31,6 +32,7 @@ export enum SETTINGPAGE {
   DATAPAGE = 'dc',
   ENUMPAGE = 'enum',
   MEASUREMENT = 'measure',
+  PROFILE = 'profile'
 }
 
 interface TabProps {
@@ -92,6 +94,12 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
       <MeasurementEditPage model={model} setModel={setModel} />
     ),
   },
+  [SETTINGPAGE.PROFILE]: {
+    title: 'View profiles',
+    Panel: ({model, setModel}) => (
+      <ViewProfileEditPage model={model} setModel={setModel} />      
+    ),
+  }
 };
 
 const BasicSettingPane: React.FC<{

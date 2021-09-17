@@ -1,9 +1,9 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { IToastProps, Switch } from '@blueprintjs/core';
+import { Text, FormGroup, IToastProps } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import MGDButton from '../../MGDComponents/MGDButton';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import { EditorModel } from '../../model/editormodel';
@@ -11,12 +11,14 @@ import { MeasureResult } from '../../model/Measurement';
 import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
 import {
   MMELVariable,
+  MMELView,
   VarType,
 } from '../../serialize/interface/supportinterface';
 import { measureTest } from '../../utils/measurement/Checker';
-import { NormalTextField } from '../common/fields';
 import updateMeasurementView from './MeasurementResultFormatter';
 import updateParaView from './ParameterizedViewFormatter';
+import VariableSettingItem from './VariableSettingItem';
+import ProfileControl from './ViewProfileControl';
 
 function simpleFilter(v: MMELVariable): boolean {
   return (
@@ -35,15 +37,9 @@ const MeasureCheckPane: React.FC<{
 }> = function ({ model, setView, showMsg, branchOnly = false }) {
   const [values, setValues] = useState<Record<string, string>>({});
   const [result, setResult] = useState<MeasureResult | undefined>(undefined);
+  const [profile, setProfile] = useState<MMELView|undefined>(undefined);
 
   const alldata = Object.values(model.vars).filter(simpleFilter);
-
-  function getDesc(v: MMELVariable) {
-    return (
-      v.description +
-      (v.type === VarType.LISTDATA ? ' (Seperate the values by ,)' : '')
-    );
-  }
 
   function updateResult(x: MeasureResult | undefined) {
     setResult(x);
@@ -56,43 +52,48 @@ const MeasureCheckPane: React.FC<{
     } else {
       setView(undefined);
     }
+  }    
+
+  function onValueChange(id: string, value: string) {
+    values[id] = value;
+    setValues({ ...values });
   }
+
+  const profiles = useMemo(() => Object.values(model.views), [model]);  
 
   return (
     <MGDSidebar>
-      {alldata.map(v =>
-        v.type === VarType.BOOLEAN ? (
-          <Switch
-            key={(branchOnly ? 'view' : 'measurment') + v.id}
-            checked={
-              values[v.id] !== undefined ? values[v.id] === 'true' : true
-            }
-            label={getDesc(v)}
-            onChange={x => {
-              values[v.id] = x.currentTarget.checked ? 'true' : 'false';
-              setValues({ ...values });
-            }}
-          />
-        ) : (
-          <NormalTextField
-            key={(branchOnly ? 'view' : 'measurment') + v.id}
-            text={getDesc(v)}
-            value={values[v.id] ?? ''}
-            onChange={x => {
-              values[v.id] = x;
-              setValues({ ...values });
-            }}
-          />
-        )
-      )}
-      <MGDButton
-        icon={branchOnly ? 'filter' : 'lab-test'}
-        onClick={() =>
-          updateResult(measureTest(model, values, showMsg, branchOnly))
-        }
-      >
-        {branchOnly ? 'Custom view' : 'Measurement Test'}
-      </MGDButton>
+      {branchOnly && profiles.length > 1 && 
+        <ProfileControl 
+          values={values}
+          profile={profile}
+          profiles={profiles}
+          setValues={setValues}
+          setProfile={setProfile}
+        />
+      }
+      <FormGroup>
+        {alldata.map(v => 
+          <VariableSettingItem 
+            variable={v}
+            value={values[v.id]}
+            profile={profile}          
+            branchOnly={branchOnly}
+            onChange={(x:string) => onValueChange(v.id, x)}
+          />          
+        )}
+      </FormGroup>
+      {alldata.length > 0
+        ? <MGDButton
+          icon={branchOnly ? 'filter' : 'lab-test'}
+          onClick={() =>
+            updateResult(measureTest(model, values, showMsg, branchOnly))
+          }
+        >
+          {branchOnly ? 'Custom view' : 'Measurement Test'}
+        </MGDButton>
+        : <Text> No setting detected </Text>
+      }
       {result !== undefined && (
         <MGDButton
           icon="reset"
@@ -105,5 +106,7 @@ const MeasureCheckPane: React.FC<{
     </MGDSidebar>
   );
 };
+
+
 
 export default MeasureCheckPane;
