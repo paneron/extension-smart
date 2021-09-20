@@ -1,5 +1,5 @@
-import { DocMapIndex, MMELDocument } from "../model/document";
-import { MapSet } from "../model/mapmodel";
+import { DocMapIndex, MMELDocument } from '../model/document';
+import { MappingType } from '../model/mapmodel';
 
 function addMetaField(doc: MMELDocument, id: string, value: string) {
   if (id === 'namespace') {
@@ -18,10 +18,6 @@ function addStatement(
   append: boolean
 ) {
   const id = Object.keys(doc.states).length.toString();
-  doc.states[id] = {
-    id,
-    text: statement,
-  };
   if (
     doc.sections.length === 0 ||
     doc.sections[doc.sections.length - 1].id !== clause
@@ -30,6 +26,13 @@ function addStatement(
       id: clause,
       contents: [[id]],
     });
+    doc.states[id] = {
+      id,
+      text: statement,
+      clause,
+      paragraph: 1,
+      index: 1,
+    };
   } else {
     const lastSec = doc.sections[doc.sections.length - 1];
     if (append) {
@@ -38,10 +41,17 @@ function addStatement(
     } else {
       lastSec.contents.push([id]);
     }
+    doc.states[id] = {
+      id,
+      text: statement,
+      clause,
+      paragraph: lastSec.contents.length,
+      index: lastSec.contents[lastSec.contents.length - 1].length,
+    };
   }
 }
 
-export function textToDoc(data: string): MMELDocument {  
+export function textToDoc(data: string): MMELDocument {
   const doc: MMELDocument = {
     states: {},
     id: '',
@@ -51,8 +61,8 @@ export function textToDoc(data: string): MMELDocument {
   };
   const lines = data.split('\n');
   let metaMode = true;
-  let consecutive = true;  
-  for (const line of lines) {    
+  let consecutive = true;
+  for (const line of lines) {
     if (line === '###') {
       metaMode = false;
     } else {
@@ -79,13 +89,22 @@ export function textToDoc(data: string): MMELDocument {
   return doc;
 }
 
-export function calculateDocumentMapping(ms: MapSet):DocMapIndex {
-  const index:DocMapIndex = {};
-  for (const from in ms.mappings) {
-    const map = ms.mappings[from];
+export function calculateDocumentMapping(mappings: MappingType): DocMapIndex {  
+  const index: DocMapIndex = {};
+  for (const from in mappings) {
+    const map = mappings[from];
     for (const to in map) {
-      index[to] = [...index[to]??[], from];      
+      index[to] = [...(index[to] ?? []), from];
     }
   }
   return index;
+}
+
+export function getDocumentMetaById(doc: MMELDocument, id: string): string {
+  const statement = doc.states[id];
+  if (statement !== undefined) {
+    const { clause, paragraph, index } = statement;
+    return `Clause ${clause} Para ${paragraph} Statement ${index}`;
+  }
+  return 'Statement not found';
 }

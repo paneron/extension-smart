@@ -14,7 +14,7 @@ import ReactFlow, {
 import { react_flow_container_layout } from '../../../css/layout';
 import { MGDButtonType } from '../../../css/MGDButton';
 import MGDButton from '../../MGDComponents/MGDButton';
-import { EditorModel, EditorNode, ModelType } from '../../model/editormodel';
+import { EditorModel, ModelType } from '../../model/editormodel';
 import {
   addToHistory,
   createPageHistory,
@@ -62,11 +62,11 @@ const ModelDiagram: React.FC<{
   modelProps: MapperState;
   setProps: (mp: MapperState) => void;
   mapResult?: MapResultType;
-  onModelChanged: (model: EditorModel) => void;
+  onModelChanged?: (model: EditorModel) => void;
   setSelected: (s: MapperSelectedInterface) => void;
   onMappingEdit: (from: string, to: string) => void;
-  issueNavigationRequest: (id: string) => void;
-  getPartnerModelElementById?: (id: string) => EditorNode | null;
+  issueNavigationRequest?: (id: string) => void;
+  getPartnerModelElementById: (id: string) => string;
 }> = ({
   className,
   viewOption,
@@ -86,7 +86,7 @@ const ModelDiagram: React.FC<{
 
   const modelType = modelProps.modelType;
   const mw = modelProps.modelWrapper;
-  const isImp = modelType === ModelType.IMP;  
+  const isImp = modelType === ModelType.IMP;
 
   function setSelectedId(id: string) {
     setSelected({
@@ -106,17 +106,20 @@ const ModelDiagram: React.FC<{
       modelWrapper: mw,
       historyMap: buildHistoryMap(mw),
     });
-    onModelChanged(mw.model);
+    if (onModelChanged !== undefined) {
+      onModelChanged(mw.model);
+    }
     setSelectedId('');
   }
 
-  function onDocumentLoaded(doc: MMELDocument) {    
+  function onDocumentLoaded(doc: MMELDocument) {
     setProps({
-      history: { items:[] },
+      history: { items: [] },
       historyMap: {},
-      modelWrapper: doc,      
-      modelType
-    });    
+      modelWrapper: doc,
+      modelType,
+    });
+    setSelectedId('');
   }
 
   function onDragOver(event: React.DragEvent<HTMLDivElement>) {
@@ -156,13 +159,14 @@ const ModelDiagram: React.FC<{
     if (mapSet.mappings[fromid] === undefined) {
       mapSet.mappings[fromid] = {};
     }
+    mapSet.mappings = { ...mapSet.mappings };
     if (mapSet.mappings[fromid][toid] === undefined) {
       mapSet.mappings[fromid][toid] = {
         description: '',
         justification: '',
       };
       onMapSetChanged({ ...mapSet });
-    }    
+    }
   }
 
   const toolbar = (
@@ -216,17 +220,15 @@ const ModelDiagram: React.FC<{
   };
 
   const MappingList: React.FC<{ id: string }> = function ({ id }) {
-    return getPartnerModelElementById !== undefined ? (
+    return (
       <MappingPartyList
         id={id}
         type={modelProps.modelType}
         mapping={mapSet.mappings}
         onMappingEdit={onMappingEdit}
         issueNavigationRequest={issueNavigationRequest}
-        getNodeById={getPartnerModelElementById}
+        getNodeInfoById={getPartnerModelElementById}
       />
-    ) : (
-      <></>
     );
   };
 
@@ -270,14 +272,15 @@ const ModelDiagram: React.FC<{
               <Controls showInteractive={false} />
             </ReactFlow>
           ) : (
-            <SMARTDocumentView 
+            <SMARTDocumentView
               document={mw}
               onDragOver={onDragOver}
               setMapping={setMapping}
               mapSet={mapSet}
+              MappingList={MappingList}
             />
           )}
-          {viewOption.legVisible && isModelWrapper(mw) &&(
+          {viewOption.legVisible && isModelWrapper(mw) && (
             <LegendPane
               list={isImp ? MappingSourceStyles : MappingResultStyles}
               onLeft={isImp}

@@ -141,15 +141,17 @@ export function isEditorEgate(x: EditorNode): x is EditorEGate {
   return isEGate(x);
 }
 
-export function getEditorNodeById(
-  model: EditorModel,
-  id: string
-): EditorNode | null {
-  if (id === '') {
-    return null;
+export function getEditorNodeInfoById(model: EditorModel, id: string): string {
+  if (id !== '') {
+    const node = model.elements[id];
+    if (
+      node !== undefined &&
+      (isEditorProcess(node) || isEditorApproval(node))
+    ) {
+      return node.name;
+    }
   }
-  const r = model.elements[id];
-  return r ?? null;
+  return 'Node not found';
 }
 
 export function getEditorRoleById(

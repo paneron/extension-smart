@@ -10,7 +10,7 @@ import {
   EditorModel,
   EditorProcess,
   EditorSubprocess,
-  getEditorNodeById,
+  getEditorNodeInfoById,
   ModelType,
 } from '../model/editormodel';
 import {
@@ -34,10 +34,7 @@ import {
 } from '../model/States';
 import { createNewEditorModel } from '../utils/EditorFactory';
 import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
-import {
-  calculateMapping,
-  filterMappings,  
-} from '../utils/MappingCalculator';
+import { calculateMapping, filterMappings } from '../utils/MappingCalculator';
 import MappingCanvus from './mapper/mappingCanvus';
 import MapperOptionMenu from './menu/mapperOptionMenu';
 import { EditMPropsInterface } from './dialog/dialogs';
@@ -47,6 +44,7 @@ import MGDButton from '../MGDComponents/MGDButton';
 import { dialog_layout, mappper_container } from '../../css/layout';
 import { vertical_line } from '../../css/components';
 import { findPageContainingElement } from '../utils/SearchFunctions';
+import { getDocumentMetaById } from '../utils/DocumentFunctions';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -78,12 +76,12 @@ const ModelMapper: React.FC<{
   const [selected, setSelected] = useState<MapperSelectedInterface>({
     modelType: ModelType.IMP,
     selected: '',
-  });  
+  });
 
   const [editMappingProps, setEditMProps] = useState<EditMPropsInterface>({
     from: '',
     to: '',
-  });  
+  });
 
   const impMW = implementProps.modelWrapper as ModelWrapper;
   const refMW = referenceProps.modelWrapper;
@@ -120,9 +118,13 @@ const ModelMapper: React.FC<{
     ]
   );
 
-  const mapResult = isModelWrapper(refMW) 
-    ? useMemo(() => calculateMapping(refMW.model, getMappings(mapProfile, refns)), [refMW.model, mapProfile]) 
-    : undefined;
+  const mapResult = useMemo(
+    () =>
+      isModelWrapper(refMW)
+        ? calculateMapping(refMW.model, getMappings(mapProfile, refns))
+        : undefined,
+    [isModelWrapper(refMW) ? refMW.model : refMW, mapProfile]
+  );
 
   function onMapSetChanged(ms: MapSet) {
     const newProfile: MapProfile = {
@@ -132,14 +134,8 @@ const ModelMapper: React.FC<{
     setMapProfile(newProfile);
   }
 
-  function onRefModelChanged(model: EditorModel) {    
-    if (isModelWrapper(refMW)) {
-      refMW.model = model;
-    }
-  }
-
   function onMapProfileChanged(mp: MapProfile) {
-    setMapProfile(mp);    
+    setMapProfile(mp);
   }
 
   function onImpModelChanged(model: EditorModel) {
@@ -176,14 +172,16 @@ const ModelMapper: React.FC<{
     const { from, to } = editMappingProps;
     const mapSet = mapProfile.mapSet[refns];
     delete mapSet.mappings[from][to];
+    mapSet.mappings[from] = { ...mapSet.mappings[from] };
     if (Object.keys(mapSet.mappings[from]).length === 0) {
       delete mapSet.mappings[from];
     }
+    mapSet.mappings = { ...mapSet.mappings };
     setMapProfile({ ...mapProfile });
     setEditMProps({
       from: '',
       to: '',
-    });    
+    });
   }
 
   if (!isVisible && selected.selected !== '') {
@@ -263,10 +261,8 @@ const ModelMapper: React.FC<{
     </ControlGroup>
   );
 
-  const mapEditPage =
-    editMappingProps.from !== '' &&
-    editMappingProps.to !== '' &&
-    isModelWrapper(refMW) ? (
+  const mapEditPage = editMappingProps.from !== '' &&
+    editMappingProps.to !== '' && (
       <MappingEditPage
         from={
           impmodel.elements[editMappingProps.from] as
@@ -274,9 +270,14 @@ const ModelMapper: React.FC<{
             | EditorApproval
         }
         to={
-          refMW.model.elements[editMappingProps.to] as
-            | EditorProcess
-            | EditorApproval
+          isModelWrapper(refMW)
+            ? (refMW.model.elements[editMappingProps.to] as
+                | EditorProcess
+                | EditorApproval)
+            : {
+                id: editMappingProps.to,
+                name: getDocumentMetaById(refMW, editMappingProps.to),
+              }
         }
         data={
           mapProfile.mapSet[refns].mappings[editMappingProps.from][
@@ -286,8 +287,6 @@ const ModelMapper: React.FC<{
         onDelete={onMappingDelete}
         onChange={onMappingChange}
       />
-    ) : (
-      <></>
     );
 
   if (isVisible) {
@@ -333,11 +332,13 @@ const ModelMapper: React.FC<{
             onModelChanged={onImpModelChanged}
             setSelected={setSelected}
             onMappingEdit={onMappingEdit}
-            issueNavigationRequest={onRefNavigate}
+            issueNavigationRequest={
+              isModelWrapper(refMW) ? onRefNavigate : undefined
+            }
             getPartnerModelElementById={
               isModelWrapper(refMW)
-                ? id => getEditorNodeById(refMW.model, id)
-                : undefined
+                ? id => getEditorNodeInfoById(refMW.model, id)
+                : id => getDocumentMetaById(refMW, id)
             }
           />
           <div ref={lineref} css={vertical_line} />
@@ -349,11 +350,12 @@ const ModelMapper: React.FC<{
             mapSet={mapSet}
             onMapSetChanged={onMapSetChanged}
             mapResult={mapResult}
-            onModelChanged={onRefModelChanged}
             setSelected={setSelected}
             onMappingEdit={onMappingEdit}
             issueNavigationRequest={onImpNavigate}
-            getPartnerModelElementById={id => getEditorNodeById(impmodel, id)}
+            getPartnerModelElementById={id =>
+              getEditorNodeInfoById(impmodel, id)
+            }
           />
         </div>
         <MappingCanvus mapEdges={mapEdges} line={lineref} />

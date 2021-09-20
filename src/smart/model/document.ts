@@ -1,6 +1,9 @@
 export interface DocStatement {
   id: string;
   text: string;
+  clause: string;
+  paragraph: number;
+  index: number;
 }
 
 export type DocParagraph = string[];

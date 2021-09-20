@@ -3,7 +3,6 @@
 
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
-import { EditorApproval, EditorProcess } from '../../model/editormodel';
 import { NormalTextField } from '../common/fields';
 import { MappingMeta } from '../../model/mapmodel';
 import { FormGroup } from '@blueprintjs/core';
@@ -14,9 +13,14 @@ import { MGDButtonType } from '../../../css/MGDButton';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { wrapper_container } from '../../../css/layout';
 
+export interface EditElmInfo {
+  id: string;
+  name: string;
+}
+
 const MappingEditPage: React.FC<{
-  from: EditorProcess | EditorApproval;
-  to: EditorProcess | EditorApproval;
+  from: EditElmInfo;
+  to: EditElmInfo;
   data: MappingMeta;
   onChange: (update: MappingMeta | null) => void;
   onDelete: () => void;

@@ -75,7 +75,7 @@ function parseModel(props: {
     }
     setModelWrapper(mw);
   } catch (e) {
-    logger?.log('Failed to load model', e);    
+    logger?.log('Failed to load model', e);
   }
 }
 

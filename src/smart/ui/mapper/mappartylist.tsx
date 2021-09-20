@@ -5,12 +5,7 @@ import { jsx } from '@emotion/react';
 import React from 'react';
 import { mgd_label } from '../../../css/form';
 import { popover_panel_container } from '../../../css/layout';
-import {
-  EditorNode,
-  isEditorApproval,
-  isEditorProcess,
-  ModelType,
-} from '../../model/editormodel';
+import { ModelType } from '../../model/editormodel';
 import { MappingType } from '../../model/mapmodel';
 import {
   findImpMapPartners,
@@ -23,15 +18,15 @@ const MappingPartyList: React.FC<{
   type: ModelType;
   mapping: MappingType;
   onMappingEdit: (from: string, to: string) => void;
-  issueNavigationRequest: (id: string) => void;
-  getNodeById: (id: string) => EditorNode | null;
+  issueNavigationRequest?: (id: string) => void;
+  getNodeInfoById: (id: string) => string;
 }> = function ({
   id,
   type,
   mapping,
   onMappingEdit,
   issueNavigationRequest,
-  getNodeById,
+  getNodeInfoById,
 }) {
   function onEditClick(partner: string) {
     if (type === ModelType.IMP) {
@@ -41,22 +36,11 @@ const MappingPartyList: React.FC<{
     }
   }
 
-  function getNameById(id: string): string {
-    const node = getNodeById(id);
-    if (node === null) {
-      return '';
-    }
-    if (isEditorProcess(node) || isEditorApproval(node)) {
-      return node.name;
-    }
-    return '';
-  }
-
   const method =
     type === ModelType.IMP ? findRefMapPartners : findImpMapPartners;
   const partnersIds = method(id, mapping);
   const partners = partnersIds
-    .map(id => ({ id: id, name: getNameById(id) }))
+    .map(id => ({ id: id, name: getNodeInfoById(id) }))
     .filter(x => x.name !== '');
 
   return (
@@ -80,13 +64,15 @@ const MappingPartnerEntry: React.FC<{
   id: string;
   name: string;
   onEdit: (id: string) => void;
-  onNavigate: (id: string) => void;
+  onNavigate?: (id: string) => void;
 }> = function ({ id, name, onEdit, onNavigate }) {
   return (
     <div>
       <label css={mgd_label}> {name} </label>
       <EditMappingButton onClick={() => onEdit(id)} />
-      <MapPartnerNavigateButton onClick={() => onNavigate(id)} />
+      {onNavigate !== undefined && (
+        <MapPartnerNavigateButton onClick={() => onNavigate(id)} />
+      )}
     </div>
   );
 };
