@@ -52,6 +52,7 @@ import MeasureCheckPane from './measurement/MeasurementValidationPane';
 import { ViewFunctionInterface } from '../model/ViewFunctionModel';
 import LegendPane from './common/description/LegendPane';
 import { loadPlugin } from './application/plugin';
+import { getNamespace } from '../utils/ModelFunctions';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -172,7 +173,7 @@ const ModelViewer: React.FC<{
 
   const mw = state.modelWrapper;
   const model = mw.model;
-  const namespace = model.meta.namespace;
+  const namespace = getNamespace(model);
 
   const FunPages: Record<FunctionPage, SidebarBlockConfig> = {
     [FunctionPage.Simulation]: {

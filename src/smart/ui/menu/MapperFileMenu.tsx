@@ -3,7 +3,7 @@
 
 import { jsx } from '@emotion/react';
 import React, { useContext } from 'react';
-import { Menu, MenuItem } from '@blueprintjs/core';
+import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { createMapProfile, MapProfile } from '../../model/mapmodel';
 import {
@@ -15,7 +15,8 @@ import {
 const MapperFileMenu: React.FC<{
   mapProfile: MapProfile;
   onMapProfileChanged: (m: MapProfile) => void;
-}> = function ({ mapProfile, onMapProfileChanged: onMapProfileChanged }) {
+  onMapImport: () => void;
+}> = function ({ mapProfile, onMapProfileChanged, onMapImport }) {
   const {
     getBlob,
     useDecodedBlob,
@@ -61,6 +62,12 @@ const MapperFileMenu: React.FC<{
         onClick={handleSave}
         disabled={!canSave}
         icon="floppy-disk"
+      />
+      <MenuDivider />
+      <MenuItem
+        text="Auto Mapper"
+        onClick={onMapImport}        
+        icon="data-lineage"
       />
     </Menu>
   );

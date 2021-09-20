@@ -11,6 +11,7 @@ const SectionView: React.FC<{
   setMapping: (from: string, to: string) => void;
   docMap: DocMapIndex;
   MappingList: React.FC<{ id: string }>;
+  setSelected: (id: string) => void;
 }> = function (props) {
   const { sec } = props;
   return (

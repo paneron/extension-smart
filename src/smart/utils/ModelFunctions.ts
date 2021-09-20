@@ -40,6 +40,12 @@ export function getRootName(meta: MMELMetadata): string {
   return 'root';
 }
 
+export function getNamespace(model: EditorModel): string {
+  return model.meta.namespace === '' 
+    ? 'defaultns'
+    : model.meta.namespace  
+}
+
 export function replaceSet(
   set: Set<string>,
   matchid: string,

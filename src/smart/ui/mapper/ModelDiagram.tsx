@@ -278,6 +278,7 @@ const ModelDiagram: React.FC<{
               setMapping={setMapping}
               mapSet={mapSet}
               MappingList={MappingList}
+              setSelected={setSelectedId}
             />
           )}
           {viewOption.legVisible && isModelWrapper(mw) && (

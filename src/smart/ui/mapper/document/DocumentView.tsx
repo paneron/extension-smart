@@ -14,7 +14,9 @@ const SMARTDocumentView: React.FC<{
   mapSet: MapSet;
   onDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
   MappingList: React.FC<{ id: string }>;
-}> = function ({ document, setMapping, onDragOver, mapSet, MappingList }) {
+  setSelected: (id: string) => void;
+}> = function (props) {
+  const { document, onDragOver, mapSet, setSelected } = props;
   const docMap = useMemo(
     () => calculateDocumentMapping(mapSet.mappings),
     [mapSet.mappings]
@@ -27,6 +29,7 @@ const SMARTDocumentView: React.FC<{
         overflowY: 'auto',
       }}
       onDragOver={onDragOver}
+      onScroll={() => setSelected('')}
     >
       <h2
         style={{
@@ -42,10 +45,9 @@ const SMARTDocumentView: React.FC<{
         <SectionView
           key={sec.id}
           sec={sec}
-          statements={document.states}
-          setMapping={setMapping}
+          statements={document.states}          
           docMap={docMap}
-          MappingList={MappingList}
+          {...props}
         />
       ))}
     </div>

@@ -3,7 +3,7 @@ import {
   isEditorApproval,
   isEditorProcess,
 } from '../model/editormodel';
-import { referenceSorter } from './ModelFunctions';
+import { getNamespace, referenceSorter } from './ModelFunctions';
 import { REPORTENDTAG, REPORTSTARTTAG } from './constants';
 import { MapProfile } from '../model/mapmodel';
 
@@ -13,10 +13,11 @@ export function genReport(
   ref: EditorModel,
   imp: EditorModel
 ): string {
-  const mapSet = mapProfile.mapSet[ref.meta.namespace];
-  if (ref.meta.namespace === '' || mapSet === undefined) {
+  const refns = getNamespace(ref)
+  const mapSet = mapProfile.mapSet[refns];
+  if (mapSet === undefined) {
     alert(
-      `Mapping to implementation model (ns: ${ref.meta.namespace}) is not defined`
+      `Mapping to implementation model (ns: ${refns}) is not defined`
     );
     return text;
   }

@@ -35,6 +35,7 @@ export interface MapperViewOption {
   dataVisible: boolean; // visibility of data nodes
   legVisible: boolean; // visibility of legends
   docVisible: boolean; // visibility of document templates
+  mapAIVisible: boolean; // visibility of mapping import calculation pane
 }
 
 export type MapperContent = ModelWrapper | MMELDocument;

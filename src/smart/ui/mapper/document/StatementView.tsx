@@ -1,25 +1,29 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { Button } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import { jsx } from '@emotion/react';
+import React from 'react';
 import { useState } from 'react';
 import { DocStatement } from '../../../model/document';
 
 const StatementView: React.FC<{
   statement: DocStatement;
-  showSection?: string;
-  first: boolean;
+  showSection?: string;  
   setMapping: (from: string, to: string) => void;
   froms: string[];
+  first: boolean;
   MappingList: React.FC<{ id: string }>;
+  setSelected: (id: string) => void;
 }> = function ({
-  statement,
-  first,
+  statement,  
   showSection,
   setMapping,
+  first,
   froms,
   MappingList,
+  setSelected
 }) {
   const [hover, setHover] = useState<boolean>(false);
   const hasMap = froms.length > 0;
@@ -29,26 +33,44 @@ const StatementView: React.FC<{
     setMapping(fromid, statement.id);
   }
 
-  return (
-    <Popover2 content={<MappingList id={statement.id} />} disabled={!hasMap}>
+  function onMouseEnter() {
+    setSelected(statement.id);
+    setHover(true);
+  }
+
+  function onMouseLeave() {
+    setSelected('');
+    setHover(false);
+  }
+
+  const content = (showSection !== undefined ? `${showSection}. ` : '') + statement.text;
+
+  return (         
+    <>
       <span
         style={{
-          marginLeft: first ? '0' : '3px',
+          marginLeft: first?'0':'3px',
           backgroundColor: hasMap
             ? 'lightgreen'
             : hover
             ? 'lightgray'
             : 'white',
         }}
+        ref={statement.uiref}
         onDrop={onDrop}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
         onDragEnter={() => setHover(true)}
         onDragLeave={() => setHover(false)}
-      >
-        {(showSection !== undefined ? `${showSection}. ` : '') + statement.text}
-      </span>
-    </Popover2>
+      >        
+        {content}            
+        {hasMap &&
+          <Popover2 content={<MappingList id={statement.id}/>} position='top'>
+            <Button small icon='link' />
+          </Popover2>
+        }
+      </span>      
+    </>
   );
 };
 

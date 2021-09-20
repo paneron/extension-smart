@@ -50,6 +50,7 @@ import {
 } from '../model/workspace';
 import WorkspaceFileMenu from './menu/WorkspaceFileMenu';
 import { WorkspaceDiagPackage, WorkspaceDialog } from './dialog/WorkspaceDiag';
+import { getNamespace } from '../utils/ModelFunctions';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -87,7 +88,7 @@ const ModelWorkspace: React.FC<{
   }
 
   const model = state.modelWrapper.model;
-  const namespace = model.meta.namespace;
+  const namespace = getNamespace(model);
   const modelStore: SMARTModelStore = state.workspace.docs[namespace] ?? {
     id: namespace,
     store: {},

@@ -12,8 +12,9 @@ import {
 } from '../model/editormodel';
 import { PageHistory } from '../model/history';
 import { LegendInterface, MapperSelectedInterface } from '../model/States';
-import { MappingType, MapSet } from '../model/mapmodel';
+import { MappingType, MapProfile, MapSet } from '../model/mapmodel';
 import { SerializedStyles } from '@emotion/react';
+import { DocStatement, MMELDocument } from '../model/document';
 
 export enum MapCoverType {
   FULL = 'full',
@@ -28,8 +29,8 @@ export enum MapSourceType {
 }
 
 export interface MapEdgeResult {
-  fromref: RefObject<HTMLDivElement>;
-  toref: RefObject<HTMLDivElement>;
+  fromref: RefObject<HTMLElement>;
+  toref: RefObject<HTMLElement>;
   fromid: string;
   toid: string;
 }
@@ -226,6 +227,41 @@ export function filterMappings(
   return result;
 }
 
+export function filterMappingsForDocument (
+  map: MapSet,
+  impPage: EditorSubprocess,
+  doc: MMELDocument,
+  selected: MapperSelectedInterface,
+  impElms: Record<string, EditorNode>
+): MapEdgeResult[] {
+  const id = selected.selected;
+  const result: MapEdgeResult[] = [];
+  if (
+    selected.modelType === ModelType.IMP &&
+    impPage.childs[id] !== undefined
+  ) {
+    const maps = map.mappings[id];
+    if (maps !== undefined) {
+      Object.keys(maps).forEach(x => {
+        const stat = doc.states[x];
+        if (stat !== undefined) {
+          result.push(getFilterMapRecordForDocument(impElms, id, stat));
+        }
+      });
+    }
+  } else if (
+    selected.modelType === ModelType.REF &&
+    doc.states[id] !== undefined
+  ) {
+    for (const [key, maps] of Object.entries(map.mappings)) {
+      if (maps[id] !== undefined) {
+        result.push(getFilterMapRecordForDocument(impElms, key, doc.states[id]));
+      }
+    }
+  }
+  return result;
+}
+
 function getFilterMapRecord(
   impElms: Record<string, EditorNode>,
   refElms: Record<string, EditorNode>,
@@ -239,6 +275,20 @@ function getFilterMapRecord(
     toref: refNode.uiref!,
     fromid: impNode.id,
     toid: refNode.id,
+  };
+}
+
+function getFilterMapRecordForDocument(
+  impElms: Record<string, EditorNode>,  
+  impId: string,
+  statement: DocStatement,
+): MapEdgeResult {
+  const impNode = impElms[impId];  
+  return {
+    fromref: impNode.uiref!,
+    toref: statement.uiref,
+    fromid: impNode.id,
+    toid: statement.id,
   };
 }
 
@@ -282,4 +332,9 @@ export function findRefMapPartners(id: string, mapping: MappingType): string[] {
     return [];
   }
   return Object.keys(map);
+}
+
+export function mapAI(base: MapProfile, addon: MapProfile, model:EditorModel):[MapProfile, string] {
+  const mp:MapProfile = { ...base }
+  return [mp, 'OK'];
 }

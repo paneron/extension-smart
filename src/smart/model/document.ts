@@ -1,9 +1,12 @@
+import { RefObject } from "react";
+
 export interface DocStatement {
   id: string;
   text: string;
   clause: string;
   paragraph: number;
   index: number;
+  uiref: RefObject<HTMLSpanElement>
 }
 
 export type DocParagraph = string[];

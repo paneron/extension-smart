@@ -16,9 +16,9 @@ const ParagraphView: React.FC<{
   setMapping: (from: string, to: string) => void;
   docMap: DocMapIndex;
   MappingList: React.FC<{ id: string }>;
+  setSelected: (id: string) => void;
 }> = function (props) {
-  const { para, showSection, statements, docMap, setMapping, MappingList } =
-    props;
+  const { para, showSection, statements, docMap } = props;
   return (
     <div
       style={{
@@ -30,10 +30,9 @@ const ParagraphView: React.FC<{
           key={s}
           showSection={showSection}
           first={index === 0}
-          statement={statements[s]}
-          setMapping={setMapping}
+          statement={statements[s]}          
           froms={docMap[s] ?? []}
-          MappingList={MappingList}
+          {...props}
         />
       ))}
     </div>

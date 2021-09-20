@@ -1,3 +1,4 @@
+import React from 'react';
 import { DocMapIndex, MMELDocument } from '../model/document';
 import { MappingType } from '../model/mapmodel';
 
@@ -32,6 +33,7 @@ function addStatement(
       clause,
       paragraph: 1,
       index: 1,
+      uiref: React.createRef()
     };
   } else {
     const lastSec = doc.sections[doc.sections.length - 1];
@@ -47,6 +49,7 @@ function addStatement(
       clause,
       paragraph: lastSec.contents.length,
       index: lastSec.contents[lastSec.contents.length - 1].length,
+      uiref: React.createRef()
     };
   }
 }
