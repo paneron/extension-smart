@@ -32,7 +32,7 @@ const ViewMappingbutton: React.FC<{
       setSelectedId(proposed ? id : '');
     }
     setState(s);
-  }  
+  }
 
   if (modelType === ModelType.IMP || modelType === ModelType.REF) {
     return (
@@ -47,7 +47,7 @@ const ViewMappingbutton: React.FC<{
           <Tooltip2 content={MapViewButtonToolTip[modelType]} position="top">
             <MGDButton
               onMouseEnter={() => action({ ...state, isHover: true })}
-              onMouseLeave={() => action({ ...state, isHover: false })}              
+              onMouseLeave={() => action({ ...state, isHover: false })}
               icon="link"
             />
           </Tooltip2>

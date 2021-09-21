@@ -41,9 +41,7 @@ export function getRootName(meta: MMELMetadata): string {
 }
 
 export function getNamespace(model: EditorModel): string {
-  return model.meta.namespace === '' 
-    ? 'defaultns'
-    : model.meta.namespace  
+  return model.meta.namespace === '' ? 'defaultns' : model.meta.namespace;
 }
 
 export function replaceSet(

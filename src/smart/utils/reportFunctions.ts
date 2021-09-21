@@ -13,12 +13,10 @@ export function genReport(
   ref: EditorModel,
   imp: EditorModel
 ): string {
-  const refns = getNamespace(ref)
+  const refns = getNamespace(ref);
   const mapSet = mapProfile.mapSet[refns];
   if (mapSet === undefined) {
-    alert(
-      `Mapping to implementation model (ns: ${refns}) is not defined`
-    );
+    alert(`Mapping to implementation model (ns: ${refns}) is not defined`);
     return text;
   }
   const records: RefRecord[] = Object.values(ref.refs)

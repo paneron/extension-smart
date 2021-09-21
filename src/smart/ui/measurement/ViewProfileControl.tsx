@@ -59,7 +59,12 @@ const ProfileControl: React.FC<{
         position="bottom-right"
         minimal
       >
-        <Icon icon="help" />
+        <Icon
+          style={{
+            marginLeft: '2px',
+          }}
+          icon="help"
+        />
       </Tooltip2>
     </MGDContainer>
   );

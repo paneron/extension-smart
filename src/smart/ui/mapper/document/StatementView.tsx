@@ -10,20 +10,20 @@ import { DocStatement } from '../../../model/document';
 
 const StatementView: React.FC<{
   statement: DocStatement;
-  showSection?: string;  
+  showSection?: string;
   setMapping: (from: string, to: string) => void;
   froms: string[];
   first: boolean;
   MappingList: React.FC<{ id: string }>;
   setSelected: (id: string) => void;
 }> = function ({
-  statement,  
+  statement,
   showSection,
   setMapping,
   first,
   froms,
   MappingList,
-  setSelected
+  setSelected,
 }) {
   const [hover, setHover] = useState<boolean>(false);
   const hasMap = froms.length > 0;
@@ -43,13 +43,14 @@ const StatementView: React.FC<{
     setHover(false);
   }
 
-  const content = (showSection !== undefined ? `${showSection}. ` : '') + statement.text;
+  const content =
+    (showSection !== undefined ? `${showSection}. ` : '') + statement.text;
 
-  return (         
+  return (
     <>
       <span
         style={{
-          marginLeft: first?'0':'3px',
+          marginLeft: first ? '0' : '3px',
           backgroundColor: hasMap
             ? 'lightgreen'
             : hover
@@ -62,14 +63,14 @@ const StatementView: React.FC<{
         onMouseLeave={onMouseLeave}
         onDragEnter={() => setHover(true)}
         onDragLeave={() => setHover(false)}
-      >        
-        {content}            
-        {hasMap &&
-          <Popover2 content={<MappingList id={statement.id}/>} position='top'>
-            <Button small icon='link' />
+      >
+        {content}
+        {hasMap && (
+          <Popover2 content={<MappingList id={statement.id} />} position="top">
+            <Button small icon="link" />
           </Popover2>
-        }
-      </span>      
+        )}
+      </span>
     </>
   );
 };

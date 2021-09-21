@@ -64,11 +64,7 @@ const MapperFileMenu: React.FC<{
         icon="floppy-disk"
       />
       <MenuDivider />
-      <MenuItem
-        text="Auto Mapper"
-        onClick={onMapImport}        
-        icon="data-lineage"
-      />
+      <MenuItem text="Auto Mapper" onClick={onMapImport} icon="data-lineage" />
     </Menu>
   );
 };

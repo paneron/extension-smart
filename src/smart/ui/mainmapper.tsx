@@ -22,7 +22,13 @@ import {
   MapSet,
 } from '../model/mapmodel';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
-import { ControlGroup, Dialog, IToaster, IToastProps, Toaster } from '@blueprintjs/core';
+import {
+  ControlGroup,
+  Dialog,
+  IToaster,
+  IToastProps,
+  Toaster,
+} from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import MapperFileMenu from './menu/MapperFileMenu';
 import { createPageHistory, PageHistory } from '../model/history';
@@ -34,7 +40,11 @@ import {
 } from '../model/States';
 import { createNewEditorModel } from '../utils/EditorFactory';
 import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
-import { calculateMapping, filterMappings, filterMappingsForDocument } from '../utils/MappingCalculator';
+import {
+  calculateMapping,
+  filterMappings,
+  filterMappingsForDocument,
+} from '../utils/MappingCalculator';
 import MappingCanvus from './mapper/mappingCanvus';
 import MapperOptionMenu from './menu/mapperOptionMenu';
 import { EditMPropsInterface } from './dialog/dialogs';
@@ -92,9 +102,7 @@ const ModelMapper: React.FC<{
   const refMW = referenceProps.modelWrapper;
 
   const impmodel = impMW.model;
-  const refns = isModelWrapper(refMW)
-    ? getNamespace(refMW.model)
-    : refMW.id;
+  const refns = isModelWrapper(refMW) ? getNamespace(refMW.model) : refMW.id;
   if (mapProfile.mapSet[refns] === undefined) {
     mapProfile.mapSet[refns] = createNewMapSet(refns);
   }
@@ -113,12 +121,12 @@ const ModelMapper: React.FC<{
             refMW.model.elements
           )
         : filterMappingsForDocument(
-          mapSet,
-          impPage,
-          refMW,
-          selected,
-          impmodel.elements
-        ),
+            mapSet,
+            impPage,
+            refMW,
+            selected,
+            impmodel.elements
+          ),
     [
       mapSet,
       impPage,
@@ -136,7 +144,7 @@ const ModelMapper: React.FC<{
   );
 
   function showMessage(msg: IToastProps) {
-    toaster.show(msg)
+    toaster.show(msg);
   }
 
   function onMapSetChanged(ms: MapSet) {
@@ -238,10 +246,10 @@ const ModelMapper: React.FC<{
     } else {
       alert('Target not found');
     }
-  }  
+  }
 
   function onMapImport() {
-    setViewOption({...viewOption, mapAIVisible: true});
+    setViewOption({ ...viewOption, mapAIVisible: true });
   }
 
   function closeDialog() {
@@ -315,9 +323,17 @@ const ModelMapper: React.FC<{
     return (
       <Workspace className={className} toolbar={toolbar}>
         <Dialog
-          isOpen={editMappingProps.from !== '' || viewOption.docVisible || viewOption.mapAIVisible}
+          isOpen={
+            editMappingProps.from !== '' ||
+            viewOption.docVisible ||
+            viewOption.mapAIVisible
+          }
           title={
-            editMappingProps.from !== '' ? 'Edit Mapping' : viewOption.docVisible ? 'Report template' : 'Auto mapper (transitive mapping)'
+            editMappingProps.from !== ''
+              ? 'Edit Mapping'
+              : viewOption.docVisible
+              ? 'Report template'
+              : 'Auto mapper (transitive mapping)'
           }
           css={dialog_layout}
           onClose={
@@ -332,24 +348,27 @@ const ModelMapper: React.FC<{
           canEscapeKeyClose={false}
           canOutsideClickClose={false}
         >
-          {editMappingProps.from !== ''
-            ? mapEditPage
-            : viewOption.docVisible 
-              ? isModelWrapper(refMW) && <DocTemplatePane
-                  mapProfile={mapProfile}
-                  setMapProfile={setMapProfile}
-                  refModel={refMW.model}
-                  impModel={impmodel}
-                />
-              : <AutoMapper 
-                  refNamespace={refns}
-                  impNamespace={getNamespace(impmodel)}
-                  showMessage={showMessage}
-                  onClose={closeDialog}
-                  mapProfile={mapProfile}
-                  setMapProfile={setMapProfile}
-                />
-              }
+          {editMappingProps.from !== '' ? (
+            mapEditPage
+          ) : viewOption.docVisible ? (
+            isModelWrapper(refMW) && (
+              <DocTemplatePane
+                mapProfile={mapProfile}
+                setMapProfile={setMapProfile}
+                refModel={refMW.model}
+                impModel={impmodel}
+              />
+            )
+          ) : (
+            <AutoMapper
+              refNamespace={refns}
+              impNamespace={getNamespace(impmodel)}
+              showMessage={showMessage}
+              onClose={closeDialog}
+              mapProfile={mapProfile}
+              setMapProfile={setMapProfile}
+            />
+          )}
         </Dialog>
         <div css={mappper_container}>
           <ModelDiagram

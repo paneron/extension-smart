@@ -3,6 +3,7 @@
 
 import { Switch } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
+import { CSSROOTVARIABLES } from '../../../css/root.css';
 import {
   MMELVariable,
   MMELView,
@@ -29,6 +30,7 @@ const VariableSettingItem: React.FC<{
       style={
         profile !== undefined && profile.profile[variable.id] !== undefined
           ? {
+              position: 'relative',
               borderStyle: 'solid',
             }
           : {}
@@ -61,6 +63,22 @@ const VariableSettingItem: React.FC<{
           }
         />
       )}
+      {profile !== undefined &&
+        profile.profile[variable.id] !== undefined &&
+        profile.profile[variable.id].isConst && (
+          <div
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: -8,
+              zIndex: 10,
+              backgroundColor: CSSROOTVARIABLES['--colour--bsi-pale-teal'],
+              color: 'red',
+            }}
+          >
+            fixed
+          </div>
+        )}
     </div>
   );
 };

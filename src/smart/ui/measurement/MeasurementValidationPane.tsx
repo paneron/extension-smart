@@ -38,6 +38,7 @@ const MeasureCheckPane: React.FC<{
   const [values, setValues] = useState<Record<string, string>>({});
   const [result, setResult] = useState<MeasureResult | undefined>(undefined);
   const [profile, setProfile] = useState<MMELView | undefined>(undefined);
+  const [viewOn, setViewOn] = useState<boolean>(false);
 
   const alldata = Object.values(model.vars).filter(simpleFilter);
 
@@ -57,6 +58,23 @@ const MeasureCheckPane: React.FC<{
   function onValueChange(id: string, value: string) {
     values[id] = value;
     setValues({ ...values });
+    if (branchOnly && viewOn) {
+      updateResult(measureTest(model, values, showMsg, branchOnly));
+    }
+  }
+
+  function action() {
+    updateResult(measureTest(model, values, showMsg, branchOnly));
+    if (branchOnly) {
+      setViewOn(true);
+    }
+  }
+
+  function reset() {
+    updateResult(undefined);
+    if (branchOnly) {
+      setViewOn(false);
+    }
   }
 
   const profiles = useMemo(() => Object.values(model.views), [model]);
@@ -84,23 +102,14 @@ const MeasureCheckPane: React.FC<{
         ))}
       </FormGroup>
       {alldata.length > 0 ? (
-        <MGDButton
-          icon={branchOnly ? 'filter' : 'lab-test'}
-          onClick={() =>
-            updateResult(measureTest(model, values, showMsg, branchOnly))
-          }
-        >
+        <MGDButton icon={branchOnly ? 'filter' : 'lab-test'} onClick={action}>
           {branchOnly ? 'Custom view' : 'Measurement Test'}
         </MGDButton>
       ) : (
         <Text> No setting detected </Text>
       )}
       {result !== undefined && (
-        <MGDButton
-          icon="reset"
-          disabled={result === undefined}
-          onClick={() => updateResult(undefined)}
-        >
+        <MGDButton icon="reset" disabled={result === undefined} onClick={reset}>
           {branchOnly ? 'Reset view' : 'Reset result'}
         </MGDButton>
       )}

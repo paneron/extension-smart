@@ -13,30 +13,38 @@ import { handleMappingOpen, handleModelOpen } from '../../utils/IOFunctions';
 import { mapAI } from '../../utils/MappingCalculator';
 import { getNamespace } from '../../utils/ModelFunctions';
 
-const centeredLayout:CSSProperties = {
-  display:'flex',
-  alignItems: 'center'
-}
+const centeredLayout: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+};
 
-const rightAlignedLayout:CSSProperties = {
-  display:'flex',
-  justifyContent: 'flex-end'
-}
+const rightAlignedLayout: CSSProperties = {
+  display: 'flex',
+  justifyContent: 'flex-end',
+};
 
 const AutoMapper: React.FC<{
   refNamespace: string;
   impNamespace: string;
-  mapProfile: MapProfile;  
+  mapProfile: MapProfile;
   onClose: () => void;
   showMessage: (msg: IToastProps) => void;
   setMapProfile: (mp: MapProfile) => void;
-}> = function ({ refNamespace, impNamespace, onClose, showMessage, mapProfile, setMapProfile }) {
-  const { useDecodedBlob, requestFileFromFilesystem, logger } = useContext(DatasetContext);  
-  
-  const [mw, setMW] = useState<ModelWrapper|undefined>(undefined);
-  const [mapping, setMapping] = useState<MapProfile|undefined>(undefined);  
+}> = function ({
+  refNamespace,
+  impNamespace,
+  onClose,
+  showMessage,
+  mapProfile,
+  setMapProfile,
+}) {
+  const { useDecodedBlob, requestFileFromFilesystem, logger } =
+    useContext(DatasetContext);
 
-  const isValid:boolean = mw !== undefined && mapping !== undefined;
+  const [mw, setMW] = useState<ModelWrapper | undefined>(undefined);
+  const [mapping, setMapping] = useState<MapProfile | undefined>(undefined);
+
+  const isValid: boolean = mw !== undefined && mapping !== undefined;
 
   async function handleOpenModel() {
     handleModelOpen({
@@ -44,7 +52,7 @@ const AutoMapper: React.FC<{
       useDecodedBlob,
       requestFileFromFilesystem,
       logger,
-    })
+    });
   }
 
   async function handleOpenMapping() {
@@ -52,15 +60,20 @@ const AutoMapper: React.FC<{
       onMapProfileChanged: setMapping,
       useDecodedBlob,
       requestFileFromFilesystem,
-    })
+    });
   }
 
   function onDiscovery() {
     if (mapping !== undefined && mw !== undefined) {
-      const [newMP, summary] = mapAI(mapProfile, mapping, mw.model, refNamespace);
+      const [newMP, summary] = mapAI(
+        mapProfile,
+        mapping,
+        mw.model,
+        refNamespace
+      );
       showMessage({
         message: summary,
-        intent: 'success'
+        intent: 'success',
       });
       setMapProfile(newMP);
       onClose();
@@ -69,19 +82,29 @@ const AutoMapper: React.FC<{
 
   return (
     <MGDDisplayPane>
-      <MGDHeading> Auto discover mapping from {impNamespace} to {refNamespace} using an intermediate model </MGDHeading>
+      <MGDHeading>
+        {' '}
+        Auto discover mapping from {impNamespace} to {refNamespace} using an
+        intermediate model{' '}
+      </MGDHeading>
       <fieldset>
         <legend>Intermediate model</legend>
         <div style={centeredLayout}>
           <Text>Model file:</Text>
-          <Button intent={mw !== undefined ? 'success' : 'danger'} onClick={handleOpenModel}>
+          <Button
+            intent={mw !== undefined ? 'success' : 'danger'}
+            onClick={handleOpenModel}
+          >
             {mw !== undefined ? 'Model set' : 'Model not set'}
           </Button>
           {mw !== undefined && <Text>Namespace: {getNamespace(mw.model)}</Text>}
         </div>
         <div style={centeredLayout}>
           <Text>Mapping file:</Text>
-          <Button intent={mapping !== undefined ? 'success' : 'danger'} onClick={handleOpenMapping}>
+          <Button
+            intent={mapping !== undefined ? 'success' : 'danger'}
+            onClick={handleOpenMapping}
+          >
             {mapping !== undefined ? 'Mapping set' : 'Mapping not set'}
           </Button>
         </div>
@@ -93,6 +116,6 @@ const AutoMapper: React.FC<{
       </fieldset>
     </MGDDisplayPane>
   );
-}
+};
 
 export default AutoMapper;

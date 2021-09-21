@@ -30,7 +30,7 @@ const ParagraphView: React.FC<{
           key={s}
           showSection={showSection}
           first={index === 0}
-          statement={statements[s]}          
+          statement={statements[s]}
           froms={docMap[s] ?? []}
           {...props}
         />

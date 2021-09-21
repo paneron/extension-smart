@@ -45,7 +45,7 @@ const SMARTDocumentView: React.FC<{
         <SectionView
           key={sec.id}
           sec={sec}
-          statements={document.states}          
+          statements={document.states}
           docMap={docMap}
           {...props}
         />

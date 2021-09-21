@@ -142,7 +142,7 @@ export function handleMappingOpen(props: {
 export async function handleFileOpen(props: {
   useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
-  logger?: LoggerInterface;  
+  logger?: LoggerInterface;
   type: FILE_TYPE;
   postProcessing: (data: string) => void;
 }) {

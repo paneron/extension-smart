@@ -228,7 +228,7 @@ export function filterMappings(
   return result;
 }
 
-export function filterMappingsForDocument (
+export function filterMappingsForDocument(
   map: MapSet,
   impPage: EditorSubprocess,
   doc: MMELDocument,
@@ -256,7 +256,9 @@ export function filterMappingsForDocument (
   ) {
     for (const [key, maps] of Object.entries(map.mappings)) {
       if (maps[id] !== undefined) {
-        result.push(getFilterMapRecordForDocument(impElms, key, doc.states[id]));
+        result.push(
+          getFilterMapRecordForDocument(impElms, key, doc.states[id])
+        );
       }
     }
   }
@@ -280,11 +282,11 @@ function getFilterMapRecord(
 }
 
 function getFilterMapRecordForDocument(
-  impElms: Record<string, EditorNode>,  
+  impElms: Record<string, EditorNode>,
   impId: string,
-  statement: DocStatement,
+  statement: DocStatement
 ): MapEdgeResult {
-  const impNode = impElms[impId];  
+  const impNode = impElms[impId];
   return {
     fromref: impNode.uiref!,
     toref: statement.uiref,
@@ -335,8 +337,13 @@ export function findRefMapPartners(id: string, mapping: MappingType): string[] {
   return Object.keys(map);
 }
 
-export function mapAI(base: MapProfile, addon: MapProfile, model:EditorModel, targetns:string):[MapProfile, string] {
-  const mp:MapProfile = { ...base };
+export function mapAI(
+  base: MapProfile,
+  addon: MapProfile,
+  model: EditorModel,
+  targetns: string
+): [MapProfile, string] {
+  const mp: MapProfile = { ...base };
   const smapping = base.mapSet[getNamespace(model)];
   const tmapping = addon.mapSet[targetns];
   let count = 0;
@@ -344,46 +351,51 @@ export function mapAI(base: MapProfile, addon: MapProfile, model:EditorModel, ta
     const smap = smapping.mappings;
     const tmap = tmapping.mappings;
     if (mp.mapSet[targetns] === undefined) {
-      mp.mapSet[targetns] = {id:targetns, mappings: {}};
+      mp.mapSet[targetns] = { id: targetns, mappings: {} };
     }
     const map = mp.mapSet[targetns].mappings;
     // sf: source from
     for (const sf in smap) {
       // st: source to
-      for (const st in smap[sf]) {        
+      for (const st in smap[sf]) {
         const sourcemap = smap[sf][st];
-        // search all components under st        
-        const allids = getChilds(model, st);        
+        // search all components under st
+        const allids = getChilds(model, st);
         for (const child of allids) {
-          const tm = tmap[child];          
-          if (tm !== undefined) {            
+          const tm = tmap[child];
+          if (tm !== undefined) {
             // tt: destination to
             for (const dt in tm) {
-              const destmap = tm[dt];              
+              const destmap = tm[dt];
               if (map[sf] === undefined) {
                 map[sf] = {};
               }
               map[sf][dt] = {
                 description: `[Auto-generated: transitive mapping]\nMapping 1: ${sourcemap.description}\nMapping 2: ${destmap.description}`,
-                justification: `[Auto-generated: transitive mapping]\nMapping 1: ${sourcemap.justification}\nMapping 2: ${destmap.justification}`
+                justification: `[Auto-generated: transitive mapping]\nMapping 1: ${sourcemap.justification}\nMapping 2: ${destmap.justification}`,
               };
               count++;
-            }            
+            }
           }
         }
       }
     }
-    mp.mapSet[targetns].mappings = {...map};
-    mp.mapSet = {...mp.mapSet};
+    mp.mapSet[targetns].mappings = { ...map };
+    mp.mapSet = { ...mp.mapSet };
   }
   return [mp, `${count} mapping discovered`];
 }
 
 function getChilds(model: EditorModel, id: string): string[] {
-  let ret:string[] = [ id ];
+  let ret: string[] = [id];
   const elm = model.elements[id];
-  if (isEditorProcess(elm) && elm.page !== '') {    
-    ret = [...ret, ...Object.values(model.pages[elm.page].childs).flatMap(e => getChilds(model, e.element))];
+  if (isEditorProcess(elm) && elm.page !== '') {
+    ret = [
+      ...ret,
+      ...Object.values(model.pages[elm.page].childs).flatMap(e =>
+        getChilds(model, e.element)
+      ),
+    ];
   }
   return ret;
 }
