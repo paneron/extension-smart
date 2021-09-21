@@ -342,8 +342,8 @@ const ModelMapper: React.FC<{
                   impModel={impmodel}
                 />
               : <AutoMapper 
-                  refName={refns}
-                  impName={getNamespace(impmodel)}
+                  refNamespace={refns}
+                  impNamespace={getNamespace(impmodel)}
                   showMessage={showMessage}
                   onClose={closeDialog}
                   mapProfile={mapProfile}

@@ -15,6 +15,7 @@ import { LegendInterface, MapperSelectedInterface } from '../model/States';
 import { MappingType, MapProfile, MapSet } from '../model/mapmodel';
 import { SerializedStyles } from '@emotion/react';
 import { DocStatement, MMELDocument } from '../model/document';
+import { getNamespace } from './ModelFunctions';
 
 export enum MapCoverType {
   FULL = 'full',
@@ -334,7 +335,55 @@ export function findRefMapPartners(id: string, mapping: MappingType): string[] {
   return Object.keys(map);
 }
 
-export function mapAI(base: MapProfile, addon: MapProfile, model:EditorModel):[MapProfile, string] {
-  const mp:MapProfile = { ...base }
-  return [mp, 'OK'];
+export function mapAI(base: MapProfile, addon: MapProfile, model:EditorModel, targetns:string):[MapProfile, string] {
+  const mp:MapProfile = { ...base };
+  const smapping = base.mapSet[getNamespace(model)];
+  const tmapping = addon.mapSet[targetns];
+  let count = 0;
+  if (smapping !== undefined && tmapping !== undefined) {
+    const smap = smapping.mappings;
+    const tmap = tmapping.mappings;
+    if (mp.mapSet[targetns] === undefined) {
+      mp.mapSet[targetns] = {id:targetns, mappings: {}};
+    }
+    const map = mp.mapSet[targetns].mappings;
+    // sf: source from
+    for (const sf in smap) {
+      // st: source to
+      for (const st in smap[sf]) {        
+        const sourcemap = smap[sf][st];
+        // search all components under st        
+        const allids = getChilds(model, st);        
+        for (const child of allids) {
+          const tm = tmap[child];          
+          if (tm !== undefined) {            
+            // tt: destination to
+            for (const dt in tm) {
+              const destmap = tm[dt];              
+              if (map[sf] === undefined) {
+                map[sf] = {};
+              }
+              map[sf][dt] = {
+                description: `[Auto-generated: transitive mapping]\nMapping 1: ${sourcemap.description}\nMapping 2: ${destmap.description}`,
+                justification: `[Auto-generated: transitive mapping]\nMapping 1: ${sourcemap.justification}\nMapping 2: ${destmap.justification}`
+              };
+              count++;
+            }            
+          }
+        }
+      }
+    }
+    mp.mapSet[targetns].mappings = {...map};
+    mp.mapSet = {...mp.mapSet};
+  }
+  return [mp, `${count} mapping discovered`];
+}
+
+function getChilds(model: EditorModel, id: string): string[] {
+  let ret:string[] = [ id ];
+  const elm = model.elements[id];
+  if (isEditorProcess(elm) && elm.page !== '') {    
+    ret = [...ret, ...Object.values(model.pages[elm.page].childs).flatMap(e => getChilds(model, e.element))];
+  }
+  return ret;
 }

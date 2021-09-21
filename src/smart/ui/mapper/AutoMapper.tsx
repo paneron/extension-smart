@@ -24,13 +24,13 @@ const rightAlignedLayout:CSSProperties = {
 }
 
 const AutoMapper: React.FC<{
-  refName: string;
-  impName: string;
+  refNamespace: string;
+  impNamespace: string;
   mapProfile: MapProfile;  
   onClose: () => void;
   showMessage: (msg: IToastProps) => void;
   setMapProfile: (mp: MapProfile) => void;
-}> = function ({ refName, impName, onClose, showMessage, mapProfile, setMapProfile }) {
+}> = function ({ refNamespace, impNamespace, onClose, showMessage, mapProfile, setMapProfile }) {
   const { useDecodedBlob, requestFileFromFilesystem, logger } = useContext(DatasetContext);  
   
   const [mw, setMW] = useState<ModelWrapper|undefined>(undefined);
@@ -57,7 +57,7 @@ const AutoMapper: React.FC<{
 
   function onDiscovery() {
     if (mapping !== undefined && mw !== undefined) {
-      const [newMP, summary] = mapAI(mapProfile, mapping, mw.model);
+      const [newMP, summary] = mapAI(mapProfile, mapping, mw.model, refNamespace);
       showMessage({
         message: summary,
         intent: 'success'
@@ -69,7 +69,7 @@ const AutoMapper: React.FC<{
 
   return (
     <MGDDisplayPane>
-      <MGDHeading> Auto discover mapping from {impName} to {refName} using an intermediate model </MGDHeading>
+      <MGDHeading> Auto discover mapping from {impNamespace} to {refNamespace} using an intermediate model </MGDHeading>
       <fieldset>
         <legend>Intermediate model</legend>
         <div style={centeredLayout}>
