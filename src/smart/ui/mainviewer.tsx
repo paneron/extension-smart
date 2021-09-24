@@ -52,7 +52,13 @@ import MeasureCheckPane from './measurement/MeasurementValidationPane';
 import { ViewFunctionInterface } from '../model/ViewFunctionModel';
 import LegendPane from './common/description/LegendPane';
 import { loadPlugin } from './application/plugin';
-import { getNamespace } from '../utils/ModelFunctions';
+import { buildModelLinks, getNamespace } from '../utils/ModelFunctions';
+import ChecklistConfigPane from './checklist/CheckListConfigPane';
+import {
+  MMELProvision,
+  MMELReference,
+} from '../serialize/interface/supportinterface';
+import { MMELDataAttribute } from '../serialize/interface/datainterface';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -94,9 +100,7 @@ const ModelViewer: React.FC<{
   const [searchResult, setSearchResult] = useState<Set<string>>(
     new Set<string>()
   );
-  const [funPage, setFunPage] = useState<FunctionPage>(
-    FunctionPage.Parameterized
-  );
+  const [funPage, setFunPage] = useState<FunctionPage>(FunctionPage.Checklist);
   const [view, setView] = useState<ViewFunctionInterface | undefined>(
     undefined
   );
@@ -171,6 +175,20 @@ const ModelViewer: React.FC<{
     setSearchResult(set);
   }
 
+  function getEdgeColor(id: string): string {
+    if (view !== undefined && view.getEdgeColor !== undefined) {
+      return view.getEdgeColor(id, state.modelWrapper.page, view.data);
+    }
+    return '';
+  }
+
+  function isEdgeAnimated(id: string): boolean {
+    if (view !== undefined && view.isEdgeAnimated !== undefined) {
+      return view.isEdgeAnimated(id, state.modelWrapper.page, view.data);
+    }
+    return false;
+  }
+
   const mw = state.modelWrapper;
   const model = mw.model;
   const namespace = getNamespace(model);
@@ -207,7 +225,7 @@ const ModelViewer: React.FC<{
       key: 'checklist',
       title: FuntionNames[FunctionPage.Checklist],
       collapsedByDefault: false,
-      content: <>Checklist</>,
+      content: <ChecklistConfigPane setView={setView} model={model} />,
     },
   };
 
@@ -215,7 +233,48 @@ const ModelViewer: React.FC<{
     view !== undefined && view.ComponentToolTip !== undefined
       ? function ({ id }) {
           const SD = view.ComponentToolTip!;
-          return <SD id={id} pageid={mw.page} data={view!.data} />;
+          return <SD id={id} pageid={mw.page} data={view.data} />;
+        }
+      : undefined;
+
+  const NodeAddon: React.FC<{ id: string }> | undefined =
+    view !== undefined && view.NodeAddon !== undefined
+      ? function ({ id }) {
+          const Addon = view.NodeAddon!;
+          return (
+            <Addon
+              element={model.elements[id]}
+              pageid={mw.page}
+              data={view.data}
+            />
+          );
+        }
+      : undefined;
+
+  const CustomAttribute:
+    | React.FC<{
+        att: MMELDataAttribute;
+        getRefById?: (id: string) => MMELReference | null;
+        dcid: string;
+      }>
+    | undefined =
+    view !== undefined && view.CustomAttribute !== undefined
+      ? function (props) {
+          const Custom = view.CustomAttribute!;
+          return <Custom {...props} data={view.data} />;
+        }
+      : undefined;
+
+  const CustomProvision:
+    | React.FC<{
+        provision: MMELProvision;
+        getRefById?: (id: string) => MMELReference | null;
+      }>
+    | undefined =
+    view !== undefined && view.CustomProvision !== undefined
+      ? function (props) {
+          const Custom = view.CustomProvision!;
+          return <Custom {...props} data={view.data} />;
         }
       : undefined;
 
@@ -228,6 +287,7 @@ const ModelViewer: React.FC<{
             useDecodedBlob,
             requestFileFromFilesystem,
             logger,
+            indexModel: buildModelLinks,
           })
         }
       >
@@ -259,6 +319,8 @@ const ModelViewer: React.FC<{
       <SelectedNodeDescription
         model={state.modelWrapper.model}
         pageid={state.modelWrapper.page}
+        CustomAttribute={CustomAttribute}
+        CustomProvision={CustomProvision}
       />
     ),
   };
@@ -327,6 +389,13 @@ const ModelViewer: React.FC<{
                 getSVGColorById,
                 view !== undefined && view.ComponentToolTip !== undefined
                   ? ViewStyleComponentDesc
+                  : undefined,
+                NodeAddon,
+                view !== undefined && view.getEdgeColor !== undefined
+                  ? getEdgeColor
+                  : undefined,
+                view !== undefined && view.isEdgeAnimated !== undefined
+                  ? isEdgeAnimated
                   : undefined
               )}
               onLoad={onLoad}
@@ -344,7 +413,7 @@ const ModelViewer: React.FC<{
                 />
               </Controls>
             </ReactFlow>
-            {view !== undefined && (
+            {view !== undefined && view.legendList !== undefined && (
               <LegendPane list={view.legendList} onLeft={false} />
             )}
           </div>

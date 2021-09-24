@@ -3,14 +3,11 @@ import { BufferDataset } from '@riboseinc/paneron-extension-kit/types/buffers';
 import { DataType } from '../serialize/interface/baseinterface';
 import { VarType } from '../serialize/interface/supportinterface';
 
-export const MODAILITYOPTIONS: Array<string> = [
-  '',
-  'MUST',
-  'SHALL',
-  'SHOULD',
-  'CAN',
-  'MAY',
-];
+export const MODALITY = ['MUST', 'SHALL', 'SHOULD', 'CAN', 'MAY'] as const;
+
+export const MODAILITYOPTIONS = ['', ...MODALITY] as const;
+
+export type ModalityType = typeof MODAILITYOPTIONS[number];
 
 export const DragAndDropFormatType = 'application/MMEL';
 

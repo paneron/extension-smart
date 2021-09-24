@@ -206,7 +206,10 @@ export function getViewerReactFlowElementsFrom(
   onProcessClick: (pageid: string, processid: string) => void,
   getStyleById: (id: string) => SerializedStyles,
   getSVGColorById: (id: string) => string,
-  ComponentDesc?: React.FC<{ id: string }>
+  ComponentDesc?: React.FC<{ id: string }>,
+  NodeAddon?: React.FC<{ id: string }>,
+  getEdgeColor?: (id: string) => string,
+  isAnimated?: (id: string) => boolean
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
@@ -215,8 +218,11 @@ export function getViewerReactFlowElementsFrom(
     getStyleClassById: getStyleById,
     getSVGColorById,
     ComponentShortDescription: ComponentDesc,
+    NodeAddon,
   });
-  return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
+  return getElements(mw, dvisible, callback, e =>
+    createEdgeContainer(e, undefined, undefined, getEdgeColor, isAnimated)
+  );
 }
 
 export function getActionReactFlowElementsFrom(

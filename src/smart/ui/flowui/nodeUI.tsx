@@ -49,6 +49,7 @@ export const Datacube: FC<NodeProps> = function ({ data }) {
     callback.getSVGColorById !== undefined
       ? callback.getSVGColorById(data.id)
       : 'none';
+  const Addon = callback.NodeAddon;
   const onDataWorkspaceActive = callback.onDataWorkspaceActive;
   return (
     <>
@@ -61,6 +62,7 @@ export const Datacube: FC<NodeProps> = function ({ data }) {
         <DatacubeShape color={color} />
       </PopoverWrapper>
       <div css={[shame__label, shame__label__long]}>{label}</div>
+      {Addon !== undefined && <Addon id={node.id} />}
     </>
   );
 };
@@ -70,6 +72,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
   const callback = data as NodeCallBack;
   const actor = callback.getRoleById(process.actor);
   const PB = ProcessBox[callback.modelType];
+  const Addon = callback.NodeAddon;
   const SD = callback.ComponentShortDescription;
 
   return (
@@ -119,6 +122,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           {actor.name}
         </div>
       )}
+      {Addon !== undefined && <Addon id={process.id} />}
     </>
   );
 };
@@ -129,6 +133,7 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
   const actor = callback.getRoleById(approval.actor);
   const approver = callback.getRoleById(approval.approver);
   const PB = ProcessBox[callback.modelType];
+  const Addon = callback.NodeAddon;
   const SD = callback.ComponentShortDescription;
 
   return (
@@ -196,6 +201,7 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
       ) : (
         <></>
       )}
+      {Addon !== undefined && <Addon id={approval.id} />}
     </>
   );
 };
@@ -244,6 +250,7 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
   const egate = data as EditorEGate;
   const callback = data as NodeCallBack;
   const SD = callback.ComponentShortDescription;
+  const Addon = callback.NodeAddon;
   const color =
     callback.getSVGColorById !== undefined
       ? callback.getSVGColorById(data.id)
@@ -273,6 +280,7 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
           {egate.label}
         </div>
       </Tooltip2>
+      {Addon !== undefined && <Addon id={egate.id} />}
     </>
   );
 };

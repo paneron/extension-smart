@@ -141,20 +141,6 @@ export function referenceSorter(a: MMELReference, b: MMELReference): number {
   return a.document.localeCompare(b.document);
 }
 
-export function buildModelLinks(model: EditorModel) {
-  for (const p in model.pages) {
-    const page = model.pages[p];
-    const neighbor: Record<string, Set<string>> = {};
-    Object.values(page.edges).forEach(e => {
-      if (neighbor[e.from] === undefined) {
-        neighbor[e.from] = new Set<string>();
-      }
-      neighbor[e.from].add(e.to);
-    });
-    page.neighbor = neighbor;
-  }
-}
-
 export function buildEdgeConnections(
   page: MMELSubprocess
 ): Record<string, MMELEdge[]> {
@@ -277,4 +263,18 @@ export function getModelAllSignals(model: EditorModel): string[] {
     .filter(x => isEditorRegistry(x))
     .sort((a, b) => a.id.localeCompare(b.id))
     .flatMap(r => [r.id + 'CREATED', r.id + 'UPDATED', r.id + 'DELETED']);
+}
+
+export function buildModelLinks(model: EditorModel) {
+  for (const p in model.pages) {
+    const page = model.pages[p];
+    const neighbor: Record<string, Set<string>> = {};
+    Object.values(page.edges).forEach(e => {
+      if (neighbor[e.from] === undefined) {
+        neighbor[e.from] = new Set<string>();
+      }
+      neighbor[e.from].add(e.to);
+    });
+    page.neighbor = neighbor;
+  }
 }

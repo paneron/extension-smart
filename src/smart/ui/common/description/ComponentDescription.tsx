@@ -212,13 +212,24 @@ export const DescribeRegistry: React.FC<{
   reg: EditorRegistry;
   getRefById?: (id: string) => MMELReference | null;
   getDataClassById: (id: string) => EditorDataClass | null;
-}> = function ({ reg, getRefById, getDataClassById }) {
+  CustomAttribute?: React.FC<{
+    att: MMELDataAttribute;
+    getRefById?: (id: string) => MMELReference | null;
+    dcid: string;
+  }>;
+}> = function ({ reg, getRefById, getDataClassById, CustomAttribute }) {
   const dc = getDataClassById(reg.data);
   return (
     <>
       <DescriptionItem label="ID" value={reg.id} />
       <DescriptionItem label="Title" value={reg.title} />
-      {dc !== null && <DescribeDC dc={dc} getRefById={getRefById} />}
+      {dc !== null && (
+        <DescribeDC
+          dc={dc}
+          getRefById={getRefById}
+          CustomAttribute={CustomAttribute}
+        />
+      )}
     </>
   );
 };
@@ -226,10 +237,20 @@ export const DescribeRegistry: React.FC<{
 export const DescribeDC: React.FC<{
   dc: EditorDataClass;
   getRefById?: (id: string) => MMELReference | null;
-}> = function ({ dc, getRefById }) {
+  CustomAttribute?: React.FC<{
+    att: MMELDataAttribute;
+    getRefById?: (id: string) => MMELReference | null;
+    dcid: string;
+  }>;
+}> = function ({ dc, getRefById, CustomAttribute }) {
   return (
     <>
-      <AttributeList attributes={dc.attributes} getRefById={getRefById} />
+      <AttributeList
+        attributes={dc.attributes}
+        getRefById={getRefById}
+        CustomAttribute={CustomAttribute}
+        dcid={dc.id}
+      />
     </>
   );
 };

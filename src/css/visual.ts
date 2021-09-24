@@ -18,6 +18,33 @@ export const handlecss = css`
   border: '1px solid black!important',
 `;
 
+export const flow_checkbox = css`
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 30px;
+  text-align: left;
+  font-size: 12px;
+`;
+
+export const flow_progress_label = css`
+  position: absolute;
+  left: 0px;
+  top: -25px;
+  width: 140px;
+  text-align: right;
+  font-size: 12px;
+`;
+
+export const flow_percentage_label = css`
+  position: absolute;
+  left: 0px;
+  top: -20px;
+  width: 140px;
+  text-align: left;
+  font-size: 12px;
+`;
+
 export const no_highlight = css``;
 
 export function map_style__coverage(result: MapCoverType): SerializedStyles {

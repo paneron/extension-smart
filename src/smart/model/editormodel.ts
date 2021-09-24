@@ -1,6 +1,11 @@
 import { RefObject } from 'react';
-import { MMELNode } from '../serialize/interface/baseinterface';
 import {
+  DataType,
+  MMELNode,
+  MMELObject,
+} from '../serialize/interface/baseinterface';
+import {
+  MMELDataAttribute,
   MMELDataClass,
   MMELEnum,
   MMELRegistry,
@@ -117,7 +122,9 @@ export function isEditorDataClass(x: EditorNode): x is EditorDataClass {
   return isDataClass(x);
 }
 
-export function isEditorData(x: EditorNode): boolean {
+export function isEditorData(
+  x: EditorNode
+): x is EditorRegistry | EditorDataClass {
   return isEditorRegistry(x) || isEditorDataClass(x);
 }
 
@@ -139,6 +146,10 @@ export function isEditorSignalEvent(x: EditorNode): x is EditorSignalEvent {
 
 export function isEditorEgate(x: EditorNode): x is EditorEGate {
   return isEGate(x);
+}
+
+export function isMMELDataAttribute(x: MMELObject): x is MMELDataAttribute {
+  return x.datatype === DataType.DATAATTRIBUTE;
 }
 
 export function getEditorNodeInfoById(model: EditorModel, id: string): string {

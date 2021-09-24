@@ -15,7 +15,6 @@ import {
   EditableNodeTypes,
   EditAction,
 } from '../../utils/constants';
-import { NodeCallBack } from '../../model/FlowContainer';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { Tooltip2 } from '@blueprintjs/popover2';
@@ -29,26 +28,29 @@ import {
   ProvisionList,
 } from '../common/description/ComponentList';
 
-export const ProcessQuickEdit: React.FC<
-  NodeCallBack & {
-    process: EditorProcess;
-    onSubprocessClick?: (pid: string) => void;
-    getRoleById: (id: string) => MMELRole | null;
-    getRefById: (id: string) => MMELReference | null;
-    getProvisionById: (id: string) => MMELProvision | null;
-    setDialog?: (
-      nodeType: EditableNodeTypes | DeletableNodeTypes,
-      action: EditAction,
-      id: string
-    ) => void;
-  }
-> = ({
+export const ProcessQuickEdit: React.FC<{
+  process: EditorProcess;
+  onSubprocessClick?: (pid: string) => void;
+  getRoleById: (id: string) => MMELRole | null;
+  getRefById: (id: string) => MMELReference | null;
+  getProvisionById: (id: string) => MMELProvision | null;
+  setDialog?: (
+    nodeType: EditableNodeTypes | DeletableNodeTypes,
+    action: EditAction,
+    id: string
+  ) => void;
+  CustomProvision?: React.FC<{
+    provision: MMELProvision;
+    getRefById?: (id: string) => MMELReference | null;
+  }>;
+}> = ({
   process,
   getProvisionById,
   getRefById,
   getRoleById,
   setDialog,
   onSubprocessClick,
+  CustomProvision,
 }) => {
   return (
     <>
@@ -80,6 +82,7 @@ export const ProcessQuickEdit: React.FC<
         provisions={process.provision}
         getProvisionById={getProvisionById}
         getRefById={getRefById}
+        CustomProvision={CustomProvision}
       />
       <MeasurementList measurements={process.measure} />
     </>

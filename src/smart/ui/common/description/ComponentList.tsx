@@ -64,16 +64,36 @@ export const ReferenceList: React.FC<{
 export const AttributeList: React.FC<{
   attributes: Record<string, MMELDataAttribute>;
   getRefById?: (id: string) => MMELReference | null;
-}> = function ({ attributes, getRefById }) {
+  CustomAttribute?: React.FC<{
+    att: MMELDataAttribute;
+    getRefById?: (id: string) => MMELReference | null;
+    dcid: string;
+  }>;
+  dcid: string;
+}> = function ({ attributes, getRefById, CustomAttribute, dcid }) {
   return (
     <>
       {Object.keys(attributes).length > 0 ? (
         <>
           {getRefById !== undefined && <p> Attributes: </p>}
-          <ul>
+          <ul
+            style={
+              CustomAttribute !== undefined
+                ? { listStyleType: 'none', paddingLeft: 5 }
+                : {}
+            }
+          >
             {Object.entries(attributes).map(([v, att]) => (
               <li key={v}>
-                <DescribeAttribute att={att} getRefById={getRefById} />
+                {CustomAttribute !== undefined ? (
+                  <CustomAttribute
+                    att={att}
+                    getRefById={getRefById}
+                    dcid={dcid}
+                  />
+                ) : (
+                  <DescribeAttribute att={att} getRefById={getRefById} />
+                )}
               </li>
             ))}
           </ul>
@@ -89,7 +109,11 @@ export const ProvisionList: React.FC<{
   provisions: Set<string>;
   getProvisionById: (id: string) => MMELProvision | null;
   getRefById?: (id: string) => MMELReference | null;
-}> = function ({ provisions, getProvisionById, getRefById }) {
+  CustomProvision?: React.FC<{
+    provision: MMELProvision;
+    getRefById?: (id: string) => MMELReference | null;
+  }>;
+}> = function ({ provisions, getProvisionById, getRefById, CustomProvision }) {
   const pros: MMELProvision[] = [];
   provisions.forEach(r => {
     const ret = getProvisionById(r);
@@ -102,13 +126,26 @@ export const ProvisionList: React.FC<{
       {provisions.size > 0 ? (
         <>
           {getRefById !== undefined && <p>Provisions</p>}
-          <ul>
+          <ul
+            style={
+              CustomProvision !== undefined
+                ? { listStyleType: 'none', paddingLeft: 5 }
+                : {}
+            }
+          >
             {pros.map((provision: MMELProvision) => (
               <li key={provision.id}>
-                <DescribeProvision
-                  provision={provision}
-                  getRefById={getRefById}
-                />
+                {CustomProvision !== undefined ? (
+                  <CustomProvision
+                    provision={provision}
+                    getRefById={getRefById}
+                  />
+                ) : (
+                  <DescribeProvision
+                    provision={provision}
+                    getRefById={getRefById}
+                  />
+                )}
               </li>
             ))}
           </ul>

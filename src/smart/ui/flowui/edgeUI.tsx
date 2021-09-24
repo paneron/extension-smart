@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 import {
   EdgeProps,
@@ -65,6 +65,12 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
   targetPosition,
   data,
 }) {
+  const pack = data as EdgePackage;
+  const getColor = pack.getColor;
+  const color = getColor !== undefined ? getColor(id) : Black;
+  const style: CSSProperties = {
+    stroke: color,
+  };
   const p1x: number = sourceX + 40;
   const p1y: number = sourceY + 30;
   const p2x: number = sourceX + 100;
@@ -115,31 +121,31 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
     <>
       <path
         id={id}
-        style={{ stroke: Black }}
+        style={style}
         className="react-flow__edge-path"
         d={edgePath1}
       />
       <path
         id={id + 2}
-        style={{ stroke: Black }}
+        style={style}
         className="react-flow__edge-path"
         d={edgePath2}
       />
       <path
         id={id + 3}
-        style={{ stroke: Black }}
+        style={style}
         className="react-flow__edge-path"
         d={edgePath3}
       />
       <path
         id={id + 4}
-        style={{ stroke: Black }}
+        style={style}
         className="react-flow__edge-path"
         d={edgePath4}
       />
-      <Marker x={targetX} y={targetY} />
+      <Marker x={targetX} y={targetY} color={color} />
       <EdgeLabel
-        payload={data as EdgePackage}
+        payload={pack}
         x={centerX}
         y={centerY}
         keytext={source + '#' + target}
@@ -160,6 +166,12 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
   targetPosition,
   data,
 }) {
+  const pack = data as EdgePackage;
+  const getColor = pack.getColor;
+  const color = getColor !== undefined ? getColor(id) : Black;
+  const style: CSSProperties = {
+    stroke: color,
+  };
   if (targetY > sourceY) {
     const edgePath1 = getSmoothStepPath({
       sourceX,
@@ -179,17 +191,17 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
       <>
         <path
           id={id}
-          style={{ stroke: Black }}
+          style={style}
           className="react-flow__edge-path"
           d={edgePath1}
         />
         <EdgeLabel
-          payload={data as EdgePackage}
+          payload={pack}
           x={centerX}
           y={centerY}
           keytext={source + '#' + target}
         />
-        <Marker x={targetX} y={targetY} />
+        <Marker x={targetX} y={targetY} color={color} />
       </>
     );
   }
@@ -255,31 +267,31 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
     <>
       <path
         id={id}
-        style={{ stroke: Black }}
+        style={style}
         className="react-flow__edge-path"
         d={edgePath1}
       />
       <path
         id={id + 2}
-        style={{ stroke: Black }}
+        style={style}
         className="react-flow__edge-path"
         d={edgePath2}
       />
       <path
         id={id + 3}
-        style={{ stroke: Black }}
+        style={style}
         className="react-flow__edge-path"
         d={edgePath3}
       />
       <path
         id={id + 4}
-        style={{ stroke: Black }}
+        style={style}
         className="react-flow__edge-path"
         d={edgePath4}
       />
       <Marker x={targetX} y={targetY} />
       <EdgeLabel
-        payload={data as EdgePackage}
+        payload={pack}
         x={centerX}
         y={centerY}
         keytext={source + '#' + target}

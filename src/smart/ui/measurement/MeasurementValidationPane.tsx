@@ -3,7 +3,7 @@
 
 import { Text, FormGroup, IToastProps } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import MGDButton from '../../MGDComponents/MGDButton';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import { EditorModel } from '../../model/editormodel';
@@ -78,6 +78,8 @@ const MeasureCheckPane: React.FC<{
   }
 
   const profiles = useMemo(() => Object.values(model.views), [model]);
+
+  useEffect(() => reset, [branchOnly, model]);
 
   return (
     <MGDSidebar>

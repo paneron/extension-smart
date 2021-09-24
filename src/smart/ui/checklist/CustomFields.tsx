@@ -1,0 +1,85 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { Checkbox } from '@blueprintjs/core';
+import { jsx } from '@emotion/react';
+import React from 'react';
+import { mgd_label } from '../../../css/form';
+import { ChecklistPackage, getCheckListId } from '../../model/checklist';
+import { MMELDataAttribute } from '../../serialize/interface/datainterface';
+import {
+  MMELProvision,
+  MMELReference,
+} from '../../serialize/interface/supportinterface';
+import {
+  DescribeAttribute,
+  DescribeProvision,
+} from '../common/description/ComponentDescription';
+import ChecklistAttribute from './AttributeField';
+import ChecklistProvision from './ProvisionField';
+
+export const CustomCLAttribute: React.FC<{
+  att: MMELDataAttribute;
+  getRefById?: (id: string) => MMELReference | null;
+  data: unknown;
+  dcid: string;
+}> = function (props) {
+  const { att, data, dcid } = props;
+
+  const pack = data as ChecklistPackage;
+  const { onProgressChange } = pack.callback;
+  const result = pack.result;
+  const aid = getCheckListId(att, dcid);
+  const item = result !== undefined ? result.checklist[aid] : undefined;
+  return item !== undefined ? (
+    <ChecklistAttribute
+      {...props}
+      progress={item.progress}
+      onProgressChange={x => onProgressChange(aid, x)}
+    />
+  ) : (
+    <DescribeAttribute {...props} />
+  );
+};
+
+export const CustomCLProvision: React.FC<{
+  provision: MMELProvision;
+  getRefById?: (id: string) => MMELReference | null;
+  data: unknown;
+}> = function (props) {
+  const { provision, data } = props;
+  const pack = data as ChecklistPackage;
+  const { onProgressChange } = pack.callback;
+  const result = pack.result;
+  const proid = getCheckListId(provision);
+  const item = result !== undefined ? result.checklist[proid] : undefined;
+  const progress = item !== undefined ? item.progress : 0;
+  return item !== undefined ? (
+    <ChecklistProvision
+      {...props}
+      progress={progress}
+      onProgressChange={x => onProgressChange(proid, x)}
+    />
+  ) : (
+    <DescribeProvision {...props} />
+  );
+};
+
+export const CLDescriptionItem: React.FC<{
+  label?: string;
+  value: string;
+  progress: number;
+  onChange: () => void;
+  children?: React.ReactNode;
+}> = function ({ label, value, progress, onChange, children }): JSX.Element {
+  return (
+    <p>
+      <Checkbox checked={progress === 100} onChange={onChange}>
+        <label css={mgd_label}>
+          {label === undefined ? value : `${label}: ${value}`}
+          {children}
+        </label>
+      </Checkbox>
+    </p>
+  );
+};

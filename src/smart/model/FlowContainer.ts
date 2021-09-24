@@ -25,6 +25,7 @@ export interface EdgePackage {
   id: string;
   condition: string;
   removeEdge: (id: string) => void;
+  getColor?: (id: string) => string;
 }
 
 export interface DataLinkContainer {
@@ -54,6 +55,7 @@ export interface NodeCallBack {
   ComponentShortDescription?: React.FC<{ id: string }>;
   MappingList?: React.FC<{ id: string }>;
   onDataWorkspaceActive?: (id: string) => void;
+  NodeAddon?: React.FC<{ id: string }>;
 }
 
 export interface NodeContainer {
@@ -66,7 +68,9 @@ export interface NodeContainer {
 export function createEdgeContainer(
   e: MMELEdge,
   isDelete = false,
-  removeEdge: (id: string) => void = () => {}
+  removeEdge: (id: string) => void = () => {},
+  getEdgeColor?: (id: string) => string,
+  isAnimated?: (id: string) => boolean
 ): EdgeContainer {
   return {
     id: e.id,
@@ -77,8 +81,9 @@ export function createEdgeContainer(
       id: isDelete ? e.id : '',
       condition: e.description,
       removeEdge: removeEdge,
+      getColor: getEdgeColor,
     },
-    animated: false,
+    animated: isAnimated !== undefined ? isAnimated(e.id) : false,
   };
 }
 
@@ -126,6 +131,7 @@ export function getEditorNodeCallBack(props: {
   MappingList?: React.FC<{ id: string }>;
   getSVGColorById?: (id: string) => string;
   onDataWorkspaceActive?: (id: string) => void;
+  NodeAddon?: React.FC<{ id: string }>;
 }): NodeCallBack {
   const {
     type,
@@ -139,6 +145,7 @@ export function getEditorNodeCallBack(props: {
     ComponentShortDescription,
     MappingList,
     onDataWorkspaceActive,
+    NodeAddon,
   } = props;
 
   function getRoleById(id: string): MMELRole | null {
@@ -157,5 +164,6 @@ export function getEditorNodeCallBack(props: {
     ComponentShortDescription,
     MappingList,
     onDataWorkspaceActive,
+    NodeAddon,
   };
 }

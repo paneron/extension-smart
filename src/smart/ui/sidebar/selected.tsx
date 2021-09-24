@@ -13,6 +13,11 @@ import {
 } from '../../utils/constants';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import { Describe } from './SelectedComponents';
+import { MMELDataAttribute } from '../../serialize/interface/datainterface';
+import {
+  MMELProvision,
+  MMELReference,
+} from '../../serialize/interface/supportinterface';
 
 export const SelectedNodeDescription: React.FC<{
   model: EditorModel;
@@ -23,7 +28,23 @@ export const SelectedNodeDescription: React.FC<{
     id: string
   ) => void;
   onSubprocessClick?: (pid: string) => void;
-}> = function ({ model, setDialog, onSubprocessClick, pageid }) {
+  CustomAttribute?: React.FC<{
+    att: MMELDataAttribute;
+    getRefById?: (id: string) => MMELReference | null;
+    dcid: string;
+  }>;
+  CustomProvision?: React.FC<{
+    provision: MMELProvision;
+    getRefById?: (id: string) => MMELReference | null;
+  }>;
+}> = function ({
+  model,
+  setDialog,
+  onSubprocessClick,
+  pageid,
+  CustomAttribute,
+  CustomProvision,
+}) {
   const selected = useStoreState(store => store.selectedElements);
 
   const elm: EdtiorNodeWithInfoCallback | null = getSelectedElement(selected);
@@ -59,6 +80,8 @@ export const SelectedNodeDescription: React.FC<{
           setDialog={setDialog}
           onSubprocessClick={onSubprocessClick}
           page={model.pages[pageid]}
+          CustomAttribute={CustomAttribute}
+          CustomProvision={CustomProvision}
         />
       ) : (
         'Nothing is selected'

@@ -22,6 +22,7 @@ import {
 } from '../../model/editormodel';
 import { EdtiorNodeWithInfoCallback } from '../../model/FlowContainer';
 import { DataType } from '../../serialize/interface/baseinterface';
+import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
 import {
   MMELProvision,
@@ -60,20 +61,34 @@ const NODE_DETAIL_VIEWS: Record<
       id: string
     ) => void;
     onSubprocessClick?: (pid: string) => void;
+    CustomAttribute?: React.FC<{
+      att: MMELDataAttribute;
+      getRefById?: (id: string) => MMELReference | null;
+      dcid: string;
+    }>;
+    CustomProvision?: React.FC<{
+      provision: MMELProvision;
+      getRefById?: (id: string) => MMELReference | null;
+    }>;
   }>
 > = {
-  [DataType.DATACLASS]: ({ node, getRefById }) =>
+  [DataType.DATACLASS]: ({ node, getRefById, CustomAttribute }) =>
     isEditorDataClass(node) ? (
-      <DescribeDC dc={node as EditorDataClass} getRefById={getRefById} />
+      <DescribeDC
+        dc={node as EditorDataClass}
+        getRefById={getRefById}
+        CustomAttribute={CustomAttribute}
+      />
     ) : (
       <></>
     ),
-  [DataType.REGISTRY]: ({ node, getRefById, getDCById }) =>
+  [DataType.REGISTRY]: ({ node, getRefById, getDCById, CustomAttribute }) =>
     isEditorRegistry(node) ? (
       <DescribeRegistry
         reg={node}
         getRefById={getRefById}
         getDataClassById={getDCById}
+        CustomAttribute={CustomAttribute}
       />
     ) : (
       <></>
@@ -122,6 +137,7 @@ const NODE_DETAIL_VIEWS: Record<
     getRefById,
     setDialog,
     onSubprocessClick,
+    CustomProvision,
   }) =>
     isEditorProcess(node) ? (
       <ProcessQuickEdit
@@ -130,6 +146,7 @@ const NODE_DETAIL_VIEWS: Record<
         getRefById={getRefById}
         setDialog={setDialog}
         onSubprocessClick={onSubprocessClick}
+        CustomProvision={CustomProvision}
         {...node}
       />
     ) : (
@@ -147,7 +164,24 @@ export const Describe: React.FC<{
   ) => void;
   onSubprocessClick?: (pid: string) => void;
   page: EditorSubprocess;
-}> = function ({ node, model, setDialog, onSubprocessClick, page }) {
+  CustomAttribute?: React.FC<{
+    att: MMELDataAttribute;
+    getRefById?: (id: string) => MMELReference | null;
+    dcid: string;
+  }>;
+  CustomProvision?: React.FC<{
+    provision: MMELProvision;
+    getRefById?: (id: string) => MMELReference | null;
+  }>;
+}> = function ({
+  node,
+  model,
+  setDialog,
+  onSubprocessClick,
+  page,
+  CustomAttribute,
+  CustomProvision,
+}) {
   function getRefById(id: string): MMELReference | null {
     return getEditorRefById(model, id);
   }
@@ -179,6 +213,8 @@ export const Describe: React.FC<{
       setDialog={setDialog}
       onSubprocessClick={onSubprocessClick}
       getOutgoingEdgesById={getOutgoingEdgesById}
+      CustomAttribute={CustomAttribute}
+      CustomProvision={CustomProvision}
     />
   );
 };
