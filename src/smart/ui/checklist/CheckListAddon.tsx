@@ -60,7 +60,17 @@ const CheckListAddon: React.FC<{
           <Checkbox checked={progress === 100} onChange={onChange} />
         </div>
       )}
-      {!isData && !isEGate && <div css={isEditorProcess(element) && element.page !== '' ? flow_progress_label_with_button : flow_progress_label}>{taskString}</div>}
+      {!isData && !isEGate && (
+        <div
+          css={
+            isEditorProcess(element) && element.page !== ''
+              ? flow_progress_label_with_button
+              : flow_progress_label
+          }
+        >
+          {taskString}
+        </div>
+      )}
       <div css={flow_percentage_label}>
         {isData ? taskString : progress !== -1 ? `${progressDisplay}%` : ''}
       </div>

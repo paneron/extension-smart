@@ -36,7 +36,15 @@ export function calculateTaskList(
   for (const x in model.elements) {
     const elm = model.elements[x];
     if (isEditorProcess(elm)) {
-      addProcessCLItem(elm, model, setting, records, inverted, egates, new Set<string>());
+      addProcessCLItem(
+        elm,
+        model,
+        setting,
+        records,
+        inverted,
+        egates,
+        new Set<string>()
+      );
     } else if (isEditorApproval(elm)) {
       addApprovalCLItem(elm, model, setting, records, inverted);
     } else if (isEditorRegistry(elm)) {
@@ -71,7 +79,7 @@ function addEGateCLItem(
   model: EditorModel,
   egates: EGatePathTaskList,
   inverted: ChecklistUpdateList,
-  adding: Set<string>,
+  adding: Set<string>
 ) {
   if (adding.has(egate.id)) {
     return;
@@ -175,7 +183,7 @@ function addProcessCLItem(
   records: ChecklistTaskList,
   inverted: ChecklistUpdateList,
   egates: EGatePathTaskList,
-  addingEGate: Set<string>,
+  addingEGate: Set<string>
 ): void {
   const pid = getCheckListId(process);
   const task: string[] = [];
@@ -205,7 +213,7 @@ function addProcessCLItem(
       model,
       new Set<string>(),
       egates,
-      inverted, 
+      inverted,
       addingEGate
     );
     for (const x of needed) {

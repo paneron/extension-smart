@@ -101,7 +101,7 @@ const ModelViewer: React.FC<{
   const [searchResult, setSearchResult] = useState<Set<string>>(
     new Set<string>()
   );
-  const [funPage, setFunPage] = useState<FunctionPage>(FunctionPage.Checklist);
+  const [funPage, setFunPage] = useState<FunctionPage>(FunctionPage.Simulation);
   const [view, setView] = useState<ViewFunctionInterface | undefined>(
     undefined
   );
@@ -132,6 +132,21 @@ const ModelViewer: React.FC<{
   }
 
   function onProcessClick(pageid: string, processid: string): void {
+    if (
+      view !== undefined &&
+      view.navigationEnabled !== undefined &&
+      !view.navigationEnabled
+    ) {
+      toaster.show({
+        message: view.navigationErrorMsg ?? 'Error',
+        intent: 'danger',
+      });
+    } else {
+      onNavigationDown(pageid, processid);
+    }
+  }
+
+  function onNavigationDown(pageid: string, processid: string): void {
     const mw = state.modelWrapper;
     mw.page = pageid;
     logger?.log('Go to page', pageid);
@@ -139,10 +154,25 @@ const ModelViewer: React.FC<{
     setState({ ...state });
   }
 
-  function drillUp(): void {
+  function onNavigationUp(): void {
     if (state.history.items.length > 0) {
       state.modelWrapper.page = popPage(state.history);
       setState({ ...state });
+    }
+  }
+
+  function drillUp(): void {
+    if (
+      view !== undefined &&
+      view.navigationEnabled !== undefined &&
+      !view.navigationEnabled
+    ) {
+      toaster.show({
+        message: view.navigationErrorMsg ?? 'Error',
+        intent: 'danger',
+      });
+    } else {
+      onNavigationUp();
     }
   }
 
@@ -199,7 +229,16 @@ const ModelViewer: React.FC<{
       key: 'simulation',
       title: FuntionNames[FunctionPage.Simulation],
       collapsedByDefault: false,
-      content: <SimulationPane model={model} setView={setView} page={state.modelWrapper.page}/>,
+      content: (
+        <SimulationPane
+          model={model}
+          setView={setView}
+          page={state.modelWrapper.page}
+          history={state.history}
+          drillUp={onNavigationUp}
+          goToPage={onNavigationDown}
+        />
+      ),
     },
     [FunctionPage.Measurement]: {
       key: 'measurement',

@@ -1,51 +1,35 @@
-// export function getSimulationView(
-//   result: string,
-//   CustomAttribute: React.FC<{
-//     att: MMELDataAttribute;
-//     getRefById?: (id: string) => MMELReference | null;
-//     data: unknown;
-//     dcid: string;
-//   }>,
-//   CustomProvision: React.FC<{
-//     provision: MMELProvision;
-//     getRefById?: (id: string) => MMELReference | null;
-//     data: unknown;
-//   }>,
-//   getEdgeColor: (id: string, pageid: string, data: unknown) => string,
-//   isEdgeAnimated: (id: string, pageid: string, data: unknown) => boolean
-// ): ViewFunctionInterface {
-//   return {
-//     getStyleById,
-//     getSVGColorById,
-//     data: result,
-//     NodeAddon: CheckListAddon,
-//     CustomAttribute,
-//     CustomProvision,
-//     getEdgeColor,
-//     isEdgeAnimated,
-//   };
-// }
+import { CSSROOTVARIABLES } from '../../../css/root.css';
+import { flow_node__highlighed } from '../../../css/visual';
+import { SimulationState } from '../../model/simulation';
+import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
 
-// function getStyleById(id: string, _: string, data: unknown) {
-//   const pack = data as ChecklistPackage;
-//   const result = pack.result;
-//   const item = result.checklist[id];
-//   if (item !== undefined) {
-//     return flow_node__highlighed(item.progress === 100 ? okcolor : normalcolor);
-//   }
-//   return flow_node__highlighed(normalcolor);
-// }
+const selectedcolor = 'lightyellow';
+const normalcolor = CSSROOTVARIABLES['--plain-node-color'];
 
-// function getSVGColorById(id: string, _: string, data: unknown): string {
-//   const pack = data as ChecklistPackage;
-//   const result = pack.result;
-//   const item = result.checklist[id];
-//   if (item !== undefined) {
-//     return item.progress === 100 ? okcolor : 'none';
-//   }
-//   const egate = result.egatelist[id];
-//   if (egate !== undefined) {
-//     return egate.progress === 100 ? okcolor : 'none';
-//   }
-//   return 'none';
-// }
+export function getSimulationView(
+  result: SimulationState
+): ViewFunctionInterface {
+  return {
+    getStyleById,
+    getSVGColorById,
+    data: result,
+    navigationEnabled: false,
+    navigationErrorMsg: 'Please turn off simulation for free navigation',
+  };
+}
+
+function getStyleById(id: string, pageid: string, data: unknown) {
+  const { spageid, sid } = data as SimulationState;
+  if (spageid === pageid && sid === id) {
+    return flow_node__highlighed(selectedcolor);
+  }
+  return flow_node__highlighed(normalcolor);
+}
+
+function getSVGColorById(id: string, pageid: string, data: unknown): string {
+  const { spageid, sid } = data as SimulationState;
+  if (spageid === pageid && sid === id) {
+    return selectedcolor;
+  }
+  return 'none';
+}

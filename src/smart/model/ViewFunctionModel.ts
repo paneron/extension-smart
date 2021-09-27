@@ -28,4 +28,6 @@ export interface ViewFunctionInterface {
   getEdgeColor?: (id: string, pageid: string, data: unknown) => string;
   isEdgeAnimated?: (id: string, pageid: string, data: unknown) => boolean;
   data: unknown; // will be passed to the functions for handling
+  navigationEnabled?: boolean; // control whether drill up and subprocess is allowed
+  navigationErrorMsg?: string; // error message shown to user when navigationEnabled is violated
 }

@@ -94,11 +94,22 @@ export const DeletableNodes = [
   DataType.ENDEVENT,
 ] as const;
 
+export const MainFlowNodes = [
+  DataType.PROCESS,
+  DataType.APPROVAL,
+  DataType.TIMEREVENT,
+  DataType.SIGNALCATCHEVENT,
+  DataType.EGATE,
+  DataType.ENDEVENT,
+  DataType.STARTEVENT,
+] as const;
+
 export type NewComponentTypes = typeof NewComponents[number];
 export type DescribableNodeTypes = typeof DescribableNodes[number];
 export type SelectableNodeTypes = typeof SelectableNodes[number];
 export type EditableNodeTypes = typeof EditableNodes[number];
 export type DeletableNodeTypes = typeof DeletableNodes[number];
+export type MainFlowNodeTypes = typeof MainFlowNodes[number];
 
 export interface LoggerInterface {
   log: (...args: unknown[]) => void;

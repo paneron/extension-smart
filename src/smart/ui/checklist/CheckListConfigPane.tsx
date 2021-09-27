@@ -55,7 +55,7 @@ const ChecklistConfigPane: React.FC<{
   function action() {
     if (result !== undefined) {
       clean();
-    } else {      
+    } else {
       const [task, egates, inverted] = calculateTaskList(model, modality);
       const result = initResult(task, egates, inverted, model);
       const callback: ChecklistCallback = {
@@ -68,7 +68,7 @@ const ChecklistConfigPane: React.FC<{
         CustomCLProvision,
         getEdgeColor,
         isEdgeAnimated
-      );      
+      );
       setView(view);
     }
   }

@@ -32,7 +32,7 @@ export const ProcessQuickEdit: React.FC<{
   process: EditorProcess;
   onSubprocessClick?: (pid: string) => void;
   getRoleById: (id: string) => MMELRole | null;
-  getRefById: (id: string) => MMELReference | null;
+  getRefById?: (id: string) => MMELReference | null;
   getProvisionById: (id: string) => MMELProvision | null;
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,

@@ -206,8 +206,12 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
   );
 };
 
-export const StartComponent: FC<NodeProps> = function () {
-  const color = 'none';
+export const StartComponent: FC<NodeProps> = function ({ data }) {
+  const callback = data as NodeCallBack;
+  const color =
+    callback.getSVGColorById !== undefined
+      ? callback.getSVGColorById(data.id)
+      : 'none';
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
@@ -216,8 +220,12 @@ export const StartComponent: FC<NodeProps> = function () {
   );
 };
 
-export const EndComponent: FC<NodeProps> = function () {
-  const color = 'none';
+export const EndComponent: FC<NodeProps> = function ({ data }) {
+  const callback = data as NodeCallBack;
+  const color =
+    callback.getSVGColorById !== undefined
+      ? callback.getSVGColorById(data.id)
+      : 'none';
   return (
     <>
       <Handle type="target" position={Position.Top} css={handlecss} />

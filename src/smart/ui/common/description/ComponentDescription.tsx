@@ -25,7 +25,6 @@ import {
   EditableNodeTypes,
   EditAction,
 } from '../../../utils/constants';
-import { NodeCallBack } from '../../../model/FlowContainer';
 import { EditButton, RemoveButton } from '../buttons';
 import {
   ApprovalRecordList,
@@ -46,7 +45,7 @@ export const DescribeStart: React.FC = function () {
 };
 
 export const DescribeEnd: React.FC<{
-  end: EditorEndEvent & NodeCallBack;
+  end: EditorEndEvent;
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
@@ -68,10 +67,10 @@ export const DescribeEnd: React.FC<{
 };
 
 export const DescribeApproval: React.FC<{
-  app: EditorApproval & NodeCallBack;
+  app: EditorApproval;
   getRoleById: (id: string) => MMELRole | null;
-  getRefById: (id: string) => MMELReference | null;
-  getRegistryById: (id: string) => EditorRegistry | null;
+  getRefById?: (id: string) => MMELReference | null;
+  getRegistryById?: (id: string) => EditorRegistry | null;
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
@@ -79,12 +78,14 @@ export const DescribeApproval: React.FC<{
   ) => void;
 }> = function ({ app, getRoleById, getRefById, getRegistryById, setDialog }) {
   const regs: EditorRegistry[] = [];
-  app.records.forEach(r => {
-    const ret = getRegistryById(r);
-    if (ret !== null) {
-      regs.push(ret);
-    }
-  });
+  if (getRegistryById !== undefined) {
+    app.records.forEach(r => {
+      const ret = getRegistryById(r);
+      if (ret !== null) {
+        regs.push(ret);
+      }
+    });
+  }
   return (
     <>
       {setDialog !== undefined && (
@@ -107,21 +108,24 @@ export const DescribeApproval: React.FC<{
       <ActorDescription role={getRoleById(app.approver)} label="Approver" />
       <NonEmptyFieldDescription label="Modality" value={app.modality} />
       <ApprovalRecordList regs={regs} />
-      <ReferenceList refs={app.ref} getRefById={getRefById} />
+      {getRefById !== undefined && (
+        <ReferenceList refs={app.ref} getRefById={getRefById} />
+      )}
     </>
   );
 };
 
 export const DescribeEGate: React.FC<{
-  egate: EditorEGate & NodeCallBack;
+  egate: EditorEGate;
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
     id: string
   ) => void;
-  getOutgoingEdgesById: (id: string) => MMELEdge[];
+  getOutgoingEdgesById?: (id: string) => MMELEdge[];
 }> = function ({ egate, setDialog, getOutgoingEdgesById }) {
-  const edges = getOutgoingEdgesById(egate.id);
+  const edges =
+    getOutgoingEdgesById !== undefined ? getOutgoingEdgesById(egate.id) : [];
   return (
     <>
       {setDialog !== undefined && (
@@ -144,7 +148,7 @@ export const DescribeEGate: React.FC<{
 };
 
 export const DescribeSignalCatch: React.FC<{
-  scEvent: EditorSignalEvent & NodeCallBack;
+  scEvent: EditorSignalEvent;
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
@@ -178,7 +182,7 @@ export const DescribeSignalCatch: React.FC<{
 };
 
 export const DescribeTimer: React.FC<{
-  timer: EditorTimerEvent & NodeCallBack;
+  timer: EditorTimerEvent;
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
@@ -202,7 +206,7 @@ export const DescribeTimer: React.FC<{
         </MGDButtonGroup>
       )}
       <DescriptionItem label="Timer Event" value={timer.id} />
-      <NonEmptyFieldDescription label="Type" value={timer.modelType} />
+      <NonEmptyFieldDescription label="Type" value={timer.type} />
       <NonEmptyFieldDescription label="Parameter" value={timer.para} />
     </>
   );
