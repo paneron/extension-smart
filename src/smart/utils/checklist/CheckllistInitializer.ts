@@ -36,7 +36,7 @@ export function calculateTaskList(
   for (const x in model.elements) {
     const elm = model.elements[x];
     if (isEditorProcess(elm)) {
-      addProcessCLItem(elm, model, setting, records, inverted, egates);
+      addProcessCLItem(elm, model, setting, records, inverted, egates, new Set<string>());
     } else if (isEditorApproval(elm)) {
       addApprovalCLItem(elm, model, setting, records, inverted);
     } else if (isEditorRegistry(elm)) {
@@ -53,7 +53,8 @@ export function calculateTaskList(
       model,
       new Set<string>(),
       egates,
-      inverted
+      inverted,
+      new Set<string>()
     );
     for (const x of needed) {
       task.push(x);
@@ -69,8 +70,13 @@ function addEGateCLItem(
   page: EditorSubprocess,
   model: EditorModel,
   egates: EGatePathTaskList,
-  inverted: ChecklistUpdateList
+  inverted: ChecklistUpdateList,
+  adding: Set<string>,
 ) {
+  if (adding.has(egate.id)) {
+    return;
+  }
+  adding.add(egate.id);
   const eid = getCheckListId(egate);
   const neighbor = page.neighbor[egate.id];
   const paths: EGatePath[] = [];
@@ -81,7 +87,7 @@ function addEGateCLItem(
       if (isEditorEgate(elm)) {
         if (elm.id !== egate.id) {
           needed.push(elm.id);
-          addEGateCLItem(elm, page, model, egates, inverted);
+          addEGateCLItem(elm, page, model, egates, inverted, adding);
         }
       } else {
         if (isEditorProcess(elm) || isEditorApproval(elm)) {
@@ -95,7 +101,8 @@ function addEGateCLItem(
             model,
             new Set<string>([egate.id]),
             egates,
-            inverted
+            inverted,
+            adding
           ),
         ];
       }
@@ -167,7 +174,8 @@ function addProcessCLItem(
   setting: ChecklistSetting,
   records: ChecklistTaskList,
   inverted: ChecklistUpdateList,
-  egates: EGatePathTaskList
+  egates: EGatePathTaskList,
+  addingEGate: Set<string>,
 ): void {
   const pid = getCheckListId(process);
   const task: string[] = [];
@@ -197,7 +205,8 @@ function addProcessCLItem(
       model,
       new Set<string>(),
       egates,
-      inverted
+      inverted, 
+      addingEGate
     );
     for (const x of needed) {
       task.push(x);
@@ -213,7 +222,8 @@ function visitNode(
   model: EditorModel,
   visited: Set<string>,
   egates: EGatePathTaskList,
-  inverted: ChecklistUpdateList
+  inverted: ChecklistUpdateList,
+  addingEGate: Set<string>
 ): string[] {
   if (visited.has(id)) {
     return [];
@@ -226,12 +236,12 @@ function visitNode(
       const elm = model.elements[x];
       if (isEditorEgate(elm)) {
         tasks.push(x);
-        addEGateCLItem(elm, page, model, egates, inverted);
+        addEGateCLItem(elm, page, model, egates, inverted, addingEGate);
       } else if (isEditorProcess(elm) || isEditorApproval(elm)) {
         tasks = [
           ...tasks,
           x,
-          ...visitNode(x, page, model, visited, egates, inverted),
+          ...visitNode(x, page, model, visited, egates, inverted, addingEGate),
         ];
       }
     }

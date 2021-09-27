@@ -4,7 +4,10 @@
   "description": "Paneron extension for HLS model editing",
   "main": "plugin.js",
   "repository": "https://github.com/paneron/extension-hls",
-  "author": "Ribose Inc. <open.source@ribose.com>",
+  "author": {
+    "name": "Ribose Inc.",
+    "email": "open.source@ribose.com"
+  },  
   "paneronExtension": {
     "title": "HLS",
     "iconURL": "https://www.glossarist.org/SymbolLoupe.png",

@@ -27,10 +27,19 @@ export const flow_checkbox = css`
   font-size: 12px;
 `;
 
-export const flow_progress_label = css`
+export const flow_progress_label_with_button = css`
   position: absolute;
   left: 0px;
   top: -25px;
+  width: 140px;
+  text-align: right;
+  font-size: 12px;
+`;
+
+export const flow_progress_label = css`
+  position: absolute;
+  left: 0px;
+  top: -20px;
   width: 140px;
   text-align: right;
   font-size: 12px;

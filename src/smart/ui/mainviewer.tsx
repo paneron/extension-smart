@@ -59,6 +59,7 @@ import {
   MMELReference,
 } from '../serialize/interface/supportinterface';
 import { MMELDataAttribute } from '../serialize/interface/datainterface';
+import SimulationPane from './sidebar/SimulationPane';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -198,7 +199,7 @@ const ModelViewer: React.FC<{
       key: 'simulation',
       title: FuntionNames[FunctionPage.Simulation],
       collapsedByDefault: false,
-      content: <>Simulation</>,
+      content: <SimulationPane model={model} setView={setView} page={state.modelWrapper.page}/>,
     },
     [FunctionPage.Measurement]: {
       key: 'measurement',

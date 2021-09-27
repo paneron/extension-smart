@@ -8,11 +8,13 @@ import {
   flow_checkbox,
   flow_percentage_label,
   flow_progress_label,
+  flow_progress_label_with_button,
 } from '../../../css/visual';
 import { ChecklistPackage } from '../../model/checklist';
 import {
   EditorNode,
   isEditorEgate,
+  isEditorProcess,
   isEditorRegistry,
 } from '../../model/editormodel';
 
@@ -58,9 +60,9 @@ const CheckListAddon: React.FC<{
           <Checkbox checked={progress === 100} onChange={onChange} />
         </div>
       )}
-      {!isData && !isEGate && <div css={flow_progress_label}>{taskString}</div>}
+      {!isData && !isEGate && <div css={isEditorProcess(element) && element.page !== '' ? flow_progress_label_with_button : flow_progress_label}>{taskString}</div>}
       <div css={flow_percentage_label}>
-        {isData ? taskString : `${progressDisplay}%`}
+        {isData ? taskString : progress !== -1 ? `${progressDisplay}%` : ''}
       </div>
     </>
   );
