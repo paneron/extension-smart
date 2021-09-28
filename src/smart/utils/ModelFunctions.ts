@@ -116,27 +116,31 @@ export function fillRDCS(
   }
 }
 
-export function referenceSorter(a: MMELReference, b: MMELReference): number {
-  if (a.document === b.document) {
-    const partsA = a.clause.split('.');
-    const partsB = b.clause.split('.');
-    let index = 0;
-    while (index < partsA.length && index < partsB.length) {
-      const numA = partsA[index];
-      const numB = partsB[index];
-      if (numA === numB) {
-        index++;
+export function clauseSorter(a: string, b: string):number {
+  const partsA = a.split('.');
+  const partsB = b.split('.');
+  let index = 0;
+  while (index < partsA.length && index < partsB.length) {
+    const numA = partsA[index];
+    const numB = partsB[index];
+    if (numA === numB) {
+      index++;
+    } else {
+      const xA = Number(numA);
+      const xB = Number(numB);
+      if (isNaN(xA) || isNaN(xB)) {
+        return numA.localeCompare(numB);
       } else {
-        const xA = Number(numA);
-        const xB = Number(numB);
-        if (isNaN(xA) || isNaN(xB)) {
-          return numA.localeCompare(numB);
-        } else {
-          return xA - xB;
-        }
+        return xA - xB;
       }
     }
-    return partsA.length - partsB.length;
+  }
+  return partsA.length - partsB.length;
+}
+
+export function referenceSorter(a: MMELReference, b: MMELReference): number {
+  if (a.document === b.document) {
+    return clauseSorter(a.clause, b.clause);
   }
   return a.document.localeCompare(b.document);
 }

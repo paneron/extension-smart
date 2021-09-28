@@ -61,16 +61,19 @@ import {
 import { MMELDataAttribute } from '../serialize/interface/datainterface';
 import SimulationPane from './sidebar/SimulationPane';
 import RegistrySummary from './summary/RegistrySummary';
+import ProvisionSettings from './summary/ProvisionSettings';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
+
 
 export enum FunctionPage {
   Simulation = 'simulation',
   Parameterized = 'para',
   Measurement = 'measurement',
   Checklist = 'checklist',
-  DataSummary = 'datasummary'
+  DataSummary = 'datasummary',
+  ProvisionSummary = "provisionsummary"
 }
 
 export const FuntionNames: Record<FunctionPage, string> = {
@@ -79,6 +82,7 @@ export const FuntionNames: Record<FunctionPage, string> = {
   [FunctionPage.Parameterized]: 'Parameterized view',
   [FunctionPage.Checklist]: 'Self-assessment checklist',
   [FunctionPage.DataSummary]: 'Registry summary',
+  [FunctionPage.ProvisionSummary]: 'Provision summary',
 };
 
 const ModelViewer: React.FC<{
@@ -275,6 +279,12 @@ const ModelViewer: React.FC<{
       title: FuntionNames[FunctionPage.DataSummary],
       collapsedByDefault: false,
       content: <RegistrySummary model={model} onChange={onPageAndHistroyChange} resetSearchElements={resetSearchElements}/>,
+    },
+    [FunctionPage.ProvisionSummary]: {
+      key: FunctionPage.ProvisionSummary,
+      title: FuntionNames[FunctionPage.ProvisionSummary],
+      collapsedByDefault: false,
+      content: <ProvisionSettings model={model}/>,
     },
   };
 

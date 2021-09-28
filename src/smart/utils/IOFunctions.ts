@@ -21,6 +21,8 @@ export enum FILE_TYPE {
   Workspace = 'workspace',
   JSON = 'json',
   Document = 'doc',
+  XML = 'xml',
+  CSV = 'csv'
 }
 
 export const FileTypeDescription: Record<
@@ -55,6 +57,16 @@ export const FileTypeDescription: Record<
     filtername: 'SMART document files',
     extension: 'sdc',
     openPrompt: 'Choose a SMART document file to open',
+  },
+  [FILE_TYPE.XML]: {
+    filtername: 'XML files',
+    extension: 'xml',
+    openPrompt: 'Choose an XML file to open',
+  },
+  [FILE_TYPE.CSV]: {
+    filtername: 'CSV files',
+    extension: 'csv',
+    openPrompt: 'Choose a CSV file to open',
   },
 };
 
