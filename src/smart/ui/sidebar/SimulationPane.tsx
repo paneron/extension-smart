@@ -60,15 +60,13 @@ const SimulationPane: React.FC<{
             onClick={clean}
             fill
             intent="primary"
-          >
-            {' '}
-            Stop{' '}
+          >            
+            Stop
           </Button>
         </>
       ) : elm !== undefined ? (
-        <Button onClick={() => onMove(elm.id)} fill intent="primary">
-          {' '}
-          Start simulation{' '}
+        <Button onClick={() => onMove(elm.id)} fill intent="primary">          
+          Start simulation
         </Button>
       ) : (
         <Text> Select a node to start simulation </Text>

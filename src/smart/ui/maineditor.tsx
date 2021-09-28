@@ -348,7 +348,7 @@ const ModelEditor: React.FC<{
         }
       >
         <MGDButton>Model</MGDButton>
-      </Popover2>
+      </Popover2>      
       <MGDButton
         type={MGDButtonType.Primary}
         disabled={state.history.items.length <= 1}

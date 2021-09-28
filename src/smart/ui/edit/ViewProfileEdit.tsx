@@ -143,10 +143,9 @@ const ViewEditItemPage: React.FC<{
           setObject({ ...view });
         }}
       />
-      <Text>
-        {' '}
+      <Text>        
         Select the settings you want to include in the profile and provide the
-        (default) value for the settings.{' '}
+        (default) value for the settings.
       </Text>
       {Object.values(vars).map(v => {
         if (v.type !== VarType.DERIVED) {

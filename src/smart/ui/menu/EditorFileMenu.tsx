@@ -59,6 +59,11 @@ const EditorFileMenu: React.FC<{
     });
   }
 
+  // Settings
+  function handleImportModel() {
+    setDialogType(DiagTypes.IMPORTMODEL);
+  }
+
   return (
     <Menu>
       <MenuItem text="New" onClick={handleNew} icon="document" />
@@ -86,6 +91,11 @@ const EditorFileMenu: React.FC<{
         text="Model settings…"
         onClick={handleOpenSettings}
         icon="settings"
+      />
+      <MenuItem
+        text="Import from model"
+        onClick={handleImportModel}
+        icon="import"
       />
     </Menu>
   );

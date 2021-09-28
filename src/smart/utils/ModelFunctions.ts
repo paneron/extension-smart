@@ -207,6 +207,13 @@ export function findUniqueID(prefix: string, ids: Record<string, MMELObject>) {
   return name;
 }
 
+export function trydefaultID(name: string, ids: Record<string, MMELObject>) {
+  if (ids[name] !== undefined) {
+    return findUniqueID(name, ids);
+  }
+  return name;  
+}
+
 export function updatePageElement(
   page: EditorSubprocess,
   oldId: string,

@@ -72,9 +72,8 @@ const SimulationDetails: React.FC<{
 
   const goDownButton =
     isEditorProcess(elm) && elm.page !== '' ? (
-      <Button onClick={() => goSubProcess(elm.page)} fill>
-        {' '}
-        Go into subprocess{' '}
+      <Button onClick={() => goSubProcess(elm.page)} fill>        
+        Go into subprocess
       </Button>
     ) : undefined;
 
@@ -91,8 +90,7 @@ const SimulationDetails: React.FC<{
         <legend>Next step</legend>
         {goDownButton}
         {edges.length > 1 ? (
-          <ul style={{ paddingLeft: 10 }}>
-            {' '}
+          <ul style={{ paddingLeft: 10 }}>            
             {edges.map(edge => (
               <PathOption
                 key={edge.id}
@@ -128,8 +126,7 @@ const PathOption: React.FC<{
   const elm = model.elements[to];
   const condition = description !== '' ? <p> Condition: {description} </p> : '';
   return elm !== undefined ? (
-    <li>
-      {' '}
+    <li>      
       <p>{getName(elm)}</p>
       {condition} <Button onClick={() => onMove(to)}>Select this path</Button>
     </li>

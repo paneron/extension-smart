@@ -20,6 +20,7 @@ import EditTimerPage from '../edit/timeredit';
 import EditSignalEventPage from '../edit/signaleventedit';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
 import { IToastProps } from '@blueprintjs/core';
+import ImportModelDiag from './ImportModelDiag';
 
 export enum DiagTypes {
   SETTING = 'setting',
@@ -29,6 +30,7 @@ export enum DiagTypes {
   EDITTIMER = 'timer',
   EDITSIGNAL = 'signal',
   EDITEGATE = 'gate',
+  IMPORTMODEL = 'import'
 }
 
 export enum MapperDiagTypes {
@@ -176,6 +178,19 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
       />
     ),
   },
+  [DiagTypes.IMPORTMODEL]: {
+    title: 'Import from model',
+    fullscreen: false,
+    Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
+      <ImportModelDiag
+        modelwrapper={modelwrapper}
+        setModel={(m: EditorModel) =>
+          updateModel(m, setModelWrapper, modelwrapper)
+        }        
+        closeDialog={cancel}
+      />
+    ),
+  }
 };
 
 export const SetDiagAction: Record<
