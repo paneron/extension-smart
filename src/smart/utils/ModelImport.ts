@@ -264,7 +264,7 @@ function addRefIfNotFound (
   if (refMap[id] !== undefined) {
     return model.refs[refMap[id]];
   }
-  const newid = trydefaultID(id, model.elements);
+  const newid = trydefaultID(id, model.refs);
   refMap[id] = newid;
 
   const r = rmodel.refs[id];  

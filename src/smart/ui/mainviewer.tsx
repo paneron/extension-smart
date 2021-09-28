@@ -60,6 +60,7 @@ import {
 } from '../serialize/interface/supportinterface';
 import { MMELDataAttribute } from '../serialize/interface/datainterface';
 import SimulationPane from './sidebar/SimulationPane';
+import RegistrySummary from './summary/RegistrySummary';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -69,6 +70,7 @@ export enum FunctionPage {
   Parameterized = 'para',
   Measurement = 'measurement',
   Checklist = 'checklist',
+  DataSummary = 'datasummary'
 }
 
 export const FuntionNames: Record<FunctionPage, string> = {
@@ -76,6 +78,7 @@ export const FuntionNames: Record<FunctionPage, string> = {
   [FunctionPage.Measurement]: 'Measurement validation',
   [FunctionPage.Parameterized]: 'Parameterized view',
   [FunctionPage.Checklist]: 'Self-assessment checklist',
+  [FunctionPage.DataSummary]: 'Registry summary',
 };
 
 const ModelViewer: React.FC<{
@@ -226,7 +229,7 @@ const ModelViewer: React.FC<{
 
   const FunPages: Record<FunctionPage, SidebarBlockConfig> = {
     [FunctionPage.Simulation]: {
-      key: 'simulation',
+      key: FunctionPage.Simulation,
       title: FuntionNames[FunctionPage.Simulation],
       collapsedByDefault: false,
       content: (
@@ -241,7 +244,7 @@ const ModelViewer: React.FC<{
       ),
     },
     [FunctionPage.Measurement]: {
-      key: 'measurement',
+      key: FunctionPage.Measurement,
       title: FuntionNames[FunctionPage.Measurement],
       collapsedByDefault: false,
       content: (
@@ -249,7 +252,7 @@ const ModelViewer: React.FC<{
       ),
     },
     [FunctionPage.Parameterized]: {
-      key: 'filter',
+      key: FunctionPage.Parameterized,
       title: FuntionNames[FunctionPage.Parameterized],
       collapsedByDefault: false,
       content: (
@@ -262,10 +265,16 @@ const ModelViewer: React.FC<{
       ),
     },
     [FunctionPage.Checklist]: {
-      key: 'checklist',
+      key: FunctionPage.Checklist,
       title: FuntionNames[FunctionPage.Checklist],
       collapsedByDefault: false,
       content: <ChecklistConfigPane setView={setView} model={model} />,
+    },
+    [FunctionPage.DataSummary]: {
+      key: FunctionPage.DataSummary,
+      title: FuntionNames[FunctionPage.DataSummary],
+      collapsedByDefault: false,
+      content: <RegistrySummary model={model} onChange={onPageAndHistroyChange} resetSearchElements={resetSearchElements}/>,
     },
   };
 
