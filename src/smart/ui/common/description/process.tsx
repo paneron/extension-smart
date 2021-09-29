@@ -3,32 +3,26 @@
 
 import { jsx } from '@emotion/react';
 import React from 'react';
-import { EditorProcess } from '../../model/editormodel';
-import { DataType } from '../../serialize/interface/baseinterface';
+import { EditorProcess } from '../../../model/editormodel';
+import { DataType } from '../../../serialize/interface/baseinterface';
 import {
   MMELProvision,
   MMELReference,
   MMELRole,
-} from '../../serialize/interface/supportinterface';
+} from '../../../serialize/interface/supportinterface';
 import {
   DeletableNodeTypes,
   EditableNodeTypes,
   EditAction,
-} from '../../utils/constants';
-import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
-import MGDButton from '../../MGDComponents/MGDButton';
+} from '../../../utils/constants';
+import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
+import MGDButton from '../../../MGDComponents/MGDButton';
 import { Tooltip2 } from '@blueprintjs/popover2';
-import { EditButton, RemoveButton } from '../common/buttons';
-import {
-  ActorDescription,
-  DescriptionItem,
-} from '../common/description/fields';
-import {
-  MeasurementList,
-  ProvisionList,
-} from '../common/description/ComponentList';
+import { EditButton, RemoveButton } from '../buttons';
+import { ActorDescription, DescriptionItem } from './fields';
+import { MeasurementList, ProvisionList } from './ComponentList';
 
-export const ProcessQuickEdit: React.FC<{
+export const DescribeProcess: React.FC<{
   process: EditorProcess;
   onSubprocessClick?: (pid: string) => void;
   getRoleById: (id: string) => MMELRole | null;

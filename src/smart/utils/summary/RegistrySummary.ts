@@ -1,6 +1,17 @@
-import { EditorModel, EditorNode, EditorSubprocess, isEditorApproval, isEditorProcess } from "../../model/editormodel";
-import { addToHistory, cloneHistory, createPageHistory, PageHistory } from "../../model/history";
-import { LegendInterface } from "../../model/States";
+import {
+  EditorModel,
+  EditorNode,
+  EditorSubprocess,
+  isEditorApproval,
+  isEditorProcess,
+} from '../../model/editormodel';
+import {
+  addToHistory,
+  cloneHistory,
+  createPageHistory,
+  PageHistory,
+} from '../../model/history';
+import { LegendInterface } from '../../model/States';
 
 export enum SearchHighlightType {
   SELECTED = 'selected',
@@ -16,12 +27,11 @@ export interface RegSummarySearchRecord {
   history: PageHistory;
 }
 
-export const DataSummaryStyles: Record<SearchHighlightType, LegendInterface> =
-  {
-    [SearchHighlightType.SELECTED]: { label: 'Selected', color: 'lightyellow' },
-    [SearchHighlightType.MATCH]: { label: 'Match', color: 'lightblue' },
-    [SearchHighlightType.NONE]: { label: 'Not match', color: '' },
-  };
+export const DataSummaryStyles: Record<SearchHighlightType, LegendInterface> = {
+  [SearchHighlightType.SELECTED]: { label: 'Selected', color: 'lightyellow' },
+  [SearchHighlightType.MATCH]: { label: 'Match', color: 'lightblue' },
+  [SearchHighlightType.NONE]: { label: 'Not match', color: '' },
+};
 
 export function computeRegistrySummary(
   model: EditorModel,
@@ -35,14 +45,7 @@ export function computeRegistrySummary(
     type: 'modelwrapper',
   });
   if (page !== undefined && id !== '') {
-    searchPageForComponent(
-      page,
-      model,
-      id,
-      result,
-      new Set<string>(),
-      history
-    );
+    searchPageForComponent(page, model, id, result, new Set<string>(), history);
   }
   return result;
 }
@@ -110,14 +113,14 @@ function searchPageForComponent(
             });
           }
         }
-      }            
+      }
     }
-  }  
+  }
 }
 
 function getSearchDescription(node: EditorNode): string {
   if (isEditorProcess(node) || isEditorApproval(node)) {
     return node.name;
-  }  
+  }
   return node.id;
 }

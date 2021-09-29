@@ -115,26 +115,22 @@ const EditProcessPage: React.FC<{
           onCancelClick={closeDialog}
         />
         <NormalTextField
-          key="field#processID"
           text="Process ID"
           value={editing.id}
           onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
         />
         <NormalTextField
-          key="field#processName"
           text="Process Name"
           value={editing.name}
           onChange={x => setEditing({ ...editing, name: x })}
         />
         <NormalComboBox
-          key="field#processStart"
           text="Subprocess"
           value={editing.page === '' ? SUBPROCESSNO : SUBPROCESSYES}
           options={SUBPROCESSOPTIONS}
           onChange={setPStart}
         />
         <ReferenceSelector
-          key="field#Actor"
           text="Actor"
           filterName="Actor filter"
           value={editing.actor}
@@ -142,7 +138,6 @@ const EditProcessPage: React.FC<{
           update={x => setEditing({ ...editing, actor: roles[x] })}
         />
         <MultiReferenceSelector
-          key="field#inputSelector"
           text="Input data registry"
           options={regs}
           values={editing.input}
@@ -157,7 +152,6 @@ const EditProcessPage: React.FC<{
           }}
         />
         <MultiReferenceSelector
-          key="field#outputSelector"
           text="Output data registry"
           options={regs}
           values={editing.output}

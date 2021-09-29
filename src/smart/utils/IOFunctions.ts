@@ -22,7 +22,7 @@ export enum FILE_TYPE {
   JSON = 'json',
   Document = 'doc',
   XML = 'xml',
-  CSV = 'csv'
+  CSV = 'csv',
 }
 
 export const FileTypeDescription: Record<

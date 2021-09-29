@@ -1,9 +1,10 @@
-import { MMELNode, MMELObject } from './baseinterface';
+import { DataType, MMELNode, MMELObject } from './baseinterface';
 
 export interface MMELSubprocessComponent extends MMELObject {
   element: string;
   x: number;
   y: number;
+  datatype: DataType.SUBPROCESSCOMPONENT;
 }
 
 export interface MMELEdge extends MMELObject {
@@ -12,6 +13,7 @@ export interface MMELEdge extends MMELObject {
   to: string;
   description: string;
   condition: string;
+  datatype: DataType.EDGE;
 }
 
 export interface MMELSubprocess extends MMELObject {
@@ -19,10 +21,10 @@ export interface MMELSubprocess extends MMELObject {
   childs: Record<string, MMELSubprocessComponent>;
   edges: Record<string, MMELEdge>;
   data: Record<string, MMELSubprocessComponent>;
+  datatype: DataType.SUBPROCESS;
 }
 
-export type MMELGateway = MMELNode;
-
-export interface MMELEGate extends MMELGateway {
+export interface MMELEGate extends MMELNode {
   label: string;
+  datatype: DataType.EGATE;
 }

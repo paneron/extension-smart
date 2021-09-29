@@ -179,7 +179,7 @@ function buildStructure(mw: ModelWrapper): ModelWrapper {
   return mw;
 }
 
-export function getReactFlowElementsFrom(
+export function getEditorReactFlowElementsFrom(
   mw: ModelWrapper,
   dvisible: boolean,
   edgeDelete: boolean,

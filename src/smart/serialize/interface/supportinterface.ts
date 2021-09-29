@@ -15,6 +15,7 @@ export interface MMELMetadata extends MMELObject {
   shortname: string;
   edition: string;
   namespace: string;
+  datatype: DataType.METADATA;
 }
 
 export interface MMELReference extends MMELObject {
@@ -22,6 +23,7 @@ export interface MMELReference extends MMELObject {
   document: string;
   clause: string;
   title: string;
+  datatype: DataType.REFERENCE;
 }
 
 export interface MMELProvision extends MMELObject {
@@ -30,11 +32,13 @@ export interface MMELProvision extends MMELObject {
   modality: string;
   condition: string;
   ref: Set<string>;
+  datatype: DataType.PROVISION;
 }
 
 export interface MMELRole extends MMELObject {
   id: string;
   name: string;
+  datatype: DataType.ROLE;
 }
 
 export interface MMELVariable extends MMELObject {
@@ -42,6 +46,7 @@ export interface MMELVariable extends MMELObject {
   type: VarType;
   definition: string;
   description: string;
+  datatype: DataType.VARIABLE;
 }
 
 export interface MMELVarSetting {

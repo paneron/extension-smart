@@ -34,17 +34,16 @@ import {
   EditAction,
   SelectableNodeTypes,
 } from '../../utils/constants';
+import { DescribeApproval } from '../common/description/approval';
 import {
-  DescribeApproval,
-  DescribeDC,
   DescribeEGate,
   DescribeEnd,
-  DescribeRegistry,
   DescribeSignalCatch,
   DescribeStart,
   DescribeTimer,
 } from '../common/description/ComponentDescription';
-import { ProcessQuickEdit } from './processquickedit';
+import { DescribeDC, DescribeRegistry } from '../common/description/data';
+import { DescribeProcess } from '../common/description/process';
 
 const NODE_DETAIL_VIEWS: Record<
   SelectableNodeTypes,
@@ -140,7 +139,7 @@ const NODE_DETAIL_VIEWS: Record<
     CustomProvision,
   }) =>
     isEditorProcess(node) ? (
-      <ProcessQuickEdit
+      <DescribeProcess
         process={node}
         getProvisionById={getProvisionById}
         getRefById={getRefById}

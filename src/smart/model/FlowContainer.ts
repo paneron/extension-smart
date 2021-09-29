@@ -132,6 +132,7 @@ export function getEditorNodeCallBack(props: {
   getSVGColorById?: (id: string) => string;
   onDataWorkspaceActive?: (id: string) => void;
   NodeAddon?: React.FC<{ id: string }>;
+  isEditMode?: boolean;
 }): NodeCallBack {
   const {
     type,

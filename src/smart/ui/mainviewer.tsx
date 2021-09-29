@@ -66,14 +66,13 @@ import ProvisionSettings from './summary/ProvisionSettings';
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
 
-
 export enum FunctionPage {
   Simulation = 'simulation',
   Parameterized = 'para',
   Measurement = 'measurement',
   Checklist = 'checklist',
   DataSummary = 'datasummary',
-  ProvisionSummary = "provisionsummary"
+  ProvisionSummary = 'provisionsummary',
 }
 
 export const FuntionNames: Record<FunctionPage, string> = {
@@ -278,13 +277,19 @@ const ModelViewer: React.FC<{
       key: FunctionPage.DataSummary,
       title: FuntionNames[FunctionPage.DataSummary],
       collapsedByDefault: false,
-      content: <RegistrySummary model={model} onChange={onPageAndHistroyChange} resetSearchElements={resetSearchElements}/>,
+      content: (
+        <RegistrySummary
+          model={model}
+          onChange={onPageAndHistroyChange}
+          resetSearchElements={resetSearchElements}
+        />
+      ),
     },
     [FunctionPage.ProvisionSummary]: {
       key: FunctionPage.ProvisionSummary,
       title: FuntionNames[FunctionPage.ProvisionSummary],
       collapsedByDefault: false,
-      content: <ProvisionSettings model={model}/>,
+      content: <ProvisionSettings model={model} />,
     },
   };
 

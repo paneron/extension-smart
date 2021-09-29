@@ -1,4 +1,4 @@
-import { MMELNode, MMELObject } from './baseinterface';
+import { DataType, MMELNode, MMELObject } from './baseinterface';
 
 // data structure for data attribute
 export interface MMELDataAttribute extends MMELObject {
@@ -9,27 +9,32 @@ export interface MMELDataAttribute extends MMELObject {
   definition: string;
   ref: Set<string>;
   satisfy: Set<string>;
+  datatype: DataType.DATAATTRIBUTE;
 }
 
 // data structure for data class
 export interface MMELDataClass extends MMELNode {
   attributes: Record<string, MMELDataAttribute>;
+  datatype: DataType.DATACLASS;
 }
 
 // data structure for enum value
 export interface MMELEnumValue extends MMELObject {
   id: string;
   value: string;
+  datatype: DataType.ENUMVALUE;
 }
 
 // data structure for enum
 export interface MMELEnum extends MMELObject {
   id: string;
   values: Record<string, MMELEnumValue>;
+  datatype: DataType.ENUM;
 }
 
 // data structure for Registry
 export interface MMELRegistry extends MMELNode {
   title: string;
   data: string;
+  datatype: DataType.REGISTRY;
 }

@@ -11,10 +11,8 @@ import {
   MMELProvision,
   MMELReference,
 } from '../../serialize/interface/supportinterface';
-import {
-  DescribeAttribute,
-  DescribeProvision,
-} from '../common/description/ComponentDescription';
+import { DescribeProvision } from '../common/description/ComponentDescription';
+import { DescribeAttribute } from '../common/description/data';
 import ChecklistAttribute from './AttributeField';
 import ChecklistProvision from './ProvisionField';
 

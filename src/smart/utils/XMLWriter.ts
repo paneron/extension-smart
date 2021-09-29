@@ -1,8 +1,8 @@
-export default function translateObjectToXML(obj: Object):string {
+export default function translateObjectToXML(obj: Object): string {
   return `<document>${objectToXML(obj)}</document>`;
 }
 
-function objectToXML(obj:Object): string {
+function objectToXML(obj: Object): string {
   const entries = Object.entries(obj);
   let out = '';
   for (const [k, o] of entries) {

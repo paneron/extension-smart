@@ -28,7 +28,7 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
 import {
   createEditorModelWrapper,
-  getReactFlowElementsFrom,
+  getEditorReactFlowElementsFrom,
   ModelWrapper,
 } from '../model/modelwrapper';
 import {
@@ -348,7 +348,7 @@ const ModelEditor: React.FC<{
         }
       >
         <MGDButton>Model</MGDButton>
-      </Popover2>      
+      </Popover2>
       <MGDButton
         type={MGDButtonType.Primary}
         disabled={state.history.items.length <= 1}
@@ -436,7 +436,7 @@ const ModelEditor: React.FC<{
           <div css={react_flow_container_layout}>
             <ReactFlow
               key="MMELModel"
-              elements={getReactFlowElementsFrom(
+              elements={getEditorReactFlowElementsFrom(
                 state.modelWrapper,
                 state.dvisible,
                 state.edgeDeleteVisible,

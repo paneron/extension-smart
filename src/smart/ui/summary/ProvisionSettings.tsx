@@ -7,8 +7,16 @@ import React from 'react';
 import { useMemo, useState } from 'react';
 import { dialog_layout, dialog_layout__full } from '../../../css/layout';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
-import { EditorModel, EditorProcess, isEditorProcess } from '../../model/editormodel';
-import { MMELProvision, MMELReference, MMELRole } from '../../serialize/interface/supportinterface';
+import {
+  EditorModel,
+  EditorProcess,
+  isEditorProcess,
+} from '../../model/editormodel';
+import {
+  MMELProvision,
+  MMELReference,
+  MMELRole,
+} from '../../serialize/interface/supportinterface';
 import { MODAILITYOPTIONS, ModalityType } from '../../utils/constants';
 import { clauseSorter } from '../../utils/ModelFunctions';
 import { NormalComboBox } from '../common/fields';
@@ -32,12 +40,15 @@ const ModalityText: Record<ModalityType, string> = {
 const ProvisionSettings: React.FC<{
   model: EditorModel;
 }> = function ({ model }) {
-    
-  const [result, setResult] = useState<Record<string, Record<string, ClauseSummary>>|undefined>(undefined);
+  const [result, setResult] = useState<
+    Record<string, Record<string, ClauseSummary>> | undefined
+  >(undefined);
   const [docOption, setDocOption] = useState<string>('');
   const [clauseOption, setClauseOption] = useState<string>('');
   const [actorOption, setActorOption] = useState<string>('');
-  const [modalityOption, setModalityOption] = useState<Record<ModalityType, boolean>>({
+  const [modalityOption, setModalityOption] = useState<
+    Record<ModalityType, boolean>
+  >({
     '': true,
     CAN: true,
     MAY: true,
@@ -47,35 +58,54 @@ const ProvisionSettings: React.FC<{
   });
 
   const docs = useMemo(() => {
-    const docs:Record<string, Record<string, ClauseSummary>> = {};
-    Object.values(model.refs).forEach(r => addToDoc(docs, r.document, r.clause, r.title));
-    Object.values(model.elements).filter(x => isEditorProcess(x)).forEach(x => {
-      const process = x as EditorProcess;
-      const actor = model.roles[process.actor];
-      process.provision.forEach(p => {
-        const prov = model.provisions[p];
-        prov.ref.forEach(r => addProvisionToDoc(docs, model.refs[r], prov, actor))
+    const docs: Record<string, Record<string, ClauseSummary>> = {};
+    Object.values(model.refs).forEach(r =>
+      addToDoc(docs, r.document, r.clause, r.title)
+    );
+    Object.values(model.elements)
+      .filter(x => isEditorProcess(x))
+      .forEach(x => {
+        const process = x as EditorProcess;
+        const actor = model.roles[process.actor];
+        process.provision.forEach(p => {
+          const prov = model.provisions[p];
+          prov.ref.forEach(r =>
+            addProvisionToDoc(docs, model.refs[r], prov, actor)
+          );
+        });
       });
-    });    
     return docs;
   }, [model]);
 
-  const actorList = useMemo(() => ['', ...Object.values(model.roles).map(r => r.id)], [model]);
-  
-  const docList = ['', ...Object.keys(docs)];
-  const clauseList = docOption !== '' ? ['', ...Object.keys(docs[docOption]).sort(clauseSorter)]: [];
+  const actorList = useMemo(
+    () => ['', ...Object.values(model.roles).map(r => r.id)],
+    [model]
+  );
 
-  function flip(opt: ModalityType) {    
-    setModalityOption({ ...modalityOption, [opt]: !modalityOption[opt] });    
+  const docList = ['', ...Object.keys(docs)];
+  const clauseList =
+    docOption !== ''
+      ? ['', ...Object.keys(docs[docOption]).sort(clauseSorter)]
+      : [];
+
+  function flip(opt: ModalityType) {
+    setModalityOption({ ...modalityOption, [opt]: !modalityOption[opt] });
   }
 
   function calculateResult() {
     const result: Record<string, Record<string, ClauseSummary>> = {};
     Object.entries(docs).forEach(([doc, record]) => {
       if (docOption === '' || doc === docOption) {
-        const filterRecord: Record<string, ClauseSummary> = {};        
+        const filterRecord: Record<string, ClauseSummary> = {};
         Object.entries(record).forEach(([clause, summary]) => {
-          if ((clauseOption === '' || clause.substring(0, Math.min(clauseOption.length, clause.length)) === clauseOption) && (actorOption === '' || summary.actor?.id === actorOption)) {
+          if (
+            (clauseOption === '' ||
+              clause.substring(
+                0,
+                Math.min(clauseOption.length, clause.length)
+              ) === clauseOption) &&
+            (actorOption === '' || summary.actor?.id === actorOption)
+          ) {
             const filterSummary: MMELProvision[] = [];
             for (const sum of summary.provisions) {
               const modality = sum.modality;
@@ -84,7 +114,7 @@ const ProvisionSettings: React.FC<{
               }
             }
             if (filterSummary.length > 0) {
-              filterRecord[clause] = {...summary, provisions: filterSummary};
+              filterRecord[clause] = { ...summary, provisions: filterSummary };
             }
           }
         });
@@ -99,10 +129,10 @@ const ProvisionSettings: React.FC<{
   return (
     <MGDSidebar>
       <Text>Reference document filter:</Text>
-      {docList.length > 1
-        ? <>
+      {docList.length > 1 ? (
+        <>
           <NormalComboBox
-            text='Select document filter'
+            text="Select document filter"
             value={docOption}
             options={docList}
             onChange={x => {
@@ -110,26 +140,27 @@ const ProvisionSettings: React.FC<{
               setClauseOption('');
             }}
           />
-          {docOption !== '' &&          
+          {docOption !== '' && (
             <>
               <Text>Clause filter:</Text>
-              { clauseList.length > 1
-                ? <NormalComboBox
-                  text='Select clause filter'
+              {clauseList.length > 1 ? (
+                <NormalComboBox
+                  text="Select clause filter"
                   value={clauseOption}
                   options={clauseList}
                   onChange={x => setClauseOption(x)}
                 />
-                : <Text>No clause is found in the document </Text>
-              }
+              ) : (
+                <Text>No clause is found in the document </Text>
+              )}
             </>
-          }
-        
+          )}
         </>
-        : <Text>No reference is found in the model</Text>
-      }
+      ) : (
+        <Text>No reference is found in the model</Text>
+      )}
       <NormalComboBox
-        text='Actor filter'
+        text="Actor filter"
         value={actorOption}
         options={actorList}
         onChange={x => setActorOption(x)}
@@ -145,44 +176,39 @@ const ProvisionSettings: React.FC<{
       ))}
       <Dialog
         isOpen={result !== undefined}
-        title='Provision summary'
+        title="Provision summary"
         css={[dialog_layout, dialog_layout__full]}
         onClose={() => setResult(undefined)}
         canEscapeKeyClose={false}
         canOutsideClickClose={false}
       >
-        {result !== undefined
-          ? <ProvisionSummary result={result}/>
-          : <></>
-        }
+        {result !== undefined ? <ProvisionSummary result={result} /> : <></>}
       </Dialog>
-      <Button onClick={calculateResult}>
-        Generate summary
-      </Button>
+      <Button onClick={calculateResult}>Generate summary</Button>
     </MGDSidebar>
   );
 };
 
 function addToDoc(
-  docs:Record<string, Record<string, ClauseSummary>>, 
-  document: string, 
-  clause: string, 
+  docs: Record<string, Record<string, ClauseSummary>>,
+  document: string,
+  clause: string,
   title: string
 ) {
   let doc = docs[document];
   if (doc === undefined) {
     doc = {};
-    docs[document] = doc;    
+    docs[document] = doc;
   }
   let c = doc[clause];
   if (c === undefined) {
-    c = {title, actor: undefined, provisions:[]};
+    c = { title, actor: undefined, provisions: [] };
     doc[clause] = c;
   }
 }
 
 function addProvisionToDoc(
-  docs:Record<string, Record<string, ClauseSummary>>,
+  docs: Record<string, Record<string, ClauseSummary>>,
   ref: MMELReference,
   provision: MMELProvision,
   actor: MMELRole | undefined

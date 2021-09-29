@@ -7,11 +7,8 @@ import {
   MMELReference,
 } from '../../../serialize/interface/supportinterface';
 import { toRefSummary } from '../../../utils/ModelFunctions';
-import {
-  DescribeAttribute,
-  DescribeEdge,
-  DescribeProvision,
-} from './ComponentDescription';
+import { DescribeEdge, DescribeProvision } from './ComponentDescription';
+import { DescribeAttribute } from './data';
 
 export const ApprovalRecordList: React.FC<{
   regs: EditorRegistry[];

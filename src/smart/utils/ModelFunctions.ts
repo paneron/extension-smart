@@ -116,7 +116,7 @@ export function fillRDCS(
   }
 }
 
-export function clauseSorter(a: string, b: string):number {
+export function clauseSorter(a: string, b: string): number {
   const partsA = a.split('.');
   const partsB = b.split('.');
   let index = 0;
@@ -215,7 +215,7 @@ export function trydefaultID(name: string, ids: Record<string, MMELObject>) {
   if (ids[name] !== undefined) {
     return findUniqueID(name, ids);
   }
-  return name;  
+  return name;
 }
 
 export function updatePageElement(

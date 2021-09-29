@@ -82,8 +82,9 @@ const AutoMapper: React.FC<{
 
   return (
     <MGDDisplayPane>
-      <MGDHeading>        
-        Auto discover mapping from {impNamespace} to {refNamespace} using an intermediate model
+      <MGDHeading>
+        Auto discover mapping from {impNamespace} to {refNamespace} using an
+        intermediate model
       </MGDHeading>
       <fieldset>
         <legend>Intermediate model</legend>

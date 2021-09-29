@@ -30,7 +30,7 @@ export enum DiagTypes {
   EDITTIMER = 'timer',
   EDITSIGNAL = 'signal',
   EDITEGATE = 'gate',
-  IMPORTMODEL = 'import'
+  IMPORTMODEL = 'import',
 }
 
 export enum MapperDiagTypes {
@@ -186,11 +186,11 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
         modelwrapper={modelwrapper}
         setModel={(m: EditorModel) =>
           updateModel(m, setModelWrapper, modelwrapper)
-        }        
+        }
         closeDialog={cancel}
       />
     ),
-  }
+  },
 };
 
 export const SetDiagAction: Record<

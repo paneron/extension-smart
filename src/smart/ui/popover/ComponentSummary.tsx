@@ -19,10 +19,7 @@ import {
 } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { DescribableNodeTypes } from '../../utils/constants';
-import {
-  DescribeDC,
-  DescribeRegistry,
-} from '../common/description/ComponentDescription';
+import { DescribeDC, DescribeRegistry } from '../common/description/data';
 import ApprovalSummary from './components/ApprovalSummary';
 import EGateSummary from './components/EGateSummary';
 import { SignalSummary, TimerSummary } from './components/EventSummary';

@@ -9,7 +9,11 @@ import React, { CSSProperties, useContext, useState } from 'react';
 import { popover_panel_container } from '../../../css/layout';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import MGDHeading from '../../MGDComponents/MGDHeading';
-import { EditorModel, EditorProcess, isEditorProcess } from '../../model/editormodel';
+import {
+  EditorModel,
+  EditorProcess,
+  isEditorProcess,
+} from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { createSubprocessComponent } from '../../utils/EditorFactory';
 import { handleModelOpen } from '../../utils/IOFunctions';
@@ -28,14 +32,14 @@ const rightAlignedLayout: CSSProperties = {
 
 const ImportModelDiag: React.FC<{
   modelwrapper: ModelWrapper;
-  setModel: (m: EditorModel) => void;  
+  setModel: (m: EditorModel) => void;
   closeDialog: () => void;
-}> = function ({ modelwrapper, setModel, closeDialog }) {  
+}> = function ({ modelwrapper, setModel, closeDialog }) {
   const { useDecodedBlob, requestFileFromFilesystem, logger } =
     useContext(DatasetContext);
 
-  const [mw, setMW] = useState<ModelWrapper | undefined>(undefined);  
-  const [selected, setSelected] = useState<string|undefined>(undefined);  
+  const [mw, setMW] = useState<ModelWrapper | undefined>(undefined);
+  const [selected, setSelected] = useState<string | undefined>(undefined);
 
   async function handleOpenModel() {
     handleModelOpen({
@@ -49,23 +53,28 @@ const ImportModelDiag: React.FC<{
   function importModel() {
     if (mw !== undefined && selected !== undefined) {
       const model = modelwrapper.model;
-      const process = addProcessIfNotFound(modelwrapper, mw, selected, {}, {}, {});
+      const process = addProcessIfNotFound(
+        modelwrapper,
+        mw,
+        selected,
+        {},
+        {},
+        {}
+      );
       const nc = createSubprocessComponent(process.id);
       nc.x = 0;
       nc.y = 0;
       const page = model.pages[modelwrapper.page];
       page.childs[process.id] = nc;
       process.pages.add(mw.page);
-      setModel({...model});
+      setModel({ ...model });
       closeDialog();
     }
   }
 
   return (
     <MGDDisplayPane>
-      <MGDHeading>        
-        Import component from external model 
-      </MGDHeading>
+      <MGDHeading>Import component from external model</MGDHeading>
       <fieldset>
         <legend>Source model</legend>
         <div style={centeredLayout}>
@@ -80,14 +89,28 @@ const ImportModelDiag: React.FC<{
         </div>
         <div style={centeredLayout}>
           <Text>Selected component:</Text>
-          <Popover2 disabled={mw===undefined} content={mw !== undefined ? <CandidateList model={mw.model} setSelected={setSelected} /> : <></>} position='bottom'>
+          <Popover2
+            disabled={mw === undefined}
+            content={
+              mw !== undefined ? (
+                <CandidateList model={mw.model} setSelected={setSelected} />
+              ) : (
+                <></>
+              )
+            }
+            position="bottom"
+          >
             <Button intent={selected !== undefined ? 'success' : 'danger'}>
-              {selected??'No component is selected'}
+              {selected ?? 'No component is selected'}
             </Button>
           </Popover2>
         </div>
         <div style={rightAlignedLayout}>
-          <Button large disabled={selected === undefined} onClick={() => importModel()}>
+          <Button
+            large
+            disabled={selected === undefined}
+            onClick={() => importModel()}
+          >
             Import to model
           </Button>
         </div>
@@ -98,20 +121,26 @@ const ImportModelDiag: React.FC<{
 
 const CandidateList: React.FC<{
   model: EditorModel;
-  setSelected: (id:string) => void;
-}> = function ({model, setSelected}) {
-  const processes = Object.values(model.elements).filter(x => isEditorProcess(x)).map(x => x as EditorProcess);
+  setSelected: (id: string) => void;
+}> = function ({ model, setSelected }) {
+  const processes = Object.values(model.elements)
+    .filter(x => isEditorProcess(x))
+    .map(x => x as EditorProcess);
   return (
     <div css={popover_panel_container}>
-      {processes.map(p => 
-        <Tooltip2 targetTagName='div' content={p.name}>
-          <Button className={Classes.POPOVER2_DISMISS} onClick={() => setSelected(p.id)} fill>
+      {processes.map(p => (
+        <Tooltip2 targetTagName="div" content={p.name}>
+          <Button
+            className={Classes.POPOVER2_DISMISS}
+            onClick={() => setSelected(p.id)}
+            fill
+          >
             {p.id}
           </Button>
         </Tooltip2>
-      )}
+      ))}
     </div>
   );
-}
+};
 
 export default ImportModelDiag;
