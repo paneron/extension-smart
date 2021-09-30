@@ -2,7 +2,13 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import React, { RefObject, useContext, useMemo, useState } from 'react';
+import React, {
+  RefObject,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import ReactFlow, {
   Controls,
@@ -43,12 +49,7 @@ import {
   createSubprocessComponent,
 } from '../utils/EditorFactory';
 import { EdgeTypes, EditorState, NodeTypes } from '../model/States';
-import {
-  EditorModel,
-  EditorProcess,
-  isEditorData,
-  isEditorNode,
-} from '../model/editormodel';
+import { EditorModel, isEditorData, isEditorNode } from '../model/editormodel';
 import EditorFileMenu from './menu/EditorFileMenu';
 import { SelectedNodeDescription } from './sidebar/selected';
 import {
@@ -70,7 +71,6 @@ import {
 import {
   addComponentToModel,
   addEdge,
-  createNewPage,
 } from '../utils/ModelAddComponentHandler';
 import { EdgePackage } from '../model/FlowContainer';
 import { deleteEdge } from '../utils/ModelRemoveComponentHandler';
@@ -247,16 +247,6 @@ const ModelEditor: React.FC<{
     setState({ ...state });
   }
 
-  function onSubprocessClick(pid: string): void {
-    const model = { ...state.modelWrapper.model };
-    const process = model.elements[pid] as EditorProcess;
-    process.page = createNewPage(model);
-    setState({
-      ...state,
-      modelWrapper: { ...state.modelWrapper, model: model },
-    });
-  }
-
   function removeEdge(id: string) {
     deleteEdge(state.modelWrapper.model, state.modelWrapper.page, id);
     setState({ ...state });
@@ -372,10 +362,11 @@ const ModelEditor: React.FC<{
           title: 'Selected node',
           content: (
             <SelectedNodeDescription
-              model={state.modelWrapper.model}
-              pageid={state.modelWrapper.page}
+              modelWrapper={state.modelWrapper}
               setDialog={setDiag}
-              onSubprocessClick={onSubprocessClick}
+              setModel={m =>
+                setModelWrapper({ ...state.modelWrapper, model: m })
+              }
             />
           ),
         },
@@ -397,6 +388,13 @@ const ModelEditor: React.FC<{
         },
       ]}
     />
+  );
+
+  useEffect(
+    () => () => {
+      saveLayout();
+    },
+    [isVisible]
   );
 
   if (isVisible) {

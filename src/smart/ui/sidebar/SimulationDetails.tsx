@@ -151,7 +151,7 @@ const NODE_SIMULATION_SUMMARY: Record<
   }>
 > = {
   [DataType.STARTEVENT]: () => <DescribeStart />,
-  [DataType.ENDEVENT]: ({ node }) => <DescribeEnd end={node} />,
+  [DataType.ENDEVENT]: () => <DescribeEnd />,
   [DataType.TIMEREVENT]: ({ node }) =>
     isEditorTimerEvent(node) ? <DescribeTimer timer={node} /> : <></>,
   [DataType.SIGNALCATCHEVENT]: ({ node }) =>

@@ -20,7 +20,7 @@ import {
   isEditorSignalEvent,
   isEditorTimerEvent,
 } from '../../model/editormodel';
-import { EdtiorNodeWithInfoCallback } from '../../model/FlowContainer';
+import { EditorNodeWithInfoCallback } from '../../model/FlowContainer';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
@@ -28,12 +28,7 @@ import {
   MMELProvision,
   MMELReference,
 } from '../../serialize/interface/supportinterface';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-  SelectableNodeTypes,
-} from '../../utils/constants';
+import { SelectableNodeTypes } from '../../utils/constants';
 import { DescribeApproval } from '../common/description/approval';
 import {
   DescribeEGate,
@@ -48,18 +43,12 @@ import { DescribeProcess } from '../common/description/process';
 const NODE_DETAIL_VIEWS: Record<
   SelectableNodeTypes,
   React.FC<{
-    node: EdtiorNodeWithInfoCallback;
+    node: EditorNodeWithInfoCallback;
     getRefById: (id: string) => MMELReference | null;
     getRegistryById: (id: string) => EditorRegistry | null;
     getDCById: (id: string) => EditorDataClass | null;
     getProvisionById: (id: string) => MMELProvision | null;
     getOutgoingEdgesById: (id: string) => MMELEdge[];
-    setDialog?: (
-      nodeType: EditableNodeTypes | DeletableNodeTypes,
-      action: EditAction,
-      id: string
-    ) => void;
-    onSubprocessClick?: (pid: string) => void;
     CustomAttribute?: React.FC<{
       att: MMELDataAttribute;
       getRefById?: (id: string) => MMELReference | null;
@@ -93,39 +82,24 @@ const NODE_DETAIL_VIEWS: Record<
       <></>
     ),
   [DataType.STARTEVENT]: () => <DescribeStart />,
-  [DataType.ENDEVENT]: ({ node, setDialog }) => (
-    <DescribeEnd end={node} setDialog={setDialog} />
-  ),
-  [DataType.TIMEREVENT]: ({ node, setDialog }) =>
-    isEditorTimerEvent(node) ? (
-      <DescribeTimer timer={node} setDialog={setDialog} />
-    ) : (
-      <></>
-    ),
-  [DataType.SIGNALCATCHEVENT]: ({ node, setDialog }) =>
-    isEditorSignalEvent(node) ? (
-      <DescribeSignalCatch scEvent={node} setDialog={setDialog} />
-    ) : (
-      <></>
-    ),
-  [DataType.EGATE]: ({ node, setDialog, getOutgoingEdgesById }) =>
+  [DataType.ENDEVENT]: () => <DescribeEnd />,
+  [DataType.TIMEREVENT]: ({ node }) =>
+    isEditorTimerEvent(node) ? <DescribeTimer timer={node} /> : <></>,
+  [DataType.SIGNALCATCHEVENT]: ({ node }) =>
+    isEditorSignalEvent(node) ? <DescribeSignalCatch scEvent={node} /> : <></>,
+  [DataType.EGATE]: ({ node, getOutgoingEdgesById }) =>
     isEditorEgate(node) ? (
-      <DescribeEGate
-        egate={node}
-        setDialog={setDialog}
-        getOutgoingEdgesById={getOutgoingEdgesById}
-      />
+      <DescribeEGate egate={node} getOutgoingEdgesById={getOutgoingEdgesById} />
     ) : (
       <></>
     ),
-  [DataType.APPROVAL]: ({ node, getRefById, getRegistryById, setDialog }) =>
+  [DataType.APPROVAL]: ({ node, getRefById, getRegistryById }) =>
     isEditorApproval(node) ? (
       <DescribeApproval
         app={node}
         getRefById={getRefById}
         getRegistryById={getRegistryById}
         getRoleById={node.getRoleById}
-        setDialog={setDialog}
       />
     ) : (
       <></>
@@ -134,8 +108,6 @@ const NODE_DETAIL_VIEWS: Record<
     node,
     getProvisionById,
     getRefById,
-    setDialog,
-    onSubprocessClick,
     CustomProvision,
   }) =>
     isEditorProcess(node) ? (
@@ -143,8 +115,6 @@ const NODE_DETAIL_VIEWS: Record<
         process={node}
         getProvisionById={getProvisionById}
         getRefById={getRefById}
-        setDialog={setDialog}
-        onSubprocessClick={onSubprocessClick}
         CustomProvision={CustomProvision}
         {...node}
       />
@@ -154,14 +124,8 @@ const NODE_DETAIL_VIEWS: Record<
 };
 
 export const Describe: React.FC<{
-  node: EdtiorNodeWithInfoCallback;
+  node: EditorNodeWithInfoCallback;
   model: EditorModel;
-  setDialog?: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
-  onSubprocessClick?: (pid: string) => void;
   page: EditorSubprocess;
   CustomAttribute?: React.FC<{
     att: MMELDataAttribute;
@@ -172,15 +136,7 @@ export const Describe: React.FC<{
     provision: MMELProvision;
     getRefById?: (id: string) => MMELReference | null;
   }>;
-}> = function ({
-  node,
-  model,
-  setDialog,
-  onSubprocessClick,
-  page,
-  CustomAttribute,
-  CustomProvision,
-}) {
+}> = function ({ node, model, page, CustomAttribute, CustomProvision }) {
   function getRefById(id: string): MMELReference | null {
     return getEditorRefById(model, id);
   }
@@ -209,8 +165,6 @@ export const Describe: React.FC<{
       getRegistryById={getRegistryById}
       getDCById={getDCById}
       getProvisionById={getProvisionById}
-      setDialog={setDialog}
-      onSubprocessClick={onSubprocessClick}
       getOutgoingEdgesById={getOutgoingEdgesById}
       CustomAttribute={CustomAttribute}
       CustomProvision={CustomProvision}

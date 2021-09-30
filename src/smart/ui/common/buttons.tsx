@@ -20,7 +20,9 @@ export const RemoveButton: React.FC<{
 export const EditButton: React.FC<{
   onClick: () => void;
 }> = function ({ onClick }) {
-  return <BaseButton tooltip="Edit Component" icon="edit" onClick={onClick} />;
+  return (
+    <BaseButton tooltip="More editing options" icon="edit" onClick={onClick} />
+  );
 };
 
 export const EditMappingButton: React.FC<{
@@ -34,6 +36,16 @@ export const EditMappingButton: React.FC<{
       position="top"
       onClick={onClick}
     />
+  );
+};
+
+export const AddSubprocessButton: React.FC<{
+  callback: () => void;
+}> = function ({ callback }) {
+  return (
+    <Tooltip2 content="Add subprocess">
+      <MGDButton icon="map-create" onClick={() => callback()} />;
+    </Tooltip2>
   );
 };
 

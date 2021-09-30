@@ -3,19 +3,11 @@
 
 import { jsx } from '@emotion/react';
 import React from 'react';
-import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
 import { EditorApproval, EditorRegistry } from '../../../model/editormodel';
-import { DataType } from '../../../serialize/interface/baseinterface';
 import {
   MMELReference,
   MMELRole,
 } from '../../../serialize/interface/supportinterface';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-} from '../../../utils/constants';
-import { EditButton, RemoveButton } from '../buttons';
 import { ApprovalRecordList, ReferenceList } from './ComponentList';
 import {
   ActorDescription,
@@ -28,12 +20,7 @@ export const DescribeApproval: React.FC<{
   getRoleById: (id: string) => MMELRole | null;
   getRefById?: (id: string) => MMELReference | null;
   getRegistryById?: (id: string) => EditorRegistry | null;
-  setDialog?: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
-}> = function ({ app, getRoleById, getRefById, getRegistryById, setDialog }) {
+}> = function ({ app, getRoleById, getRefById, getRegistryById }) {
   const regs: EditorRegistry[] = [];
   if (getRegistryById !== undefined) {
     app.records.forEach(r => {
@@ -45,20 +32,6 @@ export const DescribeApproval: React.FC<{
   }
   return (
     <>
-      {setDialog !== undefined && (
-        <MGDButtonGroup>
-          <EditButton
-            onClick={() =>
-              setDialog(DataType.APPROVAL, EditAction.EDIT, app.id)
-            }
-          />
-          <RemoveButton
-            onClick={() =>
-              setDialog(DataType.APPROVAL, EditAction.DELETE, app.id)
-            }
-          />
-        </MGDButtonGroup>
-      )}
       <DescriptionItem label="Approval" value={app.id} />
       <DescriptionItem label="Name" value={app.name} />
       <ActorDescription role={getRoleById(app.actor)} label="Actor" />

@@ -41,7 +41,7 @@ export interface DataLinkNodeData {
   isLinkBetweenData: boolean;
 }
 
-export type EdtiorNodeWithInfoCallback = EditorNode & NodeCallBack;
+export type EditorNodeWithInfoCallback = EditorNode & NodeCallBack;
 
 export interface NodeCallBack {
   modelType: ModelType;
@@ -60,7 +60,7 @@ export interface NodeCallBack {
 
 export interface NodeContainer {
   id: string;
-  data: EdtiorNodeWithInfoCallback;
+  data: EditorNodeWithInfoCallback;
   type: string;
   position: XYPosition;
 }

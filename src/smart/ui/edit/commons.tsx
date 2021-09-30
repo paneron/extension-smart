@@ -1,27 +1,55 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { Button } from '@blueprintjs/core';
+import { jsx } from '@emotion/react';
 import React from 'react';
-import MGDButton from '../../MGDComponents/MGDButton';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
+import {
+  AddSubprocessButton,
+  EditButton,
+  RemoveButton,
+} from '../common/buttons';
 
 export const EditPageButtons: React.FC<{
-  onUpdateClick: () => void;
-  onCancelClick: () => void;
-}> = function ({ onUpdateClick, onCancelClick }) {
+  onUpdateClick?: () => void;
+  onFullEditClick?: () => void;
+  onDeleteClick?: () => void;
+  onSubprocessClick?: () => void;
+}> = function ({
+  onUpdateClick,
+  onDeleteClick,
+  onFullEditClick,
+  onSubprocessClick,
+}) {
   return (
     <MGDButtonGroup>
-      <MGDButton
-        key="ui#itemupdate#savebutton"
-        icon="floppy-disk"
-        onClick={() => onUpdateClick()}
-      >
-        Save
-      </MGDButton>
-      <MGDButton
-        key="ui#itemupdate#cancelbutton"
-        icon="disable"
-        onClick={() => onCancelClick()}
-      >
-        Cancel
-      </MGDButton>
+      {onUpdateClick !== undefined ? (
+        <Button
+          icon="floppy-disk"
+          intent="success"
+          onClick={() => onUpdateClick()}
+        >
+          Save
+        </Button>
+      ) : (
+        <></>
+      )}
+      {onFullEditClick !== undefined ? (
+        <EditButton onClick={onFullEditClick} />
+      ) : (
+        <></>
+      )}
+      {onSubprocessClick !== undefined ? (
+        <AddSubprocessButton callback={onSubprocessClick} />
+      ) : (
+        <></>
+      )}
+      {onDeleteClick !== undefined ? (
+        <RemoveButton onClick={onDeleteClick} />
+      ) : (
+        <></>
+      )}
     </MGDButtonGroup>
   );
 };

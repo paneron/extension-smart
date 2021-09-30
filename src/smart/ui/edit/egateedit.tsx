@@ -3,7 +3,7 @@
 
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MGDButton from '../../MGDComponents/MGDButton';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import {
@@ -19,17 +19,40 @@ import {
   removeSpace,
   updatePageElement,
 } from '../../utils/ModelFunctions';
+import { DescriptionItem } from '../common/description/fields';
 import { NormalTextField, ReferenceSelector } from '../common/fields';
 import { EditPageButtons } from './commons';
+import EdgeQuickEdit from './components/EdgeListEdit';
+
+interface CommonEGateEditProps {
+  onUpdateClick: () => void;
+  editing: EditorEGate;
+  setEditing: (x: EditorEGate) => void;
+  edges: MMELEdge[];
+  setEdges: (es: MMELEdge[]) => void;
+  onFullEditClick?: () => void;
+  onDeleteClick?: () => void;
+}
 
 const EditEGatePage: React.FC<{
-  modelwrapper: ModelWrapper;
+  modelWrapper: ModelWrapper;
   setModel: (m: EditorModel) => void;
   id: string;
-  closeDialog: () => void;
-}> = function ({ modelwrapper, setModel, id, closeDialog }) {
-  const model = modelwrapper.model;
-  const page = model.pages[modelwrapper.page];
+  closeDialog?: () => void;
+  minimal?: boolean;
+  onFullEditClick?: () => void;
+  onDeleteClick?: () => void;
+}> = function ({
+  modelWrapper,
+  setModel,
+  id,
+  closeDialog,
+  minimal,
+  onDeleteClick,
+  onFullEditClick,
+}) {
+  const model = modelWrapper.model;
+  const page = model.pages[modelWrapper.page];
 
   const egate = model.elements[id] as EditorEGate;
   const measures = getModelAllMeasures(model);
@@ -40,34 +63,92 @@ const EditEGatePage: React.FC<{
   );
 
   function onUpdateClick() {
-    const updated = save(id, editing, modelwrapper.page, model, edges);
+    const updated = save(id, editing, modelWrapper.page, model, edges);
     if (updated !== null) {
       setModel({ ...updated });
-      closeDialog();
+      if (closeDialog !== undefined) {
+        closeDialog();
+      }
     }
   }
 
+  const commonProps: CommonEGateEditProps = {
+    onUpdateClick,
+    editing,
+    setEditing,
+    edges,
+    setEdges,
+    onDeleteClick,
+    onFullEditClick,
+  };
+
+  const fullEditProps = {
+    closeDialog,
+    measures,
+  };
+
+  useEffect(() => setEditing(egate), [egate]);
+  useEffect(
+    () => setEdges(Object.values(page.edges).filter(e => e.from === id)),
+    [page.edges]
+  );
+
+  return minimal ? (
+    <QuickVersionEdit {...commonProps} />
+  ) : (
+    <FullVersionEdit {...commonProps} {...fullEditProps} />
+  );
+};
+
+const QuickVersionEdit: React.FC<CommonEGateEditProps> = function (props) {
+  const { editing, setEditing, edges, setEdges } = props;
+  return (
+    <FormGroup>
+      <EditPageButtons {...props} />
+      <DescriptionItem label="Gateway ID" value={editing.id} />
+      <NormalTextField
+        text="Label"
+        value={editing.label}
+        onChange={x => setEditing({ ...editing, label: x })}
+      />
+      {edges.map((edge, index) => (
+        <EdgeQuickEdit
+          edge={edge}
+          index={index}
+          setEdge={(x, edge) => {
+            edges[x] = edge;
+            setEdges([...edges]);
+          }}
+        />
+      ))}
+    </FormGroup>
+  );
+};
+
+const FullVersionEdit: React.FC<
+  CommonEGateEditProps & {
+    closeDialog?: () => void;
+    measures: string[];
+  }
+> = function (props) {
+  const { editing, setEditing, edges, setEdges, measures } = props;
   return (
     <MGDDisplayPane>
       <FormGroup>
-        <EditPageButtons
-          onUpdateClick={onUpdateClick}
-          onCancelClick={closeDialog}
-        />
+        <EditPageButtons {...props} />
         <NormalTextField
-          key="field#egateID"
           text="Exclusive Gateway ID"
           value={editing.id}
           onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
         />
         <NormalTextField
-          key="field#egateLabel"
           text="Label"
           value={editing.label}
           onChange={x => setEditing({ ...editing, label: x })}
         />
         {edges.map((edge, index) => (
           <EditEdgePage
+            key={edge.id}
             edge={edge}
             index={index}
             types={measures}
@@ -91,15 +172,13 @@ const EditEdgePage: React.FC<{
   return (
     <fieldset>
       <legend>Edge to {edge.to}</legend>
-      <div key={'field#edgeConditionLabel#' + index}>
+      <div>
         <NormalTextField
-          key={'field#edgeCondition#' + index}
           text="Description"
           value={edge.description}
           onChange={x => setEdge(index, { ...edge, description: x })}
         />
         <ReferenceSelector
-          key="field#edgeCondition"
           text="Condition"
           filterName="Measurement filter"
           editable={true}
@@ -114,7 +193,6 @@ const EditEdgePage: React.FC<{
           onChange={x => setEdge(index, { ...edge, condition: x })}
         />
         <MGDButton
-          key={'defaultbutton#edgeCondition#' + index}
           onClick={() =>
             setEdge(index, {
               ...edge,
@@ -126,7 +204,6 @@ const EditEdgePage: React.FC<{
           Set default
         </MGDButton>
         <MGDButton
-          key={'emptybutton#edgeCondition#' + index}
           onClick={() =>
             setEdge(index, { ...edge, description: '', condition: '' })
           }

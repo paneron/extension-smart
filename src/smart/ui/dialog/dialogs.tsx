@@ -127,7 +127,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
     fullscreen: true,
     Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
       <EditApprovalPage
-        modelwrapper={modelwrapper}
+        modelWrapper={modelwrapper}
         setModel={(m: EditorModel) =>
           updateModel(m, setModelWrapper, modelwrapper)
         }
@@ -141,7 +141,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
     fullscreen: true,
     Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
       <EditEGatePage
-        modelwrapper={modelwrapper}
+        modelWrapper={modelwrapper}
         setModel={(m: EditorModel) =>
           updateModel(m, setModelWrapper, modelwrapper)
         }
@@ -155,7 +155,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
     fullscreen: true,
     Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
       <EditTimerPage
-        modelwrapper={modelwrapper}
+        modelWrapper={modelwrapper}
         setModel={(m: EditorModel) =>
           updateModel(m, setModelWrapper, modelwrapper)
         }
@@ -169,7 +169,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
     fullscreen: true,
     Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
       <EditSignalEventPage
-        modelwrapper={modelwrapper}
+        modelWrapper={modelwrapper}
         setModel={(m: EditorModel) =>
           updateModel(m, setModelWrapper, modelwrapper)
         }

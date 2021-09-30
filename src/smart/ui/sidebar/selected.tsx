@@ -4,30 +4,36 @@
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { useStoreState, Elements, isNode } from 'react-flow-renderer';
-import { EdtiorNodeWithInfoCallback } from '../../model/FlowContainer';
-import { EditorModel, isEditorData } from '../../model/editormodel';
+import { EditorNodeWithInfoCallback } from '../../model/FlowContainer';
+import {
+  EditorModel,
+  isEditorData,
+  isEditorDataClass,
+  isEditorRegistry,
+  isEditorStartEvent,
+} from '../../model/editormodel';
 import {
   DeletableNodeTypes,
   EditableNodeTypes,
   EditAction,
 } from '../../utils/constants';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
-import { Describe } from './SelectedComponents';
+import { Describe } from './ViewComponentDetails';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import {
   MMELProvision,
   MMELReference,
 } from '../../serialize/interface/supportinterface';
+import QuickEdit from './QuickEditComponents';
+import { ModelWrapper } from '../../model/modelwrapper';
 
 export const SelectedNodeDescription: React.FC<{
-  model: EditorModel;
-  pageid: string;
+  modelWrapper: ModelWrapper;
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
     id: string
   ) => void;
-  onSubprocessClick?: (pid: string) => void;
   CustomAttribute?: React.FC<{
     att: MMELDataAttribute;
     getRefById?: (id: string) => MMELReference | null;
@@ -37,21 +43,23 @@ export const SelectedNodeDescription: React.FC<{
     provision: MMELProvision;
     getRefById?: (id: string) => MMELReference | null;
   }>;
+  setModel?: (m: EditorModel) => void;
 }> = function ({
-  model,
+  modelWrapper,
   setDialog,
-  onSubprocessClick,
-  pageid,
   CustomAttribute,
   CustomProvision,
+  setModel,
 }) {
+  const model = modelWrapper.model;
+  const pageid = modelWrapper.page;
   const selected = useStoreState(store => store.selectedElements);
 
-  const elm: EdtiorNodeWithInfoCallback | null = getSelectedElement(selected);
+  const elm: EditorNodeWithInfoCallback | null = getSelectedElement(selected);
 
   function getSelectedElement(
     selected: Elements<unknown> | null
-  ): EdtiorNodeWithInfoCallback | null {
+  ): EditorNodeWithInfoCallback | null {
     if (selected !== null && selected.length > 0) {
       const s = selected[0];
       const page = model.pages[pageid];
@@ -62,7 +70,7 @@ export const SelectedNodeDescription: React.FC<{
           isEditorData(elm)
         ) {
           return {
-            ...(s.data as EdtiorNodeWithInfoCallback),
+            ...(s.data as EditorNodeWithInfoCallback),
             ...model.elements[s.id],
           };
         }
@@ -74,15 +82,27 @@ export const SelectedNodeDescription: React.FC<{
   return (
     <MGDSidebar>
       {elm !== null ? (
-        <Describe
-          node={elm}
-          model={model}
-          setDialog={setDialog}
-          onSubprocessClick={onSubprocessClick}
-          page={model.pages[pageid]}
-          CustomAttribute={CustomAttribute}
-          CustomProvision={CustomProvision}
-        />
+        setModel !== undefined &&
+        setDialog !== undefined &&
+        !isEditorRegistry(elm) &&
+        !isEditorDataClass(elm) &&
+        !isEditorStartEvent(elm) ? (
+          <QuickEdit
+            node={elm}
+            modelWrapper={modelWrapper}
+            setModel={setModel}
+            setDialog={setDialog}
+            page={model.pages[pageid]}
+          />
+        ) : (
+          <Describe
+            node={elm}
+            model={model}
+            page={model.pages[pageid]}
+            CustomAttribute={CustomAttribute}
+            CustomProvision={CustomProvision}
+          />
+        )
       ) : (
         'Nothing is selected'
       )}

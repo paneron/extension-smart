@@ -3,15 +3,19 @@
 
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { EditorApproval, EditorModel } from '../../model/editormodel';
+import {
+  EditorApproval,
+  EditorModel,
+  EditorRegistry,
+} from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
 import {
   checkId,
   getModelAllRefs,
   getModelAllRegs,
-  getModelAllRolesWithEmpty,
+  getModelAllRoles,
   removeSpace,
   updatePageElement,
 } from '../../utils/ModelFunctions';
@@ -23,38 +27,189 @@ import {
   ReferenceSelector,
 } from '../common/fields';
 import { EditPageButtons } from './commons';
+import {
+  MMELReference,
+  MMELRole,
+} from '../../serialize/interface/supportinterface';
+import { DescriptionItem } from '../common/description/fields';
+import RoleSelector from './components/RoleSelector';
+import RegistrySelector from './components/RegistrySelector';
+import SimpleReferenceSelector from './components/ReferenceSelector';
+
+interface CommonApprovalEditProps {
+  onUpdateClick: () => void;
+  editing: EditorApproval;
+  setEditing: (x: EditorApproval) => void;
+  model: EditorModel;
+  onFullEditClick?: () => void;
+  onDeleteClick?: () => void;
+}
 
 const EditApprovalPage: React.FC<{
-  modelwrapper: ModelWrapper;
+  modelWrapper: ModelWrapper;
   setModel: (m: EditorModel) => void;
   id: string;
-  closeDialog: () => void;
-}> = function ({ modelwrapper, setModel, id, closeDialog }) {
-  const model = modelwrapper.model;
+  closeDialog?: () => void;
+  minimal?: boolean;
+  onFullEditClick?: () => void;
+  onDeleteClick?: () => void;
+}> = function ({
+  modelWrapper,
+  setModel,
+  id,
+  closeDialog,
+  minimal = false,
+  onFullEditClick,
+  onDeleteClick,
+}) {
+  const model = modelWrapper.model;
 
   const approval = model.elements[id] as EditorApproval;
 
   const [editing, setEditing] = useState<EditorApproval>({ ...approval });
 
-  const roles = getModelAllRolesWithEmpty(model);
-  const regs = getModelAllRegs(model);
-  const refs = getModelAllRefs(model);
+  const roleObjects = useMemo(() => getModelAllRoles(model), [model]);
+  const roles = useMemo(
+    () => ['', ...roleObjects.map(r => r.id)],
+    [roleObjects]
+  );
+  const registryObjects = useMemo(() => getModelAllRegs(model), [model]);
+  const regs = useMemo(() => registryObjects.map(r => r.id), [registryObjects]);
+  const refObjects = useMemo(() => getModelAllRefs(model), [model]);
+  const refs = useMemo(() => refObjects.map(r => r.id), [refObjects]);
 
   function onUpdateClick() {
-    const updated = save(id, editing, modelwrapper.page, model);
+    const updated = save(id, editing, modelWrapper.page, model);
     if (updated !== null) {
       setModel({ ...updated });
-      closeDialog();
+      if (closeDialog !== undefined) {
+        closeDialog();
+      }
     }
   }
 
+  const commonProps = {
+    onUpdateClick,
+    editing,
+    setEditing,
+    model,
+    onFullEditClick,
+    onDeleteClick,
+  };
+
+  const fullEditProps = {
+    closeDialog,
+    roles,
+    regs,
+    refs,
+  };
+
+  const quickEditProps = {
+    roleObjects,
+    registryObjects,
+    refObjects,
+  };
+
+  useEffect(() => setEditing(approval), [approval]);
+
+  return minimal ? (
+    <QuickVersionEdit {...commonProps} {...quickEditProps} />
+  ) : (
+    <FullVersionEdit {...commonProps} {...fullEditProps} />
+  );
+};
+
+const QuickVersionEdit: React.FC<
+  CommonApprovalEditProps & {
+    roleObjects: MMELRole[];
+    registryObjects: EditorRegistry[];
+    refObjects: MMELReference[];
+  }
+> = function (props) {
+  const {
+    editing,
+    setEditing,
+    roleObjects,
+    model,
+    registryObjects,
+    refObjects,
+  } = props;
+  return (
+    <FormGroup>
+      <EditPageButtons {...props} />
+      <DescriptionItem label="Approval ID" value={editing.id} />
+      <NormalTextField
+        text="Approval Process Name"
+        value={editing.name}
+        onChange={x => setEditing({ ...editing, name: x })}
+      />
+      <NormalComboBox
+        text="Modality"
+        value={editing.modality}
+        options={MODAILITYOPTIONS}
+        onChange={x => setEditing({ ...editing, modality: x })}
+      />
+      <RoleSelector
+        label="Actor"
+        activeItem={editing.actor !== '' ? model.roles[editing.actor] : null}
+        items={roleObjects}
+        onItemSelect={x =>
+          setEditing({ ...editing, actor: x !== null ? x.id : '' })
+        }
+      />
+      <RoleSelector
+        label="Approver"
+        activeItem={
+          editing.approver !== '' ? model.roles[editing.approver] : null
+        }
+        items={roleObjects}
+        onItemSelect={x =>
+          setEditing({ ...editing, approver: x !== null ? x.id : '' })
+        }
+      />
+      <RegistrySelector
+        label="Approval record registry"
+        selected={editing.records}
+        items={registryObjects}
+        onItemSelect={x =>
+          setEditing({
+            ...editing,
+            records: new Set([...editing.records, x.id]),
+          })
+        }
+        onTagRemove={x => {
+          editing.records = new Set([...editing.records].filter(s => x !== s));
+          setEditing({ ...editing });
+        }}
+      />
+      <SimpleReferenceSelector
+        selected={editing.ref}
+        items={refObjects}
+        onItemSelect={x =>
+          setEditing({ ...editing, ref: new Set([...editing.ref, x.id]) })
+        }
+        onTagRemove={x => {
+          editing.ref = new Set([...editing.ref].filter(s => x !== s));
+          setEditing({ ...editing });
+        }}
+      />
+    </FormGroup>
+  );
+};
+
+const FullVersionEdit: React.FC<
+  CommonApprovalEditProps & {
+    closeDialog?: () => void;
+    roles: string[];
+    regs: string[];
+    refs: string[];
+  }
+> = function (props) {
+  const { editing, setEditing, roles, regs, refs } = props;
   return (
     <MGDDisplayPane>
       <FormGroup>
-        <EditPageButtons
-          onUpdateClick={onUpdateClick}
-          onCancelClick={closeDialog}
-        />
+        <EditPageButtons {...props} />
         <NormalTextField
           text="Approval ID"
           value={editing.id}

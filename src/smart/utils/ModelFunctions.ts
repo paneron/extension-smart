@@ -15,6 +15,7 @@ import {
 import {
   MMELMetadata,
   MMELReference,
+  MMELRole,
 } from '../serialize/interface/supportinterface';
 import { IListItem } from '../ui/common/fields';
 
@@ -61,7 +62,11 @@ export function toRefSummary(r: MMELReference): string {
   if (r.clause === '') {
     return r.document;
   }
-  return r.document + ' (' + r.clause + ')' + (r.title ? ' : ' + r.title : '');
+  return (
+    r.clause +
+    (r.title ? ' : ' + r.title : '') +
+    (r.document !== '' ? ` (${r.document})` : '')
+  );
 }
 
 export function genDCIdByRegId(id: string) {
@@ -242,6 +247,10 @@ export function updatePageElement(
   }
 }
 
+export function getModelAllRoles(model: EditorModel): MMELRole[] {
+  return Object.values(model.roles).sort((a, b) => a.id.localeCompare(b.id));
+}
+
 export function getModelAllRolesWithEmpty(model: EditorModel): string[] {
   return [''].concat(
     Object.values(model.roles)
@@ -250,17 +259,15 @@ export function getModelAllRolesWithEmpty(model: EditorModel): string[] {
   );
 }
 
-export function getModelAllRegs(model: EditorModel): string[] {
+export function getModelAllRegs(model: EditorModel): EditorRegistry[] {
   return Object.values(model.elements)
     .filter(x => isEditorRegistry(x))
     .sort((a, b) => a.id.localeCompare(b.id))
-    .map(r => r.id);
+    .map(x => x as EditorRegistry);
 }
 
-export function getModelAllRefs(model: EditorModel): string[] {
-  return Object.values(model.refs)
-    .sort(referenceSorter)
-    .map(r => r.id);
+export function getModelAllRefs(model: EditorModel): MMELReference[] {
+  return Object.values(model.refs).sort(referenceSorter);
 }
 
 export function getModelAllMeasures(model: EditorModel): string[] {

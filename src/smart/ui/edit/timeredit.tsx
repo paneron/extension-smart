@@ -3,7 +3,7 @@
 
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel, EditorTimerEvent } from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
@@ -15,48 +15,110 @@ import {
 import { TimerType } from '../../utils/constants';
 import { NormalComboBox, NormalTextField } from '../common/fields';
 import { EditPageButtons } from './commons';
+import { DescriptionItem } from '../common/description/fields';
+
+interface CommonTimerEditProps {
+  onUpdateClick: () => void;
+  editing: EditorTimerEvent;
+  setEditing: (x: EditorTimerEvent) => void;
+  onFullEditClick?: () => void;
+  onDeleteClick?: () => void;
+}
 
 const EditTimerPage: React.FC<{
-  modelwrapper: ModelWrapper;
+  modelWrapper: ModelWrapper;
   setModel: (m: EditorModel) => void;
   id: string;
-  closeDialog: () => void;
-}> = function ({ modelwrapper, setModel, id, closeDialog }) {
-  const model = modelwrapper.model;
+  closeDialog?: () => void;
+  minimal?: boolean;
+  onFullEditClick?: () => void;
+  onDeleteClick?: () => void;
+}> = function ({
+  modelWrapper,
+  setModel,
+  id,
+  minimal,
+  closeDialog,
+  onDeleteClick,
+  onFullEditClick,
+}) {
+  const model = modelWrapper.model;
   const timer = model.elements[id] as EditorTimerEvent;
 
   const [editing, setEditing] = useState<EditorTimerEvent>({ ...timer });
 
   function onUpdateClick() {
-    const updated = save(id, editing, modelwrapper.page, model);
+    const updated = save(id, editing, modelWrapper.page, model);
     if (updated !== null) {
       setModel({ ...updated });
-      closeDialog();
+      if (closeDialog !== undefined) {
+        closeDialog();
+      }
     }
   }
 
+  const commonProps: CommonTimerEditProps = {
+    onUpdateClick,
+    editing,
+    setEditing,
+    onDeleteClick,
+    onFullEditClick,
+  };
+
+  const fullEditProps = { closeDialog };
+
+  useEffect(() => setEditing(timer), [timer]);
+
+  return minimal ? (
+    <QuickVersionEdit {...commonProps} />
+  ) : (
+    <FullVersionEdit {...commonProps} {...fullEditProps} />
+  );
+};
+
+const QuickVersionEdit: React.FC<CommonTimerEditProps> = function (props) {
+  const { editing, setEditing } = props;
+  return (
+    <FormGroup>
+      <EditPageButtons {...props} />
+      <DescriptionItem label="Timer ID" value={editing.id} />
+      <NormalComboBox
+        text="Timer Type"
+        value={editing.type}
+        options={TimerType}
+        onChange={x => setEditing({ ...editing, type: x })}
+      />
+      <NormalTextField
+        text="Timer parameter"
+        value={editing.para}
+        onChange={x => setEditing({ ...editing, para: x })}
+      />
+    </FormGroup>
+  );
+};
+
+const FullVersionEdit: React.FC<
+  CommonTimerEditProps & {
+    closeDialog?: () => void;
+  }
+> = function (props) {
+  const { editing, setEditing } = props;
   return (
     <MGDDisplayPane>
       <FormGroup>
-        <EditPageButtons
-          onUpdateClick={onUpdateClick}
-          onCancelClick={closeDialog}
-        />
+        <EditPageButtons {...props} />
         <NormalTextField
-          key="field#timerID"
           text="Timer ID"
           value={editing.id}
           onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
         />
         <NormalComboBox
-          key="field#timerType"
           text="Timer Type"
           value={editing.type}
           options={TimerType}
           onChange={x => setEditing({ ...editing, type: x })}
         />
         <NormalTextField
-          key="field#timerPara"
           text="Timer parameter"
           value={editing.para}
           onChange={x => setEditing({ ...editing, para: x })}

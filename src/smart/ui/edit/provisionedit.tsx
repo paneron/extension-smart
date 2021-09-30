@@ -22,12 +22,11 @@ export const ProvisonItem: React.FC<{
   setObject: (obj: Object) => void;
 }> = ({ object, model, setObject }) => {
   const provision = object as MMELProvision;
-  const refs = getModelAllRefs(model!);
+  const refs = getModelAllRefs(model!).map(r => r.id);
 
   return (
     <FormGroup>
       <NormalTextField
-        key="field#provisionText"
         text="Provision Text"
         value={provision.condition}
         onChange={(x: string) => {
@@ -36,7 +35,6 @@ export const ProvisonItem: React.FC<{
         }}
       />
       <NormalComboBox
-        key="field#provisionModality"
         text="Provision Modality"
         value={provision.modality}
         options={MODAILITYOPTIONS}
@@ -46,7 +44,6 @@ export const ProvisonItem: React.FC<{
         }}
       />
       <MultiReferenceSelector
-        key="field#attributeReference"
         text="Reference"
         options={refs}
         values={provision.ref}

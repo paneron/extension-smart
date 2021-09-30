@@ -3,24 +3,15 @@
 
 import { jsx } from '@emotion/react';
 import React from 'react';
-import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
 import {
   EditorEGate,
-  EditorEndEvent,
   EditorSignalEvent,
   EditorTimerEvent,
 } from '../../../model/editormodel';
-import { DataType } from '../../../serialize/interface/baseinterface';
 import {
   MMELProvision,
   MMELReference,
 } from '../../../serialize/interface/supportinterface';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-} from '../../../utils/constants';
-import { EditButton, RemoveButton } from '../buttons';
 import { EdgeList, ReferenceList } from './ComponentList';
 import { DescriptionItem, NonEmptyFieldDescription } from './fields';
 import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
@@ -30,53 +21,18 @@ export const DescribeStart: React.FC = function () {
   return <span> Start event </span>;
 };
 
-export const DescribeEnd: React.FC<{
-  end: EditorEndEvent;
-  setDialog?: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
-}> = function ({ end, setDialog }): JSX.Element {
-  return (
-    <>
-      {setDialog !== undefined && (
-        <RemoveButton
-          onClick={() =>
-            setDialog(DataType.ENDEVENT, EditAction.DELETE, end.id)
-          }
-        />
-      )}
-      <p>End event</p>
-    </>
-  );
+export const DescribeEnd: React.FC = function (): JSX.Element {
+  return <p>End event</p>;
 };
 
 export const DescribeEGate: React.FC<{
   egate: EditorEGate;
-  setDialog?: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
   getOutgoingEdgesById?: (id: string) => MMELEdge[];
-}> = function ({ egate, setDialog, getOutgoingEdgesById }) {
+}> = function ({ egate, getOutgoingEdgesById }) {
   const edges =
     getOutgoingEdgesById !== undefined ? getOutgoingEdgesById(egate.id) : [];
   return (
     <>
-      {setDialog !== undefined && (
-        <MGDButtonGroup>
-          <EditButton
-            onClick={() => setDialog(DataType.EGATE, EditAction.EDIT, egate.id)}
-          />
-          <RemoveButton
-            onClick={() =>
-              setDialog(DataType.EGATE, EditAction.DELETE, egate.id)
-            }
-          />
-        </MGDButtonGroup>
-      )}
       <DescriptionItem label="Exclusive Gateway" value={egate.id} />
       <DescriptionItem label="Description" value={egate.label} />
       <EdgeList edges={edges} />
@@ -86,32 +42,9 @@ export const DescribeEGate: React.FC<{
 
 export const DescribeSignalCatch: React.FC<{
   scEvent: EditorSignalEvent;
-  setDialog?: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
-}> = function ({ scEvent, setDialog }) {
+}> = function ({ scEvent }) {
   return (
     <>
-      {setDialog !== undefined && (
-        <MGDButtonGroup>
-          <EditButton
-            onClick={() =>
-              setDialog(DataType.SIGNALCATCHEVENT, EditAction.EDIT, scEvent.id)
-            }
-          />
-          <RemoveButton
-            onClick={() =>
-              setDialog(
-                DataType.SIGNALCATCHEVENT,
-                EditAction.DELETE,
-                scEvent.id
-              )
-            }
-          />
-        </MGDButtonGroup>
-      )}
       <DescriptionItem label="Signal Catch Event" value={scEvent.id} />
       <DescriptionItem label="Signal" value={scEvent.signal} />
     </>
@@ -120,28 +53,9 @@ export const DescribeSignalCatch: React.FC<{
 
 export const DescribeTimer: React.FC<{
   timer: EditorTimerEvent;
-  setDialog?: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
-}> = function ({ timer, setDialog }) {
+}> = function ({ timer }) {
   return (
     <>
-      {setDialog !== undefined && (
-        <MGDButtonGroup>
-          <EditButton
-            onClick={() =>
-              setDialog(DataType.TIMEREVENT, EditAction.EDIT, timer.id)
-            }
-          />
-          <RemoveButton
-            onClick={() =>
-              setDialog(DataType.TIMEREVENT, EditAction.DELETE, timer.id)
-            }
-          />
-        </MGDButtonGroup>
-      )}
       <DescriptionItem label="Timer Event" value={timer.id} />
       <NonEmptyFieldDescription label="Type" value={timer.type} />
       <NonEmptyFieldDescription label="Parameter" value={timer.para} />

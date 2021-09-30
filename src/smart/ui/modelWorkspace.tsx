@@ -213,10 +213,7 @@ const ModelWorkspace: React.FC<{
           key: 'selected-node',
           title: 'Selected node',
           content: (
-            <SelectedNodeDescription
-              model={model}
-              pageid={state.modelWrapper.page}
-            />
+            <SelectedNodeDescription modelWrapper={state.modelWrapper} />
           ),
         },
         {

@@ -381,8 +381,7 @@ const ModelViewer: React.FC<{
     title: 'Selected node',
     content: (
       <SelectedNodeDescription
-        model={state.modelWrapper.model}
-        pageid={state.modelWrapper.page}
+        modelWrapper={state.modelWrapper}
         CustomAttribute={CustomAttribute}
         CustomProvision={CustomProvision}
       />

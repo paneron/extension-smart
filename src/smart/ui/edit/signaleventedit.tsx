@@ -3,7 +3,7 @@
 
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel, EditorSignalEvent } from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
@@ -13,16 +13,36 @@ import {
   removeSpace,
   updatePageElement,
 } from '../../utils/ModelFunctions';
+import { DescriptionItem } from '../common/description/fields';
 import { NormalTextField, ReferenceSelector } from '../common/fields';
 import { EditPageButtons } from './commons';
 
+interface CommonSignalEditProps {
+  onUpdateClick: () => void;
+  editing: EditorSignalEvent;
+  setEditing: (x: EditorSignalEvent) => void;
+  onFullEditClick?: () => void;
+  onDeleteClick?: () => void;
+}
+
 const EditSignalEventPage: React.FC<{
-  modelwrapper: ModelWrapper;
+  modelWrapper: ModelWrapper;
   setModel: (m: EditorModel) => void;
   id: string;
-  closeDialog: () => void;
-}> = function ({ modelwrapper, setModel, id, closeDialog }) {
-  const model = modelwrapper.model;
+  closeDialog?: () => void;
+  minimal?: boolean;
+  onFullEditClick?: () => void;
+  onDeleteClick?: () => void;
+}> = function ({
+  modelWrapper,
+  setModel,
+  id,
+  closeDialog,
+  minimal,
+  onFullEditClick,
+  onDeleteClick,
+}) {
+  const model = modelWrapper.model;
   const scEvent = model.elements[id] as EditorSignalEvent;
 
   const signals = getModelAllSignals(model);
@@ -30,28 +50,66 @@ const EditSignalEventPage: React.FC<{
   const [editing, setEditing] = useState<EditorSignalEvent>({ ...scEvent });
 
   function onUpdateClick() {
-    const updated = save(id, editing, modelwrapper.page, model);
+    const updated = save(id, editing, modelWrapper.page, model);
     if (updated !== null) {
       setModel({ ...updated });
-      closeDialog();
+      if (closeDialog !== undefined) {
+        closeDialog();
+      }
     }
   }
 
+  const commonProps: CommonSignalEditProps = {
+    onUpdateClick,
+    editing,
+    setEditing,
+    onDeleteClick,
+    onFullEditClick,
+  };
+
+  const fullEditProps = { closeDialog, signals };
+
+  useEffect(() => setEditing(scEvent), [scEvent]);
+
+  return minimal ? (
+    <QuickVersionEdit {...commonProps} />
+  ) : (
+    <FullVersionEdit {...commonProps} {...fullEditProps} />
+  );
+};
+
+const QuickVersionEdit: React.FC<CommonSignalEditProps> = function (props) {
+  const { editing, setEditing } = props;
+  return (
+    <FormGroup>
+      <EditPageButtons {...props} />
+      <DescriptionItem label="Signal Catch Event ID" value={editing.id} />
+      <NormalTextField
+        text="Signal"
+        value={editing.signal}
+        onChange={x => setEditing({ ...editing, signal: x })}
+      />
+    </FormGroup>
+  );
+};
+
+const FullVersionEdit: React.FC<
+  CommonSignalEditProps & {
+    closeDialog?: () => void;
+    signals: string[];
+  }
+> = function (props) {
+  const { editing, setEditing, signals } = props;
   return (
     <MGDDisplayPane>
       <FormGroup>
-        <EditPageButtons
-          onUpdateClick={onUpdateClick}
-          onCancelClick={closeDialog}
-        />
+        <EditPageButtons {...props} />
         <NormalTextField
-          key="field#scEventID"
           text="Signal Catch Event ID"
           value={editing.id}
           onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
         />
         <ReferenceSelector
-          key="field#scEventSignal"
           text="Signal"
           filterName="Signal filter"
           value={editing.signal}

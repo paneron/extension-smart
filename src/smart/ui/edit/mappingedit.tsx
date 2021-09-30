@@ -31,10 +31,7 @@ const MappingEditPage: React.FC<{
     <MGDDisplayPane>
       <FormGroup>
         <div css={wrapper_container}>
-          <EditPageButtons
-            onUpdateClick={() => onChange(editing)}
-            onCancelClick={() => onChange(null)}
-          />
+          <EditPageButtons onUpdateClick={() => onChange(editing)} />
         </div>
         <label css={mgd_label}>
           Mapping: {from.name} ( {from.id} ) to {to.name} ( {to.id} )

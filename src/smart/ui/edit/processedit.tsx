@@ -3,15 +3,22 @@
 
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { EditorModel, EditorProcess } from '../../model/editormodel';
+import {
+  EditorModel,
+  EditorProcess,
+  EditorRegistry,
+} from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
-import { MMELProvision } from '../../serialize/interface/supportinterface';
+import {
+  MMELProvision,
+  MMELRole,
+} from '../../serialize/interface/supportinterface';
 import {
   checkId,
   getModelAllRegs,
-  getModelAllRolesWithEmpty,
+  getModelAllRoles,
   removeSpace,
   updatePageElement,
 } from '../../utils/ModelFunctions';
@@ -32,6 +39,11 @@ import {
   MeasurementItem,
 } from './measurementExpressionEdit';
 import { matchProvisionFilter, ProvisonItem } from './provisionedit';
+import RoleSelector from './components/RoleSelector';
+import { DescriptionItem } from '../common/description/fields';
+import RegistrySelector from './components/RegistrySelector';
+import ProvisionListQuickEdit from './components/ProvisionList';
+import MeasureListQuickEdit from './components/MeasurementListEdit';
 
 const NEEDSUBPROCESS = 'need sub';
 
@@ -72,12 +84,39 @@ const emptyMeasurement: IMeasure = {
   measure: '',
 };
 
+interface CommonProcessEditProps {
+  onUpdateClick: () => void;
+  editing: EditorProcess;
+  setEditing: (x: EditorProcess) => void;
+  provisions: Record<string, MMELProvision>;
+  setProvisions: (x: Record<string, MMELProvision>) => void;
+  measurements: Record<string, IMeasure>;
+  setMeasurements: (x: Record<string, IMeasure>) => void;
+  model: EditorModel;
+  onFullEditClick?: () => void;
+  onDeleteClick?: () => void;
+  onSubprocessClick?: () => void;
+}
+
 const EditProcessPage: React.FC<{
   model: EditorModel;
   setModel: (m: EditorModel) => void;
   id: string;
-  closeDialog: () => void;
-}> = function ({ model, setModel, id, closeDialog }) {
+  closeDialog?: () => void;
+  minimal?: boolean;
+  onFullEditClick?: () => void;
+  onDeleteClick?: () => void;
+  onSubprocessClick?: () => void;
+}> = function ({
+  model,
+  setModel,
+  id,
+  closeDialog,
+  minimal = false,
+  onFullEditClick,
+  onDeleteClick,
+  onSubprocessClick,
+}) {
   const process = model.elements[id] as EditorProcess;
 
   const [editing, setEditing] = useState<EditorProcess>({ ...process });
@@ -88,8 +127,13 @@ const EditProcessPage: React.FC<{
     getInitMeasurement(process)
   );
 
-  const roles = getModelAllRolesWithEmpty(model);
-  const regs = getModelAllRegs(model);
+  const roleObjects = useMemo(() => getModelAllRoles(model), [model]);
+  const roles = useMemo(
+    () => ['', ...roleObjects.map(r => r.id)],
+    [roleObjects]
+  );
+  const registryObjects = useMemo(() => getModelAllRegs(model), [model]);
+  const regs = useMemo(() => registryObjects.map(r => r.id), [registryObjects]);
 
   function setPStart(x: string) {
     if (x === SUBPROCESSYES) {
@@ -103,17 +147,142 @@ const EditProcessPage: React.FC<{
     const updated = save(id, editing, provisions, measurements, model);
     if (updated !== null) {
       setModel({ ...updated });
-      closeDialog();
+      if (closeDialog !== undefined) {
+        closeDialog();
+      }
     }
   }
 
+  const commonProps = {
+    onUpdateClick,
+    editing,
+    setEditing,
+    provisions,
+    setProvisions,
+    measurements,
+    setMeasurements,
+    model,
+    onFullEditClick,
+    onDeleteClick,
+    onSubprocessClick,
+  };
+
+  const fullEditProps = {
+    closeDialog,
+    setPStart,
+    roles,
+    regs,
+  };
+
+  const quickEditProps = {
+    roleObjects,
+    registryObjects,
+  };
+
+  useEffect(() => setEditing(process), [process]);
+
+  return minimal ? (
+    <QuickVersionEdit {...commonProps} {...quickEditProps} />
+  ) : (
+    <FullVersionEdit {...commonProps} {...fullEditProps} />
+  );
+};
+
+const QuickVersionEdit: React.FC<
+  CommonProcessEditProps & {
+    roleObjects: MMELRole[];
+    registryObjects: EditorRegistry[];
+  }
+> = function (props) {
+  const {
+    editing,
+    setEditing,
+    measurements,
+    setMeasurements,
+    provisions,
+    setProvisions,
+    model,
+    roleObjects,
+    registryObjects,
+  } = props;
+  return (
+    <FormGroup>
+      <EditPageButtons {...props} />
+      <DescriptionItem label="Process ID" value={editing.id} />
+      <NormalTextField
+        text="Process Name"
+        value={editing.name}
+        onChange={x => setEditing({ ...editing, name: x })}
+      />
+      <RoleSelector
+        label="Actor"
+        activeItem={editing.actor !== '' ? model.roles[editing.actor] : null}
+        items={roleObjects}
+        onItemSelect={x =>
+          setEditing({ ...editing, actor: x !== null ? x.id : '' })
+        }
+      />
+      <RegistrySelector
+        label="Input data registry"
+        selected={editing.input}
+        items={registryObjects}
+        onItemSelect={x =>
+          setEditing({ ...editing, input: new Set([...editing.input, x.id]) })
+        }
+        onTagRemove={x => {
+          editing.input = new Set([...editing.input].filter(s => x !== s));
+          setEditing({ ...editing });
+        }}
+      />
+      <RegistrySelector
+        label="Output data registry"
+        selected={editing.output}
+        items={registryObjects}
+        onItemSelect={x =>
+          setEditing({ ...editing, output: new Set([...editing.output, x.id]) })
+        }
+        onTagRemove={x => {
+          editing.output = new Set([...editing.output].filter(s => x !== s));
+          setEditing({ ...editing });
+        }}
+      />
+      <ProvisionListQuickEdit
+        provisions={provisions}
+        setProvisions={setProvisions}
+        model={model}
+      />
+      <MeasureListQuickEdit
+        measurements={measurements}
+        setMeasurements={setMeasurements}
+      />
+    </FormGroup>
+  );
+};
+
+const FullVersionEdit: React.FC<
+  CommonProcessEditProps & {
+    closeDialog?: () => void;
+    setPStart: (x: string) => void;
+    roles: string[];
+    regs: string[];
+  }
+> = function (props) {
+  const {
+    editing,
+    setEditing,
+    measurements,
+    setMeasurements,
+    provisions,
+    setProvisions,
+    setPStart,
+    model,
+    roles,
+    regs,
+  } = props;
   return (
     <MGDDisplayPane>
       <FormGroup>
-        <EditPageButtons
-          onUpdateClick={onUpdateClick}
-          onCancelClick={closeDialog}
-        />
+        <EditPageButtons {...props} />
         <NormalTextField
           text="Process ID"
           value={editing.id}
@@ -201,7 +370,7 @@ const EditProcessPage: React.FC<{
           }}
           filterName="Measurement filter"
           Content={MeasurementItem}
-          label="Measurements"
+          label="Measurement tests"
           size={7}
           requireUniqueId={false}
         />

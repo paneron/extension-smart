@@ -100,9 +100,9 @@ export function addEdge(
     const newEdge = createEdge(findUniqueID('Edge', page.edges));
     newEdge.from = source;
     newEdge.to = target;
-    page.edges[newEdge.id] = newEdge;
+    page.edges = { ...page.edges, [newEdge.id]: newEdge };
   }
-  return page;
+  return { ...page };
 }
 
 export function createNewPage(model: EditorModel): string {
