@@ -24,8 +24,12 @@ import ProvisionSummary from './ProvisionSummary';
 
 export interface ClauseSummary {
   title: string;
+  provisions: ProvisionRecord[];
+}
+
+export interface ProvisionRecord {
   actor: MMELRole | undefined;
-  provisions: MMELProvision[];
+  statement: MMELProvision;
 }
 
 const ModalityText: Record<ModalityType, string> = {
@@ -66,12 +70,13 @@ const ProvisionSettings: React.FC<{
       .filter(x => isEditorProcess(x))
       .forEach(x => {
         const process = x as EditorProcess;
-        const actor = model.roles[process.actor];
+        const actor =
+          process.actor !== '' ? model.roles[process.actor] : undefined;
         process.provision.forEach(p => {
           const prov = model.provisions[p];
-          prov.ref.forEach(r =>
-            addProvisionToDoc(docs, model.refs[r], prov, actor)
-          );
+          prov.ref.forEach(r => {
+            addProvisionToDoc(docs, model.refs[r], prov, actor);
+          });
         });
       });
     return docs;
@@ -99,17 +104,19 @@ const ProvisionSettings: React.FC<{
         const filterRecord: Record<string, ClauseSummary> = {};
         Object.entries(record).forEach(([clause, summary]) => {
           if (
-            (clauseOption === '' ||
-              clause.substring(
-                0,
-                Math.min(clauseOption.length, clause.length)
-              ) === clauseOption) &&
-            (actorOption === '' || summary.actor?.id === actorOption)
+            clauseOption === '' ||
+            clause.substring(
+              0,
+              Math.min(clauseOption.length, clause.length)
+            ) === clauseOption
           ) {
-            const filterSummary: MMELProvision[] = [];
+            const filterSummary: ProvisionRecord[] = [];
             for (const sum of summary.provisions) {
-              const modality = sum.modality;
-              if (modalityOption[modality as ModalityType]) {
+              const modality = sum.statement.modality;
+              if (
+                modalityOption[modality as ModalityType] &&
+                (actorOption === '' || sum.actor?.id === actorOption)
+              ) {
                 filterSummary.push(sum);
               }
             }
@@ -202,7 +209,7 @@ function addToDoc(
   }
   let c = doc[clause];
   if (c === undefined) {
-    c = { title, actor: undefined, provisions: [] };
+    c = { title, provisions: [] };
     doc[clause] = c;
   }
 }
@@ -214,8 +221,7 @@ function addProvisionToDoc(
   actor: MMELRole | undefined
 ) {
   const record = docs[ref.document][ref.clause];
-  record.provisions.push(provision);
-  record.actor = actor;
+  record.provisions.push({ actor, statement: provision });
 }
 
 export default ProvisionSettings;

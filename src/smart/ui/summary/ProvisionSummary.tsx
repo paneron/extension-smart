@@ -34,20 +34,17 @@ const ProvisionSummary: React.FC<{
             <Button
               onClick={() => onSave(JSON.stringify(result), FILE_TYPE.JSON)}
             >
-              {' '}
-              Export to JSON{' '}
+              Export to JSON
             </Button>
             <Button
               onClick={() =>
                 onSave(translateObjectToXML(result), FILE_TYPE.XML)
               }
             >
-              {' '}
-              Export to XML{' '}
+              Export to XML
             </Button>
             <Button onClick={() => onSave(resultToCSV(result), FILE_TYPE.CSV)}>
-              {' '}
-              Export to CSV{' '}
+              Export to CSV
             </Button>
           </ButtonGroup>
           {entries.map(([doc, record]) => (
@@ -84,7 +81,7 @@ const ClauseSummary: React.FC<{
   clause: string;
   summary: ClauseSummary;
 }> = function ({ clause, summary }) {
-  const { provisions, actor } = summary;
+  const { provisions } = summary;
   return (
     <>
       <h3>
@@ -94,10 +91,11 @@ const ClauseSummary: React.FC<{
       {provisions.length > 0 && (
         <ul>
           {provisions.map(p => (
-            <li key={p.id}>
-              {actor !== undefined && `[Actor: ${actor.name}]`}
-              {p.modality !== '' && `[Modality: ${p.modality}]`}
-              {`[Statement: ${p.condition}]`}
+            <li key={p.statement.id}>
+              {p.actor !== undefined && `[Actor: ${p.actor.name}]`}
+              {p.statement.modality !== '' &&
+                `[Modality: ${p.statement.modality}]`}
+              {`[Statement: ${p.statement.condition}]`}
             </li>
           ))}
         </ul>
@@ -126,9 +124,9 @@ function resultToCSV(
             document,
             clause,
             summary.title,
-            summary.actor !== undefined ? summary.actor.name : '',
-            p.modality,
-            `"${p.condition}"`,
+            p.actor !== undefined ? p.actor.name : '',
+            p.statement.modality,
+            `"${p.statement.condition}"`,
           ].join(',') + '\n';
       }
     }
