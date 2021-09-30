@@ -164,6 +164,24 @@ const ModelMapper: React.FC<{
     impMW.model = model;
   }
 
+  function onImpClose() {
+    setImplProps({
+      modelWrapper: { ...initModelWrapper },
+      history: createPageHistory(initModelWrapper),
+      modelType: ModelType.IMP,
+      historyMap: {},
+    });
+  }
+
+  function onRefClose() {
+    setRefProps({
+      modelWrapper: { ...initModelWrapper },
+      history: createPageHistory(initModelWrapper),
+      modelType: ModelType.REF,
+      historyMap: {},
+    });
+  }
+
   function onImpPropsChange(state: MapperState) {
     setImplProps(state);
   }
@@ -389,6 +407,7 @@ const ModelMapper: React.FC<{
                 ? id => getEditorNodeInfoById(refMW.model, id)
                 : id => getDocumentMetaById(refMW, id)
             }
+            onClose={onImpClose}
           />
           <div ref={lineref} css={vertical_line} />
           <ModelDiagram
@@ -405,6 +424,7 @@ const ModelMapper: React.FC<{
             getPartnerModelElementById={id =>
               getEditorNodeInfoById(impmodel, id)
             }
+            onClose={onRefClose}
           />
         </div>
         <MappingCanvus mapEdges={mapEdges} line={lineref} />

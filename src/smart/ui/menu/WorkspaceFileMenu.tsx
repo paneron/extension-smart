@@ -18,7 +18,8 @@ const WorkspaceFileMenu: React.FC<{
   workspace: SMARTWorkspace;
   setModelWrapper: (m: ModelWrapper) => void;
   setWorkspace: (ws: SMARTWorkspace) => void;
-}> = function ({ workspace, setModelWrapper, setWorkspace }) {
+  onClose: () => void;
+}> = function ({ workspace, setModelWrapper, setWorkspace, onClose }) {
   const {
     getBlob,
     useDecodedBlob,
@@ -81,6 +82,7 @@ const WorkspaceFileMenu: React.FC<{
         }
         icon="graph"
       />
+      <MenuItem text="Close Model" onClick={onClose} icon="cross" />
     </Menu>
   );
 };

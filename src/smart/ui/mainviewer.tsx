@@ -357,6 +357,9 @@ const ModelViewer: React.FC<{
       >
         Open Model
       </MGDButton>
+      <MGDButton onClick={() => setModelWrapper({ ...initModelWrapper })}>
+        Close
+      </MGDButton>
       <Popover2
         minimal
         placement="bottom-start"

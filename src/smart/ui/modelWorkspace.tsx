@@ -166,6 +166,15 @@ const ModelWorkspace: React.FC<{
     setState({ ...state, workspace });
   }
 
+  function onClose() {
+    setState({
+      dvisible: state.dvisible,
+      modelWrapper: initModelWrapper,
+      history: createPageHistory(initModelWrapper),
+      workspace: createNewSMARTWorkspace(),
+    });
+  }
+
   const toolbar = (
     <ControlGroup>
       <Popover2
@@ -176,6 +185,7 @@ const ModelWorkspace: React.FC<{
             workspace={state.workspace}
             setModelWrapper={setModelWrapper}
             setWorkspace={setWorkspace}
+            onClose={onClose}
           />
         }
       >

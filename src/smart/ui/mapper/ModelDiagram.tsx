@@ -67,6 +67,7 @@ const ModelDiagram: React.FC<{
   onMappingEdit: (from: string, to: string) => void;
   issueNavigationRequest?: (id: string) => void;
   getPartnerModelElementById: (id: string) => string;
+  onClose: () => void;
 }> = ({
   className,
   viewOption,
@@ -80,6 +81,7 @@ const ModelDiagram: React.FC<{
   onMappingEdit,
   issueNavigationRequest,
   getPartnerModelElementById,
+  onClose,
 }) => {
   const { logger, useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
@@ -197,6 +199,7 @@ const ModelDiagram: React.FC<{
           Open Document
         </MGDButton>
       )}
+      <MGDButton onClick={onClose}> Close </MGDButton>
       {isModelWrapper(mw) && (
         <MGDButton
           type={MGDButtonType.Secondary}
