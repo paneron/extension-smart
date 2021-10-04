@@ -48,6 +48,7 @@ export enum ModelType {
   EDIT = 'edit',
   REF = 'ref',
   IMP = 'imp',
+  EDITREF = 'editref',
 }
 
 export interface EditorBaseObjectType {

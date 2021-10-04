@@ -6,6 +6,10 @@ import { RefObject } from 'react';
 import { mgd_label } from '../../../css/form';
 import MGDProcessBox from '../../MGDComponents/MGDProcessBox';
 import { ModelType } from '../../model/editormodel';
+import {
+  DragAndDropImportRefType,
+  DragAndDropMappingType,
+} from '../../utils/constants';
 
 export const DatacubeShape: React.FC<{ color?: string }> = function ({
   color = 'none',
@@ -125,6 +129,15 @@ export const ProcessBox: Record<
     uiref?: RefObject<HTMLDivElement>;
   }>
 > = {
+  [ModelType.EDITREF]: ({ content, pid, styleClass }) => (
+    <MGDProcessBox
+      styleClass={styleClass}
+      draggable
+      onDragStart={e => onImportDragStart(e, pid)}
+    >
+      {content}
+    </MGDProcessBox>
+  ),
   [ModelType.EDIT]: ({ content, styleClass }) => (
     <MGDProcessBox styleClass={styleClass}>{content}</MGDProcessBox>
   ),
@@ -133,8 +146,8 @@ export const ProcessBox: Record<
       <MGDProcessBox
         uiref={uiref}
         styleClass={styleClass}
-        draggable={true}
-        onDragStart={event => onDragStart(event, pid)}
+        draggable
+        onDragStart={event => onMapDragStart(event, pid)}
       >
         <label css={mgd_label}>{content}</label>
       </MGDProcessBox>
@@ -150,22 +163,29 @@ export const ProcessBox: Record<
     <MGDProcessBox
       uiref={uiref}
       styleClass={styleClass}
-      onDrop={event => onDrop(event, pid, setMapping)}
+      onDrop={event => onMapDrop(event, pid, setMapping)}
     >
       <label css={mgd_label}>{content}</label>
     </MGDProcessBox>
   ),
 };
 
-function onDragStart(event: React.DragEvent<unknown>, fromid: string): void {
-  event.dataTransfer.setData('text', fromid);
+function onMapDragStart(event: React.DragEvent<unknown>, fromid: string): void {
+  event.dataTransfer.setData(DragAndDropMappingType, fromid);
 }
 
-function onDrop(
+function onImportDragStart(
+  event: React.DragEvent<unknown>,
+  fromid: string
+): void {
+  event.dataTransfer.setData(DragAndDropImportRefType, fromid);
+}
+
+function onMapDrop(
   event: React.DragEvent<unknown>,
   toid: string,
   setMapping: (fromid: string, toid: string) => void
 ): void {
-  const fromid = event.dataTransfer.getData('text');
+  const fromid = event.dataTransfer.getData(DragAndDropMappingType);
   setMapping(fromid, toid);
 }

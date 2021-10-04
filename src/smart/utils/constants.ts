@@ -9,7 +9,9 @@ export const MODAILITYOPTIONS = ['', ...MODALITY] as const;
 
 export type ModalityType = typeof MODAILITYOPTIONS[number];
 
-export const DragAndDropFormatType = 'application/MMEL';
+export const DragAndDropNewFormatType = 'text/MMELNew';
+export const DragAndDropImportRefType = 'text/MMELImport';
+export const DragAndDropMappingType = 'text/MMELMap';
 
 export const TimerType = ['', 'WAIT', 'REPEAT'];
 

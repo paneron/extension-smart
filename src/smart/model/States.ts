@@ -38,11 +38,11 @@ export interface MapperViewOption {
   mapAIVisible: boolean; // visibility of mapping import calculation pane
 }
 
-export type MapperContent = ModelWrapper | MMELDocument;
+export type ReferenceContent = ModelWrapper | MMELDocument;
 
 export interface MapperState {
   history: PageHistory;
-  modelWrapper: MapperContent;
+  modelWrapper: ReferenceContent;
   modelType: ModelType;
   historyMap: Record<string, PageHistory>;
 }
@@ -69,7 +69,7 @@ export interface LegendInterface {
   color: string;
 }
 
-export function isModelWrapper(x: MapperContent): x is ModelWrapper {
+export function isModelWrapper(x: ReferenceContent): x is ModelWrapper {
   return x.type === 'modelwrapper';
 }
 

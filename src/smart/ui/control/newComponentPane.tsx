@@ -9,7 +9,7 @@ import MGDContainer from '../../MGDComponents/MGDContainer';
 import MGDProcessBox from '../../MGDComponents/MGDProcessBox';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
-  DragAndDropFormatType,
+  DragAndDropNewFormatType,
   NewComponentTypes,
 } from '../../utils/constants';
 import {
@@ -79,7 +79,7 @@ function onDragStart(
   msg: NewComponentTypes
 ) {
   if (event.dataTransfer !== null) {
-    event.dataTransfer.setData(DragAndDropFormatType, msg);
+    event.dataTransfer.setData(DragAndDropNewFormatType, msg);
     event.dataTransfer.effectAllowed = 'move';
   }
 }

@@ -23,7 +23,7 @@ export const mgd_canvas = css`
   pointer-events: none;
 `;
 
-export const mappper_container = css`
+export const multi_model_container = css`
   display: flex;
   width: 100%;
   height: 100%;

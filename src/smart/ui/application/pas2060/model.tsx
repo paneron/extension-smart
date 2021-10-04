@@ -70,4 +70,4 @@ export const colors2060 = [
   'lightsteelblue',
 ];
 
-export const fixedlocalhost = 'localhost:35583';
+export const fixedlocalhost = 'localhost:2060';

@@ -51,7 +51,7 @@ import { EditMPropsInterface } from './dialog/dialogs';
 import MappingEditPage from './edit/mappingedit';
 import DocTemplatePane from './reporttemplate/doctemplatepane';
 import MGDButton from '../MGDComponents/MGDButton';
-import { dialog_layout, mappper_container } from '../../css/layout';
+import { dialog_layout, multi_model_container } from '../../css/layout';
 import { vertical_line } from '../../css/components';
 import { findPageContainingElement } from '../utils/SearchFunctions';
 import { getDocumentMetaById } from '../utils/DocumentFunctions';
@@ -388,7 +388,7 @@ const ModelMapper: React.FC<{
             />
           )}
         </Dialog>
-        <div css={mappper_container}>
+        <div css={multi_model_container}>
           <ModelDiagram
             modelProps={implementProps}
             viewOption={viewOption}

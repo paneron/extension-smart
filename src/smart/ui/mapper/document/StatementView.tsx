@@ -7,6 +7,7 @@ import { jsx } from '@emotion/react';
 import React from 'react';
 import { useState } from 'react';
 import { DocStatement } from '../../../model/document';
+import { DragAndDropMappingType } from '../../../utils/constants';
 
 const StatementView: React.FC<{
   statement: DocStatement;
@@ -29,7 +30,7 @@ const StatementView: React.FC<{
   const hasMap = froms.length > 0;
 
   function onDrop(e: React.DragEvent<unknown>) {
-    const fromid = e.dataTransfer.getData('text');
+    const fromid = e.dataTransfer.getData(DragAndDropMappingType);
     setMapping(fromid, statement.id);
   }
 

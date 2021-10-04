@@ -48,7 +48,13 @@ import {
   createNewEditorModel,
   createSubprocessComponent,
 } from '../utils/EditorFactory';
-import { EdgeTypes, EditorState, NodeTypes } from '../model/States';
+import {
+  EdgeTypes,
+  EditorState,
+  isModelWrapper,
+  NodeTypes,
+  ReferenceContent,
+} from '../model/States';
 import { EditorModel, isEditorData, isEditorNode } from '../model/editormodel';
 import EditorFileMenu from './menu/EditorFileMenu';
 import { SelectedNodeDescription } from './sidebar/selected';
@@ -63,7 +69,8 @@ import { DataVisibilityButton, EdgeEditButton } from './control/buttons';
 import NewComponentPane from './control/newComponentPane';
 import {
   DeletableNodeTypes,
-  DragAndDropFormatType,
+  DragAndDropImportRefType,
+  DragAndDropNewFormatType,
   EditableNodeTypes,
   EditAction,
   NewComponentTypes,
@@ -79,6 +86,7 @@ import { MGDButtonType } from '../../css/MGDButton';
 import {
   dialog_layout,
   dialog_layout__full,
+  multi_model_container,
   react_flow_container_layout,
   sidebar_layout,
 } from '../../css/layout';
@@ -91,6 +99,9 @@ import {
   SearchResultStyles,
 } from '../utils/SearchFunctions';
 import { MMELMetadata } from '../serialize/interface/supportinterface';
+import EditorReferenceMenu from './menu/EditorReferenceMenu';
+import ModelReferenceView from './editreference/ModelReferenceView';
+import { addProcessIfNotFound } from '../utils/ModelImport';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -124,6 +135,9 @@ const ModelEditor: React.FC<{
     callback: () => {},
     msg: '',
   });
+  const [reference, setReference] = useState<ReferenceContent | undefined>(
+    undefined
+  );
   const [selected, setSelected] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<Set<string>>(
     new Set<string>()
@@ -226,11 +240,6 @@ const ModelEditor: React.FC<{
     setState({ ...state });
   }
 
-  function onDragOver(event: React.DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
-  }
-
   function onPageChange(updated: PageHistory, newPage: string) {
     saveLayout();
     state.history = updated;
@@ -264,23 +273,55 @@ const ModelEditor: React.FC<{
     event.preventDefault();
     if (canvusRef.current !== null && rfInstance !== null) {
       const reactFlowBounds = canvusRef.current.getBoundingClientRect();
-      const type = event.dataTransfer.getData(DragAndDropFormatType);
+      const type = event.dataTransfer.getData(DragAndDropNewFormatType);
+      const refid = event.dataTransfer.getData(DragAndDropImportRefType);
+
       const pos = rfInstance.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
-      const model = addComponentToModel(
-        state.modelWrapper,
-        type as NewComponentTypes,
-        pos
-      );
-      setState({
-        ...state,
-        modelWrapper: {
-          ...state.modelWrapper,
-          model: { ...model },
-        },
-      });
+      if (type !== '') {
+        const model = addComponentToModel(
+          state.modelWrapper,
+          type as NewComponentTypes,
+          pos
+        );
+        setState({
+          ...state,
+          modelWrapper: {
+            ...state.modelWrapper,
+            model: { ...model },
+          },
+        });
+      } else if (
+        refid !== '' &&
+        reference !== undefined &&
+        isModelWrapper(reference)
+      ) {
+        const process = addProcessIfNotFound(
+          state.modelWrapper,
+          reference,
+          refid,
+          {},
+          {},
+          {}
+        );
+        const model = state.modelWrapper.model;
+        const nc = createSubprocessComponent(process.id);
+        nc.x = pos.x;
+        nc.y = pos.y;
+
+        const page = model.pages[state.modelWrapper.page];
+        page.childs[process.id] = nc;
+        process.pages.add(page.id);
+        setState({
+          ...state,
+          modelWrapper: {
+            ...state.modelWrapper,
+            model: { ...model },
+          },
+        });
+      }
     }
   }
 
@@ -324,6 +365,16 @@ const ModelEditor: React.FC<{
     setSearchResult(set);
   }
 
+  const referenceMenu = (
+    <Popover2
+      minimal
+      placement="bottom-start"
+      content={<EditorReferenceMenu setReference={setReference} />}
+    >
+      <MGDButton>Reference model</MGDButton>
+    </Popover2>
+  );
+
   const toolbar = (
     <ControlGroup>
       <Popover2
@@ -339,6 +390,7 @@ const ModelEditor: React.FC<{
       >
         <MGDButton>Model</MGDButton>
       </Popover2>
+      {reference === undefined && referenceMenu}
       <MGDButton
         type={MGDButtonType.Primary}
         disabled={state.history.items.length <= 1}
@@ -400,7 +452,7 @@ const ModelEditor: React.FC<{
   if (isVisible) {
     const diagProps = dialogPack.type === null ? null : MyDiag[dialogPack.type];
     return (
-      <ReactFlowProvider>
+      <div css={multi_model_container}>
         {diagProps !== null && (
           <Dialog
             isOpen={dialogPack !== null}
@@ -425,55 +477,73 @@ const ModelEditor: React.FC<{
             />
           </Dialog>
         )}
-        <Workspace
-          className={className}
-          toolbar={toolbar}
-          sidebar={sidebar}
-          navbarProps={{ breadcrumbs }}
-        >
-          <div css={react_flow_container_layout}>
-            <ReactFlow
-              key="MMELModel"
-              elements={getEditorReactFlowElementsFrom(
-                state.modelWrapper,
-                state.dvisible,
-                state.edgeDeleteVisible,
-                onProcessClick,
-                removeEdge,
-                getStyleById,
-                getSVGColorById
+        <ReactFlowProvider>
+          <Workspace
+            className={className}
+            toolbar={toolbar}
+            sidebar={sidebar}
+            navbarProps={{ breadcrumbs }}
+          >
+            <div css={react_flow_container_layout}>
+              <ReactFlow
+                key="MMELModel"
+                elements={getEditorReactFlowElementsFrom(
+                  state.modelWrapper,
+                  state.dvisible,
+                  state.edgeDeleteVisible,
+                  onProcessClick,
+                  removeEdge,
+                  getStyleById,
+                  getSVGColorById
+                )}
+                onLoad={onLoad}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
+                onConnect={connectHandle}
+                nodesConnectable={true}
+                snapToGrid={true}
+                snapGrid={[10, 10]}
+                nodeTypes={NodeTypes}
+                edgeTypes={EdgeTypes}
+                ref={canvusRef}
+              >
+                <Controls>
+                  <DataVisibilityButton
+                    isOn={state.dvisible}
+                    onClick={toggleDataVisibility}
+                  />
+                  <EdgeEditButton
+                    isOn={state.edgeDeleteVisible}
+                    onClick={toggleEdgeDelete}
+                  />
+                </Controls>
+              </ReactFlow>
+              {searchResult.size > 0 && (
+                <LegendPane list={SearchResultStyles} onLeft={false} />
               )}
-              onLoad={onLoad}
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-              onConnect={connectHandle}
-              nodesConnectable={true}
-              snapToGrid={true}
-              snapGrid={[10, 10]}
-              nodeTypes={NodeTypes}
-              edgeTypes={EdgeTypes}
-              ref={canvusRef}
-            >
-              <Controls>
-                <DataVisibilityButton
-                  isOn={state.dvisible}
-                  onClick={toggleDataVisibility}
-                />
-                <EdgeEditButton
-                  isOn={state.edgeDeleteVisible}
-                  onClick={toggleEdgeDelete}
-                />
-              </Controls>
-            </ReactFlow>
-            {searchResult.size > 0 && (
-              <LegendPane list={SearchResultStyles} onLeft={false} />
-            )}
-          </div>
-        </Workspace>
-      </ReactFlowProvider>
+            </div>
+          </Workspace>
+        </ReactFlowProvider>
+
+        {reference !== undefined && isModelWrapper(reference) ? (
+          <ModelReferenceView
+            className={className}
+            modelWrapper={reference}
+            setModelWrapper={setReference}
+            menuControl={referenceMenu}
+          />
+        ) : (
+          <></>
+        )}
+      </div>
     );
   }
   return <div></div>;
 };
+
+function onDragOver(event: React.DragEvent<HTMLDivElement>) {
+  event.preventDefault();
+  event.dataTransfer.dropEffect = 'move';
+}
 
 export default ModelEditor;
