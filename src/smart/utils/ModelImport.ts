@@ -190,6 +190,7 @@ function addPageIfNotFound(
 
   const newEdges: Record<string, MMELEdge> = {};
   Object.values(page.edges).forEach(e => {
+    addMeasureIfNotFound(model, rmodel, e.condition);
     newEdges[e.id] = {
       ...e,
       from: nameMap[e.from],
@@ -437,6 +438,7 @@ function addMeasureIfNotFound(
     const name = r[0].substring(1, r[0].length - 1);
     if (model.vars[name] === undefined && ref.vars[name] !== undefined) {
       model.vars[name] = { ...ref.vars[name] };
+      addMeasureIfNotFound(model, ref, model.vars[name].definition);
     }
   }
 }
