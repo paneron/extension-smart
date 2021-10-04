@@ -10,16 +10,16 @@ import SectionView from './SectionView';
 
 const SMARTDocumentView: React.FC<{
   document: MMELDocument;
-  setMapping: (fromid: string, toid: string) => void;
-  mapSet: MapSet;
-  onDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
-  MappingList: React.FC<{ id: string }>;
-  setSelected: (id: string) => void;
+  setMapping?: (fromid: string, toid: string) => void;
+  mapSet?: MapSet;
+  onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
+  MappingList?: React.FC<{ id: string }>;
+  setSelected?: (id: string) => void;
 }> = function (props) {
   const { document, onDragOver, mapSet, setSelected } = props;
   const docMap = useMemo(
-    () => calculateDocumentMapping(mapSet.mappings),
-    [mapSet.mappings]
+    () => mapSet !== undefined ? calculateDocumentMapping(mapSet.mappings): undefined,
+    [mapSet?.mappings]
   );
 
   return (
@@ -29,7 +29,7 @@ const SMARTDocumentView: React.FC<{
         overflowY: 'auto',
       }}
       onDragOver={onDragOver}
-      onScroll={() => setSelected('')}
+      onScroll={setSelected !== undefined ? () => setSelected('') : undefined}
     >
       <h2
         style={{

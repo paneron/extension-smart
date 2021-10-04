@@ -8,10 +8,10 @@ import ParagraphView from './ParagraphView';
 const SectionView: React.FC<{
   sec: DocSection;
   statements: Record<string, DocStatement>;
-  setMapping: (from: string, to: string) => void;
-  docMap: DocMapIndex;
-  MappingList: React.FC<{ id: string }>;
-  setSelected: (id: string) => void;
+  setMapping?: (from: string, to: string) => void;
+  docMap?: DocMapIndex;
+  MappingList?: React.FC<{ id: string }>;
+  setSelected?: (id: string) => void;
 }> = function (props) {
   const { sec } = props;
   return (

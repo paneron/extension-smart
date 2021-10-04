@@ -12,11 +12,11 @@ import { DragAndDropMappingType } from '../../../utils/constants';
 const StatementView: React.FC<{
   statement: DocStatement;
   showSection?: string;
-  setMapping: (from: string, to: string) => void;
-  froms: string[];
+  setMapping?: (from: string, to: string) => void;
+  froms?: string[];
   first: boolean;
-  MappingList: React.FC<{ id: string }>;
-  setSelected: (id: string) => void;
+  MappingList?: React.FC<{ id: string }>;
+  setSelected?: (id: string) => void;
 }> = function ({
   statement,
   showSection,
@@ -27,21 +27,27 @@ const StatementView: React.FC<{
   setSelected,
 }) {
   const [hover, setHover] = useState<boolean>(false);
-  const hasMap = froms.length > 0;
+  const hasMap = froms !== undefined && froms.length > 0;
 
-  function onDrop(e: React.DragEvent<unknown>) {
-    const fromid = e.dataTransfer.getData(DragAndDropMappingType);
-    setMapping(fromid, statement.id);
+  function onDrop(e: React.DragEvent<unknown>) {    
+    if (setMapping !== undefined) {
+      const fromid = e.dataTransfer.getData(DragAndDropMappingType);
+      setMapping(fromid, statement.id);
+    }
   }
 
   function onMouseEnter() {
-    setSelected(statement.id);
-    setHover(true);
+    if (setSelected !== undefined) {
+      setSelected(statement.id);
+      setHover(true);
+    }
   }
 
   function onMouseLeave() {
-    setSelected('');
-    setHover(false);
+    if (setSelected !== undefined) {
+      setSelected('');
+      setHover(false);
+    }
   }
 
   const content =
@@ -59,14 +65,14 @@ const StatementView: React.FC<{
             : 'white',
         }}
         ref={statement.uiref}
-        onDrop={onDrop}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
+        onDrop={setMapping !== undefined ? onDrop:undefined}
+        onMouseEnter={setSelected !== undefined ? onMouseEnter : undefined}
+        onMouseLeave={setSelected !== undefined ? onMouseLeave : undefined}
         onDragEnter={() => setHover(true)}
         onDragLeave={() => setHover(false)}
       >
         {content}
-        {hasMap && (
+        {hasMap && MappingList !== undefined && (
           <Popover2 content={<MappingList id={statement.id} />} position="top">
             <Button small icon="link" />
           </Popover2>

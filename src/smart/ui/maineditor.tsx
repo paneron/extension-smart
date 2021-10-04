@@ -102,6 +102,7 @@ import { MMELMetadata } from '../serialize/interface/supportinterface';
 import EditorReferenceMenu from './menu/EditorReferenceMenu';
 import ModelReferenceView from './editreference/ModelReferenceView';
 import { addProcessIfNotFound } from '../utils/ModelImport';
+import DocumentReferenceView from './editreference/DocumentReferenceView';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -527,7 +528,7 @@ const ModelEditor: React.FC<{
           </Workspace>
         </ReactFlowProvider>
 
-        {reference !== undefined && isModelWrapper(reference) ? (
+        {reference !== undefined && (isModelWrapper(reference) ? (
           <ModelReferenceView
             className={className}
             modelWrapper={reference}
@@ -535,8 +536,12 @@ const ModelEditor: React.FC<{
             menuControl={referenceMenu}
           />
         ) : (
-          <></>
-        )}
+          <DocumentReferenceView 
+            className={className}
+            document={reference}
+            menuControl={referenceMenu}
+          />
+        ))}
       </div>
     );
   }
