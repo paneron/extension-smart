@@ -67,6 +67,7 @@ const EditApprovalPage: React.FC<{
   const approval = model.elements[id] as EditorApproval;
 
   const [editing, setEditing] = useState<EditorApproval>({ ...approval });
+  const [hasChange, setHasChange] = useState<boolean>(false);
 
   const roleObjects = useMemo(() => getModelAllRoles(model), [model]);
   const roles = useMemo(
@@ -88,12 +89,48 @@ const EditApprovalPage: React.FC<{
     }
   }
 
+  function setEdit(x: EditorApproval) {
+    setEditing(x);
+    onChange();
+  }
+
+  function onChange() {
+    if (!hasChange) {
+      setHasChange(true);
+    }
+  }
+
+  function saveOnExit() {
+    setHasChange(hc => {
+      if (hc) {
+        setEditing(edit => {
+          const updated = save(id, edit, modelWrapper.page, model);
+          if (updated !== null) {
+            setModel({ ...updated });
+          }
+          return edit;
+        });
+      }
+      return false;
+    });
+  }
+
+  const fullEditClick =
+    onFullEditClick !== undefined
+      ? function () {
+          if (hasChange) {
+            onUpdateClick();
+          }
+          onFullEditClick();
+        }
+      : undefined;
+
   const commonProps = {
     onUpdateClick,
     editing,
     setEditing,
     model,
-    onFullEditClick,
+    onFullEditClick: fullEditClick,
     onDeleteClick,
   };
 
@@ -108,6 +145,9 @@ const EditApprovalPage: React.FC<{
     roleObjects,
     registryObjects,
     refObjects,
+    saveOnExit,
+    approval,
+    setEditing: setEdit,
   };
 
   useEffect(() => setEditing(approval), [approval]);
@@ -124,6 +164,8 @@ const QuickVersionEdit: React.FC<
     roleObjects: MMELRole[];
     registryObjects: EditorRegistry[];
     refObjects: MMELReference[];
+    saveOnExit: () => void;
+    approval: EditorApproval;
   }
 > = function (props) {
   const {
@@ -133,7 +175,12 @@ const QuickVersionEdit: React.FC<
     model,
     registryObjects,
     refObjects,
+    saveOnExit,
+    approval,
   } = props;
+
+  useEffect(() => saveOnExit, [approval]);
+
   return (
     <FormGroup>
       <EditPageButtons {...props} />

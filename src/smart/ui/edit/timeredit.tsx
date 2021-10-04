@@ -46,6 +46,7 @@ const EditTimerPage: React.FC<{
   const timer = model.elements[id] as EditorTimerEvent;
 
   const [editing, setEditing] = useState<EditorTimerEvent>({ ...timer });
+  const [hasChange, setHasChange] = useState<boolean>(false);
 
   function onUpdateClick() {
     const updated = save(id, editing, modelWrapper.page, model);
@@ -57,27 +58,77 @@ const EditTimerPage: React.FC<{
     }
   }
 
+  function setEdit(x: EditorTimerEvent) {
+    setEditing(x);
+    onChange();
+  }
+
+  function onChange() {
+    if (!hasChange) {
+      setHasChange(true);
+    }
+  }
+
+  function saveOnExit() {
+    setHasChange(hc => {
+      if (hc) {
+        setEditing(edit => {
+          const updated = save(id, edit, modelWrapper.page, model);
+          if (updated !== null) {
+            setModel({ ...updated });
+          }
+          return edit;
+        });
+      }
+      return false;
+    });
+  }
+
+  const fullEditClick =
+    onFullEditClick !== undefined
+      ? function () {
+          if (hasChange) {
+            onUpdateClick();
+          }
+          onFullEditClick();
+        }
+      : undefined;
+
   const commonProps: CommonTimerEditProps = {
     onUpdateClick,
     editing,
     setEditing,
     onDeleteClick,
-    onFullEditClick,
+    onFullEditClick: fullEditClick,
   };
 
   const fullEditProps = { closeDialog };
 
+  const quickEditProps = {
+    saveOnExit,
+    timer,
+    setEditing: setEdit,
+  };
+
   useEffect(() => setEditing(timer), [timer]);
 
   return minimal ? (
-    <QuickVersionEdit {...commonProps} />
+    <QuickVersionEdit {...commonProps} {...quickEditProps} />
   ) : (
     <FullVersionEdit {...commonProps} {...fullEditProps} />
   );
 };
 
-const QuickVersionEdit: React.FC<CommonTimerEditProps> = function (props) {
-  const { editing, setEditing } = props;
+const QuickVersionEdit: React.FC<
+  CommonTimerEditProps & {
+    timer: EditorTimerEvent;
+    saveOnExit: () => void;
+  }
+> = function (props) {
+  const { editing, setEditing, timer, saveOnExit } = props;
+
+  useEffect(() => saveOnExit, [timer]);
+
   return (
     <FormGroup>
       <EditPageButtons {...props} />

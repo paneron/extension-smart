@@ -298,22 +298,24 @@ const ModelEditor: React.FC<{
         reference !== undefined &&
         isModelWrapper(reference)
       ) {
+        const model = state.modelWrapper.model;
+        const page = model.pages[state.modelWrapper.page];
+
         const process = addProcessIfNotFound(
           state.modelWrapper,
           reference,
           refid,
           {},
           {},
-          {}
+          {},
+          page.id
         );
-        const model = state.modelWrapper.model;
+
         const nc = createSubprocessComponent(process.id);
         nc.x = pos.x;
         nc.y = pos.y;
 
-        const page = model.pages[state.modelWrapper.page];
         page.childs[process.id] = nc;
-        process.pages.add(page.id);
         setState({
           ...state,
           modelWrapper: {

@@ -52,6 +52,26 @@ const MinListOp: ListOperator = function (
   ]);
 };
 
+const CountListOp: ListOperator = function (
+  a: MTreeNode,
+  values: EnviromentValues,
+  trees: EnviromentVariables
+) {
+  const list = getListFromNode(a, values, trees);
+  return createMTreeNodeWithValue([list.length]);
+};
+
+const AverageListOp: ListOperator = function (
+  a: MTreeNode,
+  values: EnviromentValues,
+  trees: EnviromentVariables
+) {
+  const list = getListFromNode(a, values, trees);
+  return createMTreeNodeWithValue([
+    list.length > 0 ? list.reduce((sum, v) => sum + v, 0) / list.length : 0,
+  ]);
+};
+
 const PlusOp: BinaryOperator = function (
   a: MTreeNode,
   b: MTreeNode,
@@ -96,7 +116,13 @@ const DivideOp: BinaryOperator = function (
   return createMTreeNodeWithValue([left / right]);
 };
 
-export const MListOperators = ['sum', 'max', 'min'] as const;
+export const MListOperators = [
+  'sum',
+  'max',
+  'min',
+  'count',
+  'average',
+] as const;
 
 export const MBinaryOperators = ['+', '-', '*', '/'] as const;
 
@@ -111,6 +137,8 @@ export const MLOperators: Record<MListOperatorTypes, ListOperator> = {
   sum: SumListOp,
   max: MaxListOp,
   min: MinListOp,
+  count: CountListOp,
+  average: AverageListOp,
 };
 
 export const MBOperators: Record<MBinOperatorTypes, BinaryOperator> = {

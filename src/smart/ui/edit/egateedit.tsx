@@ -61,6 +61,7 @@ const EditEGatePage: React.FC<{
   const [edges, setEdges] = useState<MMELEdge[]>(
     Object.values(page.edges).filter(e => e.from === id)
   );
+  const [hasChange, setHasChange] = useState<boolean>(false);
 
   function onUpdateClick() {
     const updated = save(id, editing, modelWrapper.page, model, edges);
@@ -72,6 +73,50 @@ const EditEGatePage: React.FC<{
     }
   }
 
+  function setEdit(x: EditorEGate) {
+    setEditing(x);
+    onChange();
+  }
+
+  function setEds(x: MMELEdge[]) {
+    setEdges(x);
+    onChange();
+  }
+
+  function onChange() {
+    if (!hasChange) {
+      setHasChange(true);
+    }
+  }
+
+  function saveOnExit() {
+    setHasChange(hc => {
+      if (hc) {
+        setEditing(edit => {
+          setEdges(es => {
+            const updated = save(id, edit, modelWrapper.page, model, es);
+            if (updated !== null) {
+              setModel({ ...updated });
+            }
+            return es;
+          });
+          return edit;
+        });
+      }
+      return false;
+    });
+  }
+
+  const fullEditClick =
+    onFullEditClick !== undefined
+      ? function () {
+          if (hasChange) {
+            onUpdateClick();
+          }
+          onFullEditClick();
+        }
+      : undefined;
+
   const commonProps: CommonEGateEditProps = {
     onUpdateClick,
     editing,
@@ -79,7 +124,7 @@ const EditEGatePage: React.FC<{
     edges,
     setEdges,
     onDeleteClick,
-    onFullEditClick,
+    onFullEditClick: fullEditClick,
   };
 
   const fullEditProps = {
@@ -87,21 +132,36 @@ const EditEGatePage: React.FC<{
     measures,
   };
 
+  const quickEditProps = {
+    saveOnExit,
+    egate,
+    setEditing: setEdit,
+    setEdges: setEds,
+  };
+
   useEffect(() => setEditing(egate), [egate]);
   useEffect(
-    () => setEdges(Object.values(page.edges).filter(e => e.from === id)),
+    () => setEdges([...Object.values(page.edges).filter(e => e.from === id)]),
     [page.edges]
   );
 
   return minimal ? (
-    <QuickVersionEdit {...commonProps} />
+    <QuickVersionEdit {...commonProps} {...quickEditProps} />
   ) : (
     <FullVersionEdit {...commonProps} {...fullEditProps} />
   );
 };
 
-const QuickVersionEdit: React.FC<CommonEGateEditProps> = function (props) {
-  const { editing, setEditing, edges, setEdges } = props;
+const QuickVersionEdit: React.FC<
+  CommonEGateEditProps & {
+    egate: EditorEGate;
+    saveOnExit: () => void;
+  }
+> = function (props) {
+  const { editing, setEditing, edges, setEdges, egate, saveOnExit } = props;
+
+  useEffect(() => saveOnExit, [egate]);
+
   return (
     <FormGroup>
       <EditPageButtons {...props} />
@@ -243,6 +303,7 @@ function updateEdges(page: EditorSubprocess, edges: MMELEdge[]) {
   for (const edge of edges) {
     page.edges[edge.id] = edge;
   }
+  page.edges = { ...page.edges };
 }
 
 export default EditEGatePage;

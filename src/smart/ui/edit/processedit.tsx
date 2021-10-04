@@ -126,6 +126,7 @@ const EditProcessPage: React.FC<{
   const [measurements, setMeasurements] = useState<Record<string, IMeasure>>(
     getInitMeasurement(process)
   );
+  const [hasChange, setHasChange] = useState<boolean>(false);
 
   const roleObjects = useMemo(() => getModelAllRoles(model), [model]);
   const roles = useMemo(
@@ -153,6 +154,61 @@ const EditProcessPage: React.FC<{
     }
   }
 
+  function setEdit(x: EditorProcess) {
+    setEditing(x);
+    onChange();
+  }
+
+  function setPros(x: Record<string, MMELProvision>) {
+    setProvisions(x);
+    onChange();
+  }
+
+  function setMeasure(x: Record<string, IMeasure>) {
+    setMeasurements(x);
+    onChange();
+  }
+
+  function onChange() {
+    if (!hasChange) {
+      setHasChange(true);
+    }
+  }
+
+  function saveOnExit() {
+    setHasChange(hc => {
+      if (hc) {
+        setEditing(edit => {
+          setMeasurements(mea => {
+            setProvisions(pros => {
+              const updated = save(id, edit, pros, mea, model);
+              if (updated !== null) {
+                setModel({ ...updated });
+                if (closeDialog !== undefined) {
+                  closeDialog();
+                }
+              }
+              return pros;
+            });
+            return mea;
+          });
+          return edit;
+        });
+      }
+      return false;
+    });
+  }
+
+  const fullEditClick =
+    onFullEditClick !== undefined
+      ? function () {
+          if (hasChange) {
+            onUpdateClick();
+          }
+          onFullEditClick();
+        }
+      : undefined;
+
   const commonProps = {
     onUpdateClick,
     editing,
@@ -162,7 +218,7 @@ const EditProcessPage: React.FC<{
     measurements,
     setMeasurements,
     model,
-    onFullEditClick,
+    onFullEditClick: fullEditClick,
     onDeleteClick,
     onSubprocessClick,
   };
@@ -177,6 +233,11 @@ const EditProcessPage: React.FC<{
   const quickEditProps = {
     roleObjects,
     registryObjects,
+    setEditing: setEdit,
+    setProvisions: setPros,
+    setMeasurements: setMeasure,
+    process,
+    saveOnExit,
   };
 
   useEffect(() => setEditing(process), [process]);
@@ -192,6 +253,8 @@ const QuickVersionEdit: React.FC<
   CommonProcessEditProps & {
     roleObjects: MMELRole[];
     registryObjects: EditorRegistry[];
+    process: EditorProcess;
+    saveOnExit: () => void;
   }
 > = function (props) {
   const {
@@ -204,7 +267,12 @@ const QuickVersionEdit: React.FC<
     model,
     roleObjects,
     registryObjects,
+    process,
+    saveOnExit,
   } = props;
+
+  useEffect(() => saveOnExit, [process]);
+
   return (
     <FormGroup>
       <EditPageButtons {...props} />

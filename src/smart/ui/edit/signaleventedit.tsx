@@ -48,6 +48,7 @@ const EditSignalEventPage: React.FC<{
   const signals = getModelAllSignals(model);
 
   const [editing, setEditing] = useState<EditorSignalEvent>({ ...scEvent });
+  const [hasChange, setHasChange] = useState<boolean>(false);
 
   function onUpdateClick() {
     const updated = save(id, editing, modelWrapper.page, model);
@@ -59,27 +60,77 @@ const EditSignalEventPage: React.FC<{
     }
   }
 
+  function setEdit(x: EditorSignalEvent) {
+    setEditing(x);
+    onChange();
+  }
+
+  function onChange() {
+    if (!hasChange) {
+      setHasChange(true);
+    }
+  }
+
+  function saveOnExit() {
+    setHasChange(hc => {
+      if (hc) {
+        setEditing(edit => {
+          const updated = save(id, edit, modelWrapper.page, model);
+          if (updated !== null) {
+            setModel({ ...updated });
+          }
+          return edit;
+        });
+      }
+      return false;
+    });
+  }
+
+  const fullEditClick =
+    onFullEditClick !== undefined
+      ? function () {
+          if (hasChange) {
+            onUpdateClick();
+          }
+          onFullEditClick();
+        }
+      : undefined;
+
   const commonProps: CommonSignalEditProps = {
     onUpdateClick,
     editing,
     setEditing,
     onDeleteClick,
-    onFullEditClick,
+    onFullEditClick: fullEditClick,
   };
 
   const fullEditProps = { closeDialog, signals };
 
+  const quickEditProps = {
+    saveOnExit,
+    scEvent,
+    setEditing: setEdit,
+  };
+
   useEffect(() => setEditing(scEvent), [scEvent]);
 
   return minimal ? (
-    <QuickVersionEdit {...commonProps} />
+    <QuickVersionEdit {...commonProps} {...quickEditProps} />
   ) : (
     <FullVersionEdit {...commonProps} {...fullEditProps} />
   );
 };
 
-const QuickVersionEdit: React.FC<CommonSignalEditProps> = function (props) {
-  const { editing, setEditing } = props;
+const QuickVersionEdit: React.FC<
+  CommonSignalEditProps & {
+    saveOnExit: () => void;
+    scEvent: EditorSignalEvent;
+  }
+> = function (props) {
+  const { editing, setEditing, scEvent, saveOnExit } = props;
+
+  useEffect(() => saveOnExit, [scEvent]);
+
   return (
     <FormGroup>
       <EditPageButtons {...props} />
