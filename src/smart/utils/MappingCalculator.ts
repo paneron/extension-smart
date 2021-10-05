@@ -289,7 +289,7 @@ function getFilterMapRecordForDocument(
   const impNode = impElms[impId];
   return {
     fromref: impNode.uiref!,
-    toref: statement.uiref,
+    toref: statement.uiref!,
     fromid: impNode.id,
     toid: statement.id,
   };

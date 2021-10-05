@@ -7,6 +7,7 @@ import { SMARTWorkspace } from '../model/workspace';
 import { textToMMEL } from '../serialize/MMEL';
 import { LoggerInterface, OpenFileInterface } from './constants';
 import { textToDoc } from './DocumentFunctions';
+import { xmlToDocument } from './xml/XMLDocumentFunctions';
 
 export interface FileTypeDescriptionInterface {
   filtername: string;
@@ -116,12 +117,16 @@ export function handleDocumentOpen(props: {
   setDocument: (doc: MMELDocument) => void;
   useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
+  fileType: FILE_TYPE.Document | FILE_TYPE.XML;
 }) {
-  const { setDocument } = props;
+  const { setDocument, fileType } = props;
   handleFileOpen({
     ...props,
-    type: FILE_TYPE.Document,
-    postProcessing: data => setDocument(textToDoc(data)),
+    type: fileType,
+    postProcessing: data =>
+      setDocument(
+        fileType === FILE_TYPE.Document ? textToDoc(data) : xmlToDocument(data)
+      ),
   });
 }
 

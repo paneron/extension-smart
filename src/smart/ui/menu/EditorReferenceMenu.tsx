@@ -5,7 +5,11 @@ import { jsx } from '@emotion/react';
 import React, { useContext } from 'react';
 import { Menu, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { handleDocumentOpen, handleModelOpen } from '../../utils/IOFunctions';
+import {
+  FILE_TYPE,
+  handleDocumentOpen,
+  handleModelOpen,
+} from '../../utils/IOFunctions';
 import { ReferenceContent } from '../../model/States';
 import { indexModel } from '../../model/mapmodel';
 
@@ -33,12 +37,25 @@ const EditorReferenceMenu: React.FC<{
         icon="document-open"
       />
       <MenuItem
-        text="Open Document"
+        text="Open SMART Document"
         onClick={() =>
           handleDocumentOpen({
             setDocument: setReference,
             useDecodedBlob,
             requestFileFromFilesystem,
+            fileType: FILE_TYPE.Document,
+          })
+        }
+        icon="floppy-disk"
+      />
+      <MenuItem
+        text="Open XML Document"
+        onClick={() =>
+          handleDocumentOpen({
+            setDocument: setReference,
+            useDecodedBlob,
+            requestFileFromFilesystem,
+            fileType: FILE_TYPE.XML,
           })
         }
         icon="floppy-disk"

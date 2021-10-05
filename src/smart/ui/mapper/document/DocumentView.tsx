@@ -29,7 +29,8 @@ const SMARTDocumentView: React.FC<{
   return (
     <div
       style={{
-        height: 'calc(100vh - 100px)',
+        height:
+          mapSet !== undefined ? 'calc(100vh - 100px)' : 'calc(100vh - 50px)',
         overflowY: 'auto',
       }}
       onDragOver={onDragOver}

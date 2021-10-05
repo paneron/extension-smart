@@ -9,10 +9,12 @@ export interface DocStatement {
   uiref: RefObject<HTMLSpanElement>;
 }
 
+// ids of the statements
 export type DocParagraph = string[];
 
 export interface DocSection {
   id: string;
+  title?: string;
   contents: DocParagraph[];
 }
 
@@ -22,6 +24,8 @@ export interface MMELDocument {
   title: string;
   sections: DocSection[];
   type: 'document';
+  edition?: string;
+  sdo?: string;
 }
 
 export type DocMapIndex = Record<string, string[]>;

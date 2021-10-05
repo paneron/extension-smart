@@ -8,7 +8,7 @@ import React, { useContext } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { FILE_TYPE, saveToFileSystem } from '../../utils/IOFunctions';
 import { clauseSorter } from '../../utils/ModelFunctions';
-import translateObjectToXML from '../../utils/XMLWriter';
+import translateObjectToXML from '../../utils/xml/XMLWriter';
 import { ClauseSummary } from './ProvisionSettings';
 
 const ProvisionSummary: React.FC<{

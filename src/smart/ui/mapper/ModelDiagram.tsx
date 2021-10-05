@@ -50,7 +50,11 @@ import {
 } from '../../utils/MappingCalculator';
 import LegendPane from '../common/description/LegendPane';
 import MappingPartyList from './mappartylist';
-import { handleDocumentOpen, handleModelOpen } from '../../utils/IOFunctions';
+import {
+  FILE_TYPE,
+  handleDocumentOpen,
+  handleModelOpen,
+} from '../../utils/IOFunctions';
 import { MMELDocument } from '../../model/document';
 import SMARTDocumentView from './document/DocumentView';
 
@@ -193,6 +197,7 @@ const ModelDiagram: React.FC<{
               setDocument: onDocumentLoaded,
               useDecodedBlob,
               requestFileFromFilesystem,
+              fileType: FILE_TYPE.Document,
             });
           }}
         >
