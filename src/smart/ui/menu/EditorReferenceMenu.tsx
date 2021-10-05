@@ -46,7 +46,7 @@ const EditorReferenceMenu: React.FC<{
             fileType: FILE_TYPE.Document,
           })
         }
-        icon="floppy-disk"
+        icon="document-open"
       />
       <MenuItem
         text="Open XML Document"
@@ -58,7 +58,7 @@ const EditorReferenceMenu: React.FC<{
             fileType: FILE_TYPE.XML,
           })
         }
-        icon="floppy-disk"
+        icon="document-open"
       />
       <MenuItem
         text="Close Reference"

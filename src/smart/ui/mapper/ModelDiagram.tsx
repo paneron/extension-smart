@@ -50,13 +50,11 @@ import {
 } from '../../utils/MappingCalculator';
 import LegendPane from '../common/description/LegendPane';
 import MappingPartyList from './mappartylist';
-import {
-  FILE_TYPE,
-  handleDocumentOpen,
-  handleModelOpen,
-} from '../../utils/IOFunctions';
+import { handleModelOpen } from '../../utils/IOFunctions';
 import { MMELDocument } from '../../model/document';
 import SMARTDocumentView from './document/DocumentView';
+import { Popover2 } from '@blueprintjs/popover2';
+import MapperDocumentMenu from '../menu/MapperDocumentMenu';
 
 const ModelDiagram: React.FC<{
   className?: string;
@@ -191,18 +189,13 @@ const ModelDiagram: React.FC<{
         {'Open ' + MapperModelLabel[modelProps.modelType as MapperModelType]}
       </MGDButton>
       {!isImp && (
-        <MGDButton
-          onClick={() => {
-            handleDocumentOpen({
-              setDocument: onDocumentLoaded,
-              useDecodedBlob,
-              requestFileFromFilesystem,
-              fileType: FILE_TYPE.Document,
-            });
-          }}
+        <Popover2
+          minimal
+          placement="bottom-start"
+          content={<MapperDocumentMenu setDocument={onDocumentLoaded} />}
         >
-          Open Document
-        </MGDButton>
+          <MGDButton>Open Document</MGDButton>
+        </Popover2>
       )}
       <MGDButton onClick={onClose}> Close </MGDButton>
       {isModelWrapper(mw) && (
