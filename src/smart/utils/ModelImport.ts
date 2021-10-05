@@ -377,16 +377,10 @@ function addRefIfNotFound(
   }
 
   const r = rmodel.refs[id];
-  for (const x in model.refs) {
-    const ref = model.refs[x];
-    if (
-      r.title === ref.title &&
-      r.document === ref.document &&
-      r.clause === ref.clause
-    ) {
-      refMap[id] = ref.id;
-      return ref;
-    }
+  const existing = findExistingRef(model, r);
+  if (existing !== null) {
+    refMap[id] = existing.id;
+    return existing;
   }
 
   const newid = trydefaultID(id, model.refs);
@@ -441,4 +435,22 @@ function addMeasureIfNotFound(
       addMeasureIfNotFound(model, ref, model.vars[name].definition);
     }
   }
+}
+
+export function findExistingRef(
+  model: EditorModel,
+  r: MMELReference,
+  titleCheck = true
+): MMELReference | null {
+  for (const x in model.refs) {
+    const ref = model.refs[x];
+    if (
+      (r.title === ref.title || !titleCheck) &&
+      r.document === ref.document &&
+      r.clause === ref.clause
+    ) {
+      return ref;
+    }
+  }
+  return null;
 }

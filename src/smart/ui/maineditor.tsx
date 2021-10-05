@@ -103,6 +103,7 @@ import EditorReferenceMenu from './menu/EditorReferenceMenu';
 import ModelReferenceView from './editreference/ModelReferenceView';
 import { addProcessIfNotFound } from '../utils/ModelImport';
 import DocumentReferenceView from './editreference/DocumentReferenceView';
+import { ProvisionSelection } from '../model/provisionImport';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -143,6 +144,9 @@ const ModelEditor: React.FC<{
   const [searchResult, setSearchResult] = useState<Set<string>>(
     new Set<string>()
   );
+  const [provisionImport, setPImport] = useState<
+    ProvisionSelection | undefined
+  >(undefined);
   const [toaster] = useState<IToaster>(Toaster.create());
 
   function showMsg(msg: IToastProps) {
@@ -422,6 +426,7 @@ const ModelEditor: React.FC<{
               setModel={m =>
                 setModelWrapper({ ...state.modelWrapper, model: m })
               }
+              provision={provisionImport}
             />
           ),
         },
@@ -528,20 +533,22 @@ const ModelEditor: React.FC<{
           </Workspace>
         </ReactFlowProvider>
 
-        {reference !== undefined && (isModelWrapper(reference) ? (
-          <ModelReferenceView
-            className={className}
-            modelWrapper={reference}
-            setModelWrapper={setReference}
-            menuControl={referenceMenu}
-          />
-        ) : (
-          <DocumentReferenceView 
-            className={className}
-            document={reference}
-            menuControl={referenceMenu}
-          />
-        ))}
+        {reference !== undefined &&
+          (isModelWrapper(reference) ? (
+            <ModelReferenceView
+              className={className}
+              modelWrapper={reference}
+              setModelWrapper={setReference}
+              menuControl={referenceMenu}
+            />
+          ) : (
+            <DocumentReferenceView
+              className={className}
+              document={reference}
+              menuControl={referenceMenu}
+              setPImport={setPImport}
+            />
+          ))}
       </div>
     );
   }

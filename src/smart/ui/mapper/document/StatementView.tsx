@@ -29,7 +29,7 @@ const StatementView: React.FC<{
   const [hover, setHover] = useState<boolean>(false);
   const hasMap = froms !== undefined && froms.length > 0;
 
-  function onDrop(e: React.DragEvent<unknown>) {    
+  function onDrop(e: React.DragEvent<unknown>) {
     if (setMapping !== undefined) {
       const fromid = e.dataTransfer.getData(DragAndDropMappingType);
       setMapping(fromid, statement.id);
@@ -65,11 +65,12 @@ const StatementView: React.FC<{
             : 'white',
         }}
         ref={statement.uiref}
-        onDrop={setMapping !== undefined ? onDrop:undefined}
+        onDrop={setMapping !== undefined ? onDrop : undefined}
         onMouseEnter={setSelected !== undefined ? onMouseEnter : undefined}
         onMouseLeave={setSelected !== undefined ? onMouseLeave : undefined}
         onDragEnter={() => setHover(true)}
         onDragLeave={() => setHover(false)}
+        data-clause={statement.clause}
       >
         {content}
         {hasMap && MappingList !== undefined && (

@@ -26,6 +26,7 @@ import {
 } from '../../serialize/interface/supportinterface';
 import QuickEdit from './QuickEditComponents';
 import { ModelWrapper } from '../../model/modelwrapper';
+import { ProvisionSelection } from '../../model/provisionImport';
 
 export const SelectedNodeDescription: React.FC<{
   modelWrapper: ModelWrapper;
@@ -44,12 +45,14 @@ export const SelectedNodeDescription: React.FC<{
     getRefById?: (id: string) => MMELReference | null;
   }>;
   setModel?: (m: EditorModel) => void;
+  provision?: ProvisionSelection;
 }> = function ({
   modelWrapper,
   setDialog,
   CustomAttribute,
   CustomProvision,
   setModel,
+  provision,
 }) {
   const model = modelWrapper.model;
   const pageid = modelWrapper.page;
@@ -93,6 +96,7 @@ export const SelectedNodeDescription: React.FC<{
             setModel={setModel}
             setDialog={setDialog}
             page={model.pages[pageid]}
+            provision={provision}
           />
         ) : (
           <Describe

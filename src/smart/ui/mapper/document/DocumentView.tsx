@@ -13,12 +13,16 @@ const SMARTDocumentView: React.FC<{
   setMapping?: (fromid: string, toid: string) => void;
   mapSet?: MapSet;
   onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
+  onMouseUp?: () => void;
   MappingList?: React.FC<{ id: string }>;
   setSelected?: (id: string) => void;
 }> = function (props) {
-  const { document, onDragOver, mapSet, setSelected } = props;
+  const { document, onDragOver, mapSet, setSelected, onMouseUp } = props;
   const docMap = useMemo(
-    () => mapSet !== undefined ? calculateDocumentMapping(mapSet.mappings): undefined,
+    () =>
+      mapSet !== undefined
+        ? calculateDocumentMapping(mapSet.mappings)
+        : undefined,
     [mapSet?.mappings]
   );
 
@@ -29,6 +33,7 @@ const SMARTDocumentView: React.FC<{
         overflowY: 'auto',
       }}
       onDragOver={onDragOver}
+      onMouseUp={onMouseUp}
       onScroll={setSelected !== undefined ? () => setSelected('') : undefined}
     >
       <h2

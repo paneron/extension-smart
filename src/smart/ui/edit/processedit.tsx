@@ -3,7 +3,7 @@
 
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import {
   EditorModel,
@@ -13,6 +13,7 @@ import {
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
   MMELProvision,
+  MMELReference,
   MMELRole,
 } from '../../serialize/interface/supportinterface';
 import {
@@ -44,6 +45,7 @@ import { DescriptionItem } from '../common/description/fields';
 import RegistrySelector from './components/RegistrySelector';
 import ProvisionListQuickEdit from './components/ProvisionList';
 import MeasureListQuickEdit from './components/MeasurementListEdit';
+import { ProvisionSelection } from '../../model/provisionImport';
 
 const NEEDSUBPROCESS = 'need sub';
 
@@ -107,6 +109,7 @@ const EditProcessPage: React.FC<{
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
   onSubprocessClick?: () => void;
+  provision?: ProvisionSelection;
 }> = function ({
   model,
   setModel,
@@ -116,6 +119,7 @@ const EditProcessPage: React.FC<{
   onFullEditClick,
   onDeleteClick,
   onSubprocessClick,
+  provision,
 }) {
   const process = model.elements[id] as EditorProcess;
 
@@ -135,6 +139,8 @@ const EditProcessPage: React.FC<{
   );
   const registryObjects = useMemo(() => getModelAllRegs(model), [model]);
   const regs = useMemo(() => registryObjects.map(r => r.id), [registryObjects]);
+  const modelRef = useRef<EditorModel>();
+  modelRef.current = model;
 
   function setPStart(x: string) {
     if (x === SUBPROCESSYES) {
@@ -152,6 +158,10 @@ const EditProcessPage: React.FC<{
         closeDialog();
       }
     }
+  }
+
+  function onAddReference(refs: Record<string, MMELReference>) {
+    setModel({ ...model, refs });
   }
 
   function setEdit(x: EditorProcess) {
@@ -181,9 +191,9 @@ const EditProcessPage: React.FC<{
         setEditing(edit => {
           setMeasurements(mea => {
             setProvisions(pros => {
-              const updated = save(id, edit, pros, mea, model);
+              const updated = save(id, edit, pros, mea, modelRef.current!);
               if (updated !== null) {
-                setModel({ ...updated });
+                setModel(updated);
                 if (closeDialog !== undefined) {
                   closeDialog();
                 }
@@ -238,6 +248,8 @@ const EditProcessPage: React.FC<{
     setMeasurements: setMeasure,
     process,
     saveOnExit,
+    provision,
+    onAddReference,
   };
 
   useEffect(() => setEditing(process), [process]);
@@ -255,6 +267,8 @@ const QuickVersionEdit: React.FC<
     registryObjects: EditorRegistry[];
     process: EditorProcess;
     saveOnExit: () => void;
+    provision?: ProvisionSelection;
+    onAddReference: (refs: Record<string, MMELReference>) => void;
   }
 > = function (props) {
   const {
@@ -269,6 +283,8 @@ const QuickVersionEdit: React.FC<
     registryObjects,
     process,
     saveOnExit,
+    provision,
+    onAddReference,
   } = props;
 
   useEffect(() => saveOnExit, [process]);
@@ -317,7 +333,9 @@ const QuickVersionEdit: React.FC<
       <ProvisionListQuickEdit
         provisions={provisions}
         setProvisions={setProvisions}
+        selected={provision}
         model={model}
+        onAddReference={onAddReference}
       />
       <MeasureListQuickEdit
         measurements={measurements}

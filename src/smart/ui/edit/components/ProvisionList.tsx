@@ -5,13 +5,20 @@ import { Button, FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import { useMemo } from 'react';
 import { EditorModel } from '../../../model/editormodel';
+import { ProvisionSelection } from '../../../model/provisionImport';
+import { DataType } from '../../../serialize/interface/baseinterface';
 import {
   MMELProvision,
   MMELReference,
 } from '../../../serialize/interface/supportinterface';
-import { MODAILITYOPTIONS } from '../../../utils/constants';
+import { MODAILITYOPTIONS, ModalityType } from '../../../utils/constants';
 import { createProvision } from '../../../utils/EditorFactory';
-import { findUniqueID, getModelAllRefs } from '../../../utils/ModelFunctions';
+import {
+  findUniqueID,
+  getModelAllRefs,
+  trydefaultID,
+} from '../../../utils/ModelFunctions';
+import { findExistingRef } from '../../../utils/ModelImport';
 import { NormalComboBox, NormalTextField } from '../../common/fields';
 import SimpleReferenceSelector from './ReferenceSelector';
 
@@ -19,7 +26,9 @@ const ProvisionListQuickEdit: React.FC<{
   provisions: Record<string, MMELProvision>;
   setProvisions: (x: Record<string, MMELProvision>) => void;
   model: EditorModel;
-}> = function ({ provisions, setProvisions, model }) {
+  selected?: ProvisionSelection;
+  onAddReference: (refs: Record<string, MMELReference>) => void;
+}> = function ({ provisions, setProvisions, model, selected, onAddReference }) {
   const refs = useMemo(() => getModelAllRefs(model), [model]);
 
   function addProvision() {
@@ -28,8 +37,59 @@ const ProvisionListQuickEdit: React.FC<{
     setProvisions({ ...provisions });
   }
 
+  function onImport() {
+    if (selected !== undefined) {
+      const ref: MMELReference = {
+        id: '',
+        title: '',
+        clause: selected.clause,
+        document: selected.doc,
+        datatype: DataType.REFERENCE,
+      };
+      const existing = findExistingRef(model, ref, false);
+      const refid =
+        existing !== null
+          ? existing.id
+          : trydefaultID(
+              `${selected.namespace}-ref${selected.clause.replaceAll(
+                '.',
+                '-'
+              )}`,
+              model.refs
+            );
+      if (existing === null) {
+        onAddReference({ ...model.refs, [refid]: { ...ref, id: refid } });
+      }
+
+      const id = findUniqueID('Provision', provisions);
+      provisions[id] = {
+        subject: {},
+        id,
+        modality: detectModality(selected.text),
+        condition: selected.text,
+        ref: new Set<string>([refid]),
+        datatype: DataType.PROVISION,
+      };
+      setProvisions({ ...provisions });
+    }
+  }
+
   return (
     <FormGroup label="Provisions">
+      {selected !== undefined && (
+        <div
+          style={{
+            width: '100%',
+            marginBottom: '15px',
+            textAlign: 'center',
+          }}
+        >
+          <Button intent="primary" onClick={onImport}>
+            Import from selection
+          </Button>
+        </div>
+      )}
+
       {Object.entries(provisions).map(([index, p]) => (
         <ProvisionQuickEdit
           key={index}
@@ -106,5 +166,26 @@ const ProvisionQuickEdit: React.FC<{
     </div>
   );
 };
+
+interface ModOption {
+  lowerCaseText: string;
+  modality: ModalityType;
+}
+
+function detectModality(text: string): ModalityType {
+  const options: ModOption[] = [...MODAILITYOPTIONS]
+    .map(x => ({
+      lowerCaseText: x.toLowerCase(),
+      modality: x,
+    }))
+    .sort((a, b) => b.modality.length - a.modality.length);
+  const t = text.toLowerCase();
+  for (const m of options) {
+    if (t.includes(m.lowerCaseText)) {
+      return m.modality;
+    }
+  }
+  return '';
+}
 
 export default ProvisionListQuickEdit;

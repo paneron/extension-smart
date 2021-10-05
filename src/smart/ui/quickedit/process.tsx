@@ -4,6 +4,7 @@
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { EditorModel, EditorProcess } from '../../model/editormodel';
+import { ProvisionSelection } from '../../model/provisionImport';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
   DeletableNodeTypes,
@@ -22,6 +23,7 @@ const QuickEditProcess: React.FC<{
     action: EditAction,
     id: string
   ) => void;
+  provision?: ProvisionSelection;
 }> = props => {
   const { process, model, setModel, setDialog } = props;
 
