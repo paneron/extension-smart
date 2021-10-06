@@ -100,19 +100,22 @@ function parseStartTagContents(t: string): XMLElement {
   if (parts.length > 0) {
     const name = parts[0];
     const elm = createXMLElement(name);
-    parts.splice(0, 1);
-    for (const x of parts) {
-      const part = x.split('=');
-      if (part.length > 2) {
-        throw new Error(
-          `Parse error. Too many = for an attribute declaration: ${x}`
-        );
-      } else if (part.length === 2) {
-        elm.attributes[part[0]] = part[1].substring(1, part[1].length - 1);
-      } else if (part.length === 1) {
-        elm.attributes[part[0]] = '';
-      } else {
-        throw new Error(`Empty attribute is not filtered. ${x}`);
+    if (name !== 'image') {
+      // image content is ignored at the moment
+      parts.splice(0, 1);
+      for (const x of parts) {
+        const part = x.split('=');
+        if (part.length > 2) {
+          throw new Error(
+            `Parse error. Too many = for an attribute declaration: ${x}`
+          );
+        } else if (part.length === 2) {
+          elm.attributes[part[0]] = part[1].substring(1, part[1].length - 1);
+        } else if (part.length === 1) {
+          elm.attributes[part[0]] = '';
+        } else {
+          throw new Error(`Empty attribute is not filtered. ${x}`);
+        }
       }
     }
     return elm;

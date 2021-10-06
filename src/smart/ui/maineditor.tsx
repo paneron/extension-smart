@@ -376,7 +376,12 @@ const ModelEditor: React.FC<{
     <Popover2
       minimal
       placement="bottom-start"
-      content={<EditorReferenceMenu setReference={setReference} />}
+      content={
+        <EditorReferenceMenu
+          setReference={setReference}
+          isCloseEnabled={reference !== undefined}
+        />
+      }
     >
       <MGDButton>Reference model</MGDButton>
     </Popover2>

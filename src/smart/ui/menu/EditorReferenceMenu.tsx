@@ -15,7 +15,8 @@ import { indexModel } from '../../model/mapmodel';
 
 const EditorReferenceMenu: React.FC<{
   setReference: (x: ReferenceContent | undefined) => void;
-}> = function ({ setReference }) {
+  isCloseEnabled: boolean;
+}> = function ({ setReference, isCloseEnabled }) {
   const { useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
 
@@ -62,6 +63,7 @@ const EditorReferenceMenu: React.FC<{
       />
       <MenuItem
         text="Close Reference"
+        disabled={!isCloseEnabled}
         onClick={() => setReference(undefined)}
         icon="import"
       />

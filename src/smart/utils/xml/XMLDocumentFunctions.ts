@@ -3,6 +3,11 @@ import { DocSection, DocStatement, MMELDocument } from '../../model/document';
 import { XMLElement } from '../../model/xmlelement';
 import { elementToString, isXMLElement, parseXML } from './XMLParser';
 
+interface CountFigTable {
+  fig: number;
+  table: number;
+}
+
 function getElementValue(xml: XMLElement, name: string): string {
   const array = xml.xmlChild[name];
   if (array === undefined) {
@@ -23,46 +28,132 @@ function getElementValueByPath(xml: XMLElement, path: string[]): string {
   return elementToString(xml);
 }
 
-function isUnwantedElement(x: XMLElement): boolean {
-  if (x.tag === 'fn') {
-    return true;
+// remove unused reference materials that affect text contents
+function cleanXML(xml: XMLElement, ids: Record<string, string>) {
+  if (xml.xmlChild['concept'] !== undefined) {
+    for (const concept of xml.xmlChild['concept']) {
+      if (concept.xmlChild['renderterm'] !== undefined) {
+        concept.childs = [elementToString(concept.xmlChild['renderterm'][0])];
+        concept.xmlChild = {};
+      } else if (concept.xmlChild['strong'] !== undefined) {
+        concept.childs = [getElementValueByPath(concept, ['strong', 'tt'])];
+        concept.xmlChild = {};
+      }
+    }
   }
-  if (x.tag === 'xref' && x.attributes['ref-type'] === 'fn') {
-    return true;
-  }
-  return false;
-}
-
-// remove unwanted elements, e.g., footnote fn
-function cleanXML(xml: XMLElement) {
-  if (xml.xmlChild['fn'] !== undefined) {
-    delete xml.xmlChild['fn'];
-    xml.childs = xml.childs.filter(
-      x => !isXMLElement(x) || !isUnwantedElement(x)
-    );
+  if (xml.tag === 'xref') {
+    const target = xml.attributes['target'];
+    if (target !== undefined) {
+      const resolved = ids[target];
+      if (resolved !== undefined) {
+        xml.childs.push(resolved);
+      }
+    }
   }
   for (const c of xml.childs) {
     if (isXMLElement(c)) {
-      cleanXML(c);
+      cleanXML(c, ids);
+    }
+  }
+}
+
+function replaceHTMLCodes(data: string): string {
+  const x = data.replaceAll(/&#8212;/g, '—');
+  return x.replaceAll(/&#....;/g, ' ');
+}
+
+function buildIdMap(xml: XMLElement): Record<string, string> {
+  const map: Record<string, string> = {};
+  let index = 1;
+  const body = xml.xmlChild['sections'];
+  if (body !== undefined && body.length > 0) {
+    for (const sec of body[0].childs) {
+      if (isXMLElement(sec)) {
+        if (index === 2 && sec.tag === 'terms') {
+          index++;
+        }
+        mockAddSection(sec, '', index, map);
+        index++;
+      }
+    }
+  }
+  const annex = xml.xmlChild['annex'];
+  if (annex !== undefined) {
+    annex.forEach((a, index) => {
+      const id = a.attributes['id'];
+      if (id !== undefined) {
+        map[id] = 'Annex ' + String.fromCharCode(65 + index);
+      }
+    });
+  }
+  countFigTable(xml, { fig: 0, table: 0 }, map);
+  return map;
+}
+
+function countFigTable(
+  xml: XMLElement,
+  count: CountFigTable,
+  map: Record<string, string>
+) {
+  if (xml.tag === 'table') {
+    const id = xml.attributes['id'];
+    if (id !== undefined) {
+      count.table++;
+      map[id] = `Table ${count.table}`;
+    }
+  } else if (xml.tag === 'figure') {
+    const id = xml.attributes['id'];
+    if (id !== undefined) {
+      count.fig++;
+      map[id] = `Figure ${count.fig}`;
+    }
+  }
+  for (const c of xml.childs) {
+    if (isXMLElement(c)) {
+      countFigTable(c, count, map);
+    }
+  }
+}
+
+function mockAddSection(
+  xml: XMLElement,
+  prefix: string,
+  index: number,
+  map: Record<string, string>
+) {
+  const clause = `${prefix}${index}`;
+  const id = xml.attributes['id'];
+  if (id !== undefined) {
+    map[id] = clause;
+  }
+
+  let innerIndex = 1;
+  for (const c of xml.childs) {
+    if (isXMLElement(c)) {
+      if (c.tag === 'clause') {
+        mockAddSection(c, clause + '.', innerIndex, map);
+        innerIndex++;
+      }
     }
   }
 }
 
 export function xmlToDocument(data: string): MMELDocument {
-  const xml = parseXML(data);
-  cleanXML(xml);
-  const front = xml.xmlChild['front'];
   const doc: MMELDocument = {
     states: {},
     id: '',
     title: '',
     sections: [],
     type: 'document',
-  };
+  };  
+  const xml = parseXML(replaceHTMLCodes(data));
+  const ids = buildIdMap(xml);
+  cleanXML(xml, ids);
+  const front = xml.xmlChild['bibdata'];
   if (front !== undefined && front.length > 0) {
     setMeta(doc, front[0]);
   }
-  const body = xml.xmlChild['body'];
+  const body = xml.xmlChild['sections'];
   if (body !== undefined && body.length > 0) {
     setMainDoc(doc, body[0]);
   }
@@ -71,52 +162,75 @@ export function xmlToDocument(data: string): MMELDocument {
 
 function setMeta(doc: MMELDocument, xml: XMLElement) {
   if (xml !== undefined) {
-    doc.sdo = getElementValueByPath(xml, ['iso-meta', 'doc-ident', 'sdo']);
-    doc.edition = getElementValueByPath(xml, [
-      'iso-meta',
-      'std-ident',
-      'edition',
+    doc.sdo = getElementValueByPath(xml, [
+      'contributor',
+      'organization',
+      'name',
     ]);
-    doc.id =
-      getElementValueByPath(xml, ['iso-meta', 'std-ident', 'originator']) +
-      getElementValueByPath(xml, ['iso-meta', 'std-ident', 'doc-number']);
-    doc.title = getElementValueByPath(xml, ['iso-meta', 'title-wrap', 'full']);
+    doc.edition = getElementValueByPath(xml, ['version', 'revision-date']);
+    const identified = xml.xmlChild['docidentifier'];
+    if (identified !== undefined && identified.length > 0) {
+      doc.id =
+        identified[0].attributes['type'] + elementToString(identified[0]);
+    }
+    doc.title = doc.id + ' ' + getElementValueByPath(xml, ['title']);
   }
 }
 
 function setMainDoc(doc: MMELDocument, xml: XMLElement) {
-  const secs = xml.xmlChild['sec'];
-  if (secs !== undefined && secs.length > 0) {
-    for (const sec of secs) {
-      addSection(doc, sec);
+  let index = 1;
+  for (const sec of xml.childs) {
+    if (isXMLElement(sec)) {
+      if (index === 2 && sec.tag === 'terms') {
+        const clause = '2';
+        const title = 'Normative references';
+        const section = createDocSection(clause, title);
+        doc.sections.push(section);
+        addStatement(doc, section, title, clause);
+        addStatement(
+          doc,
+          section,
+          'There are no normative references in this document',
+          clause
+        );
+        index++;
+      }
+      addSection(doc, sec, '', index);
+      index++;
     }
   }
 }
 
-function addSection(doc: MMELDocument, xml: XMLElement) {
-  const clause = getElementValue(xml, 'label');
+function addSection(
+  doc: MMELDocument,
+  xml: XMLElement,
+  prefix: string,
+  index: number
+) {
+  const clause = `${prefix}${index}`;
   const title = getElementValue(xml, 'title');
 
   const section = createDocSection(clause, title);
   doc.sections.push(section);
   addStatement(doc, section, title, clause);
 
+  let innerIndex = 1;
   for (const c of xml.childs) {
     if (isXMLElement(c)) {
-      if (c.tag === 'label' || c.tag === 'title') {
-        // already obtained their values. Ignore these parts
-      } else if (c.tag === 'sec') {
-        addSection(doc, c);
+      if (c.tag === 'clause') {
+        addSection(doc, c, clause + '.', innerIndex);
+        innerIndex++;
       } else if (c.tag === 'p') {
         addStatement(doc, section, elementToString(c), clause);
-      } else if (c.tag === 'list') {
-        processList(doc, section, c, clause);
-      } else if (c.tag === 'non-normative-note') {
-        addStatement(doc, section, elementToString(c), clause);
-      } else if (c.tag === 'ref-list') {
-        processRefList(doc, section, c, clause);
-      } else if (c.tag === 'term-sec') {
-        addTermsSection(doc, c);
+      } else if (c.tag === 'ul') {
+        processList(doc, section, c, clause, false);
+      } else if (c.tag === 'ol') {
+        processList(doc, section, c, clause, true);
+      } else if (c.tag === 'note') {
+        processNote(doc, section, c, clause);
+      } else if (c.tag === 'term') {
+        addTermsSection(doc, c, clause + '.', innerIndex);
+        innerIndex++;
       } else {
         // Other elements are ignored at the moment
         // like tables, figures, note, etc
@@ -127,70 +241,111 @@ function addSection(doc: MMELDocument, xml: XMLElement) {
   }
 }
 
-function addTermsSection(doc: MMELDocument, xml: XMLElement) {
-  const clause = getElementValue(xml, 'label');
-  const title = getElementValueByPath(xml, [
-    'tbx:termEntry',
-    'tbx:langSet',
-    'tbx:tig',
-    'tbx:term',
-  ]);
+function processNote(
+  doc: MMELDocument,
+  section: DocSection,
+  xml: XMLElement,
+  clause: string
+) {
+  xml.childs.forEach((c, index) => {
+    if (isXMLElement(c)) {
+      if (c.tag === 'p') {
+        addStatement(
+          doc,
+          section,
+          (index === 0 ? 'NOTE\t' : '') + elementToString(c),
+          clause
+        );
+      } else if (c.tag === 'ul') {
+        processList(doc, section, c, clause, false);
+      } else if (c.tag === 'ol') {
+        processList(doc, section, c, clause, true);
+      } else {
+        // Other elements are ignored at the moment
+        // like tables, figures, note, etc
+      }
+    } else {
+      throw new Error('A note shall not have direct text?');
+    }
+  });
+}
+
+function addTermsSection(
+  doc: MMELDocument,
+  xml: XMLElement,
+  prefix: string,
+  index: number
+) {
+  const clause = `${prefix}${index}`;
+  const title = getElementValue(xml, 'preferred');
 
   const section = createDocSection(clause, title);
   doc.sections.push(section);
   addStatement(doc, section, title, clause);
 
-  const langSet = xml.xmlChild['tbx:termEntry'][0].xmlChild['tbx:langSet'][0];
-  const definition = langSet.xmlChild['tbx:definition'][0];
-
-  let defText = '';
-  for (const c of definition.childs) {
-    if (isXMLElement(c)) {
-      if (c.tag === 'list') {
-        if (defText !== '') {
-          addStatement(doc, section, defText, clause);
-          defText = '';
-        }
-        processList(doc, section, c, clause);
-      } else {
-        defText += elementToString(c);
-      }
-    } else {
-      defText += c;
+  const admitted = xml.xmlChild['admitted'];
+  if (admitted !== undefined && admitted.length > 0) {
+    for (const ad of admitted) {
+      addStatement(doc, section, elementToString(ad), clause);
     }
   }
-  if (defText !== '') {
-    addStatement(doc, section, defText, clause);
+  const definitions = xml.xmlChild['definition'];
+
+  if (definitions !== undefined) {
+    const definition = definitions[0];
+    let defText = '';
+    for (const c of definition.childs) {
+      if (isXMLElement(c)) {
+        if (c.tag === 'ul' || c.tag === 'ol') {
+          if (defText !== '') {
+            addStatement(doc, section, defText, clause);
+            defText = '';
+          }
+          processList(doc, section, c, clause, c.tag === 'ol');
+        } else {
+          defText += elementToString(c);
+        }
+      } else {
+        defText += c;
+      }
+    }
+    if (defText !== '') {
+      addStatement(doc, section, defText, clause);
+    }
   }
 
-  const notes = langSet.xmlChild['tbx:note'];
+  const notes = xml.xmlChild['termnote'];
   if (notes !== undefined) {
     notes.forEach((note, index) => {
-      const parts = elementToString(note).split('—');
-      parts.forEach((p, pIndex) => {
-        if (pIndex === 0) {
-          addStatement(
-            doc,
-            section,
-            `Note ${index + 1} to entry: ${p}`,
-            clause
-          );
+      note.childs.forEach((c, pIndex) => {
+        if (isXMLElement(c)) {
+          if (c.tag === 'ul') {
+            processList(doc, section, c, clause, false);
+          } else {
+            if (pIndex === 0) {
+              addStatement(
+                doc,
+                section,
+                `Note ${index + 1} to entry: ${elementToString(c)}`,
+                clause
+              );
+            } else {
+              addStatement(doc, section, elementToString(c), clause);
+            }
+          }
         } else {
-          addStatement(doc, section, `—${p}`, clause);
+          if (pIndex === 0) {
+            addStatement(
+              doc,
+              section,
+              `Note ${index + 1} to entry: ${c}`,
+              clause
+            );
+          } else {
+            addStatement(doc, section, c, clause);
+          }
         }
       });
-    });
-  }
-
-  const sources = langSet.xmlChild['tbx:source'];
-  if (sources !== undefined) {
-    sources.forEach(source => {
-      addStatement(
-        doc,
-        section,
-        `[SOURCE: ${elementToString(source)}]`,
-        clause
-      );
     });
   }
 }
@@ -225,33 +380,32 @@ function processList(
   doc: MMELDocument,
   section: DocSection,
   xml: XMLElement,
-  clause: string
+  clause: string,
+  isNumbering: boolean
 ) {
+  let index = 0;
   for (const c of xml.childs) {
     if (isXMLElement(c)) {
-      if (c.tag === 'list-item') {
-        const prefix = getElementValue(c, 'label');
-        const paras = c.xmlChild['p'];
-        if (paras !== undefined && paras.length > 0) {
-          paras.forEach((p, index) => {
-            if (index === 0) {
+      if (c.tag === 'li') {
+        const prefix = isNumbering
+          ? String.fromCharCode(97 + index) + ')'
+          : '-';
+        index++;
+        let pindex = 0;
+        for (const gc of c.childs) {
+          if (isXMLElement(gc)) {
+            if (gc.tag === 'p') {
               addStatement(
                 doc,
                 section,
-                prefix + ' ' + elementToString(p),
+                (pindex === 0 ? prefix : '') + ' ' + elementToString(gc),
                 clause
               );
-            } else {
-              addStatement(doc, section, elementToString(p), clause);
-            }
-          });
-        }
-        for (const gc of c.childs) {
-          if (isXMLElement(gc)) {
-            if (gc.tag === 'label' || gc.tag === 'p') {
-              // no problem, already processed
-            } else if (gc.tag === 'list') {
-              processList(doc, section, gc, clause);
+              pindex++;
+            } else if (gc.tag === 'ul') {
+              processList(doc, section, gc, clause, false);
+            } else if (gc.tag === 'ol') {
+              processList(doc, section, gc, clause, true);
             } else {
               // Other elements are ignored at the moment
               // like tables, figures, note, etc
@@ -265,20 +419,6 @@ function processList(
       }
     } else {
       throw new Error(`List contains direct string? ${elementToString(xml)}`);
-    }
-  }
-}
-
-function processRefList(
-  doc: MMELDocument,
-  section: DocSection,
-  xml: XMLElement,
-  clause: string
-) {
-  const refs = xml.xmlChild['ref'];
-  if (refs !== undefined && refs.length > 0) {
-    for (const ref of refs) {
-      addStatement(doc, section, elementToString(ref), clause);
     }
   }
 }
