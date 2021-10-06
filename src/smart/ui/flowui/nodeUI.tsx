@@ -27,7 +27,6 @@ import MGDButton from '../../MGDComponents/MGDButton';
 import React from 'react';
 import { handlecss } from '../../../css/visual';
 import {
-  shame__approver_deco,
   shame__label,
   shame__label__long,
   shame__label__noaction,
@@ -39,6 +38,7 @@ import { flownode_top_left_button_layout } from '../../../css/layout';
 import PopoverWrapper from '../popover/PopoverWrapper';
 import ViewMappingbutton from '../mapper/viewmapbutton';
 import ViewWorkspaceButton from '../workspace/ViewDataWorkspaceButton';
+import { Icon } from '@blueprintjs/core';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -314,10 +314,13 @@ export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
 };
 
 const actorIcon = (
-  <svg height="15" width="15">
-    <circle cx="8" cy="15" r="6" stroke="black" strokeWidth="1" fill="none" />
-    <circle cx="8" cy="6" r="3" stroke="black" strokeWidth="1" fill="none" />
-  </svg>
+  <Icon style={{ width: 15, height: 15, marginRight: 5 }} icon="person" />
 );
 
-const approverIcon = <span css={shame__approver_deco}>{'\u2611'}</span>;
+const approverIcon = (
+  <Icon
+    style={{ width: 15, height: 15, marginRight: 5 }}
+    intent="success"
+    icon="endorsed"
+  />
+);

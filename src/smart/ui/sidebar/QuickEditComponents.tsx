@@ -15,7 +15,7 @@ import {
   EditorTimerEvent,
 } from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
-import { ProvisionSelection } from '../../model/provisionImport';
+import { RefTextSelection } from '../../model/selectionImport';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
   DeletableNodeTypes,
@@ -41,7 +41,7 @@ const NODE_EDIT_VIEWS: Record<
       id: string
     ) => void;
     page: EditorSubprocess;
-    provision?: ProvisionSelection;
+    provision?: RefTextSelection;
   }>
 > = {
   [DataType.ENDEVENT]: props => (
@@ -78,7 +78,7 @@ const QuickEdit: React.FC<{
     id: string
   ) => void;
   page: EditorSubprocess;
-  provision?: ProvisionSelection;
+  provision?: RefTextSelection;
 }> = function (props) {
   const { node } = props;
   const Edit = NODE_EDIT_VIEWS[node.datatype as DeletableNodeTypes];

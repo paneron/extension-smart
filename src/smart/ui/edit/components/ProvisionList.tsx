@@ -5,7 +5,7 @@ import { Button, FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import { useMemo } from 'react';
 import { EditorModel } from '../../../model/editormodel';
-import { ProvisionSelection } from '../../../model/provisionImport';
+import { RefTextSelection } from '../../../model/selectionImport';
 import { DataType } from '../../../serialize/interface/baseinterface';
 import {
   MMELProvision,
@@ -26,7 +26,7 @@ const ProvisionListQuickEdit: React.FC<{
   provisions: Record<string, MMELProvision>;
   setProvisions: (x: Record<string, MMELProvision>) => void;
   model: EditorModel;
-  selected?: ProvisionSelection;
+  selected?: RefTextSelection;
   onAddReference: (refs: Record<string, MMELReference>) => void;
 }> = function ({ provisions, setProvisions, model, selected, onAddReference }) {
   const refs = useMemo(() => getModelAllRefs(model), [model]);
@@ -41,7 +41,7 @@ const ProvisionListQuickEdit: React.FC<{
     if (selected !== undefined) {
       const ref: MMELReference = {
         id: '',
-        title: '',
+        title: selected.clauseTitle,
         clause: selected.clause,
         document: selected.doc,
         datatype: DataType.REFERENCE,

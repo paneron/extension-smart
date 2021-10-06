@@ -6,14 +6,14 @@ import { jsx } from '@emotion/react';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useEffect } from 'react';
 import { MMELDocument } from '../../model/document';
-import { ProvisionSelection } from '../../model/provisionImport';
+import { RefTextSelection } from '../../model/selectionImport';
 import SMARTDocumentView from '../mapper/document/DocumentView';
 
 const DocumentReferenceView: React.FC<{
   className?: string;
   document: MMELDocument;
   menuControl: React.ReactNode;
-  setPImport: (x: ProvisionSelection | undefined) => void;
+  setPImport: (x: RefTextSelection | undefined) => void;
 }> = function (props) {
   const { className, document, menuControl, setPImport } = props;
 
@@ -27,12 +27,15 @@ const DocumentReferenceView: React.FC<{
       if (text !== '' && parent !== null) {
         const elm = parent as HTMLSpanElement;
         if (elm.attributes !== undefined) {
-          const att = elm.attributes.getNamedItem('data-clause');
-          if (att !== null) {
-            const clause = att.value;
+          const clauseAtt = elm.attributes.getNamedItem('data-clause');
+          const titleAtt = elm.attributes.getNamedItem('data-title');
+          if (clauseAtt !== null) {
+            const clause = clauseAtt.value;
+            const clauseTitle = titleAtt !== null ? titleAtt.value : '';
             setPImport({
               text,
               clause,
+              clauseTitle,
               namespace: document.id,
               doc: document.title,
             });

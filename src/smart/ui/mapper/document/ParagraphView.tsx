@@ -12,6 +12,7 @@ import StatementView from './StatementView';
 const ParagraphView: React.FC<{
   para: DocParagraph;
   statements: Record<string, DocStatement>;
+  title: string;
   showSection?: string;
   setMapping?: (from: string, to: string) => void;
   docMap?: DocMapIndex;

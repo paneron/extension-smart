@@ -28,6 +28,7 @@ const SectionView: React.FC<{
           key={index}
           para={para}
           showSection={index === 0 ? sec.id : undefined}
+          title={sec.title ?? ''}
         />
       ))}
     </div>

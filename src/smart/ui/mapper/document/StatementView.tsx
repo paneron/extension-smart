@@ -17,6 +17,7 @@ const StatementView: React.FC<{
   first: boolean;
   MappingList?: React.FC<{ id: string }>;
   setSelected?: (id: string) => void;
+  title: string;
 }> = function ({
   statement,
   showSection,
@@ -25,6 +26,7 @@ const StatementView: React.FC<{
   froms,
   MappingList,
   setSelected,
+  title,
 }) {
   const [hover, setHover] = useState<boolean>(false);
   const hasMap = froms !== undefined && froms.length > 0;
@@ -71,6 +73,7 @@ const StatementView: React.FC<{
         onDragEnter={() => setHover(true)}
         onDragLeave={() => setHover(false)}
         data-clause={statement.clause}
+        data-title={title}
       >
         {content}
         {hasMap && MappingList !== undefined && (

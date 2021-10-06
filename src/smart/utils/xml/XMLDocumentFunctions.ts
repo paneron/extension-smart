@@ -145,7 +145,7 @@ export function xmlToDocument(data: string): MMELDocument {
     title: '',
     sections: [],
     type: 'document',
-  };  
+  };
   const xml = parseXML(replaceHTMLCodes(data));
   const ids = buildIdMap(xml);
   cleanXML(xml, ids);

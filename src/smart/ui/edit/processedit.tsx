@@ -45,7 +45,7 @@ import { DescriptionItem } from '../common/description/fields';
 import RegistrySelector from './components/RegistrySelector';
 import ProvisionListQuickEdit from './components/ProvisionList';
 import MeasureListQuickEdit from './components/MeasurementListEdit';
-import { ProvisionSelection } from '../../model/provisionImport';
+import { RefTextSelection } from '../../model/selectionImport';
 
 const NEEDSUBPROCESS = 'need sub';
 
@@ -109,7 +109,7 @@ const EditProcessPage: React.FC<{
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
   onSubprocessClick?: () => void;
-  provision?: ProvisionSelection;
+  provision?: RefTextSelection;
 }> = function ({
   model,
   setModel,
@@ -267,7 +267,7 @@ const QuickVersionEdit: React.FC<
     registryObjects: EditorRegistry[];
     process: EditorProcess;
     saveOnExit: () => void;
-    provision?: ProvisionSelection;
+    provision?: RefTextSelection;
     onAddReference: (refs: Record<string, MMELReference>) => void;
   }
 > = function (props) {

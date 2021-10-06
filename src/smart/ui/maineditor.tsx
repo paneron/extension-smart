@@ -46,6 +46,7 @@ import {
 } from '../model/history';
 import {
   createNewEditorModel,
+  createRegistry,
   createSubprocessComponent,
 } from '../utils/EditorFactory';
 import {
@@ -55,7 +56,12 @@ import {
   NodeTypes,
   ReferenceContent,
 } from '../model/States';
-import { EditorModel, isEditorData, isEditorNode } from '../model/editormodel';
+import {
+  EditorDataClass,
+  EditorModel,
+  isEditorData,
+  isEditorNode,
+} from '../model/editormodel';
 import EditorFileMenu from './menu/EditorFileMenu';
 import { SelectedNodeDescription } from './sidebar/selected';
 import {
@@ -91,19 +97,29 @@ import {
   sidebar_layout,
 } from '../../css/layout';
 import SearchComponentPane from './sidebar/search';
-import { getRootName, Logger } from '../utils/ModelFunctions';
+import {
+  checkId,
+  genDCIdByRegId,
+  getRootName,
+  Logger,
+} from '../utils/ModelFunctions';
 import LegendPane from './common/description/LegendPane';
 import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,
   SearchResultStyles,
 } from '../utils/SearchFunctions';
-import { MMELMetadata } from '../serialize/interface/supportinterface';
+import {
+  MMELMetadata,
+  MMELRole,
+} from '../serialize/interface/supportinterface';
 import EditorReferenceMenu from './menu/EditorReferenceMenu';
 import ModelReferenceView from './editreference/ModelReferenceView';
 import { addProcessIfNotFound } from '../utils/ModelImport';
 import DocumentReferenceView from './editreference/DocumentReferenceView';
-import { ProvisionSelection } from '../model/provisionImport';
+import { RefTextSelection } from '../model/selectionImport';
+import ImportFromSelectionButton from './popover/ImportFromSelectionButton';
+import { DataType } from '../serialize/interface/baseinterface';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -144,10 +160,13 @@ const ModelEditor: React.FC<{
   const [searchResult, setSearchResult] = useState<Set<string>>(
     new Set<string>()
   );
-  const [provisionImport, setPImport] = useState<
-    ProvisionSelection | undefined
-  >(undefined);
+  const [selectionImport, setSImport] = useState<RefTextSelection | undefined>(
+    undefined
+  );
   const [toaster] = useState<IToaster>(Toaster.create());
+
+  const mw = state.modelWrapper;
+  const model = mw.model;
 
   function showMsg(msg: IToastProps) {
     toaster.show(msg);
@@ -167,7 +186,7 @@ const ModelEditor: React.FC<{
     setState({
       ...state,
       modelWrapper: {
-        ...state.modelWrapper,
+        ...mw,
         model: { ...model },
       },
     });
@@ -181,8 +200,8 @@ const ModelEditor: React.FC<{
   ) {
     const props: IDiagAction = {
       nodeType: nodeType,
-      model: state.modelWrapper.model,
-      page: state.modelWrapper.page,
+      model: model,
+      page: mw.page,
       id: id,
       setModelAfterDelete,
     };
@@ -195,8 +214,7 @@ const ModelEditor: React.FC<{
     if (rfInstance !== null) {
       for (const x of rfInstance.getElements()) {
         const data = x.data;
-        const mw = state.modelWrapper;
-        const page = mw.model.pages[mw.page];
+        const page = model.pages[mw.page];
         if (isNode(x) && isEditorNode(data)) {
           const node = isEditorData(data)
             ? page.data[data.id]
@@ -217,7 +235,7 @@ const ModelEditor: React.FC<{
         }
       }
     }
-    return state.modelWrapper;
+    return mw;
   }
 
   function toggleDataVisibility() {
@@ -241,20 +259,19 @@ const ModelEditor: React.FC<{
 
   function onMetaChanged(meta: MMELMetadata) {
     state.history.items[0].pathtext = getRootName(meta);
-    state.modelWrapper.model.meta = meta;
+    model.meta = meta;
     setState({ ...state });
   }
 
   function onPageChange(updated: PageHistory, newPage: string) {
     saveLayout();
     state.history = updated;
-    state.modelWrapper.page = newPage;
+    mw.page = newPage;
     setState({ ...state });
   }
 
   function onProcessClick(pageid: string, processid: string): void {
     saveLayout();
-    const mw = state.modelWrapper;
     mw.page = pageid;
     logger?.log('Go to page', pageid);
     addToHistory(state.history, mw.page, processid);
@@ -262,14 +279,14 @@ const ModelEditor: React.FC<{
   }
 
   function removeEdge(id: string) {
-    deleteEdge(state.modelWrapper.model, state.modelWrapper.page, id);
+    deleteEdge(model, mw.page, id);
     setState({ ...state });
   }
 
   function drillUp(): void {
     if (state.history.items.length > 0) {
       saveLayout();
-      state.modelWrapper.page = popPage(state.history);
+      mw.page = popPage(state.history);
       setState({ ...state });
     }
   }
@@ -286,15 +303,11 @@ const ModelEditor: React.FC<{
         y: event.clientY - reactFlowBounds.top,
       });
       if (type !== '') {
-        const model = addComponentToModel(
-          state.modelWrapper,
-          type as NewComponentTypes,
-          pos
-        );
+        const model = addComponentToModel(mw, type as NewComponentTypes, pos);
         setState({
           ...state,
           modelWrapper: {
-            ...state.modelWrapper,
+            ...mw,
             model: { ...model },
           },
         });
@@ -303,11 +316,10 @@ const ModelEditor: React.FC<{
         reference !== undefined &&
         isModelWrapper(reference)
       ) {
-        const model = state.modelWrapper.model;
-        const page = model.pages[state.modelWrapper.page];
+        const page = model.pages[mw.page];
 
         const process = addProcessIfNotFound(
-          state.modelWrapper,
+          mw,
           reference,
           refid,
           {},
@@ -324,7 +336,7 @@ const ModelEditor: React.FC<{
         setState({
           ...state,
           modelWrapper: {
-            ...state.modelWrapper,
+            ...mw,
             model: { ...model },
           },
         });
@@ -334,14 +346,8 @@ const ModelEditor: React.FC<{
 
   function connectHandle(x: Edge<EdgePackage> | Connection) {
     if (x.source !== null && x.target !== null) {
-      const mw = state.modelWrapper;
-      const page = mw.model.pages[mw.page];
-      mw.model.pages[mw.page] = addEdge(
-        page,
-        mw.model.elements,
-        x.source,
-        x.target
-      );
+      const page = model.pages[mw.page];
+      model.pages[mw.page] = addEdge(page, model.elements, x.source, x.target);
       setState({ ...state });
     }
   }
@@ -355,7 +361,7 @@ const ModelEditor: React.FC<{
     setState({
       ...state,
       history,
-      modelWrapper: { ...state.modelWrapper, page: pageid },
+      modelWrapper: { ...mw, page: pageid },
     });
   }
 
@@ -372,19 +378,82 @@ const ModelEditor: React.FC<{
     setSearchResult(set);
   }
 
+  function importRole(id: string, data: string) {
+    const role: MMELRole = {
+      id,
+      name: data,
+      datatype: DataType.ROLE,
+    };
+    setModelWrapper({
+      ...mw,
+      model: { ...model, roles: { ...model.roles, [id]: role } },
+    });
+  }
+
+  function importRegistry(id: string, data: string) {
+    const dcid = genDCIdByRegId(id);
+    const newreg = createRegistry(id);
+    const newdc: EditorDataClass = {
+      attributes: {},
+      id: dcid,
+      datatype: DataType.DATACLASS,
+      added: false,
+      pages: new Set<string>(),
+      objectVersion: 'Editor',
+      rdcs: new Set<string>(),
+      mother: id,
+    };
+    newreg.data = dcid;
+    newreg.title = data;
+    setModelWrapper({
+      ...mw,
+      model: {
+        ...model,
+        elements: { ...model.elements, [id]: newreg, [dcid]: newdc },
+      },
+    });
+  }
+
   const referenceMenu = (
-    <Popover2
-      minimal
-      placement="bottom-start"
-      content={
-        <EditorReferenceMenu
-          setReference={setReference}
-          isCloseEnabled={reference !== undefined}
-        />
-      }
-    >
-      <MGDButton>Reference model</MGDButton>
-    </Popover2>
+    <>
+      <Popover2
+        minimal
+        placement="bottom-start"
+        content={
+          <EditorReferenceMenu
+            setReference={setReference}
+            isCloseEnabled={reference !== undefined}
+          />
+        }
+      >
+        <MGDButton>Reference model</MGDButton>
+      </Popover2>
+      {selectionImport !== undefined && (
+        <>
+          <ImportFromSelectionButton
+            title="Role ID"
+            validTest={x => checkId(x, model.roles)}
+            valueTitle="Role name"
+            value={selectionImport.text}
+            iconName="person"
+            buttonText="Import as Role"
+            save={importRole}
+          />
+          <ImportFromSelectionButton
+            title="Registy ID"
+            validTest={x =>
+              checkId(x, model.elements) &&
+              checkId(genDCIdByRegId(x), model.elements, true)
+            }
+            valueTitle="Registry name"
+            value={selectionImport.text}
+            iconName="cube"
+            buttonText="Import as Registry"
+            save={importRegistry}
+          />
+        </>
+      )}
+    </>
   );
 
   const toolbar = (
@@ -431,7 +500,7 @@ const ModelEditor: React.FC<{
               setModel={m =>
                 setModelWrapper({ ...state.modelWrapper, model: m })
               }
-              provision={provisionImport}
+              provision={selectionImport}
             />
           ),
         },
@@ -551,7 +620,7 @@ const ModelEditor: React.FC<{
               className={className}
               document={reference}
               menuControl={referenceMenu}
-              setPImport={setPImport}
+              setPImport={setSImport}
             />
           ))}
       </div>
