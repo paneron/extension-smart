@@ -128,6 +128,9 @@ const ModelEditor: React.FC<{
   setState: (x: EditorState, rh: boolean) => void;
   redo?: () => void;
   undo?: () => void;
+  copy?: () => void;
+  paste?: () => void;  
+  setSelectedId: (id:string|undefined) => void;
 }> = ({
   isVisible,
   className,
@@ -136,6 +139,9 @@ const ModelEditor: React.FC<{
   setState,
   redo,
   undo,
+  copy,
+  paste,
+  setSelectedId
 }) => {
   const { logger } = useContext(DatasetContext);
 
@@ -507,7 +513,7 @@ const ModelEditor: React.FC<{
       <Popover2
         minimal
         placement="bottom-start"
-        content={<EditorEditMenu {...{ redo, undo }} />}
+        content={<EditorEditMenu {...{ redo, undo, copy, paste }} />}
       >
         <MGDButton>Edit</MGDButton>
       </Popover2>

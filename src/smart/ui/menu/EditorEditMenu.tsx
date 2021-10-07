@@ -8,7 +8,9 @@ import { Menu, MenuItem } from '@blueprintjs/core';
 const EditorFileMenu: React.FC<{
   undo?: () => void;
   redo?: () => void;
-}> = function ({ undo, redo }) {
+  copy?: () => void;
+  paste?: () => void;
+}> = function ({ undo, redo, copy, paste }) {
   return (
     <Menu>
       <MenuItem
@@ -22,6 +24,18 @@ const EditorFileMenu: React.FC<{
         label="Ctrl + Y"
         disabled={redo === undefined}
         onClick={redo}
+      />
+      <MenuItem
+        text="Copy (Process only)"
+        label="Ctrl + C"
+        disabled={copy === undefined}
+        onClick={copy}
+      />
+      <MenuItem
+        text="Paste"
+        label="Ctrl + V"
+        disabled={paste === undefined}
+        onClick={paste}
       />
     </Menu>
   );

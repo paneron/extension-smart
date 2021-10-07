@@ -50,6 +50,8 @@ const EditWrapper: React.FC<{
   });
 
   const [history, setHistory] = useState<EditHistory>({ past: [], future: [] });
+  const [selected, setSelected] = useState<string|undefined>(undefined);
+  const [copied, setCopied] = useState<string|undefined>(undefined);
 
   const hotkeys = [
     {
@@ -63,6 +65,18 @@ const EditWrapper: React.FC<{
       global: true,
       label: 'Redo',
       onKeyDown: redo,
+    },
+    {
+      combo: 'ctrl+c',
+      global: true,
+      label: 'Redo',
+      onKeyDown: copy,
+    },
+    {
+      combo: 'ctrl+y',
+      global: true,
+      label: 'Redo',
+      onKeyDown: paste,
     },
   ];
 
@@ -100,6 +114,16 @@ const EditWrapper: React.FC<{
     }
   }
 
+  function copy() {
+    if (selected !== undefined) {
+      setCopied(selected);
+    }
+  }
+
+  function paste() {
+
+  }
+
   return (
     <HotkeysProvider>
       <HotkeysTarget2 hotkeys={hotkeys}>
@@ -113,6 +137,9 @@ const EditWrapper: React.FC<{
           setState={updateState}
           redo={history.future.length > 0 ? redo : undefined}
           undo={history.past.length > 0 ? undo : undefined}
+          copy={selected!==undefined?copy:undefined}
+          paste={copied!==undefined?copy:undefined}
+          setSelectedId={setSelected}
         />
       </HotkeysTarget2>
     </HotkeysProvider>

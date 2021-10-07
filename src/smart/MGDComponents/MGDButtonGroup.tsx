@@ -8,7 +8,7 @@ import { mgd_button_group } from '../../css/MGDButtonGroup';
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 interface OwnProps {
-  children: JSX.Element[];
+  children: (JSX.Element|null)[];
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -16,7 +16,7 @@ interface OwnProps {
 function MGDButtonGroup(props: OwnProps) {
   const { children } = props;
   const base = `mgd-button-group__item`;
-  const items = children.map((child: JSX.Element, index: number) => (
+  const items = children.filter(x=>x !== null).map((child: JSX.Element|null, index: number) => (
     <div key={`${base}--${index}`}>{child}</div>
   ));
   return <fieldset css={mgd_button_group}>{items}</fieldset>;
