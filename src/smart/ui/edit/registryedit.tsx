@@ -203,7 +203,6 @@ const RegistryEditItemPage: React.FC<{
   return (
     <FormGroup>
       <NormalTextField
-        key="field#registryid"
         text="Registry ID"
         value={reg.id}
         onChange={(x: string) => {
@@ -212,7 +211,6 @@ const RegistryEditItemPage: React.FC<{
         }}
       />
       <NormalTextField
-        key="field#regtitle"
         text="Registry title"
         value={reg.title}
         onChange={(x: string) => {
@@ -221,7 +219,6 @@ const RegistryEditItemPage: React.FC<{
         }}
       />
       <AttributeEditPage
-        key={'ui#registry#attributeEditPage'}
         attributes={{ ...reg.attributes }}
         model={model!}
         setAtts={x => {

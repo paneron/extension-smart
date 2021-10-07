@@ -147,6 +147,7 @@ const ModelReferenceView: React.FC<{
         toolbar={toolbar}
         sidebar={sidebar}
         navbarProps={{ breadcrumbs }}
+        style={{ flex: 3 }}
       >
         <div css={react_flow_container_layout}>
           <ReactFlow

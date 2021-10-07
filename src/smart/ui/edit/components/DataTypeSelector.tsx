@@ -9,12 +9,12 @@ import {
   ItemRenderer,
   Select,
 } from '@blueprintjs/select';
-import { MMELRole } from '../../../serialize/interface/supportinterface';
 import React from 'react';
+import { AttributeType } from './AttributeList';
 
-const RoleSelect = Select.ofType<MMELRole>();
+const DataTypeSelect = Select.ofType<AttributeType>();
 
-const RoleSelectRender: ItemRenderer<MMELRole> = function (
+const TypeSelectRender: ItemRenderer<AttributeType> = function (
   item,
   { handleClick, modifiers }
 ) {
@@ -28,24 +28,24 @@ const RoleSelectRender: ItemRenderer<MMELRole> = function (
       key={item.id}
       onClick={handleClick}
     >
-      {item.name}
+      {item.display}
     </Button>
   );
 };
 
-const RoleSelectFilter: ItemPredicate<MMELRole> = function (query, item) {
+const TypeSelectFilter: ItemPredicate<AttributeType> = function (query, item) {
   return item.name.toLowerCase().includes(query.toLowerCase());
 };
 
-const RoleSelector: React.FC<{
-  activeItem: MMELRole | null;
-  items: MMELRole[];
-  onItemSelect: (x: MMELRole | null) => void;
+const DataTypeSelector: React.FC<{
+  activeItem: AttributeType | null;
+  items: AttributeType[];
+  onItemSelect: (x: AttributeType | null) => void;
   label: string;
 }> = function (props) {
   const { activeItem, onItemSelect, label } = props;
 
-  const RoleListRender: ItemListRenderer<MMELRole> = function (props) {
+  const DataTypeListRender: ItemListRenderer<AttributeType> = function (props) {
     const { filteredItems, itemsParentRef, renderItem } = props;
 
     return (
@@ -61,7 +61,7 @@ const RoleSelector: React.FC<{
           filteredItems.map(renderItem)
         ) : (
           <Button fill minimal alignText="left">
-            No role avaiable
+            No data type avaiable
           </Button>
         )}
       </Menu>
@@ -71,16 +71,16 @@ const RoleSelector: React.FC<{
   return (
     <FormGroup label={label}>
       <ButtonGroup>
-        <RoleSelect
-          itemRenderer={RoleSelectRender}
-          itemPredicate={RoleSelectFilter}
-          itemListRenderer={RoleListRender}
+        <DataTypeSelect
+          itemRenderer={TypeSelectRender}
+          itemPredicate={TypeSelectFilter}
+          itemListRenderer={DataTypeListRender}
           {...props}
         >
           <Button rightIcon="double-caret-vertical">
             {activeItem !== null ? activeItem.name : 'Not specified'}
           </Button>
-        </RoleSelect>
+        </DataTypeSelect>
         <Button
           intent="danger"
           icon="cross"
@@ -92,4 +92,4 @@ const RoleSelector: React.FC<{
   );
 };
 
-export default RoleSelector;
+export default DataTypeSelector;

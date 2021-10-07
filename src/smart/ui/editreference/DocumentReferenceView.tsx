@@ -14,8 +14,10 @@ const DocumentReferenceView: React.FC<{
   document: MMELDocument;
   menuControl: React.ReactNode;
   setPImport: (x: RefTextSelection | undefined) => void;
+  setClickListener: (f: (() => void)[]) => void;
 }> = function (props) {
-  const { className, document, menuControl, setPImport } = props;
+  const { className, document, menuControl, setPImport, setClickListener } =
+    props;
 
   const toolbar = <ControlGroup>{menuControl}</ControlGroup>;
 
@@ -49,13 +51,17 @@ const DocumentReferenceView: React.FC<{
 
   function cleanup() {
     setPImport(undefined);
+    setClickListener([]);
   }
 
-  useEffect(() => cleanup, [document]);
+  useEffect(() => {
+    setClickListener([onSelection]);
+    return cleanup;
+  }, [document]);
 
   return (
-    <Workspace className={className} toolbar={toolbar}>
-      <SMARTDocumentView document={document} onMouseUp={onSelection} />
+    <Workspace className={className} toolbar={toolbar} style={{ flex: 2 }}>
+      <SMARTDocumentView mmelDoc={document} />
     </Workspace>
   );
 };

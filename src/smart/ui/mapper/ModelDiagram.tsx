@@ -274,7 +274,7 @@ const ModelDiagram: React.FC<{
             </ReactFlow>
           ) : (
             <SMARTDocumentView
-              document={mw}
+              mmelDoc={mw}
               onDragOver={onDragOver}
               setMapping={setMapping}
               mapSet={mapSet}

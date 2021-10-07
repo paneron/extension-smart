@@ -252,7 +252,11 @@ const EditProcessPage: React.FC<{
     onAddReference,
   };
 
-  useEffect(() => setEditing(process), [process]);
+  useEffect(() => {
+    setEditing(process);
+    setProvisions(getInitProvisions(model, process));
+    setMeasurements(getInitMeasurement(process));
+  }, [process]);
 
   return minimal ? (
     <QuickVersionEdit {...commonProps} {...quickEditProps} />

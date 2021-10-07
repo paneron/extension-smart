@@ -21,6 +21,8 @@ import { FocusStyleManager } from '@blueprintjs/core';
 
 const RepositoryView: React.FC<Record<never, never>> = function () {
   const [selectedModule, selectModule] = useState<ModuleName>('modelViewer');
+  const [clickListener, setClickListener] = useState<(() => void)[]>([]);
+
   FocusStyleManager.onlyShowFocusOnTabs();
 
   const toolbar = (
@@ -74,6 +76,11 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
         display: flex;
         flex-flow: row nowrap;
       `}
+      onMouseUp={() => {
+        for (const x of clickListener) {
+          x();
+        }
+      }}
     >
       {toolbar}
       {MODULES.map(moduleName => {
@@ -83,6 +90,7 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
         return (
           <View
             isVisible={selected}
+            setClickListener={setClickListener}
             css={css`
               flex: 1;
               overflow: hidden;
@@ -110,7 +118,11 @@ interface ModuleConfiguration {
   description: JSX.Element;
   tooltip: string;
   icon: IconName;
-  view: React.FC<{ isVisible: boolean; className?: string }>;
+  view: React.FC<{
+    isVisible: boolean;
+    className?: string;
+    setClickListener: (f: (() => void)[]) => void;
+  }>;
 }
 
 const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {

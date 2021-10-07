@@ -9,15 +9,14 @@ import { calculateDocumentMapping } from '../../../utils/DocumentFunctions';
 import SectionView from './SectionView';
 
 const SMARTDocumentView: React.FC<{
-  document: MMELDocument;
+  mmelDoc: MMELDocument;
   setMapping?: (fromid: string, toid: string) => void;
   mapSet?: MapSet;
-  onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
-  onMouseUp?: () => void;
+  onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;  
   MappingList?: React.FC<{ id: string }>;
   setSelected?: (id: string) => void;
 }> = function (props) {
-  const { document, onDragOver, mapSet, setSelected, onMouseUp } = props;
+  const { mmelDoc, onDragOver, mapSet, setSelected } = props;
   const docMap = useMemo(
     () =>
       mapSet !== undefined
@@ -34,7 +33,6 @@ const SMARTDocumentView: React.FC<{
         overflowY: 'auto',
       }}
       onDragOver={onDragOver}
-      onMouseUp={onMouseUp}
       onScroll={setSelected !== undefined ? () => setSelected('') : undefined}
     >
       <h2
@@ -45,13 +43,13 @@ const SMARTDocumentView: React.FC<{
           textAlign: 'center',
         }}
       >
-        {document.title}
+        {mmelDoc.title}
       </h2>
-      {document.sections.map(sec => (
+      {mmelDoc.sections.map(sec => (
         <SectionView
           key={sec.id}
           sec={sec}
-          statements={document.states}
+          statements={mmelDoc.states}
           docMap={docMap}
           {...props}
         />

@@ -127,7 +127,8 @@ const initModelWrapper = createEditorModelWrapper(initModel);
 const ModelEditor: React.FC<{
   isVisible: boolean;
   className?: string;
-}> = ({ isVisible, className }) => {
+  setClickListener: (f: (() => void)[]) => void;
+}> = ({ isVisible, className, setClickListener }) => {
   const { logger } = useContext(DatasetContext);
 
   Logger.logger = logger!;
@@ -565,6 +566,7 @@ const ModelEditor: React.FC<{
             toolbar={toolbar}
             sidebar={sidebar}
             navbarProps={{ breadcrumbs }}
+            style={{ flex: 3 }}
           >
             <div css={react_flow_container_layout}>
               <ReactFlow
@@ -620,6 +622,7 @@ const ModelEditor: React.FC<{
               className={className}
               document={reference}
               menuControl={referenceMenu}
+              setClickListener={setClickListener}
               setPImport={setSImport}
             />
           ))}

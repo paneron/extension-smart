@@ -8,8 +8,6 @@ import { EditorNodeWithInfoCallback } from '../../model/FlowContainer';
 import {
   EditorModel,
   isEditorData,
-  isEditorDataClass,
-  isEditorRegistry,
   isEditorStartEvent,
 } from '../../model/editormodel';
 import {
@@ -87,8 +85,6 @@ export const SelectedNodeDescription: React.FC<{
       {elm !== null ? (
         setModel !== undefined &&
         setDialog !== undefined &&
-        !isEditorRegistry(elm) &&
-        !isEditorDataClass(elm) &&
         !isEditorStartEvent(elm) ? (
           <QuickEdit
             node={elm}

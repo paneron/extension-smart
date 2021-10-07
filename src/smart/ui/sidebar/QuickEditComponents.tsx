@@ -10,6 +10,7 @@ import {
   EditorModel,
   EditorNode,
   EditorProcess,
+  EditorRegistry,
   EditorSignalEvent,
   EditorSubprocess,
   EditorTimerEvent,
@@ -21,16 +22,18 @@ import {
   DeletableNodeTypes,
   EditableNodeTypes,
   EditAction,
+  QuickEditableNodeTypes,
 } from '../../utils/constants';
 import QuickEditApproval from '../quickedit/approval';
 import QuickEditEGate from '../quickedit/egate';
 import QuickEditEnd from '../quickedit/end';
 import QuickEditProcess from '../quickedit/process';
+import QuickEditRegistry from '../quickedit/registry';
 import QuickEditSignalEvent from '../quickedit/signalevent';
 import QuickEditTimer from '../quickedit/timer';
 
 const NODE_EDIT_VIEWS: Record<
-  DeletableNodeTypes,
+  QuickEditableNodeTypes,
   React.FC<{
     node: EditorNode;
     modelWrapper: ModelWrapper;
@@ -66,6 +69,15 @@ const NODE_EDIT_VIEWS: Record<
       model={props.modelWrapper.model}
     />
   ),
+  [DataType.REGISTRY]: props => (
+    <QuickEditRegistry
+      setModel={props.setModel}
+      provision={props.provision}
+      registry={props.node as EditorRegistry}
+      model={props.modelWrapper.model}
+    />
+  ),
+  [DataType.DATACLASS]: props => <></>,
 };
 
 const QuickEdit: React.FC<{
@@ -81,7 +93,7 @@ const QuickEdit: React.FC<{
   provision?: RefTextSelection;
 }> = function (props) {
   const { node } = props;
-  const Edit = NODE_EDIT_VIEWS[node.datatype as DeletableNodeTypes];
+  const Edit = NODE_EDIT_VIEWS[node.datatype as QuickEditableNodeTypes];
   return <Edit {...props} />;
 };
 
