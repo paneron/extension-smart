@@ -37,6 +37,7 @@ import {
   isDataClass,
   isEGate,
   isEndEvent,
+  isPage,
   isProcess,
   isRegistry,
   isSignalEvent,
@@ -105,6 +106,10 @@ export function isEditorNode(x: unknown): x is EditorNode {
     test.objectVersion !== undefined &&
     test.objectVersion === 'Editor'
   );
+}
+
+export function isEditorPage(x: MMELObject): x is EditorSubprocess {
+  return isPage(x);
 }
 
 export function isEditorProcess(x: EditorNode): x is EditorProcess {

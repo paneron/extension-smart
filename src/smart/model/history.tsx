@@ -16,6 +16,16 @@ export interface PageHistory {
   items: HistoryItem[];
 }
 
+export interface EditHistoryItem {
+  mw: ModelWrapper;
+  phistory: PageHistory;
+}
+
+export interface EditHistory {
+  past: EditHistoryItem[];
+  future: EditHistoryItem[];
+}
+
 export function cloneHistory(history: PageHistory): PageHistory {
   return {
     items: history.items.map(item => ({

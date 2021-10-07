@@ -13,7 +13,9 @@ export function deleteEdge(
   edgeid: string
 ): EditorModel {
   const page = model.pages[pageid];
-  delete page.edges[edgeid];
+  const edges = { ...page.edges };
+  delete edges[edgeid];
+  page.edges = edges;
   return model;
 }
 
@@ -22,7 +24,9 @@ function deleteProcess(model: EditorModel, pageid: string, id: string) {
   delete page.childs[id];
   deleteRelatedEdges(page, id);
   const process = model.elements[id] as EditorProcess;
-  process.pages.delete(pageid);
+  const newPages = new Set(process.pages);
+  newPages.delete(pageid);
+  process.pages = newPages;
   if (process.pages.size === 0) {
     delete model.elements[id];
     for (const provision of process.provision) {
@@ -51,8 +55,9 @@ export function deletePage(model: EditorModel, pageid: string) {
 }
 
 function deleteNode(model: EditorModel, pageid: string, id: string) {
-  const page = model.pages[pageid];
+  const page = { ...model.pages[pageid] };
   delete page.childs[id];
+  model.pages[pageid] = page;
   deleteRelatedEdges(page, id);
   delete model.elements[id];
   return model;

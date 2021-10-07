@@ -98,20 +98,22 @@ export function addEdge(
   source: string,
   target: string
 ): EditorSubprocess {
+  const newPage = { ...page };
   const s = page.childs[source];
   const t = page.childs[target];
   if (s !== undefined && t !== undefined) {
     const selm = elements[s.element];
     const telm = elements[s.element];
     if (isEditorData(selm) || isEditorData(telm)) {
-      return page;
+      return newPage;
     }
+
     const newEdge = createEdge(findUniqueID('Edge', page.edges));
     newEdge.from = source;
     newEdge.to = target;
-    page.edges = { ...page.edges, [newEdge.id]: newEdge };
+    newPage.edges = { ...page.edges, [newEdge.id]: newEdge };
   }
-  return { ...page };
+  return newPage;
 }
 
 export function createNewPage(model: EditorModel): string {

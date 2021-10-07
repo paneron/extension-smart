@@ -33,7 +33,6 @@ import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
 import {
-  createEditorModelWrapper,
   getEditorReactFlowElementsFrom,
   ModelWrapper,
 } from '../model/modelwrapper';
@@ -45,7 +44,6 @@ import {
   popPage,
 } from '../model/history';
 import {
-  createNewEditorModel,
   createRegistry,
   createSubprocessComponent,
 } from '../utils/EditorFactory';
@@ -120,15 +118,25 @@ import DocumentReferenceView from './editreference/DocumentReferenceView';
 import { RefTextSelection } from '../model/selectionImport';
 import ImportFromSelectionButton from './popover/ImportFromSelectionButton';
 import { DataType } from '../serialize/interface/baseinterface';
-
-const initModel = createNewEditorModel();
-const initModelWrapper = createEditorModelWrapper(initModel);
+import EditorEditMenu from './menu/EditorEditMenu';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
   className?: string;
   setClickListener: (f: (() => void)[]) => void;
-}> = ({ isVisible, className, setClickListener }) => {
+  state: EditorState;
+  setState: (x: EditorState, rh: boolean) => void;
+  redo?: () => void;
+  undo?: () => void;
+}> = ({
+  isVisible,
+  className,
+  setClickListener,
+  state,
+  setState,
+  redo,
+  undo,
+}) => {
   const { logger } = useContext(DatasetContext);
 
   Logger.logger = logger!;
@@ -142,12 +150,6 @@ const ModelEditor: React.FC<{
     []
   );
 
-  const [state, setState] = useState<EditorState>({
-    dvisible: true,
-    modelWrapper: initModelWrapper,
-    history: createPageHistory(initModelWrapper),
-    edgeDeleteVisible: false,
-  });
   const [rfInstance, setRfInstance] = useState<OnLoadParams | null>(null);
   const [dialogPack, setDialogPack] = useState<DiagPackage>({
     type: null,
@@ -186,13 +188,16 @@ const ModelEditor: React.FC<{
   }
 
   function setModelAfterDelete(model: EditorModel) {
-    setState({
-      ...state,
-      modelWrapper: {
-        ...mw,
-        model: { ...model },
+    setState(
+      {
+        ...state,
+        modelWrapper: {
+          ...mw,
+          model: { ...model },
+        },
       },
-    });
+      true
+    );
     setDialogType(null);
   }
 
@@ -245,32 +250,35 @@ const ModelEditor: React.FC<{
     if (state.dvisible) {
       saveLayout();
     }
-    setState({ ...state, dvisible: !state.dvisible });
+    setState({ ...state, dvisible: !state.dvisible }, false);
   }
 
   function toggleEdgeDelete() {
-    setState({ ...state, edgeDeleteVisible: !state.edgeDeleteVisible });
+    setState({ ...state, edgeDeleteVisible: !state.edgeDeleteVisible }, false);
   }
 
   function setNewModelWrapper(mw: ModelWrapper) {
-    setState({ ...state, history: createPageHistory(mw), modelWrapper: mw });
+    setState(
+      { ...state, history: createPageHistory(mw), modelWrapper: mw },
+      true
+    );
   }
 
   function setModelWrapper(mw: ModelWrapper) {
-    setState({ ...state, modelWrapper: mw });
+    setState({ ...state, modelWrapper: mw }, true);
   }
 
   function onMetaChanged(meta: MMELMetadata) {
     state.history.items[0].pathtext = getRootName(meta);
     model.meta = meta;
-    setState({ ...state });
+    setState({ ...state }, true);
   }
 
   function onPageChange(updated: PageHistory, newPage: string) {
     saveLayout();
     state.history = updated;
     mw.page = newPage;
-    setState({ ...state });
+    setState({ ...state }, true);
   }
 
   function onProcessClick(pageid: string, processid: string): void {
@@ -278,19 +286,19 @@ const ModelEditor: React.FC<{
     mw.page = pageid;
     logger?.log('Go to page', pageid);
     addToHistory(state.history, mw.page, processid);
-    setState({ ...state });
+    setState({ ...state }, true);
   }
 
   function removeEdge(id: string) {
     deleteEdge(model, mw.page, id);
-    setState({ ...state });
+    setState({ ...state }, true);
   }
 
   function drillUp(): void {
     if (state.history.items.length > 0) {
       saveLayout();
       mw.page = popPage(state.history);
-      setState({ ...state });
+      setState({ ...state }, true);
     }
   }
 
@@ -312,13 +320,16 @@ const ModelEditor: React.FC<{
           pos,
           selectionImport !== undefined ? selectionImport.text : undefined
         );
-        setState({
-          ...state,
-          modelWrapper: {
-            ...mw,
-            model: { ...model },
+        setState(
+          {
+            ...state,
+            modelWrapper: {
+              ...mw,
+              model: { ...model },
+            },
           },
-        });
+          true
+        );
       } else if (
         refid !== '' &&
         reference !== undefined &&
@@ -341,13 +352,16 @@ const ModelEditor: React.FC<{
         nc.y = pos.y;
 
         page.childs[process.id] = nc;
-        setState({
-          ...state,
-          modelWrapper: {
-            ...mw,
-            model: { ...model },
+        setState(
+          {
+            ...state,
+            modelWrapper: {
+              ...mw,
+              model: { ...model },
+            },
           },
-        });
+          true
+        );
       }
     }
   }
@@ -356,7 +370,7 @@ const ModelEditor: React.FC<{
     if (x.source !== null && x.target !== null) {
       const page = model.pages[mw.page];
       model.pages[mw.page] = addEdge(page, model.elements, x.source, x.target);
-      setState({ ...state });
+      setState({ ...state }, true);
     }
   }
 
@@ -366,11 +380,14 @@ const ModelEditor: React.FC<{
     history: PageHistory
   ) {
     setSelected(selected);
-    setState({
-      ...state,
-      history,
-      modelWrapper: { ...mw, page: pageid },
-    });
+    setState(
+      {
+        ...state,
+        history,
+        modelWrapper: { ...mw, page: pageid },
+      },
+      true
+    );
   }
 
   function getStyleById(id: string) {
@@ -477,13 +494,22 @@ const ModelEditor: React.FC<{
         placement="bottom-start"
         content={
           <EditorFileMenu
-            setModelWrapper={setNewModelWrapper}
-            getLatestLayout={saveLayout}
-            setDialogType={setDialogType}
+            {...{
+              setModelWrapper: setNewModelWrapper,
+              getLatestLayout: saveLayout,
+              setDialogType,
+            }}
           />
         }
       >
         <MGDButton>Model</MGDButton>
+      </Popover2>
+      <Popover2
+        minimal
+        placement="bottom-start"
+        content={<EditorEditMenu {...{ redo, undo }} />}
+      >
+        <MGDButton>Edit</MGDButton>
       </Popover2>
       {reference === undefined && referenceMenu}
       <MGDButton
@@ -562,23 +588,19 @@ const ModelEditor: React.FC<{
             canOutsideClickClose={false}
           >
             <diagProps.Panel
+              {...{ setModelWrapper, onMetaChanged, showMsg }}
               modelwrapper={state.modelWrapper}
-              setModelWrapper={setModelWrapper}
-              onMetaChanged={onMetaChanged}
               callback={dialogPack.callback}
               cancel={() => {
                 setDialogType(null);
               }}
               msg={dialogPack.msg}
-              showMsg={showMsg}
             />
           </Dialog>
         )}
         <ReactFlowProvider>
           <Workspace
-            className={className}
-            toolbar={toolbar}
-            sidebar={sidebar}
+            {...{ className, toolbar, sidebar }}
             navbarProps={{ breadcrumbs }}
             style={{ flex: 3 }}
           >
@@ -594,9 +616,7 @@ const ModelEditor: React.FC<{
                   getStyleById,
                   getSVGColorById
                 )}
-                onLoad={onLoad}
-                onDrop={onDrop}
-                onDragOver={onDragOver}
+                {...{ onLoad, onDrop, onDragOver }}
                 onConnect={connectHandle}
                 nodesConnectable={true}
                 snapToGrid={true}

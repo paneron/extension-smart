@@ -12,12 +12,12 @@ import {
   IconName,
 } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
-import ModelEditor from './smart/ui/maineditor';
 import ModelMapper from './smart/ui/mainmapper';
 import { BSI_WHITE_TEXT } from './css/BSI.logos';
 import ModelViewer from './smart/ui/mainviewer';
 import ModelWorkspace from './smart/ui/modelWorkspace';
 import { FocusStyleManager } from '@blueprintjs/core';
+import EditWrapper from './smart/ui/editFunctions/EditWrapper';
 
 const RepositoryView: React.FC<Record<never, never>> = function () {
   const [selectedModule, selectModule] = useState<ModuleName>('modelViewer');
@@ -138,7 +138,7 @@ const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {
     description: <>Model editor</>,
     tooltip: 'Model editor',
     icon: 'edit',
-    view: ModelEditor,
+    view: EditWrapper,
   },
   modelMapper: {
     title: <>Map</>,

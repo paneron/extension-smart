@@ -1,4 +1,4 @@
-import { DataType, MMELNode } from '../interface/baseinterface';
+import { DataType, MMELNode, MMELObject } from '../interface/baseinterface';
 import {
   MMELDataAttribute,
   MMELDataClass,
@@ -210,6 +210,10 @@ export function validateModel(model: MMELModel): void {
   for (const v in model.views) {
     validateView(model.views[v], model.vars);
   }
+}
+
+export function isPage(x: MMELObject): x is MMELSubprocess {
+  return x.datatype === DataType.SUBPROCESS;
 }
 
 export function isProcess(x: MMELNode): x is MMELProcess {
