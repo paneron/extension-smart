@@ -165,6 +165,8 @@ const ModelEditor: React.FC<{
     undefined
   );
   const [toaster] = useState<IToaster>(Toaster.create());
+  const [isImportRoleOpen, setIsImportRoleOpen] = useState<boolean>(false);
+  const [isImportRegOpen, setIsImportRegOpen] = useState<boolean>(false);
 
   const mw = state.modelWrapper;
   const model = mw.model;
@@ -434,13 +436,17 @@ const ModelEditor: React.FC<{
       >
         <MGDButton>Reference model</MGDButton>
       </Popover2>
-      {selectionImport !== undefined && (
+      {(selectionImport !== undefined ||
+        isImportRoleOpen ||
+        isImportRegOpen) && (
         <>
           <ImportFromSelectionButton
             title="Role ID"
             validTest={x => checkId(x, model.roles)}
             valueTitle="Role name"
-            value={selectionImport.text}
+            value={selectionImport !== undefined ? selectionImport.text : ''}
+            isOpen={isImportRoleOpen}
+            setIsOpen={setIsImportRoleOpen}
             iconName="person"
             buttonText="Import as Role"
             save={importRole}
@@ -452,7 +458,9 @@ const ModelEditor: React.FC<{
               checkId(genDCIdByRegId(x), model.elements, true)
             }
             valueTitle="Registry name"
-            value={selectionImport.text}
+            value={selectionImport !== undefined ? selectionImport.text : ''}
+            isOpen={isImportRegOpen}
+            setIsOpen={setIsImportRegOpen}
             iconName="cube"
             buttonText="Import as Registry"
             save={importRegistry}
