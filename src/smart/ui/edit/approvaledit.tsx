@@ -53,6 +53,8 @@ const EditApprovalPage: React.FC<{
   minimal?: boolean;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
+  getLatestLayoutMW?: () => ModelWrapper;
+  setSelectedNode?: (id: string) => void;
 }> = function ({
   modelWrapper,
   setModel,
@@ -61,6 +63,8 @@ const EditApprovalPage: React.FC<{
   minimal = false,
   onFullEditClick,
   onDeleteClick,
+  getLatestLayoutMW,
+  setSelectedNode,
 }) {
   const model = modelWrapper.model;
 
@@ -87,6 +91,7 @@ const EditApprovalPage: React.FC<{
         closeDialog();
       }
     }
+    setHasChange(false);
   }
 
   function setEdit(x: EditorApproval) {
@@ -113,6 +118,26 @@ const EditApprovalPage: React.FC<{
       }
       return false;
     });
+  }
+
+  function onNewID(id: string) {
+    const oldid = approval.id;
+    if (getLatestLayoutMW !== undefined) {
+      const mw = getLatestLayoutMW();
+      const updated = save(
+        oldid,
+        { ...editing, id },
+        modelWrapper.page,
+        mw.model
+      );
+      if (updated !== null) {
+        setModel({ ...updated });
+      }
+      setHasChange(false);
+      if (setSelectedNode !== undefined) {
+        setSelectedNode(id);
+      }
+    }
   }
 
   const fullEditClick =
@@ -148,6 +173,10 @@ const EditApprovalPage: React.FC<{
     saveOnExit,
     approval,
     setEditing: setEdit,
+    initID: approval.id,
+    validTest: (id: string) =>
+      id === approval.id || checkId(id, model.elements),
+    onNewID,
   };
 
   useEffect(() => setEditing(approval), [approval]);

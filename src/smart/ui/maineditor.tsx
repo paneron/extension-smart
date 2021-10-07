@@ -304,7 +304,12 @@ const ModelEditor: React.FC<{
         y: event.clientY - reactFlowBounds.top,
       });
       if (type !== '') {
-        const model = addComponentToModel(mw, type as NewComponentTypes, pos);
+        const model = addComponentToModel(
+          mw,
+          type as NewComponentTypes,
+          pos,
+          selectionImport !== undefined ? selectionImport.text : undefined
+        );
         setState({
           ...state,
           modelWrapper: {
@@ -502,6 +507,7 @@ const ModelEditor: React.FC<{
                 setModelWrapper({ ...state.modelWrapper, model: m })
               }
               provision={selectionImport}
+              getLatestLayoutMW={saveLayout}
             />
           ),
         },

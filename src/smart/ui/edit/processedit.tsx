@@ -46,6 +46,7 @@ import RegistrySelector from './components/RegistrySelector';
 import ProvisionListQuickEdit from './components/ProvisionList';
 import MeasureListQuickEdit from './components/MeasurementListEdit';
 import { RefTextSelection } from '../../model/selectionImport';
+import { ModelWrapper } from '../../model/modelwrapper';
 
 const NEEDSUBPROCESS = 'need sub';
 
@@ -110,6 +111,8 @@ const EditProcessPage: React.FC<{
   onDeleteClick?: () => void;
   onSubprocessClick?: () => void;
   provision?: RefTextSelection;
+  getLatestLayoutMW?: () => ModelWrapper;
+  setSelectedNode?: (id: string) => void;
 }> = function ({
   model,
   setModel,
@@ -120,6 +123,8 @@ const EditProcessPage: React.FC<{
   onDeleteClick,
   onSubprocessClick,
   provision,
+  getLatestLayoutMW,
+  setSelectedNode,
 }) {
   const process = model.elements[id] as EditorProcess;
 
@@ -158,6 +163,7 @@ const EditProcessPage: React.FC<{
         closeDialog();
       }
     }
+    setHasChange(false);
   }
 
   function onAddReference(refs: Record<string, MMELReference>) {
@@ -209,6 +215,27 @@ const EditProcessPage: React.FC<{
     });
   }
 
+  function onNewID(id: string) {
+    const oldid = process.id;
+    if (getLatestLayoutMW !== undefined) {
+      const mw = getLatestLayoutMW();
+      const updated = save(
+        oldid,
+        { ...editing, id },
+        provisions,
+        measurements,
+        mw.model
+      );
+      if (updated !== null) {
+        setModel({ ...updated });
+      }
+      setHasChange(false);
+      if (setSelectedNode !== undefined) {
+        setSelectedNode(id);
+      }
+    }
+  }
+
   const fullEditClick =
     onFullEditClick !== undefined
       ? function () {
@@ -250,6 +277,9 @@ const EditProcessPage: React.FC<{
     saveOnExit,
     provision,
     onAddReference,
+    initID: process.id,
+    validTest: (id: string) => id === process.id || checkId(id, model.elements),
+    onNewID,
   };
 
   useEffect(() => {

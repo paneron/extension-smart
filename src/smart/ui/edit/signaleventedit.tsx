@@ -33,6 +33,8 @@ const EditSignalEventPage: React.FC<{
   minimal?: boolean;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
+  getLatestLayoutMW?: () => ModelWrapper;
+  setSelectedNode?: (id: string) => void;
 }> = function ({
   modelWrapper,
   setModel,
@@ -41,6 +43,8 @@ const EditSignalEventPage: React.FC<{
   minimal,
   onFullEditClick,
   onDeleteClick,
+  getLatestLayoutMW,
+  setSelectedNode,
 }) {
   const model = modelWrapper.model;
   const scEvent = model.elements[id] as EditorSignalEvent;
@@ -58,6 +62,7 @@ const EditSignalEventPage: React.FC<{
         closeDialog();
       }
     }
+    setHasChange(false);
   }
 
   function setEdit(x: EditorSignalEvent) {
@@ -86,6 +91,26 @@ const EditSignalEventPage: React.FC<{
     });
   }
 
+  function onNewID(id: string) {
+    const oldid = scEvent.id;
+    if (getLatestLayoutMW !== undefined) {
+      const mw = getLatestLayoutMW();
+      const updated = save(
+        oldid,
+        { ...editing, id },
+        modelWrapper.page,
+        mw.model
+      );
+      if (updated !== null) {
+        setModel({ ...updated });
+      }
+      setHasChange(false);
+      if (setSelectedNode !== undefined) {
+        setSelectedNode(id);
+      }
+    }
+  }
+
   const fullEditClick =
     onFullEditClick !== undefined
       ? function () {
@@ -110,6 +135,9 @@ const EditSignalEventPage: React.FC<{
     saveOnExit,
     scEvent,
     setEditing: setEdit,
+    initID: scEvent.id,
+    validTest: (id: string) => id === scEvent.id || checkId(id, model.elements),
+    onNewID,
   };
 
   useEffect(() => setEditing(scEvent), [scEvent]);

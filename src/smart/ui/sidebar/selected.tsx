@@ -44,6 +44,7 @@ export const SelectedNodeDescription: React.FC<{
   }>;
   setModel?: (m: EditorModel) => void;
   provision?: RefTextSelection;
+  getLatestLayoutMW?: () => ModelWrapper;
 }> = function ({
   modelWrapper,
   setDialog,
@@ -51,6 +52,7 @@ export const SelectedNodeDescription: React.FC<{
   CustomProvision,
   setModel,
   provision,
+  getLatestLayoutMW,
 }) {
   const model = modelWrapper.model;
   const pageid = modelWrapper.page;
@@ -93,6 +95,7 @@ export const SelectedNodeDescription: React.FC<{
             setDialog={setDialog}
             page={model.pages[pageid]}
             provision={provision}
+            getLatestLayoutMW={getLatestLayoutMW}
           />
         ) : (
           <Describe

@@ -33,6 +33,8 @@ const EditTimerPage: React.FC<{
   minimal?: boolean;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
+  getLatestLayoutMW?: () => ModelWrapper;
+  setSelectedNode?: (id: string) => void;
 }> = function ({
   modelWrapper,
   setModel,
@@ -41,6 +43,8 @@ const EditTimerPage: React.FC<{
   closeDialog,
   onDeleteClick,
   onFullEditClick,
+  getLatestLayoutMW,
+  setSelectedNode,
 }) {
   const model = modelWrapper.model;
   const timer = model.elements[id] as EditorTimerEvent;
@@ -56,6 +60,7 @@ const EditTimerPage: React.FC<{
         closeDialog();
       }
     }
+    setHasChange(false);
   }
 
   function setEdit(x: EditorTimerEvent) {
@@ -84,6 +89,26 @@ const EditTimerPage: React.FC<{
     });
   }
 
+  function onNewID(id: string) {
+    const oldid = timer.id;
+    if (getLatestLayoutMW !== undefined) {
+      const mw = getLatestLayoutMW();
+      const updated = save(
+        oldid,
+        { ...editing, id },
+        modelWrapper.page,
+        mw.model
+      );
+      if (updated !== null) {
+        setModel({ ...updated });
+      }
+      setHasChange(false);
+      if (setSelectedNode !== undefined) {
+        setSelectedNode(id);
+      }
+    }
+  }
+
   const fullEditClick =
     onFullEditClick !== undefined
       ? function () {
@@ -108,6 +133,9 @@ const EditTimerPage: React.FC<{
     saveOnExit,
     timer,
     setEditing: setEdit,
+    initID: timer.id,
+    validTest: (id: string) => id === timer.id || checkId(id, model.elements),
+    onNewID,
   };
 
   useEffect(() => setEditing(timer), [timer]);

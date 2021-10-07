@@ -12,7 +12,7 @@ const SMARTDocumentView: React.FC<{
   mmelDoc: MMELDocument;
   setMapping?: (fromid: string, toid: string) => void;
   mapSet?: MapSet;
-  onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;  
+  onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
   MappingList?: React.FC<{ id: string }>;
   setSelected?: (id: string) => void;
 }> = function (props) {

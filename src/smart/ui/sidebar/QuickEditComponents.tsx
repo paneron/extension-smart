@@ -3,8 +3,10 @@
 
 import { jsx } from '@emotion/react';
 import React from 'react';
+import { useStoreActions } from 'react-flow-renderer';
 import {
   EditorApproval,
+  EditorDataClass,
   EditorEGate,
   EditorEndEvent,
   EditorModel,
@@ -25,6 +27,7 @@ import {
   QuickEditableNodeTypes,
 } from '../../utils/constants';
 import QuickEditApproval from '../quickedit/approval';
+import QuickEditDataClass from '../quickedit/dataclass';
 import QuickEditEGate from '../quickedit/egate';
 import QuickEditEnd from '../quickedit/end';
 import QuickEditProcess from '../quickedit/process';
@@ -45,6 +48,8 @@ const NODE_EDIT_VIEWS: Record<
     ) => void;
     page: EditorSubprocess;
     provision?: RefTextSelection;
+    getLatestLayoutMW?: () => ModelWrapper;
+    setSelectedNode: (id: string) => void;
   }>
 > = {
   [DataType.ENDEVENT]: props => (
@@ -77,7 +82,14 @@ const NODE_EDIT_VIEWS: Record<
       model={props.modelWrapper.model}
     />
   ),
-  [DataType.DATACLASS]: props => <></>,
+  [DataType.DATACLASS]: props => (
+    <QuickEditDataClass
+      setModel={props.setModel}
+      provision={props.provision}
+      dataclass={props.node as EditorDataClass}
+      model={props.modelWrapper.model}
+    />
+  ),
 };
 
 const QuickEdit: React.FC<{
@@ -91,10 +103,18 @@ const QuickEdit: React.FC<{
   ) => void;
   page: EditorSubprocess;
   provision?: RefTextSelection;
+  getLatestLayoutMW?: () => ModelWrapper;
 }> = function (props) {
   const { node } = props;
   const Edit = NODE_EDIT_VIEWS[node.datatype as QuickEditableNodeTypes];
-  return <Edit {...props} />;
+
+  const setSelectedElements = useStoreActions(a => a.setSelectedElements);
+
+  function setSelectedNodeId(id: string) {
+    setSelectedElements([{ id, position: { x: 0, y: 0 } }]);
+  }
+
+  return <Edit {...props} setSelectedNode={setSelectedNodeId} />;
 };
 
 export default QuickEdit;

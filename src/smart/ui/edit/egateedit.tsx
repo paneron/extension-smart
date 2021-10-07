@@ -42,6 +42,8 @@ const EditEGatePage: React.FC<{
   minimal?: boolean;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
+  getLatestLayoutMW?: () => ModelWrapper;
+  setSelectedNode?: (id: string) => void;
 }> = function ({
   modelWrapper,
   setModel,
@@ -50,6 +52,8 @@ const EditEGatePage: React.FC<{
   minimal,
   onDeleteClick,
   onFullEditClick,
+  getLatestLayoutMW,
+  setSelectedNode,
 }) {
   const model = modelWrapper.model;
   const page = model.pages[modelWrapper.page];
@@ -71,6 +75,7 @@ const EditEGatePage: React.FC<{
         closeDialog();
       }
     }
+    setHasChange(false);
   }
 
   function setEdit(x: EditorEGate) {
@@ -107,6 +112,27 @@ const EditEGatePage: React.FC<{
     });
   }
 
+  function onNewID(id: string) {
+    const oldid = egate.id;
+    if (getLatestLayoutMW !== undefined) {
+      const mw = getLatestLayoutMW();
+      const updated = save(
+        oldid,
+        { ...editing, id },
+        modelWrapper.page,
+        mw.model,
+        edges
+      );
+      if (updated !== null) {
+        setModel({ ...updated });
+      }
+      setHasChange(false);
+      if (setSelectedNode !== undefined) {
+        setSelectedNode(id);
+      }
+    }
+  }
+
   const fullEditClick =
     onFullEditClick !== undefined
       ? function () {
@@ -137,6 +163,9 @@ const EditEGatePage: React.FC<{
     egate,
     setEditing: setEdit,
     setEdges: setEds,
+    initID: egate.id,
+    validTest: (id: string) => id === egate.id || checkId(id, model.elements),
+    onNewID,
   };
 
   useEffect(() => setEditing(egate), [egate]);

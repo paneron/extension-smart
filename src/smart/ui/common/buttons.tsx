@@ -21,7 +21,7 @@ export const EditButton: React.FC<{
   onClick: () => void;
 }> = function ({ onClick }) {
   return (
-    <BaseButton tooltip="More editing options" icon="edit" onClick={onClick} />
+    <BaseButton tooltip="More editing options" icon="more" onClick={onClick} />
   );
 };
 

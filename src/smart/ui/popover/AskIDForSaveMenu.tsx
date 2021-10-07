@@ -9,14 +9,15 @@ import { NormalTextField } from '../common/fields';
 
 const AskIDForSaveMenu: React.FC<{
   title: string;
-  valueTitle: string;
-  value: string;
+  initID?: string;
+  valueTitle?: string;
+  value?: string;
   validTest: (id: string) => boolean;
   onSave: (id: string, data: string) => void;
 }> = function (props) {
-  const { title, validTest, onSave, valueTitle, value } = props;
-  const [id, setID] = useState<string>('');
-  const [data, setData] = useState<string>(value);
+  const { title, validTest, onSave, valueTitle, initID, value } = props;
+  const [id, setID] = useState<string>(initID ?? '');
+  const [data, setData] = useState<string>(value ?? '');
 
   function handleSave() {
     if (validTest(id)) {
@@ -27,11 +28,13 @@ const AskIDForSaveMenu: React.FC<{
   return (
     <div css={popover_panel_container}>
       <NormalTextField text={title} value={id} onChange={x => setID(x)} />
-      <NormalTextField
-        text={valueTitle}
-        value={data}
-        onChange={x => setData(x)}
-      />
+      {value !== undefined && (
+        <NormalTextField
+          text={valueTitle}
+          value={data}
+          onChange={x => setData(x)}
+        />
+      )}
       <Button intent="primary" fill onClick={handleSave}>
         Save
       </Button>

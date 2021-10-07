@@ -30,7 +30,7 @@ import {
 
 const newComponent: Record<
   NewComponentTypes,
-  (model: EditorModel) => EditorNode
+  (model: EditorModel, title?: string) => EditorNode
 > = {
   [DataType.PROCESS]: newProcess,
   [DataType.APPROVAL]: newApproval,
@@ -43,10 +43,11 @@ const newComponent: Record<
 export function addComponentToModel(
   mw: ModelWrapper,
   type: NewComponentTypes,
-  pos: XYPosition
+  pos: XYPosition,
+  title?: string
 ): EditorModel {
   const model = mw.model;
-  const elm = newComponent[type](model);
+  const elm = newComponent[type](model, title);
   model.elements[elm.id] = elm;
   const nc = createSubprocessComponent(elm.id);
   nc.x = pos.x;
@@ -57,12 +58,20 @@ export function addComponentToModel(
   return model;
 }
 
-function newProcess(model: EditorModel): EditorProcess {
-  return createProcess(findUniqueID('Process', model.elements));
+function newProcess(model: EditorModel, title?: string): EditorProcess {
+  const process = createProcess(findUniqueID('Process', model.elements));
+  if (title !== undefined) {
+    process.name = title;
+  }
+  return process;
 }
 
-function newApproval(model: EditorModel): EditorApproval {
-  return createApproval(findUniqueID('Approval', model.elements));
+function newApproval(model: EditorModel, title?: string): EditorApproval {
+  const approval = createApproval(findUniqueID('Approval', model.elements));
+  if (title !== undefined) {
+    approval.name = title;
+  }
+  return approval;
 }
 
 function newEndEvent(model: EditorModel): EditorEndEvent {
