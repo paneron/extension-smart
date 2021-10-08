@@ -8,11 +8,12 @@ import { EditorModel } from '../../../model/editormodel';
 import { RefTextSelection } from '../../../model/selectionImport';
 import { DataType } from '../../../serialize/interface/baseinterface';
 import {
-  MMELProvision,
+  MMELNote,  
   MMELReference,
+  NOTE_TYPE,
+  NOTE_TYPES,
 } from '../../../serialize/interface/supportinterface';
-import { MODAILITYOPTIONS, ModalityType } from '../../../utils/constants';
-import { createProvision } from '../../../utils/EditorFactory';
+import { createNote } from '../../../utils/EditorFactory';
 import {
   findUniqueID,
   getModelAllRefs,
@@ -22,19 +23,19 @@ import { findExistingRef } from '../../../utils/ModelImport';
 import { NormalComboBox, NormalTextField } from '../../common/fields';
 import SimpleReferenceSelector from './ReferenceSelector';
 
-const ProvisionListQuickEdit: React.FC<{
-  provisions: Record<string, MMELProvision>;
-  setProvisions: (x: Record<string, MMELProvision>) => void;
+const NoteListQuickEdit: React.FC<{
+  notes: Record<string, MMELNote>;
+  setNotes: (x: Record<string, MMELNote>) => void;
   model: EditorModel;
   selected?: RefTextSelection;
   onAddReference: (refs: Record<string, MMELReference>) => void;
-}> = function ({ provisions, setProvisions, model, selected, onAddReference }) {
+}> = function ({ notes, setNotes, model, selected, onAddReference }) {
   const refs = useMemo(() => getModelAllRefs(model), [model]);
 
-  function addProvision() {
-    const id = findUniqueID('Provision', provisions);
-    provisions[id] = createProvision(id);
-    setProvisions({ ...provisions });
+  function addNote() {
+    const id = findUniqueID('Note', notes);
+    notes[id] = createNote(id);
+    setNotes({ ...notes });
   }
 
   function onImport() {
@@ -61,21 +62,20 @@ const ProvisionListQuickEdit: React.FC<{
         onAddReference({ ...model.refs, [refid]: { ...ref, id: refid } });
       }
 
-      const id = findUniqueID('Provision', provisions);
-      provisions[id] = {
-        subject: {},
+      const id = findUniqueID('Note', notes);
+      notes[id] = {        
         id,
-        modality: detectModality(selected.text),
-        condition: selected.text,
+        type: detectType(selected.text),
+        message: selected.text,
         ref: new Set<string>([refid]),
-        datatype: DataType.PROVISION,
+        datatype: DataType.NOTE,
       };
-      setProvisions({ ...provisions });
+      setNotes({ ...notes });
     }
   }
 
   return (
-    <FormGroup label="Provisions">
+    <FormGroup label="Notes">
       {selected !== undefined && (
         <div
           style={{
@@ -90,34 +90,31 @@ const ProvisionListQuickEdit: React.FC<{
         </div>
       )}
 
-      {Object.entries(provisions).map(([index, p]) => (
-        <ProvisionQuickEdit
+      {Object.entries(notes).map(([index, n]) => (
+        <NoteQuickEdit
           key={index}
-          provision={p}
+          note={n}
           refs={refs}
-          setProvision={x => {
-            provisions[index] = x;
-            setProvisions({ ...provisions });
-          }}
+          setNote={x => setNotes({ ...notes, [index]: x })}
           onDelete={() => {
-            delete provisions[index];
-            setProvisions({ ...provisions });
+            delete notes[index];
+            setNotes({ ...notes });
           }}
         />
       ))}
-      <Button icon="plus" onClick={addProvision}>
-        Add provision
+      <Button icon="plus" onClick={addNote}>
+        Add note
       </Button>
     </FormGroup>
   );
 };
 
-const ProvisionQuickEdit: React.FC<{
-  provision: MMELProvision;
-  setProvision: (x: MMELProvision) => void;
+const NoteQuickEdit: React.FC<{
+  note: MMELNote;
+  setNote: (x: MMELNote) => void;
   refs: MMELReference[];
   onDelete: () => void;
-}> = function ({ provision, setProvision, refs, onDelete }) {
+}> = function ({ note, setNote, refs, onDelete }) {
   return (
     <div
       style={{
@@ -125,29 +122,29 @@ const ProvisionQuickEdit: React.FC<{
       }}
     >
       <fieldset>
-        <NormalTextField
-          text="Provision Text"
-          value={provision.condition}
-          onChange={x => setProvision({ ...provision, condition: x })}
-        />
         <NormalComboBox
-          text="Provision Modality"
-          value={provision.modality}
-          options={MODAILITYOPTIONS}
-          onChange={x => setProvision({ ...provision, modality: x })}
+          text="Note type"
+          value={note.type}
+          options={NOTE_TYPES}
+          onChange={x => setNote({ ...note, type: x as NOTE_TYPE})}
         />
+        <NormalTextField
+          text="Message"
+          value={note.message}
+          onChange={x => setNote({ ...note, message: x })}          
+        /> 
         <SimpleReferenceSelector
-          selected={provision.ref}
+          selected={note.ref}
           items={refs}
           onItemSelect={x =>
-            setProvision({
-              ...provision,
-              ref: new Set([...provision.ref, x.id]),
+            setNote({
+              ...note,
+              ref: new Set([...note.ref, x.id]),
             })
           }
           onTagRemove={x => {
-            provision.ref = new Set([...provision.ref].filter(s => x !== s));
-            setProvision({ ...provision });
+            note.ref = new Set([...note.ref].filter(s => x !== s));
+            setNote({ ...note });
           }}
         />
         <div
@@ -167,25 +164,24 @@ const ProvisionQuickEdit: React.FC<{
   );
 };
 
-interface ModOption {
+interface TypeOption {
   lowerCaseText: string;
-  modality: ModalityType;
+  type: NOTE_TYPE;
 }
 
-function detectModality(text: string): ModalityType {
-  const options: ModOption[] = MODAILITYOPTIONS
+function detectType(text: string): NOTE_TYPE {
+  const options: TypeOption[] = NOTE_TYPES
     .map(x => ({
       lowerCaseText: x.toLowerCase(),
-      modality: x,
-    }))
-    .sort((a, b) => b.modality.length - a.modality.length);
-  const t = text.toLowerCase();
+      type: x,
+    }))    
+  const t = text.toLowerCase().trim();
   for (const m of options) {
-    if (t.includes(m.lowerCaseText)) {
-      return m.modality;
+    if (t.substring(0, m.lowerCaseText.length) === m.lowerCaseText) {
+      return m.type;
     }
   }
-  return '';
+  return 'NOTE';
 }
 
-export default ProvisionListQuickEdit;
+export default NoteListQuickEdit;

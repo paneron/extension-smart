@@ -12,6 +12,7 @@ import {
 } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
+  MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
@@ -23,7 +24,7 @@ import {
   removeSpace,
   updatePageElement,
 } from '../../utils/ModelFunctions';
-import { createProvision } from '../../utils/EditorFactory';
+import { createNote, createProvision } from '../../utils/EditorFactory';
 import { createNewPage } from '../../utils/ModelAddComponentHandler';
 import { deletePage } from '../../utils/ModelRemoveComponentHandler';
 import {
@@ -47,6 +48,8 @@ import ProvisionListQuickEdit from './components/ProvisionList';
 import MeasureListQuickEdit from './components/MeasurementListEdit';
 import { RefTextSelection } from '../../model/selectionImport';
 import { ModelWrapper } from '../../model/modelwrapper';
+import { matchNoteFilter, NoteItem } from './NoteEdit';
+import NoteListQuickEdit from './components/NoteList';
 
 const NEEDSUBPROCESS = 'need sub';
 
@@ -66,6 +69,19 @@ function getInitProvisions(
       initProvision[k] = model.provisions[k];
     });
   return initProvision;
+}
+
+function getInitNotes(
+  model: EditorModel,
+  process: EditorProcess
+): Record<string, MMELNote> {
+  const initNotes: Record<string, MMELNote> = {};
+  Object.keys(model.notes)
+    .filter(k => process.notes.has(k))
+    .forEach(k => {
+      initNotes[k] = model.notes[k];
+    });
+  return initNotes;
 }
 
 function getInitMeasurement(process: EditorProcess): Record<string, IMeasure> {
@@ -99,6 +115,8 @@ interface CommonProcessEditProps {
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
   onSubprocessClick?: () => void;
+  notes: Record<string, MMELNote>;
+  setNotes: (x:Record<string, MMELNote>)=>void;
 }
 
 const EditProcessPage: React.FC<{
@@ -132,6 +150,9 @@ const EditProcessPage: React.FC<{
   const [provisions, setProvisions] = useState<Record<string, MMELProvision>>(
     getInitProvisions(model, process)
   );
+  const [notes, setNotes] = useState<Record<string, MMELNote>>(
+    getInitNotes(model, process)
+  );
   const [measurements, setMeasurements] = useState<Record<string, IMeasure>>(
     getInitMeasurement(process)
   );
@@ -156,7 +177,7 @@ const EditProcessPage: React.FC<{
   }
 
   function onUpdateClick() {
-    const updated = save(id, editing, provisions, measurements, model);
+    const updated = save(id, editing, provisions, measurements, notes, model);
     if (updated !== null) {
       setModel({ ...updated });
       if (closeDialog !== undefined) {
@@ -185,6 +206,11 @@ const EditProcessPage: React.FC<{
     onChange();
   }
 
+  function setN(x: Record<string, MMELNote>) {
+    setNotes(x);
+    onChange();
+  }
+
   function onChange() {
     if (!hasChange) {
       setHasChange(true);
@@ -197,13 +223,16 @@ const EditProcessPage: React.FC<{
         setEditing(edit => {
           setMeasurements(mea => {
             setProvisions(pros => {
-              const updated = save(id, edit, pros, mea, modelRef.current!);
-              if (updated !== null) {
-                setModel(updated);
-                if (closeDialog !== undefined) {
-                  closeDialog();
+              setNotes(nos => {
+                const updated = save(id, edit, pros, mea, nos, modelRef.current!);
+                if (updated !== null) {
+                  setModel(updated);
+                  if (closeDialog !== undefined) {
+                    closeDialog();
+                  }
                 }
-              }
+                return nos;
+              });              
               return pros;
             });
             return mea;
@@ -224,6 +253,7 @@ const EditProcessPage: React.FC<{
         { ...editing, id },
         provisions,
         measurements,
+        notes,
         mw.model
       );
       if (updated !== null) {
@@ -249,11 +279,13 @@ const EditProcessPage: React.FC<{
   const commonProps = {
     onUpdateClick,
     editing,
-    setEditing,
+    setEditing: setEdit,
     provisions,
-    setProvisions,
+    setProvisions: setPros,
     measurements,
-    setMeasurements,
+    setMeasurements: setMeasure,
+    notes,
+    setNotes: setN,
     model,
     onFullEditClick: fullEditClick,
     onDeleteClick,
@@ -269,10 +301,7 @@ const EditProcessPage: React.FC<{
 
   const quickEditProps = {
     roleObjects,
-    registryObjects,
-    setEditing: setEdit,
-    setProvisions: setPros,
-    setMeasurements: setMeasure,
+    registryObjects,    
     process,
     saveOnExit,
     provision,
@@ -319,6 +348,8 @@ const QuickVersionEdit: React.FC<
     saveOnExit,
     provision,
     onAddReference,
+    notes,
+    setNotes
   } = props;
 
   useEffect(() => saveOnExit, [process]);
@@ -371,6 +402,13 @@ const QuickVersionEdit: React.FC<
         model={model}
         onAddReference={onAddReference}
       />
+      <NoteListQuickEdit
+        notes={notes}
+        setNotes={setNotes}
+        selected={provision}
+        model={model}
+        onAddReference={onAddReference}
+      />
       <MeasureListQuickEdit
         measurements={measurements}
         setMeasurements={setMeasurements}
@@ -398,6 +436,8 @@ const FullVersionEdit: React.FC<
     model,
     roles,
     regs,
+    notes, 
+    setNotes
   } = props;
   return (
     <MGDDisplayPane>
@@ -476,6 +516,25 @@ const FullVersionEdit: React.FC<
           requireUniqueId={false}
         />
         <ListWithPopoverItem
+          items={{ ...notes }}
+          setItems={x => setNotes(x as Record<string, MMELNote>)}
+          model={model}
+          initObject={createNote('')}
+          matchFilter={matchNoteFilter}
+          getListItem={x => {
+            const note = x as MMELNote;
+            return {
+              id: note.id,
+              text: note.message,
+            };
+          }}
+          filterName="Note filter"
+          Content={NoteItem}
+          label="Notes"
+          size={7}
+          requireUniqueId={false}
+        />
+        <ListWithPopoverItem
           items={{ ...measurements }}
           setItems={x => setMeasurements(x as Record<string, IMeasure>)}
           model={model}
@@ -504,6 +563,7 @@ function save(
   process: EditorProcess,
   provisions: Record<string, MMELProvision>,
   measurements: Record<string, IMeasure>,
+  notes: Record<string, MMELNote>,
   model: EditorModel
 ): EditorModel | null {
   process.measure = Object.values(measurements).map(m => m.measure);
@@ -529,6 +589,11 @@ function save(
     oldProcess.provision,
     provisions
   );
+  model.notes = updateNotes(
+    model.notes,
+    oldProcess.notes,
+    notes
+  );
   process.provision = new Set(Object.values(provisions).map(p => p.id));
   return model;
 }
@@ -552,6 +617,27 @@ function updateProvisions(
     x++;
   }
   return { ...provisions };
+}
+
+function updateNotes(
+  notes: Record<string, MMELNote>,
+  old: Set<string>,
+  update: Record<string, MMELNote>
+): Record<string, MMELNote> {
+  for (const x of old) {
+    delete notes[x];
+  }
+  let x = 1;
+  for (const p in update) {
+    const pro = update[p];
+    while (notes['Note' + x] !== undefined) {
+      x++;
+    }
+    pro.id = 'Note' + x;
+    notes[pro.id] = pro;
+    x++;
+  }
+  return { ...notes };
 }
 
 function checkPage(

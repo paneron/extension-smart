@@ -10,6 +10,7 @@ import {
 } from '../serialize/interface/flowcontrolinterface';
 import {
   MMELMetadata,
+  MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
@@ -89,6 +90,16 @@ export function createProvision(id: string): MMELProvision {
     condition: '',
     ref: new Set<string>(),
     datatype: DataType.PROVISION,
+  };
+}
+
+export function createNote(id: string): MMELNote {
+  return {    
+    id: id,
+    type: 'NOTE',
+    message: '',
+    ref: new Set<string>(),
+    datatype: DataType.NOTE,
   };
 }
 
