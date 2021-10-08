@@ -26,13 +26,13 @@ const EditorFileMenu: React.FC<{
         onClick={redo}
       />
       <MenuItem
-        text="Copy (Process only)"
+        text="Mark Process"
         label="Ctrl + C"
         disabled={copy === undefined}
         onClick={copy}
       />
       <MenuItem
-        text="Paste"
+        text="Bring in marked"
         label="Ctrl + V"
         disabled={paste === undefined}
         onClick={paste}

@@ -38,7 +38,7 @@ import { SelectedNodeDescription } from './sidebar/selected';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
 import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
-import { DataVisibilityButton } from './control/buttons';
+import { DataVisibilityButton, IdVisibleButton } from './control/buttons';
 import SearchComponentPane from './sidebar/search';
 import {
   getHighlightedStyleById,
@@ -112,6 +112,7 @@ const ModelViewer: React.FC<{
     undefined
   );
   const [toaster] = useState<IToaster>(Toaster.create());
+  const [idVisible, setIdVisible] = useState<boolean>(false);
 
   function showMsg(msg: IToastProps) {
     toaster.show(msg);
@@ -453,6 +454,7 @@ const ModelViewer: React.FC<{
                 onProcessClick,
                 getStyleById,
                 getSVGColorById,
+                idVisible,
                 view !== undefined && view.ComponentToolTip !== undefined
                   ? ViewStyleComponentDesc
                   : undefined,
@@ -476,6 +478,10 @@ const ModelViewer: React.FC<{
                 <DataVisibilityButton
                   isOn={state.dvisible}
                   onClick={toggleDataVisibility}
+                />
+                <IdVisibleButton
+                  isOn={idVisible}
+                  onClick={() => setIdVisible(x => !x)}
                 />
               </Controls>
             </ReactFlow>

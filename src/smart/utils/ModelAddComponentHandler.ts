@@ -27,6 +27,8 @@ import {
   createSubprocessComponent,
   createTimerEvent,
 } from './EditorFactory';
+import { PageHistory } from '../model/history';
+import { MMELSubprocessComponent } from '../serialize/interface/flowcontrolinterface';
 
 const newComponent: Record<
   NewComponentTypes,
@@ -125,4 +127,37 @@ export function createNewPage(model: EditorModel): string {
   page.childs[start.id] = com;
   model.pages[page.id] = page;
   return page.id;
+}
+
+export function addExisingProcessToPage(
+  model: EditorModel,
+  history: PageHistory,
+  pageid: string,
+  process: string
+): EditorModel {
+  const page = model.pages[pageid];
+  if (page !== undefined) {
+    if (page.childs[process] !== undefined) {
+      throw new Error(`Process already exists`);
+    } else {
+      for (const h of history.items) {
+        if (h.pathtext === process) {
+          throw new Error(`Cannot include self in subprocess`);
+        }
+      }
+      const newComponent: MMELSubprocessComponent = {
+        element: process,
+        x: 0,
+        y: 0,
+        datatype: DataType.SUBPROCESSCOMPONENT,
+      };
+      const newPage = {
+        ...page,
+        childs: { ...page.childs, [process]: newComponent },
+      };
+      return { ...model, pages: { ...model.pages, [pageid]: newPage } };
+    }
+  } else {
+    throw new Error(`Current page not found: ${pageid}`);
+  }
 }

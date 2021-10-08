@@ -69,7 +69,11 @@ import {
   MyDiag,
   SetDiagAction,
 } from './dialog/dialogs';
-import { DataVisibilityButton, EdgeEditButton } from './control/buttons';
+import {
+  DataVisibilityButton,
+  EdgeEditButton,
+  IdVisibleButton,
+} from './control/buttons';
 import NewComponentPane from './control/newComponentPane';
 import {
   DeletableNodeTypes,
@@ -129,8 +133,8 @@ const ModelEditor: React.FC<{
   redo?: () => void;
   undo?: () => void;
   copy?: () => void;
-  paste?: () => void;  
-  setSelectedId: (id:string|undefined) => void;
+  paste?: () => void;
+  setSelectedId: (id: string | undefined) => void;
 }> = ({
   isVisible,
   className,
@@ -141,7 +145,7 @@ const ModelEditor: React.FC<{
   undo,
   copy,
   paste,
-  setSelectedId
+  setSelectedId,
 }) => {
   const { logger } = useContext(DatasetContext);
 
@@ -175,6 +179,7 @@ const ModelEditor: React.FC<{
   const [toaster] = useState<IToaster>(Toaster.create());
   const [isImportRoleOpen, setIsImportRoleOpen] = useState<boolean>(false);
   const [isImportRegOpen, setIsImportRegOpen] = useState<boolean>(false);
+  const [idVisible, setIdVisible] = useState<boolean>(false);
 
   const mw = state.modelWrapper;
   const model = mw.model;
@@ -548,6 +553,7 @@ const ModelEditor: React.FC<{
               }
               provision={selectionImport}
               getLatestLayoutMW={saveLayout}
+              onSelect={setSelectedId}
             />
           ),
         },
@@ -620,7 +626,8 @@ const ModelEditor: React.FC<{
                   onProcessClick,
                   removeEdge,
                   getStyleById,
-                  getSVGColorById
+                  getSVGColorById,
+                  idVisible
                 )}
                 {...{ onLoad, onDrop, onDragOver }}
                 onConnect={connectHandle}
@@ -639,6 +646,10 @@ const ModelEditor: React.FC<{
                   <EdgeEditButton
                     isOn={state.edgeDeleteVisible}
                     onClick={toggleEdgeDelete}
+                  />
+                  <IdVisibleButton
+                    isOn={idVisible}
+                    onClick={() => setIdVisible(x => !x)}
                   />
                 </Controls>
               </ReactFlow>

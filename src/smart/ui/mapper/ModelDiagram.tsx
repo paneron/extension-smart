@@ -259,7 +259,8 @@ const ModelDiagram: React.FC<{
                 setSelectedId,
                 isParentMapFullCovered(modelProps.history, mapResult),
                 ComponentShortDescription,
-                MappingList
+                MappingList,
+                viewOption.idVisible
               )}
               onLoad={onLoad}
               onDragOver={onDragOver}

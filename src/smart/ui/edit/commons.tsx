@@ -39,7 +39,7 @@ export const EditPageButtons: React.FC<{
         >
           Save
         </Button>
-      ) : null }
+      ) : null}
       {onNewID !== undefined &&
       initID !== undefined &&
       validTest !== undefined ? (
@@ -48,24 +48,16 @@ export const EditPageButtons: React.FC<{
           validTest={validTest}
           save={onNewID}
         />
-      ) : (
-        null
-      )}
+      ) : null}
       {onFullEditClick !== undefined ? (
         <EditButton onClick={onFullEditClick} />
-      ) : (
-        null
-      )}
+      ) : null}
       {onSubprocessClick !== undefined ? (
         <AddSubprocessButton callback={onSubprocessClick} />
-      ) : (
-        null
-      )}
+      ) : null}
       {onDeleteClick !== undefined ? (
         <RemoveButton onClick={onDeleteClick} />
-      ) : (
-        null
-      )}
+      ) : null}
     </MGDButtonGroup>
   );
 };

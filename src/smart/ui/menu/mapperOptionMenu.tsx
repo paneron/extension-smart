@@ -18,6 +18,10 @@ const MapperOptionMenu: React.FC<{
     setOptions({ ...viewOption, legVisible: !viewOption.legVisible });
   }
 
+  function onIdVisibilityChanged() {
+    setOptions({ ...viewOption, idVisible: !viewOption.idVisible });
+  }
+
   return (
     <Menu>
       <MenuItem
@@ -29,6 +33,11 @@ const MapperOptionMenu: React.FC<{
         text="Show legends"
         onClick={onLegendVisibilityChanged}
         icon={getVisibilityIconName(viewOption.legVisible)}
+      />
+      <MenuItem
+        text="Show ID"
+        onClick={onIdVisibilityChanged}
+        icon={getVisibilityIconName(viewOption.idVisible)}
       />
     </Menu>
   );

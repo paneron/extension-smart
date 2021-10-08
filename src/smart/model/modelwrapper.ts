@@ -186,7 +186,8 @@ export function getEditorReactFlowElementsFrom(
   onProcessClick: (pageid: string, processid: string) => void,
   removeEdge: (id: string) => void,
   getStyleById: (id: string) => SerializedStyles,
-  getSVGColorById: (id: string) => string
+  getSVGColorById: (id: string) => string,
+  idVisible: boolean
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
@@ -194,6 +195,7 @@ export function getEditorReactFlowElementsFrom(
     onProcessClick,
     getStyleClassById: getStyleById,
     getSVGColorById,
+    idVisible,
   });
   return getElements(mw, dvisible, callback, e =>
     createEdgeContainer(e, edgeDelete, removeEdge)
@@ -205,7 +207,8 @@ export function getEditorReferenceFlowElementsFrom(
   dvisible: boolean,
   onProcessClick: (pageid: string, processid: string) => void,
   getStyleById: (id: string) => SerializedStyles,
-  getSVGColorById: (id: string) => string
+  getSVGColorById: (id: string) => string,
+  idVisible: boolean
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDITREF,
@@ -213,6 +216,7 @@ export function getEditorReferenceFlowElementsFrom(
     onProcessClick,
     getStyleClassById: getStyleById,
     getSVGColorById,
+    idVisible,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }
@@ -223,6 +227,7 @@ export function getViewerReactFlowElementsFrom(
   onProcessClick: (pageid: string, processid: string) => void,
   getStyleById: (id: string) => SerializedStyles,
   getSVGColorById: (id: string) => string,
+  idVisible: boolean,
   ComponentDesc?: React.FC<{ id: string }>,
   NodeAddon?: React.FC<{ id: string }>,
   getEdgeColor?: (id: string) => string,
@@ -236,6 +241,7 @@ export function getViewerReactFlowElementsFrom(
     getSVGColorById,
     ComponentShortDescription: ComponentDesc,
     NodeAddon,
+    idVisible,
   });
   return getElements(mw, dvisible, callback, e =>
     createEdgeContainer(e, undefined, undefined, getEdgeColor, isAnimated)
@@ -248,7 +254,8 @@ export function getActionReactFlowElementsFrom(
   onProcessClick: (pageid: string, processid: string) => void,
   getStyleById: (id: string) => SerializedStyles,
   getSVGColorById: (id: string) => string,
-  onDataWorkspaceActive: (id: string) => void
+  onDataWorkspaceActive: (id: string) => void,
+  idVisible: boolean
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
@@ -257,6 +264,7 @@ export function getActionReactFlowElementsFrom(
     getStyleClassById: getStyleById,
     getSVGColorById,
     onDataWorkspaceActive,
+    idVisible,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }
@@ -272,7 +280,8 @@ export function getMapperReactFlowElementsFrom(
   setSelectedId: (id: string) => void,
   isParentFull: boolean,
   ComponentShortDescription: React.FC<{ id: string }>,
-  MappingList: React.FC<{ id: string }>
+  MappingList: React.FC<{ id: string }>,
+  idVisible: boolean
 ): Elements {
   const destinationList = getMappedList(mapSet);
   const callback = getEditorNodeCallBack({
@@ -293,6 +302,7 @@ export function getMapperReactFlowElementsFrom(
         : id => mapSet.mappings[id] !== undefined,
     ComponentShortDescription,
     MappingList,
+    idVisible,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }

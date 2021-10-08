@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useStoreState, Elements, isNode } from 'react-flow-renderer';
 import { EditorNodeWithInfoCallback } from '../../model/FlowContainer';
 import {
@@ -45,6 +45,7 @@ export const SelectedNodeDescription: React.FC<{
   setModel?: (m: EditorModel) => void;
   provision?: RefTextSelection;
   getLatestLayoutMW?: () => ModelWrapper;
+  onSelect?: (id: string | undefined) => void;
 }> = function ({
   modelWrapper,
   setDialog,
@@ -53,12 +54,18 @@ export const SelectedNodeDescription: React.FC<{
   setModel,
   provision,
   getLatestLayoutMW,
+  onSelect,
 }) {
   const model = modelWrapper.model;
   const pageid = modelWrapper.page;
   const selected = useStoreState(store => store.selectedElements);
 
   const elm: EditorNodeWithInfoCallback | null = getSelectedElement(selected);
+
+  useMemo(
+    () => onSelect !== undefined && onSelect(elm !== null ? elm.id : undefined),
+    [elm]
+  );
 
   function getSelectedElement(
     selected: Elements<unknown> | null

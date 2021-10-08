@@ -32,7 +32,7 @@ import {
 import { createNewEditorModel } from '../utils/EditorFactory';
 import { ActionState, EdgeTypes, NodeTypes } from '../model/States';
 import { SelectedNodeDescription } from './sidebar/selected';
-import { DataVisibilityButton } from './control/buttons';
+import { DataVisibilityButton, IdVisibleButton } from './control/buttons';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
 import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
@@ -81,6 +81,7 @@ const ModelWorkspace: React.FC<{
   );
 
   const [diagProps, setDiagProps] = useState<WorkspaceDiagPackage | null>(null);
+  const [idVisible, setIdVisible] = useState<boolean>(false);
 
   function onLoad(params: OnLoadParams) {
     logger?.log('flow loaded');
@@ -274,7 +275,8 @@ const ModelWorkspace: React.FC<{
                 onProcessClick,
                 getStyleById,
                 getSVGColorById,
-                onDataWorkspaceActive
+                onDataWorkspaceActive,
+                idVisible
               )}
               onLoad={onLoad}
               nodesConnectable={false}
@@ -288,6 +290,10 @@ const ModelWorkspace: React.FC<{
                 <DataVisibilityButton
                   isOn={state.dvisible}
                   onClick={toggleDataVisibility}
+                />
+                <IdVisibleButton
+                  isOn={idVisible}
+                  onClick={() => setIdVisible(x => !x)}
                 />
               </Controls>
             </ReactFlow>

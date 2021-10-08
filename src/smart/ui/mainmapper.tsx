@@ -73,6 +73,7 @@ const ModelMapper: React.FC<{
     legVisible: true,
     docVisible: false,
     mapAIVisible: false,
+    idVisible: false,
   });
   const [implementProps, setImplProps] = useState<MapperState>({
     modelWrapper: { ...initModelWrapper },
@@ -95,7 +96,6 @@ const ModelMapper: React.FC<{
     from: '',
     to: '',
   });
-
   const [toaster] = useState<IToaster>(Toaster.create());
 
   const impMW = implementProps.modelWrapper as ModelWrapper;

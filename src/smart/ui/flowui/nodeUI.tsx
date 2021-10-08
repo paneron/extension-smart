@@ -39,6 +39,7 @@ import PopoverWrapper from '../popover/PopoverWrapper';
 import ViewMappingbutton from '../mapper/viewmapbutton';
 import ViewWorkspaceButton from '../workspace/ViewDataWorkspaceButton';
 import { Icon } from '@blueprintjs/core';
+import NodeIDField from './NodeIDField';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -53,6 +54,7 @@ export const Datacube: FC<NodeProps> = function ({ data }) {
   const onDataWorkspaceActive = callback.onDataWorkspaceActive;
   return (
     <>
+      {callback.idVisible && <NodeIDField nodeid={node.id} />}
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
       {isEditorRegistry(node) && onDataWorkspaceActive !== undefined && (
@@ -77,6 +79,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
 
   return (
     <>
+      {callback.idVisible && <NodeIDField nodeid={process.id} wide />}
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <PopoverWrapper id={process.id} SD={SD}>
         <PB
@@ -96,7 +99,6 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
         <div css={flownode_top_left_button_layout}>
           <Tooltip2 content="View subprocess" position="top">
             <MGDButton
-              key={process.id + '#subprocessbutton'}
               onClick={() => callback.onProcessClick(process.page, process.id)}
               icon="plus"
             />
@@ -114,10 +116,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           />
         )}
       {actor !== null && (
-        <div
-          css={[shame__label, shame__label__noaction]}
-          key={process.id + '#ActorLabel'}
-        >
+        <div css={[shame__label, shame__label__noaction]}>
           {actorIcon}
           {actor.name}
         </div>
@@ -138,6 +137,7 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
 
   return (
     <>
+      {callback.idVisible && <NodeIDField nodeid={approval.id} wide />}
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <PopoverWrapper id={approval.id} SD={SD}>
         <PB
@@ -244,6 +244,7 @@ export const TimerComponent: FC<NodeProps> = function ({ data }) {
   const SD = callback.ComponentShortDescription;
   return (
     <>
+      {callback.idVisible && <NodeIDField nodeid={data.id} />}
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
       <PopoverWrapper id={data.id} SD={SD}>
@@ -266,6 +267,7 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
 
   return (
     <>
+      {callback.idVisible && <NodeIDField nodeid={egate.id} />}
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
       <PopoverWrapper id={egate.id} SD={SD}>
@@ -303,6 +305,7 @@ export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
       : 'none';
   return (
     <>
+      {callback.idVisible && <NodeIDField nodeid={scevent.id} />}
       <Handle type="source" position={Position.Bottom} css={handlecss} />
       <Handle type="target" position={Position.Top} css={handlecss} />
       <PopoverWrapper id={scevent.id} SD={SD}>

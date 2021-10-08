@@ -1,7 +1,12 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { HotkeysProvider, HotkeysTarget2 } from '@blueprintjs/core';
+import {
+  HotkeysProvider,
+  HotkeysTarget2,
+  IToaster,
+  Toaster,
+} from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import { useState } from 'react';
 import {
@@ -32,6 +37,7 @@ import {
   MMELView,
 } from '../../serialize/interface/supportinterface';
 import { createNewEditorModel } from '../../utils/EditorFactory';
+import { addExisingProcessToPage } from '../../utils/ModelAddComponentHandler';
 import ModelEditor from '../maineditor';
 
 const initModel = createNewEditorModel();
@@ -50,8 +56,9 @@ const EditWrapper: React.FC<{
   });
 
   const [history, setHistory] = useState<EditHistory>({ past: [], future: [] });
-  const [selected, setSelected] = useState<string|undefined>(undefined);
-  const [copied, setCopied] = useState<string|undefined>(undefined);
+  const [selected, setSelected] = useState<string | undefined>(undefined);
+  const [copied, setCopied] = useState<string | undefined>(undefined);
+  const [toaster] = useState<IToaster>(Toaster.create());
 
   const hotkeys = [
     {
@@ -69,23 +76,30 @@ const EditWrapper: React.FC<{
     {
       combo: 'ctrl+c',
       global: true,
-      label: 'Redo',
+      label: 'Copy',
       onKeyDown: copy,
     },
     {
-      combo: 'ctrl+y',
+      combo: 'ctrl+v',
       global: true,
-      label: 'Redo',
+      label: 'Paste',
       onKeyDown: paste,
     },
   ];
 
   function updateState(newState: EditorState, requireHistory: boolean) {
     if (requireHistory) {
-      setHistory({
-        past: [...history.past, getEditHistory(state)],
-        future: [],
-      });
+      if (history.past.length < 500) {
+        setHistory({
+          past: [...history.past, getEditHistory(state)],
+          future: [],
+        });
+      } else {
+        setHistory({
+          past: [...history.past.slice(1), getEditHistory(state)],
+          future: [],
+        });
+      }
     }
     setState(newState);
   }
@@ -117,11 +131,52 @@ const EditWrapper: React.FC<{
   function copy() {
     if (selected !== undefined) {
       setCopied(selected);
+      toaster.show({
+        message: `Process ${selected} marked`,
+        intent: 'success',
+      });
+    }
+  }
+
+  function setSelectedId(id: string | undefined) {
+    if (id !== undefined) {
+      const elm = state.modelWrapper.model.elements[id];
+      if (elm !== undefined && isEditorProcess(elm)) {
+        setSelected(id);
+      } else {
+        setSelected(undefined);
+      }
+    } else {
+      setSelected(undefined);
     }
   }
 
   function paste() {
-
+    if (copied !== undefined) {
+      const mw = state.modelWrapper;
+      const model = mw.model;
+      const elm = model.elements[copied];
+      if (elm !== undefined) {
+        try {
+          const newModel = addExisingProcessToPage(
+            model,
+            state.history,
+            mw.page,
+            elm.id
+          );
+          updateState(
+            { ...state, modelWrapper: { ...mw, model: newModel } },
+            true
+          );
+        } catch (e: unknown) {
+          const error = e as Error;
+          toaster.show({
+            message: `Error: ${error.message}`,
+            intent: 'danger',
+          });
+        }
+      }
+    }
   }
 
   return (
@@ -137,9 +192,9 @@ const EditWrapper: React.FC<{
           setState={updateState}
           redo={history.future.length > 0 ? redo : undefined}
           undo={history.past.length > 0 ? undo : undefined}
-          copy={selected!==undefined?copy:undefined}
-          paste={copied!==undefined?copy:undefined}
-          setSelectedId={setSelected}
+          copy={selected !== undefined ? copy : undefined}
+          paste={copied !== undefined ? paste : undefined}
+          setSelectedId={setSelectedId}
         />
       </HotkeysTarget2>
     </HotkeysProvider>

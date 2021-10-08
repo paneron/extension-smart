@@ -5,18 +5,25 @@ import { jsx } from '@emotion/react';
 import { Icon, IconName } from '@blueprintjs/core';
 import MGDControlButton from '../../MGDComponents/MGDControlButton';
 
-export const DataVisibilityButton: React.FC<{
+interface IconControlInterface {
   isOn: boolean;
   onClick: () => void;
-}> = function ({ isOn, onClick }) {
-  return <IconControlButton isOn={isOn} onClick={onClick} icon="cube" />;
+}
+
+export const DataVisibilityButton: React.FC<IconControlInterface> = function (
+  props
+) {
+  return <IconControlButton {...props} icon="cube" />;
 };
 
-export const EdgeEditButton: React.FC<{
-  isOn: boolean;
-  onClick: () => void;
-}> = function ({ isOn, onClick }) {
-  return <IconControlButton isOn={isOn} onClick={onClick} icon="link" />;
+export const EdgeEditButton: React.FC<IconControlInterface> = function (props) {
+  return <IconControlButton {...props} icon="link" />;
+};
+
+export const IdVisibleButton: React.FC<IconControlInterface> = function (
+  props
+) {
+  return <IconControlButton {...props} icon="id-number" />;
 };
 
 const IconControlButton: React.FC<{

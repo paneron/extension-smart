@@ -32,7 +32,7 @@ import {
   SearchResultStyles,
 } from '../../utils/SearchFunctions';
 import LegendPane from '../common/description/LegendPane';
-import { DataVisibilityButton } from '../control/buttons';
+import { DataVisibilityButton, IdVisibleButton } from '../control/buttons';
 import SearchComponentPane from '../sidebar/search';
 import { SelectedNodeDescription } from '../sidebar/selected';
 
@@ -57,6 +57,7 @@ const ModelReferenceView: React.FC<{
   const [searchResult, setSearchResult] = useState<Set<string>>(
     new Set<string>()
   );
+  const [idVisible, setIdVisible] = useState<boolean>(false);
 
   function onPageChange(updated: PageHistory, newPage: string) {
     setHistory({ ...updated });
@@ -157,7 +158,8 @@ const ModelReferenceView: React.FC<{
               dvisible,
               onProcessClick,
               getStyleById,
-              getSVGColorById
+              getSVGColorById,
+              idVisible
             )}
             onLoad={params => params.fitView()}
             nodesConnectable={false}
@@ -172,6 +174,10 @@ const ModelReferenceView: React.FC<{
               <DataVisibilityButton
                 isOn={dvisible}
                 onClick={() => setDVisible(!dvisible)}
+              />
+              <IdVisibleButton
+                isOn={idVisible}
+                onClick={() => setIdVisible(x => !x)}
               />
             </Controls>
           </ReactFlow>

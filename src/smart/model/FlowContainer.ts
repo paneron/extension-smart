@@ -45,6 +45,7 @@ export type EditorNodeWithInfoCallback = EditorNode & NodeCallBack;
 
 export interface NodeCallBack {
   modelType: ModelType;
+  idVisible: boolean;
   onProcessClick: (pageid: string, processid: string) => void;
   getRoleById: (id: string) => MMELRole | null;
   setMapping: (fromid: string, toid: string) => void;
@@ -133,6 +134,7 @@ export function getEditorNodeCallBack(props: {
   onDataWorkspaceActive?: (id: string) => void;
   NodeAddon?: React.FC<{ id: string }>;
   isEditMode?: boolean;
+  idVisible: boolean;
 }): NodeCallBack {
   const {
     type,
@@ -147,6 +149,7 @@ export function getEditorNodeCallBack(props: {
     MappingList,
     onDataWorkspaceActive,
     NodeAddon,
+    idVisible,
   } = props;
 
   function getRoleById(id: string): MMELRole | null {
@@ -166,5 +169,6 @@ export function getEditorNodeCallBack(props: {
     MappingList,
     onDataWorkspaceActive,
     NodeAddon,
+    idVisible,
   };
 }

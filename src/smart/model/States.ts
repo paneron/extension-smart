@@ -36,6 +36,7 @@ export interface MapperViewOption {
   legVisible: boolean; // visibility of legends
   docVisible: boolean; // visibility of document templates
   mapAIVisible: boolean; // visibility of mapping import calculation pane
+  idVisible: boolean;
 }
 
 export type ReferenceContent = ModelWrapper | MMELDocument;
