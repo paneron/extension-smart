@@ -26,6 +26,7 @@ import {
 } from '../serialize/interface/processinterface';
 import {
   MMELMetadata,
+  MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
@@ -94,6 +95,7 @@ export interface EditorModel {
   refs: Record<string, MMELReference>;
   enums: Record<string, MMELEnum>;
   vars: Record<string, MMELVariable>;
+  notes: Record<string, MMELNote>;
   pages: Record<string, EditorSubprocess>;
   views: Record<string, MMELView>;
   root: string;

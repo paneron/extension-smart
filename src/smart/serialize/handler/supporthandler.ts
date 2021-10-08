@@ -1,12 +1,14 @@
 import { DataType } from '../interface/baseinterface';
 import {
   MMELMetadata,
+  MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
   MMELVariable,
   MMELVarSetting,
   MMELView,
+  NOTE_TYPE,
   VarType,
 } from '../interface/supportinterface';
 import {
@@ -225,6 +227,45 @@ export function parseView(id: string, data: string): MMELView {
         } else {
           throw new Error(
             'Parsing error: view. ID ' + id + ': Unknown keyword ' + command
+          );
+        }
+      } else {
+        throw new Error(
+          'Parsing error: variable. ID ' +
+            id +
+            ': Expecting value for ' +
+            command
+        );
+      }
+    }
+  }
+  return v;
+}
+
+export function parseNote(id: string, data: string): MMELNote {
+  const v: MMELNote = {
+    id: id,
+    type: 'NOTE',
+    message: '',
+    ref: new Set<string>(),
+    datatype: DataType.NOTE,
+  };
+
+  if (data !== '') {
+    const t: string[] = MMELtokenizePackage(data);
+    let i = 0;
+    while (i < t.length) {
+      const command: string = t[i++];
+      if (i < t.length) {
+        if (command === 'type') {
+          v.type = t[i++] as NOTE_TYPE;
+        } else if (command === 'message') {
+          v.message = MMELremovePackage(t[i++]);
+        } else if (command === 'reference') {
+          v.ref = MMELtokenizeSet(t[i++]);
+        } else {
+          throw new Error(
+            `Parsing error: note. ID ${id}: Unknown keyword ${command}`
           );
         }
       } else {

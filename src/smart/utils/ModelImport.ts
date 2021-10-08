@@ -17,6 +17,7 @@ import {
   MMELSubprocessComponent,
 } from '../serialize/interface/flowcontrolinterface';
 import {
+  MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
@@ -62,6 +63,10 @@ export function addProcessIfNotFound(
   process.provision.forEach(p =>
     pros.push(addProvision(mw, ref, rmodel.provisions[p], refMap))
   );
+  const ns: string[] = [];
+  process.notes.forEach(n =>
+    ns.push(addNote(mw, ref, rmodel.notes[n], refMap))
+  );
   const newPage =
     process.page !== ''
       ? addPageIfNotFound(mw, ref, process.page, nameMap, refMap, roleMap)
@@ -78,6 +83,7 @@ export function addProcessIfNotFound(
     output: new Set(outputs.map(o => o.id)),
     input: new Set(inputs.map(o => o.id)),
     provision: new Set(pros),
+    notes: new Set(ns),
     page: newPage !== undefined ? newPage.id : '',
     datatype: DataType.PROCESS,
     measure: [...process.measure], // not done yet
@@ -228,6 +234,24 @@ function addProvision(
     ref: new Set(refs),
   };
   mw.model.provisions[newid] = newProvision;
+  return newid;
+}
+
+function addNote(
+  mw: ModelWrapper,
+  ref: ModelWrapper,
+  note: MMELNote,
+  refMap: Record<string, string>
+): string {
+  const newid = findUniqueID('Note', mw.model.notes);
+  const refs: string[] = [];
+  note.ref.forEach(r => refs.push(addRefIfNotFound(mw, ref, r, refMap).id));
+  const newNote: MMELNote = {
+    ...note,
+    id: newid,
+    ref: new Set(refs),
+  };
+  mw.model.notes[newid] = newNote;
   return newid;
 }
 

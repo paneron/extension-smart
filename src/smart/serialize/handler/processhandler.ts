@@ -63,6 +63,7 @@ export function parseProcess(id: string, data: string): MMELProcess {
     actor: '',
     output: new Set<string>(),
     input: new Set<string>(),
+    notes: new Set<string>(),
     provision: new Set<string>(),
     page: '',
     measure: [],
@@ -90,6 +91,8 @@ export function parseProcess(id: string, data: string): MMELProcess {
           );
         } else if (command === 'output') {
           p.output = MMELtokenizeSet(t[i++]);
+        } else if (command === 'note') {
+          p.notes = MMELtokenizeSet(t[i++]);
         } else if (command === 'reference_data_registry') {
           p.input = MMELtokenizeSet(t[i++]);
         } else {

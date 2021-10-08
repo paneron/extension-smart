@@ -8,6 +8,9 @@ export enum VarType {
   BOOLEAN = 'TRUE/FALSE',
 }
 
+export const NOTE_TYPES = ['NOTE', 'EXAMPLE', 'DEFINITION'] as const;
+export type NOTE_TYPE = typeof NOTE_TYPES[number];
+
 export interface MMELMetadata extends MMELObject {
   schema: string;
   author: string;
@@ -60,4 +63,12 @@ export interface MMELView extends MMELObject {
   id: string;
   name: string;
   profile: Record<string, MMELVarSetting>;
+}
+
+export interface MMELNote extends MMELObject {
+  id: string;
+  type: NOTE_TYPE;
+  message: string;
+  ref: Set<string>;
+  datatype: DataType.NOTE;
 }

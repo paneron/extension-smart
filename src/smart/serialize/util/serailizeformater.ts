@@ -21,6 +21,7 @@ import {
 import { MMELApproval, MMELProcess } from '../interface/processinterface';
 import {
   MMELMetadata,
+  MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
@@ -242,6 +243,21 @@ export function toViewProfile(v: MMELView): string {
   return out;
 }
 
+export function toNoteModel(x: MMELNote): string {
+  let out: string = 'note ' + x.id + ' {\n';
+  out += '  type ' + x.type + '\n';
+  out += '  message "' + x.message + '"\n';
+  if (x.ref.size > 0) {
+    out += '  reference {\n';
+    for (const r of x.ref) {
+      out += '    ' + r + '\n';
+    }
+    out += '  }\n';
+  }
+  out += '}\n';
+  return out;
+}
+
 export function toVarSettingModel(v: MMELVarSetting): string {
   let out = `    ${v.id} {\n`;
   out += `      required ${v.isConst ? 'true' : 'false'}\n`;
@@ -345,6 +361,13 @@ export function toProcessModel(process: MMELProcess): string {
   if (process.provision.size > 0) {
     out += '  validate_provision {\n';
     for (const r of process.provision) {
+      out += '    ' + r + '\n';
+    }
+    out += '  }\n';
+  }
+  if (process.notes.size > 0) {
+    out += '  note {\n';
+    for (const r of process.notes) {
       out += '    ' + r + '\n';
     }
     out += '  }\n';

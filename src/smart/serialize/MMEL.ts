@@ -1,5 +1,6 @@
 import {
   parseMetaData,
+  parseNote,
   parseProvision,
   parseReference,
   parseRole,
@@ -25,12 +26,13 @@ import {
   toEnumModel,
   toMetaDataModel,
   toNodeModel,
+  toNoteModel,
   toProvisionModel,
   toReferenceModel,
   toRoleModel,
   toSubprocessModel,
   toVariableModel,
-  toViewProfile,
+  toViewProfile as toViewProfileModel,
 } from './util/serailizeformater';
 import { validateModel } from './util/validation';
 
@@ -66,8 +68,11 @@ export function MMELToText(model: MMELModel): string {
   for (const v in model.vars) {
     out += toVariableModel(model.vars[v]) + '\n';
   }
+  for (const v in model.notes) {
+    out += toNoteModel(model.notes[v]) + '\n';
+  }
   for (const v in model.views) {
-    out += toViewProfile(model.views[v]) + '\n';
+    out += toViewProfileModel(model.views[v]) + '\n';
   }
   for (const r in model.refs) {
     out += toReferenceModel(model.refs[r]) + '\n';
@@ -85,8 +90,9 @@ function parseModel(input: string): MMELModel {
     refs: {},
     enums: {},
     vars: {},
-    root: '',
+    notes: {},
     views: {},
+    root: '',
   };
 
   const token: Array<string> = MMELtokenize(input);
@@ -142,6 +148,9 @@ function parseModel(input: string): MMELModel {
     } else if (command === 'view') {
       const v = parseView(token[i++], token[i++]);
       model.views[v.id] = v;
+    } else if (command === 'note') {
+      const v = parseNote(token[i++], token[i++]);
+      model.notes[v.id] = v;
     } else if (command === 'signal_catch_event') {
       const e = parseSignalCatchEvent(token[i++], token[i++]);
       model.elements[e.id] = e;

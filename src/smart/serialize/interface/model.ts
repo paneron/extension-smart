@@ -3,6 +3,7 @@ import { MMELEnum } from './datainterface';
 import { MMELSubprocess } from './flowcontrolinterface';
 import {
   MMELMetadata,
+  MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
@@ -20,6 +21,7 @@ export interface MMELModel {
   vars: Record<string, MMELVariable>;
   pages: Record<string, MMELSubprocess>;
   views: Record<string, MMELView>;
+  notes: Record<string, MMELNote>;
 
   root: string;
 }

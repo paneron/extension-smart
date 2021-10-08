@@ -47,6 +47,7 @@ export function createNewEditorModel(): EditorModel {
     enums: {},
     vars: {},
     views: {},
+    notes: {},
     root: page.id,
   };
   return m;
@@ -199,6 +200,7 @@ export function createProcess(id: string): EditorProcess {
     actor: '',
     output: new Set<string>(),
     input: new Set<string>(),
+    notes: new Set<string>(),
     provision: new Set<string>(),
     page: '',
     measure: [],

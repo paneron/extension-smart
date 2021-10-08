@@ -21,6 +21,7 @@ export enum DataType {
   PROVISION = 'provision',
   REFERENCE = 'ref',
   VIEW = 'view',
+  NOTE = 'note',
 }
 
 // the base interface for all objects in MMEL
