@@ -116,7 +116,7 @@ interface CommonProcessEditProps {
   onDeleteClick?: () => void;
   onSubprocessClick?: () => void;
   notes: Record<string, MMELNote>;
-  setNotes: (x:Record<string, MMELNote>)=>void;
+  setNotes: (x: Record<string, MMELNote>) => void;
 }
 
 const EditProcessPage: React.FC<{
@@ -224,7 +224,14 @@ const EditProcessPage: React.FC<{
           setMeasurements(mea => {
             setProvisions(pros => {
               setNotes(nos => {
-                const updated = save(id, edit, pros, mea, nos, modelRef.current!);
+                const updated = save(
+                  id,
+                  edit,
+                  pros,
+                  mea,
+                  nos,
+                  modelRef.current!
+                );
                 if (updated !== null) {
                   setModel(updated);
                   if (closeDialog !== undefined) {
@@ -232,7 +239,7 @@ const EditProcessPage: React.FC<{
                   }
                 }
                 return nos;
-              });              
+              });
               return pros;
             });
             return mea;
@@ -301,7 +308,7 @@ const EditProcessPage: React.FC<{
 
   const quickEditProps = {
     roleObjects,
-    registryObjects,    
+    registryObjects,
     process,
     saveOnExit,
     provision,
@@ -349,7 +356,7 @@ const QuickVersionEdit: React.FC<
     provision,
     onAddReference,
     notes,
-    setNotes
+    setNotes,
   } = props;
 
   useEffect(() => saveOnExit, [process]);
@@ -436,8 +443,8 @@ const FullVersionEdit: React.FC<
     model,
     roles,
     regs,
-    notes, 
-    setNotes
+    notes,
+    setNotes,
   } = props;
   return (
     <MGDDisplayPane>
@@ -590,11 +597,7 @@ function save(
     provisions
   );
   process.provision = new Set(Object.values(provisions).map(p => p.id));
-  model.notes = updateNotes(
-    model.notes,
-    oldProcess.notes,
-    notes
-  );
+  model.notes = updateNotes(model.notes, oldProcess.notes, notes);
   process.notes = new Set(Object.values(notes).map(n => n.id));
   return model;
 }

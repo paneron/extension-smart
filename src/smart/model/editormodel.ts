@@ -226,13 +226,13 @@ export function getEditorDataClassById(
 export function getEditorProvisionById(
   model: EditorModel,
   id: string
-): MMELProvision | null {  
-  return model.provisions[id] ?? null;  
+): MMELProvision | null {
+  return model.provisions[id] ?? null;
 }
 
 export function getEditorNoteById(
   model: EditorModel,
   id: string
 ): MMELNote | null {
-  return model.notes[id]??null;  
+  return model.notes[id] ?? null;
 }

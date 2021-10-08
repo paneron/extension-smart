@@ -1,7 +1,10 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
-import { MMELNote, NOTE_TYPES } from '../../serialize/interface/supportinterface';
+import {
+  MMELNote,
+  NOTE_TYPES,
+} from '../../serialize/interface/supportinterface';
 import { getModelAllRefs } from '../../utils/ModelFunctions';
 import {
   MultiReferenceSelector,
@@ -34,15 +37,20 @@ export const NoteItem: React.FC<{
       <NormalTextField
         text="Message"
         value={note.message}
-        onChange={x => setObject({ ...note, message: x })}          
-      />      
+        onChange={x => setObject({ ...note, message: x })}
+      />
       <MultiReferenceSelector
         text="Reference"
         options={refs}
         values={note.ref}
         filterName="Reference filter"
-        add={x => setObject({ ...note, ref: new Set([...note.ref, ...x])  }) }
-        remove={ x => setObject({ ...note, ref: new Set([...note.ref].filter(s => !x.has(s))) }) }
+        add={x => setObject({ ...note, ref: new Set([...note.ref, ...x]) })}
+        remove={x =>
+          setObject({
+            ...note,
+            ref: new Set([...note.ref].filter(s => !x.has(s))),
+          })
+        }
       />
     </FormGroup>
   );

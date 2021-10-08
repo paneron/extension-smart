@@ -8,7 +8,7 @@ import { EditorModel } from '../../../model/editormodel';
 import { RefTextSelection } from '../../../model/selectionImport';
 import { DataType } from '../../../serialize/interface/baseinterface';
 import {
-  MMELNote,  
+  MMELNote,
   MMELReference,
   NOTE_TYPE,
   NOTE_TYPES,
@@ -63,7 +63,7 @@ const NoteListQuickEdit: React.FC<{
       }
 
       const id = findUniqueID('Note', notes);
-      notes[id] = {        
+      notes[id] = {
         id,
         type: detectType(selected.text),
         message: selected.text,
@@ -126,13 +126,13 @@ const NoteQuickEdit: React.FC<{
           text="Note type"
           value={note.type}
           options={NOTE_TYPES}
-          onChange={x => setNote({ ...note, type: x as NOTE_TYPE})}
+          onChange={x => setNote({ ...note, type: x as NOTE_TYPE })}
         />
         <NormalTextField
           text="Message"
           value={note.message}
-          onChange={x => setNote({ ...note, message: x })}          
-        /> 
+          onChange={x => setNote({ ...note, message: x })}
+        />
         <SimpleReferenceSelector
           selected={note.ref}
           items={refs}
@@ -170,11 +170,10 @@ interface TypeOption {
 }
 
 function detectType(text: string): NOTE_TYPE {
-  const options: TypeOption[] = NOTE_TYPES
-    .map(x => ({
-      lowerCaseText: x.toLowerCase(),
-      type: x,
-    }))    
+  const options: TypeOption[] = NOTE_TYPES.map(x => ({
+    lowerCaseText: x.toLowerCase(),
+    type: x,
+  }));
   const t = text.toLowerCase().trim();
   for (const m of options) {
     if (t.substring(0, m.lowerCaseText.length) === m.lowerCaseText) {

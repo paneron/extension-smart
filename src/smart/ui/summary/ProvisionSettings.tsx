@@ -3,7 +3,7 @@
 
 import { Button, Checkbox, Dialog, Text } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMemo, useState } from 'react';
 import { dialog_layout, dialog_layout__full } from '../../../css/layout';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
@@ -60,7 +60,6 @@ const ProvisionSettings: React.FC<{
     SHALL: true,
     SHOULD: true,
   });
-
   const docs = useMemo(() => {
     const docs: Record<string, Record<string, ClauseSummary>> = {};
     Object.values(model.refs).forEach(r =>
@@ -90,7 +89,7 @@ const ProvisionSettings: React.FC<{
   const docList = ['', ...Object.keys(docs)];
   const clauseList =
     docOption !== ''
-      ? ['', ...Object.keys(docs[docOption]).sort(clauseSorter)]
+      ? ['', ...Object.keys(docs[docOption] ?? {}).sort(clauseSorter)]
       : [];
 
   function flip(opt: ModalityType) {
@@ -132,6 +131,21 @@ const ProvisionSettings: React.FC<{
     });
     setResult(result);
   }
+  function cleanup() {
+    setDocOption('');
+    setClauseOption('');
+    setActorOption('');
+    setModalityOption({
+      '': true,
+      CAN: true,
+      MAY: true,
+      MUST: true,
+      SHALL: true,
+      SHOULD: true,
+    });
+  }
+
+  useEffect(() => cleanup, [model]);
 
   return (
     <MGDSidebar>

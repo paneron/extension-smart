@@ -8,7 +8,11 @@ import {
   MMELReference,
 } from '../../../serialize/interface/supportinterface';
 import { toRefSummary } from '../../../utils/ModelFunctions';
-import { DescribeEdge, DescribeNote, DescribeProvision } from './ComponentDescription';
+import {
+  DescribeEdge,
+  DescribeNote,
+  DescribeProvision,
+} from './ComponentDescription';
 import { DescribeAttribute } from './data';
 
 export const ApprovalRecordList: React.FC<{
@@ -156,7 +160,7 @@ export const ProvisionList: React.FC<{
 export const NotesList: React.FC<{
   notes: Set<string>;
   getNoteById: (id: string) => MMELNote | null;
-  getRefById?: (id: string) => MMELReference | null;  
+  getRefById?: (id: string) => MMELReference | null;
 }> = function ({ notes, getNoteById, getRefById }) {
   const ns: MMELNote[] = [];
   notes.forEach(r => {
@@ -172,11 +176,8 @@ export const NotesList: React.FC<{
           {getRefById !== undefined && <p>Notes</p>}
           <ul>
             {ns.map(note => (
-              <li key={note.id}>                
-                <DescribeNote
-                  note={note}
-                  getRefById={getRefById}
-                />
+              <li key={note.id}>
+                <DescribeNote note={note} getRefById={getRefById} />
               </li>
             ))}
           </ul>

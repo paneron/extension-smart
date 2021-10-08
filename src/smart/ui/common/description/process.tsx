@@ -45,7 +45,7 @@ export const DescribeProcess: React.FC<{
       <NotesList
         notes={process.notes}
         getNoteById={getNoteById}
-        getRefById={getRefById}        
+        getRefById={getRefById}
       />
       <MeasurementList measurements={process.measure} />
     </>

@@ -207,6 +207,12 @@ function searchProcess(
       return 'Process';
     }
   }
+  for (const x of process.notes) {
+    const note = model.notes[x];
+    if (note.message.toLowerCase().includes(search)) {
+      return 'Process';
+    }
+  }
   return null;
 }
 

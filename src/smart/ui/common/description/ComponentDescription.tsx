@@ -92,13 +92,11 @@ export const DescribeNote: React.FC<{
   const minimal = getRefById === undefined;
   return (
     <>
-      {!minimal && (
-        <DescriptionItem label="Type" value={note.type} />
-      )}
+      {!minimal && <DescriptionItem label="Type" value={note.type} />}
       <DescriptionItem
-        label={minimal ? undefined : 'Message'}     
+        label={minimal ? undefined : 'Message'}
         value={minimal ? `${note.type} ${note.message}` : note.message}
-      />      
+      />
       {getRefById !== undefined && (
         <ReferenceList refs={note.ref} getRefById={getRefById} />
       )}

@@ -94,7 +94,7 @@ export function createProvision(id: string): MMELProvision {
 }
 
 export function createNote(id: string): MMELNote {
-  return {    
+  return {
     id: id,
     type: 'NOTE',
     message: '',
