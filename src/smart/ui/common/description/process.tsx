@@ -5,18 +5,20 @@ import { jsx } from '@emotion/react';
 import React from 'react';
 import { EditorProcess } from '../../../model/editormodel';
 import {
+  MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
 } from '../../../serialize/interface/supportinterface';
 import { ActorDescription, DescriptionItem } from './fields';
-import { MeasurementList, ProvisionList } from './ComponentList';
+import { MeasurementList, NotesList, ProvisionList } from './ComponentList';
 
 export const DescribeProcess: React.FC<{
   process: EditorProcess;
   getRoleById: (id: string) => MMELRole | null;
   getRefById?: (id: string) => MMELReference | null;
   getProvisionById: (id: string) => MMELProvision | null;
+  getNoteById: (id: string) => MMELNote | null;
   CustomProvision?: React.FC<{
     provision: MMELProvision;
     getRefById?: (id: string) => MMELReference | null;
@@ -26,6 +28,7 @@ export const DescribeProcess: React.FC<{
   getProvisionById,
   getRefById,
   getRoleById,
+  getNoteById,
   CustomProvision,
 }) => {
   return (
@@ -38,6 +41,11 @@ export const DescribeProcess: React.FC<{
         getProvisionById={getProvisionById}
         getRefById={getRefById}
         CustomProvision={CustomProvision}
+      />
+      <NotesList
+        notes={process.notes}
+        getNoteById={getNoteById}
+        getRefById={getRefById}        
       />
       <MeasurementList measurements={process.measure} />
     </>

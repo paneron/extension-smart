@@ -9,6 +9,7 @@ import {
   EditorRegistry,
   EditorSubprocess,
   getEditorDataClassById,
+  getEditorNoteById,
   getEditorProvisionById,
   getEditorRefById,
   getEditorRegistryById,
@@ -25,6 +26,7 @@ import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
 import {
+  MMELNote,
   MMELProvision,
   MMELReference,
 } from '../../serialize/interface/supportinterface';
@@ -48,6 +50,7 @@ const NODE_DETAIL_VIEWS: Record<
     getRegistryById: (id: string) => EditorRegistry | null;
     getDCById: (id: string) => EditorDataClass | null;
     getProvisionById: (id: string) => MMELProvision | null;
+    getNoteById: (id: string) => MMELNote | null;
     getOutgoingEdgesById: (id: string) => MMELEdge[];
     CustomAttribute?: React.FC<{
       att: MMELDataAttribute;
@@ -108,6 +111,7 @@ const NODE_DETAIL_VIEWS: Record<
     node,
     getProvisionById,
     getRefById,
+    getNoteById,
     CustomProvision,
   }) =>
     isEditorProcess(node) ? (
@@ -115,6 +119,7 @@ const NODE_DETAIL_VIEWS: Record<
         process={node}
         getProvisionById={getProvisionById}
         getRefById={getRefById}
+        getNoteById={getNoteById}
         CustomProvision={CustomProvision}
         {...node}
       />
@@ -153,6 +158,10 @@ export const Describe: React.FC<{
     return getEditorProvisionById(model, id);
   }
 
+  function getNoteById(id: string): MMELNote | null {
+    return getEditorNoteById(model, id);
+  }
+
   function getOutgoingEdgesById(id: string): MMELEdge[] {
     return Object.values(page.edges).filter(e => e.from === id);
   }
@@ -166,6 +175,7 @@ export const Describe: React.FC<{
       getDCById={getDCById}
       getProvisionById={getProvisionById}
       getOutgoingEdgesById={getOutgoingEdgesById}
+      getNoteById={getNoteById}
       CustomAttribute={CustomAttribute}
       CustomProvision={CustomProvision}
     />

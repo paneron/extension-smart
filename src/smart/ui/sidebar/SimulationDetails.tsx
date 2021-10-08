@@ -18,6 +18,7 @@ import { Button, Text } from '@blueprintjs/core';
 import { MainFlowNodeTypes } from '../../utils/constants';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
+  MMELNote,
   MMELProvision,
   MMELRole,
 } from '../../serialize/interface/supportinterface';
@@ -52,6 +53,10 @@ const SimulationDetails: React.FC<{
     return model.provisions[id] ?? null;
   }
 
+  function getNoteById(id: string): MMELNote | null {
+    return model.notes[id] ?? null;
+  }
+
   function getRoleById(id: string): MMELRole | null {
     return model.roles[id] ?? null;
   }
@@ -84,6 +89,7 @@ const SimulationDetails: React.FC<{
           node={elm}
           getProvisionById={getProvisionById}
           getRoleById={getRoleById}
+          getNoteById={getNoteById}
         />
       )}
       <fieldset>
@@ -148,6 +154,7 @@ const NODE_SIMULATION_SUMMARY: Record<
     node: EditorNode;
     getProvisionById: (id: string) => MMELProvision | null;
     getRoleById: (id: string) => MMELRole | null;
+    getNoteById: (id: string) => MMELNote | null;
   }>
 > = {
   [DataType.STARTEVENT]: () => <DescribeStart />,
@@ -164,12 +171,13 @@ const NODE_SIMULATION_SUMMARY: Record<
     ) : (
       <></>
     ),
-  [DataType.PROCESS]: ({ node, getProvisionById, getRoleById }) =>
+  [DataType.PROCESS]: ({ node, getProvisionById, getRoleById, getNoteById }) =>
     isEditorProcess(node) ? (
       <DescribeProcess
         process={node}
         getProvisionById={getProvisionById}
         getRoleById={getRoleById}
+        getNoteById={getNoteById}
       />
     ) : (
       <></>

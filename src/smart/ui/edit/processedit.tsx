@@ -589,12 +589,13 @@ function save(
     oldProcess.provision,
     provisions
   );
+  process.provision = new Set(Object.values(provisions).map(p => p.id));
   model.notes = updateNotes(
     model.notes,
     oldProcess.notes,
     notes
   );
-  process.provision = new Set(Object.values(provisions).map(p => p.id));
+  process.notes = new Set(Object.values(notes).map(n => n.id));
   return model;
 }
 

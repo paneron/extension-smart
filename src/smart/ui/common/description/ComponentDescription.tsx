@@ -9,6 +9,7 @@ import {
   EditorTimerEvent,
 } from '../../../model/editormodel';
 import {
+  MMELNote,
   MMELProvision,
   MMELReference,
 } from '../../../serialize/interface/supportinterface';
@@ -79,6 +80,27 @@ export const DescribeProvision: React.FC<{
       )}
       {getRefById !== undefined && (
         <ReferenceList refs={provision.ref} getRefById={getRefById} />
+      )}
+    </>
+  );
+};
+
+export const DescribeNote: React.FC<{
+  note: MMELNote;
+  getRefById?: (id: string) => MMELReference | null;
+}> = function ({ note, getRefById }) {
+  const minimal = getRefById === undefined;
+  return (
+    <>
+      {!minimal && (
+        <DescriptionItem label="Type" value={note.type} />
+      )}
+      <DescriptionItem
+        label={minimal ? undefined : 'Message'}     
+        value={minimal ? `${note.type} ${note.message}` : note.message}
+      />      
+      {getRefById !== undefined && (
+        <ReferenceList refs={note.ref} getRefById={getRefById} />
       )}
     </>
   );

@@ -105,6 +105,16 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           </Tooltip2>
         </div>
       )}
+      {process.page !== '' && (
+        <div css={flownode_top_left_button_layout}>
+          <Tooltip2 content="View subprocess" position="top">
+            <MGDButton
+              onClick={() => callback.onProcessClick(process.page, process.id)}
+              icon="plus"
+            />
+          </Tooltip2>
+        </div>
+      )}      
       {callback.hasMapping !== undefined &&
         callback.hasMapping(process.id) &&
         callback.MappingList !== undefined && (

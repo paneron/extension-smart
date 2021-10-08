@@ -3,11 +3,12 @@ import { EditorRegistry } from '../../../model/editormodel';
 import { MMELDataAttribute } from '../../../serialize/interface/datainterface';
 import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
 import {
+  MMELNote,
   MMELProvision,
   MMELReference,
 } from '../../../serialize/interface/supportinterface';
 import { toRefSummary } from '../../../utils/ModelFunctions';
-import { DescribeEdge, DescribeProvision } from './ComponentDescription';
+import { DescribeEdge, DescribeNote, DescribeProvision } from './ComponentDescription';
 import { DescribeAttribute } from './data';
 
 export const ApprovalRecordList: React.FC<{
@@ -143,6 +144,39 @@ export const ProvisionList: React.FC<{
                     getRefById={getRefById}
                   />
                 )}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+    </>
+  );
+};
+
+export const NotesList: React.FC<{
+  notes: Set<string>;
+  getNoteById: (id: string) => MMELNote | null;
+  getRefById?: (id: string) => MMELReference | null;  
+}> = function ({ notes, getNoteById, getRefById }) {
+  const ns: MMELNote[] = [];
+  notes.forEach(r => {
+    const ret = getNoteById(r);
+    if (ret !== null) {
+      ns.push(ret);
+    }
+  });
+  return (
+    <>
+      {ns.length > 0 ? (
+        <>
+          {getRefById !== undefined && <p>Notes</p>}
+          <ul>
+            {ns.map(note => (
+              <li key={note.id}>                
+                <DescribeNote
+                  note={note}
+                  getRefById={getRefById}
+                />
               </li>
             ))}
           </ul>
