@@ -25,6 +25,7 @@ import {
   MMELProvision,
   MMELReference,
   MMELRole,
+  MMELTerm,
   MMELVariable,
   MMELVarSetting,
   MMELView,
@@ -299,10 +300,23 @@ export function toProvisionModel(pro: MMELProvision): string {
 }
 
 export function toReferenceModel(ref: MMELReference): string {
-  let out: string = 'reference ' + ref.id + ' {\n';
-  out += '  document "' + ref.document + '"\n';
-  out += '  clause "' + ref.clause + '"\n';
-  out += '  title "' + ref.title + '"\n';
+  return 'reference ' + ref.id + ' {\n'
+  + '  document "' + ref.document + '"\n'
+  + '  clause "' + ref.clause + '"\n'
+  + '  title "' + ref.title + '"\n'
+  + '}\n';
+}
+
+export function toTermsModel(term: MMELTerm): string {
+  let out: string = 'term ' + term.id + ' {\n';
+  out += '  term "' + term.term + '"\n';
+  out += '  definition "' + term.definition + '"\n';
+  for (const x of term.admitted) {
+    out += '  admitted "' + x + '"\n';
+  }
+  for (const x of term.notes) {
+    out += '  note "' + x + '"\n';
+  }
   out += '}\n';
   return out;
 }

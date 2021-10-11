@@ -30,6 +30,7 @@ import {
   MMELProvision,
   MMELReference,
   MMELRole,
+  MMELTerm,
   MMELVariable,
   MMELView,
 } from '../serialize/interface/supportinterface';
@@ -98,6 +99,7 @@ export interface EditorModel {
   notes: Record<string, MMELNote>;
   pages: Record<string, EditorSubprocess>;
   views: Record<string, MMELView>;
+  terms: Record<string, MMELTerm>;
   root: string;
 }
 

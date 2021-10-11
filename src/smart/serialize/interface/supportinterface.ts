@@ -72,3 +72,12 @@ export interface MMELNote extends MMELObject {
   ref: Set<string>;
   datatype: DataType.NOTE;
 }
+
+export interface MMELTerm extends MMELObject {
+  id: string;
+  term: string;
+  admitted: string[];
+  definition: string;
+  notes: string[];
+  datatype: DataType.TERMS;
+}

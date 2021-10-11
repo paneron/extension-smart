@@ -7,6 +7,7 @@ import {
   MMELProvision,
   MMELReference,
   MMELRole,
+  MMELTerm,
   MMELVariable,
   MMELView,
 } from './supportinterface';
@@ -22,6 +23,7 @@ export interface MMELModel {
   pages: Record<string, MMELSubprocess>;
   views: Record<string, MMELView>;
   notes: Record<string, MMELNote>;
-
+  terms: Record<string, MMELTerm>;
+  
   root: string;
 }

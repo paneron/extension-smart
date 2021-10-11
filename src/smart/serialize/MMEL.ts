@@ -4,6 +4,7 @@ import {
   parseProvision,
   parseReference,
   parseRole,
+  parseTerm,
   parseVariable,
   parseView,
 } from './handler/supporthandler';
@@ -31,6 +32,7 @@ import {
   toReferenceModel,
   toRoleModel,
   toSubprocessModel,
+  toTermsModel,
   toVariableModel,
   toViewProfile as toViewProfileModel,
 } from './util/serailizeformater';
@@ -77,6 +79,9 @@ export function MMELToText(model: MMELModel): string {
   for (const r in model.refs) {
     out += toReferenceModel(model.refs[r]) + '\n';
   }
+  for (const t in model.terms) {
+    out += toTermsModel(model.terms[t]) + '\n';
+  }
   return out;
 }
 
@@ -92,6 +97,7 @@ function parseModel(input: string): MMELModel {
     vars: {},
     notes: {},
     views: {},
+    terms: {},
     root: '',
   };
 
@@ -154,6 +160,9 @@ function parseModel(input: string): MMELModel {
     } else if (command === 'signal_catch_event') {
       const e = parseSignalCatchEvent(token[i++], token[i++]);
       model.elements[e.id] = e;
+    } else if (command === 'term') {
+      const e = parseTerm(token[i++], token[i++]);
+      model.terms[e.id] = e;
     } else {
       console.error('Unknown command ' + command);
       break;

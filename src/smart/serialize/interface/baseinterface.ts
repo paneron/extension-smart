@@ -22,11 +22,14 @@ export enum DataType {
   REFERENCE = 'ref',
   VIEW = 'view',
   NOTE = 'note',
+  TERMS = 'terms'
 }
 
 // the base interface for all objects in MMEL
 export interface MMELObject {
   datatype: DataType;
+  version?: string;
+  globalId?: string;
 }
 
 // the elements in the MMEL diagram

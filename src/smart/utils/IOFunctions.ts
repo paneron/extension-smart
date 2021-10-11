@@ -87,8 +87,13 @@ function parseModel(props: {
       indexModel(mw.model);
     }
     setModelWrapper(mw);
-  } catch (e) {
-    logger?.log('Failed to load model', e);
+  } catch (e:unknown) {
+    logger?.log('Failed to load model');
+    if (typeof e === 'object') {
+      const error = e as Error;
+      logger?.log(error.message);
+      logger?.log(error.stack);
+    }
   }
 }
 

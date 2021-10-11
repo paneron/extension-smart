@@ -49,6 +49,7 @@ export function createNewEditorModel(): EditorModel {
     vars: {},
     views: {},
     notes: {},
+    terms: {},
     root: page.id,
   };
   return m;

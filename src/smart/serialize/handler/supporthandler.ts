@@ -5,6 +5,7 @@ import {
   MMELProvision,
   MMELReference,
   MMELRole,
+  MMELTerm,
   MMELVariable,
   MMELVarSetting,
   MMELView,
@@ -227,6 +228,48 @@ export function parseView(id: string, data: string): MMELView {
         } else {
           throw new Error(
             'Parsing error: view. ID ' + id + ': Unknown keyword ' + command
+          );
+        }
+      } else {
+        throw new Error(
+          'Parsing error: variable. ID ' +
+            id +
+            ': Expecting value for ' +
+            command
+        );
+      }
+    }
+  }
+  return v;
+}
+
+export function parseTerm(id: string, data: string): MMELTerm {
+  const v: MMELTerm = {
+    id,
+    term: '',
+    admitted: [],
+    definition: '',
+    notes: [],
+    datatype: DataType.TERMS
+  }
+
+  if (data !== '') {
+    const t = MMELtokenizePackage(data);
+    let i = 0;
+    while (i < t.length) {
+      const command: string = t[i++];
+      if (i < t.length) {
+        if (command === 'term') {
+          v.term = MMELremovePackage(t[i++]);
+        } else if (command === 'admitted') {
+          v.admitted.push(MMELremovePackage(t[i++]));
+        } else if (command === 'definition') {
+          v.definition = MMELremovePackage(t[i++]);
+        } else if (command === 'note') {
+          v.notes.push(MMELremovePackage(t[i++]));
+        } else {
+          throw new Error(
+            `Parsing error: term. ID ${id}: Unknown keyword ${command}`
           );
         }
       } else {
