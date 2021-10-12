@@ -61,21 +61,21 @@ export interface IRefSelectField {
   update: (x: number) => void;
 }
 
-export type IManageHandler = {
+export type IManageHandler<T> = {
   filterName: string;
   itemName: string;
   Content: React.FC<{
-    object: Object;
+    object: T;
     model?: EditorModel;
-    setObject: (obj: Object) => void;
+    setObject: (obj: T) => void;
   }>;
-  initObj: Object;
+  initObj: T;
   model?: EditorModel;
   getItems: (filter: string) => IListItem[];
   removeItems: (ids: Array<string>) => void;
-  addItem: (obj: Object) => boolean;
-  updateItem: (oldid: string, obj: Object) => boolean;
-  getObjById: (id: string) => Object;
+  addItem: (obj: T) => boolean;
+  updateItem: (oldid: string, obj: T) => boolean;
+  getObjById: (id: string) => T;
   buttons?: IAdditionalListButton[];
 };
 
@@ -97,16 +97,16 @@ export interface IListItem {
   text: string;
 }
 
-export interface IUpdateInterface {
+export interface IUpdateInterface<T> {
   isVisible: boolean;
   Content: React.FC<{
-    object: Object;
+    object: T;
     model?: EditorModel;
-    setObject: (obj: Object) => void;
+    setObject: (obj: T) => void;
   }>;
-  object: Object;
+  object: T;
   model?: EditorModel;
-  setObject: (obj: Object) => void;
+  setObject: (obj: T) => void;
   updateButtonLabel: string;
   updateButtonIcon: IconName;
   updateClicked: () => void;

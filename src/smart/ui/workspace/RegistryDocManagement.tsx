@@ -79,12 +79,12 @@ const RegistryDocManagement: React.FC<{
         };
 
   const CallbackDocumentEdit: React.FC<{
-    object: Object;
-    setObject: (obj: Object) => void;
+    object: DocumentEditInterface;
+    setObject: (obj: DocumentEditInterface) => void;
   }> = function ({ object, setObject }) {
     return (
       <DocumentEdit
-        doc={object as DocumentEditInterface}
+        doc={object}
         model={model}
         setDoc={x => setObject(x)}
         workspace={workspace}
@@ -92,7 +92,7 @@ const RegistryDocManagement: React.FC<{
     );
   };
 
-  const reghandler: IManageHandler = {
+  const reghandler: IManageHandler<DocumentEditInterface> = {
     filterName: 'Date item filter',
     itemName: 'Data items',
     Content: CallbackDocumentEdit,
@@ -100,9 +100,8 @@ const RegistryDocManagement: React.FC<{
     model: model,
     getItems: getDocListItems,
     removeItems: removeDocListItem,
-    addItem: obj => addDoc(cleanDocument(obj as DocumentEditInterface)),
-    updateItem: (oldid, obj) =>
-      updateDoc(oldid, cleanDocument(obj as DocumentEditInterface)),
+    addItem: obj => addDoc(cleanDocument(obj)),
+    updateItem: (oldid, obj) => updateDoc(oldid, cleanDocument(obj)),
     getObjById: getDocById,
     buttons: backButton === undefined ? undefined : [backButton],
   };

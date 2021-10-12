@@ -23,9 +23,7 @@ import {
   NormalTextField,
   ReferenceSelector,
 } from '../common/fields';
-import ListWithPopoverItem, {
-  IObject,
-} from '../common/listmanagement/listPopoverItem';
+import ListWithPopoverItem from '../common/listmanagement/listPopoverItem';
 import { CardinalityField } from './components/CardinalityEdit';
 
 const AttributeEditPage: React.FC<{
@@ -33,8 +31,7 @@ const AttributeEditPage: React.FC<{
   setAtts: (x: Record<string, MMELDataAttribute>) => void;
   model: EditorModel;
 }> = ({ attributes, setAtts, model }) => {
-  function matchFilter(x: IObject, filter: string): boolean {
-    const att = x as MMELDataAttribute;
+  function matchFilter(att: MMELDataAttribute, filter: string): boolean {
     return (
       filter === '' ||
       att.id.toLowerCase().includes(filter) ||
@@ -45,7 +42,7 @@ const AttributeEditPage: React.FC<{
   return (
     <ListWithPopoverItem
       items={attributes}
-      setItems={x => setAtts(x as Record<string, MMELDataAttribute>)}
+      setItems={x => setAtts(x)}
       model={model}
       initObject={createDataAttribute('')}
       matchFilter={matchFilter}
@@ -57,12 +54,10 @@ const AttributeEditPage: React.FC<{
 };
 
 const AttributeItem: React.FC<{
-  object: Object;
+  object: MMELDataAttribute;
   model?: EditorModel;
-  setObject: (obj: Object) => void;
-}> = ({ object, model, setObject }) => {
-  const att = object as MMELDataAttribute;
-
+  setObject: (obj: MMELDataAttribute) => void;
+}> = ({ object: att, model, setObject: setAtt }) => {
   const types: string[] = [...DATATYPE];
   for (const x in model!.elements) {
     const elm = model!.elements[x];
@@ -90,7 +85,7 @@ const AttributeItem: React.FC<{
           value={att.id}
           onChange={(x: string) => {
             att.id = x.replaceAll(/\s+/g, '');
-            setObject({ ...att });
+            setAtt({ ...att });
           }}
         />
         <NormalTextField
@@ -98,14 +93,14 @@ const AttributeItem: React.FC<{
           value={att.definition}
           onChange={(x: string) => {
             att.definition = x;
-            setObject({ ...att });
+            setAtt({ ...att });
           }}
         />
         <CardinalityField
           value={att.cardinality}
           onChange={x => {
             att.cardinality = x;
-            setObject({ ...att });
+            setAtt({ ...att });
           }}
         />
         <NormalComboBox
@@ -114,7 +109,7 @@ const AttributeItem: React.FC<{
           options={MODAILITYOPTIONS}
           onChange={x => {
             att.modality = x;
-            setObject({ ...att });
+            setAtt({ ...att });
           }}
         />
         <ReferenceSelector
@@ -124,7 +119,7 @@ const AttributeItem: React.FC<{
           options={types}
           update={(x: number) => {
             att.type = types[x];
-            setObject({ ...att });
+            setAtt({ ...att });
           }}
         />
         <MultiReferenceSelector
@@ -134,11 +129,11 @@ const AttributeItem: React.FC<{
           filterName="Reference filter"
           add={x => {
             att.ref = new Set([...att.ref, ...x]);
-            setObject({ ...att });
+            setAtt({ ...att });
           }}
           remove={x => {
             att.ref = new Set([...att.ref].filter(s => !x.has(s)));
-            setObject({ ...att });
+            setAtt({ ...att });
           }}
         />
       </FormGroup>

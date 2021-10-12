@@ -37,11 +37,9 @@ const EnumValueEditPage: React.FC<{
 };
 
 const EnumValueItem: React.FC<{
-  object: Object;
-  setObject: (obj: Object) => void;
-}> = ({ object, setObject }) => {
-  const ev = object as MMELEnumValue;
-
+  object: MMELEnumValue;
+  setObject: (obj: MMELEnumValue) => void;
+}> = ({ object: ev, setObject: setEV }) => {
   return (
     <MGDDisplayPane>
       <FormGroup>
@@ -51,7 +49,7 @@ const EnumValueItem: React.FC<{
           value={ev.id}
           onChange={x => {
             ev.id = x.replaceAll(/\s+/g, '');
-            setObject({ ...ev });
+            setEV({ ...ev });
           }}
         />
         <NormalTextField
@@ -60,7 +58,7 @@ const EnumValueItem: React.FC<{
           value={ev.value}
           onChange={x => {
             ev.value = x;
-            setObject({ ...ev });
+            setEV({ ...ev });
           }}
         />
       </FormGroup>

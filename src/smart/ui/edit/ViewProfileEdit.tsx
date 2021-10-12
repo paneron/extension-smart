@@ -82,7 +82,7 @@ const ViewProfileEditPage: React.FC<{
     return view;
   }
 
-  const viewhandler: IManageHandler = {
+  const viewhandler: IManageHandler<MMELView> = {
     filterName: 'View Profile filter',
     itemName: 'View profiles',
     Content: ViewEditItemPage,
@@ -90,8 +90,8 @@ const ViewProfileEditPage: React.FC<{
     model: model,
     getItems: getViewListItems,
     removeItems: removeViewListItem,
-    addItem: obj => addView(obj as MMELView),
-    updateItem: (oldid, obj) => updateView(oldid, obj as MMELView),
+    addItem: obj => addView(obj),
+    updateItem: (oldid, obj) => updateView(oldid, obj),
     getObjById: getViewById,
   };
 
@@ -99,11 +99,10 @@ const ViewProfileEditPage: React.FC<{
 };
 
 const ViewEditItemPage: React.FC<{
-  object: Object;
+  object: MMELView;
   model?: EditorModel;
-  setObject: (obj: Object) => void;
-}> = ({ object, model, setObject }) => {
-  const view = object as MMELView;
+  setObject: (obj: MMELView) => void;
+}> = ({ object: view, model, setObject: setView }) => {
   const vars = model!.vars;
   const profile = view.profile;
 
@@ -117,12 +116,14 @@ const ViewEditItemPage: React.FC<{
     } else {
       delete profile[id];
     }
-    setObject({ ...view });
+    setView({ ...view });
   }
 
   function onEditableChange(x: boolean, id: string) {
-    profile[id].isConst = x;
-    setObject({ ...view });
+    setView({
+      ...view,
+      profile: { ...profile, [id]: { ...profile[id], isConst: x } },
+    });
   }
 
   return (
@@ -130,18 +131,12 @@ const ViewEditItemPage: React.FC<{
       <NormalTextField
         text="Profile ID"
         value={view.id}
-        onChange={(x: string) => {
-          view.id = x.replaceAll(/\s+/g, '');
-          setObject({ ...view });
-        }}
+        onChange={x => setView({ ...view, id: x.replaceAll(/\s+/g, '') })}
       />
       <NormalTextField
         text="Profile name"
         value={view.name}
-        onChange={(x: string) => {
-          view.name = x;
-          setObject({ ...view });
-        }}
+        onChange={x => setView({ ...view, name: x })}
       />
       <Text>
         Select the settings you want to include in the profile and provide the
@@ -166,7 +161,7 @@ const ViewEditItemPage: React.FC<{
                     value={profile[v.id].value}
                     onChange={x => {
                       profile[v.id].value = x;
-                      setObject({ ...view });
+                      setView({ ...view });
                     }}
                   />
                   <Switch

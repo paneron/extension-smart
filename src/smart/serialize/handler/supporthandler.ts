@@ -250,8 +250,8 @@ export function parseTerm(id: string, data: string): MMELTerm {
     admitted: [],
     definition: '',
     notes: [],
-    datatype: DataType.TERMS
-  }
+    datatype: DataType.TERMS,
+  };
 
   if (data !== '') {
     const t = MMELtokenizePackage(data);

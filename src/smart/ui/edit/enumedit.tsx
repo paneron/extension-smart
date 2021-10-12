@@ -85,7 +85,7 @@ const EnumEditPage: React.FC<{
     return en;
   }
 
-  const refhandler: IManageHandler = {
+  const refhandler: IManageHandler<MMELEnum> = {
     filterName: 'Enumeration filter',
     itemName: 'Enumerations',
     Content: EnumEditItemPage,
@@ -93,8 +93,8 @@ const EnumEditPage: React.FC<{
     model: model,
     getItems: getEnumListItems,
     removeItems: removeEnumListItem,
-    addItem: obj => addEnum(obj as MMELEnum),
-    updateItem: (oldid, obj) => updateEnum(oldid, obj as MMELEnum),
+    addItem: obj => addEnum(obj),
+    updateItem: (oldid, obj) => updateEnum(oldid, obj),
     getObjById: getEnumById,
   };
 
@@ -102,30 +102,21 @@ const EnumEditPage: React.FC<{
 };
 
 const EnumEditItemPage: React.FC<{
-  object: Object;
+  object: MMELEnum;
   model?: EditorModel;
-  setObject: (obj: Object) => void;
-}> = ({ object, model, setObject }) => {
-  const en = object as MMELEnum;
+  setObject: (obj: MMELEnum) => void;
+}> = ({ object: en, model, setObject: setEN }) => {
   return (
     <FormGroup>
       <NormalTextField
-        key="field#enumid"
         text="Enumeration ID"
         value={en.id}
-        onChange={x => {
-          en.id = x.replaceAll(/\s+/g, '');
-          setObject({ ...en });
-        }}
+        onChange={x => setEN({ ...en, id: x.replaceAll(/\s+/g, '') })}
       />
       <EnumValueEditPage
-        key={'ui#enum#enumValueEditPage'}
         values={{ ...en.values }}
         model={model!}
-        setValues={x => {
-          en.values = x;
-          setObject({ ...en });
-        }}
+        setValues={x => setEN({ ...en, values: x })}
       />
     </FormGroup>
   );

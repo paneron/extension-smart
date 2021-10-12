@@ -178,7 +178,7 @@ const RegistryEditPage: React.FC<{
     return { ...dc, id: id, title: reg.title };
   }
 
-  const reghandler: IManageHandler = {
+  const reghandler: IManageHandler<RegistryCombined> = {
     filterName: 'Registry filter',
     itemName: 'Data Registries',
     Content: RegistryEditItemPage,
@@ -186,8 +186,8 @@ const RegistryEditPage: React.FC<{
     model: model,
     getItems: getRegListItems,
     removeItems: removeRegListItem,
-    addItem: obj => addRegistry(obj as RegistryCombined),
-    updateItem: (oldid, obj) => updateRegistry(oldid, obj as RegistryCombined),
+    addItem: obj => addRegistry(obj),
+    updateItem: (oldid, obj) => updateRegistry(oldid, obj),
     getObjById: getRegById,
   };
 
@@ -195,36 +195,26 @@ const RegistryEditPage: React.FC<{
 };
 
 const RegistryEditItemPage: React.FC<{
-  object: Object;
+  object: RegistryCombined;
   model?: EditorModel;
-  setObject: (obj: Object) => void;
-}> = ({ object, model, setObject }) => {
-  const reg = object as RegistryCombined;
+  setObject: (obj: RegistryCombined) => void;
+}> = ({ object: reg, model, setObject: setReg }) => {
   return (
     <FormGroup>
       <NormalTextField
         text="Registry ID"
         value={reg.id}
-        onChange={(x: string) => {
-          reg.id = x.replaceAll(/\s+/g, '');
-          setObject({ ...reg });
-        }}
+        onChange={x => setReg({ ...reg, id: x.replaceAll(/\s+/g, '') })}
       />
       <NormalTextField
         text="Registry title"
         value={reg.title}
-        onChange={(x: string) => {
-          reg.title = x;
-          setObject({ ...reg });
-        }}
+        onChange={x => setReg({ ...reg, title: x })}
       />
       <AttributeEditPage
         attributes={{ ...reg.attributes }}
         model={model!}
-        setAtts={x => {
-          reg.attributes = x;
-          setObject({ ...reg });
-        }}
+        setAtts={x => setReg({ ...reg, attributes: x })}
       />
     </FormGroup>
   );

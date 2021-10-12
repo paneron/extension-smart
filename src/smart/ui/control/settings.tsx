@@ -22,6 +22,7 @@ import MetaEditPage from '../edit/metaedit';
 import ReferenceEditPage from '../edit/refedit';
 import RegistryEditPage from '../edit/registryedit';
 import RoleEditPage from '../edit/roleedit';
+import TermsEditPage from '../edit/TermEdit';
 import ViewProfileEditPage from '../edit/ViewProfileEdit';
 
 export enum SETTINGPAGE {
@@ -33,6 +34,7 @@ export enum SETTINGPAGE {
   ENUMPAGE = 'enum',
   MEASUREMENT = 'measure',
   PROFILE = 'profile',
+  TERMPAGE = 'terms',
 }
 
 interface TabProps {
@@ -56,6 +58,12 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
         }}
         showMsg={showMsg}
       />
+    ),
+  },
+  [SETTINGPAGE.TERMPAGE]: {
+    title: 'Terms',
+    Panel: ({ model, setModel }) => (
+      <TermsEditPage model={model} setModel={setModel} />
     ),
   },
   [SETTINGPAGE.ROLEPAGE]: {

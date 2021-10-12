@@ -3,6 +3,7 @@ import React from 'react';
 import { EditorModel } from '../../model/editormodel';
 import {
   MMELNote,
+  NOTE_TYPE,
   NOTE_TYPES,
 } from '../../serialize/interface/supportinterface';
 import { getModelAllRefs } from '../../utils/ModelFunctions';
@@ -19,11 +20,10 @@ export function matchNoteFilter(x: IObject, filter: string): boolean {
 }
 
 export const NoteItem: React.FC<{
-  object: Object;
+  object: MMELNote;
   model?: EditorModel;
-  setObject: (obj: Object) => void;
-}> = ({ object, model, setObject }) => {
-  const note = object as MMELNote;
+  setObject: (obj: MMELNote) => void;
+}> = ({ object: note, model, setObject: setNote }) => {
   const refs = getModelAllRefs(model!).map(r => r.id);
 
   return (
@@ -32,21 +32,21 @@ export const NoteItem: React.FC<{
         text="Note type"
         value={note.type}
         options={NOTE_TYPES}
-        onChange={x => setObject({ ...note, type: x })}
+        onChange={x => setNote({ ...note, type: x as NOTE_TYPE })}
       />
       <NormalTextField
         text="Message"
         value={note.message}
-        onChange={x => setObject({ ...note, message: x })}
+        onChange={x => setNote({ ...note, message: x })}
       />
       <MultiReferenceSelector
         text="Reference"
         options={refs}
         values={note.ref}
         filterName="Reference filter"
-        add={x => setObject({ ...note, ref: new Set([...note.ref, ...x]) })}
+        add={x => setNote({ ...note, ref: new Set([...note.ref, ...x]) })}
         remove={x =>
-          setObject({
+          setNote({
             ...note,
             ref: new Set([...note.ref].filter(s => !x.has(s))),
           })

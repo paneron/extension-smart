@@ -16,12 +16,10 @@ export function matchMeasurementFilter(x: IObject, filter: string): boolean {
 }
 
 export const MeasurementItem: React.FC<{
-  object: Object;
+  object: IMeasure;
   model?: EditorModel;
-  setObject: (obj: Object) => void;
-}> = ({ object, model, setObject }) => {
-  const measure = object as IMeasure;
-
+  setObject: (obj: IMeasure) => void;
+}> = ({ object: measure, model, setObject: setMeasure }) => {
   const types = Object.values(model!.vars).map(v => v.id);
 
   return (
@@ -35,11 +33,11 @@ export const MeasurementItem: React.FC<{
         options={types}
         update={(x: number) => {
           measure.measure += '[' + types[x] + ']';
-          setObject({ ...measure });
+          setMeasure({ ...measure });
         }}
         onChange={(x: string) => {
           measure.measure = x;
-          setObject({ ...measure });
+          setMeasure({ ...measure });
         }}
       />
       <MGDButton

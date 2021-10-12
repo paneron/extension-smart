@@ -24,6 +24,6 @@ export interface MMELModel {
   views: Record<string, MMELView>;
   notes: Record<string, MMELNote>;
   terms: Record<string, MMELTerm>;
-  
+
   root: string;
 }

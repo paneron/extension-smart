@@ -94,7 +94,7 @@ const DocTemplatePane: React.FC<{
     onClick: onGenReportClick,
   };
 
-  const dochandler: IManageHandler = {
+  const dochandler: IManageHandler<MappingDoc> = {
     filterName: 'Template filter',
     itemName: 'Templates',
     Content: DocEditItemPage,
@@ -105,8 +105,8 @@ const DocTemplatePane: React.FC<{
     },
     getItems: getDocListItems,
     removeItems: removeDocListItem,
-    addItem: obj => addDoc(obj as MappingDoc),
-    updateItem: (oldid, obj) => updateDoc(oldid, obj as MappingDoc),
+    addItem: obj => addDoc(obj),
+    updateItem: (oldid, obj) => updateDoc(oldid, obj),
     getObjById: getDocById,
     buttons: [genButtonProps],
   };
@@ -131,40 +131,27 @@ const DocTemplatePane: React.FC<{
 };
 
 const DocEditItemPage: React.FC<{
-  object: Object;
-  setObject: (obj: Object) => void;
-}> = ({ object, setObject }) => {
-  const doc = object as MappingDoc;
+  object: MappingDoc;
+  setObject: (obj: MappingDoc) => void;
+}> = ({ object: doc, setObject: setDoc }) => {
   return (
     <MGDDisplayPane>
       <FormGroup>
         <NormalTextField
-          key="field#docid"
           text="Document ID"
           value={doc.id}
-          onChange={(x: string) => {
-            doc.id = x.replaceAll(/\s+/g, '');
-            setObject({ ...doc });
-          }}
+          onChange={x => setDoc({ ...doc, id: x.replaceAll(/\s+/g, '') })}
         />
         <NormalTextField
-          key="field#doctitle"
           text="Document title"
           value={doc.title}
-          onChange={(x: string) => {
-            doc.title = x;
-            setObject({ ...doc });
-          }}
+          onChange={x => setDoc({ ...doc, title: x })}
         />
         <NormalTextField
-          key="field#doccontent"
           text="Document Content"
           rows={30}
           value={doc.content}
-          onChange={(x: string) => {
-            doc.content = x;
-            setObject({ ...doc });
-          }}
+          onChange={x => setDoc({ ...doc, content: x })}
         />
       </FormGroup>
     </MGDDisplayPane>

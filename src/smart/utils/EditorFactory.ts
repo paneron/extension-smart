@@ -14,6 +14,7 @@ import {
   MMELProvision,
   MMELReference,
   MMELRole,
+  MMELTerm,
   MMELVariable,
   MMELView,
   VarType,
@@ -119,6 +120,17 @@ export function createRole(id: string): MMELRole {
     id: id,
     name: '',
     datatype: DataType.ROLE,
+  };
+}
+
+export function createTerm(id: string): MMELTerm {
+  return {
+    id: id,
+    term: '',
+    definition: '',
+    admitted: [],
+    notes: [],
+    datatype: DataType.TERMS,
   };
 }
 

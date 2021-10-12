@@ -124,7 +124,7 @@ const ReferenceEditPage: React.FC<{
     return ref;
   }
 
-  const refhandler: IManageHandler = {
+  const refhandler: IManageHandler<MMELReference> = {
     filterName: 'Reference filter',
     itemName: 'References',
     Content: ReferenceEditItemPage,
@@ -132,8 +132,8 @@ const ReferenceEditPage: React.FC<{
     model: model,
     getItems: getRefListItems,
     removeItems: removeRefListItem,
-    addItem: obj => addRef(obj as MMELReference),
-    updateItem: (oldid, obj) => updateRef(oldid, obj as MMELReference),
+    addItem: obj => addRef(obj),
+    updateItem: (oldid, obj) => updateRef(oldid, obj),
     getObjById: getRefById,
   };
 
@@ -141,10 +141,9 @@ const ReferenceEditPage: React.FC<{
 };
 
 const ReferenceEditItemPage: React.FC<{
-  object: Object;
-  setObject: (obj: Object) => void;
-}> = ({ object, setObject }) => {
-  const ref = object as MMELReference;
+  object: MMELReference;
+  setObject: (obj: MMELReference) => void;
+}> = ({ object: ref, setObject: setRef }) => {
   return (
     <FormGroup>
       <p>
@@ -154,40 +153,24 @@ const ReferenceEditItemPage: React.FC<{
         "ref4-1-1".
       </p>
       <NormalTextField
-        key="field#refid"
         text="Reference ID"
         value={ref.id}
-        onChange={(x: string) => {
-          ref.id = x.replaceAll(/\s+/g, '');
-          setObject({ ...ref });
-        }}
+        onChange={x => setRef({ ...ref, id: x.replaceAll(/\s+/g, '') })}
       />
       <NormalTextField
-        key="field#document"
         text="Document"
         value={ref.document}
-        onChange={(x: string) => {
-          ref.document = x;
-          setObject({ ...ref });
-        }}
+        onChange={x => setRef({ ...ref, document: x })}
       />
       <NormalTextField
-        key="field#clause"
         text="Clause"
         value={ref.clause}
-        onChange={(x: string) => {
-          ref.clause = x;
-          setObject({ ...ref });
-        }}
+        onChange={x => setRef({ ...ref, clause: x })}
       />
       <NormalTextField
-        key="field#title"
         text="Title"
         value={ref.title}
-        onChange={(x: string) => {
-          ref.title = x;
-          setObject({ ...ref });
-        }}
+        onChange={x => setRef({ ...ref, title: x })}
       />
     </FormGroup>
   );

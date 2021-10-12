@@ -300,11 +300,21 @@ export function toProvisionModel(pro: MMELProvision): string {
 }
 
 export function toReferenceModel(ref: MMELReference): string {
-  return 'reference ' + ref.id + ' {\n'
-  + '  document "' + ref.document + '"\n'
-  + '  clause "' + ref.clause + '"\n'
-  + '  title "' + ref.title + '"\n'
-  + '}\n';
+  return (
+    'reference ' +
+    ref.id +
+    ' {\n' +
+    '  document "' +
+    ref.document +
+    '"\n' +
+    '  clause "' +
+    ref.clause +
+    '"\n' +
+    '  title "' +
+    ref.title +
+    '"\n' +
+    '}\n'
+  );
 }
 
 export function toTermsModel(term: MMELTerm): string {

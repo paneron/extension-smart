@@ -17,25 +17,27 @@ export enum ListManagePageType {
   UPDATE = 'update',
 }
 
-const ListManagePage: React.FC<IManageHandler> = ({
-  filterName,
-  itemName,
-  Content,
-  initObj,
-  model,
-  getItems,
-  removeItems,
-  addItem,
-  updateItem,
-  getObjById,
-  buttons,
-}) => {
-  const [selected, setSelected] = useState<Object>(initObj);
+const ListManagePage = <T extends Object>(props: IManageHandler<T>) => {
+  const {
+    filterName,
+    itemName,
+    Content,
+    initObj,
+    model,
+    getItems,
+    removeItems,
+    addItem,
+    updateItem,
+    getObjById,
+    buttons,
+  } = props;
+
+  const [selected, setSelected] = useState<T>(initObj);
   const [oldid, setOldId] = useState<string>('');
 
   const [mode, setMode] = useState<ListManagePageType>(ListManagePageType.VIEW);
 
-  const addHandler: IUpdateInterface = {
+  const addHandler: IUpdateInterface<T> = {
     isVisible: mode === ListManagePageType.ADD,
     Content: Content,
     object: selected,
@@ -53,7 +55,7 @@ const ListManagePage: React.FC<IManageHandler> = ({
     },
   };
 
-  const updateHandler: IUpdateInterface = {
+  const updateHandler: IUpdateInterface<T> = {
     isVisible: mode === ListManagePageType.UPDATE,
     Content: Content,
     object: selected,

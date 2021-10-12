@@ -83,7 +83,7 @@ const MeasurementEditPage: React.FC<{
     return role;
   }
 
-  const measureHandler: IManageHandler = {
+  const measureHandler: IManageHandler<MMELVariable> = {
     filterName: 'Measurement filter',
     itemName: 'Measurements',
     Content: MeasureEditItemPage,
@@ -91,8 +91,8 @@ const MeasurementEditPage: React.FC<{
     model: model,
     getItems: getMeasureListItems,
     removeItems: removeMeasureListItem,
-    addItem: obj => addMeasure(obj as MMELVariable),
-    updateItem: (oldid, obj) => updateMeasure(oldid, obj as MMELVariable),
+    addItem: obj => addMeasure(obj),
+    updateItem: (oldid, obj) => updateMeasure(oldid, obj),
     getObjById: getMeasureById,
   };
 
@@ -100,12 +100,10 @@ const MeasurementEditPage: React.FC<{
 };
 
 const MeasureEditItemPage: React.FC<{
-  object: Object;
+  object: MMELVariable;
   model?: EditorModel;
-  setObject: (obj: Object) => void;
-}> = ({ object, model, setObject }) => {
-  const mea = object as MMELVariable;
-
+  setObject: (obj: MMELVariable) => void;
+}> = ({ object: mea, model, setObject: setMeasure }) => {
   const types = Object.values(model!.vars).map(v => v.id);
   return (
     <FormGroup>
@@ -145,36 +143,25 @@ const MeasureEditItemPage: React.FC<{
         calculates the average temperature from the sensor.
       </div>
       <NormalTextField
-        key="field#varid"
         text="Measurement ID"
         value={mea.id}
-        onChange={(x: string) => {
-          mea.id = x.replaceAll(/\s+/g, '');
-          setObject({ ...mea });
-        }}
+        onChange={(x: string) =>
+          setMeasure({ ...mea, id: x.replaceAll(/\s+/g, '') })
+        }
       />
       <NormalTextField
-        key="field#vardescription"
         text="Measurement description"
         value={mea.description}
-        onChange={(x: string) => {
-          mea.description = x;
-          setObject({ ...mea });
-        }}
+        onChange={(x: string) => setMeasure({ ...mea, description: x })}
       />
       <NormalComboBox
-        key="field#vartype"
         text="Measurement Type"
         value={mea.type}
         options={MEASUREMENTTYPES}
-        onChange={x => {
-          mea.type = x as VarType;
-          setObject({ ...mea });
-        }}
+        onChange={x => setMeasure({ ...mea, type: x as VarType })}
       />
       {mea.type === VarType.DERIVED && (
         <MGDButton
-          key="ui#measurement#builderbutton#holder"
           icon="derive-column"
           onClick={() => measurementValidCheck(mea.definition, model!.vars)}
         >
@@ -182,20 +169,18 @@ const MeasureEditItemPage: React.FC<{
         </MGDButton>
       )}
       <ReferenceSelector
-        key="field#vardefinition"
         text="Measurement definition"
         filterName="Measurement filter"
         editable={true}
         value={mea.type === VarType.DERIVED ? mea.definition : 'disabled'}
         options={types}
-        update={(x: number) => {
-          mea.definition += '[' + types[x] + ']';
-          setObject({ ...mea });
-        }}
-        onChange={(x: string) => {
-          mea.definition = x;
-          setObject({ ...mea });
-        }}
+        update={x =>
+          setMeasure({
+            ...mea,
+            definition: mea.definition + '[' + types[x] + ']',
+          })
+        }
+        onChange={x => setMeasure({ ...mea, definition: x })}
       />
     </FormGroup>
   );

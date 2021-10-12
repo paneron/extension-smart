@@ -94,7 +94,7 @@ const RoleEditPage: React.FC<{
     return role;
   }
 
-  const rolehandler: IManageHandler = {
+  const rolehandler: IManageHandler<MMELRole> = {
     filterName: 'Role filter',
     itemName: 'Roles',
     Content: RoleEditItemPage,
@@ -102,8 +102,8 @@ const RoleEditPage: React.FC<{
     model: model,
     getItems: getRoleListItems,
     removeItems: removeRoleListItem,
-    addItem: obj => addRole(obj as MMELRole),
-    updateItem: (oldid, obj) => updateRole(oldid, obj as MMELRole),
+    addItem: obj => addRole(obj),
+    updateItem: (oldid, obj) => updateRole(oldid, obj),
     getObjById: getRoleById,
   };
 
@@ -111,29 +111,20 @@ const RoleEditPage: React.FC<{
 };
 
 const RoleEditItemPage: React.FC<{
-  object: Object;
-  setObject: (obj: Object) => void;
-}> = ({ object, setObject }) => {
-  const role = object as MMELRole;
+  object: MMELRole;
+  setObject: (obj: MMELRole) => void;
+}> = ({ object: role, setObject: setRole }) => {
   return (
     <FormGroup>
       <NormalTextField
-        key="field#roleid"
         text="Role ID"
         value={role.id}
-        onChange={(x: string) => {
-          role.id = x.replaceAll(/\s+/g, '');
-          setObject({ ...role });
-        }}
+        onChange={x => setRole({ ...role, id: x.replaceAll(/\s+/g, '') })}
       />
       <NormalTextField
-        key="field#rolename"
         text="Role Name"
         value={role.name}
-        onChange={(x: string) => {
-          role.name = x;
-          setObject({ ...role });
-        }}
+        onChange={x => setRole({ ...role, name: x })}
       />
     </FormGroup>
   );

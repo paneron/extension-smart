@@ -122,7 +122,7 @@ const DataClassEditPage: React.FC<{
     return { ...initObj };
   }
 
-  const dchandler: IManageHandler = {
+  const dchandler: IManageHandler<EditorDataClass> = {
     filterName: 'Data structure filter',
     itemName: 'Data Structures',
     Content: DataClassItemPage,
@@ -130,8 +130,8 @@ const DataClassEditPage: React.FC<{
     model: model,
     getItems: getDCListItems,
     removeItems: removeDCListItem,
-    addItem: obj => addDC(obj as EditorDataClass),
-    updateItem: (oldid, obj) => updateDC(oldid, obj as EditorDataClass),
+    addItem: obj => addDC(obj),
+    updateItem: (oldid, obj) => updateDC(oldid, obj),
     getObjById: getDCById,
   };
 
@@ -139,30 +139,23 @@ const DataClassEditPage: React.FC<{
 };
 
 const DataClassItemPage: React.FC<{
-  object: Object;
+  object: EditorDataClass;
   model?: EditorModel;
-  setObject: (obj: Object) => void;
-}> = ({ object, model, setObject }) => {
-  const dc = object as EditorDataClass;
+  setObject: (obj: EditorDataClass) => void;
+}> = ({ object: dc, model, setObject: setDC }) => {
   return (
     <FormGroup>
       <NormalTextField
         key="field#dataclassid"
         text="Dataclass ID"
         value={dc.id}
-        onChange={x => {
-          dc.id = x.replaceAll(/\s+/g, '');
-          setObject({ ...dc });
-        }}
+        onChange={x => setDC({ ...dc, id: x.replaceAll(/\s+/g, '') })}
       />
       <AttributeEditPage
         key={'ui#dataclass#attributeEditPage'}
         attributes={{ ...dc.attributes }}
         model={model!}
-        setAtts={x => {
-          dc.attributes = x;
-          setObject({ ...dc });
-        }}
+        setAtts={x => setDC({ ...dc, attributes: x })}
       />
     </FormGroup>
   );

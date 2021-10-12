@@ -17,11 +17,10 @@ export function matchProvisionFilter(x: IObject, filter: string): boolean {
 }
 
 export const ProvisonItem: React.FC<{
-  object: Object;
+  object: MMELProvision;
   model?: EditorModel;
-  setObject: (obj: Object) => void;
-}> = ({ object, model, setObject }) => {
-  const provision = object as MMELProvision;
+  setObject: (obj: MMELProvision) => void;
+}> = ({ object: provision, model, setObject: setProvision }) => {
   const refs = getModelAllRefs(model!).map(r => r.id);
 
   return (
@@ -29,19 +28,13 @@ export const ProvisonItem: React.FC<{
       <NormalTextField
         text="Provision Text"
         value={provision.condition}
-        onChange={(x: string) => {
-          provision.condition = x;
-          setObject({ ...provision });
-        }}
+        onChange={x => setProvision({ ...provision, condition: x })}
       />
       <NormalComboBox
         text="Provision Modality"
         value={provision.modality}
         options={MODAILITYOPTIONS}
-        onChange={(x: string) => {
-          provision.modality = x;
-          setObject({ ...provision });
-        }}
+        onChange={x => setProvision({ ...provision, modality: x })}
       />
       <MultiReferenceSelector
         text="Reference"
@@ -50,11 +43,11 @@ export const ProvisonItem: React.FC<{
         filterName="Reference filter"
         add={x => {
           provision.ref = new Set([...provision.ref, ...x]);
-          setObject({ ...provision });
+          setProvision({ ...provision });
         }}
         remove={x => {
           provision.ref = new Set([...provision.ref].filter(s => !x.has(s)));
-          setObject({ ...provision });
+          setProvision({ ...provision });
         }}
       />
     </FormGroup>

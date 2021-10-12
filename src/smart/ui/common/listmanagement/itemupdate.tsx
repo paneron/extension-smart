@@ -9,17 +9,18 @@ import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
 import { IUpdateInterface } from '../fields';
 
-const ItemUpdatePane: React.FC<IUpdateInterface> = ({
-  Content,
-  object,
-  setObject,
-  model,
-  updateButtonLabel,
-  updateButtonIcon,
-  updateClicked,
-  cancelClicked,
-  isVisible,
-}) => {
+const ItemUpdatePane = <T extends Object>(props: IUpdateInterface<T>) => {
+  const {
+    Content,
+    object,
+    setObject,
+    model,
+    updateButtonLabel,
+    updateButtonIcon,
+    updateClicked,
+    cancelClicked,
+    isVisible,
+  } = props;
   if (isVisible) {
     return (
       <MGDDisplayPane>

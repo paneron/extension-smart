@@ -22,7 +22,7 @@ export enum DataType {
   REFERENCE = 'ref',
   VIEW = 'view',
   NOTE = 'note',
-  TERMS = 'terms'
+  TERMS = 'terms',
 }
 
 // the base interface for all objects in MMEL

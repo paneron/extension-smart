@@ -87,7 +87,7 @@ function parseModel(props: {
       indexModel(mw.model);
     }
     setModelWrapper(mw);
-  } catch (e:unknown) {
+  } catch (e: unknown) {
     logger?.log('Failed to load model');
     if (typeof e === 'object') {
       const error = e as Error;
