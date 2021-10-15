@@ -18,6 +18,11 @@ import { ModelType } from './editormodel';
 import { SMARTWorkspace } from './workspace';
 import { MMELDocument } from './document';
 
+export interface FunModel {
+  mw: ModelWrapper;
+  history: PageHistory;
+}
+
 export interface EditorState {
   dvisible: boolean; // visibility of data nodes
   edgeDeleteVisible: boolean; // visibility of the remove edge buttons

@@ -28,7 +28,6 @@ export enum DataType {
 // the base interface for all objects in MMEL
 export interface MMELObject {
   datatype: DataType;
-  version?: string;
   globalId?: string;
 }
 

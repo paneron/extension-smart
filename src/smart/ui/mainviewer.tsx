@@ -33,7 +33,7 @@ import {
   popPage,
 } from '../model/history';
 import { createNewEditorModel } from '../utils/EditorFactory';
-import { EdgeTypes, NodeTypes, ViewerState } from '../model/States';
+import { EdgeTypes, FunModel, NodeTypes, ViewerState } from '../model/States';
 import { SelectedNodeDescription } from './sidebar/selected';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
@@ -52,7 +52,7 @@ import MeasureCheckPane from './measurement/MeasurementValidationPane';
 import { ViewFunctionInterface } from '../model/ViewFunctionModel';
 import LegendPane from './common/description/LegendPane';
 import { loadPlugin } from './application/plugin';
-import { buildModelLinks, getNamespace } from '../utils/ModelFunctions';
+import { buildModelLinks, getNamespace, Logger } from '../utils/ModelFunctions';
 import ChecklistConfigPane from './checklist/CheckListConfigPane';
 import {
   MMELProvision,
@@ -62,6 +62,7 @@ import { MMELDataAttribute } from '../serialize/interface/datainterface';
 import SimulationPane from './sidebar/SimulationPane';
 import RegistrySummary from './summary/RegistrySummary';
 import ProvisionSettings from './summary/ProvisionSettings';
+import VersionTrackerSettingPane from './version/VersionTrackerSetting';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -73,6 +74,7 @@ export enum FunctionPage {
   Checklist = 'checklist',
   DataSummary = 'datasummary',
   ProvisionSummary = 'provisionsummary',
+  VersionViewer = 'version',
 }
 
 export const FuntionNames: Record<FunctionPage, string> = {
@@ -82,6 +84,7 @@ export const FuntionNames: Record<FunctionPage, string> = {
   [FunctionPage.Checklist]: 'Self-assessment checklist',
   [FunctionPage.DataSummary]: 'Registry summary',
   [FunctionPage.ProvisionSummary]: 'Provision summary',
+  [FunctionPage.VersionViewer]: 'Edition comparator',
 };
 
 const ModelViewer: React.FC<{
@@ -90,6 +93,7 @@ const ModelViewer: React.FC<{
 }> = ({ isVisible, className }) => {
   const { logger, useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
+  Logger.logger = logger;
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
@@ -107,12 +111,16 @@ const ModelViewer: React.FC<{
   const [searchResult, setSearchResult] = useState<Set<string>>(
     new Set<string>()
   );
-  const [funPage, setFunPage] = useState<FunctionPage>(FunctionPage.Simulation);
+  const [funPage, setFunPage] = useState<FunctionPage>(
+    FunctionPage.VersionViewer
+  );
   const [view, setView] = useState<ViewFunctionInterface | undefined>(
     undefined
   );
+
   const [toaster] = useState<IToaster>(Toaster.create());
   const [idVisible, setIdVisible] = useState<boolean>(false);
+  const [funMS, setFunMS] = useState<FunModel | undefined>(undefined);
 
   function showMsg(msg: IToastProps) {
     toaster.show(msg);
@@ -133,9 +141,15 @@ const ModelViewer: React.FC<{
   }
 
   function onPageChange(updated: PageHistory, newPage: string) {
-    state.history = updated;
-    state.modelWrapper.page = newPage;
-    setState({ ...state });
+    if (funMS !== undefined) {
+      funMS.history = updated;
+      funMS.mw.page = newPage;
+      setFunMS({ ...funMS });
+    } else {
+      state.history = updated;
+      state.modelWrapper.page = newPage;
+      setState({ ...state });
+    }
   }
 
   function onProcessClick(pageid: string, processid: string): void {
@@ -154,17 +168,30 @@ const ModelViewer: React.FC<{
   }
 
   function onNavigationDown(pageid: string, processid: string): void {
-    const mw = state.modelWrapper;
-    mw.page = pageid;
     logger?.log('Go to page', pageid);
-    addToHistory(state.history, mw.page, processid);
-    setState({ ...state });
+    if (funMS !== undefined) {
+      const mw = funMS.mw;
+      addToHistory(funMS.history, mw.page, processid);
+      setFunMS({ mw: { ...mw, page: pageid }, history: funMS.history });
+    } else {
+      const mw = state.modelWrapper;
+      mw.page = pageid;
+      addToHistory(state.history, mw.page, processid);
+      setState({ ...state });
+    }
   }
 
   function onNavigationUp(): void {
-    if (state.history.items.length > 0) {
-      state.modelWrapper.page = popPage(state.history);
-      setState({ ...state });
+    if (funMS !== undefined) {
+      if (funMS.history.items.length > 0) {
+        funMS.mw.page = popPage(funMS.history);
+        setFunMS({ ...funMS });
+      }
+    } else {
+      if (state.history.items.length > 0) {
+        state.modelWrapper.page = popPage(state.history);
+        setState({ ...state });
+      }
     }
   }
 
@@ -189,22 +216,33 @@ const ModelViewer: React.FC<{
     history: PageHistory
   ) {
     setSelected(selected);
-    setState({
-      ...state,
-      history,
-      modelWrapper: { ...state.modelWrapper, page: pageid },
-    });
+    if (funMS !== undefined) {
+      setFunMS({
+        history,
+        mw: { ...funMS.mw, page: pageid },
+      });
+    } else {
+      setState({
+        ...state,
+        history,
+        modelWrapper: { ...state.modelWrapper, page: pageid },
+      });
+    }
   }
 
   function getStyleById(id: string) {
     return view !== undefined
-      ? view.getStyleById(id, mw.page, view.data)
+      ? funMS !== undefined
+        ? view.getStyleById(id, funMS.mw.page, view.data)
+        : view.getStyleById(id, mw.page, view.data)
       : getHighlightedStyleById(id, selected, searchResult);
   }
 
   function getSVGColorById(id: string) {
     return view !== undefined
-      ? view.getSVGColorById(id, mw.page, view.data)
+      ? funMS !== undefined
+        ? view.getSVGColorById(id, funMS.mw.page, view.data)
+        : view.getSVGColorById(id, mw.page, view.data)
       : getHighlightedSVGColorById(id, selected, searchResult);
   }
 
@@ -215,14 +253,22 @@ const ModelViewer: React.FC<{
 
   function getEdgeColor(id: string): string {
     if (view !== undefined && view.getEdgeColor !== undefined) {
-      return view.getEdgeColor(id, state.modelWrapper.page, view.data);
+      return view.getEdgeColor(
+        id,
+        funMS !== undefined ? funMS.mw.page : state.modelWrapper.page,
+        view.data
+      );
     }
     return '';
   }
 
   function isEdgeAnimated(id: string): boolean {
     if (view !== undefined && view.isEdgeAnimated !== undefined) {
-      return view.isEdgeAnimated(id, state.modelWrapper.page, view.data);
+      return view.isEdgeAnimated(
+        id,
+        funMS !== undefined ? funMS.mw.page : state.modelWrapper.page,
+        view.data
+      );
     }
     return false;
   }
@@ -291,6 +337,19 @@ const ModelViewer: React.FC<{
       title: FuntionNames[FunctionPage.ProvisionSummary],
       collapsedByDefault: false,
       content: <ProvisionSettings model={model} />,
+    },
+    [FunctionPage.VersionViewer]: {
+      key: FunctionPage.VersionViewer,
+      title: FuntionNames[FunctionPage.VersionViewer],
+      collapsedByDefault: false,
+      content: (
+        <VersionTrackerSettingPane
+          mw={{ ...mw }}
+          history={funMS !== undefined ? funMS.history : state.history}
+          setView={setView}
+          setFunctionalState={setFunMS}
+        />
+      ),
     },
   };
 
@@ -370,7 +429,11 @@ const ModelViewer: React.FC<{
       </Popover2>
       <MGDButton
         type={MGDButtonType.Primary}
-        disabled={state.history.items.length <= 1}
+        disabled={
+          funMS !== undefined
+            ? funMS.history.items.length <= 1
+            : state.history.items.length <= 1
+        }
         onClick={drillUp}
       >
         Drill up
@@ -378,14 +441,17 @@ const ModelViewer: React.FC<{
     </ControlGroup>
   );
 
-  const breadcrumbs = getBreadcrumbs(state.history, onPageChange);
+  const breadcrumbs = getBreadcrumbs(
+    funMS !== undefined ? funMS.history : state.history,
+    onPageChange
+  );
 
   const selectedSideBlockConfig: SidebarBlockConfig = {
     key: 'selected-node',
     title: 'Selected node',
     content: (
       <SelectedNodeDescription
-        modelWrapper={state.modelWrapper}
+        modelWrapper={funMS !== undefined ? funMS.mw : state.modelWrapper}
         CustomAttribute={CustomAttribute}
         CustomProvision={CustomProvision}
       />
@@ -397,7 +463,7 @@ const ModelViewer: React.FC<{
     title: 'Search components',
     content: (
       <SearchComponentPane
-        model={state.modelWrapper.model}
+        model={funMS !== undefined ? funMS.mw.model : state.modelWrapper.model}
         onChange={onPageAndHistroyChange}
         resetSearchElements={resetSearchElements}
       />
@@ -449,7 +515,7 @@ const ModelViewer: React.FC<{
           <div css={react_flow_container_layout}>
             <ReactFlow
               elements={getViewerReactFlowElementsFrom(
-                state.modelWrapper,
+                funMS !== undefined ? funMS.mw : state.modelWrapper,
                 state.dvisible,
                 onProcessClick,
                 getStyleById,
