@@ -23,12 +23,13 @@ import { ModelWrapper } from '../model/modelwrapper';
 import { LegendInterface } from '../model/States';
 import { VersionState, VersionStatus } from '../model/versioncompare';
 import { ViewFunctionInterface } from '../model/ViewFunctionModel';
-import { getRootName } from './ModelFunctions';
+import VersionDiffLogView from '../ui/version/VersionDiffLogView';
+import { getRootName, Logger } from './ModelFunctions';
 
 const ComparisonResultStyles: Record<VersionStatus, LegendInterface> = {
   same: { label: 'Identical', color: 'lightblue' },
-  add: { label: 'Base model only', color: 'lightgreen' },
-  delete: { label: 'Compared model only', color: 'red' },
+  add: { label: 'Added', color: 'lightgreen' },
+  delete: { label: 'Removed', color: 'red' },
   change: { label: 'Modified', color: 'lightyellow' },
 };
 
@@ -73,6 +74,8 @@ export function getDiffViewProps(data: VersionState): ViewFunctionInterface {
     getSVGColorById,
     getEdgeColor,
     legendList: ComparisonResultStyles,
+    ComponentToolTip: VersionDiffLogView,
+    StartEndToolTip: VersionDiffLogView,
     data,
   };
 }
@@ -86,9 +89,11 @@ export function computeDiff(
     orielements: {},
     oriedges: {},
     oripages: {},
+    oricomments: {},
     refelements: {},
     refedges: {},
     refpages: {},
+    refcomments: {},
     viewOptionRef: option,
   };
   const model = mw.model;
@@ -117,136 +122,184 @@ function checkProcess(
   p1: EditorProcess,
   p2: EditorProcess,
   props: FunctionProps
-): VersionStatus {
+): string[] {
   const { model, ref, state } = props;
+  const comments: string[] = [];
 
   if (p1.name !== p2.name) {
-    return 'change';
+    comments.push(`Name changed ${p2.name} => ${p1.name}`);
   }
 
   if (p1.actor !== p2.actor) {
-    return 'change';
+    comments.push(`Actor changed ${p2.actor} => ${p1.actor}`);
   }
 
-  if (p1.input.size !== p2.input.size) {
-    return 'change';
-  }
   for (const x of p1.input) {
     if (!p2.input.has(x)) {
-      return 'change';
+      comments.push(`Added input: ${x}`);
     }
   }
 
-  if (p1.output.size !== p2.output.size) {
-    return 'change';
+  for (const x of p2.input) {
+    if (!p1.input.has(x)) {
+      comments.push(`Removed input: ${x}`);
+    }
   }
+
   for (const x of p1.output) {
     if (!p2.output.has(x)) {
-      return 'change';
+      comments.push(`Added output: ${x}`);
     }
   }
 
-  const ps1 = new Set<string>();
-  const ps2 = new Set<string>();
-  p1.provision.forEach(x => {
-    const pro = model.provisions[x];
-    ps1.add(pro.condition.trim().toLowerCase() + ' ' + pro.modality);
-  });
-  p2.provision.forEach(x => {
-    const pro = ref.provisions[x];
-    ps2.add(pro.condition.trim().toLowerCase() + ' ' + pro.modality);
-  });
-  for (const x of ps1) {
-    if (!ps2.has(x)) {
-      return 'change';
+  for (const x of p2.output) {
+    if (!p1.output.has(x)) {
+      comments.push(`Removed output: ${x}`);
+    }
+  }
+
+  for (const x of p1.provision) {
+    const pro1 = model.provisions[x];
+    let found = false;
+    for (const y of p2.provision) {
+      const pro2 = ref.provisions[y];
+      if (
+        pro1.condition.trim().toLowerCase() ===
+          pro2.condition.trim().toLowerCase() &&
+        pro1.modality === pro2.modality
+      ) {
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      comments.push(`Added provision [${pro1.modality}]: ${pro1.condition}`);
+    }
+  }
+
+  for (const x of p2.provision) {
+    const pro1 = ref.provisions[x];
+    let found = false;
+    for (const y of p1.provision) {
+      const pro2 = model.provisions[y];
+      if (
+        pro1.condition.trim().toLowerCase() ===
+          pro2.condition.trim().toLowerCase() &&
+        pro1.modality === pro2.modality
+      ) {
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      comments.push(`Removed provision [${pro1.modality}]: ${pro1.condition}`);
     }
   }
 
   if (p1.page !== '' && p2.page !== '') {
     const page = model.pages[p1.page];
     const refpage = ref.pages[p2.page];
-    return matchPage({ ...props, page, refpage }) ? 'same' : 'change';
+    if (!matchPage({ ...props, page, refpage })) {
+      comments.push('Change in subprocess');
+    }
   } else if (p1.page !== '') {
     const page = model.pages[p1.page];
-    labelSubPages(page, model, 'add', state.orielements);
-    return 'change';
+    labelSubPages(
+      page,
+      model,
+      'add',
+      'New component',
+      state.orielements,
+      state.oricomments
+    );
+    comments.push('Added subprocess');
   } else if (p2.page !== '') {
     const page = ref.pages[p2.page];
-    labelSubPages(page, ref, 'delete', state.refelements);
-    return 'change';
+    labelSubPages(
+      page,
+      ref,
+      'delete',
+      'Removed component',
+      state.refelements,
+      state.refcomments
+    );
+    comments.push('Removed subprocess');
   }
 
-  return 'same';
+  return comments;
 }
 
-function checkApproval(p1: EditorApproval, p2: EditorApproval): VersionStatus {
+function checkApproval(p1: EditorApproval, p2: EditorApproval): string[] {
+  const comments: string[] = [];
   if (p1.actor !== p2.actor) {
-    return 'change';
+    comments.push(`Actor changed ${p2.actor} => ${p1.actor}`);
   }
 
   if (p1.approver !== p2.approver) {
-    return 'change';
+    comments.push(`Approver changed ${p2.actor} => ${p1.actor}`);
   }
 
-  if (p1.records.size !== p2.records.size) {
-    return 'change';
-  }
   for (const x of p1.records) {
     if (!p2.records.has(x)) {
-      return 'change';
+      comments.push(`Added record: ${x}`);
+    }
+  }
+
+  for (const x of p2.records) {
+    if (!p1.records.has(x)) {
+      comments.push(`Removed record: ${x}`);
     }
   }
 
   if (p1.modality !== p2.modality) {
-    return 'change';
+    comments.push(`Changed modality: ${p2.modality} => ${p1.modality}`);
   }
 
   if (p1.name !== p2.name) {
-    return 'change';
+    comments.push(`Name changed ${p2.name} => ${p1.name}`);
   }
 
-  return 'same';
+  return comments;
 }
 
-function checkEGate(e1: EditorEGate, e2: EditorEGate): VersionStatus {
+function checkEGate(e1: EditorEGate, e2: EditorEGate): string[] {
   if (e1.label !== e2.label) {
-    return 'change';
+    return [`Changed gateway description: ${e2.label} => ${e1.label}`];
   }
 
-  return 'same';
+  return [];
 }
 
-function checkTimer(e1: EditorTimerEvent, e2: EditorTimerEvent): VersionStatus {
+function checkTimer(e1: EditorTimerEvent, e2: EditorTimerEvent): string[] {
+  const comments: string[] = [];
   if (e1.type !== e2.type) {
-    return 'change';
+    comments.push(`Changed type: ${e2.type} => ${e1.type}`);
   }
 
   if (e1.para !== e2.para) {
-    return 'change';
+    comments.push(`Changed parameter: ${e2.para} => ${e1.para}`);
   }
 
-  return 'same';
+  return comments;
 }
 
-function checkSignal(
-  e1: EditorSignalEvent,
-  e2: EditorSignalEvent
-): VersionStatus {
+function checkSignal(e1: EditorSignalEvent, e2: EditorSignalEvent): string[] {
   if (e1.signal !== e2.signal) {
-    return 'change';
+    return [`Changed signal: ${e2.signal} => ${e1.signal}`];
   }
 
-  return 'same';
+  return [];
 }
 
 function checkRegistry(
   r1: EditorRegistry,
   r2: EditorRegistry,
   props: FunctionProps
-): VersionStatus {
+): string[] {
+  const comments: string[] = [];
   const { model, ref } = props;
   if (r1.title !== r2.title) {
-    return 'change';
+    comments.push(`Changed title: ${r2.title} => ${r1.title}`);
   }
 
   const dc1 = model.elements[r1.data];
@@ -257,37 +310,41 @@ function checkRegistry(
     isEditorDataClass(dc1) &&
     isEditorDataClass(dc2)
   ) {
-    return checkDC(dc1, dc2);
+    return [...comments, ...checkDC(dc1, dc2)];
   }
-  return 'same';
+  return comments;
 }
 
-function checkDC(dc1: EditorDataClass, dc2: EditorDataClass): VersionStatus {
+function checkDC(dc1: EditorDataClass, dc2: EditorDataClass): string[] {
+  const comments: string[] = [];
   const att1 = dc1.attributes;
   const att2 = dc2.attributes;
 
-  const set1 = new Set<string>();
-  const set2 = new Set<string>();
-  Object.values(att1).forEach(x => {
-    set1.add(
-      x.cardinality + ' ' + x.definition.trim() + ' ' + x.id + ' ' + x.modality
-    );
-  });
-  Object.values(att2).forEach(x => {
-    set2.add(
-      x.cardinality + ' ' + x.definition.trim() + ' ' + x.id + ' ' + x.modality
-    );
-  });
-  if (set1.size !== set2.size) {
-    return 'change';
-  }
-  for (const x of set1) {
-    if (!set2.has(x)) {
-      return 'change';
+  for (const x in att1) {
+    const a1 = att1[x];
+    const a2 = att2[x];
+    if (a2 !== undefined) {
+      if (a1.definition !== a2.definition) {
+        comments.push(
+          `Changed attribute definition ${a1.id}: ${a2.definition} => ${a1.definition}`
+        );
+      }
+      if (a1.cardinality !== a2.cardinality) {
+        comments.push(
+          `Changed attribute cardinality ${a1.id}: ${a2.cardinality} => ${a1.cardinality}`
+        );
+      }
+      if (a1.modality !== a2.modality) {
+        comments.push(
+          `Changed attribute modality ${a1.id}: ${a2.modality} => ${a1.modality}`
+        );
+      }
+    } else {
+      comments.push(`Added attribute ${a1.id}`);
     }
   }
 
-  return 'same';
+  return comments;
 }
 
 function matchPage(props: FunctionProps): boolean {
@@ -295,61 +352,93 @@ function matchPage(props: FunctionProps): boolean {
   let ret = true;
   state.orielements[page.id] = {};
   state.refelements[refpage.id] = {};
+  state.oricomments[page.id] = {};
+  state.refcomments[refpage.id] = {};
   for (const c in page.childs) {
+    Logger.logger.log(page.id, c);
     const child = model.elements[c];
     const refchild = refpage.childs[c];
     const refelm = ref.elements[c];
     if (refchild === undefined) {
       state.orielements[page.id][c] = 'add';
+      state.oricomments[page.id][c] = ['New component'];
       if (isEditorProcess(child) && child.page !== '') {
         const nextPage = model.pages[child.page];
-        labelSubPages(nextPage, model, 'add', state.orielements);
+        labelSubPages(
+          nextPage,
+          model,
+          'add',
+          'New component',
+          state.orielements,
+          state.oricomments
+        );
       }
       ret = false;
     } else {
+      state.oricomments[page.id][c] = [];
+      state.refcomments[refpage.id][c] = [];
       if (child.datatype === refelm.datatype) {
         if (isEditorProcess(child) && isEditorProcess(refelm)) {
-          const label = checkProcess(child, refelm, props);
+          const comments = checkProcess(child, refelm, props);
+          const label = comments.length > 0 ? 'change' : 'same';
           state.orielements[page.id][c] = label;
           state.refelements[refpage.id][c] = label;
+          state.oricomments[page.id][c] = comments;
+          state.refcomments[refpage.id][c] = comments;
           if (label !== 'same') {
             ret = false;
           }
         } else if (isEditorApproval(child) && isEditorApproval(refelm)) {
-          const label = checkApproval(child, refelm);
+          const comments = checkApproval(child, refelm);
+          const label = comments.length > 0 ? 'change' : 'same';
           state.orielements[page.id][c] = label;
           state.refelements[refpage.id][c] = label;
+          state.oricomments[page.id][c] = comments;
+          state.refcomments[refpage.id][c] = comments;
           if (label !== 'same') {
             ret = false;
           }
         } else if (isEditorEgate(child) && isEditorEgate(refelm)) {
-          const label = checkEGate(child, refelm);
+          const comments = checkEGate(child, refelm);
+          const label = comments.length > 0 ? 'change' : 'same';
           state.orielements[page.id][c] = label;
           state.refelements[refpage.id][c] = label;
+          state.oricomments[page.id][c] = comments;
+          state.refcomments[refpage.id][c] = comments;
           if (label !== 'same') {
             ret = false;
           }
         } else if (isEditorTimerEvent(child) && isEditorTimerEvent(refelm)) {
-          const label = checkTimer(child, refelm);
+          const comments = checkTimer(child, refelm);
+          const label = comments.length > 0 ? 'change' : 'same';
           state.orielements[page.id][c] = label;
           state.refelements[refpage.id][c] = label;
+          state.oricomments[page.id][c] = comments;
+          state.refcomments[refpage.id][c] = comments;
           if (label !== 'same') {
             ret = false;
           }
         } else if (isEditorSignalEvent(child) && isEditorSignalEvent(refelm)) {
-          const label = checkSignal(child, refelm);
+          const comments = checkSignal(child, refelm);
+          const label = comments.length > 0 ? 'change' : 'same';
           state.orielements[page.id][c] = label;
           state.refelements[refpage.id][c] = label;
+          state.oricomments[page.id][c] = comments;
+          state.refcomments[refpage.id][c] = comments;
           if (label !== 'same') {
             ret = false;
           }
         } else {
           state.orielements[page.id][c] = 'same';
           state.refelements[refpage.id][c] = 'same';
+          state.oricomments[page.id][c] = [];
+          state.refcomments[refpage.id][c] = [];
         }
       } else {
         state.orielements[page.id][c] = 'add';
         state.orielements[refpage.id][c] = 'delete';
+        state.oricomments[page.id][c] = ['New component'];
+        state.refcomments[refpage.id][c] = ['Removed component'];
         ret = false;
       }
     }
@@ -361,20 +450,27 @@ function matchPage(props: FunctionProps): boolean {
     const refelm = ref.elements[c];
     if (refchild === undefined) {
       state.orielements[page.id][c] = 'add';
+      state.oricomments[page.id][c] = ['New component'];
       ret = false;
     } else {
       if (child.datatype === refelm.datatype) {
         if (isEditorRegistry(child) && isEditorRegistry(refelm)) {
-          const label = checkRegistry(child, refelm, props);
+          const comments = checkRegistry(child, refelm, props);
+          const label = comments.length > 0 ? 'change' : 'same';
           state.orielements[page.id][c] = label;
           state.refelements[refpage.id][c] = label;
+          state.oricomments[page.id][c] = comments;
+          state.refcomments[refpage.id][c] = comments;
           if (label !== 'same') {
             ret = false;
           }
         } else if (isEditorDataClass(child) && isEditorDataClass(refelm)) {
-          const label = checkDC(child, refelm);
+          const comments = checkDC(child, refelm);
+          const label = comments.length > 0 ? 'change' : 'same';
           state.orielements[page.id][c] = label;
           state.refelements[refpage.id][c] = label;
+          state.oricomments[page.id][c] = comments;
+          state.refcomments[refpage.id][c] = comments;
           if (label !== 'same') {
             ret = false;
           }
@@ -382,6 +478,8 @@ function matchPage(props: FunctionProps): boolean {
       } else {
         state.orielements[page.id][c] = 'add';
         state.orielements[refpage.id][c] = 'delete';
+        state.oricomments[page.id][c] = ['New component'];
+        state.refcomments[refpage.id][c] = ['Removed component'];
         ret = false;
       }
     }
@@ -390,10 +488,18 @@ function matchPage(props: FunctionProps): boolean {
   for (const c in refpage.childs) {
     if (page.childs[c] === undefined) {
       const child = ref.elements[c];
-      state.refelements[page.id][c] = 'delete';
+      state.refelements[refpage.id][c] = 'delete';
+      state.refcomments[refpage.id][c] = ['Removed component'];
       if (isEditorProcess(child) && child.page !== '') {
         const nextPage = ref.pages[child.page];
-        labelSubPages(nextPage, ref, 'delete', state.refelements);
+        labelSubPages(
+          nextPage,
+          ref,
+          'delete',
+          'Removed component',
+          state.refelements,
+          state.refcomments
+        );
       }
       ret = false;
     }
@@ -401,6 +507,7 @@ function matchPage(props: FunctionProps): boolean {
   for (const c in refpage.data) {
     if (page.data[c] === undefined) {
       state.refelements[page.id][c] = 'delete';
+      state.refcomments[refpage.id][c] = ['Removed component'];
       ret = false;
     }
   }
@@ -409,12 +516,22 @@ function matchPage(props: FunctionProps): boolean {
   state.refedges[refpage.id] = {};
   for (const x in page.edges) {
     const e1 = page.edges[x];
+    Logger.logger.log('edge', page.id, e1.from);
     for (const y in refpage.edges) {
       const e2 = refpage.edges[y];
       if (e1.from === e2.from && e1.to === e2.to) {
         const label = e1.description === e2.description ? 'same' : 'change';
         state.oriedges[page.id][x] = label;
         state.refedges[refpage.id][y] = label;
+
+        if (label !== 'same') {
+          state.oricomments[page.id][e1.from].push(
+            `Changed edge description to ${e1.to}: ${e2.description} => ${e1.description}`
+          );
+          state.refcomments[refpage.id][e1.from].push(
+            `Changed edge description to ${e1.to}: ${e2.description} => ${e1.description}`
+          );
+        }
         if (label !== 'same') {
           ret = false;
         }
@@ -426,6 +543,8 @@ function matchPage(props: FunctionProps): boolean {
   for (const x in page.edges) {
     if (state.oriedges[page.id][x] === undefined) {
       state.oriedges[page.id][x] = 'add';
+      const e1 = page.edges[x];
+      state.oricomments[page.id][e1.from].push(`Added edge to ${e1.to}`);
       ret = false;
     }
   }
@@ -433,6 +552,8 @@ function matchPage(props: FunctionProps): boolean {
   for (const x in refpage.edges) {
     if (state.refedges[refpage.id][x] === undefined) {
       state.refedges[refpage.id][x] = 'delete';
+      const e1 = refpage.edges[x];
+      state.refcomments[refpage.id][e1.from].push(`Removed edge to ${e1.to}`);
       ret = false;
     }
   }
@@ -446,15 +567,19 @@ function labelSubPages(
   page: EditorSubprocess,
   model: EditorModel,
   label: VersionStatus,
-  result: Record<string, Record<string, VersionStatus>>
+  comment: string,
+  result: Record<string, Record<string, VersionStatus>>,
+  comments: Record<string, Record<string, string[]>>
 ) {
   result[page.id] = {};
+  comments[page.id] = {};
   for (const c in page.childs) {
     result[page.id][c] = label;
+    comments[page.id][c] = [comment];
     const child = model.elements[c];
     if (isEditorProcess(child) && child.page !== '') {
       const nextPage = model.pages[child.page];
-      labelSubPages(nextPage, model, label, result);
+      labelSubPages(nextPage, model, label, comment, result, comments);
     }
   }
 }

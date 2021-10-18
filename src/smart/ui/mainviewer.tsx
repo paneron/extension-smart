@@ -357,7 +357,27 @@ const ModelViewer: React.FC<{
     view !== undefined && view.ComponentToolTip !== undefined
       ? function ({ id }) {
           const SD = view.ComponentToolTip!;
-          return <SD id={id} pageid={mw.page} data={view.data} />;
+          return (
+            <SD
+              id={id}
+              pageid={funMS !== undefined ? funMS.mw.page : mw.page}
+              data={view.data}
+            />
+          );
+        }
+      : undefined;
+
+  const ViewStartEndComponentDesc: React.FC<{ id: string }> | undefined =
+    view !== undefined && view.StartEndToolTip !== undefined
+      ? function ({ id }) {
+          const SD = view.StartEndToolTip!;
+          return (
+            <SD
+              id={id}
+              pageid={funMS !== undefined ? funMS.mw.page : mw.page}
+              data={view.data}
+            />
+          );
         }
       : undefined;
 
@@ -530,7 +550,8 @@ const ModelViewer: React.FC<{
                   : undefined,
                 view !== undefined && view.isEdgeAnimated !== undefined
                   ? isEdgeAnimated
-                  : undefined
+                  : undefined,
+                ViewStartEndComponentDesc
               )}
               onLoad={onLoad}
               nodesConnectable={false}

@@ -12,6 +12,7 @@ export interface ViewFunctionInterface {
   getStyleById: (id: string, pageid: string, data: unknown) => SerializedStyles;
   getSVGColorById: (id: string, pageid: string, data: unknown) => string;
   ComponentToolTip?: React.FC<{ id: string; pageid: string; data: unknown }>;
+  StartEndToolTip?: React.FC<{ id: string; pageid: string; data: unknown }>;
   legendList?: Record<string, LegendInterface>;
   NodeAddon?: React.FC<{ element: EditorNode; pageid: string; data: unknown }>;
   CustomAttribute?: React.FC<{

@@ -54,6 +54,7 @@ export interface NodeCallBack {
   setSelectedId?: (id: string) => void;
   hasMapping?: (id: string) => boolean;
   ComponentShortDescription?: React.FC<{ id: string }>;
+  StartEndShortDescription?: React.FC<{ id: string }>;
   MappingList?: React.FC<{ id: string }>;
   onDataWorkspaceActive?: (id: string) => void;
   NodeAddon?: React.FC<{ id: string }>;
@@ -129,6 +130,7 @@ export function getEditorNodeCallBack(props: {
   setSelectedId?: (id: string) => void;
   hasMapping?: (id: string) => boolean;
   ComponentShortDescription?: React.FC<{ id: string }>;
+  ViewStartEndComponentDesc?: React.FC<{ id: string }>;
   MappingList?: React.FC<{ id: string }>;
   getSVGColorById?: (id: string) => string;
   onDataWorkspaceActive?: (id: string) => void;
@@ -146,6 +148,7 @@ export function getEditorNodeCallBack(props: {
     setSelectedId,
     hasMapping,
     ComponentShortDescription,
+    ViewStartEndComponentDesc,
     MappingList,
     onDataWorkspaceActive,
     NodeAddon,
@@ -166,6 +169,7 @@ export function getEditorNodeCallBack(props: {
     setSelectedId,
     hasMapping,
     ComponentShortDescription,
+    StartEndShortDescription: ViewStartEndComponentDesc,
     MappingList,
     onDataWorkspaceActive,
     NodeAddon,

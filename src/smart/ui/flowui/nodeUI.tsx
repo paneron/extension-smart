@@ -222,10 +222,13 @@ export const StartComponent: FC<NodeProps> = function ({ data }) {
     callback.getSVGColorById !== undefined
       ? callback.getSVGColorById(data.id)
       : 'none';
+  const SD = callback.StartEndShortDescription;
   return (
     <>
       <Handle type="source" position={Position.Bottom} css={handlecss} />
-      <StartShape color={color} />
+      <PopoverWrapper id={data.id} SD={SD}>
+        <StartShape color={color} />
+      </PopoverWrapper>
     </>
   );
 };
@@ -236,10 +239,13 @@ export const EndComponent: FC<NodeProps> = function ({ data }) {
     callback.getSVGColorById !== undefined
       ? callback.getSVGColorById(data.id)
       : 'none';
+  const SD = callback.StartEndShortDescription;
   return (
     <>
       <Handle type="target" position={Position.Top} css={handlecss} />
-      <EndShape color={color} />
+      <PopoverWrapper id={data.id} SD={SD}>
+        <EndShape color={color} />
+      </PopoverWrapper>
       <div css={[shame__label, shame__label__short]}>end</div>
     </>
   );

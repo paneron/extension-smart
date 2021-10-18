@@ -231,7 +231,8 @@ export function getViewerReactFlowElementsFrom(
   ComponentDesc?: React.FC<{ id: string }>,
   NodeAddon?: React.FC<{ id: string }>,
   getEdgeColor?: (id: string) => string,
-  isAnimated?: (id: string) => boolean
+  isAnimated?: (id: string) => boolean,
+  ViewStartEndComponentDesc?: React.FC<{ id: string }>
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
@@ -242,6 +243,7 @@ export function getViewerReactFlowElementsFrom(
     ComponentShortDescription: ComponentDesc,
     NodeAddon,
     idVisible,
+    ViewStartEndComponentDesc,
   });
   return getElements(mw, dvisible, callback, e =>
     createEdgeContainer(e, undefined, undefined, getEdgeColor, isAnimated)
