@@ -344,7 +344,9 @@ function toApprovalModel(app: MMELApproval): string {
   if (app.actor !== '') {
     out += '  actor ' + app.actor + '\n';
   }
-  out += '  modality ' + app.modality + '\n';
+  if (app.modality !== '') {
+    out += '  modality ' + app.modality + '\n';
+  }
   if (app.approver !== '') {
     out += '  approve_by ' + app.approver + '\n';
   }

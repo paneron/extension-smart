@@ -54,6 +54,7 @@ const DataTypeSelector: React.FC<{
         className="bp3-popover-content-sizing"
         style={{
           maxHeight: '35vh',
+          maxWidth: '30vw',
           overflowY: 'auto',
         }}
       >

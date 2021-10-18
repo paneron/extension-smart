@@ -13,7 +13,7 @@ import {
 } from '../model/editormodel';
 import { ModelWrapper } from '../model/modelwrapper';
 import { DataType } from '../serialize/interface/baseinterface';
-import { findUniqueID } from './ModelFunctions';
+import { capitalizeString, findUniqueID, trydefaultID } from './ModelFunctions';
 import { NewComponentTypes } from './constants';
 import {
   createApproval,
@@ -61,7 +61,11 @@ export function addComponentToModel(
 }
 
 function newProcess(model: EditorModel, title?: string): EditorProcess {
-  const process = createProcess(findUniqueID('Process', model.elements));
+  const id =
+    title !== undefined
+      ? trydefaultID(capitalizeString(title), model.elements)
+      : findUniqueID('Process', model.elements);
+  const process = createProcess(id);
   if (title !== undefined) {
     process.name = title;
   }

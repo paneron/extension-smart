@@ -216,6 +216,15 @@ export function findUniqueID(prefix: string, ids: Record<string, MMELObject>) {
   return name;
 }
 
+function capital(data: string): string {
+  return capital.length > 0 ? data[0].toUpperCase() + data.slice(1) : '';
+}
+
+export function capitalizeString(data: string): string {
+  const parts = data.split(/\s+/);
+  return parts.map(x => capital(x)).join('');
+}
+
 export function trydefaultID(name: string, ids: Record<string, MMELObject>) {
   if (ids[name] !== undefined) {
     return findUniqueID(name, ids);

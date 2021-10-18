@@ -15,8 +15,9 @@ import { indexModel } from '../../model/mapmodel';
 
 const EditorReferenceMenu: React.FC<{
   setReference: (x: ReferenceContent | undefined) => void;
+  isBSIEnabled?: boolean;
   isCloseEnabled: boolean;
-}> = function ({ setReference, isCloseEnabled }) {
+}> = function ({ setReference, isBSIEnabled = false, isCloseEnabled }) {
   const { useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
 
@@ -61,6 +62,20 @@ const EditorReferenceMenu: React.FC<{
         }
         icon="document-open"
       />
+      {isBSIEnabled && (
+        <MenuItem
+          text="Open XML Document"
+          onClick={() =>
+            handleDocumentOpen({
+              setDocument: setReference,
+              useDecodedBlob,
+              requestFileFromFilesystem,
+              fileType: FILE_TYPE.BSI,
+            })
+          }
+          icon="document-open"
+        />
+      )}
       <MenuItem
         text="Close Reference"
         disabled={!isCloseEnabled}

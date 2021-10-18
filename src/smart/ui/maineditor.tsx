@@ -135,6 +135,7 @@ const ModelEditor: React.FC<{
   copy?: () => void;
   paste?: () => void;
   setSelectedId: (id: string | undefined) => void;
+  isBSIEnabled?: boolean;
 }> = ({
   isVisible,
   className,
@@ -146,6 +147,7 @@ const ModelEditor: React.FC<{
   copy,
   paste,
   setSelectedId,
+  isBSIEnabled,
 }) => {
   const { logger } = useContext(DatasetContext);
 
@@ -458,6 +460,7 @@ const ModelEditor: React.FC<{
         content={
           <EditorReferenceMenu
             setReference={setReference}
+            isBSIEnabled={isBSIEnabled}
             isCloseEnabled={reference !== undefined}
           />
         }

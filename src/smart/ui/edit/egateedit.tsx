@@ -168,7 +168,10 @@ const EditEGatePage: React.FC<{
     onNewID,
   };
 
-  useEffect(() => setEditing(egate), [egate]);
+  useEffect(() => {
+    setEditing(egate);
+    setEdges([...Object.values(page.edges).filter(e => e.from === id)]);
+  }, [egate]);
   useEffect(
     () => setEdges([...Object.values(page.edges).filter(e => e.from === id)]),
     [page.edges]

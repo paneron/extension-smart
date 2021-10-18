@@ -5,6 +5,7 @@ import { Button } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
 import { popover_panel_container } from '../../../css/layout';
+import { removeSpace } from '../../utils/ModelFunctions';
 import { NormalTextField } from '../common/fields';
 
 const AskIDForSaveMenu: React.FC<{
@@ -27,7 +28,11 @@ const AskIDForSaveMenu: React.FC<{
 
   return (
     <div css={popover_panel_container}>
-      <NormalTextField text={title} value={id} onChange={x => setID(x)} />
+      <NormalTextField
+        text={title}
+        value={id}
+        onChange={x => setID(removeSpace(x))}
+      />
       {value !== undefined && (
         <NormalTextField
           text={valueTitle}

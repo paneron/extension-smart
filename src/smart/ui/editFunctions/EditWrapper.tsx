@@ -59,6 +59,7 @@ const EditWrapper: React.FC<{
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [copied, setCopied] = useState<string | undefined>(undefined);
   const [toaster] = useState<IToaster>(Toaster.create());
+  const [isBSI, setIsBSI] = useState<boolean>(false);
 
   const hotkeys = [
     {
@@ -84,6 +85,12 @@ const EditWrapper: React.FC<{
       global: true,
       label: 'Paste',
       onKeyDown: paste,
+    },
+    {
+      combo: 'ctrl+b',
+      global: true,
+      label: 'BSI',
+      onKeyDown: () => setIsBSI(x => !x),
     },
   ];
 
@@ -195,6 +202,7 @@ const EditWrapper: React.FC<{
           copy={selected !== undefined ? copy : undefined}
           paste={copied !== undefined ? paste : undefined}
           setSelectedId={setSelectedId}
+          isBSIEnabled={isBSI}
         />
       </HotkeysTarget2>
     </HotkeysProvider>

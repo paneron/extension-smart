@@ -7,6 +7,7 @@ import { SMARTWorkspace } from '../model/workspace';
 import { textToMMEL } from '../serialize/MMEL';
 import { LoggerInterface, OpenFileInterface } from './constants';
 import { textToDoc } from './DocumentFunctions';
+import { bsiToDocument } from './xml/BSIXML';
 import { xmlToDocument } from './xml/XMLDocumentFunctions';
 
 export interface FileTypeDescriptionInterface {
@@ -24,6 +25,7 @@ export enum FILE_TYPE {
   Document = 'doc',
   XML = 'xml',
   CSV = 'csv',
+  BSI = 'bsi',
 }
 
 export const FileTypeDescription: Record<
@@ -68,6 +70,11 @@ export const FileTypeDescription: Record<
     filtername: 'CSV files',
     extension: 'csv',
     openPrompt: 'Choose a CSV file to open',
+  },
+  [FILE_TYPE.BSI]: {
+    filtername: 'BSI XML files',
+    extension: 'xml',
+    openPrompt: 'Choose a BSI XML file to open',
   },
 };
 
@@ -122,7 +129,7 @@ export function handleDocumentOpen(props: {
   setDocument: (doc: MMELDocument) => void;
   useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
-  fileType: FILE_TYPE.Document | FILE_TYPE.XML;
+  fileType: FILE_TYPE.Document | FILE_TYPE.XML | FILE_TYPE.BSI;
 }) {
   const { setDocument, fileType } = props;
   handleFileOpen({
@@ -130,7 +137,11 @@ export function handleDocumentOpen(props: {
     type: fileType,
     postProcessing: data =>
       setDocument(
-        fileType === FILE_TYPE.Document ? textToDoc(data) : xmlToDocument(data)
+        fileType === FILE_TYPE.Document
+          ? textToDoc(data)
+          : fileType === FILE_TYPE.XML
+          ? xmlToDocument(data)
+          : bsiToDocument(data)
       ),
   });
 }

@@ -321,6 +321,7 @@ const EditProcessPage: React.FC<{
   useEffect(() => {
     setEditing(process);
     setProvisions(getInitProvisions(model, process));
+    setNotes(getInitNotes(model, process));
     setMeasurements(getInitMeasurement(process));
   }, [process]);
 
