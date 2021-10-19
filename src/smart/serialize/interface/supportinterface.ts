@@ -86,3 +86,11 @@ export interface MMELTerm extends MMELObject {
   notes: string[];
   datatype: DataType.TERMS;
 }
+
+export interface MMELTable extends MMELObject {
+  id: string;
+  title: string;
+  columns: number;
+  data: string[][];
+  datatype: DataType.TABLE;
+}

@@ -5,6 +5,7 @@ import {
   MMELProvision,
   MMELReference,
   MMELRole,
+  MMELTable,
   MMELTerm,
   MMELVariable,
   MMELVarSetting,
@@ -241,6 +242,62 @@ export function parseView(id: string, data: string): MMELView {
     }
   }
   return v;
+}
+
+function to2DArray(data: string[], column: number): string[][] {
+  let count = 0;
+  let row: string[] = [];
+  const ret: string[][] = [];
+  for (const x of data) {
+    row[count++] = MMELremovePackage(x);
+    if (count >= column) {
+      ret.push(row);
+      row = [];
+      count = 0;
+    }
+  }
+  return ret;
+}
+
+export function parseTable(id: string, data: string): MMELTable {
+  const table: MMELTable = {
+    id,
+    title: '',
+    columns: 1,
+    data: [],
+    datatype: DataType.TABLE,
+  };
+
+  let cells: string[] = [];
+  if (data !== '') {
+    const t = MMELtokenizePackage(data);
+    let i = 0;
+    while (i < t.length) {
+      const command: string = t[i++];
+      if (i < t.length) {
+        if (command === 'title') {
+          table.title = MMELremovePackage(t[i++]);
+        } else if (command === 'columns') {
+          table.columns = parseInt(MMELremovePackage(t[i++]));
+        } else if (command === 'data') {
+          cells = MMELtokenizePackage(t[i++]);
+        } else {
+          throw new Error(
+            `Parsing error: table. ID ${id}: Unknown keyword ${command}`
+          );
+        }
+      } else {
+        throw new Error(
+          'Parsing error: variable. ID ' +
+            id +
+            ': Expecting value for ' +
+            command
+        );
+      }
+    }
+  }
+  table.data = to2DArray(cells, table.columns);
+  return table;
 }
 
 export function parseTerm(id: string, data: string): MMELTerm {

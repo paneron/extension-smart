@@ -25,6 +25,7 @@ import {
   MMELProvision,
   MMELReference,
   MMELRole,
+  MMELTable,
   MMELTerm,
   MMELVariable,
   MMELVarSetting,
@@ -327,6 +328,18 @@ export function toTermsModel(term: MMELTerm): string {
   for (const x of term.notes) {
     out += '  note "' + x + '"\n';
   }
+  out += '}\n';
+  return out;
+}
+export function toTableModel(table: MMELTable): string {
+  let out: string = 'table ' + table.id + ' {\n';
+  out += '  title "' + table.title + '"\n';
+  out += '  columns "' + table.columns + '"\n';
+  out += '  data {\n';
+  for (const row of table.data) {
+    out += '    ' + row.map(x => `"${x}"`).join(' ') + '\n';
+  }
+  out += '  }\n';
   out += '}\n';
   return out;
 }

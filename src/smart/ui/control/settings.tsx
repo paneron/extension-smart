@@ -22,6 +22,7 @@ import MetaEditPage from '../edit/metaedit';
 import ReferenceEditPage from '../edit/refedit';
 import RegistryEditPage from '../edit/registryedit';
 import RoleEditPage from '../edit/roleedit';
+import TableEditPage from '../edit/table/TableEdit';
 import TermsEditPage from '../edit/TermEdit';
 import ViewProfileEditPage from '../edit/ViewProfileEdit';
 
@@ -35,6 +36,7 @@ export enum SETTINGPAGE {
   MEASUREMENT = 'measure',
   PROFILE = 'profile',
   TERMPAGE = 'terms',
+  TABLEPAGE = 'table',
 }
 
 interface TabProps {
@@ -108,6 +110,12 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
       <ViewProfileEditPage model={model} setModel={setModel} />
     ),
   },
+  [SETTINGPAGE.TABLEPAGE]: {
+    title: 'Tables',
+    Panel: ({ model, setModel }) => (
+      <TableEditPage model={model} setModel={setModel} />
+    ),
+  },
 };
 
 const BasicSettingPane: React.FC<{
@@ -124,7 +132,6 @@ const BasicSettingPane: React.FC<{
     <MGDDisplayPane>
       <Tabs
         css={mgd_tabs}
-        id="TabsExample"
         onChange={x => setPage(x as SETTINGPAGE)}
         selectedTabId={page}
         animate={false}

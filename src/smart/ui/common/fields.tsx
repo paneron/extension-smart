@@ -1,7 +1,12 @@
 /** @jsx jsx */
 
 import { jsx } from '@emotion/react';
-import { FormGroup, HTMLSelect, IconName } from '@blueprintjs/core';
+import {
+  FormGroup,
+  HTMLSelect,
+  IconName,
+  NumericInput,
+} from '@blueprintjs/core';
 import React, { RefObject, useState } from 'react';
 import { EditorModel } from '../../model/editormodel';
 import MGDButton from '../../MGDComponents/MGDButton';
@@ -30,6 +35,13 @@ export interface IField {
   onChange?: (x: string) => void;
   extend?: JSX.Element;
   rows?: number;
+}
+
+export interface INumField {
+  text?: string;
+  value: number;
+  onChange?: (x: number) => void;
+  extend?: JSX.Element;
 }
 
 export interface IComboField {
@@ -113,12 +125,28 @@ export interface IUpdateInterface<T> {
   cancelClicked: () => void;
 }
 
-export const NormalTextField: React.FC<IField> = (f: IField) => {
+export const NumberTextField: React.FC<INumField> = f => {
+  return (
+    <FormGroup label={f.text} helperText={f.extend}>
+      <NumericInput
+        readOnly={f.onChange === undefined}
+        onValueChange={x => {
+          if (f.onChange) {
+            f.onChange(x);
+          }
+        }}
+        value={f.value}
+        fill
+      />
+    </FormGroup>
+  );
+};
+
+export const NormalTextField: React.FC<IField> = f => {
   return (
     <FormGroup label={f.text} helperText={f.extend}>
       <MGDTextarea
         readOnly={f.onChange === undefined}
-        id="field#text"
         onChange={e => {
           if (f.onChange) {
             f.onChange(e.target.value);

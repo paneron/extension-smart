@@ -14,6 +14,7 @@ import {
   MMELProvision,
   MMELReference,
   MMELRole,
+  MMELTable,
   MMELTerm,
   MMELVariable,
   MMELView,
@@ -51,6 +52,7 @@ export function createNewEditorModel(): EditorModel {
     views: {},
     notes: {},
     terms: {},
+    tables: {},
     root: page.id,
   };
   return m;
@@ -257,6 +259,16 @@ export function createVariable(id: string): MMELVariable {
     definition: '',
     description: '',
     datatype: DataType.VARIABLE,
+  };
+}
+
+export function createTable(id: string): MMELTable {
+  return {
+    id,
+    title: id,
+    columns: 3,
+    data: [],
+    datatype: DataType.TABLE,
   };
 }
 

@@ -30,6 +30,7 @@ import {
   MMELProvision,
   MMELReference,
   MMELRole,
+  MMELTable,
   MMELTerm,
   MMELVariable,
   MMELView,
@@ -100,6 +101,7 @@ export interface EditorModel {
   pages: Record<string, EditorSubprocess>;
   views: Record<string, MMELView>;
   terms: Record<string, MMELTerm>;
+  tables: Record<string, MMELTable>;
   root: string;
 }
 
