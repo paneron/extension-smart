@@ -20,6 +20,7 @@ import {
 } from '../interface/flowcontrolinterface';
 import { MMELApproval, MMELProcess } from '../interface/processinterface';
 import {
+  MMELFigure,
   MMELMetadata,
   MMELNote,
   MMELProvision,
@@ -331,6 +332,22 @@ export function toTermsModel(term: MMELTerm): string {
   out += '}\n';
   return out;
 }
+
+export function toFigModel(fig: MMELFigure): string {
+  return (
+    'figure ' +
+    fig.id +
+    ' {\n' +
+    '  title "' +
+    fig.title +
+    '"\n' +
+    '  data "' +
+    fig.data +
+    '"\n' +
+    '}\n'
+  );
+}
+
 export function toTableModel(table: MMELTable): string {
   let out: string = 'table ' + table.id + ' {\n';
   out += '  title "' + table.title + '"\n';
@@ -421,6 +438,13 @@ export function toProcessModel(process: MMELProcess): string {
   if (process.tables.size > 0) {
     out += '  table {\n';
     for (const r of process.tables) {
+      out += '    ' + r + '\n';
+    }
+    out += '  }\n';
+  }
+  if (process.figures.size > 0) {
+    out += '  figure {\n';
+    for (const r of process.figures) {
       out += '    ' + r + '\n';
     }
     out += '  }\n';

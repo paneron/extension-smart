@@ -24,6 +24,7 @@ export enum DataType {
   NOTE = 'note',
   TERMS = 'terms',
   TABLE = 'table',
+  FIGURE = 'figure',
 }
 
 // the base interface for all objects in MMEL

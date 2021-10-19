@@ -1,5 +1,6 @@
 import { DataType } from '../interface/baseinterface';
 import {
+  MMELFigure,
   MMELMetadata,
   MMELNote,
   MMELProvision,
@@ -257,6 +258,42 @@ function to2DArray(data: string[], column: number): string[][] {
     }
   }
   return ret;
+}
+
+export function parseFigure(id: string, data: string): MMELFigure {
+  const fig: MMELFigure = {
+    id,
+    title: '',
+    data: '',
+    datatype: DataType.FIGURE,
+  };
+
+  if (data !== '') {
+    const t = MMELtokenizePackage(data);
+    let i = 0;
+    while (i < t.length) {
+      const command: string = t[i++];
+      if (i < t.length) {
+        if (command === 'title') {
+          fig.title = MMELremovePackage(t[i++]);
+        } else if (command === 'data') {
+          fig.data = MMELremovePackage(t[i++]);
+        } else {
+          throw new Error(
+            `Parsing error: figure. ID ${id}: Unknown keyword ${command}`
+          );
+        }
+      } else {
+        throw new Error(
+          'Parsing error: variable. ID ' +
+            id +
+            ': Expecting value for ' +
+            command
+        );
+      }
+    }
+  }
+  return fig;
 }
 
 export function parseTable(id: string, data: string): MMELTable {

@@ -169,6 +169,10 @@ const EditProcessPage: React.FC<{
     () => Object.values(model.tables).map(t => t.id),
     [model.tables]
   );
+  const figures = useMemo(
+    () => Object.values(model.figures).map(t => t.id),
+    [model.figures]
+  );
   const modelRef = useRef<EditorModel>();
   modelRef.current = model;
 
@@ -309,6 +313,7 @@ const EditProcessPage: React.FC<{
     roles,
     regs,
     tables,
+    figures,
   };
 
   const quickEditProps = {
@@ -437,6 +442,7 @@ const FullVersionEdit: React.FC<
     roles: string[];
     regs: string[];
     tables: string[];
+    figures: string[];
   }
 > = function (props) {
   const {
@@ -451,6 +457,7 @@ const FullVersionEdit: React.FC<
     roles,
     regs,
     tables,
+    figures,
     notes,
     setNotes,
   } = props;
@@ -523,6 +530,22 @@ const FullVersionEdit: React.FC<
           remove={x => {
             editing.tables = new Set(
               [...editing.tables].filter(s => !x.has(s))
+            );
+            setEditing({ ...editing });
+          }}
+        />
+        <MultiReferenceSelector
+          text="Reference figures"
+          options={figures}
+          values={editing.figures}
+          filterName="Figure filter"
+          add={x => {
+            editing.figures = new Set([...editing.figures, ...x]);
+            setEditing({ ...editing });
+          }}
+          remove={x => {
+            editing.figures = new Set(
+              [...editing.figures].filter(s => !x.has(s))
             );
             setEditing({ ...editing });
           }}

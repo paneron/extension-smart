@@ -12,7 +12,7 @@ import { xmlToDocument } from './xml/XMLDocumentFunctions';
 
 export interface FileTypeDescriptionInterface {
   filtername: string;
-  extension: string;
+  extension: string[];
   openPrompt?: string;
 }
 
@@ -26,6 +26,7 @@ export enum FILE_TYPE {
   XML = 'xml',
   CSV = 'csv',
   BSI = 'bsi',
+  IMG = 'img',
 }
 
 export const FileTypeDescription: Record<
@@ -34,47 +35,52 @@ export const FileTypeDescription: Record<
 > = {
   [FILE_TYPE.Model]: {
     filtername: 'MMEL files',
-    extension: 'mmel',
+    extension: ['mmel'],
     openPrompt: 'Choose a model file to open',
   },
   [FILE_TYPE.Report]: {
     filtername: 'All files',
-    extension: '*',
+    extension: ['*'],
   },
   [FILE_TYPE.Map]: {
     filtername: 'MAP files',
-    extension: 'map',
+    extension: ['map'],
     openPrompt: 'Choose a mapping file to open',
   },
   [FILE_TYPE.Workspace]: {
     filtername: 'Workspace files',
-    extension: 'sws',
+    extension: ['sws'],
     openPrompt: 'Choose a SMART workspace file to open',
   },
   [FILE_TYPE.JSON]: {
     filtername: 'JSON files',
-    extension: 'json',
+    extension: ['json'],
     openPrompt: 'Choose a JSON file to open',
   },
   [FILE_TYPE.Document]: {
     filtername: 'SMART document files',
-    extension: 'sdc',
+    extension: ['sdc'],
     openPrompt: 'Choose a SMART document file to open',
   },
   [FILE_TYPE.XML]: {
     filtername: 'XML files',
-    extension: 'xml',
+    extension: ['xml'],
     openPrompt: 'Choose an XML file to open',
   },
   [FILE_TYPE.CSV]: {
     filtername: 'CSV files',
-    extension: 'csv',
+    extension: ['csv'],
     openPrompt: 'Choose a CSV file to open',
   },
   [FILE_TYPE.BSI]: {
     filtername: 'BSI XML files',
-    extension: 'xml',
+    extension: ['xml'],
     openPrompt: 'Choose a BSI XML file to open',
+  },
+  [FILE_TYPE.IMG]: {
+    filtername: 'Image files',
+    extension: ['jpg', 'png'],
+    openPrompt: 'Choose an image file to open',
   },
 };
 
@@ -178,6 +184,7 @@ export async function handleFileOpen(props: {
   logger?: LoggerInterface;
   type: FILE_TYPE;
   postProcessing: (data: string) => void;
+  base64?: boolean;
 }) {
   const {
     useDecodedBlob,
@@ -185,6 +192,7 @@ export async function handleFileOpen(props: {
     logger,
     type,
     postProcessing,
+    base64,
   } = props;
   if (requestFileFromFilesystem && useDecodedBlob) {
     const desc = FileTypeDescription[type];
@@ -193,21 +201,29 @@ export async function handleFileOpen(props: {
       {
         prompt: desc.openPrompt ?? '',
         allowMultiple: false,
-        filters: [{ name: desc.filtername, extensions: [desc.extension] }],
+        filters: [{ name: desc.filtername, extensions: desc.extension }],
       },
       selectedFiles => {
         logger?.log('Requesting file: Got selection');
         const fileData = Object.values(selectedFiles ?? {})[0];
         logger?.log('File data');
         if (fileData) {
-          const fileDataAsString = useDecodedBlob({
-            blob: fileData,
-          }).asString;
-          logger?.log(
-            'Requesting file: Decoded blob',
-            fileDataAsString.substring(0, Math.min(20, fileDataAsString.length))
-          );
-          postProcessing(fileDataAsString);
+          if (base64 !== undefined && base64) {
+            const result = Buffer.from(fileData).toString('base64');
+            postProcessing(result);
+          } else {
+            const fileDataAsString = useDecodedBlob({
+              blob: fileData,
+            }).asString;
+            logger?.log(
+              'Requesting file: Decoded blob',
+              fileDataAsString.substring(
+                0,
+                Math.min(20, fileDataAsString.length)
+              )
+            );
+            postProcessing(fileDataAsString);
+          }
         } else {
           logger?.log('Requesting file: No file data received');
           console.error('Import file: no file data received');
@@ -238,7 +254,7 @@ export async function saveToFileSystem(props: {
     await writeFileToFilesystem({
       dialogOpts: {
         prompt: 'Choose location to save',
-        filters: [{ name: desc.filtername, extensions: [desc.extension] }],
+        filters: [{ name: desc.filtername, extensions: desc.extension }],
       },
       bufferData: blob,
     });

@@ -9,7 +9,13 @@ const TableViewer: React.FC<{
   table: MMELTable;
 }> = function ({ table }) {
   return (
-    <HTMLTable bordered interactive striped>
+    <HTMLTable
+      style={{
+        border: '2px solid black',
+        borderCollapse: 'collapse',
+        margin: '5px 5px 5px 5px',
+      }}
+    >
       {table.data.map((row, index) => (
         <RowViewer key={index} row={row} />
       ))}
@@ -23,7 +29,13 @@ const RowViewer: React.FC<{
   return (
     <tr>
       {row.map((x, index) => (
-        <td key={index}>
+        <td
+          key={index}
+          style={{
+            border: '1px solid black',
+            borderCollapse: 'collapse',
+          }}
+        >
           <Text>{x}</Text>
         </td>
       ))}

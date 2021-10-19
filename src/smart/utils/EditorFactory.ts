@@ -9,6 +9,7 @@ import {
   MMELSubprocessComponent,
 } from '../serialize/interface/flowcontrolinterface';
 import {
+  MMELFigure,
   MMELMetadata,
   MMELNote,
   MMELProvision,
@@ -53,6 +54,7 @@ export function createNewEditorModel(): EditorModel {
     notes: {},
     terms: {},
     tables: {},
+    figures: {},
     root: page.id,
   };
   return m;
@@ -229,6 +231,7 @@ export function createProcess(id: string): EditorProcess {
     notes: new Set<string>(),
     provision: new Set<string>(),
     tables: new Set<string>(),
+    figures: new Set<string>(),
     page: '',
     measure: [],
     added: false,
@@ -260,6 +263,15 @@ export function createVariable(id: string): MMELVariable {
     definition: '',
     description: '',
     datatype: DataType.VARIABLE,
+  };
+}
+
+export function createFig(id: string): MMELFigure {
+  return {
+    id,
+    title: id,
+    data: '',
+    datatype: DataType.FIGURE,
   };
 }
 

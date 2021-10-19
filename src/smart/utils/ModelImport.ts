@@ -77,6 +77,9 @@ export function addProcessIfNotFound(
   for (const x of process.tables) {
     addTableIfNotFound(mw.model, ref.model, x);
   }
+  for (const x of process.figures) {
+    addFigIfNotFound(mw.model, ref.model, x);
+  }
 
   const newProcess: EditorProcess = {
     id: newid,
@@ -91,6 +94,7 @@ export function addProcessIfNotFound(
     datatype: DataType.PROCESS,
     measure: [...process.measure],
     tables: new Set(process.tables),
+    figures: new Set(process.figures),
     added: false,
     pages: new Set<string>([pageid]),
     objectVersion: 'Editor',
@@ -470,6 +474,13 @@ function addTableIfNotFound(model: EditorModel, ref: EditorModel, id: string) {
   const newData = table.data.map(row => [...row]);
   if (table !== undefined && model.tables[id] === undefined) {
     model.tables[id] = { ...table, data: newData };
+  }
+}
+
+function addFigIfNotFound(model: EditorModel, ref: EditorModel, id: string) {
+  const fig = ref.figures[id];
+  if (fig !== undefined && model.figures[id] === undefined) {
+    model.figures[id] = { ...fig };
   }
 }
 

@@ -17,6 +17,7 @@ import { EditorModel } from '../../model/editormodel';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
 import DataClassEditPage from '../edit/dataclassedit';
 import EnumEditPage from '../edit/enumedit';
+import FigureEditPage from '../edit/figure/FigureEdit';
 import MeasurementEditPage from '../edit/measurementedit';
 import MetaEditPage from '../edit/metaedit';
 import ReferenceEditPage from '../edit/refedit';
@@ -37,6 +38,7 @@ export enum SETTINGPAGE {
   PROFILE = 'profile',
   TERMPAGE = 'terms',
   TABLEPAGE = 'table',
+  FIGUREPAGE = 'figure',
 }
 
 interface TabProps {
@@ -114,6 +116,12 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
     title: 'Tables',
     Panel: ({ model, setModel }) => (
       <TableEditPage model={model} setModel={setModel} />
+    ),
+  },
+  [SETTINGPAGE.FIGUREPAGE]: {
+    title: 'Figures',
+    Panel: ({ model, setModel }) => (
+      <FigureEditPage model={model} setModel={setModel} />
     ),
   },
 };

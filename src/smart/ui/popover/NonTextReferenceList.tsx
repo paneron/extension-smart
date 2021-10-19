@@ -4,15 +4,17 @@
 import { jsx } from '@emotion/react';
 import { Menu, MenuItem } from '@blueprintjs/core';
 import React from 'react';
-import { MMELTable } from '../../serialize/interface/supportinterface';
+import {
+  MMELFigure,
+  MMELTable,
+} from '../../serialize/interface/supportinterface';
+import { isMMELTable } from '../../model/editormodel';
 
 const NonTextReferenceList: React.FC<{
-  refs: MMELTable[];
-  setShow: (x: MMELTable | undefined) => void;
+  refs: (MMELTable | MMELFigure)[];
+  setShow: (x: MMELTable | MMELFigure | undefined) => void;
 }> = function ({ refs, setShow }) {
-  // const [show, setShow] = useState<MMELTable|undefined>(undefined);
-
-  function showRef(ref: MMELTable) {
+  function showRef(ref: MMELTable | MMELFigure) {
     setShow(ref);
   }
 
@@ -24,7 +26,11 @@ const NonTextReferenceList: React.FC<{
       }}
     >
       {refs.map(ref => (
-        <MenuItem text={ref.title} key={ref.id} onClick={() => showRef(ref)} />
+        <MenuItem
+          text={(isMMELTable(ref) ? 'Table: ' : 'Figure: ') + ref.title}
+          key={ref.id}
+          onClick={() => showRef(ref)}
+        />
       ))}
     </Menu>
   );

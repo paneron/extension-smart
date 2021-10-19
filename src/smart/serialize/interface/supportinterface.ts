@@ -94,3 +94,10 @@ export interface MMELTable extends MMELObject {
   data: string[][];
   datatype: DataType.TABLE;
 }
+
+export interface MMELFigure extends MMELObject {
+  id: string;
+  title: string;
+  data: string;
+  datatype: DataType.FIGURE;
+}

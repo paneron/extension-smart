@@ -1,4 +1,5 @@
 import {
+  parseFigure,
   parseMetaData,
   parseNote,
   parseProvision,
@@ -26,6 +27,7 @@ import {
 import { parseEGate, parseSubprocess } from './handler/flowcontrolhandler';
 import {
   toEnumModel,
+  toFigModel,
   toMetaDataModel,
   toNodeModel,
   toNoteModel,
@@ -87,6 +89,9 @@ export function MMELToText(model: MMELModel): string {
   for (const t in model.tables) {
     out += toTableModel(model.tables[t]) + '\n';
   }
+  for (const t in model.figures) {
+    out += toFigModel(model.figures[t]) + '\n';
+  }
   return out;
 }
 
@@ -104,6 +109,7 @@ function parseModel(input: string): MMELModel {
     views: {},
     terms: {},
     tables: {},
+    figures: {},
     root: '',
   };
 
@@ -172,6 +178,9 @@ function parseModel(input: string): MMELModel {
     } else if (command === 'table') {
       const t = parseTable(token[i++], token[i++]);
       model.tables[t.id] = t;
+    } else if (command === 'figure') {
+      const t = parseFigure(token[i++], token[i++]);
+      model.figures[t.id] = t;
     } else {
       console.error('Unknown command ' + command);
       break;

@@ -8,18 +8,18 @@ import {
   EditorProcess,
   isEditorProcess,
 } from '../../../model/editormodel';
-import { MMELTable } from '../../../serialize/interface/supportinterface';
+import { MMELFigure } from '../../../serialize/interface/supportinterface';
 import { checkId, defaultItemSorter } from '../../../utils/ModelFunctions';
-import { createTable } from '../../../utils/EditorFactory';
+import { createFig } from '../../../utils/EditorFactory';
 import { IListItem, IManageHandler } from '../../common/fields';
 import ListManagePage from '../../common/listmanagement/listmanagement';
-import TableItemEditPage from './TableItemEdit';
+import FigItemEditPage from './FigureItemEdit';
 
-const TableEditPage: React.FC<{
+const FigureEditPage: React.FC<{
   model: EditorModel;
   setModel: (model: EditorModel) => void;
 }> = function ({ model, setModel }) {
-  function matchFilter(x: MMELTable, filter: string) {
+  function matchFilter(x: MMELFigure, filter: string) {
     return (
       filter === '' ||
       x.id.toLowerCase().includes(filter) ||
@@ -27,8 +27,8 @@ const TableEditPage: React.FC<{
     );
   }
 
-  function getTableListItems(filter: string): IListItem[] {
-    return Object.values(model.tables)
+  function getFigListItems(filter: string): IListItem[] {
+    return Object.values(model.figures)
       .filter(x => matchFilter(x, filter))
       .map(x => ({ id: x.id, text: x.title }))
       .sort(defaultItemSorter);
@@ -38,72 +38,72 @@ const TableEditPage: React.FC<{
     for (const x in model.elements) {
       const elm = model.elements[x];
       if (isEditorProcess(elm)) {
-        const newSet = new Set([...elm.tables]);
+        const newSet = new Set([...elm.figures]);
         if (newSet.has(matchid)) {
           newSet.delete(matchid);
           newSet.add(replaceid);
-          const newElm: EditorProcess = { ...elm, tables: newSet };
+          const newElm: EditorProcess = { ...elm, figures: newSet };
           model.elements[x] = newElm;
         }
       }
     }
   }
 
-  function removeTableListItem(ids: string[]) {
+  function removeFigListItem(ids: string[]) {
     for (const id of ids) {
-      delete model.tables[id];
+      delete model.figures[id];
     }
     setModel(model);
   }
 
-  function addTable(x: MMELTable): boolean {
-    if (checkId(x.id, model.tables)) {
-      model.tables[x.id] = { ...x };
+  function addFig(x: MMELFigure): boolean {
+    if (checkId(x.id, model.figures)) {
+      model.figures[x.id] = { ...x };
       setModel(model);
       return true;
     }
     return false;
   }
 
-  function updateTable(oldid: string, x: MMELTable): boolean {
+  function updateFig(oldid: string, x: MMELFigure): boolean {
     if (oldid !== x.id) {
-      if (checkId(x.id, model.tables)) {
-        delete model.tables[oldid];
-        model.tables[x.id] = { ...x };
+      if (checkId(x.id, model.figures)) {
+        delete model.figures[oldid];
+        model.figures[x.id] = { ...x };
         replaceReferences(oldid, x.id);
         setModel(model);
         return true;
       }
       return false;
     } else {
-      model.tables[oldid] = { ...x };
+      model.figures[oldid] = { ...x };
       setModel(model);
       return true;
     }
   }
 
-  function getTableById(id: string): MMELTable {
-    const table = model.tables[id];
-    if (table === undefined) {
-      return createTable('');
+  function getFigById(id: string): MMELFigure {
+    const fig = model.figures[id];
+    if (fig === undefined) {
+      return createFig('');
     }
-    return table;
+    return fig;
   }
 
-  const tablehandler: IManageHandler<MMELTable> = {
-    filterName: 'Table filter',
-    itemName: 'View tables',
-    Content: TableItemEditPage,
-    initObj: createTable(''),
+  const fighandler: IManageHandler<MMELFigure> = {
+    filterName: 'Figure filter',
+    itemName: 'View figures',
+    Content: FigItemEditPage,
+    initObj: createFig(''),
     model: model,
-    getItems: getTableListItems,
-    removeItems: removeTableListItem,
-    addItem: obj => addTable(obj),
-    updateItem: (oldid, obj) => updateTable(oldid, obj),
-    getObjById: getTableById,
+    getItems: getFigListItems,
+    removeItems: removeFigListItem,
+    addItem: obj => addFig(obj),
+    updateItem: (oldid, obj) => updateFig(oldid, obj),
+    getObjById: getFigById,
   };
 
-  return <ListManagePage {...tablehandler} />;
+  return <ListManagePage {...fighandler} />;
 };
 
-export default TableEditPage;
+export default FigureEditPage;

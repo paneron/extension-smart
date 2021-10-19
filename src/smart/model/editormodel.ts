@@ -25,6 +25,7 @@ import {
   MMELProcess,
 } from '../serialize/interface/processinterface';
 import {
+  MMELFigure,
   MMELMetadata,
   MMELNote,
   MMELProvision,
@@ -102,6 +103,7 @@ export interface EditorModel {
   views: Record<string, MMELView>;
   terms: Record<string, MMELTerm>;
   tables: Record<string, MMELTable>;
+  figures: Record<string, MMELFigure>;
   root: string;
 }
 
@@ -162,6 +164,14 @@ export function isEditorEgate(x: EditorNode): x is EditorEGate {
 
 export function isMMELDataAttribute(x: MMELObject): x is MMELDataAttribute {
   return x.datatype === DataType.DATAATTRIBUTE;
+}
+
+export function isMMELTable(x: MMELObject): x is MMELTable {
+  return x.datatype === DataType.TABLE;
+}
+
+export function isMMELFigure(x: MMELObject): x is MMELFigure {
+  return x.datatype === DataType.FIGURE;
 }
 
 export function getEditorNodeInfoById(model: EditorModel, id: string): string {

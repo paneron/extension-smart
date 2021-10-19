@@ -2,6 +2,7 @@ import { MMELNode } from './baseinterface';
 import { MMELEnum } from './datainterface';
 import { MMELSubprocess } from './flowcontrolinterface';
 import {
+  MMELFigure,
   MMELMetadata,
   MMELNote,
   MMELProvision,
@@ -26,6 +27,7 @@ export interface MMELModel {
   notes: Record<string, MMELNote>;
   terms: Record<string, MMELTerm>;
   tables: Record<string, MMELTable>;
+  figures: Record<string, MMELFigure>;
 
   root: string;
 }

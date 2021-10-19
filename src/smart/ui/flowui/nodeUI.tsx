@@ -11,6 +11,7 @@ import {
   EditorProcess,
   EditorSignalEvent,
   isEditorRegistry,
+  isMMELTable,
 } from '../../model/editormodel';
 import { NodeCallBack } from '../../model/FlowContainer';
 import {
@@ -37,11 +38,15 @@ import { flownode_top_left_button_layout } from '../../../css/layout';
 import PopoverWrapper from '../popover/PopoverWrapper';
 import ViewMappingbutton from '../mapper/viewmapbutton';
 import ViewWorkspaceButton from '../workspace/ViewDataWorkspaceButton';
-import { Button, Dialog, Icon } from '@blueprintjs/core';
+import { Button, Classes, Dialog, Icon } from '@blueprintjs/core';
 import NodeIDField from './NodeIDField';
-import { MMELTable } from '../../serialize/interface/supportinterface';
+import {
+  MMELFigure,
+  MMELTable,
+} from '../../serialize/interface/supportinterface';
 import NonTextReferenceList from '../popover/NonTextReferenceList';
 import TableViewer from '../common/description/TableViewer';
+import FigureViewer from '../common/description/FigureViewer';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -72,7 +77,9 @@ export const Datacube: FC<NodeProps> = function ({ data }) {
 };
 
 export const ProcessComponent: FC<NodeProps> = function ({ data }) {
-  const [show, setShow] = useState<MMELTable | undefined>(undefined);
+  const [show, setShow] = useState<MMELTable | MMELFigure | undefined>(
+    undefined
+  );
 
   const process = data as EditorProcess;
   const callback = data as NodeCallBack;
@@ -80,11 +87,17 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
   const PB = ProcessBox[callback.modelType];
   const Addon = callback.NodeAddon;
   const SD = callback.ComponentShortDescription;
-  const tables: MMELTable[] = [];
+  const refs: (MMELTable | MMELFigure)[] = [];
   for (const t of process.tables) {
     const tab = callback.getTableById(t);
     if (tab !== undefined) {
-      tables.push(tab);
+      refs.push(tab);
+    }
+  }
+  for (const f of process.figures) {
+    const fig = callback.getFigById(f);
+    if (fig !== undefined) {
+      refs.push(fig);
     }
   }
 
@@ -106,7 +119,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
         />
       </PopoverWrapper>
       <Handle type="target" position={Position.Top} css={handlecss} />
-      {tables.length > 0 && (
+      {refs.length > 0 && (
         <div
           style={{
             position: 'fixed',
@@ -115,7 +128,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           }}
         >
           <Popover2
-            content={<NonTextReferenceList refs={tables} setShow={setShow} />}
+            content={<NonTextReferenceList refs={refs} setShow={setShow} />}
           >
             <Tooltip2 content="View reference tables" position="top">
               <Button small icon="th" />
@@ -152,13 +165,33 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
       )}
       {Addon !== undefined && <Addon id={process.id} />}
       <Dialog
+        style={{
+          maxWidth: '90vw',
+          maxHeight: '90vh',
+        }}
         isOpen={show !== undefined}
         onClose={() => setShow(undefined)}
         canEscapeKeyClose={false}
         canOutsideClickClose={false}
         title={show !== undefined ? show.title : ''}
       >
-        {show !== undefined ? <TableViewer table={show} /> : <></>}
+        <div
+          className={Classes.DIALOG_BODY}
+          style={{
+            textAlign: 'center',
+            overflow: 'auto',
+          }}
+        >
+          {show !== undefined ? (
+            isMMELTable(show) ? (
+              <TableViewer table={show} />
+            ) : (
+              <FigureViewer fig={show} />
+            )
+          ) : (
+            <></>
+          )}
+        </div>
       </Dialog>
     </>
   );
