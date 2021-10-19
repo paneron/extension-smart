@@ -8,7 +8,7 @@ import {
   ModelType,
 } from './editormodel';
 import { MMELtoFlowEntries } from './States';
-import { MMELRole } from '../serialize/interface/supportinterface';
+import { MMELRole, MMELTable } from '../serialize/interface/supportinterface';
 import { SerializedStyles } from '@emotion/react';
 import React from 'react';
 
@@ -48,6 +48,7 @@ export interface NodeCallBack {
   idVisible: boolean;
   onProcessClick: (pageid: string, processid: string) => void;
   getRoleById: (id: string) => MMELRole | null;
+  getTableById: (id: string) => MMELTable | undefined;
   setMapping: (fromid: string, toid: string) => void;
   getStyleClassById?: (id: string) => SerializedStyles;
   getSVGColorById?: (id: string) => string;
@@ -159,9 +160,14 @@ export function getEditorNodeCallBack(props: {
     return getEditorRoleById(model, id);
   }
 
+  function getTableById(id: string): MMELTable | undefined {
+    return model.tables[id];
+  }
+
   return {
     modelType: type,
     getRoleById,
+    getTableById,
     onProcessClick,
     setMapping,
     getStyleClassById,

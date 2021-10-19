@@ -3,7 +3,7 @@
 
 import { jsx } from '@emotion/react';
 import { Handle, NodeProps, Position } from 'react-flow-renderer';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import {
   EditorApproval,
   EditorEGate,
@@ -22,8 +22,7 @@ import {
   StartShape,
   TimerShape,
 } from './shapes';
-import { Tooltip2 } from '@blueprintjs/popover2';
-import MGDButton from '../../MGDComponents/MGDButton';
+import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { handlecss } from '../../../css/visual';
 import {
@@ -38,8 +37,11 @@ import { flownode_top_left_button_layout } from '../../../css/layout';
 import PopoverWrapper from '../popover/PopoverWrapper';
 import ViewMappingbutton from '../mapper/viewmapbutton';
 import ViewWorkspaceButton from '../workspace/ViewDataWorkspaceButton';
-import { Icon } from '@blueprintjs/core';
+import { Button, Dialog, Icon } from '@blueprintjs/core';
 import NodeIDField from './NodeIDField';
+import { MMELTable } from '../../serialize/interface/supportinterface';
+import NonTextReferenceList from '../popover/NonTextReferenceList';
+import TableViewer from '../common/description/TableViewer';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -70,12 +72,21 @@ export const Datacube: FC<NodeProps> = function ({ data }) {
 };
 
 export const ProcessComponent: FC<NodeProps> = function ({ data }) {
+  const [show, setShow] = useState<MMELTable | undefined>(undefined);
+
   const process = data as EditorProcess;
   const callback = data as NodeCallBack;
   const actor = callback.getRoleById(process.actor);
   const PB = ProcessBox[callback.modelType];
   const Addon = callback.NodeAddon;
   const SD = callback.ComponentShortDescription;
+  const tables: MMELTable[] = [];
+  for (const t of process.tables) {
+    const tab = callback.getTableById(t);
+    if (tab !== undefined) {
+      tables.push(tab);
+    }
+  }
 
   return (
     <>
@@ -95,22 +106,30 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
         />
       </PopoverWrapper>
       <Handle type="target" position={Position.Top} css={handlecss} />
-      {process.page !== '' && (
-        <div css={flownode_top_left_button_layout}>
-          <Tooltip2 content="View subprocess" position="top">
-            <MGDButton
-              onClick={() => callback.onProcessClick(process.page, process.id)}
-              icon="plus"
-            />
-          </Tooltip2>
+      {tables.length > 0 && (
+        <div
+          style={{
+            position: 'fixed',
+            right: -10,
+            bottom: -10,
+          }}
+        >
+          <Popover2
+            content={<NonTextReferenceList refs={tables} setShow={setShow} />}
+          >
+            <Tooltip2 content="View reference tables" position="top">
+              <Button small icon="th" />
+            </Tooltip2>
+          </Popover2>
         </div>
       )}
       {process.page !== '' && (
         <div css={flownode_top_left_button_layout}>
           <Tooltip2 content="View subprocess" position="top">
-            <MGDButton
-              onClick={() => callback.onProcessClick(process.page, process.id)}
+            <Button
+              small
               icon="plus"
+              onClick={() => callback.onProcessClick(process.page, process.id)}
             />
           </Tooltip2>
         </div>
@@ -132,6 +151,15 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
         </div>
       )}
       {Addon !== undefined && <Addon id={process.id} />}
+      <Dialog
+        isOpen={show !== undefined}
+        onClose={() => setShow(undefined)}
+        canEscapeKeyClose={false}
+        canOutsideClickClose={false}
+        title={show !== undefined ? show.title : ''}
+      >
+        {show !== undefined ? <TableViewer table={show} /> : <></>}
+      </Dialog>
     </>
   );
 };

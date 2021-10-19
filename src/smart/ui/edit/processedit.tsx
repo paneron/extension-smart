@@ -165,6 +165,10 @@ const EditProcessPage: React.FC<{
   );
   const registryObjects = useMemo(() => getModelAllRegs(model), [model]);
   const regs = useMemo(() => registryObjects.map(r => r.id), [registryObjects]);
+  const tables = useMemo(
+    () => Object.values(model.tables).map(t => t.id),
+    [model.tables]
+  );
   const modelRef = useRef<EditorModel>();
   modelRef.current = model;
 
@@ -304,6 +308,7 @@ const EditProcessPage: React.FC<{
     setPStart,
     roles,
     regs,
+    tables,
   };
 
   const quickEditProps = {
@@ -431,6 +436,7 @@ const FullVersionEdit: React.FC<
     setPStart: (x: string) => void;
     roles: string[];
     regs: string[];
+    tables: string[];
   }
 > = function (props) {
   const {
@@ -444,6 +450,7 @@ const FullVersionEdit: React.FC<
     model,
     roles,
     regs,
+    tables,
     notes,
     setNotes,
   } = props;
@@ -500,6 +507,22 @@ const FullVersionEdit: React.FC<
           remove={x => {
             editing.output = new Set(
               [...editing.output].filter(s => !x.has(s))
+            );
+            setEditing({ ...editing });
+          }}
+        />
+        <MultiReferenceSelector
+          text="Reference tables"
+          options={tables}
+          values={editing.tables}
+          filterName="Table filter"
+          add={x => {
+            editing.tables = new Set([...editing.tables, ...x]);
+            setEditing({ ...editing });
+          }}
+          remove={x => {
+            editing.tables = new Set(
+              [...editing.tables].filter(s => !x.has(s))
             );
             setEditing({ ...editing });
           }}

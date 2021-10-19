@@ -418,6 +418,13 @@ export function toProcessModel(process: MMELProcess): string {
     }
     out += '  }\n';
   }
+  if (process.tables.size > 0) {
+    out += '  table {\n';
+    for (const r of process.tables) {
+      out += '    ' + r + '\n';
+    }
+    out += '  }\n';
+  }
   if (process.output.size > 0) {
     out += '  output {\n';
     for (const c of process.output) {

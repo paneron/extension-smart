@@ -74,6 +74,9 @@ export function addProcessIfNotFound(
   for (const x of process.measure) {
     addMeasureIfNotFound(mw.model, ref.model, x);
   }
+  for (const x of process.tables) {
+    addTableIfNotFound(mw.model, ref.model, x);
+  }
 
   const newProcess: EditorProcess = {
     id: newid,
@@ -86,7 +89,8 @@ export function addProcessIfNotFound(
     notes: new Set(ns),
     page: newPage !== undefined ? newPage.id : '',
     datatype: DataType.PROCESS,
-    measure: [...process.measure], // not done yet
+    measure: [...process.measure],
+    tables: new Set(process.tables),
     added: false,
     pages: new Set<string>([pageid]),
     objectVersion: 'Editor',
@@ -458,6 +462,14 @@ function addMeasureIfNotFound(
       model.vars[name] = { ...ref.vars[name] };
       addMeasureIfNotFound(model, ref, model.vars[name].definition);
     }
+  }
+}
+
+function addTableIfNotFound(model: EditorModel, ref: EditorModel, id: string) {
+  const table = ref.tables[id];
+  const newData = table.data.map(row => [...row]);
+  if (table !== undefined && model.tables[id] === undefined) {
+    model.tables[id] = { ...table, data: newData };
   }
 }
 

@@ -228,6 +228,7 @@ export function createProcess(id: string): EditorProcess {
     input: new Set<string>(),
     notes: new Set<string>(),
     provision: new Set<string>(),
+    tables: new Set<string>(),
     page: '',
     measure: [],
     added: false,
