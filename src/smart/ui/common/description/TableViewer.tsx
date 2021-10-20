@@ -3,23 +3,28 @@
 
 import { HTMLTable, Text } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
+import React from 'react';
 import { MMELTable } from '../../../serialize/interface/supportinterface';
+import { DescriptionItem } from './fields';
 
 const TableViewer: React.FC<{
   table: MMELTable;
 }> = function ({ table }) {
   return (
-    <HTMLTable
-      style={{
-        border: '2px solid black',
-        borderCollapse: 'collapse',
-        margin: '5px 5px 5px 5px',
-      }}
-    >
-      {table.data.map((row, index) => (
-        <RowViewer key={index} row={row} />
-      ))}
-    </HTMLTable>
+    <>
+      <DescriptionItem label='Title' value={table.title} />
+      <HTMLTable
+        style={{
+          border: '2px solid black',
+          borderCollapse: 'collapse',
+          margin: '5px 5px 5px 5px',
+        }}
+      >
+        {table.data.map((row, index) => (
+          <RowViewer key={index} row={row} />
+        ))}
+      </HTMLTable>
+    </>
   );
 };
 

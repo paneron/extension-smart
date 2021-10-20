@@ -179,7 +179,8 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           className={Classes.DIALOG_BODY}
           style={{
             display: 'flex',
-            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center',
             overflowX: 'visible',
             overflowY: 'auto',
           }}
