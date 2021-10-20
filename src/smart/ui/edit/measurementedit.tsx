@@ -130,6 +130,11 @@ const MeasureEditItemPage: React.FC<{
               {VarType.DERIVED} : Calulated from other measurement values
             </label>
           </li>
+          <li>
+            <label css={mgd_label}>
+              {VarType.TABLE} : Look up values in a table
+            </label>
+          </li>
         </ul>
         The definition field is applicable to {VarType.DERIVED} only. Example
         definitions:
@@ -172,7 +177,11 @@ const MeasureEditItemPage: React.FC<{
         text="Measurement definition"
         filterName="Measurement filter"
         editable={true}
-        value={mea.type === VarType.DERIVED ? mea.definition : 'disabled'}
+        value={
+          mea.type === VarType.DERIVED || mea.type === VarType.TABLE
+            ? mea.definition
+            : 'disabled'
+        }
         options={types}
         update={x =>
           setMeasure({

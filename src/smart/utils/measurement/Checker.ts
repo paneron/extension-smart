@@ -15,7 +15,7 @@ import {
 } from '../../model/Measurement';
 import { LegendInterface } from '../../model/States';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
-import { VarType } from '../../serialize/interface/supportinterface';
+import { MMELTable, VarType } from '../../serialize/interface/supportinterface';
 import { buildEdgeConnections } from '../ModelFunctions';
 import { evaluateCondition, resolveMTNode } from './Evaluator';
 import { parseMeasurement } from './Parser';
@@ -76,6 +76,14 @@ export function measureTest(
   }
 
   try {
+    // load the data from table
+    for (const x in model.vars) {
+      const v = model.vars[x];
+      if (v.type === VarType.TABLE) {
+        nums[x] = lookupTable(model.tables, v.definition, values);
+      }
+    }
+
     const result = checkModelMeasurement(model, nums, branchOnly);
     if (!branchOnly) {
       if (result.overall) {
@@ -360,4 +368,35 @@ function computeNode(
   }
   visited[node.id] = result;
   return result;
+}
+
+function lookupTable(
+  tables: Record<string, MMELTable>,
+  commands: string,
+  values: Record<string, string>
+): string | number[] {
+  const parts = commands.split(',');
+  if (parts.length > 1) {
+    const table = tables[parts[0]];
+    const col = parseInt(parts[1]);
+    if (table !== undefined) {
+      let rows = table.data;
+      for (let i = 2; i + 1 < parts.length; i += 2) {
+        const index = parseInt(parts[i]);
+        const varName = parts[i + 1];
+        const data = values[varName];
+        rows = rows.filter(r => r[index] === data);
+      }
+      if (rows.length > 0) {
+        const ret = rows[0][col];
+        const num = Number(ret);
+        if (isNaN(num)) {
+          return ret;
+        } else {
+          return [num];
+        }
+      }
+    }
+  }
+  throw `No data is found on the table`;
 }

@@ -41,7 +41,10 @@ const FigItemEditPage: React.FC<{
       <div>
         <Text>Image:</Text>
         {fig.data !== '' ? (
-          <img src={`data:image/jpeg;base64,${fig.data}`} />
+          <img
+            style={{ maxWidth: '100%' }}
+            src={`data:image/jpeg;base64,${fig.data}`}
+          />
         ) : (
           <Text>No image</Text>
         )}

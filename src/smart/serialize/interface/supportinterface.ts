@@ -6,6 +6,7 @@ export enum VarType {
   TEXT = 'TEXT',
   DERIVED = 'DERIVED',
   BOOLEAN = 'TRUE/FALSE',
+  TABLE = 'TABLE_REFERENCE',
 }
 
 export const NOTE_TYPES = [

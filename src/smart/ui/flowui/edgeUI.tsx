@@ -357,11 +357,8 @@ const Marker: React.FC<{
   );
 };
 
-const edgeDefaultTexts = new Set(['true', 'false', 'yes', 'no', '', 'default']);
-
 function getEdgeLabel(text: string): string {
-  const lower = text.trim().toLowerCase();
-  if (edgeDefaultTexts.has(lower)) {
+  if (text.length < 10) {
     return text;
   } else {
     return 'condition';

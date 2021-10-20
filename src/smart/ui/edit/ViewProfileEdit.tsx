@@ -143,7 +143,7 @@ const ViewEditItemPage: React.FC<{
         (default) value for the settings.
       </Text>
       {Object.values(vars).map(v => {
-        if (v.type !== VarType.DERIVED) {
+        if (v.type !== VarType.DERIVED && v.type !== VarType.TABLE) {
           const InputTool = Inputs[v.type];
           const defValue = DefaultValues[v.type];
           return (
@@ -183,7 +183,10 @@ const ViewEditItemPage: React.FC<{
   );
 };
 
-type InputableVarType = Exclude<VarType, typeof VarType.DERIVED>;
+type InputableVarType = Exclude<
+  VarType,
+  typeof VarType.DERIVED | VarType.TABLE
+>;
 
 const DefaultValues: Record<InputableVarType, string> = {
   [VarType.BOOLEAN]: 'true',

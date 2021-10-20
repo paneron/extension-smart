@@ -130,7 +130,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           <Popover2
             content={<NonTextReferenceList refs={refs} setShow={setShow} />}
           >
-            <Tooltip2 content="View reference tables" position="top">
+            <Tooltip2 content="View tables/figures" position="top">
               <Button small icon="th" />
             </Tooltip2>
           </Popover2>
@@ -166,7 +166,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
       {Addon !== undefined && <Addon id={process.id} />}
       <Dialog
         style={{
-          maxWidth: '90vw',
+          width: '95vw',
           maxHeight: '90vh',
         }}
         isOpen={show !== undefined}
@@ -178,8 +178,10 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
         <div
           className={Classes.DIALOG_BODY}
           style={{
-            textAlign: 'center',
-            overflow: 'auto',
+            display: 'flex',
+            justifyContent: 'center',
+            overflowX: 'visible',
+            overflowY: 'auto',
           }}
         >
           {show !== undefined ? (

@@ -23,20 +23,35 @@ const TableViewer: React.FC<{
   );
 };
 
+type CellInfo = {
+  data: string;
+  span: number;
+};
+
 const RowViewer: React.FC<{
   row: string[];
 }> = function ({ row }) {
+  const filteredRows: CellInfo[] = [];
+  for (const x of row) {
+    if (x !== '' || filteredRows.length === 0) {
+      filteredRows.push({ data: x, span: 1 });
+    } else {
+      filteredRows[filteredRows.length - 1].span++;
+    }
+  }
+
   return (
     <tr>
-      {row.map((x, index) => (
+      {filteredRows.map((x, index) => (
         <td
+          colSpan={x.span}
           key={index}
           style={{
             border: '1px solid black',
             borderCollapse: 'collapse',
           }}
         >
-          <Text>{x}</Text>
+          <Text>{x.data}</Text>
         </td>
       ))}
     </tr>

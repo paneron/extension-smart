@@ -84,7 +84,7 @@ export const FuntionNames: Record<FunctionPage, string> = {
   [FunctionPage.Checklist]: 'Self-assessment checklist',
   [FunctionPage.DataSummary]: 'Registry summary',
   [FunctionPage.ProvisionSummary]: 'Provision summary',
-  [FunctionPage.VersionViewer]: 'Edition comparator',
+  [FunctionPage.VersionViewer]: 'Edition comparison',
 };
 
 const ModelViewer: React.FC<{

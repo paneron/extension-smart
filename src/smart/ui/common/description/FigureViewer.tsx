@@ -7,7 +7,12 @@ import { MMELFigure } from '../../../serialize/interface/supportinterface';
 const FigureViewer: React.FC<{
   fig: MMELFigure;
 }> = function ({ fig }) {
-  return <img src={`data:image/jpeg;base64,${fig.data}`} />;
+  return (
+    <img
+      style={{ maxWidth: '90vw' }}
+      src={`data:image/jpeg;base64,${fig.data}`}
+    />
+  );
 };
 
 export default FigureViewer;
