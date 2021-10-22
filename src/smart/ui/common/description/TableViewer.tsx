@@ -12,7 +12,7 @@ const TableViewer: React.FC<{
 }> = function ({ table }) {
   return (
     <>
-      <DescriptionItem label='Title' value={table.title} />
+      <DescriptionItem label="Title" value={table.title} />
       <HTMLTable
         style={{
           border: '2px solid black',

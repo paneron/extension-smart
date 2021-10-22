@@ -5,6 +5,7 @@ import {
   parseProvision,
   parseReference,
   parseRole,
+  parseSection,
   parseTable,
   parseTerm,
   parseVariable,
@@ -34,6 +35,7 @@ import {
   toProvisionModel,
   toReferenceModel,
   toRoleModel,
+  toSectionModel,
   toSubprocessModel,
   toTableModel,
   toTermsModel,
@@ -92,6 +94,9 @@ export function MMELToText(model: MMELModel): string {
   for (const t in model.figures) {
     out += toFigModel(model.figures[t]) + '\n';
   }
+  for (const t in model.sections) {
+    out += toSectionModel(model.sections[t]) + '\n';
+  }
   return out;
 }
 
@@ -110,6 +115,7 @@ function parseModel(input: string): MMELModel {
     terms: {},
     tables: {},
     figures: {},
+    sections: {},
     root: '',
   };
 
@@ -181,6 +187,9 @@ function parseModel(input: string): MMELModel {
     } else if (command === 'figure') {
       const t = parseFigure(token[i++], token[i++]);
       model.figures[t.id] = t;
+    } else if (command === 'section') {
+      const t = parseSection(token[i++], token[i++]);
+      model.sections[t.id] = t;
     } else {
       console.error('Unknown command ' + command);
       break;

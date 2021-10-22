@@ -33,6 +33,7 @@ import {
   MMELRole,
   MMELTable,
   MMELTerm,
+  MMELTextSection,
   MMELVariable,
   MMELView,
 } from '../serialize/interface/supportinterface';
@@ -104,6 +105,7 @@ export interface EditorModel {
   terms: Record<string, MMELTerm>;
   tables: Record<string, MMELTable>;
   figures: Record<string, MMELFigure>;
+  sections: Record<string, MMELTextSection>;
   root: string;
 }
 

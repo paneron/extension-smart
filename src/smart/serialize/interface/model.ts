@@ -10,6 +10,7 @@ import {
   MMELRole,
   MMELTable,
   MMELTerm,
+  MMELTextSection,
   MMELVariable,
   MMELView,
 } from './supportinterface';
@@ -28,6 +29,7 @@ export interface MMELModel {
   terms: Record<string, MMELTerm>;
   tables: Record<string, MMELTable>;
   figures: Record<string, MMELFigure>;
+  sections: Record<string, MMELTextSection>;
 
   root: string;
 }

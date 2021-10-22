@@ -87,8 +87,8 @@ const TermsEditPage: React.FC<{
     model,
     getItems: getTermListItems,
     removeItems: removeTermListItem,
-    addItem: obj => addTerm(obj as MMELTerm),
-    updateItem: (oldid, obj) => updateTerm(oldid, obj as MMELTerm),
+    addItem: obj => addTerm(obj),
+    updateItem: (oldid, obj) => updateTerm(oldid, obj),
     getObjById: getTermById,
   };
 

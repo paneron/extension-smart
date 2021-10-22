@@ -132,7 +132,12 @@ const MeasureEditItemPage: React.FC<{
           </li>
           <li>
             <label css={mgd_label}>
-              {VarType.TABLE} : Look up values in a table
+              {VarType.TABLE} : Look up a value in a table
+            </label>
+          </li>
+          <li>
+            <label css={mgd_label}>
+              {VarType.TABLEITEM} : Select a value from the table column
             </label>
           </li>
         </ul>
@@ -173,24 +178,26 @@ const MeasureEditItemPage: React.FC<{
           Definition validity check
         </MGDButton>
       )}
-      <ReferenceSelector
-        text="Measurement definition"
-        filterName="Measurement filter"
-        editable={true}
-        value={
-          mea.type === VarType.DERIVED || mea.type === VarType.TABLE
-            ? mea.definition
-            : 'disabled'
-        }
-        options={types}
-        update={x =>
-          setMeasure({
-            ...mea,
-            definition: mea.definition + '[' + types[x] + ']',
-          })
-        }
-        onChange={x => setMeasure({ ...mea, definition: x })}
-      />
+      {mea.type === VarType.DERIVED ||
+      mea.type === VarType.TABLE ||
+      mea.type === VarType.TABLEITEM ? (
+        <ReferenceSelector
+          text="Measurement definition"
+          filterName="Measurement filter"
+          editable={true}
+          value={mea.definition}
+          options={types}
+          update={x =>
+            setMeasure({
+              ...mea,
+              definition: mea.definition + '[' + types[x] + ']',
+            })
+          }
+          onChange={x => setMeasure({ ...mea, definition: x })}
+        />
+      ) : (
+        <></>
+      )}
     </FormGroup>
   );
 };

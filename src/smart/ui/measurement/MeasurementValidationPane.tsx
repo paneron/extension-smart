@@ -25,7 +25,8 @@ function simpleFilter(v: MMELVariable): boolean {
     v.type === VarType.DATA ||
     v.type === VarType.LISTDATA ||
     v.type === VarType.TEXT ||
-    v.type === VarType.BOOLEAN
+    v.type === VarType.BOOLEAN ||
+    v.type === VarType.TABLEITEM
   );
 }
 
@@ -95,10 +96,12 @@ const MeasureCheckPane: React.FC<{
       <FormGroup>
         {alldata.map(v => (
           <VariableSettingItem
+            key={v.id}
+            model={model}
             variable={v}
             value={values[v.id]}
+            values={values}
             profile={profile}
-            branchOnly={branchOnly}
             onChange={(x: string) => onValueChange(v.id, x)}
           />
         ))}

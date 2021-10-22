@@ -22,6 +22,7 @@ import {
   NormalTextField,
 } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
+import { InputableVarType } from '../../model/Measurement';
 
 const ViewProfileEditPage: React.FC<{
   model: EditorModel;
@@ -143,7 +144,11 @@ const ViewEditItemPage: React.FC<{
         (default) value for the settings.
       </Text>
       {Object.values(vars).map(v => {
-        if (v.type !== VarType.DERIVED && v.type !== VarType.TABLE) {
+        if (
+          v.type !== VarType.DERIVED &&
+          v.type !== VarType.TABLE &&
+          v.type !== VarType.TABLEITEM
+        ) {
           const InputTool = Inputs[v.type];
           const defValue = DefaultValues[v.type];
           return (
@@ -183,16 +188,12 @@ const ViewEditItemPage: React.FC<{
   );
 };
 
-type InputableVarType = Exclude<
-  VarType,
-  typeof VarType.DERIVED | VarType.TABLE
->;
-
 const DefaultValues: Record<InputableVarType, string> = {
   [VarType.BOOLEAN]: 'true',
   [VarType.DATA]: '0',
   [VarType.LISTDATA]: '0',
   [VarType.TEXT]: '',
+  [VarType.TABLEITEM]: '',
 };
 
 const Inputs: Record<
@@ -226,6 +227,14 @@ const Inputs: Record<
     />
   ),
   [VarType.TEXT]: ({ value, onChange }) => (
+    <InputGroup
+      placeholder="Default value"
+      value={value}
+      onChange={x => onChange(x.target.value)}
+      fill
+    />
+  ),
+  [VarType.TABLEITEM]: ({ value, onChange }) => (
     <InputGroup
       placeholder="Default value"
       value={value}

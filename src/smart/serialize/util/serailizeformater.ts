@@ -28,6 +28,7 @@ import {
   MMELRole,
   MMELTable,
   MMELTerm,
+  MMELTextSection,
   MMELVariable,
   MMELVarSetting,
   MMELView,
@@ -343,6 +344,21 @@ export function toFigModel(fig: MMELFigure): string {
     '"\n' +
     '  data "' +
     fig.data +
+    '"\n' +
+    '}\n'
+  );
+}
+
+export function toSectionModel(s: MMELTextSection): string {
+  return (
+    'section ' +
+    s.id +
+    ' {\n' +
+    '  title "' +
+    s.title +
+    '"\n' +
+    '  content "' +
+    s.content +
     '"\n' +
     '}\n'
   );

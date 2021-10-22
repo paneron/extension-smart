@@ -1,86 +1,69 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Switch } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
+import React from 'react';
 import { CSSROOTVARIABLES } from '../../../css/root.css';
-import {
-  MMELVariable,
-  MMELView,
-  VarType,
-} from '../../serialize/interface/supportinterface';
-import { NormalTextField } from '../common/fields';
+import { InputableVarType, VarInputInterface } from '../../model/Measurement';
+import { VarType } from '../../serialize/interface/supportinterface';
+import BooleanMeasureEdit from './fields/boolean';
+import TableComboBox from './fields/TableComboBox';
+import TextMeasureEdit from './fields/text';
 
-function getDesc(v: MMELVariable) {
+const VarInputs: Record<InputableVarType, React.FC<VarInputInterface>> = {
+  [VarType.BOOLEAN]: BooleanMeasureEdit,
+  [VarType.DATA]: TextMeasureEdit,
+  [VarType.LISTDATA]: TextMeasureEdit,
+  [VarType.TEXT]: TextMeasureEdit,
+  [VarType.TABLEITEM]: TableComboBox,
+};
+
+const VariableSettingItem: React.FC<VarInputInterface> = function (props) {
+  const { variable, profile } = props;
+  const Input = VarInputs[variable.type as InputableVarType];
   return (
-    v.description +
-    (v.type === VarType.LISTDATA ? ' (Seperate the values by ,)' : '')
+    <VarItemContainer
+      required={
+        profile !== undefined && profile.profile[variable.id] !== undefined
+      }
+    >
+      <Input {...props} />
+      {profile !== undefined &&
+        profile.profile[variable.id] !== undefined &&
+        profile.profile[variable.id].isConst && <FixedLabel />}
+    </VarItemContainer>
+  );
+};
+
+function FixedLabel() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        right: 0,
+        top: -8,
+        zIndex: 10,
+        backgroundColor: CSSROOTVARIABLES['--colour--bsi-pale-teal'],
+        color: 'red',
+      }}
+    >
+      fixed
+    </div>
   );
 }
 
-const VariableSettingItem: React.FC<{
-  variable: MMELVariable;
-  value?: string;
-  profile: MMELView | undefined;
-  onChange: (v: string) => void;
-  branchOnly: boolean;
-}> = function ({ variable, value, profile, branchOnly, onChange }) {
+function VarItemContainer({
+  children,
+  required,
+}: {
+  children: React.ReactNode;
+  required: boolean;
+}) {
   return (
-    <div
-      style={
-        profile !== undefined && profile.profile[variable.id] !== undefined
-          ? {
-              position: 'relative',
-              borderStyle: 'solid',
-            }
-          : {}
-      }
-    >
-      {variable.type === VarType.BOOLEAN ? (
-        <Switch
-          key={(branchOnly ? 'view' : 'measurment') + variable.id}
-          checked={value !== undefined ? value === 'true' : true}
-          label={getDesc(variable)}
-          onChange={
-            profile !== undefined &&
-            profile.profile[variable.id] !== undefined &&
-            profile.profile[variable.id].isConst
-              ? undefined
-              : x => onChange(x.currentTarget.checked ? 'true' : 'false')
-          }
-        />
-      ) : (
-        <NormalTextField
-          key={(branchOnly ? 'view' : 'measurment') + variable.id}
-          text={getDesc(variable)}
-          value={value ?? ''}
-          onChange={
-            profile !== undefined &&
-            profile.profile[variable.id] !== undefined &&
-            profile.profile[variable.id].isConst
-              ? undefined
-              : onChange
-          }
-        />
-      )}
-      {profile !== undefined &&
-        profile.profile[variable.id] !== undefined &&
-        profile.profile[variable.id].isConst && (
-          <div
-            style={{
-              position: 'absolute',
-              right: 0,
-              top: -8,
-              zIndex: 10,
-              backgroundColor: CSSROOTVARIABLES['--colour--bsi-pale-teal'],
-              color: 'red',
-            }}
-          >
-            fixed
-          </div>
-        )}
+    <div style={required ? { position: 'relative', borderStyle: 'solid' } : {}}>
+      {children}
     </div>
   );
-};
+}
 
 export default VariableSettingItem;

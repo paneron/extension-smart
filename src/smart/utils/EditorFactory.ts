@@ -17,6 +17,7 @@ import {
   MMELRole,
   MMELTable,
   MMELTerm,
+  MMELTextSection,
   MMELVariable,
   MMELView,
   VarType,
@@ -55,6 +56,7 @@ export function createNewEditorModel(): EditorModel {
     terms: {},
     tables: {},
     figures: {},
+    sections: {},
     root: page.id,
   };
   return m;
@@ -124,6 +126,15 @@ export function createRole(id: string): MMELRole {
     id: id,
     name: '',
     datatype: DataType.ROLE,
+  };
+}
+
+export function createTextSection(id: string): MMELTextSection {
+  return {
+    id: id,
+    title: '',
+    content: '',
+    datatype: DataType.SECTION,
   };
 }
 

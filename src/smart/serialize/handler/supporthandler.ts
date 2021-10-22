@@ -8,6 +8,7 @@ import {
   MMELRole,
   MMELTable,
   MMELTerm,
+  MMELTextSection,
   MMELVariable,
   MMELVarSetting,
   MMELView,
@@ -258,6 +259,41 @@ function to2DArray(data: string[], column: number): string[][] {
     }
   }
   return ret;
+}
+
+export function parseSection(id: string, data: string): MMELTextSection {
+  const s: MMELTextSection = {
+    id,
+    title: '',
+    content: '',
+    datatype: DataType.SECTION,
+  };
+  if (data !== '') {
+    const t = MMELtokenizePackage(data);
+    let i = 0;
+    while (i < t.length) {
+      const command: string = t[i++];
+      if (i < t.length) {
+        if (command === 'title') {
+          s.title = MMELremovePackage(t[i++]);
+        } else if (command === 'content') {
+          s.content = MMELremovePackage(t[i++]);
+        } else {
+          throw new Error(
+            `Parsing error: section. ID ${id}: Unknown keyword ${command}`
+          );
+        }
+      } else {
+        throw new Error(
+          'Parsing error: variable. ID ' +
+            id +
+            ': Expecting value for ' +
+            command
+        );
+      }
+    }
+  }
+  return s;
 }
 
 export function parseFigure(id: string, data: string): MMELFigure {

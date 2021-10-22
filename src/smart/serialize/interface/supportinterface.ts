@@ -1,12 +1,13 @@
 import { DataType, MMELObject } from './baseinterface';
 
 export enum VarType {
-  DATA = 'DATAITEM',
+  DATA = 'NUMERIC',
   LISTDATA = 'DATALIST',
   TEXT = 'TEXT',
   DERIVED = 'DERIVED',
   BOOLEAN = 'TRUE/FALSE',
   TABLE = 'TABLE_REFERENCE',
+  TABLEITEM = 'TABLE_OPTIONS',
 }
 
 export const NOTE_TYPES = [
@@ -101,4 +102,11 @@ export interface MMELFigure extends MMELObject {
   title: string;
   data: string;
   datatype: DataType.FIGURE;
+}
+
+export interface MMELTextSection extends MMELObject {
+  id: string;
+  title: string;
+  content: string;
+  datatype: DataType.SECTION;
 }

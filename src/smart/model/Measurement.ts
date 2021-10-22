@@ -1,3 +1,10 @@
+import {
+  MMELVariable,
+  MMELView,
+  VarType,
+} from '../serialize/interface/supportinterface';
+import { EditorModel } from './editormodel';
+
 export interface MTreeNode {
   action: string; // if data is a value, action = ''
   isData: boolean;
@@ -7,6 +14,20 @@ export interface MTreeNode {
 
 export type EnviromentValues = Record<string, number[] | string>;
 export type EnviromentVariables = Record<string, MTreeNode>;
+
+export type InputableVarType = Exclude<
+  VarType,
+  typeof VarType.DERIVED | VarType.TABLE
+>;
+
+export type VarInputInterface = {
+  model: EditorModel;
+  variable: MMELVariable;
+  value?: string;
+  values: Record<string, string>;
+  profile: MMELView | undefined;
+  onChange: (v: string) => void;
+};
 
 export enum MeasureRType {
   OK = 'ok',

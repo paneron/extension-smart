@@ -23,6 +23,7 @@ import MetaEditPage from '../edit/metaedit';
 import ReferenceEditPage from '../edit/refedit';
 import RegistryEditPage from '../edit/registryedit';
 import RoleEditPage from '../edit/roleedit';
+import SectionEditPage from '../edit/SectionEditPage';
 import TableEditPage from '../edit/table/TableEdit';
 import TermsEditPage from '../edit/TermEdit';
 import ViewProfileEditPage from '../edit/ViewProfileEdit';
@@ -39,6 +40,7 @@ export enum SETTINGPAGE {
   TERMPAGE = 'terms',
   TABLEPAGE = 'table',
   FIGUREPAGE = 'figure',
+  SECTION = 'section',
 }
 
 interface TabProps {
@@ -62,6 +64,12 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
         }}
         showMsg={showMsg}
       />
+    ),
+  },
+  [SETTINGPAGE.SECTION]: {
+    title: 'Sections',
+    Panel: ({ model, setModel }) => (
+      <SectionEditPage model={model} setModel={setModel} />
     ),
   },
   [SETTINGPAGE.TERMPAGE]: {

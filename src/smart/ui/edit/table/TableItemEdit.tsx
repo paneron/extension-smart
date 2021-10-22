@@ -72,7 +72,7 @@ const TableItemEditPage: React.FC<{
   }
 
   function parseTable(data: string) {
-    const lines = data.split('\n');
+    const lines = data.replaceAll('\r', '').split('\n');
     const cells = lines.map(l => l.split(','));
     const maxLength = cells.reduce((max, l) => Math.max(max, l.length), 0);
     for (const line of cells) {
