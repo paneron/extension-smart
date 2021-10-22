@@ -18,9 +18,12 @@ import ModelViewer from './smart/ui/mainviewer';
 import ModelWorkspace from './smart/ui/modelWorkspace';
 import { FocusStyleManager } from '@blueprintjs/core';
 import EditWrapper from './smart/ui/editFunctions/EditWrapper';
+import { MMELRepo } from './smart/model/repo';
+import RepoViewer from './smart/ui/repo/RepoViewer';
 
 const RepositoryView: React.FC<Record<never, never>> = function () {
-  const [selectedModule, selectModule] = useState<ModuleName>('modelViewer');
+  const [repo, setRepo] = useState<MMELRepo | undefined>(undefined);
+  const [selectedModule, selectModule] = useState<ModuleName>('repo');
   const [clickListener, setClickListener] = useState<(() => void)[]>([]);
 
   FocusStyleManager.onlyShowFocusOnTabs();
@@ -60,6 +63,7 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
       />
       {MODULES.map(moduleName => (
         <ModuleButton
+          key={moduleName}
           moduleName={moduleName}
           selected={moduleName === selectedModule}
           onSelect={() => selectModule(moduleName)}
@@ -95,6 +99,8 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
               flex: 1;
               overflow: hidden;
             `}
+            repo={repo}
+            setRepo={setRepo}
           />
         );
       })}
@@ -105,6 +111,7 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
 export default RepositoryView;
 
 const MODULES = [
+  'repo',
   'modelViewer',
   'modelEditor',
   'modelMapper',
@@ -114,43 +121,46 @@ const MODULES = [
 type ModuleName = typeof MODULES[number];
 
 interface ModuleConfiguration {
-  title: JSX.Element;
-  description: JSX.Element;
-  tooltip: string;
+  title: string;
+  description: string;
   icon: IconName;
   view: React.FC<{
     isVisible: boolean;
     className?: string;
     setClickListener: (f: (() => void)[]) => void;
+    repo?: MMELRepo;
+    setRepo: (x?: MMELRepo) => void;
   }>;
 }
 
 const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {
+  repo: {
+    title: 'Repository',
+    description: 'Model repository',
+    icon: 'projects',
+    view: RepoViewer,
+  },
   modelViewer: {
-    title: <>View</>,
-    description: <>Model viewer</>,
-    tooltip: 'Model viewer',
+    title: 'View',
+    description: 'Model viewer',
     icon: 'eye-open',
     view: ModelViewer,
   },
   modelEditor: {
-    title: <>Edit</>,
-    description: <>Model editor</>,
-    tooltip: 'Model editor',
+    title: 'Edit',
+    description: 'Model editor',
     icon: 'edit',
     view: EditWrapper,
   },
   modelMapper: {
-    title: <>Map</>,
-    description: <>Model mapper</>,
-    tooltip: 'Model mapper',
+    title: 'Map',
+    description: 'Model mapper',
     icon: 'data-lineage',
     view: ModelMapper,
   },
   modelImplement: {
-    title: <>Implementation</>,
-    description: <>Model implementation</>,
-    tooltip: 'Model implementation',
+    title: 'Implementation',
+    description: 'Model implementation',
     icon: 'unarchive',
     view: ModelWorkspace,
   },
@@ -164,19 +174,13 @@ const ModuleButton: React.FC<{
   const cfg = MODULE_CONFIGURATION[moduleName];
 
   return (
-    <Tooltip2
-      content={cfg.description}
-      css={css`
-        margin-top: -2px;
-      `}
-    >
+    <Tooltip2 content={cfg.description}>
       <Button
         large
         intent="primary"
         active={selected}
         onClick={onSelect}
         icon={cfg.icon}
-        title={cfg.tooltip}
       />
     </Tooltip2>
   );
