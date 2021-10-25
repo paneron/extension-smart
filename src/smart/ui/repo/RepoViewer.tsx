@@ -18,6 +18,9 @@ import RepoImportButton from './RepoImportButton';
 import RepoModelFile from './RepoItem';
 import RepoInfoPane from './RepoInfoPane';
 import RepoCloseButton from './RepoCloseButton';
+import { EditorModel } from '../../model/editormodel';
+import { createNewSMARTWorkspace } from '../../model/workspace';
+import { getNamespace } from '../../utils/ModelFunctions';
 
 const RepoViewer: React.FC<{
   isVisible: boolean;
@@ -33,15 +36,27 @@ const RepoViewer: React.FC<{
   const repoData = repoFile.value.data[repoIndexPath];
   const index = (repoData ?? {}) as RepoIndex;
 
-  async function saveIndex<T>(updated: RepoIndex, path?: string, data?: T) {
+  async function saveIndex(
+    updated: RepoIndex,
+    ns?: string,
+    model?: EditorModel
+  ) {
     if (updateObjects) {
-      if (path !== undefined && data !== undefined) {
+      if (ns !== undefined && model !== undefined) {
         await updateObjects({
           commitMessage: 'Updating concept',
           _dangerouslySkipValidation: true,
           objectChangeset: {
             [repoIndexPath]: { oldValue: undefined, newValue: updated },
-            [path]: { newValue: data },
+            [getPathByNS(ns, RepoFileType.MODEL)]: {
+              newValue: MMELToSerializable(model),
+            },
+            [getPathByNS(ns, RepoFileType.MAP)]: {
+              newValue: { id: getNamespace(model), mapSet: {}, docs: {} },
+            },
+            [getPathByNS(ns, RepoFileType.WORKSPACE)]: {
+              newValue: createNewSMARTWorkspace(),
+            },
           },
         });
       } else {
@@ -82,11 +97,7 @@ const RepoViewer: React.FC<{
         date: new Date(),
       };
       const updated = { ...index, [ns]: newItem };
-      saveIndex(
-        updated,
-        getPathByNS(ns, RepoFileType.MODEL),
-        MMELToSerializable(model)
-      );
+      saveIndex(updated, ns, model);
       toaster.show({
         message: `Done: model with namespace ${ns} added to the repository`,
         intent: 'success',

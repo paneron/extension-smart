@@ -1,3 +1,5 @@
+import { JSONContext, JSONContextType } from '../utils/repo/io';
+
 export interface SMARTDocument {
   id: number;
   name: string;
@@ -18,11 +20,15 @@ export interface SMARTModelStore {
 
 // docs[model namespace]
 export interface SMARTWorkspace {
+  '@context': JSONContextType;
+  '@type': 'MMEL_WORKSPACE';
   docs: Record<string, SMARTModelStore>;
 }
 
 export function createNewSMARTWorkspace(): SMARTWorkspace {
   return {
+    '@context': JSONContext,
+    '@type': 'MMEL_WORKSPACE',
     docs: {},
   };
 }

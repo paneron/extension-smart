@@ -84,7 +84,7 @@ const MetaEditPage: React.FC<{
       />
       <MGDButtonGroup>
         <MGDButton icon="floppy-disk" onClick={save}>
-          Save
+          Update metadata
         </MGDButton>
         <MGDButton icon="disable" onClick={cancel}>
           Cancel

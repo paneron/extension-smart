@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import React, { RefObject, useMemo, useState } from 'react';
+import React, { RefObject, useContext, useMemo, useState } from 'react';
 
 import ModelDiagram from './mapper/ModelDiagram';
 import {
@@ -14,9 +14,11 @@ import {
   ModelType,
 } from '../model/editormodel';
 import {
+  buildHistoryMap,
   createMapProfile,
   createNewMapSet,
   getMappings,
+  indexModel,
   MappingMeta,
   MapProfile,
   MapSet,
@@ -25,6 +27,8 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
   ControlGroup,
   Dialog,
+  HotkeysProvider,
+  HotkeysTarget2,
   IToaster,
   IToastProps,
   Toaster,
@@ -57,6 +61,14 @@ import { findPageContainingElement } from '../utils/SearchFunctions';
 import { getDocumentMetaById } from '../utils/DocumentFunctions';
 import AutoMapper from './mapper/AutoMapper';
 import { getNamespace } from '../utils/ModelFunctions';
+import {
+  getPathByNS,
+  JSONContext,
+  JSONToMMEL,
+  RepoFileType,
+} from '../utils/repo/io';
+import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
+import { MMELJSON } from '../model/json';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -66,7 +78,10 @@ const lineref: RefObject<HTMLDivElement> = React.createRef();
 const ModelMapper: React.FC<{
   isVisible: boolean;
   className?: string;
-}> = ({ isVisible, className }) => {
+  repo?: string;
+}> = ({ isVisible, className, repo }) => {
+  const { useObjectData, updateObjects } = useContext(DatasetContext);
+
   const [mapProfile, setMapProfile] = useState<MapProfile>(createMapProfile());
   const [viewOption, setViewOption] = useState<MapperViewOption>({
     dataVisible: true,
@@ -97,6 +112,46 @@ const ModelMapper: React.FC<{
     to: '',
   });
   const [toaster] = useState<IToaster>(Toaster.create());
+
+  const repoPath = getPathByNS(repo ?? '', RepoFileType.MODEL);
+  const mapPath = getPathByNS(repo ?? '', RepoFileType.MAP);
+  const repoModelFile = useObjectData({
+    objectPaths: repo !== undefined ? [repoPath, mapPath] : [],
+  });
+  const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
+  const mapData = repo !== undefined ? repoModelFile.value.data[mapPath] : {};
+
+  useMemo(() => {
+    if (
+      repo !== undefined &&
+      repoData !== null &&
+      repoData !== undefined &&
+      !repoModelFile.isUpdating
+    ) {
+      const json = repoData as MMELJSON;
+      const model = JSONToMMEL(json);
+      const mw = createEditorModelWrapper(model);
+      indexModel(mw.model);
+      setImplProps({
+        ...implementProps,
+        history: createPageHistory(mw),
+        modelWrapper: mw,
+        historyMap: buildHistoryMap(mw),
+      });
+      if (mapData !== undefined && mapData !== null) {
+        const mapPro = mapData as MapProfile;
+        setMapProfile(mapPro);
+      } else {
+        setMapProfile({
+          '@context': JSONContext,
+          '@type': 'MMEL_MAP',
+          id: getNamespace(mw.model),
+          mapSet: {},
+          docs: {},
+        });
+      }
+    }
+  }, [repoData, repoModelFile.isUpdating]);
 
   const impMW = implementProps.modelWrapper as ModelWrapper;
   const refMW = referenceProps.modelWrapper;
@@ -160,7 +215,13 @@ const ModelMapper: React.FC<{
   }
 
   function onImpModelChanged(model: EditorModel) {
-    onMapProfileChanged({ id: getNamespace(model), mapSet: {}, docs: {} });
+    onMapProfileChanged({
+      '@context': JSONContext,
+      '@type': 'MMEL_MAP',
+      id: getNamespace(model),
+      mapSet: {},
+      docs: {},
+    });
     impMW.model = model;
   }
 
@@ -284,6 +345,8 @@ const ModelMapper: React.FC<{
             mapProfile={mapProfile}
             onMapProfileChanged={onMapProfileChanged}
             onMapImport={onMapImport}
+            isRepoMode={repo !== undefined}
+            onRepoSave={saveMapping}
           />
         }
       >
@@ -337,98 +400,130 @@ const ModelMapper: React.FC<{
       />
     );
 
+  const hotkeys = [
+    {
+      combo: 'ctrl+s',
+      global: true,
+      label: 'Save Mapping',
+      onKeyDown: saveMapping,
+    },
+  ];
+
+  async function saveMapping() {
+    if (repo && updateObjects && isVisible) {
+      const task = updateObjects({
+        commitMessage: 'Updating concept',
+        _dangerouslySkipValidation: true,
+        objectChangeset: {
+          [mapPath]: { newValue: mapProfile },
+        },
+      });
+      task.then(() =>
+        toaster.show({
+          message: 'Mapping saved',
+          intent: 'success',
+        })
+      );
+    }
+  }
+
   if (isVisible) {
     return (
-      <Workspace className={className} toolbar={toolbar}>
-        <Dialog
-          isOpen={
-            editMappingProps.from !== '' ||
-            viewOption.docVisible ||
-            viewOption.mapAIVisible
-          }
-          title={
-            editMappingProps.from !== ''
-              ? 'Edit Mapping'
-              : viewOption.docVisible
-              ? 'Report template'
-              : 'Auto mapper (transitive mapping)'
-          }
-          css={dialog_layout}
-          onClose={
-            editMappingProps.from !== ''
-              ? () =>
-                  setEditMProps({
-                    from: '',
-                    to: '',
-                  })
-              : closeDialog
-          }
-          canEscapeKeyClose={false}
-          canOutsideClickClose={false}
-        >
-          {editMappingProps.from !== '' ? (
-            mapEditPage
-          ) : viewOption.docVisible ? (
-            isModelWrapper(refMW) && (
-              <DocTemplatePane
-                mapProfile={mapProfile}
-                setMapProfile={setMapProfile}
-                refModel={refMW.model}
-                impModel={impmodel}
+      <HotkeysProvider>
+        <HotkeysTarget2 hotkeys={hotkeys}>
+          <Workspace className={className} toolbar={toolbar}>
+            <Dialog
+              isOpen={
+                editMappingProps.from !== '' ||
+                viewOption.docVisible ||
+                viewOption.mapAIVisible
+              }
+              title={
+                editMappingProps.from !== ''
+                  ? 'Edit Mapping'
+                  : viewOption.docVisible
+                  ? 'Report template'
+                  : 'Auto mapper (transitive mapping)'
+              }
+              css={dialog_layout}
+              onClose={
+                editMappingProps.from !== ''
+                  ? () =>
+                      setEditMProps({
+                        from: '',
+                        to: '',
+                      })
+                  : closeDialog
+              }
+              canEscapeKeyClose={false}
+              canOutsideClickClose={false}
+            >
+              {editMappingProps.from !== '' ? (
+                mapEditPage
+              ) : viewOption.docVisible ? (
+                isModelWrapper(refMW) && (
+                  <DocTemplatePane
+                    mapProfile={mapProfile}
+                    setMapProfile={setMapProfile}
+                    refModel={refMW.model}
+                    impModel={impmodel}
+                  />
+                )
+              ) : (
+                <AutoMapper
+                  refNamespace={refns}
+                  impNamespace={getNamespace(impmodel)}
+                  showMessage={showMessage}
+                  onClose={closeDialog}
+                  mapProfile={mapProfile}
+                  setMapProfile={setMapProfile}
+                />
+              )}
+            </Dialog>
+            <div css={multi_model_container}>
+              <ModelDiagram
+                modelProps={implementProps}
+                viewOption={viewOption}
+                setProps={onImpPropsChange}
+                className={className}
+                mapSet={mapSet}
+                onMapSetChanged={onMapSetChanged}
+                onModelChanged={onImpModelChanged}
+                setSelected={setSelected}
+                onMappingEdit={onMappingEdit}
+                issueNavigationRequest={
+                  isModelWrapper(refMW) ? onRefNavigate : undefined
+                }
+                getPartnerModelElementById={
+                  isModelWrapper(refMW)
+                    ? id => getEditorNodeInfoById(refMW.model, id)
+                    : id => getDocumentMetaById(refMW, id)
+                }
+                onClose={onImpClose}
+                isRepoMode={repo !== undefined}
               />
-            )
-          ) : (
-            <AutoMapper
-              refNamespace={refns}
-              impNamespace={getNamespace(impmodel)}
-              showMessage={showMessage}
-              onClose={closeDialog}
-              mapProfile={mapProfile}
-              setMapProfile={setMapProfile}
-            />
-          )}
-        </Dialog>
-        <div css={multi_model_container}>
-          <ModelDiagram
-            modelProps={implementProps}
-            viewOption={viewOption}
-            setProps={onImpPropsChange}
-            className={className}
-            mapSet={mapSet}
-            onMapSetChanged={onMapSetChanged}
-            onModelChanged={onImpModelChanged}
-            setSelected={setSelected}
-            onMappingEdit={onMappingEdit}
-            issueNavigationRequest={
-              isModelWrapper(refMW) ? onRefNavigate : undefined
-            }
-            getPartnerModelElementById={
-              isModelWrapper(refMW)
-                ? id => getEditorNodeInfoById(refMW.model, id)
-                : id => getDocumentMetaById(refMW, id)
-            }
-            onClose={onImpClose}
-          />
-          <div ref={lineref} css={vertical_line} />
-          <ModelDiagram
-            modelProps={referenceProps}
-            viewOption={viewOption}
-            setProps={onRefPropsChange}
-            className={className}
-            mapSet={mapSet}
-            onMapSetChanged={onMapSetChanged}
-            mapResult={mapResult}
-            setSelected={setSelected}
-            onMappingEdit={onMappingEdit}
-            issueNavigationRequest={onImpNavigate}
-            getPartnerModelElementById={id =>
-              getEditorNodeInfoById(impmodel, id)
-            }
-            onClose={onRefClose}
-          />
-        </div>
-        <MappingCanvus mapEdges={mapEdges} line={lineref} />
-      </Workspace>
+              <div ref={lineref} css={vertical_line} />
+              <ModelDiagram
+                modelProps={referenceProps}
+                viewOption={viewOption}
+                setProps={onRefPropsChange}
+                className={className}
+                mapSet={mapSet}
+                onMapSetChanged={onMapSetChanged}
+                mapResult={mapResult}
+                setSelected={setSelected}
+                onMappingEdit={onMappingEdit}
+                issueNavigationRequest={onImpNavigate}
+                getPartnerModelElementById={id =>
+                  getEditorNodeInfoById(impmodel, id)
+                }
+                onClose={onRefClose}
+              />
+            </div>
+            <MappingCanvus mapEdges={mapEdges} line={lineref} />
+          </Workspace>
+        </HotkeysTarget2>
+      </HotkeysProvider>
     );
   }
   return <></>;

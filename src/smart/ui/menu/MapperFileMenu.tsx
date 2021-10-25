@@ -16,7 +16,15 @@ const MapperFileMenu: React.FC<{
   mapProfile: MapProfile;
   onMapProfileChanged: (m: MapProfile) => void;
   onMapImport: () => void;
-}> = function ({ mapProfile, onMapProfileChanged, onMapImport }) {
+  isRepoMode: boolean;
+  onRepoSave: () => void;
+}> = function ({
+  mapProfile,
+  onMapProfileChanged,
+  onMapImport,
+  isRepoMode,
+  onRepoSave,
+}) {
   const {
     getBlob,
     useDecodedBlob,
@@ -44,25 +52,36 @@ const MapperFileMenu: React.FC<{
 
   return (
     <Menu>
-      <MenuItem text="New" onClick={handleNew} icon="document" />
-      <MenuItem
-        text="Open…"
-        disabled={!canOpen}
-        onClick={() =>
-          handleMappingOpen({
-            onMapProfileChanged,
-            useDecodedBlob,
-            requestFileFromFilesystem,
-          })
-        }
-        icon="document-open"
-      />
-      <MenuItem
-        text="Save…"
-        onClick={handleSave}
-        disabled={!canSave}
-        icon="floppy-disk"
-      />
+      {isRepoMode ? (
+        <MenuItem
+          text="Save"
+          onClick={onRepoSave}
+          label="Ctrl + S"
+          icon="floppy-disk"
+        />
+      ) : (
+        <>
+          <MenuItem text="New" onClick={handleNew} icon="document" />
+          <MenuItem
+            text="Open…"
+            disabled={!canOpen}
+            onClick={() =>
+              handleMappingOpen({
+                onMapProfileChanged,
+                useDecodedBlob,
+                requestFileFromFilesystem,
+              })
+            }
+            icon="document-open"
+          />
+          <MenuItem
+            text="Save…"
+            onClick={handleSave}
+            disabled={!canSave}
+            icon="floppy-disk"
+          />
+        </>
+      )}
       <MenuDivider />
       <MenuItem text="Auto Mapper" onClick={onMapImport} icon="data-lineage" />
     </Menu>

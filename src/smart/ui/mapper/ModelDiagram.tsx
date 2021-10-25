@@ -70,6 +70,7 @@ const ModelDiagram: React.FC<{
   issueNavigationRequest?: (id: string) => void;
   getPartnerModelElementById: (id: string) => string;
   onClose: () => void;
+  isRepoMode?: boolean;
 }> = ({
   className,
   viewOption,
@@ -84,6 +85,7 @@ const ModelDiagram: React.FC<{
   issueNavigationRequest,
   getPartnerModelElementById,
   onClose,
+  isRepoMode = false,
 }) => {
   const { logger, useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
@@ -175,19 +177,21 @@ const ModelDiagram: React.FC<{
 
   const toolbar = (
     <ControlGroup>
-      <MGDButton
-        onClick={() => {
-          handleModelOpen({
-            setModelWrapper,
-            useDecodedBlob,
-            requestFileFromFilesystem,
-            logger,
-            indexModel,
-          });
-        }}
-      >
-        {'Open ' + MapperModelLabel[modelProps.modelType as MapperModelType]}
-      </MGDButton>
+      {!isRepoMode && (
+        <MGDButton
+          onClick={() => {
+            handleModelOpen({
+              setModelWrapper,
+              useDecodedBlob,
+              requestFileFromFilesystem,
+              logger,
+              indexModel,
+            });
+          }}
+        >
+          {'Open ' + MapperModelLabel[modelProps.modelType as MapperModelType]}
+        </MGDButton>
+      )}
       {!isImp && (
         <Popover2
           minimal
@@ -197,7 +201,7 @@ const ModelDiagram: React.FC<{
           <MGDButton>Open Document</MGDButton>
         </Popover2>
       )}
-      <MGDButton onClick={onClose}> Close </MGDButton>
+      {!isRepoMode && <MGDButton onClick={onClose}> Close </MGDButton>}
       {isModelWrapper(mw) && (
         <MGDButton
           type={MGDButtonType.Secondary}

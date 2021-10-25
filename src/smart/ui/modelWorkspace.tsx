@@ -4,13 +4,15 @@
 import { jsx } from '@emotion/react';
 import React, { useContext, useMemo, useState } from 'react';
 
-import ReactFlow, {
-  Controls,
-  OnLoadParams,
-  ReactFlowProvider,
-} from 'react-flow-renderer';
+import ReactFlow, { Controls, ReactFlowProvider } from 'react-flow-renderer';
 
-import { ControlGroup } from '@blueprintjs/core';
+import {
+  ControlGroup,
+  HotkeysProvider,
+  HotkeysTarget2,
+  IToaster,
+  Toaster,
+} from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
@@ -51,6 +53,8 @@ import {
 import WorkspaceFileMenu from './menu/WorkspaceFileMenu';
 import { WorkspaceDiagPackage, WorkspaceDialog } from './dialog/WorkspaceDiag';
 import { getNamespace } from '../utils/ModelFunctions';
+import { getPathByNS, JSONToMMEL, RepoFileType } from '../utils/repo/io';
+import { MMELJSON } from '../model/json';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -58,8 +62,9 @@ const initModelWrapper = createEditorModelWrapper(initModel);
 const ModelWorkspace: React.FC<{
   isVisible: boolean;
   className?: string;
-}> = ({ isVisible, className }) => {
-  const { logger } = useContext(DatasetContext);
+  repo?: string;
+}> = ({ isVisible, className, repo }) => {
+  const { useObjectData, updateObjects } = useContext(DatasetContext);
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
@@ -83,10 +88,38 @@ const ModelWorkspace: React.FC<{
   const [diagProps, setDiagProps] = useState<WorkspaceDiagPackage | null>(null);
   const [idVisible, setIdVisible] = useState<boolean>(false);
 
-  function onLoad(params: OnLoadParams) {
-    logger?.log('flow loaded');
-    params.fitView();
-  }
+  const [toaster] = useState<IToaster>(Toaster.create());
+
+  const repoPath = getPathByNS(repo ?? '', RepoFileType.MODEL);
+  const workPath = getPathByNS(repo ?? '', RepoFileType.WORKSPACE);
+  const repoModelFile = useObjectData({
+    objectPaths: repo !== undefined ? [repoPath, workPath] : [],
+  });
+  const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
+  const workData = repo !== undefined ? repoModelFile.value.data[workPath] : {};
+
+  useMemo(() => {
+    if (
+      repo !== undefined &&
+      repoData !== null &&
+      repoData !== undefined &&
+      !repoModelFile.isUpdating
+    ) {
+      const json = repoData as MMELJSON;
+      const model = JSONToMMEL(json);
+      const mw = createEditorModelWrapper(model);
+      const ws =
+        workData !== undefined && workData !== null
+          ? (workData as SMARTWorkspace)
+          : createNewSMARTWorkspace();
+      setState({
+        ...state,
+        history: createPageHistory(mw),
+        modelWrapper: mw,
+        workspace: ws,
+      });
+    }
+  }, [repoData, repoModelFile.isUpdating]);
 
   const model = state.modelWrapper.model;
   const namespace = getNamespace(model);
@@ -116,7 +149,6 @@ const ModelWorkspace: React.FC<{
   function onProcessClick(pageid: string, processid: string): void {
     const mw = state.modelWrapper;
     mw.page = pageid;
-    logger?.log('Go to page', pageid);
     addToHistory(state.history, mw.page, processid);
     setState({ ...state });
   }
@@ -187,6 +219,8 @@ const ModelWorkspace: React.FC<{
             setModelWrapper={setModelWrapper}
             setWorkspace={setWorkspace}
             onClose={onClose}
+            isRepoMode={repo !== undefined}
+            onRepoSave={saveWork}
           />
         }
       >
@@ -242,67 +276,97 @@ const ModelWorkspace: React.FC<{
     />
   );
 
+  const hotkeys = [
+    {
+      combo: 'ctrl+s',
+      global: true,
+      label: 'Save Workspace',
+      onKeyDown: saveWork,
+    },
+  ];
+
+  async function saveWork() {
+    if (repo && updateObjects && isVisible) {
+      const task = updateObjects({
+        commitMessage: 'Updating concept',
+        _dangerouslySkipValidation: true,
+        objectChangeset: {
+          [workPath]: { newValue: state.workspace },
+        },
+      });
+      task.then(() =>
+        toaster.show({
+          message: 'Workspace saved',
+          intent: 'success',
+        })
+      );
+    }
+  }
+
   if (isVisible) {
     return (
-      <ReactFlowProvider>
-        {diagProps !== null && (
-          <WorkspaceDialog
-            diagProps={diagProps}
-            onClose={() => setDiagProps(null)}
-            modelStore={modelStore}
-            setModelStore={setModelStore}
-            model={model}
-            setRegistry={id =>
-              setDiagProps({
-                regid: id,
-                isFromReactNode: false,
-              })
-            }
-          />
-        )}
-        <Workspace
-          className={className}
-          toolbar={toolbar}
-          sidebar={sidebar}
-          navbarProps={{ breadcrumbs }}
-        >
-          <div css={react_flow_container_layout}>
-            <ReactFlow
-              key="MMELModel"
-              elements={getActionReactFlowElementsFrom(
-                state.modelWrapper,
-                state.dvisible,
-                onProcessClick,
-                getStyleById,
-                getSVGColorById,
-                onDataWorkspaceActive,
-                idVisible
-              )}
-              onLoad={onLoad}
-              nodesConnectable={false}
-              snapToGrid={true}
-              snapGrid={[10, 10]}
-              nodeTypes={NodeTypes}
-              edgeTypes={EdgeTypes}
-              nodesDraggable={false}
-            >
-              <Controls showInteractive={false}>
-                <DataVisibilityButton
-                  isOn={state.dvisible}
-                  onClick={toggleDataVisibility}
-                />
-                <IdVisibleButton
-                  isOn={idVisible}
-                  onClick={() => setIdVisible(x => !x)}
-                />
-              </Controls>
-            </ReactFlow>
-            {searchResult.size > 0 && (
-              <LegendPane list={SearchResultStyles} onLeft={false} />
+      <HotkeysProvider>
+        <HotkeysTarget2 hotkeys={hotkeys}>
+          <ReactFlowProvider>
+            {diagProps !== null && (
+              <WorkspaceDialog
+                diagProps={diagProps}
+                onClose={() => setDiagProps(null)}
+                modelStore={modelStore}
+                setModelStore={setModelStore}
+                model={model}
+                setRegistry={id =>
+                  setDiagProps({
+                    regid: id,
+                    isFromReactNode: false,
+                  })
+                }
+              />
             )}
-          </div>
-        </Workspace>
-      </ReactFlowProvider>
+            <Workspace
+              className={className}
+              toolbar={toolbar}
+              sidebar={sidebar}
+              navbarProps={{ breadcrumbs }}
+            >
+              <div css={react_flow_container_layout}>
+                <ReactFlow
+                  elements={getActionReactFlowElementsFrom(
+                    state.modelWrapper,
+                    state.dvisible,
+                    onProcessClick,
+                    getStyleById,
+                    getSVGColorById,
+                    onDataWorkspaceActive,
+                    idVisible
+                  )}
+                  onLoad={para => para.fitView()}
+                  nodesConnectable={false}
+                  snapToGrid={true}
+                  snapGrid={[10, 10]}
+                  nodeTypes={NodeTypes}
+                  edgeTypes={EdgeTypes}
+                  nodesDraggable={false}
+                >
+                  <Controls showInteractive={false}>
+                    <DataVisibilityButton
+                      isOn={state.dvisible}
+                      onClick={toggleDataVisibility}
+                    />
+                    <IdVisibleButton
+                      isOn={idVisible}
+                      onClick={() => setIdVisible(x => !x)}
+                    />
+                  </Controls>
+                </ReactFlow>
+                {searchResult.size > 0 && (
+                  <LegendPane list={SearchResultStyles} onLeft={false} />
+                )}
+              </div>
+            </Workspace>
+          </ReactFlowProvider>
+        </HotkeysTarget2>
+      </HotkeysProvider>
     );
   }
   return <div></div>;

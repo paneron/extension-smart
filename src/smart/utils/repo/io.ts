@@ -33,7 +33,11 @@ import {
 export enum RepoFileType {
   MODEL = 'model',
   MAP = 'map',
+  WORKSPACE = 'workspace',
 }
+
+export const JSONContext = 'https://bsi-ribose-smart.schema.org';
+export type JSONContextType = typeof JSONContext;
 
 export function getPathByNS(ns: string, type: RepoFileType) {
   return `/${type}/${ns}.json`;
@@ -42,6 +46,8 @@ export function getPathByNS(ns: string, type: RepoFileType) {
 export function MMELToSerializable(m: MMELModel): MMELJSON {
   return {
     ...m,
+    '@context': JSONContext,
+    '@type': 'MMEL_SMART',
     provisions: convertProvisions(m.provisions),
     notes: convertNotes(m.notes),
     elements: convertElements(m.elements),

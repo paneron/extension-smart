@@ -13,8 +13,11 @@ import {
   MMELView,
   NOTE_TYPE,
 } from '../serialize/interface/supportinterface';
+import { JSONContextType } from '../utils/repo/io';
 
 export type MMELJSON = {
+  '@context': JSONContextType;
+  '@type': 'MMEL_SMART';
   meta: MMELMetadata;
   roles: Record<string, MMELRole>;
   provisions: Record<string, JSONProvision>;

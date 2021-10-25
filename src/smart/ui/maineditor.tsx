@@ -133,6 +133,7 @@ import {
   RepoFileType,
 } from '../utils/repo/io';
 import { MMELJSON } from '../model/json';
+import { repoIndexPath } from '../model/repo';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -199,9 +200,11 @@ const ModelEditor: React.FC<{
 
   const repoPath = getPathByNS(repo ?? '', RepoFileType.MODEL);
   const repoModelFile = useObjectData({
-    objectPaths: repo !== undefined ? [repoPath] : [],
+    objectPaths: repo !== undefined ? [repoIndexPath, repoPath] : [],
   });
   const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
+  const repoIndex =
+    repo !== undefined ? repoModelFile.value.data[repoIndexPath] : {};
 
   useMemo(() => {
     if (
@@ -225,14 +228,26 @@ const ModelEditor: React.FC<{
   const model = mw.model;
 
   async function saveRepo() {
-    if (repo && updateObjects) {
+    if (repo && updateObjects && isVisible) {
       saveLayout();
-      const path = getPathByNS(repo, RepoFileType.MODEL);
+      const meta = model.meta;
       const task = updateObjects({
         commitMessage: 'Updating concept',
         _dangerouslySkipValidation: true,
         objectChangeset: {
-          [path]: { newValue: MMELToSerializable(state.modelWrapper.model) },
+          [repoPath]: {
+            newValue: MMELToSerializable(state.modelWrapper.model),
+          },
+          [repoIndexPath]: {
+            newValue: {
+              ...repoIndex,
+              [repo]: {
+                shortname: meta.shortname,
+                title: meta.title,
+                date: new Date(),
+              },
+            },
+          },
         },
       });
       task.then(() =>

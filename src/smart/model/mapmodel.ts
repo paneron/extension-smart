@@ -1,5 +1,6 @@
 import React from 'react';
 import { buildModelLinks } from '../utils/ModelFunctions';
+import { JSONContext, JSONContextType } from '../utils/repo/io';
 import {
   EditorModel,
   EditorNode,
@@ -26,6 +27,8 @@ export interface MappingDoc {
 export type MappingType = Record<string, Record<string, MappingMeta>>;
 
 export interface MapProfile {
+  '@context': JSONContextType;
+  '@type': 'MMEL_MAP';
   id: string; // namespace of the implementation model
   mapSet: Record<string, MapSet>;
   docs: Record<string, MappingDoc>;
@@ -43,6 +46,8 @@ export interface MappingMeta {
 
 export function createMapProfile(): MapProfile {
   return {
+    '@context': JSONContext,
+    '@type': 'MMEL_MAP',
     id: '',
     mapSet: {},
     docs: {},
