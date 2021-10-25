@@ -24,7 +24,7 @@ import { LegendInterface } from '../model/States';
 import { VersionState, VersionStatus } from '../model/versioncompare';
 import { ViewFunctionInterface } from '../model/ViewFunctionModel';
 import VersionDiffLogView from '../ui/version/VersionDiffLogView';
-import { getRootName, Logger } from './ModelFunctions';
+import { getRootName } from './ModelFunctions';
 
 const ComparisonResultStyles: Record<VersionStatus, LegendInterface> = {
   same: { label: 'Identical', color: 'lightblue' },
@@ -355,7 +355,6 @@ function matchPage(props: FunctionProps): boolean {
   state.oricomments[page.id] = {};
   state.refcomments[refpage.id] = {};
   for (const c in page.childs) {
-    Logger.logger.log(page.id, c);
     const child = model.elements[c];
     const refchild = refpage.childs[c];
     const refelm = ref.elements[c];
@@ -516,7 +515,6 @@ function matchPage(props: FunctionProps): boolean {
   state.refedges[refpage.id] = {};
   for (const x in page.edges) {
     const e1 = page.edges[x];
-    Logger.logger.log('edge', page.id, e1.from);
     for (const y in refpage.edges) {
       const e2 = refpage.edges[y];
       if (e1.from === e2.from && e1.to === e2.to) {

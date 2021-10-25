@@ -9,48 +9,50 @@ import { useContext, useState } from 'react';
 import { react_flow_container_layout } from '../../../css/layout';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { MMELRepo, RepoIndex, repoIndexPath, RepoItem } from '../../model/repo';
-import { getPathByNS, RepoFileType } from '../../utils/repo/io';
+import {
+  getPathByNS,
+  MMELToSerializable,
+  RepoFileType,
+} from '../../utils/repo/io';
 import RepoImportButton from './RepoImportButton';
 import RepoModelFile from './RepoItem';
 import RepoInfoPane from './RepoInfoPane';
+import RepoCloseButton from './RepoCloseButton';
 
 const RepoViewer: React.FC<{
   isVisible: boolean;
   className?: string;
   repo?: MMELRepo;
-  setRepo: (x: MMELRepo|undefined) => void;
-}> = function ({ isVisible, className, repo, setRepo }) {  
-  const { logger, useObjectData, updateObjects } = useContext(DatasetContext);  
+  setRepo: (x: MMELRepo | undefined) => void;
+}> = function ({ isVisible, className, repo, setRepo }) {
+  const { useObjectData, updateObjects } = useContext(DatasetContext);
 
   const [toaster] = useState<IToaster>(Toaster.create());
-  const repoFile = useObjectData({ objectPaths: [repoIndexPath] });  
-  
-  const repoData = repoFile.value.data[repoIndexPath];
-  const index = (repoData??{}) as RepoIndex;
-  
-  logger.log(repoData === null);
-  logger.log('index contents:', Object.values(index).map(x => x.shortname).join(','));
+  const repoFile = useObjectData({ objectPaths: [repoIndexPath] });
 
-  async function saveIndex<T>(updated: RepoIndex, path?:string, data?: T) {
+  const repoData = repoFile.value.data[repoIndexPath];
+  const index = (repoData ?? {}) as RepoIndex;
+
+  async function saveIndex<T>(updated: RepoIndex, path?: string, data?: T) {
     if (updateObjects) {
       if (path !== undefined && data !== undefined) {
         await updateObjects({
           commitMessage: 'Updating concept',
           _dangerouslySkipValidation: true,
           objectChangeset: {
-            [repoIndexPath]: {oldValue: undefined, newValue: updated},
-            // [path]: {newValue: data}
+            [repoIndexPath]: { oldValue: undefined, newValue: updated },
+            [path]: { newValue: data },
           },
-        });      
+        });
       } else {
         await updateObjects({
           commitMessage: 'Updating concept',
           _dangerouslySkipValidation: true,
           objectChangeset: {
-            [repoIndexPath]: {oldValue: undefined, newValue: updated}            
+            [repoIndexPath]: { oldValue: undefined, newValue: updated },
           },
-        });      
-      }      
+        });
+      }
     } else {
       toaster.show({
         message: 'No write access to the repository',
@@ -74,13 +76,17 @@ const RepoViewer: React.FC<{
         intent: 'danger',
       });
     } else {
-      const newItem: RepoItem = {        
+      const newItem: RepoItem = {
         shortname: meta.shortname,
         title: meta.title,
         date: new Date(),
       };
       const updated = { ...index, [ns]: newItem };
-      saveIndex(updated, getPathByNS(ns, RepoFileType.MODEL), model);
+      saveIndex(
+        updated,
+        getPathByNS(ns, RepoFileType.MODEL),
+        MMELToSerializable(model)
+      );
       toaster.show({
         message: `Done: model with namespace ${ns} added to the repository`,
         intent: 'success',
@@ -100,6 +106,9 @@ const RepoViewer: React.FC<{
   const toolbar = (
     <ControlGroup>
       <RepoImportButton addMW={addMW} />
+      {repo !== undefined && (
+        <RepoCloseButton onClose={() => setRepo(undefined)} />
+      )}
     </ControlGroup>
   );
 
@@ -131,6 +140,8 @@ const RepoViewer: React.FC<{
   );
 };
 
-const EmptyMsg = () => <p style={{margin: 10}}>No document in the repository.</p>;
+const EmptyMsg = () => (
+  <p style={{ margin: 10 }}>No document in the repository.</p>
+);
 
 export default RepoViewer;

@@ -1,5 +1,5 @@
-import { OpenDialogProps } from '@riboseinc/paneron-extension-kit/types';
 import { BufferDataset } from '@riboseinc/paneron-extension-kit/types/buffers';
+import { OpenFileDialogProps } from '@riboseinc/paneron-extension-kit/types/dialogs';
 import { DataType } from '../serialize/interface/baseinterface';
 import { VarType } from '../serialize/interface/supportinterface';
 
@@ -130,6 +130,6 @@ export interface LoggerInterface {
 }
 
 export type OpenFileInterface = (
-  opts: OpenDialogProps,
+  opts: OpenFileDialogProps,
   cb?: (data: BufferDataset) => void
 ) => Promise<BufferDataset>;

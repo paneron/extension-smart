@@ -11,7 +11,7 @@ type VF = () => void;
 const RepoModelFile: React.FC<{ file: RepoItem; onDelete: VF; onOpen: VF }> =
   function ({ file, onDelete, onOpen }) {
     return (
-      <ContextMenu2 content={<ItemMenu onDelete={onDelete} onOpen={onOpen}/>}>
+      <ContextMenu2 content={<ItemMenu onDelete={onDelete} onOpen={onOpen} />}>
         <Card
           style={{
             width: '15vw',
@@ -33,11 +33,14 @@ const RepoModelFile: React.FC<{ file: RepoItem; onDelete: VF; onOpen: VF }> =
     );
   };
 
-const ItemMenu: React.FC<{ onDelete: VF; onOpen: VF }> = function ({ onDelete, onOpen }) {
+const ItemMenu: React.FC<{ onDelete: VF; onOpen: VF }> = function ({
+  onDelete,
+  onOpen,
+}) {
   return (
     <Menu>
       <MenuItem text="Open" onClick={onOpen} />
-      <MenuItem text="Delete" intent="danger" onClick={onDelete} />      
+      <MenuItem text="Delete" intent="danger" onClick={onDelete} />
     </Menu>
   );
 };

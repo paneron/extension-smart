@@ -107,7 +107,9 @@ const SimulationDetails: React.FC<{
             ))}
           </ul>
         ) : edges.length === 1 ? (
-          <Button onClick={() => onMove(edges[0].to)}>Next</Button>
+          <Button fill onClick={() => onMove(edges[0].to)}>
+            Next
+          </Button>
         ) : history.items.length > 1 ? (
           <>
             <Text>End of subprocess</Text>
@@ -134,7 +136,10 @@ const PathOption: React.FC<{
   return elm !== undefined ? (
     <li>
       <p>{getName(elm)}</p>
-      {condition} <Button onClick={() => onMove(to)}>Select this path</Button>
+      {condition}{' '}
+      <Button fill onClick={() => onMove(to)}>
+        Select this path
+      </Button>
     </li>
   ) : (
     <></>

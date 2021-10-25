@@ -22,7 +22,15 @@ const EditorFileMenu: React.FC<{
   setModelWrapper: (m: ModelWrapper) => void;
   getLatestLayout: () => ModelWrapper;
   setDialogType: (x: DiagTypes) => void;
-}> = function ({ setModelWrapper, getLatestLayout, setDialogType }) {
+  isRepoMode: boolean;
+  onRepoSave: () => void;
+}> = function ({
+  setModelWrapper,
+  getLatestLayout,
+  setDialogType,
+  isRepoMode,
+  onRepoSave,
+}) {
   const {
     logger,
     getBlob,
@@ -61,26 +69,37 @@ const EditorFileMenu: React.FC<{
 
   return (
     <Menu>
-      <MenuItem text="New" onClick={handleNew} icon="document" />
-      <MenuItem
-        text="Open…"
-        disabled={!canOpen}
-        onClick={() =>
-          handleModelOpen({
-            setModelWrapper,
-            useDecodedBlob,
-            requestFileFromFilesystem,
-            logger,
-          })
-        }
-        icon="document-open"
-      />
-      <MenuItem
-        text="Save…"
-        onClick={handleSave}
-        disabled={!canSave}
-        icon="floppy-disk"
-      />
+      {isRepoMode ? (
+        <MenuItem
+          text="Save"
+          label="Ctrl + S"
+          onClick={onRepoSave}
+          icon="floppy-disk"
+        />
+      ) : (
+        <>
+          <MenuItem text="New" onClick={handleNew} icon="document" />
+          <MenuItem
+            text="Open…"
+            disabled={!canOpen}
+            onClick={() =>
+              handleModelOpen({
+                setModelWrapper,
+                useDecodedBlob,
+                requestFileFromFilesystem,
+                logger,
+              })
+            }
+            icon="document-open"
+          />
+          <MenuItem
+            text="Save…"
+            onClick={handleSave}
+            disabled={!canSave}
+            icon="floppy-disk"
+          />
+        </>
+      )}
       <MenuDivider />
       <MenuItem
         text="Model settings…"

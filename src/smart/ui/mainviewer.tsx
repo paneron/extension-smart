@@ -63,6 +63,8 @@ import SimulationPane from './sidebar/SimulationPane';
 import RegistrySummary from './summary/RegistrySummary';
 import ProvisionSettings from './summary/ProvisionSettings';
 import VersionTrackerSettingPane from './version/VersionTrackerSetting';
+import { getPathByNS, JSONToMMEL, RepoFileType } from '../utils/repo/io';
+import { MMELJSON } from '../model/json';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -90,8 +92,9 @@ export const FuntionNames: Record<FunctionPage, string> = {
 const ModelViewer: React.FC<{
   isVisible: boolean;
   className?: string;
-}> = ({ isVisible, className }) => {
-  const { logger, useDecodedBlob, requestFileFromFilesystem } =
+  repo?: string;
+}> = ({ isVisible, className, repo }) => {
+  const { logger, useObjectData, useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
   Logger.logger = logger;
 
@@ -121,6 +124,27 @@ const ModelViewer: React.FC<{
   const [toaster] = useState<IToaster>(Toaster.create());
   const [idVisible, setIdVisible] = useState<boolean>(false);
   const [funMS, setFunMS] = useState<FunModel | undefined>(undefined);
+
+  const repoPath = getPathByNS(repo ?? '', RepoFileType.MODEL);
+  const repoModelFile = useObjectData({
+    objectPaths: repo !== undefined ? [repoPath] : [],
+  });
+  const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
+
+  useMemo(() => {
+    if (
+      repo !== undefined &&
+      repoData !== null &&
+      repoData !== undefined &&
+      !repoModelFile.isUpdating
+    ) {
+      const json = repoData as MMELJSON;
+      const model = JSONToMMEL(json);
+      const mw = createEditorModelWrapper(model);
+      buildModelLinks(mw.model);
+      setModelWrapper(mw);
+    }
+  }, [repoData, repoModelFile.isUpdating]);
 
   function showMsg(msg: IToastProps) {
     toaster.show(msg);
@@ -424,22 +448,26 @@ const ModelViewer: React.FC<{
 
   const toolbar = (
     <ControlGroup>
-      <MGDButton
-        onClick={() =>
-          handleModelOpen({
-            setModelWrapper,
-            useDecodedBlob,
-            requestFileFromFilesystem,
-            logger,
-            indexModel: buildModelLinks,
-          })
-        }
-      >
-        Open Model
-      </MGDButton>
-      <MGDButton onClick={() => setModelWrapper({ ...initModelWrapper })}>
-        Close
-      </MGDButton>
+      {repo === undefined && (
+        <>
+          <MGDButton
+            onClick={() =>
+              handleModelOpen({
+                setModelWrapper,
+                useDecodedBlob,
+                requestFileFromFilesystem,
+                logger,
+                indexModel: buildModelLinks,
+              })
+            }
+          >
+            Open Model
+          </MGDButton>
+          <MGDButton onClick={() => setModelWrapper({ ...initModelWrapper })}>
+            Close
+          </MGDButton>
+        </>
+      )}
       <Popover2
         minimal
         placement="bottom-start"

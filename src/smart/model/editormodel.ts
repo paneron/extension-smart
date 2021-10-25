@@ -176,6 +176,18 @@ export function isMMELFigure(x: MMELObject): x is MMELFigure {
   return x.datatype === DataType.FIGURE;
 }
 
+export function isMMELProcess(x: MMELNode): x is MMELProcess {
+  return x.datatype === DataType.PROCESS;
+}
+
+export function isMMELApproval(x: MMELNode): x is MMELApproval {
+  return x.datatype === DataType.APPROVAL;
+}
+
+export function isMMELDataClass(x: MMELNode): x is MMELDataClass {
+  return x.datatype === DataType.DATACLASS;
+}
+
 export function getEditorNodeInfoById(model: EditorModel, id: string): string {
   if (id !== '') {
     const node = model.elements[id];

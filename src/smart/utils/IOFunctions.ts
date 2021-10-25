@@ -1,4 +1,5 @@
-import { Hooks, SaveDialogProps } from '@riboseinc/paneron-extension-kit/types';
+import { Hooks } from '@riboseinc/paneron-extension-kit/types';
+import { SaveFileDialogProps } from '@riboseinc/paneron-extension-kit/types/dialogs';
 import { MMELDocument } from '../model/document';
 import { EditorModel } from '../model/editormodel';
 import { MapProfile } from '../model/mapmodel';
@@ -238,7 +239,7 @@ export async function handleFileOpen(props: {
 export async function saveToFileSystem(props: {
   getBlob?: (value: string) => Promise<Uint8Array>;
   writeFileToFilesystem?: (opts: {
-    dialogOpts: SaveDialogProps;
+    dialogOpts: SaveFileDialogProps;
     bufferData: Uint8Array;
   }) => Promise<{
     success: true;

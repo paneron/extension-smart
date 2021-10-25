@@ -47,6 +47,7 @@ const EditWrapper: React.FC<{
   isVisible: boolean;
   className?: string;
   setClickListener: (f: (() => void)[]) => void;
+  repo?: string;
 }> = function (props) {
   const [state, setState] = useState<EditorState>({
     dvisible: true,
@@ -203,6 +204,7 @@ const EditWrapper: React.FC<{
           paste={copied !== undefined ? paste : undefined}
           setSelectedId={setSelectedId}
           isBSIEnabled={isBSI}
+          resetHistory={() => setHistory({ past: [], future: [] })}
         />
       </HotkeysTarget2>
     </HotkeysProvider>

@@ -50,19 +50,21 @@ interface TabProps {
     setModel: (m: EditorModel) => void;
     onMetaChanged: (meta: MMELMetadata) => void;
     showMsg: (msg: IToastProps) => void;
+    repo: string | undefined;
   }>;
 }
 
 const tabs: Record<SETTINGPAGE, TabProps> = {
   [SETTINGPAGE.METAPAGE]: {
     title: 'Metadata',
-    Panel: ({ model, onMetaChanged, showMsg }) => (
+    Panel: ({ model, onMetaChanged, showMsg, repo }) => (
       <MetaEditPage
         meta={model.meta}
         setMetadata={(meta: MMELMetadata) => {
           onMetaChanged(meta);
         }}
         showMsg={showMsg}
+        isRepoMode={repo !== undefined}
       />
     ),
   },
@@ -139,7 +141,8 @@ const BasicSettingPane: React.FC<{
   setModel: (m: EditorModel) => void;
   onMetaChanged: (meta: MMELMetadata) => void;
   showMsg: (msg: IToastProps) => void;
-}> = ({ model, setModel, onMetaChanged, showMsg }) => {
+  repo: string | undefined;
+}> = ({ model, setModel, onMetaChanged, showMsg, repo }) => {
   const { logger } = useContext(DatasetContext);
   const [page, setPage] = useState<SETTINGPAGE>(SETTINGPAGE.METAPAGE);
 
@@ -173,6 +176,7 @@ const BasicSettingPane: React.FC<{
                 setModel={setModel}
                 onMetaChanged={onMetaChanged}
                 showMsg={showMsg}
+                repo={repo}
               />
             }
           />

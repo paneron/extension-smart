@@ -22,6 +22,8 @@ import ReactFlow, {
 import {
   ControlGroup,
   Dialog,
+  HotkeysProvider,
+  HotkeysTarget2,
   IToaster,
   IToastProps,
   Toaster,
@@ -33,6 +35,7 @@ import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
 import {
+  createEditorModelWrapper,
   getEditorReactFlowElementsFrom,
   ModelWrapper,
 } from '../model/modelwrapper';
@@ -123,6 +126,13 @@ import { RefTextSelection } from '../model/selectionImport';
 import ImportFromSelectionButton from './popover/ImportFromSelectionButton';
 import { DataType } from '../serialize/interface/baseinterface';
 import EditorEditMenu from './menu/EditorEditMenu';
+import {
+  getPathByNS,
+  JSONToMMEL,
+  MMELToSerializable,
+  RepoFileType,
+} from '../utils/repo/io';
+import { MMELJSON } from '../model/json';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -136,6 +146,8 @@ const ModelEditor: React.FC<{
   paste?: () => void;
   setSelectedId: (id: string | undefined) => void;
   isBSIEnabled?: boolean;
+  repo?: string;
+  resetHistory: () => void;
 }> = ({
   isVisible,
   className,
@@ -148,8 +160,10 @@ const ModelEditor: React.FC<{
   paste,
   setSelectedId,
   isBSIEnabled,
+  repo,
+  resetHistory,
 }) => {
-  const { logger } = useContext(DatasetContext);
+  const { logger, useObjectData, updateObjects } = useContext(DatasetContext);
 
   Logger.logger = logger!;
 
@@ -183,8 +197,52 @@ const ModelEditor: React.FC<{
   const [isImportRegOpen, setIsImportRegOpen] = useState<boolean>(false);
   const [idVisible, setIdVisible] = useState<boolean>(false);
 
+  const repoPath = getPathByNS(repo ?? '', RepoFileType.MODEL);
+  const repoModelFile = useObjectData({
+    objectPaths: repo !== undefined ? [repoPath] : [],
+  });
+  const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
+
+  useMemo(() => {
+    if (
+      repo !== undefined &&
+      repoData !== null &&
+      repoData !== undefined &&
+      !repoModelFile.isUpdating
+    ) {
+      const json = repoData as MMELJSON;
+      const model = JSONToMMEL(json);
+      const mw = createEditorModelWrapper(model);
+      setState(
+        { ...state, history: createPageHistory(mw), modelWrapper: mw },
+        false
+      );
+      resetHistory();
+    }
+  }, [repoData, repoModelFile.isUpdating]);
+
   const mw = state.modelWrapper;
   const model = mw.model;
+
+  async function saveRepo() {
+    if (repo && updateObjects) {
+      saveLayout();
+      const path = getPathByNS(repo, RepoFileType.MODEL);
+      const task = updateObjects({
+        commitMessage: 'Updating concept',
+        _dangerouslySkipValidation: true,
+        objectChangeset: {
+          [path]: { newValue: MMELToSerializable(state.modelWrapper.model) },
+        },
+      });
+      task.then(() =>
+        toaster.show({
+          message: 'Model saved',
+          intent: 'success',
+        })
+      );
+    }
+  }
 
   function showMsg(msg: IToastProps) {
     toaster.show(msg);
@@ -452,6 +510,15 @@ const ModelEditor: React.FC<{
     });
   }
 
+  const hotkeys = [
+    {
+      combo: 'ctrl+s',
+      global: true,
+      label: 'Save',
+      onKeyDown: saveRepo,
+    },
+  ];
+
   const referenceMenu = (
     <>
       <Popover2
@@ -512,6 +579,8 @@ const ModelEditor: React.FC<{
               setModelWrapper: setNewModelWrapper,
               getLatestLayout: saveLayout,
               setDialogType,
+              isRepoMode: repo !== undefined,
+              onRepoSave: saveRepo,
             }}
           />
         }
@@ -590,97 +659,104 @@ const ModelEditor: React.FC<{
   if (isVisible) {
     const diagProps = dialogPack.type === null ? null : MyDiag[dialogPack.type];
     return (
-      <div css={multi_model_container}>
-        {diagProps !== null && (
-          <Dialog
-            isOpen={dialogPack !== null}
-            title={diagProps.title}
-            css={
-              diagProps.fullscreen ? [dialog_layout, dialog_layout__full] : ''
-            }
-            onClose={() => setDialogType(null)}
-            canEscapeKeyClose={false}
-            canOutsideClickClose={false}
-          >
-            <diagProps.Panel
-              {...{ setModelWrapper, onMetaChanged, showMsg }}
-              modelwrapper={state.modelWrapper}
-              callback={dialogPack.callback}
-              cancel={() => {
-                setDialogType(null);
-              }}
-              msg={dialogPack.msg}
-            />
-          </Dialog>
-        )}
-        <ReactFlowProvider>
-          <Workspace
-            {...{ className, toolbar, sidebar }}
-            navbarProps={{ breadcrumbs }}
-            style={{ flex: 3 }}
-          >
-            <div css={react_flow_container_layout}>
-              <ReactFlow
-                key="MMELModel"
-                elements={getEditorReactFlowElementsFrom(
-                  state.modelWrapper,
-                  state.dvisible,
-                  state.edgeDeleteVisible,
-                  onProcessClick,
-                  removeEdge,
-                  getStyleById,
-                  getSVGColorById,
-                  idVisible
-                )}
-                {...{ onLoad, onDrop, onDragOver }}
-                onConnect={connectHandle}
-                nodesConnectable={true}
-                snapToGrid={true}
-                snapGrid={[10, 10]}
-                nodeTypes={NodeTypes}
-                edgeTypes={EdgeTypes}
-                ref={canvusRef}
+      <HotkeysProvider>
+        <HotkeysTarget2 hotkeys={hotkeys}>
+          <div css={multi_model_container}>
+            {diagProps !== null && (
+              <Dialog
+                isOpen={dialogPack !== null}
+                title={diagProps.title}
+                css={
+                  diagProps.fullscreen
+                    ? [dialog_layout, dialog_layout__full]
+                    : ''
+                }
+                onClose={() => setDialogType(null)}
+                canEscapeKeyClose={false}
+                canOutsideClickClose={false}
               >
-                <Controls>
-                  <DataVisibilityButton
-                    isOn={state.dvisible}
-                    onClick={toggleDataVisibility}
-                  />
-                  <EdgeEditButton
-                    isOn={state.edgeDeleteVisible}
-                    onClick={toggleEdgeDelete}
-                  />
-                  <IdVisibleButton
-                    isOn={idVisible}
-                    onClick={() => setIdVisible(x => !x)}
-                  />
-                </Controls>
-              </ReactFlow>
-              {searchResult.size > 0 && (
-                <LegendPane list={SearchResultStyles} onLeft={false} />
-              )}
-            </div>
-          </Workspace>
-        </ReactFlowProvider>
+                <diagProps.Panel
+                  {...{ setModelWrapper, onMetaChanged, showMsg }}
+                  modelwrapper={state.modelWrapper}
+                  callback={dialogPack.callback}
+                  cancel={() => {
+                    setDialogType(null);
+                  }}
+                  repo={repo}
+                  msg={dialogPack.msg}
+                />
+              </Dialog>
+            )}
+            <ReactFlowProvider>
+              <Workspace
+                {...{ className, toolbar, sidebar }}
+                navbarProps={{ breadcrumbs }}
+                style={{ flex: 3 }}
+              >
+                <div css={react_flow_container_layout}>
+                  <ReactFlow
+                    key="MMELModel"
+                    elements={getEditorReactFlowElementsFrom(
+                      state.modelWrapper,
+                      state.dvisible,
+                      state.edgeDeleteVisible,
+                      onProcessClick,
+                      removeEdge,
+                      getStyleById,
+                      getSVGColorById,
+                      idVisible
+                    )}
+                    {...{ onLoad, onDrop, onDragOver }}
+                    onConnect={connectHandle}
+                    nodesConnectable={true}
+                    snapToGrid={true}
+                    snapGrid={[10, 10]}
+                    nodeTypes={NodeTypes}
+                    edgeTypes={EdgeTypes}
+                    ref={canvusRef}
+                  >
+                    <Controls>
+                      <DataVisibilityButton
+                        isOn={state.dvisible}
+                        onClick={toggleDataVisibility}
+                      />
+                      <EdgeEditButton
+                        isOn={state.edgeDeleteVisible}
+                        onClick={toggleEdgeDelete}
+                      />
+                      <IdVisibleButton
+                        isOn={idVisible}
+                        onClick={() => setIdVisible(x => !x)}
+                      />
+                    </Controls>
+                  </ReactFlow>
+                  {searchResult.size > 0 && (
+                    <LegendPane list={SearchResultStyles} onLeft={false} />
+                  )}
+                </div>
+              </Workspace>
+            </ReactFlowProvider>
 
-        {reference !== undefined &&
-          (isModelWrapper(reference) ? (
-            <ModelReferenceView
-              className={className}
-              modelWrapper={reference}
-              setModelWrapper={setReference}
-              menuControl={referenceMenu}
-            />
-          ) : (
-            <DocumentReferenceView
-              className={className}
-              document={reference}
-              menuControl={referenceMenu}
-              setClickListener={setClickListener}
-              setPImport={setSImport}
-            />
-          ))}
-      </div>
+            {reference !== undefined &&
+              (isModelWrapper(reference) ? (
+                <ModelReferenceView
+                  className={className}
+                  modelWrapper={reference}
+                  setModelWrapper={setReference}
+                  menuControl={referenceMenu}
+                />
+              ) : (
+                <DocumentReferenceView
+                  className={className}
+                  document={reference}
+                  menuControl={referenceMenu}
+                  setClickListener={setClickListener}
+                  setPImport={setSImport}
+                />
+              ))}
+          </div>
+        </HotkeysTarget2>
+      </HotkeysProvider>
     );
   }
   return <div></div>;

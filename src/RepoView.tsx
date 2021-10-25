@@ -26,6 +26,13 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
   const [selectedModule, selectModule] = useState<ModuleName>('repo');
   const [clickListener, setClickListener] = useState<(() => void)[]>([]);
 
+  function onRepoChange(r: string | undefined) {
+    setRepo(r);
+    if (r !== undefined) {
+      selectModule('modelViewer');
+    }
+  }
+
   FocusStyleManager.onlyShowFocusOnTabs();
 
   const toolbar = (
@@ -100,7 +107,7 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
               overflow: hidden;
             `}
             repo={repo}
-            setRepo={setRepo}
+            setRepo={onRepoChange}
           />
         );
       })}

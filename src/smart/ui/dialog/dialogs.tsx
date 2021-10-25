@@ -55,6 +55,7 @@ export interface IDiagInterface {
   cancel: () => void;
   showMsg: (msg: IToastProps) => void;
   msg: string;
+  repo: string | undefined;
 }
 
 export interface EditorDiagProps {
@@ -88,7 +89,13 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.SETTING]: {
     title: 'Setting',
     fullscreen: true,
-    Panel: ({ modelwrapper, setModelWrapper, onMetaChanged, showMsg }) => (
+    Panel: ({
+      modelwrapper,
+      setModelWrapper,
+      onMetaChanged,
+      showMsg,
+      repo,
+    }) => (
       <BasicSettingPane
         model={modelwrapper.model}
         setModel={(model: EditorModel) =>
@@ -96,6 +103,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
         }
         onMetaChanged={onMetaChanged}
         showMsg={showMsg}
+        repo={repo}
       />
     ),
   },

@@ -7,13 +7,15 @@ import { useState } from 'react';
 import MGDButton from '../../MGDComponents/MGDButton';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
+import { DescriptionItem } from '../common/description/fields';
 import { NormalTextField } from '../common/fields';
 
 const MetaEditPage: React.FC<{
   meta: MMELMetadata;
   setMetadata: (meta: MMELMetadata) => void;
   showMsg: (msg: IToastProps) => void;
-}> = ({ meta, setMetadata, showMsg }) => {
+  isRepoMode: boolean;
+}> = ({ meta, setMetadata, showMsg, isRepoMode }) => {
   const [editing, setEditing] = useState<MMELMetadata>({ ...meta });
 
   function save() {
@@ -34,6 +36,17 @@ const MetaEditPage: React.FC<{
 
   return (
     <FormGroup>
+      {isRepoMode ? (
+        <DescriptionItem label="Namepsace" value={editing.namespace} />
+      ) : (
+        <NormalTextField
+          text="Globally unique identifier of the Data Model (Namespace)"
+          value={editing.namespace}
+          onChange={(x: string) => {
+            setEditing({ ...editing, namespace: x.replaceAll(/\s+/g, '') });
+          }}
+        />
+      )}
       <NormalTextField
         text="Data Model Schema"
         value={editing.schema}
@@ -67,13 +80,6 @@ const MetaEditPage: React.FC<{
         value={editing.shortname}
         onChange={(x: string) => {
           setEditing({ ...editing, shortname: x });
-        }}
-      />
-      <NormalTextField
-        text="Globally unique identifier of the Data Model (Namespace)"
-        value={editing.namespace}
-        onChange={(x: string) => {
-          setEditing({ ...editing, namespace: x.replaceAll(/\s+/g, '') });
         }}
       />
       <MGDButtonGroup>

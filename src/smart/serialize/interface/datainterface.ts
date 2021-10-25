@@ -14,6 +14,7 @@ export interface MMELDataAttribute extends MMELObject {
 
 // data structure for data class
 export interface MMELDataClass extends MMELNode {
+  id: string;
   attributes: Record<string, MMELDataAttribute>;
   datatype: DataType.DATACLASS;
 }

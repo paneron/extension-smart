@@ -1,15 +1,18 @@
-import { MMELNode } from './baseinterface';
+import { DataType, MMELNode } from './baseinterface';
 
 export interface MMELApproval extends MMELNode {
+  id: string;
   name: string;
   modality: string;
   actor: string;
   approver: string;
   records: Set<string>;
   ref: Set<string>;
+  datatype: DataType.APPROVAL;
 }
 
 export interface MMELProcess extends MMELNode {
+  id: string;
   name: string;
   modality: string;
   actor: string;
@@ -21,4 +24,5 @@ export interface MMELProcess extends MMELNode {
   figures: Set<string>;
   page: string;
   measure: string[];
+  datatype: DataType.PROCESS;
 }
