@@ -9,23 +9,48 @@ import { useContext, useState } from 'react';
 import { react_flow_container_layout } from '../../../css/layout';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { MMELRepo, RepoIndex, repoIndexPath, RepoItem } from '../../model/repo';
-import { repoRead, repoWrite } from '../../utils/repo/io';
+import { getPathByNS, RepoFileType } from '../../utils/repo/io';
 import RepoImportButton from './RepoImportButton';
 import RepoModelFile from './RepoItem';
+import RepoInfoPane from './RepoInfoPane';
 
 const RepoViewer: React.FC<{
   isVisible: boolean;
   className?: string;
   repo?: MMELRepo;
-  setRepo: (x?: MMELRepo) => void;
-}> = function ({ isVisible, className, repo, setRepo }) {
-  const { useObjectData, updateObjects } = useContext(DatasetContext);
-  const [toaster] = useState<IToaster>(Toaster.create());
-  const index = repoRead<RepoIndex>(repoIndexPath, useObjectData) ?? {};
+  setRepo: (x: MMELRepo|undefined) => void;
+}> = function ({ isVisible, className, repo, setRepo }) {  
+  const { logger, useObjectData, updateObjects } = useContext(DatasetContext);  
 
-  function saveIndex(updated: RepoIndex) {
+  const [toaster] = useState<IToaster>(Toaster.create());
+  const repoFile = useObjectData({ objectPaths: [repoIndexPath] });  
+  
+  const repoData = repoFile.value.data[repoIndexPath];
+  const index = (repoData??{}) as RepoIndex;
+  
+  logger.log(repoData === null);
+  logger.log('index contents:', Object.values(index).map(x => x.shortname).join(','));
+
+  async function saveIndex<T>(updated: RepoIndex, path?:string, data?: T) {
     if (updateObjects) {
-      repoWrite(repoIndexPath, updated, updateObjects);
+      if (path !== undefined && data !== undefined) {
+        await updateObjects({
+          commitMessage: 'Updating concept',
+          _dangerouslySkipValidation: true,
+          objectChangeset: {
+            [repoIndexPath]: {oldValue: undefined, newValue: updated},
+            // [path]: {newValue: data}
+          },
+        });      
+      } else {
+        await updateObjects({
+          commitMessage: 'Updating concept',
+          _dangerouslySkipValidation: true,
+          objectChangeset: {
+            [repoIndexPath]: {oldValue: undefined, newValue: updated}            
+          },
+        });      
+      }      
     } else {
       toaster.show({
         message: 'No write access to the repository',
@@ -49,13 +74,17 @@ const RepoViewer: React.FC<{
         intent: 'danger',
       });
     } else {
-      const newItem: RepoItem = {
+      const newItem: RepoItem = {        
         shortname: meta.shortname,
         title: meta.title,
         date: new Date(),
       };
       const updated = { ...index, [ns]: newItem };
-      saveIndex(updated);
+      saveIndex(updated, getPathByNS(ns, RepoFileType.MODEL), model);
+      toaster.show({
+        message: `Done: model with namespace ${ns} added to the repository`,
+        intent: 'success',
+      });
     }
   }
 
@@ -63,6 +92,9 @@ const RepoViewer: React.FC<{
     const updated = { ...index };
     delete updated[ns];
     saveIndex(updated);
+    if (ns === repo) {
+      setRepo(undefined);
+    }
   }
 
   const toolbar = (
@@ -73,6 +105,7 @@ const RepoViewer: React.FC<{
 
   return isVisible ? (
     <Workspace toolbar={toolbar} className={className}>
+      <RepoInfoPane repo={repo} index={index} />
       <div css={react_flow_container_layout}>
         {Object.values(index).length === 0 && <EmptyMsg />}
         <div
@@ -82,11 +115,12 @@ const RepoViewer: React.FC<{
             margin: 10,
           }}
         >
-          {Object.entries(index).map(([key, x]) => (
+          {Object.entries(index).map(([ns, x]) => (
             <RepoModelFile
-              key={key}
+              key={ns}
               file={x}
-              onDelete={() => deleteModel(key)}
+              onDelete={() => deleteModel(ns)}
+              onOpen={() => setRepo(ns)}
             />
           ))}
         </div>
@@ -97,6 +131,6 @@ const RepoViewer: React.FC<{
   );
 };
 
-const EmptyMsg = () => <p>No document in the repository.</p>;
+const EmptyMsg = () => <p style={{margin: 10}}>No document in the repository.</p>;
 
 export default RepoViewer;

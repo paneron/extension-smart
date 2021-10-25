@@ -6,10 +6,12 @@ import { ContextMenu2, Tooltip2 } from '@blueprintjs/popover2';
 import { jsx } from '@emotion/react';
 import { RepoItem } from '../../model/repo';
 
-const RepoModelFile: React.FC<{ file: RepoItem; onDelete: () => void }> =
-  function ({ file, onDelete }) {
+type VF = () => void;
+
+const RepoModelFile: React.FC<{ file: RepoItem; onDelete: VF; onOpen: VF }> =
+  function ({ file, onDelete, onOpen }) {
     return (
-      <ContextMenu2 content={<ItemMenu onDelete={onDelete} />}>
+      <ContextMenu2 content={<ItemMenu onDelete={onDelete} onOpen={onOpen}/>}>
         <Card
           style={{
             width: '15vw',
@@ -19,6 +21,7 @@ const RepoModelFile: React.FC<{ file: RepoItem; onDelete: () => void }> =
             justifyContent: 'center',
             flexDirection: 'column',
           }}
+          onDoubleClick={onOpen}
           interactive={true}
         >
           <Tooltip2 content={file.title}>
@@ -30,10 +33,11 @@ const RepoModelFile: React.FC<{ file: RepoItem; onDelete: () => void }> =
     );
   };
 
-const ItemMenu: React.FC<{ onDelete: () => void }> = function ({ onDelete }) {
+const ItemMenu: React.FC<{ onDelete: VF; onOpen: VF }> = function ({ onDelete, onOpen }) {
   return (
     <Menu>
-      <MenuItem text="Delete" intent="danger" onClick={onDelete} />
+      <MenuItem text="Open" onClick={onOpen} />
+      <MenuItem text="Delete" intent="danger" onClick={onDelete} />      
     </Menu>
   );
 };
