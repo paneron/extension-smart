@@ -7,7 +7,11 @@ import { Button } from '@blueprintjs/core';
 const RepoCloseButton: React.FC<{
   onClose: () => void;
 }> = function ({ onClose }) {
-  return <Button onClick={onClose}>Close model</Button>;
+  return (
+    <Button style={{ marginLeft: 10 }} onClick={onClose}>
+      Close model
+    </Button>
+  );
 };
 
 export default RepoCloseButton;

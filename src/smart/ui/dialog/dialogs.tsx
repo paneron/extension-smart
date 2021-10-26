@@ -20,6 +20,7 @@ import EditTimerPage from '../edit/timeredit';
 import EditSignalEventPage from '../edit/signaleventedit';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
 import { IToastProps } from '@blueprintjs/core';
+import { MMELRepo } from '../../model/repo';
 
 export enum DiagTypes {
   SETTING = 'setting',
@@ -55,7 +56,7 @@ export interface IDiagInterface {
   cancel: () => void;
   showMsg: (msg: IToastProps) => void;
   msg: string;
-  repo: string | undefined;
+  repo: MMELRepo | undefined;
 }
 
 export interface EditorDiagProps {

@@ -55,6 +55,7 @@ import { WorkspaceDiagPackage, WorkspaceDialog } from './dialog/WorkspaceDiag';
 import { getNamespace } from '../utils/ModelFunctions';
 import { getPathByNS, JSONToMMEL, RepoFileType } from '../utils/repo/io';
 import { MMELJSON } from '../model/json';
+import { MMELRepo } from '../model/repo';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -62,7 +63,7 @@ const initModelWrapper = createEditorModelWrapper(initModel);
 const ModelWorkspace: React.FC<{
   isVisible: boolean;
   className?: string;
-  repo?: string;
+  repo?: MMELRepo;
 }> = ({ isVisible, className, repo }) => {
   const { useObjectData, updateObjects } = useContext(DatasetContext);
 
@@ -90,8 +91,8 @@ const ModelWorkspace: React.FC<{
 
   const [toaster] = useState<IToaster>(Toaster.create());
 
-  const repoPath = getPathByNS(repo ?? '', RepoFileType.MODEL);
-  const workPath = getPathByNS(repo ?? '', RepoFileType.WORKSPACE);
+  const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
+  const workPath = getPathByNS(repo ? repo.ns : '', RepoFileType.WORKSPACE);
   const repoModelFile = useObjectData({
     objectPaths: repo !== undefined ? [repoPath, workPath] : [],
   });

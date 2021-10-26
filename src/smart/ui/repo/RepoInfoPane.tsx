@@ -2,26 +2,29 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import { RepoIndex } from '../../model/repo';
+import { MMELRepo, RepoIndex } from '../../model/repo';
 import { DescriptionItem } from '../common/description/fields';
+import RepoCloseButton from './RepoCloseButton';
 
 const RepoInfoPane: React.FC<{
-  repo?: string;
+  repo?: MMELRepo;
   index: RepoIndex;
-}> = function ({ repo, index }) {
-  const item = repo !== undefined ? index[repo] : undefined;
+  onClose: () => void;
+}> = function ({ repo, index, onClose }) {
+  const item = repo !== undefined ? index[repo.ns] : undefined;
   return (
     <div
       style={{
         margin: 10,
       }}
     >
+      <p>
+        Viewing:
+        {item !== undefined ? item.shortname : 'Nil'}
+        {repo !== undefined && <RepoCloseButton onClose={onClose} />}
+      </p>
       <DescriptionItem
-        label="Viewing:"
-        value={item !== undefined ? item.shortname : 'Nil'}
-      />
-      <DescriptionItem
-        label="Number of models in repository:"
+        label="Number of items in repository:"
         value={Object.values(index).length.toString()}
       />
     </div>

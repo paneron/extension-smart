@@ -15,8 +15,9 @@ const SMARTDocumentView: React.FC<{
   onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
   MappingList?: React.FC<{ id: string }>;
   setSelected?: (id: string) => void;
+  isRepo?: boolean;
 }> = function (props) {
-  const { mmelDoc, onDragOver, mapSet, setSelected } = props;
+  const { mmelDoc, onDragOver, mapSet, setSelected, isRepo } = props;
   const docMap = useMemo(
     () =>
       mapSet !== undefined
@@ -28,8 +29,11 @@ const SMARTDocumentView: React.FC<{
   return (
     <div
       style={{
-        height:
-          mapSet !== undefined ? 'calc(100vh - 100px)' : 'calc(100vh - 50px)',
+        height: isRepo
+          ? 'calc(100vh - 25px)'
+          : mapSet !== undefined
+          ? 'calc(100vh - 100px)'
+          : 'calc(100vh - 50px)',
         overflowY: 'auto',
       }}
       onDragOver={onDragOver}

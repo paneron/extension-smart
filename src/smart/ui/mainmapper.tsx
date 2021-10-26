@@ -69,6 +69,7 @@ import {
 } from '../utils/repo/io';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { MMELJSON } from '../model/json';
+import { MMELRepo } from '../model/repo';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -78,7 +79,7 @@ const lineref: RefObject<HTMLDivElement> = React.createRef();
 const ModelMapper: React.FC<{
   isVisible: boolean;
   className?: string;
-  repo?: string;
+  repo?: MMELRepo;
 }> = ({ isVisible, className, repo }) => {
   const { useObjectData, updateObjects } = useContext(DatasetContext);
 
@@ -113,8 +114,8 @@ const ModelMapper: React.FC<{
   });
   const [toaster] = useState<IToaster>(Toaster.create());
 
-  const repoPath = getPathByNS(repo ?? '', RepoFileType.MODEL);
-  const mapPath = getPathByNS(repo ?? '', RepoFileType.MAP);
+  const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
+  const mapPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MAP);
   const repoModelFile = useObjectData({
     objectPaths: repo !== undefined ? [repoPath, mapPath] : [],
   });

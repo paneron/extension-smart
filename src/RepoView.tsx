@@ -9,6 +9,8 @@ import {
   Classes,
   Colors,
   ControlGroup,
+  HotkeysProvider,
+  HotkeysTarget2,
   IconName,
 } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
@@ -18,22 +20,35 @@ import ModelViewer from './smart/ui/mainviewer';
 import ModelWorkspace from './smart/ui/modelWorkspace';
 import { FocusStyleManager } from '@blueprintjs/core';
 import EditWrapper from './smart/ui/editFunctions/EditWrapper';
-import { MMELRepo } from './smart/model/repo';
+import { MMELRepo, RepoItemType } from './smart/model/repo';
 import RepoViewer from './smart/ui/repo/RepoViewer';
+import DocumentViewer from './smart/ui/docviewer';
 
 const RepositoryView: React.FC<Record<never, never>> = function () {
   const [repo, setRepo] = useState<MMELRepo | undefined>(undefined);
   const [selectedModule, selectModule] = useState<ModuleName>('repo');
   const [clickListener, setClickListener] = useState<(() => void)[]>([]);
+  const [isBSI, setIsBSI] = useState<boolean>(false);
 
-  function onRepoChange(r: string | undefined) {
+  const hotkeys = [
+    {
+      combo: 'ctrl+b',
+      global: true,
+      label: 'BSI',
+      onKeyDown: () => setIsBSI(x => !x),
+    },
+  ];
+
+  function onRepoChange(r: MMELRepo | undefined) {
     setRepo(r);
     if (r !== undefined) {
-      selectModule('modelViewer');
+      selectModule(r.type === 'Doc' ? 'docViewer' : 'modelViewer');
     }
   }
 
   FocusStyleManager.onlyShowFocusOnTabs();
+
+  const modules = ModuleList[repo ? repo.type : ''];
 
   const toolbar = (
     <ControlGroup
@@ -68,7 +83,7 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
         `}
         dangerouslySetInnerHTML={{ __html: BSI_WHITE_TEXT }}
       />
-      {MODULES.map(moduleName => (
+      {modules.map(moduleName => (
         <ModuleButton
           key={moduleName}
           moduleName={moduleName}
@@ -80,38 +95,44 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
   );
 
   return (
-    <div
-      css={css`
-        flex: 1;
-        overflow: hidden;
-        display: flex;
-        flex-flow: row nowrap;
-      `}
-      onMouseUp={() => {
-        for (const x of clickListener) {
-          x();
-        }
-      }}
-    >
-      {toolbar}
-      {MODULES.map(moduleName => {
-        const cfg = MODULE_CONFIGURATION[moduleName];
-        const View = cfg.view;
-        const selected = selectedModule === moduleName;
-        return (
-          <View
-            isVisible={selected}
-            setClickListener={setClickListener}
-            css={css`
-              flex: 1;
-              overflow: hidden;
-            `}
-            repo={repo}
-            setRepo={onRepoChange}
-          />
-        );
-      })}
-    </div>
+    <HotkeysProvider>
+      <HotkeysTarget2 hotkeys={hotkeys}>
+        <div
+          css={css`
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-flow: row nowrap;
+          `}
+          onMouseUp={() => {
+            for (const x of clickListener) {
+              x();
+            }
+          }}
+        >
+          {toolbar}
+          {modules.map(moduleName => {
+            const cfg = MODULE_CONFIGURATION[moduleName];
+            const View = cfg.view;
+            const selected = selectedModule === moduleName;
+            return (
+              <View
+                key={moduleName}
+                isVisible={selected}
+                setClickListener={setClickListener}
+                css={css`
+                  flex: 1;
+                  overflow: hidden;
+                `}
+                repo={repo}
+                setRepo={onRepoChange}
+                isBSI={isBSI}
+              />
+            );
+          })}
+        </div>
+      </HotkeysTarget2>
+    </HotkeysProvider>
   );
 };
 
@@ -123,9 +144,17 @@ const MODULES = [
   'modelEditor',
   'modelMapper',
   'modelImplement',
+  'docViewer',
 ] as const;
 
 type ModuleName = typeof MODULES[number];
+
+const ModuleList: Record<RepoItemType | '', ModuleName[]> = {
+  '': ['repo', 'modelViewer', 'modelEditor', 'modelMapper', 'modelImplement'],
+  Doc: ['repo', 'docViewer'],
+  Ref: ['repo', 'modelViewer', 'modelMapper', 'modelImplement'],
+  Imp: ['repo', 'modelViewer', 'modelEditor', 'modelMapper', 'modelImplement'],
+};
 
 interface ModuleConfiguration {
   title: string;
@@ -137,6 +166,7 @@ interface ModuleConfiguration {
     setClickListener: (f: (() => void)[]) => void;
     repo?: MMELRepo;
     setRepo: (x?: MMELRepo) => void;
+    isBSI: boolean;
   }>;
 }
 
@@ -170,6 +200,12 @@ const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {
     description: 'Model implementation',
     icon: 'unarchive',
     view: ModelWorkspace,
+  },
+  docViewer: {
+    title: 'Document viewer',
+    description: 'Document viewer',
+    icon: 'document-open',
+    view: DocumentViewer,
   },
 };
 

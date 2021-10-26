@@ -65,6 +65,7 @@ import ProvisionSettings from './summary/ProvisionSettings';
 import VersionTrackerSettingPane from './version/VersionTrackerSetting';
 import { getPathByNS, JSONToMMEL, RepoFileType } from '../utils/repo/io';
 import { MMELJSON } from '../model/json';
+import { MMELRepo } from '../model/repo';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -92,7 +93,7 @@ export const FuntionNames: Record<FunctionPage, string> = {
 const ModelViewer: React.FC<{
   isVisible: boolean;
   className?: string;
-  repo?: string;
+  repo?: MMELRepo;
 }> = ({ isVisible, className, repo }) => {
   const { logger, useObjectData, useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
@@ -125,7 +126,7 @@ const ModelViewer: React.FC<{
   const [idVisible, setIdVisible] = useState<boolean>(false);
   const [funMS, setFunMS] = useState<FunModel | undefined>(undefined);
 
-  const repoPath = getPathByNS(repo ?? '', RepoFileType.MODEL);
+  const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
   const repoModelFile = useObjectData({
     objectPaths: repo !== undefined ? [repoPath] : [],
   });

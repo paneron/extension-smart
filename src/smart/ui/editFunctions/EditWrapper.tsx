@@ -26,6 +26,7 @@ import {
   createEditorModelWrapper,
   ModelWrapper,
 } from '../../model/modelwrapper';
+import { MMELRepo } from '../../model/repo';
 import { EditorState } from '../../model/States';
 import { MMELObject } from '../../serialize/interface/baseinterface';
 import { MMELEnum } from '../../serialize/interface/datainterface';
@@ -47,7 +48,8 @@ const EditWrapper: React.FC<{
   isVisible: boolean;
   className?: string;
   setClickListener: (f: (() => void)[]) => void;
-  repo?: string;
+  repo?: MMELRepo;
+  isBSI: boolean;
 }> = function (props) {
   const [state, setState] = useState<EditorState>({
     dvisible: true,
@@ -60,7 +62,6 @@ const EditWrapper: React.FC<{
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [copied, setCopied] = useState<string | undefined>(undefined);
   const [toaster] = useState<IToaster>(Toaster.create());
-  const [isBSI, setIsBSI] = useState<boolean>(false);
 
   const hotkeys = [
     {
@@ -86,12 +87,6 @@ const EditWrapper: React.FC<{
       global: true,
       label: 'Paste',
       onKeyDown: paste,
-    },
-    {
-      combo: 'ctrl+b',
-      global: true,
-      label: 'BSI',
-      onKeyDown: () => setIsBSI(x => !x),
     },
   ];
 
@@ -203,7 +198,7 @@ const EditWrapper: React.FC<{
           copy={selected !== undefined ? copy : undefined}
           paste={copied !== undefined ? paste : undefined}
           setSelectedId={setSelectedId}
-          isBSIEnabled={isBSI}
+          isBSIEnabled={props.isBSI}
           resetHistory={() => setHistory({ past: [], future: [] })}
         />
       </HotkeysTarget2>

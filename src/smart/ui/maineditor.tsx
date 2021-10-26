@@ -133,7 +133,11 @@ import {
   RepoFileType,
 } from '../utils/repo/io';
 import { MMELJSON } from '../model/json';
-import { repoIndexPath } from '../model/repo';
+import { MMELRepo, RepoIndex, repoIndexPath } from '../model/repo';
+import {
+  createEmptyIndex,
+  setValueToIndex,
+} from '../utils/repo/CommonFunctions';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -147,7 +151,7 @@ const ModelEditor: React.FC<{
   paste?: () => void;
   setSelectedId: (id: string | undefined) => void;
   isBSIEnabled?: boolean;
-  repo?: string;
+  repo?: MMELRepo;
   resetHistory: () => void;
 }> = ({
   isVisible,
@@ -198,13 +202,15 @@ const ModelEditor: React.FC<{
   const [isImportRegOpen, setIsImportRegOpen] = useState<boolean>(false);
   const [idVisible, setIdVisible] = useState<boolean>(false);
 
-  const repoPath = getPathByNS(repo ?? '', RepoFileType.MODEL);
+  const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
   const repoModelFile = useObjectData({
     objectPaths: repo !== undefined ? [repoIndexPath, repoPath] : [],
   });
   const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
-  const repoIndex =
-    repo !== undefined ? repoModelFile.value.data[repoIndexPath] : {};
+  const repoIndex: RepoIndex | null =
+    repo !== undefined
+      ? (repoModelFile.value.data[repoIndexPath] as RepoIndex)
+      : createEmptyIndex();
 
   useMemo(() => {
     if (
@@ -239,14 +245,13 @@ const ModelEditor: React.FC<{
             newValue: MMELToSerializable(state.modelWrapper.model),
           },
           [repoIndexPath]: {
-            newValue: {
-              ...repoIndex,
-              [repo]: {
-                shortname: meta.shortname,
-                title: meta.title,
-                date: new Date(),
-              },
-            },
+            newValue: setValueToIndex(repoIndex!, repo.ns, {
+              namespace: repo.ns,
+              shortname: meta.shortname,
+              title: meta.title,
+              date: new Date(),
+              type: 'Imp',
+            }),
           },
         },
       });

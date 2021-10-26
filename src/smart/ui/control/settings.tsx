@@ -14,6 +14,7 @@ import {
 } from '../../../css/MGDTabs';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel } from '../../model/editormodel';
+import { MMELRepo } from '../../model/repo';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
 import DataClassEditPage from '../edit/dataclassedit';
 import EnumEditPage from '../edit/enumedit';
@@ -50,7 +51,7 @@ interface TabProps {
     setModel: (m: EditorModel) => void;
     onMetaChanged: (meta: MMELMetadata) => void;
     showMsg: (msg: IToastProps) => void;
-    repo: string | undefined;
+    repo: MMELRepo | undefined;
   }>;
 }
 
@@ -141,7 +142,7 @@ const BasicSettingPane: React.FC<{
   setModel: (m: EditorModel) => void;
   onMetaChanged: (meta: MMELMetadata) => void;
   showMsg: (msg: IToastProps) => void;
-  repo: string | undefined;
+  repo: MMELRepo | undefined;
 }> = ({ model, setModel, onMetaChanged, showMsg, repo }) => {
   const { logger } = useContext(DatasetContext);
   const [page, setPage] = useState<SETTINGPAGE>(SETTINGPAGE.METAPAGE);

@@ -25,9 +25,12 @@ const RepoModelFile: React.FC<{ file: RepoItem; onDelete: VF; onOpen: VF }> =
           interactive={true}
         >
           <Tooltip2 content={file.title}>
-            <Icon icon="document" iconSize={80} />
+            <Icon
+              icon={file.type === 'Doc' ? 'document' : 'layout-hierarchy'}
+              iconSize={80}
+            />
           </Tooltip2>
-          <h4>{file.shortname}</h4>
+          <h3 style={{ textAlign: 'center' }}>{file.shortname}</h3>
         </Card>
       </ContextMenu2>
     );
