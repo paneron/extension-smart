@@ -2,7 +2,13 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import { Button, ControlGroup, IToaster, Toaster } from '@blueprintjs/core';
+import {
+  Button,
+  ControlGroup,
+  InputGroup,
+  IToaster,
+  Toaster,
+} from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import { useContext, useMemo, useState } from 'react';
@@ -34,6 +40,15 @@ import { Popover2 } from '@blueprintjs/popover2';
 import RepoImportMenu from './RepoImportMenu';
 import { MMELDocument } from '../../model/document';
 
+function matchFilter(item: RepoItem, filter: string) {
+  return (
+    filter === '' ||
+    item.namespace.includes(filter) ||
+    item.shortname.includes(filter) ||
+    item.title.includes(filter)
+  );
+}
+
 const RepoViewer: React.FC<{
   isVisible: boolean;
   className?: string;
@@ -43,6 +58,8 @@ const RepoViewer: React.FC<{
 }> = function ({ isVisible, className, repo, setRepo, isBSI }) {
   const { useObjectData, updateObjects } = useContext(DatasetContext);
 
+  const [filter, setFilter] = useState<string>('');
+
   const [toaster] = useState<IToaster>(Toaster.create());
   const repoFile = useObjectData({ objectPaths: [repoIndexPath] });
 
@@ -50,6 +67,18 @@ const RepoViewer: React.FC<{
   const index: RepoIndex = (repoData ?? createEmptyIndex()) as RepoIndex;
 
   const [refs, imps, docs] = useMemo(() => groupItems(index), [index]);
+  const frefs = useMemo(
+    () => refs.filter(x => matchFilter(x, filter)),
+    [refs, filter]
+  );
+  const fimps = useMemo(
+    () => imps.filter(x => matchFilter(x, filter)),
+    [imps, filter]
+  );
+  const fdocs = useMemo(
+    () => docs.filter(x => matchFilter(x, filter)),
+    [docs, filter]
+  );
 
   async function saveIndex(
     updated: RepoIndex,
@@ -201,29 +230,37 @@ const RepoViewer: React.FC<{
 
   return isVisible ? (
     <Workspace toolbar={toolbar} className={className}>
-      <RepoInfoPane
-        repo={repo}
-        index={index}
-        onClose={() => setRepo(undefined)}
-      />
-      <RepoGroup
-        legend="Reference models"
-        list={refs}
-        deleteItem={deleteItem}
-        setRepo={setRepo}
-      />
-      <RepoGroup
-        legend="Implementation models"
-        list={imps}
-        deleteItem={deleteItem}
-        setRepo={setRepo}
-      />
-      <RepoGroup
-        legend="SMART documents"
-        list={docs}
-        deleteItem={deleteItem}
-        setRepo={setRepo}
-      />
+      <div style={{ height: 'calc(100vh - 50px)', overflowY: 'auto' }}>
+        <RepoInfoPane
+          repo={repo}
+          index={index}
+          onClose={() => setRepo(undefined)}
+        />
+        <InputGroup
+          leftIcon="filter"
+          onChange={x => setFilter(x.currentTarget.value)}
+          placeholder="Filter..."
+          value={filter}
+        />
+        <RepoGroup
+          legend={`Reference models [${frefs.length} / ${refs.length}]`}
+          list={frefs}
+          deleteItem={deleteItem}
+          setRepo={setRepo}
+        />
+        <RepoGroup
+          legend={`Reference models [${fimps.length} / ${imps.length}]`}
+          list={fimps}
+          deleteItem={deleteItem}
+          setRepo={setRepo}
+        />
+        <RepoGroup
+          legend={`SMART documents [${fdocs.length} / ${docs.length}]`}
+          list={fdocs}
+          deleteItem={deleteItem}
+          setRepo={setRepo}
+        />
+      </div>
     </Workspace>
   ) : (
     <div></div>

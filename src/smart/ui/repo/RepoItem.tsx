@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Card, Icon, Menu, MenuItem } from '@blueprintjs/core';
+import { Card, Icon, Menu, MenuItem, Text } from '@blueprintjs/core';
 import { ContextMenu2, Tooltip2 } from '@blueprintjs/popover2';
 import { jsx } from '@emotion/react';
 import { RepoItem } from '../../model/repo';
@@ -30,7 +30,17 @@ const RepoModelFile: React.FC<{ file: RepoItem; onDelete: VF; onOpen: VF }> =
               iconSize={80}
             />
           </Tooltip2>
-          <h3 style={{ textAlign: 'center' }}>{file.shortname}</h3>
+          <div
+            style={{
+              width: '15vw',
+              marginTop: 10,
+              fontSize: 18,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}
+          >
+            <Text ellipsize>{file.shortname}</Text>
+          </div>
         </Card>
       </ContextMenu2>
     );
