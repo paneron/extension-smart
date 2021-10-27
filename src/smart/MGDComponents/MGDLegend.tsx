@@ -5,7 +5,9 @@
 import { jsx } from '@emotion/react';
 import {
   mgd_legend,
+  mgd_legend__bottom,
   mgd_legend__left,
+  mgd_legend__normal,
   mgd_legend__right,
 } from '../../css/MGDLegend';
 
@@ -14,14 +16,21 @@ import {
 interface OwnProps {
   children: JSX.Element[];
   onLeft: boolean;
+  bottom: boolean;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function MGDLegend(props: OwnProps) {
-  const { children, onLeft } = props;
+  const { children, onLeft, bottom } = props;
   return (
-    <aside css={[mgd_legend, onLeft ? mgd_legend__left : mgd_legend__right]}>
+    <aside
+      css={[
+        mgd_legend,
+        onLeft ? mgd_legend__left : mgd_legend__right,
+        bottom ? mgd_legend__bottom : mgd_legend__normal,
+      ]}
+    >
       {children}
     </aside>
   );

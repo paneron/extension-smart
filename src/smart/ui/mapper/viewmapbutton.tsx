@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { flownode_top_right_button_layout } from '../../../css/layout';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { ModelType } from '../../model/editormodel';
-import { MapViewButtonToolTip } from '../../utils/MappingCalculator';
+import { MapViewButtonToolTip } from '../../utils/map/MappingCalculator';
 
 interface MouseState {
   isHover: boolean;

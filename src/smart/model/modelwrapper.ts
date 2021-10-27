@@ -41,7 +41,7 @@ import {
   getSourceStyleById,
   MapCoverType,
   MapResultType,
-} from '../utils/MappingCalculator';
+} from '../utils/map/MappingCalculator';
 import { MapSet } from './mapmodel';
 import { map_style__coverage } from '../../css/visual';
 import React from 'react';

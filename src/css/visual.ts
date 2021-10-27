@@ -4,7 +4,7 @@ import {
   MappingResultStyles,
   MappingSourceStyles,
   MapSourceType,
-} from '../smart/utils/MappingCalculator';
+} from '../smart/utils/map/MappingCalculator';
 import {
   SearchHighlightType,
   SearchResultStyles,

@@ -676,6 +676,13 @@ const ModelEditor: React.FC<{
     [isVisible]
   );
 
+  useEffect(
+    () => () => {
+      setReference(undefined);
+    },
+    [repo]
+  );
+
   if (isVisible) {
     const diagProps = dialogPack.type === null ? null : MyDiag[dialogPack.type];
     return (

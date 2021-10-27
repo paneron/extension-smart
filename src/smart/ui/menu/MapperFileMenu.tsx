@@ -18,12 +18,14 @@ const MapperFileMenu: React.FC<{
   onMapImport: () => void;
   isRepoMode: boolean;
   onRepoSave: () => void;
+  onResetMapping: () => void;
 }> = function ({
   mapProfile,
   onMapProfileChanged,
   onMapImport,
   isRepoMode,
   onRepoSave,
+  onResetMapping,
 }) {
   const {
     getBlob,
@@ -53,12 +55,27 @@ const MapperFileMenu: React.FC<{
   return (
     <Menu>
       {isRepoMode ? (
-        <MenuItem
-          text="Save"
-          onClick={onRepoSave}
-          label="Ctrl + S"
-          icon="floppy-disk"
-        />
+        <>
+          <MenuItem
+            text="Save"
+            onClick={onRepoSave}
+            label="Ctrl + S"
+            icon="floppy-disk"
+          />
+          <MenuDivider />
+          <MenuItem
+            text="Clear current mapping"
+            onClick={onResetMapping}
+            intent="danger"
+            icon="eraser"
+          />
+          <MenuItem
+            text="Clear all mappings"
+            onClick={handleNew}
+            intent="danger"
+            icon="trash"
+          />
+        </>
       ) : (
         <>
           <MenuItem text="New" onClick={handleNew} icon="document" />

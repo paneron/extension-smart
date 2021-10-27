@@ -47,7 +47,7 @@ import {
   MappingResultStyles,
   MappingSourceStyles,
   MapResultType,
-} from '../../utils/MappingCalculator';
+} from '../../utils/map/MappingCalculator';
 import LegendPane from '../common/description/LegendPane';
 import MappingPartyList from './mappartylist';
 import { handleModelOpen } from '../../utils/IOFunctions';
@@ -55,6 +55,7 @@ import { MMELDocument } from '../../model/document';
 import SMARTDocumentView from './document/DocumentView';
 import { Popover2 } from '@blueprintjs/popover2';
 import MapperDocumentMenu from '../menu/MapperDocumentMenu';
+import RepoMapRefMenus from './repo/RepoMapRefMenu';
 
 const ModelDiagram: React.FC<{
   className?: string;
@@ -71,6 +72,7 @@ const ModelDiagram: React.FC<{
   getPartnerModelElementById: (id: string) => string;
   onClose: () => void;
   isRepoMode?: boolean;
+  setRefRepo?: (x: string) => void;
 }> = ({
   className,
   viewOption,
@@ -86,6 +88,7 @@ const ModelDiagram: React.FC<{
   getPartnerModelElementById,
   onClose,
   isRepoMode = false,
+  setRefRepo,
 }) => {
   const { logger, useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
@@ -178,28 +181,38 @@ const ModelDiagram: React.FC<{
   const toolbar = (
     <ControlGroup>
       {!isRepoMode && (
-        <MGDButton
-          onClick={() => {
-            handleModelOpen({
-              setModelWrapper,
-              useDecodedBlob,
-              requestFileFromFilesystem,
-              logger,
-              indexModel,
-            });
-          }}
-        >
-          {'Open ' + MapperModelLabel[modelProps.modelType as MapperModelType]}
-        </MGDButton>
+        <>
+          <MGDButton
+            onClick={() => {
+              handleModelOpen({
+                setModelWrapper,
+                useDecodedBlob,
+                requestFileFromFilesystem,
+                logger,
+                indexModel,
+              });
+            }}
+          >
+            {'Open ' +
+              MapperModelLabel[modelProps.modelType as MapperModelType]}
+          </MGDButton>
+          {!isImp && (
+            <Popover2
+              minimal
+              placement="bottom-start"
+              content={<MapperDocumentMenu setDocument={onDocumentLoaded} />}
+            >
+              <MGDButton>Open Document</MGDButton>
+            </Popover2>
+          )}
+        </>
       )}
-      {!isImp && (
-        <Popover2
-          minimal
-          placement="bottom-start"
-          content={<MapperDocumentMenu setDocument={onDocumentLoaded} />}
-        >
-          <MGDButton>Open Document</MGDButton>
-        </Popover2>
+      {isRepoMode && setRefRepo && (
+        <RepoMapRefMenus
+          setModelWrapper={setModelWrapper}
+          setDocument={onDocumentLoaded}
+          setRefRepo={setRefRepo}
+        />
       )}
       {!isRepoMode && <MGDButton onClick={onClose}> Close </MGDButton>}
       {isModelWrapper(mw) && (

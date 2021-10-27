@@ -10,7 +10,7 @@ import MGDHeading from '../../MGDComponents/MGDHeading';
 import { MapProfile } from '../../model/mapmodel';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { handleMappingOpen, handleModelOpen } from '../../utils/IOFunctions';
-import { mapAI } from '../../utils/MappingCalculator';
+import { mapAI } from '../../utils/map/MappingCalculator';
 import { getNamespace } from '../../utils/ModelFunctions';
 
 const centeredLayout: CSSProperties = {

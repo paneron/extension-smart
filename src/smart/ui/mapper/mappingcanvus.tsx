@@ -3,7 +3,7 @@
 
 import { jsx } from '@emotion/react';
 import React, { RefObject } from 'react';
-import { MapEdgeResult } from '../../utils/MappingCalculator';
+import { MapEdgeResult } from '../../utils/map/MappingCalculator';
 import { mgd_canvas } from '../../../css/layout';
 import { CSSROOTVARIABLES } from '../../../css/root.css';
 

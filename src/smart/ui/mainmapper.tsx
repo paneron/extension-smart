@@ -2,7 +2,13 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import React, { RefObject, useContext, useMemo, useState } from 'react';
+import React, {
+  RefObject,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import ModelDiagram from './mapper/ModelDiagram';
 import {
@@ -48,7 +54,7 @@ import {
   calculateMapping,
   filterMappings,
   filterMappingsForDocument,
-} from '../utils/MappingCalculator';
+} from '../utils/map/MappingCalculator';
 import MappingCanvus from './mapper/mappingCanvus';
 import MapperOptionMenu from './menu/mapperOptionMenu';
 import { EditMPropsInterface } from './dialog/dialogs';
@@ -69,7 +75,10 @@ import {
 } from '../utils/repo/io';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { MMELJSON } from '../model/json';
-import { MMELRepo } from '../model/repo';
+import { MMELRepo, RepoIndex, repoIndexPath } from '../model/repo';
+import RepoMapMainView from './mapper/repo/RepoMapMainView';
+import { LoadingContainer } from './common/Loading';
+import { MMELDocument } from '../model/document';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -90,6 +99,8 @@ const ModelMapper: React.FC<{
     docVisible: false,
     mapAIVisible: false,
     idVisible: false,
+    repoMapVisible: false,
+    repoLegendVisible: true,
   });
   const [implementProps, setImplProps] = useState<MapperState>({
     modelWrapper: { ...initModelWrapper },
@@ -113,14 +124,53 @@ const ModelMapper: React.FC<{
     to: '',
   });
   const [toaster] = useState<IToaster>(Toaster.create());
+  const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
 
   const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
   const mapPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MAP);
+  const refPath = getPathByNS(refrepo ?? '', RepoFileType.MODEL);
   const repoModelFile = useObjectData({
     objectPaths: repo !== undefined ? [repoPath, mapPath] : [],
   });
   const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
   const mapData = repo !== undefined ? repoModelFile.value.data[mapPath] : {};
+  const repoRefFile = useObjectData({
+    objectPaths: refrepo !== undefined ? [repoIndexPath, refPath] : [],
+  });
+  if (refrepo !== undefined && !repoRefFile.isUpdating) {
+    const index = repoRefFile.value.data[repoIndexPath] as RepoIndex;
+    if (index !== undefined) {
+      const data = repoRefFile.value.data[refPath];
+      const item = index[refrepo];
+      if (item !== undefined) {
+        if (item.type === 'Imp' || item.type === 'Ref') {
+          const json = data as MMELJSON;
+          const model = JSONToMMEL(json);
+          const mw = createEditorModelWrapper(model);
+          indexModel(mw.model);
+          onRefPropsChange({
+            ...referenceProps,
+            history: createPageHistory(mw),
+            modelWrapper: mw,
+            historyMap: buildHistoryMap(mw),
+          });
+        } else {
+          const doc = data as MMELDocument;
+          onRefPropsChange({
+            history: { items: [] },
+            historyMap: {},
+            modelWrapper: doc,
+            modelType: referenceProps.modelType,
+          });
+        }
+        setSelected({
+          modelType: referenceProps.modelType,
+          selected: '',
+        });
+      }
+      setRefRepo(undefined);
+    }
+  }
 
   useMemo(() => {
     if (
@@ -285,11 +335,14 @@ const ModelMapper: React.FC<{
     });
   }
 
-  if (!isVisible && selected.selected !== '') {
-    setSelected({
-      modelType: ModelType.IMP,
-      selected: '',
-    });
+  function onResetMapping() {
+    const mapset = mapProfile.mapSet;
+    const newMS: Record<string, MapSet> = {
+      ...mapset,
+      [refns]: { id: refns, mappings: {} },
+    };
+    const newProfile: MapProfile = { ...mapProfile, mapSet: newMS };
+    setMapProfile(newProfile);
   }
 
   function onImpNavigate(id: string) {
@@ -336,6 +389,13 @@ const ModelMapper: React.FC<{
     setViewOption({ ...viewOption, docVisible: false, mapAIVisible: false });
   }
 
+  if (!isVisible && selected.selected !== '') {
+    setSelected({
+      modelType: ModelType.IMP,
+      selected: '',
+    });
+  }
+
   const toolbar = (
     <ControlGroup>
       <Popover2
@@ -348,6 +408,7 @@ const ModelMapper: React.FC<{
             onMapImport={onMapImport}
             isRepoMode={repo !== undefined}
             onRepoSave={saveMapping}
+            onResetMapping={onResetMapping}
           />
         }
       >
@@ -360,6 +421,7 @@ const ModelMapper: React.FC<{
           <MapperOptionMenu
             viewOption={viewOption}
             setOptions={setViewOption}
+            isRepo={repo !== undefined}
           />
         }
       >
@@ -427,6 +489,12 @@ const ModelMapper: React.FC<{
       );
     }
   }
+
+  function clean() {
+    onRefClose();
+  }
+
+  useEffect(() => clean, [repo]);
 
   if (isVisible) {
     return (
@@ -504,24 +572,39 @@ const ModelMapper: React.FC<{
                 isRepoMode={repo !== undefined}
               />
               <div ref={lineref} css={vertical_line} />
-              <ModelDiagram
-                modelProps={referenceProps}
-                viewOption={viewOption}
-                setProps={onRefPropsChange}
-                className={className}
-                mapSet={mapSet}
-                onMapSetChanged={onMapSetChanged}
-                mapResult={mapResult}
-                setSelected={setSelected}
-                onMappingEdit={onMappingEdit}
-                issueNavigationRequest={onImpNavigate}
-                getPartnerModelElementById={id =>
-                  getEditorNodeInfoById(impmodel, id)
-                }
-                onClose={onRefClose}
-              />
+              {refrepo !== undefined ? (
+                <LoadingContainer label="Loading..." />
+              ) : (
+                <ModelDiagram
+                  modelProps={referenceProps}
+                  viewOption={viewOption}
+                  setProps={onRefPropsChange}
+                  className={className}
+                  mapSet={mapSet}
+                  onMapSetChanged={onMapSetChanged}
+                  mapResult={mapResult}
+                  setSelected={setSelected}
+                  onMappingEdit={onMappingEdit}
+                  issueNavigationRequest={onImpNavigate}
+                  getPartnerModelElementById={id =>
+                    getEditorNodeInfoById(impmodel, id)
+                  }
+                  onClose={onRefClose}
+                  isRepoMode={repo !== undefined}
+                  setRefRepo={setRefRepo}
+                />
+              )}
             </div>
             <MappingCanvus mapEdges={mapEdges} line={lineref} />
+            <RepoMapMainView
+              isVisible={repo !== undefined && viewOption.repoMapVisible}
+              viewOption={viewOption}
+              repo={repo}
+              loadModel={setRefRepo}
+              onClose={() =>
+                setViewOption({ ...viewOption, repoMapVisible: false })
+              }
+            />
           </Workspace>
         </HotkeysTarget2>
       </HotkeysProvider>

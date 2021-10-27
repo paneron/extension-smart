@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
-import { CSSROOTVARIABLES } from '../../css/root.css';
-import { map_style__coverage, map_style__source } from '../../css/visual';
+import { CSSROOTVARIABLES } from '../../../css/root.css';
+import { map_style__coverage, map_style__source } from '../../../css/visual';
 import {
   EditorModel,
   EditorNode,
@@ -9,13 +9,13 @@ import {
   isEditorEgate,
   isEditorProcess,
   ModelType,
-} from '../model/editormodel';
-import { PageHistory } from '../model/history';
-import { LegendInterface, MapperSelectedInterface } from '../model/States';
-import { MappingType, MapProfile, MapSet } from '../model/mapmodel';
+} from '../../model/editormodel';
+import { PageHistory } from '../../model/history';
+import { LegendInterface, MapperSelectedInterface } from '../../model/States';
+import { MappingType, MapProfile, MapSet } from '../../model/mapmodel';
 import { SerializedStyles } from '@emotion/react';
-import { DocStatement, MMELDocument } from '../model/document';
-import { getNamespace } from './ModelFunctions';
+import { DocStatement, MMELDocument } from '../../model/document';
+import { getNamespace } from '../ModelFunctions';
 
 export enum MapCoverType {
   FULL = 'full',

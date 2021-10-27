@@ -36,7 +36,7 @@ export enum RepoFileType {
   WORKSPACE = 'workspace',
 }
 
-export const JSONContext = 'https://bsi-ribose-smart.schema.org';
+export const JSONContext = 'https://bsi-ribose-smart.org';
 export type JSONContextType = typeof JSONContext;
 
 export function getPathByNS(ns: string, type: RepoFileType) {

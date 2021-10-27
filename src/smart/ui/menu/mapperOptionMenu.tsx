@@ -3,43 +3,68 @@
 
 import { jsx } from '@emotion/react';
 import React from 'react';
-import { IconName, Menu, MenuItem } from '@blueprintjs/core';
+import { IconName, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { MapperViewOption } from '../../model/States';
 
 const MapperOptionMenu: React.FC<{
   viewOption: MapperViewOption;
   setOptions: (opt: MapperViewOption) => void;
-}> = function ({ viewOption, setOptions }) {
-  function onDataVisibilityChanged() {
-    setOptions({ ...viewOption, dataVisible: !viewOption.dataVisible });
-  }
-
-  function onLegendVisibilityChanged() {
-    setOptions({ ...viewOption, legVisible: !viewOption.legVisible });
-  }
-
-  function onIdVisibilityChanged() {
-    setOptions({ ...viewOption, idVisible: !viewOption.idVisible });
-  }
-
+  isRepo: boolean;
+}> = function ({ viewOption, setOptions, isRepo }) {
   return (
     <Menu>
-      <MenuItem
-        text="Show data"
-        onClick={onDataVisibilityChanged}
-        icon={getVisibilityIconName(viewOption.dataVisible)}
+      <ViewMenuItem
+        pname="dataVisible"
+        label="Show data"
+        viewOption={viewOption}
+        setOptions={setOptions}
       />
-      <MenuItem
-        text="Show legends"
-        onClick={onLegendVisibilityChanged}
-        icon={getVisibilityIconName(viewOption.legVisible)}
+      <ViewMenuItem
+        pname="legVisible"
+        label="Show legends"
+        viewOption={viewOption}
+        setOptions={setOptions}
       />
-      <MenuItem
-        text="Show ID"
-        onClick={onIdVisibilityChanged}
-        icon={getVisibilityIconName(viewOption.idVisible)}
+      <ViewMenuItem
+        pname="idVisible"
+        label="Show ID"
+        viewOption={viewOption}
+        setOptions={setOptions}
       />
+      {isRepo && (
+        <>
+          <MenuDivider />
+          <ViewMenuItem
+            pname="repoMapVisible"
+            label="Repo map"
+            viewOption={viewOption}
+            setOptions={setOptions}
+          />
+          <ViewMenuItem
+            pname="repoLegendVisible"
+            label="Repo map legend"
+            viewOption={viewOption}
+            setOptions={setOptions}
+          />
+        </>
+      )}
     </Menu>
+  );
+};
+
+const ViewMenuItem: React.FC<{
+  pname: keyof MapperViewOption;
+  viewOption: MapperViewOption;
+  setOptions: (opt: MapperViewOption) => void;
+  label: string;
+}> = function ({ label, pname, viewOption, setOptions }) {
+  const value = viewOption[pname];
+  return (
+    <MenuItem
+      text={label}
+      onClick={() => setOptions({ ...viewOption, [pname]: !value })}
+      icon={getVisibilityIconName(value)}
+    />
   );
 };
 

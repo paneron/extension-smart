@@ -6,9 +6,10 @@ import { LegendInterface } from '../../../model/States';
 const LegendPane: React.FC<{
   list: Record<string, LegendInterface>;
   onLeft: boolean;
-}> = function ({ list, onLeft }) {
+  bottom?: boolean;
+}> = function ({ list, onLeft, bottom = false }) {
   return (
-    <MGDLegend onLeft={onLeft}>
+    <MGDLegend onLeft={onLeft} bottom={bottom}>
       {Object.values(list)
         .filter(entry => entry.color !== '')
         .map((value, index) => (

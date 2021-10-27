@@ -41,6 +41,8 @@ export interface MapperViewOption {
   legVisible: boolean; // visibility of legends
   docVisible: boolean; // visibility of document templates
   mapAIVisible: boolean; // visibility of mapping import calculation pane
+  repoMapVisible: boolean;
+  repoLegendVisible: boolean;
   idVisible: boolean;
 }
 

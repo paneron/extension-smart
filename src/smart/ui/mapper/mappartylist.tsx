@@ -10,7 +10,7 @@ import { MappingType } from '../../model/mapmodel';
 import {
   findImpMapPartners,
   findRefMapPartners,
-} from '../../utils/MappingCalculator';
+} from '../../utils/map/MappingCalculator';
 import { EditMappingButton, MapPartnerNavigateButton } from '../common/buttons';
 
 const MappingPartyList: React.FC<{
