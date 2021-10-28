@@ -249,7 +249,7 @@ const RepoViewer: React.FC<{
           setRepo={setRepo}
         />
         <RepoGroup
-          legend={`Reference models [${fimps.length} / ${imps.length}]`}
+          legend={`Implementation models [${fimps.length} / ${imps.length}]`}
           list={fimps}
           deleteItem={deleteItem}
           setRepo={setRepo}

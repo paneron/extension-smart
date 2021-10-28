@@ -1,0 +1,60 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { Button, Dialog } from '@blueprintjs/core';
+import { Popover2 } from '@blueprintjs/popover2';
+import { jsx } from '@emotion/react';
+import React, { useState } from 'react';
+import { RepoItemType } from '../../model/repo';
+import { ReferenceContent } from '../../model/States';
+import RepoItemSelector from '../repo/RepoItemSelector';
+import EditorReferenceMenu from './EditorReferenceMenu';
+
+const EditorReferenceMenuButton: React.FC<{
+  setReference: (x: ReferenceContent | undefined) => void;
+  isBSIEnabled?: boolean;
+  reference: ReferenceContent | undefined;
+  isRepo: boolean;
+  setRefRepo: (x: string) => void;
+}> = function (props) {
+  const { reference } = props;
+
+  const [type, setType] = useState<RepoItemType | undefined>(undefined);
+
+  return (
+    <>
+      <Popover2
+        minimal
+        placement="bottom-start"
+        content={
+          <EditorReferenceMenu
+            {...props}
+            setType={setType}
+            isCloseEnabled={reference !== undefined}
+          />
+        }
+      >
+        <Button>Reference model</Button>
+      </Popover2>
+      <Dialog
+        isOpen={type !== undefined}
+        canEscapeKeyClose={false}
+        canOutsideClickClose={false}
+        style={{
+          width: '75vw',
+          height: '50vh',
+        }}
+      >
+        {type !== undefined && (
+          <RepoItemSelector
+            {...props}
+            type={type}
+            onClose={() => setType(undefined)}
+          />
+        )}
+      </Dialog>
+    </>
+  );
+};
+
+export default EditorReferenceMenuButton;

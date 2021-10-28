@@ -66,10 +66,10 @@ const RepoItemSelector: React.FC<{
           placeholder="Filter..."
           value={filter}
         />
-        {Object.values(list).length === 0 && <EmptyMsg />}
         <fieldset
           style={{ width: 'calc(100% - 5px)', height: 'calc(100% - 70px)' }}
         >
+          {Object.values(list).length === 0 && <EmptyMsg />}
           <div
             style={{
               display: 'flex',
@@ -121,38 +121,38 @@ const RepoSelectItem: React.FC<{
   onClick: () => void;
 }> = function ({ file, onSelect, highlight, onClick }) {
   return (
-    <Card
-      style={{
-        width: '12vw',
-        height: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        backgroundColor: highlight ? 'lightblue' : undefined,
-      }}
-      onDoubleClick={onSelect}
-      onClick={onClick}
-      interactive={true}
-    >
-      <Tooltip2 content={file.title}>
+    <Tooltip2 content={file.title}>
+      <Card
+        style={{
+          width: '12vw',
+          height: 100,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          backgroundColor: highlight ? 'lightblue' : undefined,
+        }}
+        onDoubleClick={onSelect}
+        onClick={onClick}
+        interactive={true}
+      >
         <Icon
           icon={file.type === 'Doc' ? 'document' : 'layout-hierarchy'}
           iconSize={40}
         />
-      </Tooltip2>
-      <div
-        style={{
-          width: '12vw',
-          marginTop: 10,
-          fontSize: 14,
-          fontWeight: 'bold',
-          textAlign: 'center',
-        }}
-      >
-        <Text ellipsize>{file.shortname}</Text>
-      </div>
-    </Card>
+        <div
+          style={{
+            width: '12vw',
+            marginTop: 10,
+            fontSize: 14,
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          <Text ellipsize>{file.shortname}</Text>
+        </div>
+      </Card>
+    </Tooltip2>
   );
 };
 

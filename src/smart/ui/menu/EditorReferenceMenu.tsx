@@ -3,7 +3,7 @@
 
 import { jsx } from '@emotion/react';
 import React, { useContext } from 'react';
-import { Menu, MenuItem } from '@blueprintjs/core';
+import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import {
   FILE_TYPE,
@@ -12,76 +12,145 @@ import {
 } from '../../utils/IOFunctions';
 import { ReferenceContent } from '../../model/States';
 import { indexModel } from '../../model/mapmodel';
+import { RepoItemType } from '../../model/repo';
 
 const EditorReferenceMenu: React.FC<{
   setReference: (x: ReferenceContent | undefined) => void;
   isBSIEnabled?: boolean;
   isCloseEnabled: boolean;
-}> = function ({ setReference, isBSIEnabled = false, isCloseEnabled }) {
+  isRepo: boolean;
+  setType: (x: RepoItemType) => void;
+}> = function ({
+  setReference,
+  isBSIEnabled = false,
+  isCloseEnabled,
+  isRepo,
+  setType,
+}) {
   const { useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
 
   const canOpen = requestFileFromFilesystem && useDecodedBlob;
 
+  const FileModelButton = () => (
+    <MenuItem
+      text="Open Model"
+      disabled={!canOpen}
+      onClick={() =>
+        handleModelOpen({
+          setModelWrapper: setReference,
+          useDecodedBlob,
+          requestFileFromFilesystem,
+          indexModel,
+        })
+      }
+      icon="document-open"
+    />
+  );
+
+  const FileDocButton = () => (
+    <MenuItem
+      text="Open SMART Document"
+      onClick={() =>
+        handleDocumentOpen({
+          setDocument: setReference,
+          useDecodedBlob,
+          requestFileFromFilesystem,
+          fileType: FILE_TYPE.Document,
+        })
+      }
+      icon="document-open"
+    />
+  );
+
+  const FileXMLButton = () => (
+    <MenuItem
+      text="Open XML Document"
+      onClick={() =>
+        handleDocumentOpen({
+          setDocument: setReference,
+          useDecodedBlob,
+          requestFileFromFilesystem,
+          fileType: FILE_TYPE.XML,
+        })
+      }
+      icon="document-open"
+    />
+  );
+
+  const FileBSIButton = () => (
+    <MenuItem
+      text="Open XML Document"
+      onClick={() =>
+        handleDocumentOpen({
+          setDocument: setReference,
+          useDecodedBlob,
+          requestFileFromFilesystem,
+          fileType: FILE_TYPE.BSI,
+        })
+      }
+      icon="document-open"
+    />
+  );
+
+  const CloseButton = () => (
+    <MenuItem
+      text="Close Reference"
+      onClick={() => setReference(undefined)}
+      icon="import"
+    />
+  );
+  const RepoMenu = () => (
+    <MenuItem text="Repository">
+      <MenuItem
+        icon="document-open"
+        text="Open reference model"
+        onClick={() => setType('Ref')}
+      />
+      <MenuItem
+        icon="document-open"
+        text="Open implementation model"
+        onClick={() => setType('Imp')}
+      />
+      <MenuItem
+        icon="document-open"
+        text="Open document"
+        onClick={() => setType('Doc')}
+      />
+    </MenuItem>
+  );
+
+  const CommonButtons = () => (
+    <>
+      <FileModelButton />
+      <FileDocButton />
+      <FileXMLButton />
+      {isBSIEnabled && <FileBSIButton />}
+    </>
+  );
+
+  const ExternalMenu = () => (
+    <MenuItem text="External files">
+      <CommonButtons />
+    </MenuItem>
+  );
+
   return (
     <Menu>
-      <MenuItem
-        text="Open Model"
-        disabled={!canOpen}
-        onClick={() =>
-          handleModelOpen({
-            setModelWrapper: setReference,
-            useDecodedBlob,
-            requestFileFromFilesystem,
-            indexModel,
-          })
-        }
-        icon="document-open"
-      />
-      <MenuItem
-        text="Open SMART Document"
-        onClick={() =>
-          handleDocumentOpen({
-            setDocument: setReference,
-            useDecodedBlob,
-            requestFileFromFilesystem,
-            fileType: FILE_TYPE.Document,
-          })
-        }
-        icon="document-open"
-      />
-      <MenuItem
-        text="Open XML Document"
-        onClick={() =>
-          handleDocumentOpen({
-            setDocument: setReference,
-            useDecodedBlob,
-            requestFileFromFilesystem,
-            fileType: FILE_TYPE.XML,
-          })
-        }
-        icon="document-open"
-      />
-      {isBSIEnabled && (
-        <MenuItem
-          text="Open XML Document"
-          onClick={() =>
-            handleDocumentOpen({
-              setDocument: setReference,
-              useDecodedBlob,
-              requestFileFromFilesystem,
-              fileType: FILE_TYPE.BSI,
-            })
-          }
-          icon="document-open"
-        />
+      {isRepo ? (
+        <>
+          <RepoMenu />
+          <ExternalMenu />
+        </>
+      ) : (
+        <CommonButtons />
       )}
-      <MenuItem
-        text="Close Reference"
-        disabled={!isCloseEnabled}
-        onClick={() => setReference(undefined)}
-        icon="import"
-      />
+      {isCloseEnabled && (
+        <>
+          <MenuDivider />
+          <CloseButton />
+        </>
+      )}
     </Menu>
   );
 };

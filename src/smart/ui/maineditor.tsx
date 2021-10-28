@@ -20,6 +20,7 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 
 import {
+  Button,
   ControlGroup,
   Dialog,
   HotkeysProvider,
@@ -118,7 +119,6 @@ import {
   MMELMetadata,
   MMELRole,
 } from '../serialize/interface/supportinterface';
-import EditorReferenceMenu from './menu/EditorReferenceMenu';
 import ModelReferenceView from './editreference/ModelReferenceView';
 import { addProcessIfNotFound } from '../utils/ModelImport';
 import DocumentReferenceView from './editreference/DocumentReferenceView';
@@ -138,6 +138,10 @@ import {
   createEmptyIndex,
   setValueToIndex,
 } from '../utils/repo/CommonFunctions';
+import EditorReferenceMenuButton from './menu/EditorReferenceMenuButton';
+import { indexModel } from '../model/mapmodel';
+import { MMELDocument } from '../model/document';
+import { LoadingContainer } from './common/Loading';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -201,16 +205,42 @@ const ModelEditor: React.FC<{
   const [isImportRoleOpen, setIsImportRoleOpen] = useState<boolean>(false);
   const [isImportRegOpen, setIsImportRegOpen] = useState<boolean>(false);
   const [idVisible, setIdVisible] = useState<boolean>(false);
+  const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
 
   const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
   const repoModelFile = useObjectData({
     objectPaths: repo !== undefined ? [repoIndexPath, repoPath] : [],
   });
+  const refPath = getPathByNS(refrepo ?? '', RepoFileType.MODEL);
   const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
   const repoIndex: RepoIndex | null =
     repo !== undefined
       ? (repoModelFile.value.data[repoIndexPath] as RepoIndex)
       : createEmptyIndex();
+
+  const repoRefFile = useObjectData({
+    objectPaths: refrepo !== undefined ? [repoIndexPath, refPath] : [],
+  });
+  if (refrepo !== undefined && !repoRefFile.isUpdating) {
+    const index = repoRefFile.value.data[repoIndexPath] as RepoIndex;
+    if (index !== undefined) {
+      const data = repoRefFile.value.data[refPath];
+      const item = index[refrepo];
+      if (item !== undefined) {
+        if (item.type === 'Imp' || item.type === 'Ref') {
+          const json = data as MMELJSON;
+          const model = JSONToMMEL(json);
+          const mw = createEditorModelWrapper(model);
+          indexModel(mw.model);
+          setReference(mw);
+        } else {
+          const doc = data as MMELDocument;
+          setReference(doc);
+        }
+      }
+      setRefRepo(undefined);
+    }
+  }
 
   useMemo(() => {
     if (
@@ -541,19 +571,13 @@ const ModelEditor: React.FC<{
 
   const referenceMenu = (
     <>
-      <Popover2
-        minimal
-        placement="bottom-start"
-        content={
-          <EditorReferenceMenu
-            setReference={setReference}
-            isBSIEnabled={isBSIEnabled}
-            isCloseEnabled={reference !== undefined}
-          />
-        }
-      >
-        <MGDButton>Reference model</MGDButton>
-      </Popover2>
+      <EditorReferenceMenuButton
+        setReference={setReference}
+        isBSIEnabled={isBSIEnabled}
+        reference={reference}
+        isRepo={repo !== undefined}
+        setRefRepo={setRefRepo}
+      />
       {(selectionImport !== undefined ||
         isImportRoleOpen ||
         isImportRegOpen) && (
@@ -605,14 +629,14 @@ const ModelEditor: React.FC<{
           />
         }
       >
-        <MGDButton>Model</MGDButton>
+        <Button>Model</Button>
       </Popover2>
       <Popover2
         minimal
         placement="bottom-start"
         content={<EditorEditMenu {...{ redo, undo, copy, paste }} />}
       >
-        <MGDButton>Edit</MGDButton>
+        <Button>Edit</Button>
       </Popover2>
       {reference === undefined && referenceMenu}
       <MGDButton
@@ -765,7 +789,9 @@ const ModelEditor: React.FC<{
             </ReactFlowProvider>
 
             {reference !== undefined &&
-              (isModelWrapper(reference) ? (
+              (refrepo !== undefined ? (
+                <LoadingContainer label="Loading..." size={3} />
+              ) : isModelWrapper(reference) ? (
                 <ModelReferenceView
                   className={className}
                   modelWrapper={reference}
