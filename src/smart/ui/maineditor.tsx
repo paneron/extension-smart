@@ -135,10 +135,7 @@ import {
 } from '../utils/repo/io';
 import { MMELJSON } from '../model/json';
 import { MMELRepo, RepoIndex, repoIndexPath } from '../model/repo';
-import {
-  createEmptyIndex,
-  setValueToIndex,
-} from '../utils/repo/CommonFunctions';
+import { setValueToIndex } from '../utils/repo/CommonFunctions';
 import EditorReferenceMenuButton from './menu/EditorReferenceMenuButton';
 import { indexModel } from '../model/mapmodel';
 import { MMELDocument } from '../model/document';
@@ -158,6 +155,7 @@ const ModelEditor: React.FC<{
   isBSIEnabled?: boolean;
   repo?: MMELRepo;
   resetHistory: () => void;
+  index: RepoIndex;
 }> = ({
   isVisible,
   className,
@@ -172,6 +170,7 @@ const ModelEditor: React.FC<{
   isBSIEnabled,
   repo,
   resetHistory,
+  index,
 }) => {
   const { logger, useObjectData, updateObjects } = useContext(DatasetContext);
 
@@ -210,34 +209,27 @@ const ModelEditor: React.FC<{
 
   const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
   const repoModelFile = useObjectData({
-    objectPaths: repo !== undefined ? [repoIndexPath, repoPath] : [],
+    objectPaths: repo !== undefined ? [repoPath] : [],
   });
   const refPath = getPathByNS(refrepo ?? '', RepoFileType.MODEL);
   const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
-  const repoIndex: RepoIndex | null =
-    repo !== undefined
-      ? (repoModelFile.value.data[repoIndexPath] as RepoIndex)
-      : createEmptyIndex();
 
   const repoRefFile = useObjectData({
-    objectPaths: refrepo !== undefined ? [repoIndexPath, refPath] : [],
+    objectPaths: refrepo !== undefined ? [refPath] : [],
   });
   if (refrepo !== undefined && !repoRefFile.isUpdating) {
-    const index = repoRefFile.value.data[repoIndexPath] as RepoIndex;
-    if (index !== undefined) {
-      const data = repoRefFile.value.data[refPath];
-      const item = index[refrepo];
-      if (item !== undefined) {
-        if (item.type === 'Imp' || item.type === 'Ref') {
-          const json = data as MMELJSON;
-          const model = JSONToMMEL(json);
-          const mw = createEditorModelWrapper(model);
-          indexModel(mw.model);
-          setReference(mw);
-        } else {
-          const doc = data as MMELDocument;
-          setReference(doc);
-        }
+    const data = repoRefFile.value.data[refPath];
+    const item = index[refrepo];
+    if (data && item) {
+      if (item.type === 'Imp' || item.type === 'Ref') {
+        const json = data as MMELJSON;
+        const model = JSONToMMEL(json);
+        const mw = createEditorModelWrapper(model);
+        indexModel(mw.model);
+        setReference(mw);
+      } else {
+        const doc = data as MMELDocument;
+        setReference(doc);
       }
       setRefRepo(undefined);
     }
@@ -276,7 +268,7 @@ const ModelEditor: React.FC<{
             newValue: MMELToSerializable(state.modelWrapper.model),
           },
           [repoIndexPath]: {
-            newValue: setValueToIndex(repoIndex!, repo.ns, {
+            newValue: setValueToIndex(index, repo.ns, {
               namespace: repo.ns,
               shortname: meta.shortname,
               title: meta.title,
@@ -578,6 +570,7 @@ const ModelEditor: React.FC<{
         reference={reference}
         isRepo={repo !== undefined}
         setRefRepo={setRefRepo}
+        index={index}
       />
       {(selectionImport !== undefined ||
         isImportRoleOpen ||

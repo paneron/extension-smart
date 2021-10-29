@@ -3,6 +3,7 @@ import { MMELEnum } from '../serialize/interface/datainterface';
 import { MMELSubprocess } from '../serialize/interface/flowcontrolinterface';
 import {
   MMELFigure,
+  MMELLink,
   MMELMetadata,
   MMELReference,
   MMELRole,
@@ -32,6 +33,7 @@ export type MMELJSON = {
   tables?: Record<string, MMELTable>;
   figures?: Record<string, MMELFigure>;
   sections?: Record<string, MMELTextSection>;
+  links?: Record<string, MMELLink>;
   root?: string;
 };
 
@@ -60,6 +62,7 @@ export type JSONProcess = {
   output: string[];
   input: string[];
   provision: string[];
+  links: string[];
   notes: string[];
   tables: string[];
   figures: string[];

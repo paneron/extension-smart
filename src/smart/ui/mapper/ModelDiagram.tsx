@@ -56,6 +56,7 @@ import SMARTDocumentView from './document/DocumentView';
 import { Popover2 } from '@blueprintjs/popover2';
 import MapperDocumentMenu from '../menu/MapperDocumentMenu';
 import RepoMapRefMenus from './repo/RepoMapRefMenu';
+import { RepoIndex } from '../../model/repo';
 
 const ModelDiagram: React.FC<{
   className?: string;
@@ -73,6 +74,7 @@ const ModelDiagram: React.FC<{
   onClose: () => void;
   isRepoMode?: boolean;
   setRefRepo?: (x: string) => void;
+  index: RepoIndex;
 }> = ({
   className,
   viewOption,
@@ -89,6 +91,7 @@ const ModelDiagram: React.FC<{
   onClose,
   isRepoMode = false,
   setRefRepo,
+  index,
 }) => {
   const { logger, useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
@@ -212,6 +215,7 @@ const ModelDiagram: React.FC<{
           setModelWrapper={setModelWrapper}
           setDocument={onDocumentLoaded}
           setRefRepo={setRefRepo}
+          index={index}
         />
       )}
       {!isRepoMode && <MGDButton onClick={onClose}> Close </MGDButton>}

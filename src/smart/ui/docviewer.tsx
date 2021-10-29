@@ -9,6 +9,7 @@ import { useContext } from 'react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { getPathByNS, RepoFileType } from '../utils/repo/io';
 import { MMELDocument } from '../model/document';
+import { LoadingScreen } from './common/Loading';
 
 const DocumentViewer: React.FC<{
   isVisible: boolean;
@@ -23,12 +24,16 @@ const DocumentViewer: React.FC<{
   });
   const doc = repoModelFile.value.data[repoPath] as MMELDocument;
 
-  if (isVisible && repo !== undefined && doc) {
-    return (
-      <Workspace className={className}>
-        <SMARTDocumentView mmelDoc={doc} isRepo />
-      </Workspace>
-    );
+  if (isVisible) {
+    if (repo !== undefined && doc) {
+      return (
+        <Workspace className={className}>
+          <SMARTDocumentView mmelDoc={doc} isRepo />
+        </Workspace>
+      );
+    } else {
+      return <LoadingScreen />;
+    }
   }
   return <div></div>;
 };

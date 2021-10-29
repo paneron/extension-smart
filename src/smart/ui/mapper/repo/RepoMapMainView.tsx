@@ -11,7 +11,7 @@ import {
   createEditorModelWrapper,
   ModelWrapper,
 } from '../../../model/modelwrapper';
-import { MMELRepo, RepoIndex, repoIndexPath } from '../../../model/repo';
+import { MMELRepo, RepoIndex } from '../../../model/repo';
 import { MapperViewOption } from '../../../model/States';
 import {
   getAllRepoMaps,
@@ -27,22 +27,19 @@ const RepoMapMainView: React.FC<{
   onClose: () => void;
   repo?: MMELRepo;
   loadModel: (x: string) => void;
-}> = function ({ isVisible, viewOption, repo, onClose, loadModel }) {
+  index: RepoIndex;
+}> = function ({ isVisible, viewOption, repo, onClose, loadModel, index }) {
   const { useObjectData } = useContext(DatasetContext);
 
-  const indexFile = useObjectData({ objectPaths: [repoIndexPath] });
-  const index = indexFile.isUpdating
-    ? undefined
-    : (indexFile.value.data[repoIndexPath] as RepoIndex);
   const mapFiles = useObjectData({
-    objectPaths: index ? getAllRepoMaps(index) : [],
+    objectPaths: getAllRepoMaps(index),
   });
   const modelFiles = useObjectData({
-    objectPaths: index ? getAllRepoModels(index) : [],
+    objectPaths: getAllRepoModels(index),
   });
 
   const maps: Record<string, MapProfile> = useMemo(() => {
-    if (index !== undefined && !mapFiles.isUpdating) {
+    if (!mapFiles.isUpdating) {
       return Object.entries(mapFiles.value.data).reduce<
         Record<string, MapProfile>
       >(
@@ -52,10 +49,10 @@ const RepoMapMainView: React.FC<{
       );
     }
     return {};
-  }, [index, mapFiles.isUpdating]);
+  }, [mapFiles.isUpdating]);
 
   const models: Record<string, ModelWrapper> | undefined = useMemo(() => {
-    if (index !== undefined && !modelFiles.isUpdating) {
+    if (!modelFiles.isUpdating) {
       return Object.entries(modelFiles.value.data).reduce<
         Record<string, ModelWrapper>
       >(
@@ -70,7 +67,7 @@ const RepoMapMainView: React.FC<{
       );
     }
     return undefined;
-  }, [index, mapFiles.isUpdating]);
+  }, [mapFiles.isUpdating]);
 
   if (repo && isVisible) {
     return (

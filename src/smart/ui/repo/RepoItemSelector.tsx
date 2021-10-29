@@ -4,14 +4,8 @@
 import { jsx } from '@emotion/react';
 import { Button, Card, Icon, InputGroup, Text } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
-import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { CSSProperties, useContext, useState } from 'react';
-import {
-  RepoIndex,
-  repoIndexPath,
-  RepoItem,
-  RepoItemType,
-} from '../../model/repo';
+import { CSSProperties, useState } from 'react';
+import { RepoIndex, RepoItem, RepoItemType } from '../../model/repo';
 import { LoadingContainer } from '../common/Loading';
 
 function matchFilter(item: RepoItem, filter: string) {
@@ -33,14 +27,10 @@ const RepoItemSelector: React.FC<{
   setRefRepo: (x: string) => void;
   type: RepoItemType;
   onClose: () => void;
-}> = function ({ type, setRefRepo, onClose }) {
-  const { useObjectData } = useContext(DatasetContext);
+  index: RepoIndex;
+}> = function ({ type, setRefRepo, onClose, index }) {
   const [filter, setFilter] = useState<string>('');
-  const indexFile = useObjectData({ objectPaths: [repoIndexPath] });
   const [selected, setSelected] = useState<string | undefined>(undefined);
-  const index = indexFile.isUpdating
-    ? undefined
-    : (indexFile.value.data[repoIndexPath] as RepoIndex);
 
   function onSelect(ns: string) {
     setRefRepo(ns);

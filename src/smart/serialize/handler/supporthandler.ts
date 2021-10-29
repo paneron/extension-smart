@@ -1,6 +1,8 @@
 import { DataType } from '../interface/baseinterface';
 import {
+  LINK_TYPE,
   MMELFigure,
+  MMELLink,
   MMELMetadata,
   MMELNote,
   MMELProvision,
@@ -261,6 +263,44 @@ function to2DArray(data: string[], column: number): string[][] {
   return ret;
 }
 
+export function parseLink(id: string, data: string): MMELLink {
+  const s: MMELLink = {
+    id,
+    title: '',
+    description: '',
+    link: '',
+    type: 'REPO',
+    datatype: DataType.LINK,
+  };
+  if (data !== '') {
+    const t = MMELtokenizePackage(data);
+    let i = 0;
+    while (i < t.length) {
+      const command: string = t[i++];
+      if (i < t.length) {
+        if (command === 'title') {
+          s.title = MMELremovePackage(t[i++]);
+        } else if (command === 'description') {
+          s.description = MMELremovePackage(t[i++]);
+        } else if (command === 'link') {
+          s.link = MMELremovePackage(t[i++]);
+        } else if (command === 'type') {
+          s.type = t[i++] as LINK_TYPE;
+        } else {
+          throw new Error(
+            `Parsing error: Link. ID ${id}: Unknown keyword ${command}`
+          );
+        }
+      } else {
+        throw new Error(
+          'Parsing error: link. ID ' + id + ': Expecting value for ' + command
+        );
+      }
+    }
+  }
+  return s;
+}
+
 export function parseSection(id: string, data: string): MMELTextSection {
   const s: MMELTextSection = {
     id,
@@ -285,7 +325,7 @@ export function parseSection(id: string, data: string): MMELTextSection {
         }
       } else {
         throw new Error(
-          'Parsing error: variable. ID ' +
+          'Parsing error: section. ID ' +
             id +
             ': Expecting value for ' +
             command
@@ -321,10 +361,7 @@ export function parseFigure(id: string, data: string): MMELFigure {
         }
       } else {
         throw new Error(
-          'Parsing error: variable. ID ' +
-            id +
-            ': Expecting value for ' +
-            command
+          'Parsing error: figure. ID ' + id + ': Expecting value for ' + command
         );
       }
     }
@@ -361,10 +398,7 @@ export function parseTable(id: string, data: string): MMELTable {
         }
       } else {
         throw new Error(
-          'Parsing error: variable. ID ' +
-            id +
-            ': Expecting value for ' +
-            command
+          'Parsing error: table. ID ' + id + ': Expecting value for ' + command
         );
       }
     }
@@ -404,10 +438,7 @@ export function parseTerm(id: string, data: string): MMELTerm {
         }
       } else {
         throw new Error(
-          'Parsing error: variable. ID ' +
-            id +
-            ': Expecting value for ' +
-            command
+          'Parsing error: term. ID ' + id + ': Expecting value for ' + command
         );
       }
     }
@@ -443,10 +474,7 @@ export function parseNote(id: string, data: string): MMELNote {
         }
       } else {
         throw new Error(
-          'Parsing error: variable. ID ' +
-            id +
-            ': Expecting value for ' +
-            command
+          'Parsing error: note. ID ' + id + ': Expecting value for ' + command
         );
       }
     }

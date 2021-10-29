@@ -26,7 +26,7 @@ import {
   createEditorModelWrapper,
   ModelWrapper,
 } from '../../model/modelwrapper';
-import { MMELRepo } from '../../model/repo';
+import { MMELRepo, RepoIndex } from '../../model/repo';
 import { EditorState } from '../../model/States';
 import { MMELObject } from '../../serialize/interface/baseinterface';
 import { MMELEnum } from '../../serialize/interface/datainterface';
@@ -50,6 +50,7 @@ const EditWrapper: React.FC<{
   setClickListener: (f: (() => void)[]) => void;
   repo?: MMELRepo;
   isBSI: boolean;
+  index: RepoIndex;
 }> = function (props) {
   const [state, setState] = useState<EditorState>({
     dvisible: true,

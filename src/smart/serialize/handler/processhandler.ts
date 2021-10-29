@@ -65,6 +65,7 @@ export function parseProcess(id: string, data: string): MMELProcess {
     input: new Set<string>(),
     notes: new Set<string>(),
     provision: new Set<string>(),
+    links: new Set<string>(),
     tables: new Set<string>(),
     figures: new Set<string>(),
     page: '',
@@ -87,6 +88,8 @@ export function parseProcess(id: string, data: string): MMELProcess {
           p.page = t[i++];
         } else if (command === 'validate_provision') {
           p.provision = MMELtokenizeSet(t[i++]);
+        } else if (command === 'links') {
+          p.links = MMELtokenizeSet(t[i++]);
         } else if (command === 'validate_measurement') {
           p.measure = MMELtokenizePackage(t[i++]).flatMap(x =>
             MMELremovePackage(x)

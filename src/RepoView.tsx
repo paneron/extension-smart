@@ -20,11 +20,13 @@ import ModelViewer from './smart/ui/mainviewer';
 import ModelWorkspace from './smart/ui/modelWorkspace';
 import { FocusStyleManager } from '@blueprintjs/core';
 import EditWrapper from './smart/ui/editFunctions/EditWrapper';
-import { MMELRepo, RepoItemType } from './smart/model/repo';
+import { MMELRepo, RepoIndex, RepoItemType } from './smart/model/repo';
 import RepoViewer from './smart/ui/repo/RepoViewer';
 import DocumentViewer from './smart/ui/docviewer';
 
-const RepositoryView: React.FC<Record<never, never>> = function () {
+const RepositoryView: React.FC<{
+  index: RepoIndex;
+}> = function ({ index }) {
   const [repo, setRepo] = useState<MMELRepo | undefined>(undefined);
   const [selectedModule, selectModule] = useState<ModuleName>('repo');
   const [clickListener, setClickListener] = useState<(() => void)[]>([]);
@@ -114,11 +116,10 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
           {modules.map(moduleName => {
             const cfg = MODULE_CONFIGURATION[moduleName];
             const View = cfg.view;
-            const selected = selectedModule === moduleName;
             return (
               <View
                 key={moduleName}
-                isVisible={selected}
+                isVisible={selectedModule === moduleName}
                 setClickListener={setClickListener}
                 css={css`
                   flex: 1;
@@ -127,6 +128,7 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
                 repo={repo}
                 setRepo={onRepoChange}
                 isBSI={isBSI}
+                index={index}
               />
             );
           })}
@@ -135,8 +137,6 @@ const RepositoryView: React.FC<Record<never, never>> = function () {
     </HotkeysProvider>
   );
 };
-
-export default RepositoryView;
 
 const MODULES = [
   'repo',
@@ -167,6 +167,7 @@ interface ModuleConfiguration {
     repo?: MMELRepo;
     setRepo: (x?: MMELRepo) => void;
     isBSI: boolean;
+    index: RepoIndex;
   }>;
 }
 
@@ -228,3 +229,5 @@ const ModuleButton: React.FC<{
     </Tooltip2>
   );
 };
+
+export default RepositoryView;

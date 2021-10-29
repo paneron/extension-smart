@@ -76,7 +76,7 @@ import {
 } from '../utils/repo/io';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { MMELJSON } from '../model/json';
-import { MMELRepo, RepoIndex, repoIndexPath } from '../model/repo';
+import { MMELRepo, RepoIndex } from '../model/repo';
 import RepoMapMainView from './mapper/repo/RepoMapMainView';
 import { LoadingContainer } from './common/Loading';
 import { MMELDocument } from '../model/document';
@@ -90,7 +90,8 @@ const ModelMapper: React.FC<{
   isVisible: boolean;
   className?: string;
   repo?: MMELRepo;
-}> = ({ isVisible, className, repo }) => {
+  index: RepoIndex;
+}> = ({ isVisible, className, repo, index }) => {
   const { useObjectData, updateObjects } = useContext(DatasetContext);
 
   const [mapProfile, setMapProfile] = useState<MapProfile>(createMapProfile());
@@ -136,39 +137,36 @@ const ModelMapper: React.FC<{
   const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
   const mapData = repo !== undefined ? repoModelFile.value.data[mapPath] : {};
   const repoRefFile = useObjectData({
-    objectPaths: refrepo !== undefined ? [repoIndexPath, refPath] : [],
+    objectPaths: refrepo !== undefined ? [refPath] : [],
   });
   if (refrepo !== undefined && !repoRefFile.isUpdating) {
-    const index = repoRefFile.value.data[repoIndexPath] as RepoIndex;
-    if (index !== undefined) {
-      const data = repoRefFile.value.data[refPath];
-      const item = index[refrepo];
-      if (item !== undefined) {
-        if (item.type === 'Imp' || item.type === 'Ref') {
-          const json = data as MMELJSON;
-          const model = JSONToMMEL(json);
-          const mw = createEditorModelWrapper(model);
-          indexModel(mw.model);
-          onRefPropsChange({
-            ...referenceProps,
-            history: createPageHistory(mw),
-            modelWrapper: mw,
-            historyMap: buildHistoryMap(mw),
-          });
-        } else {
-          const doc = data as MMELDocument;
-          onRefPropsChange({
-            history: { items: [] },
-            historyMap: {},
-            modelWrapper: doc,
-            modelType: referenceProps.modelType,
-          });
-        }
-        setSelected({
+    const data = repoRefFile.value.data[refPath];
+    const item = index[refrepo];
+    if (item && data) {
+      if (item.type === 'Imp' || item.type === 'Ref') {
+        const json = data as MMELJSON;
+        const model = JSONToMMEL(json);
+        const mw = createEditorModelWrapper(model);
+        indexModel(mw.model);
+        onRefPropsChange({
+          ...referenceProps,
+          history: createPageHistory(mw),
+          modelWrapper: mw,
+          historyMap: buildHistoryMap(mw),
+        });
+      } else {
+        const doc = data as MMELDocument;
+        onRefPropsChange({
+          history: { items: [] },
+          historyMap: {},
+          modelWrapper: doc,
           modelType: referenceProps.modelType,
-          selected: '',
         });
       }
+      setSelected({
+        modelType: referenceProps.modelType,
+        selected: '',
+      });
       setRefRepo(undefined);
     }
   }
@@ -571,6 +569,7 @@ const ModelMapper: React.FC<{
                 }
                 onClose={onImpClose}
                 isRepoMode={repo !== undefined}
+                index={index}
               />
               <div ref={lineref} css={vertical_line} />
               {refrepo !== undefined ? (
@@ -593,6 +592,7 @@ const ModelMapper: React.FC<{
                   onClose={onRefClose}
                   isRepoMode={repo !== undefined}
                   setRefRepo={setRefRepo}
+                  index={index}
                 />
               )}
             </div>
@@ -605,6 +605,7 @@ const ModelMapper: React.FC<{
               onClose={() =>
                 setViewOption({ ...viewOption, repoMapVisible: false })
               }
+              index={index}
             />
           </Workspace>
         </HotkeysTarget2>

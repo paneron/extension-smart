@@ -17,6 +17,7 @@ import {
   MMELSubprocessComponent,
 } from '../serialize/interface/flowcontrolinterface';
 import {
+  MMELLink,
   MMELNote,
   MMELProvision,
   MMELReference,
@@ -80,6 +81,11 @@ export function addProcessIfNotFound(
   for (const x of process.figures) {
     addFigIfNotFound(mw.model, ref.model, x);
   }
+  for (const x of process.figures) {
+    addFigIfNotFound(mw.model, ref.model, x);
+  }
+  const links: string[] = [];
+  process.links.forEach(l => links.push(addLink(mw, rmodel.links[l])));
 
   const newProcess: EditorProcess = {
     id: newid,
@@ -89,6 +95,7 @@ export function addProcessIfNotFound(
     output: new Set(outputs.map(o => o.id)),
     input: new Set(inputs.map(o => o.id)),
     provision: new Set(pros),
+    links: new Set(links),
     notes: new Set(ns),
     page: newPage !== undefined ? newPage.id : '',
     datatype: DataType.PROCESS,
@@ -223,6 +230,16 @@ function addPageIfNotFound(
   });
   newPage.neighbor = newNeighbor;
   return newPage;
+}
+
+function addLink(mw: ModelWrapper, link: MMELLink): string {
+  const newid = findUniqueID('Link', mw.model.links);
+  const newLink: MMELLink = {
+    ...link,
+    id: newid,
+  };
+  mw.model.links[newid] = newLink;
+  return newid;
 }
 
 function addProvision(
