@@ -12,7 +12,7 @@ const RepoModelFile: React.FC<{ file: RepoItem; onDelete: VF; onOpen: VF }> =
   function ({ file, onDelete, onOpen }) {
     return (
       <ContextMenu2 content={<ItemMenu onDelete={onDelete} onOpen={onOpen} />}>
-        <Tooltip2 content={file.title}>
+        <Tooltip2 content={`${file.shortname} ${file.title}`}>
           <Card
             style={{
               width: '15vw',

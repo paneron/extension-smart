@@ -68,6 +68,7 @@ import { getDocumentMetaById } from '../utils/DocumentFunctions';
 import AutoMapper from './mapper/AutoMapper';
 import { getNamespace } from '../utils/ModelFunctions';
 import {
+  COMMITMSG,
   getPathByNS,
   JSONContext,
   JSONToMMEL,
@@ -475,7 +476,7 @@ const ModelMapper: React.FC<{
   async function saveMapping() {
     if (repo && updateObjects && isVisible) {
       const task = updateObjects({
-        commitMessage: 'Updating concept',
+        commitMessage: COMMITMSG,
         _dangerouslySkipValidation: true,
         objectChangeset: {
           [mapPath]: { newValue: mapProfile },

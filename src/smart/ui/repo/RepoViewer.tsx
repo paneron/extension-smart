@@ -22,6 +22,7 @@ import {
   RepoItemType,
 } from '../../model/repo';
 import {
+  COMMITMSG,
   getPathByNS,
   MMELToSerializable,
   RepoFileType,
@@ -88,7 +89,7 @@ const RepoViewer: React.FC<{
     if (updateObjects) {
       if (ns !== undefined && model !== undefined) {
         const task = updateObjects({
-          commitMessage: 'Updating concept',
+          commitMessage: COMMITMSG,
           _dangerouslySkipValidation: true,
           objectChangeset: {
             [repoIndexPath]: { oldValue: undefined, newValue: updated },
@@ -111,7 +112,7 @@ const RepoViewer: React.FC<{
         });
       } else {
         await updateObjects({
-          commitMessage: 'Updating concept',
+          commitMessage: COMMITMSG,
           _dangerouslySkipValidation: true,
           objectChangeset: {
             [repoIndexPath]: { oldValue: undefined, newValue: updated },
@@ -129,7 +130,7 @@ const RepoViewer: React.FC<{
   async function saveIndexWithDoc(updated: RepoIndex, doc: MMELDocument) {
     if (updateObjects) {
       const task = updateObjects({
-        commitMessage: 'Updating concept',
+        commitMessage: COMMITMSG,
         _dangerouslySkipValidation: true,
         objectChangeset: {
           [repoIndexPath]: { oldValue: undefined, newValue: updated },
@@ -172,12 +173,13 @@ const RepoViewer: React.FC<{
 
   function addDoc(x: MMELDocument) {
     const item: RepoItem = {
-      namespace: x.id,
+      namespace: `${x.id}-doc`,
       shortname: x.id,
       title: x.title,
       date: new Date(),
       type: 'Doc',
     };
+    x.id = item.namespace;
     const updated = addItem(item);
     if (updated !== undefined) {
       saveIndexWithDoc(updated, x);
@@ -283,6 +285,7 @@ const RepoGroup: React.FC<{
         <div
           style={{
             display: 'flex',
+            flexWrap: 'wrap',
             gap: 10,
             margin: 10,
           }}

@@ -102,11 +102,11 @@ function parseModel(props: {
     }
     setModelWrapper(mw);
   } catch (e: unknown) {
-    logger?.log('Failed to load model');
-    if (typeof e === 'object') {
-      const error = e as Error;
-      logger?.log(error.message);
-      logger?.log(error.stack);
+    const err = e as Error;
+    alert(`Failed to load model. Message: ${err.message ?? ''}`);
+    if (err.message !== undefined && err.stack !== undefined) {
+      logger?.log(err.message);
+      logger?.log(err.stack);
     }
   }
 }
@@ -138,19 +138,24 @@ export function handleDocumentOpen(props: {
   requestFileFromFilesystem?: OpenFileInterface;
   fileType: FILE_TYPE.Document | FILE_TYPE.XML | FILE_TYPE.BSI;
 }) {
-  const { setDocument, fileType } = props;
-  handleFileOpen({
-    ...props,
-    type: fileType,
-    postProcessing: data =>
-      setDocument(
-        fileType === FILE_TYPE.Document
-          ? textToDoc(data)
-          : fileType === FILE_TYPE.XML
-          ? xmlToDocument(data)
-          : bsiToDocument(data)
-      ),
-  });
+  try {
+    const { setDocument, fileType } = props;
+    handleFileOpen({
+      ...props,
+      type: fileType,
+      postProcessing: data =>
+        setDocument(
+          fileType === FILE_TYPE.Document
+            ? textToDoc(data)
+            : fileType === FILE_TYPE.XML
+            ? xmlToDocument(data)
+            : bsiToDocument(data)
+        ),
+    });
+  } catch (e: unknown) {
+    const err = e as Error;
+    alert(`Failed to open document. Message: ${err.message ?? ''}`);
+  }
 }
 
 export function handleWSOpen(props: {
@@ -158,12 +163,17 @@ export function handleWSOpen(props: {
   useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
 }) {
-  const { setWorkspace } = props;
-  handleFileOpen({
-    ...props,
-    type: FILE_TYPE.Workspace,
-    postProcessing: data => setWorkspace(JSON.parse(data) as SMARTWorkspace),
-  });
+  try {
+    const { setWorkspace } = props;
+    handleFileOpen({
+      ...props,
+      type: FILE_TYPE.Workspace,
+      postProcessing: data => setWorkspace(JSON.parse(data) as SMARTWorkspace),
+    });
+  } catch (e: unknown) {
+    const err = e as Error;
+    alert(`Failed to open workspace. Message: ${err.message ?? ''}`);
+  }
 }
 
 export function handleMappingOpen(props: {
@@ -171,12 +181,18 @@ export function handleMappingOpen(props: {
   useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
 }) {
-  const { onMapProfileChanged } = props;
-  handleFileOpen({
-    ...props,
-    type: FILE_TYPE.Map,
-    postProcessing: data => onMapProfileChanged(JSON.parse(data) as MapProfile),
-  });
+  try {
+    const { onMapProfileChanged } = props;
+    handleFileOpen({
+      ...props,
+      type: FILE_TYPE.Map,
+      postProcessing: data =>
+        onMapProfileChanged(JSON.parse(data) as MapProfile),
+    });
+  } catch (e: unknown) {
+    const err = e as Error;
+    alert(`Failed to open mapping. Message: ${err.message ?? ''}`);
+  }
 }
 
 export async function handleFileOpen(props: {
@@ -195,44 +211,54 @@ export async function handleFileOpen(props: {
     postProcessing,
     base64,
   } = props;
-  if (requestFileFromFilesystem && useDecodedBlob) {
-    const desc = FileTypeDescription[type];
-    logger?.log('Requesting file');
-    requestFileFromFilesystem(
-      {
-        prompt: desc.openPrompt ?? '',
-        allowMultiple: false,
-        filters: [{ name: desc.filtername, extensions: desc.extension }],
-      },
-      selectedFiles => {
-        logger?.log('Requesting file: Got selection');
-        const fileData = Object.values(selectedFiles ?? {})[0];
-        logger?.log('File data');
-        if (fileData) {
-          if (base64 !== undefined && base64) {
-            const result = Buffer.from(fileData).toString('base64');
-            postProcessing(result);
-          } else {
-            const fileDataAsString = useDecodedBlob({
-              blob: fileData,
-            }).asString;
-            logger?.log(
-              'Requesting file: Decoded blob',
-              fileDataAsString.substring(
-                0,
-                Math.min(20, fileDataAsString.length)
-              )
-            );
-            postProcessing(fileDataAsString);
+  try {
+    if (requestFileFromFilesystem && useDecodedBlob) {
+      const desc = FileTypeDescription[type];
+      logger?.log('Requesting file');
+      requestFileFromFilesystem(
+        {
+          prompt: desc.openPrompt ?? '',
+          allowMultiple: false,
+          filters: [{ name: desc.filtername, extensions: desc.extension }],
+        },
+        selectedFiles => {
+          try {
+            logger?.log('Requesting file: Got selection');
+            const fileData = Object.values(selectedFiles ?? {})[0];
+            logger?.log('File data');
+            if (fileData) {
+              if (base64 !== undefined && base64) {
+                const result = Buffer.from(fileData).toString('base64');
+                postProcessing(result);
+              } else {
+                const fileDataAsString = useDecodedBlob({
+                  blob: fileData,
+                }).asString;
+                logger?.log(
+                  'Requesting file: Decoded blob',
+                  fileDataAsString.substring(
+                    0,
+                    Math.min(20, fileDataAsString.length)
+                  )
+                );
+                postProcessing(fileDataAsString);
+              }
+            } else {
+              logger?.log('Requesting file: No file data received');
+              console.error('Import file: no file data received');
+            }
+          } catch (e: unknown) {
+            const err = e as Error;
+            alert(`Failed to open file. Message: ${err.message ?? ''}`);
           }
-        } else {
-          logger?.log('Requesting file: No file data received');
-          console.error('Import file: no file data received');
         }
-      }
-    );
-  } else {
-    throw new Error('File import function not availbale');
+      );
+    } else {
+      throw new Error('File import function not availbale');
+    }
+  } catch (e: unknown) {
+    const err = e as Error;
+    alert(`Failed to open file. Message: ${err.message ?? ''}`);
   }
 }
 

@@ -53,7 +53,12 @@ import {
 import WorkspaceFileMenu from './menu/WorkspaceFileMenu';
 import { WorkspaceDiagPackage, WorkspaceDialog } from './dialog/WorkspaceDiag';
 import { getNamespace } from '../utils/ModelFunctions';
-import { getPathByNS, JSONToMMEL, RepoFileType } from '../utils/repo/io';
+import {
+  COMMITMSG,
+  getPathByNS,
+  JSONToMMEL,
+  RepoFileType,
+} from '../utils/repo/io';
 import { MMELJSON } from '../model/json';
 import { MMELRepo } from '../model/repo';
 
@@ -289,7 +294,7 @@ const ModelWorkspace: React.FC<{
   async function saveWork() {
     if (repo && updateObjects && isVisible) {
       const task = updateObjects({
-        commitMessage: 'Updating concept',
+        commitMessage: COMMITMSG,
         _dangerouslySkipValidation: true,
         objectChangeset: {
           [workPath]: { newValue: state.workspace },

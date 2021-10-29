@@ -127,6 +127,7 @@ import ImportFromSelectionButton from './popover/ImportFromSelectionButton';
 import { DataType } from '../serialize/interface/baseinterface';
 import EditorEditMenu from './menu/EditorEditMenu';
 import {
+  COMMITMSG,
   getPathByNS,
   JSONToMMEL,
   MMELToSerializable,
@@ -268,7 +269,7 @@ const ModelEditor: React.FC<{
       saveLayout();
       const meta = model.meta;
       const task = updateObjects({
-        commitMessage: 'Updating concept',
+        commitMessage: COMMITMSG,
         _dangerouslySkipValidation: true,
         objectChangeset: {
           [repoPath]: {

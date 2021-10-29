@@ -18,21 +18,21 @@ import { JSONContextType } from '../utils/repo/io';
 export type MMELJSON = {
   '@context': JSONContextType;
   '@type': 'MMEL_SMART';
-  meta: MMELMetadata;
-  roles: Record<string, MMELRole>;
-  provisions: Record<string, JSONProvision>;
-  elements: Record<string, MMELNode>;
-  refs: Record<string, MMELReference>;
-  enums: Record<string, MMELEnum>;
-  vars: Record<string, MMELVariable>;
-  notes: Record<string, JSONNote>;
-  pages: Record<string, MMELSubprocess>;
-  views: Record<string, MMELView>;
-  terms: Record<string, MMELTerm>;
-  tables: Record<string, MMELTable>;
-  figures: Record<string, MMELFigure>;
-  sections: Record<string, MMELTextSection>;
-  root: string;
+  meta?: MMELMetadata;
+  roles?: Record<string, MMELRole>;
+  provisions?: Record<string, JSONProvision>;
+  elements?: Record<string, MMELNode>;
+  refs?: Record<string, MMELReference>;
+  enums?: Record<string, MMELEnum>;
+  vars?: Record<string, MMELVariable>;
+  notes?: Record<string, JSONNote>;
+  pages?: Record<string, MMELSubprocess>;
+  views?: Record<string, MMELView>;
+  terms?: Record<string, MMELTerm>;
+  tables?: Record<string, MMELTable>;
+  figures?: Record<string, MMELFigure>;
+  sections?: Record<string, MMELTextSection>;
+  root?: string;
 };
 
 export type JSONProvision = {

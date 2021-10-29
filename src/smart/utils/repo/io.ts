@@ -29,6 +29,7 @@ import {
   MMELNote,
   MMELProvision,
 } from '../../serialize/interface/supportinterface';
+import { createMetaData } from '../EditorFactory';
 
 export enum RepoFileType {
   MODEL = 'model',
@@ -37,6 +38,7 @@ export enum RepoFileType {
 }
 
 export const JSONContext = 'https://bsi-ribose-smart.org';
+export const COMMITMSG = 'Update by Paneron';
 export type JSONContextType = typeof JSONContext;
 
 export function getPathByNS(ns: string, type: RepoFileType) {
@@ -56,10 +58,22 @@ export function MMELToSerializable(m: MMELModel): MMELJSON {
 
 export function JSONToMMEL(m: MMELJSON): MMELModel {
   return {
+    meta: createMetaData(),
+    roles: {},
+    refs: {},
+    enums: {},
+    vars: {},
+    pages: {},
+    views: {},
+    terms: {},
+    tables: {},
+    figures: {},
+    sections: {},
+    root: '',
     ...m,
-    provisions: recoverProvisions(m.provisions),
-    notes: recoverNotes(m.notes),
-    elements: recoverElements(m.elements),
+    provisions: m.provisions ? recoverProvisions(m.provisions) : {},
+    notes: m.notes ? recoverNotes(m.notes) : {},
+    elements: m.elements ? recoverElements(m.elements) : {},
   };
 }
 

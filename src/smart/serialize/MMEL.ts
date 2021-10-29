@@ -191,8 +191,7 @@ function parseModel(input: string): MMELModel {
       const t = parseSection(token[i++], token[i++]);
       model.sections[t.id] = t;
     } else {
-      console.error('Unknown command ' + command);
-      break;
+      throw Error('Unknown command ' + command);
     }
   }
   return model;

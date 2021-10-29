@@ -590,7 +590,7 @@ const ModelViewer: React.FC<{
               edgeTypes={EdgeTypes}
               nodesDraggable={false}
             >
-              <Controls>
+              <Controls showInteractive={false}>
                 <DataVisibilityButton
                   isOn={state.dvisible}
                   onClick={toggleDataVisibility}
