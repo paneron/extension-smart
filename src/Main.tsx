@@ -1,6 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { FocusStyleManager } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React from 'react';
@@ -13,6 +14,8 @@ import { createEmptyIndex } from './smart/utils/repo/CommonFunctions';
 const MainExtension: React.FC<Record<never, never>> = function () {
   const { useObjectData } = useContext(DatasetContext);
   const [index, setIndex] = useState<RepoIndex | undefined>(undefined);
+
+  FocusStyleManager.onlyShowFocusOnTabs();
 
   const indexFile = useObjectData({ objectPaths: [repoIndexPath] });
   const data = indexFile.value.data[repoIndexPath];

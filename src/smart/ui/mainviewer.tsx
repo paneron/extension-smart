@@ -65,7 +65,7 @@ import ProvisionSettings from './summary/ProvisionSettings';
 import VersionTrackerSettingPane from './version/VersionTrackerSetting';
 import { getPathByNS, JSONToMMEL, RepoFileType } from '../utils/repo/io';
 import { MMELJSON } from '../model/json';
-import { MMELRepo } from '../model/repo';
+import { MMELRepo, RepoIndex } from '../model/repo';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -94,7 +94,10 @@ const ModelViewer: React.FC<{
   isVisible: boolean;
   className?: string;
   repo?: MMELRepo;
-}> = ({ isVisible, className, repo }) => {
+  index: RepoIndex;
+  linktoAnotherRepo: (x: MMELRepo) => void;
+  popHis?: () => void;
+}> = ({ isVisible, className, repo, index, linktoAnotherRepo, popHis }) => {
   const { logger, useObjectData, useDecodedBlob, requestFileFromFilesystem } =
     useContext(DatasetContext);
   Logger.logger = logger;
@@ -487,6 +490,11 @@ const ModelViewer: React.FC<{
       >
         Drill up
       </MGDButton>
+      {popHis && (
+        <MGDButton type={MGDButtonType.Primary} onClick={popHis}>
+          Previous model
+        </MGDButton>
+      )}
     </ControlGroup>
   );
 
@@ -565,11 +573,13 @@ const ModelViewer: React.FC<{
             <ReactFlow
               elements={getViewerReactFlowElementsFrom(
                 funMS !== undefined ? funMS.mw : state.modelWrapper,
+                index,
                 state.dvisible,
                 onProcessClick,
                 getStyleById,
                 getSVGColorById,
                 idVisible,
+                linktoAnotherRepo,
                 view !== undefined && view.ComponentToolTip !== undefined
                   ? ViewStyleComponentDesc
                   : undefined,

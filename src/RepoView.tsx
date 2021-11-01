@@ -18,11 +18,11 @@ import ModelMapper from './smart/ui/mainmapper';
 import { BSI_WHITE_TEXT } from './css/BSI.logos';
 import ModelViewer from './smart/ui/mainviewer';
 import ModelWorkspace from './smart/ui/modelWorkspace';
-import { FocusStyleManager } from '@blueprintjs/core';
 import EditWrapper from './smart/ui/editFunctions/EditWrapper';
 import { MMELRepo, RepoIndex, RepoItemType } from './smart/model/repo';
 import RepoViewer from './smart/ui/repo/RepoViewer';
 import DocumentViewer from './smart/ui/docviewer';
+import { RepoHistory } from './smart/model/history';
 
 const RepositoryView: React.FC<{
   index: RepoIndex;
@@ -31,6 +31,7 @@ const RepositoryView: React.FC<{
   const [selectedModule, selectModule] = useState<ModuleName>('repo');
   const [clickListener, setClickListener] = useState<(() => void)[]>([]);
   const [isBSI, setIsBSI] = useState<boolean>(false);
+  const [repoHis, setRepoHis] = useState<RepoHistory>([]);
 
   const hotkeys = [
     {
@@ -44,11 +45,31 @@ const RepositoryView: React.FC<{
   function onRepoChange(r: MMELRepo | undefined) {
     setRepo(r);
     if (r !== undefined) {
+      setRepoHis([r]);
       selectModule(r.type === 'Doc' ? 'docViewer' : 'modelViewer');
+    } else {
+      setRepoHis([]);
     }
   }
 
-  FocusStyleManager.onlyShowFocusOnTabs();
+  function linktoAnotherRepo(x: MMELRepo) {
+    setRepo(x);
+    setRepoHis([...repoHis, x]);
+    if (x.type === 'Doc') {
+      selectModule('docViewer');
+    }
+  }
+
+  function popHis() {
+    const newHis = [...repoHis];
+    newHis.pop();
+    if (newHis.length > 0) {
+      const last = newHis[newHis.length - 1];
+      setRepo(last);
+      setRepoHis(newHis);
+      selectModule(last.type === 'Doc' ? 'docViewer' : 'modelViewer');
+    }
+  }
 
   const modules = ModuleList[repo ? repo.type : ''];
 
@@ -129,6 +150,8 @@ const RepositoryView: React.FC<{
                 setRepo={onRepoChange}
                 isBSI={isBSI}
                 index={index}
+                linktoAnotherRepo={linktoAnotherRepo}
+                popHis={repoHis.length > 1 ? popHis : undefined}
               />
             );
           })}
@@ -168,6 +191,8 @@ interface ModuleConfiguration {
     setRepo: (x?: MMELRepo) => void;
     isBSI: boolean;
     index: RepoIndex;
+    linktoAnotherRepo: (x: MMELRepo) => void;
+    popHis?: () => void;
   }>;
 }
 

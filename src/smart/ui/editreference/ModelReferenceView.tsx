@@ -25,6 +25,7 @@ import {
   getEditorReferenceFlowElementsFrom,
   ModelWrapper,
 } from '../../model/modelwrapper';
+import { RepoIndex } from '../../model/repo';
 import { EdgeTypes, NodeTypes } from '../../model/States';
 import {
   getHighlightedStyleById,
@@ -41,7 +42,8 @@ const ModelReferenceView: React.FC<{
   modelWrapper: ModelWrapper;
   setModelWrapper: (x: ModelWrapper) => void;
   menuControl: React.ReactNode;
-}> = ({ className, modelWrapper, setModelWrapper, menuControl }) => {
+  index: RepoIndex;
+}> = ({ className, modelWrapper, setModelWrapper, menuControl, index }) => {
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
   const Sidebar = useMemo(
@@ -155,6 +157,7 @@ const ModelReferenceView: React.FC<{
             key="EditorReference"
             elements={getEditorReferenceFlowElementsFrom(
               modelWrapper,
+              index,
               dvisible,
               onProcessClick,
               getStyleById,

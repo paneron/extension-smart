@@ -145,7 +145,16 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
             bottom: -10,
           }}
         >
-          <Popover2 content={<LinksList links={process.links} />}>
+          <Popover2
+            content={
+              <LinksList
+                links={process.links}
+                getLinkById={callback.getLinkById}
+                index={callback.index}
+                goToNextModel={callback.goToNextModel}
+              />
+            }
+          >
             <Tooltip2 content="View links" position="top">
               <Button small icon="link" />
             </Tooltip2>

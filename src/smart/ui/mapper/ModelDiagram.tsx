@@ -271,6 +271,7 @@ const ModelDiagram: React.FC<{
               key="MMELModel"
               elements={getMapperReactFlowElementsFrom(
                 mw,
+                index,
                 modelProps.modelType,
                 viewOption.dataVisible,
                 onProcessClick,

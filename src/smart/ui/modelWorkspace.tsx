@@ -60,7 +60,7 @@ import {
   RepoFileType,
 } from '../utils/repo/io';
 import { MMELJSON } from '../model/json';
-import { MMELRepo } from '../model/repo';
+import { MMELRepo, RepoIndex } from '../model/repo';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -69,7 +69,8 @@ const ModelWorkspace: React.FC<{
   isVisible: boolean;
   className?: string;
   repo?: MMELRepo;
-}> = ({ isVisible, className, repo }) => {
+  index: RepoIndex;
+}> = ({ isVisible, className, repo, index }) => {
   const { useObjectData, updateObjects } = useContext(DatasetContext);
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
@@ -339,6 +340,7 @@ const ModelWorkspace: React.FC<{
                 <ReactFlow
                   elements={getActionReactFlowElementsFrom(
                     state.modelWrapper,
+                    index,
                     state.dvisible,
                     onProcessClick,
                     getStyleById,

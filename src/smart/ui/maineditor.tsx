@@ -743,6 +743,7 @@ const ModelEditor: React.FC<{
                     key="MMELModel"
                     elements={getEditorReactFlowElementsFrom(
                       state.modelWrapper,
+                      index,
                       state.dvisible,
                       state.edgeDeleteVisible,
                       onProcessClick,
@@ -791,6 +792,7 @@ const ModelEditor: React.FC<{
                   modelWrapper={reference}
                   setModelWrapper={setReference}
                   menuControl={referenceMenu}
+                  index={index}
                 />
               ) : (
                 <DocumentReferenceView
