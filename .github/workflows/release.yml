@@ -1,0 +1,38 @@
+name: release
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      next_version:
+        description: |
+          Next release version. Possible values: x.y.z, major, minor, patch
+        required: true
+        default: 'skip'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '15.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - if: github.event_name == 'workflow_dispatch' && github.event.inputs.next_version != 'skip'
+        run: |
+          yarn version --new-version ${{ github.event.inputs.next_version }}
+          git push
+
+      - run: yarn lint
+
+      - run: yarn build
+
+      - run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PANERON_CI_NPM_TOKEN }}
