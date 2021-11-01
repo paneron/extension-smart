@@ -3,6 +3,7 @@
 
 import { FormGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
+import { LocalizedConceptForm } from '@riboseinc/paneron-extension-glossarist/classes/localizedConcept/LocalizedConceptForm';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
 import { MMELTerm } from '../../serialize/interface/supportinterface';
@@ -101,6 +102,10 @@ const TermEditItemPage: React.FC<{
 }> = ({ object: term, setObject: setTerm }) => {
   return (
     <FormGroup>
+      <LocalizedConceptForm
+        localizedConcept={{ terms: [], definition: '', notes: [], examples: [], authoritativeSource: [] }}
+        writingDirectionality="LTR"
+      />
       <NormalTextField
         text="Term ID"
         value={term.id}

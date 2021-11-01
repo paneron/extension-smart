@@ -55,5 +55,8 @@
     "react-mathjax2": "^0.0.2",
     "typescript": "^4.1.3"
   },
-  "license": "MIT"  
+  "license": "MIT",
+  "dependencies": {
+    "@riboseinc/paneron-extension-glossarist": "1.0.0-dev34"
+  }
 }
