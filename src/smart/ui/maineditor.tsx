@@ -205,6 +205,7 @@ const ModelEditor: React.FC<{
   const [isImportRoleOpen, setIsImportRoleOpen] = useState<boolean>(false);
   const [isImportRegOpen, setIsImportRegOpen] = useState<boolean>(false);
   const [idVisible, setIdVisible] = useState<boolean>(false);
+  const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
   const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
 
   const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
@@ -235,6 +236,10 @@ const ModelEditor: React.FC<{
     }
   }
 
+  if (repo === undefined && mainRepo !== undefined) {
+    setMainRepo(undefined);
+  }
+
   useMemo(() => {
     if (
       repo !== undefined &&
@@ -242,14 +247,17 @@ const ModelEditor: React.FC<{
       repoData !== undefined &&
       !repoModelFile.isUpdating
     ) {
-      const json = repoData as MMELJSON;
-      const model = JSONToMMEL(json);
-      const mw = createEditorModelWrapper(model);
-      setState(
-        { ...state, history: createPageHistory(mw), modelWrapper: mw },
-        false
-      );
-      resetHistory();
+      if (repo.ns !== mainRepo) {
+        const json = repoData as MMELJSON;
+        const model = JSONToMMEL(json);
+        const mw = createEditorModelWrapper(model);
+        setState(
+          { ...state, history: createPageHistory(mw), modelWrapper: mw },
+          false
+        );
+        resetHistory();
+        setMainRepo(repo.ns);
+      }
     }
   }, [repoData, repoModelFile.isUpdating]);
 
