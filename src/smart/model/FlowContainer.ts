@@ -10,11 +10,13 @@ import {
 import { MMELtoFlowEntries } from './States';
 import {
   MMELFigure,
+  MMELLink,
   MMELRole,
   MMELTable,
 } from '../serialize/interface/supportinterface';
 import { SerializedStyles } from '@emotion/react';
 import React from 'react';
+import { MMELRepo, RepoIndex } from './repo';
 
 export interface EdgeContainer {
   id: string;
@@ -49,11 +51,13 @@ export type EditorNodeWithInfoCallback = EditorNode & NodeCallBack;
 
 export interface NodeCallBack {
   modelType: ModelType;
+  index: RepoIndex;
   idVisible: boolean;
   onProcessClick: (pageid: string, processid: string) => void;
   getRoleById: (id: string) => MMELRole | null;
   getTableById: (id: string) => MMELTable | undefined;
   getFigById: (id: string) => MMELFigure | undefined;
+  getLinkById: (id: string) => MMELLink | undefined;
   setMapping: (fromid: string, toid: string) => void;
   getStyleClassById?: (id: string) => SerializedStyles;
   getSVGColorById?: (id: string) => string;
@@ -64,6 +68,7 @@ export interface NodeCallBack {
   MappingList?: React.FC<{ id: string }>;
   onDataWorkspaceActive?: (id: string) => void;
   NodeAddon?: React.FC<{ id: string }>;
+  goToNextModel?: (x: MMELRepo) => void;
 }
 
 export interface NodeContainer {
@@ -130,6 +135,7 @@ export function createNodeContainer(
 export function getEditorNodeCallBack(props: {
   type: ModelType;
   model: EditorModel;
+  index: RepoIndex;
   onProcessClick: (pageid: string, processid: string) => void;
   setMapping?: (fromid: string, toid: string) => void;
   getStyleClassById?: (id: string) => SerializedStyles;
@@ -143,6 +149,7 @@ export function getEditorNodeCallBack(props: {
   NodeAddon?: React.FC<{ id: string }>;
   isEditMode?: boolean;
   idVisible: boolean;
+  goToNextModel?: (x: MMELRepo) => void;
 }): NodeCallBack {
   const {
     type,
@@ -159,6 +166,8 @@ export function getEditorNodeCallBack(props: {
     onDataWorkspaceActive,
     NodeAddon,
     idVisible,
+    index,
+    goToNextModel,
   } = props;
 
   function getRoleById(id: string): MMELRole | null {
@@ -173,6 +182,10 @@ export function getEditorNodeCallBack(props: {
     return model.figures[id];
   }
 
+  function getLinkById(id: string): MMELLink | undefined {
+    return model.links[id];
+  }
+
   return {
     modelType: type,
     getRoleById,
@@ -182,6 +195,7 @@ export function getEditorNodeCallBack(props: {
     setMapping,
     getStyleClassById,
     getSVGColorById,
+    getLinkById,
     setSelectedId,
     hasMapping,
     ComponentShortDescription,
@@ -190,5 +204,7 @@ export function getEditorNodeCallBack(props: {
     onDataWorkspaceActive,
     NodeAddon,
     idVisible,
+    index,
+    goToNextModel,
   };
 }

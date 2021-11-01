@@ -12,6 +12,7 @@ import {
 } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
+  MMELLink,
   MMELNote,
   MMELProvision,
   MMELReference,
@@ -50,6 +51,7 @@ import { RefTextSelection } from '../../model/selectionImport';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { matchNoteFilter, NoteItem } from './NoteEdit';
 import NoteListQuickEdit from './components/NoteList';
+import { LinkItem, matchLinkFilter } from './LinkEdit';
 
 const NEEDSUBPROCESS = 'need sub';
 
@@ -84,6 +86,19 @@ function getInitNotes(
   return initNotes;
 }
 
+function getInitLinks(
+  model: EditorModel,
+  process: EditorProcess
+): Record<string, MMELLink> {
+  const initLinks: Record<string, MMELLink> = {};
+  Object.keys(model.links)
+    .filter(k => process.links.has(k))
+    .forEach(k => {
+      initLinks[k] = model.links[k];
+    });
+  return initLinks;
+}
+
 function getInitMeasurement(process: EditorProcess): Record<string, IMeasure> {
   const initMeasurement: Record<string, IMeasure> = {};
   process.measure.forEach((v, k) => {
@@ -101,6 +116,15 @@ const emptyMeasurement: IMeasure = {
   id: '',
   datatype: DataType.VARIABLE,
   measure: '',
+};
+
+const emptyLink: MMELLink = {
+  id: '',
+  title: '',
+  description: '',
+  link: '',
+  type: 'REPO',
+  datatype: DataType.LINK,
 };
 
 interface CommonProcessEditProps {
@@ -156,6 +180,9 @@ const EditProcessPage: React.FC<{
   const [measurements, setMeasurements] = useState<Record<string, IMeasure>>(
     getInitMeasurement(process)
   );
+  const [links, setLinks] = useState<Record<string, MMELLink>>(
+    getInitLinks(model, process)
+  );
   const [hasChange, setHasChange] = useState<boolean>(false);
 
   const roleObjects = useMemo(() => getModelAllRoles(model), [model]);
@@ -185,7 +212,15 @@ const EditProcessPage: React.FC<{
   }
 
   function onUpdateClick() {
-    const updated = save(id, editing, provisions, measurements, notes, model);
+    const updated = save(
+      id,
+      editing,
+      provisions,
+      measurements,
+      notes,
+      links,
+      model
+    );
     if (updated !== null) {
       setModel({ ...updated });
       if (closeDialog !== undefined) {
@@ -238,6 +273,7 @@ const EditProcessPage: React.FC<{
                   pros,
                   mea,
                   nos,
+                  links,
                   modelRef.current!
                 );
                 if (updated !== null) {
@@ -269,6 +305,7 @@ const EditProcessPage: React.FC<{
         provisions,
         measurements,
         notes,
+        links,
         mw.model
       );
       if (updated !== null) {
@@ -314,6 +351,8 @@ const EditProcessPage: React.FC<{
     regs,
     tables,
     figures,
+    links,
+    setLinks,
   };
 
   const quickEditProps = {
@@ -443,6 +482,8 @@ const FullVersionEdit: React.FC<
     regs: string[];
     tables: string[];
     figures: string[];
+    links: Record<string, MMELLink>;
+    setLinks: (x: Record<string, MMELLink>) => void;
   }
 > = function (props) {
   const {
@@ -460,6 +501,8 @@ const FullVersionEdit: React.FC<
     figures,
     notes,
     setNotes,
+    links,
+    setLinks,
   } = props;
   return (
     <MGDDisplayPane>
@@ -594,16 +637,26 @@ const FullVersionEdit: React.FC<
           model={model}
           initObject={{ ...emptyMeasurement }}
           matchFilter={matchMeasurementFilter}
-          getListItem={x => {
-            const m = x as IMeasure;
-            return {
-              id: m.id,
-              text: m.measure,
-            };
-          }}
+          getListItem={x => ({
+            id: x.id,
+            text: x.measure,
+          })}
           filterName="Measurement filter"
           Content={MeasurementItem}
           label="Measurement tests"
+          size={7}
+          requireUniqueId={false}
+        />
+        <ListWithPopoverItem
+          items={{ ...links }}
+          setItems={x => setLinks(x as Record<string, MMELLink>)}
+          model={model}
+          initObject={{ ...emptyLink }}
+          matchFilter={matchLinkFilter}
+          getListItem={x => ({ id: x.id, text: x.title })}
+          filterName="Link filter"
+          Content={LinkItem}
+          label="External links"
           size={7}
           requireUniqueId={false}
         />
@@ -618,6 +671,7 @@ function save(
   provisions: Record<string, MMELProvision>,
   measurements: Record<string, IMeasure>,
   notes: Record<string, MMELNote>,
+  links: Record<string, MMELLink>,
   model: EditorModel
 ): EditorModel | null {
   process.measure = Object.values(measurements).map(m => m.measure);
@@ -646,6 +700,8 @@ function save(
   process.provision = new Set(Object.values(provisions).map(p => p.id));
   model.notes = updateNotes(model.notes, oldProcess.notes, notes);
   process.notes = new Set(Object.values(notes).map(n => n.id));
+  model.links = updateLinks(model.links, oldProcess.links, links);
+  process.links = new Set(Object.values(links).map(n => n.id));
   return model;
 }
 
@@ -654,20 +710,21 @@ function updateProvisions(
   old: Set<string>,
   update: Record<string, MMELProvision>
 ): Record<string, MMELProvision> {
+  const newP = { ...provisions };
   for (const x of old) {
-    delete provisions[x];
+    delete newP[x];
   }
   let x = 1;
   for (const p in update) {
     const pro = update[p];
-    while (provisions['Provision' + x] !== undefined) {
+    while (newP['Provision' + x] !== undefined) {
       x++;
     }
     pro.id = 'Provision' + x;
-    provisions[pro.id] = pro;
+    newP[pro.id] = pro;
     x++;
   }
-  return { ...provisions };
+  return newP;
 }
 
 function updateNotes(
@@ -675,20 +732,43 @@ function updateNotes(
   old: Set<string>,
   update: Record<string, MMELNote>
 ): Record<string, MMELNote> {
+  const newNotes = { ...notes };
   for (const x of old) {
-    delete notes[x];
+    delete newNotes[x];
   }
   let x = 1;
   for (const p in update) {
     const pro = update[p];
-    while (notes['Note' + x] !== undefined) {
+    while (newNotes['Note' + x] !== undefined) {
       x++;
     }
     pro.id = 'Note' + x;
-    notes[pro.id] = pro;
+    newNotes[pro.id] = pro;
     x++;
   }
-  return { ...notes };
+  return newNotes;
+}
+
+function updateLinks(
+  links: Record<string, MMELLink>,
+  old: Set<string>,
+  update: Record<string, MMELLink>
+): Record<string, MMELLink> {
+  const newLinks = { ...links };
+  for (const x of old) {
+    delete newLinks[x];
+  }
+  let x = 1;
+  for (const p in update) {
+    const link = update[p];
+    while (newLinks['Link' + x] !== undefined) {
+      x++;
+    }
+    link.id = 'Link' + x;
+    newLinks[link.id] = link;
+    x++;
+  }
+  return newLinks;
 }
 
 function checkPage(

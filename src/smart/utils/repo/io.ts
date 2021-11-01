@@ -69,6 +69,7 @@ export function JSONToMMEL(m: MMELJSON): MMELModel {
     tables: {},
     figures: {},
     sections: {},
+    links: {},
     root: '',
     ...m,
     provisions: m.provisions ? recoverProvisions(m.provisions) : {},
@@ -91,6 +92,7 @@ function convertElement(p: MMELNode): MMELNode {
   if (isMMELProcess(p)) {
     const x: JSONProcess = {
       ...p,
+      links: [...p.links],
       input: [...p.input],
       output: [...p.output],
       provision: [...p.provision],
@@ -174,6 +176,7 @@ function recoverElement(p: MMELNode): MMELNode {
       input: new Set(p.input),
       output: new Set(p.output),
       provision: new Set(p.provision),
+      links: new Set(p.links),
       notes: new Set(p.notes),
       tables: new Set(p.tables),
       figures: new Set(p.figures),

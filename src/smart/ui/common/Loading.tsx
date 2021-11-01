@@ -25,3 +25,15 @@ export const LoadingContainer = (props: { label?: string; size?: number }) => (
     <LoadingPage {...props} />
   </div>
 );
+
+export const LoadingScreen = (props: { label?: string; size?: number }) => (
+  <div
+    style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+    }}
+  >
+    <LoadingContainer {...props} />
+  </div>
+);

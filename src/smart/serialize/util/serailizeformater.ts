@@ -21,6 +21,7 @@ import {
 import { MMELApproval, MMELProcess } from '../interface/processinterface';
 import {
   MMELFigure,
+  MMELLink,
   MMELMetadata,
   MMELNote,
   MMELProvision,
@@ -364,6 +365,16 @@ export function toSectionModel(s: MMELTextSection): string {
   );
 }
 
+export function toLinkModel(l: MMELLink): string {
+  let out: string = 'link ' + l.id + ' {\n';
+  out += '  title "' + l.title + '"\n';
+  out += '  description "' + l.description + '"\n';
+  out += '  link "' + l.link + '"\n';
+  out += '  type ' + l.type + '\n';
+  out += '}\n';
+  return out;
+}
+
 export function toTableModel(table: MMELTable): string {
   let out: string = 'table ' + table.id + ' {\n';
   out += '  title "' + table.title + '"\n';
@@ -433,6 +444,13 @@ export function toProcessModel(process: MMELProcess): string {
   if (process.provision.size > 0) {
     out += '  validate_provision {\n';
     for (const r of process.provision) {
+      out += '    ' + r + '\n';
+    }
+    out += '  }\n';
+  }
+  if (process.links.size > 0) {
+    out += '  links {\n';
+    for (const r of process.links) {
       out += '    ' + r + '\n';
     }
     out += '  }\n';

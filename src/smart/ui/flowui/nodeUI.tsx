@@ -47,6 +47,7 @@ import {
 import NonTextReferenceList from '../popover/NonTextReferenceList';
 import TableViewer from '../common/description/TableViewer';
 import FigureViewer from '../common/description/FigureViewer';
+import LinksList from '../popover/LinksList';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -132,6 +133,30 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           >
             <Tooltip2 content="View tables/figures" position="top">
               <Button small icon="th" />
+            </Tooltip2>
+          </Popover2>
+        </div>
+      )}
+      {process.links.size > 0 && (
+        <div
+          style={{
+            position: 'fixed',
+            left: -10,
+            bottom: -10,
+          }}
+        >
+          <Popover2
+            content={
+              <LinksList
+                links={process.links}
+                getLinkById={callback.getLinkById}
+                index={callback.index}
+                goToNextModel={callback.goToNextModel}
+              />
+            }
+          >
+            <Tooltip2 content="View links" position="top">
+              <Button small icon="link" />
             </Tooltip2>
           </Popover2>
         </div>

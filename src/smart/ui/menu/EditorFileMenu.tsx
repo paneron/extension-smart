@@ -70,12 +70,21 @@ const EditorFileMenu: React.FC<{
   return (
     <Menu>
       {isRepoMode ? (
-        <MenuItem
-          text="Save"
-          label="Ctrl + S"
-          onClick={onRepoSave}
-          icon="floppy-disk"
-        />
+        <>
+          <MenuItem
+            text="Save"
+            label="Ctrl + S"
+            onClick={onRepoSave}
+            icon="floppy-disk"
+          />
+          <MenuItem text="Export" onClick={onRepoSave} icon="export">
+            <MenuItem
+              text="SMART file"
+              onClick={handleSave}
+              disabled={!canSave}
+            />
+          </MenuItem>
+        </>
       ) : (
         <>
           <MenuItem text="New" onClick={handleNew} icon="document" />

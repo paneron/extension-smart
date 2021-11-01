@@ -18,6 +18,9 @@ export const NOTE_TYPES = [
 ] as const;
 export type NOTE_TYPE = typeof NOTE_TYPES[number];
 
+export const LINK_TYPES = ['REPO', 'URL'] as const;
+export type LINK_TYPE = typeof LINK_TYPES[number];
+
 export interface MMELMetadata extends MMELObject {
   schema: string;
   author: string;
@@ -109,4 +112,13 @@ export interface MMELTextSection extends MMELObject {
   title: string;
   content: string;
   datatype: DataType.SECTION;
+}
+
+export interface MMELLink extends MMELObject {
+  id: string;
+  title: string;
+  description: string;
+  link: string;
+  type: LINK_TYPE;
+  datatype: DataType.LINK;
 }

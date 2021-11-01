@@ -1,6 +1,7 @@
 import React from 'react';
 import { getRootName } from '../utils/ModelFunctions';
 import { ModelWrapper } from './modelwrapper';
+import { MMELRepo } from './repo';
 
 interface Breadcrumb {
   label: JSX.Element;
@@ -25,6 +26,8 @@ export interface EditHistory {
   past: EditHistoryItem[];
   future: EditHistoryItem[];
 }
+
+export type RepoHistory = MMELRepo[];
 
 export function cloneHistory(history: PageHistory): PageHistory {
   return {

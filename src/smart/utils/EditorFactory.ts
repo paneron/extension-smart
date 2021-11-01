@@ -57,6 +57,7 @@ export function createNewEditorModel(): EditorModel {
     tables: {},
     figures: {},
     sections: {},
+    links: {},
     root: page.id,
   };
   return m;
@@ -241,6 +242,7 @@ export function createProcess(id: string): EditorProcess {
     input: new Set<string>(),
     notes: new Set<string>(),
     provision: new Set<string>(),
+    links: new Set<string>(),
     tables: new Set<string>(),
     figures: new Set<string>(),
     page: '',

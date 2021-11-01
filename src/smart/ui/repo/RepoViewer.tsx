@@ -32,11 +32,7 @@ import RepoInfoPane from './RepoInfoPane';
 import { EditorModel } from '../../model/editormodel';
 import { createNewSMARTWorkspace } from '../../model/workspace';
 import { getNamespace } from '../../utils/ModelFunctions';
-import {
-  createEmptyIndex,
-  groupItems,
-  setValueToIndex,
-} from '../../utils/repo/CommonFunctions';
+import { groupItems, setValueToIndex } from '../../utils/repo/CommonFunctions';
 import { Popover2 } from '@blueprintjs/popover2';
 import RepoImportMenu from './RepoImportMenu';
 import { MMELDocument } from '../../model/document';
@@ -56,16 +52,13 @@ const RepoViewer: React.FC<{
   repo?: MMELRepo;
   setRepo: (x: MMELRepo | undefined) => void;
   isBSI: boolean;
-}> = function ({ isVisible, className, repo, setRepo, isBSI }) {
-  const { useObjectData, updateObjects } = useContext(DatasetContext);
+  index: RepoIndex;
+}> = function ({ isVisible, className, repo, setRepo, isBSI, index }) {
+  const { updateObjects } = useContext(DatasetContext);
 
   const [filter, setFilter] = useState<string>('');
 
   const [toaster] = useState<IToaster>(Toaster.create());
-  const repoFile = useObjectData({ objectPaths: [repoIndexPath] });
-
-  const repoData = repoFile.value.data[repoIndexPath];
-  const index: RepoIndex = (repoData ?? createEmptyIndex()) as RepoIndex;
 
   const [refs, imps, docs] = useMemo(() => groupItems(index), [index]);
   const frefs = useMemo(

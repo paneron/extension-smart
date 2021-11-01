@@ -46,6 +46,7 @@ import { MapSet } from './mapmodel';
 import { map_style__coverage } from '../../css/visual';
 import React from 'react';
 import { SerializedStyles } from '@emotion/react';
+import { MMELRepo, RepoIndex } from './repo';
 
 export interface ModelWrapper {
   model: EditorModel;
@@ -181,6 +182,7 @@ function buildStructure(mw: ModelWrapper): ModelWrapper {
 
 export function getEditorReactFlowElementsFrom(
   mw: ModelWrapper,
+  index: RepoIndex,
   dvisible: boolean,
   edgeDelete: boolean,
   onProcessClick: (pageid: string, processid: string) => void,
@@ -196,6 +198,7 @@ export function getEditorReactFlowElementsFrom(
     getStyleClassById: getStyleById,
     getSVGColorById,
     idVisible,
+    index,
   });
   return getElements(mw, dvisible, callback, e =>
     createEdgeContainer(e, edgeDelete, removeEdge)
@@ -204,6 +207,7 @@ export function getEditorReactFlowElementsFrom(
 
 export function getEditorReferenceFlowElementsFrom(
   mw: ModelWrapper,
+  index: RepoIndex,
   dvisible: boolean,
   onProcessClick: (pageid: string, processid: string) => void,
   getStyleById: (id: string) => SerializedStyles,
@@ -217,17 +221,20 @@ export function getEditorReferenceFlowElementsFrom(
     getStyleClassById: getStyleById,
     getSVGColorById,
     idVisible,
+    index,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }
 
 export function getViewerReactFlowElementsFrom(
   mw: ModelWrapper,
+  index: RepoIndex,
   dvisible: boolean,
   onProcessClick: (pageid: string, processid: string) => void,
   getStyleById: (id: string) => SerializedStyles,
   getSVGColorById: (id: string) => string,
   idVisible: boolean,
+  goToNextModel: (x: MMELRepo) => void,
   ComponentDesc?: React.FC<{ id: string }>,
   NodeAddon?: React.FC<{ id: string }>,
   getEdgeColor?: (id: string) => string,
@@ -244,6 +251,8 @@ export function getViewerReactFlowElementsFrom(
     NodeAddon,
     idVisible,
     ViewStartEndComponentDesc,
+    index,
+    goToNextModel,
   });
   return getElements(mw, dvisible, callback, e =>
     createEdgeContainer(e, undefined, undefined, getEdgeColor, isAnimated)
@@ -252,6 +261,7 @@ export function getViewerReactFlowElementsFrom(
 
 export function getActionReactFlowElementsFrom(
   mw: ModelWrapper,
+  index: RepoIndex,
   dvisible: boolean,
   onProcessClick: (pageid: string, processid: string) => void,
   getStyleById: (id: string) => SerializedStyles,
@@ -267,12 +277,14 @@ export function getActionReactFlowElementsFrom(
     getSVGColorById,
     onDataWorkspaceActive,
     idVisible,
+    index,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }
 
 export function getMapperReactFlowElementsFrom(
   mw: ModelWrapper,
+  index: RepoIndex,
   type: ModelType,
   dvisible: boolean,
   onProcessClick: (pageid: string, processid: string) => void,
@@ -305,6 +317,7 @@ export function getMapperReactFlowElementsFrom(
     ComponentShortDescription,
     MappingList,
     idVisible,
+    index,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }

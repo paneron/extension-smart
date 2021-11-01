@@ -60,7 +60,7 @@ import {
   RepoFileType,
 } from '../utils/repo/io';
 import { MMELJSON } from '../model/json';
-import { MMELRepo } from '../model/repo';
+import { MMELRepo, RepoIndex } from '../model/repo';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -69,7 +69,8 @@ const ModelWorkspace: React.FC<{
   isVisible: boolean;
   className?: string;
   repo?: MMELRepo;
-}> = ({ isVisible, className, repo }) => {
+  index: RepoIndex;
+}> = ({ isVisible, className, repo, index }) => {
   const { useObjectData, updateObjects } = useContext(DatasetContext);
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
@@ -93,6 +94,7 @@ const ModelWorkspace: React.FC<{
 
   const [diagProps, setDiagProps] = useState<WorkspaceDiagPackage | null>(null);
   const [idVisible, setIdVisible] = useState<boolean>(false);
+  const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
 
   const [toaster] = useState<IToaster>(Toaster.create());
 
@@ -104,6 +106,10 @@ const ModelWorkspace: React.FC<{
   const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
   const workData = repo !== undefined ? repoModelFile.value.data[workPath] : {};
 
+  if (repo === undefined && mainRepo !== undefined) {
+    setMainRepo(undefined);
+  }
+
   useMemo(() => {
     if (
       repo !== undefined &&
@@ -111,19 +117,22 @@ const ModelWorkspace: React.FC<{
       repoData !== undefined &&
       !repoModelFile.isUpdating
     ) {
-      const json = repoData as MMELJSON;
-      const model = JSONToMMEL(json);
-      const mw = createEditorModelWrapper(model);
-      const ws =
-        workData !== undefined && workData !== null
-          ? (workData as SMARTWorkspace)
-          : createNewSMARTWorkspace();
-      setState({
-        ...state,
-        history: createPageHistory(mw),
-        modelWrapper: mw,
-        workspace: ws,
-      });
+      if (repo.ns !== mainRepo) {
+        const json = repoData as MMELJSON;
+        const model = JSONToMMEL(json);
+        const mw = createEditorModelWrapper(model);
+        const ws =
+          workData !== undefined && workData !== null
+            ? (workData as SMARTWorkspace)
+            : createNewSMARTWorkspace();
+        setState({
+          ...state,
+          history: createPageHistory(mw),
+          modelWrapper: mw,
+          workspace: ws,
+        });
+        setMainRepo(repo.ns);
+      }
     }
   }, [repoData, repoModelFile.isUpdating]);
 
@@ -339,6 +348,7 @@ const ModelWorkspace: React.FC<{
                 <ReactFlow
                   elements={getActionReactFlowElementsFrom(
                     state.modelWrapper,
+                    index,
                     state.dvisible,
                     onProcessClick,
                     getStyleById,
