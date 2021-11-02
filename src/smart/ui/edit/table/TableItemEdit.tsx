@@ -2,64 +2,34 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import { Button, ButtonGroup, FormGroup } from '@blueprintjs/core';
+import { Button, ButtonGroup, FormGroup, Tab, Tabs } from '@blueprintjs/core';
 import { MMELTable } from '../../../serialize/interface/supportinterface';
 import { NormalTextField } from '../../common/fields';
-import MMELTableRow from './TableRow';
-import { useContext, useMemo } from 'react';
+import { useContext, useState } from 'react';
 import {
   FILE_TYPE,
   handleFileOpen,
   saveToFileSystem,
 } from '../../../utils/IOFunctions';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { Tooltip2 } from '@blueprintjs/popover2';
+import EditTableView from './EditTableView';
+import EditClassView from './EditClassView';
+import React from 'react';
+
+type TabType = 'table' | 'class';
 
 const TableItemEditPage: React.FC<{
   object: MMELTable;
   setObject: (obj: MMELTable) => void;
 }> = ({ object: table, setObject: setTable }) => {
+  const [mode, setMode] = useState<TabType>('table');
+
   const {
     getBlob,
     writeFileToFilesystem,
     useDecodedBlob,
     requestFileFromFilesystem,
   } = useContext(DatasetContext);
-
-  const emptyRow = useMemo(
-    () => new Array(table.columns).fill(''),
-    [table.columns]
-  );
-
-  function setRow(index: number, row: string[]) {
-    const newTable = [...table.data];
-    newTable[index] = row;
-    setTable({ ...table, data: newTable });
-  }
-
-  function onDeleteRow(index: number) {
-    const newTable = [...table.data];
-    newTable.splice(index, 1);
-    setTable({ ...table, data: newTable });
-  }
-
-  function newRow(row: string[]) {
-    setTable({ ...table, data: [...table.data, row] });
-  }
-
-  function onDelete(index: number) {
-    const newTable = table.data.map(r => {
-      const newRow = [...r];
-      newRow.splice(index, 1);
-      return newRow;
-    });
-    setTable({ ...table, columns: table.columns - 1, data: newTable });
-  }
-
-  function addColumn() {
-    const newTable = table.data.map(r => [...r, '']);
-    setTable({ ...table, columns: table.columns + 1, data: newTable });
-  }
 
   function saveCSV() {
     const fileData = table.data.map(row => row.join(',')).join('\n');
@@ -92,6 +62,8 @@ const TableItemEditPage: React.FC<{
     });
   }
 
+  const props = { table, setTable };
+
   return (
     <FormGroup>
       <NormalTextField
@@ -104,41 +76,22 @@ const TableItemEditPage: React.FC<{
         value={table.title}
         onChange={x => setTable({ ...table, title: x })}
       />
-      <table>
-        <tr>
-          <td />
-          {emptyRow.map(
-            (_, index) =>
-              table.columns > 1 && (
-                <td style={{ textAlign: 'center' }}>
-                  <Tooltip2 content="Remove column">
-                    <Button
-                      intent="danger"
-                      icon="cross"
-                      minimal
-                      onClick={() => onDelete(index)}
-                    />
-                  </Tooltip2>
-                </td>
-              )
-          )}
-          <td>
-            <Button intent="success" onClick={addColumn}>
-              Add column
-            </Button>
-          </td>
-        </tr>
-        {table.data.map((row, index) => (
-          <MMELTableRow
-            key={index}
-            row={row}
-            line={index}
-            setRow={row => setRow(index, row)}
-            onDelete={() => onDeleteRow(index)}
-          />
-        ))}
-        <MMELTableRow row={emptyRow} setRow={newRow} />
-      </table>
+      <Tabs
+        id="TableEditOption"
+        onChange={x => setMode(x as TabType)}
+        selectedTabId={mode}
+      >
+        <Tab
+          id="table"
+          title="Table view"
+          panel={mode === 'table' ? <EditTableView {...props} /> : <></>}
+        />
+        <Tab
+          id="class"
+          title="Class view"
+          panel={mode === 'class' ? <EditClassView {...props} /> : <></>}
+        />
+      </Tabs>
       <ButtonGroup>
         <Button icon="import" onClick={loadCSV}>
           Import CSV
