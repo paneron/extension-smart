@@ -12,7 +12,7 @@ import {
 import { MMELRepo, RepoIndex } from '../../../model/repo';
 import { getAllRepoModels } from '../../../utils/repo/CommonFunctions';
 import { JSONToMMEL } from '../../../utils/repo/io';
-import { LoadingPage } from '../../common/Loading';
+import { LoadingScreen } from '../../common/Loading';
 import RepoIndexDiagram from './RepoIndexDiagram';
 
 const RepoIndexMainView: React.FC<{
@@ -54,6 +54,6 @@ const RepoIndexMainView: React.FC<{
   );
 };
 
-const LoadingAnalysis = LoadingPage({ label: 'Loading model information' });
+const LoadingAnalysis = LoadingScreen({ label: 'Loading model information' });
 
 export default RepoIndexMainView;
