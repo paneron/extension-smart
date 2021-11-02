@@ -380,7 +380,7 @@ function lookupTable(
     const table = tables[parts[0]];
     const col = parseInt(parts[1]);
     if (table !== undefined) {
-      let rows = table.data;
+      let rows = table.data.slice(1);
       for (let i = 2; i + 1 < parts.length; i += 2) {
         const index = parseInt(parts[i]);
         const varName = parts[i + 1];
