@@ -2,7 +2,7 @@ import { Edge, Elements, Node, Position } from 'react-flow-renderer';
 import { MapProfile } from '../../model/mapmodel';
 import { MMELRepo, RepoIndex } from '../../model/repo';
 import { createNodeContent } from '../../ui/mapper/repo/RepoMapNode';
-import { RepoMapLegend, RepoNodeType } from '../repo/CommonFunctions';
+import { RepoLegend, RepoNodeType } from '../repo/CommonFunctions';
 import { getPathByNS, RepoFileType } from '../repo/io';
 
 type Maps = Record<string, MapProfile>;
@@ -93,7 +93,7 @@ function createNode(
     sourcePosition: Position.Right,
     targetPosition: Position.Left,
     style: {
-      background: RepoMapLegend[type].color,
+      background: RepoLegend[type].color,
     },
   };
 }

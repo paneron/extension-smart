@@ -23,6 +23,7 @@ import { MMELRepo, RepoIndex, RepoItemType } from './smart/model/repo';
 import RepoViewer from './smart/ui/repo/RepoViewer';
 import DocumentViewer from './smart/ui/docviewer';
 import { RepoHistory } from './smart/model/history';
+import LinkAnalysis from './smart/ui/LinkAnalysis';
 
 const RepositoryView: React.FC<{
   index: RepoIndex;
@@ -168,6 +169,7 @@ const MODULES = [
   'modelMapper',
   'modelImplement',
   'docViewer',
+  'linkAnalysis',
 ] as const;
 
 type ModuleName = typeof MODULES[number];
@@ -175,8 +177,15 @@ type ModuleName = typeof MODULES[number];
 const ModuleList: Record<RepoItemType | '', ModuleName[]> = {
   '': ['repo', 'modelViewer', 'modelEditor', 'modelMapper', 'modelImplement'],
   Doc: ['repo', 'docViewer'],
-  Ref: ['repo', 'modelViewer', 'modelMapper', 'modelImplement'],
-  Imp: ['repo', 'modelViewer', 'modelEditor', 'modelMapper', 'modelImplement'],
+  Ref: ['repo', 'modelViewer', 'modelMapper', 'modelImplement', 'linkAnalysis'],
+  Imp: [
+    'repo',
+    'modelViewer',
+    'modelEditor',
+    'modelMapper',
+    'modelImplement',
+    'linkAnalysis',
+  ],
 };
 
 interface ModuleConfiguration {
@@ -232,6 +241,12 @@ const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {
     description: 'Document viewer',
     icon: 'document-open',
     view: DocumentViewer,
+  },
+  linkAnalysis: {
+    title: 'Link Analyser',
+    description: 'Analyse links between models',
+    icon: 'predictive-analysis',
+    view: LinkAnalysis,
   },
 };
 

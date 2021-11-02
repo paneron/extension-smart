@@ -10,14 +10,14 @@ import React from 'react';
 export function createNodeContent(
   label: string,
   item: RepoItem | undefined,
-  loadModel: (x: string) => void
+  loadModel?: (x: string) => void
 ): JSX.Element {
   return (
     <>
       <Tooltip2 content={item ? item.title : ''}>
         <Text ellipsize>{label}</Text>
       </Tooltip2>
-      {item !== undefined && (
+      {item && loadModel && (
         <div
           style={{
             position: 'fixed',
