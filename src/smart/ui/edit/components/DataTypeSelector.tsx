@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Button, ButtonGroup, FormGroup, Menu } from '@blueprintjs/core';
 import {
   ItemListRenderer,

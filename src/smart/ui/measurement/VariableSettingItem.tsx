@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React from 'react';
 import { CSSROOTVARIABLES } from '../../../css/root.css';
 import { InputableVarType, VarInputInterface } from '../../model/Measurement';

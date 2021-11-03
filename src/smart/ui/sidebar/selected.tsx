@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React, { useMemo } from 'react';
 import { useStoreState, Elements, isNode } from 'react-flow-renderer';
 import { EditorNodeWithInfoCallback } from '../../model/FlowContainer';

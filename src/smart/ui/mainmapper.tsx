@@ -12,9 +12,7 @@ import React, {
 
 import ModelDiagram from './mapper/ModelDiagram';
 import {
-  EditorApproval,
   EditorModel,
-  EditorProcess,
   EditorSubprocess,
   getEditorNodeInfoById,
   ModelType,
@@ -25,14 +23,12 @@ import {
   createNewMapSet,
   getMappings,
   indexModel,
-  MappingMeta,
   MapProfile,
   MapSet,
 } from '../model/mapmodel';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
   ControlGroup,
-  Dialog,
   HotkeysProvider,
   HotkeysTarget2,
   IToaster,
@@ -59,14 +55,11 @@ import {
 import MappingCanvus from './mapper/MappingCanvus';
 import MapperOptionMenu from './menu/mapperOptionMenu';
 import { EditMPropsInterface } from './dialog/dialogs';
-import MappingEditPage from './edit/mappingedit';
-import DocTemplatePane from './reporttemplate/doctemplatepane';
 import MGDButton from '../MGDComponents/MGDButton';
-import { dialog_layout, multi_model_container } from '../../css/layout';
+import { multi_model_container } from '../../css/layout';
 import { vertical_line } from '../../css/components';
 import { findPageContainingElement } from '../utils/SearchFunctions';
 import { getDocumentMetaById } from '../utils/DocumentFunctions';
-import AutoMapper from './mapper/AutoMapper';
 import { getNamespace } from '../utils/ModelFunctions';
 import {
   COMMITMSG,
@@ -81,6 +74,8 @@ import { MMELRepo, RepoIndex } from '../model/repo';
 import RepoMapMainView from './mapper/repo/RepoMapMainView';
 import { LoadingContainer } from './common/Loading';
 import { MMELDocument } from '../model/document';
+import MapperCompareMenu from './menu/MapperCompareMenu';
+import MapperDialog from './popover/MapperDialog';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -129,6 +124,7 @@ const ModelMapper: React.FC<{
   const [toaster] = useState<IToaster>(Toaster.create());
   const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
   const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
+  const [diffMap, setDiffMap] = useState<MapProfile | undefined>(undefined);
 
   const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
   const mapPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MAP);
@@ -247,12 +243,49 @@ const ModelMapper: React.FC<{
     ]
   );
 
+  const compareEdges = useMemo(() => {
+    if (diffMap) {
+      const ms = diffMap.mapSet[refns];
+      return isModelWrapper(refMW)
+        ? filterMappings(
+            ms,
+            impPage,
+            refMW.model.pages[refMW.page],
+            selected,
+            impmodel.elements,
+            refMW.model.elements
+          )
+        : filterMappingsForDocument(
+            ms,
+            impPage,
+            refMW,
+            selected,
+            impmodel.elements
+          );
+    } else {
+      return undefined;
+    }
+  }, [
+    diffMap,
+    impPage,
+    isModelWrapper(refMW) ? refMW.model.pages[refMW.page] : refMW,
+    selected,
+  ]);
+
   const mapResult = useMemo(
     () =>
       isModelWrapper(refMW)
         ? calculateMapping(refMW.model, getMappings(mapProfile, refns))
         : undefined,
     [isModelWrapper(refMW) ? refMW.model : refMW, mapProfile]
+  );
+
+  const compareResult = useMemo(
+    () =>
+      isModelWrapper(refMW) && diffMap
+        ? calculateMapping(refMW.model, getMappings(diffMap, refns))
+        : undefined,
+    [isModelWrapper(refMW) ? refMW.model : refMW, diffMap]
   );
 
   function showMessage(msg: IToastProps) {
@@ -273,7 +306,7 @@ const ModelMapper: React.FC<{
 
   function onMapProfileImported(mp: MapProfile) {
     const newMP = mergeMapProfiles(mapProfile, mp);
-    setMapProfile(newMP)
+    setMapProfile(newMP);
   }
 
   function onImpModelChanged(model: EditorModel) {
@@ -315,35 +348,6 @@ const ModelMapper: React.FC<{
 
   function onMappingEdit(from: string, to: string) {
     setEditMProps({ from, to });
-  }
-
-  function onMappingChange(update: MappingMeta | null) {
-    if (update !== null) {
-      mapProfile.mapSet[refns].mappings[editMappingProps.from][
-        editMappingProps.to
-      ] = update;
-      setMapProfile({ ...mapProfile });
-    }
-    setEditMProps({
-      from: '',
-      to: '',
-    });
-  }
-
-  function onMappingDelete() {
-    const { from, to } = editMappingProps;
-    const mapSet = mapProfile.mapSet[refns];
-    delete mapSet.mappings[from][to];
-    mapSet.mappings[from] = { ...mapSet.mappings[from] };
-    if (Object.keys(mapSet.mappings[from]).length === 0) {
-      delete mapSet.mappings[from];
-    }
-    mapSet.mappings = { ...mapSet.mappings };
-    setMapProfile({ ...mapProfile });
-    setEditMProps({
-      from: '',
-      to: '',
-    });
   }
 
   function onResetMapping() {
@@ -396,10 +400,6 @@ const ModelMapper: React.FC<{
     setViewOption({ ...viewOption, mapAIVisible: true });
   }
 
-  function closeDialog() {
-    setViewOption({ ...viewOption, docVisible: false, mapAIVisible: false });
-  }
-
   if (!isVisible && selected.selected !== '') {
     setSelected({
       modelType: ModelType.IMP,
@@ -439,6 +439,15 @@ const ModelMapper: React.FC<{
       >
         <MGDButton> View </MGDButton>
       </Popover2>
+      <Popover2
+        minimal
+        placement="bottom-start"
+        content={
+          <MapperCompareMenu opponent={diffMap} setDiffMap={setDiffMap} />
+        }
+      >
+        <MGDButton> Compare </MGDButton>
+      </Popover2>
       <MGDButton
         onClick={() => setViewOption({ ...viewOption, docVisible: true })}
       >
@@ -446,34 +455,6 @@ const ModelMapper: React.FC<{
       </MGDButton>
     </ControlGroup>
   );
-
-  const mapEditPage = editMappingProps.from !== '' &&
-    editMappingProps.to !== '' && (
-      <MappingEditPage
-        from={
-          impmodel.elements[editMappingProps.from] as
-            | EditorProcess
-            | EditorApproval
-        }
-        to={
-          isModelWrapper(refMW)
-            ? (refMW.model.elements[editMappingProps.to] as
-                | EditorProcess
-                | EditorApproval)
-            : {
-                id: editMappingProps.to,
-                name: getDocumentMetaById(refMW, editMappingProps.to),
-              }
-        }
-        data={
-          mapProfile.mapSet[refns].mappings[editMappingProps.from][
-            editMappingProps.to
-          ]
-        }
-        onDelete={onMappingDelete}
-        onChange={onMappingChange}
-      />
-    );
 
   const hotkeys = [
     {
@@ -508,59 +489,24 @@ const ModelMapper: React.FC<{
 
   useEffect(() => clean, [repo]);
 
+  const diagProps = {
+    editMappingProps,
+    mapProfile,
+    refMW,
+    setMapProfile,
+    setEditMProps,
+    viewOption,
+    setViewOption,
+    showMessage,
+    impMW,
+  };
+
   if (isVisible) {
     return (
       <HotkeysProvider>
         <HotkeysTarget2 hotkeys={hotkeys}>
           <Workspace className={className} toolbar={toolbar}>
-            <Dialog
-              isOpen={
-                editMappingProps.from !== '' ||
-                viewOption.docVisible ||
-                viewOption.mapAIVisible
-              }
-              title={
-                editMappingProps.from !== ''
-                  ? 'Edit Mapping'
-                  : viewOption.docVisible
-                  ? 'Report template'
-                  : 'Auto mapper (transitive mapping)'
-              }
-              css={dialog_layout}
-              onClose={
-                editMappingProps.from !== ''
-                  ? () =>
-                      setEditMProps({
-                        from: '',
-                        to: '',
-                      })
-                  : closeDialog
-              }
-              canEscapeKeyClose={false}
-              canOutsideClickClose={false}
-            >
-              {editMappingProps.from !== '' ? (
-                mapEditPage
-              ) : viewOption.docVisible ? (
-                isModelWrapper(refMW) && (
-                  <DocTemplatePane
-                    mapProfile={mapProfile}
-                    setMapProfile={setMapProfile}
-                    refModel={refMW.model}
-                    impModel={impmodel}
-                  />
-                )
-              ) : (
-                <AutoMapper
-                  refNamespace={refns}
-                  impNamespace={getNamespace(impmodel)}
-                  showMessage={showMessage}
-                  onClose={closeDialog}
-                  mapProfile={mapProfile}
-                  setMapProfile={setMapProfile}
-                />
-              )}
-            </Dialog>
+            <MapperDialog {...diagProps} />
             <div css={multi_model_container}>
               <ModelDiagram
                 modelProps={implementProps}

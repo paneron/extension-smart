@@ -1,0 +1,36 @@
+import React, { useContext } from 'react';
+import { Menu, MenuItem } from '@blueprintjs/core';
+import { FILE_TYPE, handleMappingOpen } from '../../utils/IOFunctions';
+import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
+import { MapProfile } from '../../model/mapmodel';
+
+const MapperCompareMenu: React.FC<{
+  opponent: MapProfile | undefined;
+  setDiffMap: (x: MapProfile | undefined) => void;
+}> = function ({ opponent, setDiffMap }) {
+  const { useDecodedBlob, requestFileFromFilesystem } =
+    useContext(DatasetContext);
+
+  function onClick() {
+    handleMappingOpen({
+      onMapProfileChanged: setDiffMap,
+      useDecodedBlob,
+      requestFileFromFilesystem,
+      fileType: FILE_TYPE.JSON,
+    });
+  }
+
+  return (
+    <Menu>
+      <MenuItem text="Open comparand (JSON)" onClick={onClick} />
+      {opponent && (
+        <MenuItem
+          text="Close comparand"
+          onClick={() => setDiffMap(undefined)}
+        />
+      )}
+    </Menu>
+  );
+};
+
+export default MapperCompareMenu;

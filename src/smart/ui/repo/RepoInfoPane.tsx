@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { MMELRepo, RepoIndex } from '../../model/repo';
 import { DescriptionItem } from '../common/description/fields';
 import RepoCloseButton from './RepoCloseButton';

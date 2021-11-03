@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Switch } from '@blueprintjs/core';
+import React from 'react';
 import { VarInputInterface } from '../../../model/Measurement';
 
 const BooleanMeasureEdit: React.FC<VarInputInterface> = function ({

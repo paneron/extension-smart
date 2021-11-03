@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { FormGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import MGDLabel from '../../../MGDComponents/MGDLabel';
 import {
   cardinalityToString,

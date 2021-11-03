@@ -1,9 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button, IconName } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import AskIDForSaveMenu from './AskIDForSaveMenu';
 
 const ImportFromSelectionButton: React.FC<{

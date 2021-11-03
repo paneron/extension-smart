@@ -1,10 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React, { RefObject } from 'react';
 import { MapEdgeResult } from '../../utils/map/MappingCalculator';
-import { mgd_canvas } from '../../../css/layout';
+import { mgdCanvas } from '../../../css/layout';
 import { CSSROOTVARIABLES } from '../../../css/root.css';
 
 const color = CSSROOTVARIABLES['--colour--green'];
@@ -60,7 +56,7 @@ const MappingCanvus: React.FC<{
     .map(r => computePos(r))
     .filter(r => filterResult(r, threshold));
   return (
-    <div css={mgd_canvas}>
+    <div style={mgdCanvas}>
       <svg width="100%" height="99%">
         <defs>
           <marker

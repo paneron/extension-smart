@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useState } from 'react';
 import MGDButton from '../../MGDComponents/MGDButton';
 import AskIDForSaveMenu from './AskIDForSaveMenu';

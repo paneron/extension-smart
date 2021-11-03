@@ -1,11 +1,7 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button, Checkbox, Dialog, Text } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React, { useEffect } from 'react';
 import { useMemo, useState } from 'react';
-import { dialog_layout, dialog_layout__full } from '../../../css/layout';
+import { dialogLayout, dialogLayoutFull } from '../../../css/layout';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import {
   EditorModel,
@@ -198,7 +194,7 @@ const ProvisionSettings: React.FC<{
       <Dialog
         isOpen={result !== undefined}
         title="Provision summary"
-        css={[dialog_layout, dialog_layout__full]}
+        style={{ ...dialogLayout, ...dialogLayoutFull }}
         onClose={() => setResult(undefined)}
         canEscapeKeyClose={false}
         canOutsideClickClose={false}

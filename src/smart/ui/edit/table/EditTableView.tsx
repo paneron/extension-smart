@@ -1,9 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useMemo } from 'react';
 import { MMELTable } from '../../../serialize/interface/supportinterface';
 import MMELTableRow from './TableRow';

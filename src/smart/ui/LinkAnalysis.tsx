@@ -1,10 +1,7 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { MMELRepo, RepoIndex } from '../model/repo';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import RepoIndexMainView from './mapper/repo/RepoIndexMainView';
+import React from 'react';
 
 const LinkAnalysis: React.FC<{
   isVisible: boolean;

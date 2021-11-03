@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React from 'react';
 import { EditorDataClass, EditorModel } from '../../model/editormodel';
 import { SMARTDocumentStore } from '../../model/workspace';

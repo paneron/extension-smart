@@ -1,8 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { FormGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 // import { LocalizedConceptForm } from '@riboseinc/paneron-extension-glossarist/classes/localizedConcept/LocalizedConceptForm';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';

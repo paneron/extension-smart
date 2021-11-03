@@ -12,7 +12,13 @@ import {
 } from '../../model/editormodel';
 import { PageHistory } from '../../model/history';
 import { LegendInterface, MapperSelectedInterface } from '../../model/States';
-import { MappingDoc, MappingMeta, MappingType, MapProfile, MapSet } from '../../model/mapmodel';
+import {
+  MappingDoc,
+  MappingMeta,
+  MappingType,
+  MapProfile,
+  MapSet,
+} from '../../model/mapmodel';
 import { SerializedStyles } from '@emotion/react';
 import { DocStatement, MMELDocument } from '../../model/document';
 import { getNamespace } from '../ModelFunctions';
@@ -400,15 +406,18 @@ function getChilds(model: EditorModel, id: string): string[] {
   return ret;
 }
 
-export function mergeMapProfiles (mp1: MapProfile, mp2: MapProfile):MapProfile {
-  const newMP = {...mp1};    
+export function mergeMapProfiles(mp1: MapProfile, mp2: MapProfile): MapProfile {
+  const newMP = { ...mp1 };
   newMP.docs = mergeMapDocs(mp1.docs, mp2.docs);
   newMP.mapSet = mergeMapSets(mp1.mapSet, mp2.mapSet);
   return newMP;
 }
 
-function mergeMapping(m1: Record<string, MappingMeta>, m2: Record<string, MappingMeta>): Record<string, MappingMeta> {
-  const newMap = {...m1};
+function mergeMapping(
+  m1: Record<string, MappingMeta>,
+  m2: Record<string, MappingMeta>
+): Record<string, MappingMeta> {
+  const newMap = { ...m1 };
   for (const x in m2) {
     if (newMap[x] === undefined) {
       newMap[x] = m2[x];
@@ -418,11 +427,11 @@ function mergeMapping(m1: Record<string, MappingMeta>, m2: Record<string, Mappin
 }
 
 function mergeMapSet(s1: MapSet, s2: MapSet): MapSet {
-  const newMapSet:MapSet = {...s1, mappings: {...s1.mappings}};
+  const newMapSet: MapSet = { ...s1, mappings: { ...s1.mappings } };
   const { mappings } = newMapSet;
   for (const x in s2.mappings) {
     if (mappings[x] !== undefined) {
-      mappings[x] = mergeMapping(mappings[x], s2.mappings[x])
+      mappings[x] = mergeMapping(mappings[x], s2.mappings[x]);
     } else {
       mappings[x] = s2.mappings[x];
     }
@@ -430,8 +439,11 @@ function mergeMapSet(s1: MapSet, s2: MapSet): MapSet {
   return newMapSet;
 }
 
-function mergeMapSets(s1: Record<string, MapSet>, s2: Record<string, MapSet>): Record<string, MapSet> {
-  const newMapSet = {...s1};
+function mergeMapSets(
+  s1: Record<string, MapSet>,
+  s2: Record<string, MapSet>
+): Record<string, MapSet> {
+  const newMapSet = { ...s1 };
   for (const x in s2) {
     if (newMapSet[x] !== undefined) {
       newMapSet[x] = mergeMapSet(newMapSet[x], s2[x]);
@@ -442,19 +454,22 @@ function mergeMapSets(s1: Record<string, MapSet>, s2: Record<string, MapSet>): R
   return newMapSet;
 }
 
-function mergeMapDocs(d1: Record<string, MappingDoc>, d2: Record<string, MappingDoc>): Record<string, MappingDoc> {
-  const newDoc = {...d1};
+function mergeMapDocs(
+  d1: Record<string, MappingDoc>,
+  d2: Record<string, MappingDoc>
+): Record<string, MappingDoc> {
+  const newDoc = { ...d1 };
   for (const x in d2) {
     const doc = d2[x];
     if (newDoc[x] === undefined) {
       newDoc[x] = doc;
     } else {
-      let suffix = 0;      
+      let suffix = 0;
       while (newDoc[x + suffix] !== undefined) {
         suffix++;
       }
       const newId = x + suffix;
-      newDoc[newId] = {...doc, id: newId};
+      newDoc[newId] = { ...doc, id: newId };
     }
   }
   return newDoc;

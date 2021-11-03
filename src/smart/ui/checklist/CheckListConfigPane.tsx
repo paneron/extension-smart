@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button, Checkbox, Text } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useEffect, useState } from 'react';
 import MGDLabel from '../../MGDComponents/MGDLabel';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';

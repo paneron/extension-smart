@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Button, ButtonGroup, FormGroup, Tab, Tabs } from '@blueprintjs/core';
 import { MMELTable } from '../../../serialize/interface/supportinterface';
 import { NormalTextField } from '../../common/fields';

@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import {
   Button,
   ControlGroup,
@@ -12,7 +8,7 @@ import {
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import { useContext, useMemo, useState } from 'react';
-import { react_flow_container_layout } from '../../../css/layout';
+import { reactFlowContainerLayout } from '../../../css/layout';
 import { ModelWrapper } from '../../model/modelwrapper';
 import {
   MMELRepo,
@@ -36,6 +32,7 @@ import { groupItems, setValueToIndex } from '../../utils/repo/CommonFunctions';
 import { Popover2 } from '@blueprintjs/popover2';
 import RepoImportMenu from './RepoImportMenu';
 import { MMELDocument } from '../../model/document';
+import React from 'react';
 
 function matchFilter(item: RepoItem, filter: string) {
   return (
@@ -273,7 +270,7 @@ const RepoGroup: React.FC<{
   return (
     <fieldset>
       <legend>{legend}</legend>
-      <div css={react_flow_container_layout}>
+      <div style={reactFlowContainerLayout}>
         {Object.values(list).length === 0 && <EmptyMsg />}
         <div
           style={{

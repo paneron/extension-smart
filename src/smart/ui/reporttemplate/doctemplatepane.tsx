@@ -1,10 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Dialog, FormGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
-import { dialog_layout } from '../../../css/layout';
+import { dialogLayout } from '../../../css/layout';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel } from '../../model/editormodel';
 import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
@@ -118,7 +114,7 @@ const DocTemplatePane: React.FC<{
         <Dialog
           isOpen={report !== null}
           title={'Report'}
-          css={dialog_layout}
+          style={dialogLayout}
           onClose={() => setReport(null)}
           canEscapeKeyClose={false}
           canOutsideClickClose={false}

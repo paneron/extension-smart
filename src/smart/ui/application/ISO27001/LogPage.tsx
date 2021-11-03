@@ -1,10 +1,7 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button, ButtonGroup, HTMLTable } from '@blueprintjs/core';
 import { Classes } from '@blueprintjs/popover2';
-import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
+import React from 'react';
 import { CSSProperties, useContext, useState } from 'react';
 import MGDContainer from '../../../MGDComponents/MGDContainer';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';

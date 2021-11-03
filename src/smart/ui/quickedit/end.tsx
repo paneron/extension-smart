@@ -1,8 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { FormGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React from 'react';
 import { EditorEndEvent } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';

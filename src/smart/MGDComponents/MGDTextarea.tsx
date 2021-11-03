@@ -1,10 +1,8 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
 
 import { TextArea } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
-import { mgd_textarea } from '../../css/form';
+import React from 'react';
+import { mgdTextarea } from '../../css/form';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -24,7 +22,7 @@ function MGDTextarea(props: OwnProps) {
   return (
     <TextArea
       id={id}
-      css={mgd_textarea}
+      style={mgdTextarea}
       readOnly={readOnly}
       onChange={onChange}
       value={value}

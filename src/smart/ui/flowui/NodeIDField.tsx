@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Text } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { CSSROOTVARIABLES } from '../../../css/root.css';
 
 const NodeIDField: React.FC<{ nodeid: string; wide?: boolean }> = function ({

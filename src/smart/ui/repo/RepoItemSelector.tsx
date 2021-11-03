@@ -1,9 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Button, Card, Icon, InputGroup, Text } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
+import React from 'react';
 import { CSSProperties, useState } from 'react';
 import { RepoIndex, RepoItem, RepoItemType } from '../../model/repo';
 import { LoadingContainer } from '../common/Loading';

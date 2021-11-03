@@ -1,6 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import {
   Text,
   Button,
@@ -9,8 +6,8 @@ import {
   InputGroup,
 } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
-import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
+import React from 'react';
 import { useContext } from 'react';
 import MGDContainer from '../../../MGDComponents/MGDContainer';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';

@@ -1,6 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import {
   Button,
   ControlGroup,
@@ -10,7 +7,7 @@ import {
   NumberRange,
   NumericInput,
 } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import MGDContainer from '../../../MGDComponents/MGDContainer';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
 import { obtainData } from './DataFeeder';

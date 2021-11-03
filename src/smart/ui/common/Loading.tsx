@@ -1,8 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Spinner, Text } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React from 'react';
 
 export const LoadingPage = ({ label }: { label?: string }) => (

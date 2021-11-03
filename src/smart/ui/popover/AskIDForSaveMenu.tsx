@@ -1,10 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
-import { popover_panel_container } from '../../../css/layout';
+import { popoverPanelContainer } from '../../../css/layout';
 import { removeSpace } from '../../utils/ModelFunctions';
 import { NormalTextField } from '../common/fields';
 
@@ -27,7 +23,7 @@ const AskIDForSaveMenu: React.FC<{
   }
 
   return (
-    <div css={popover_panel_container}>
+    <div style={popoverPanelContainer}>
       <NormalTextField
         text={title}
         value={id}

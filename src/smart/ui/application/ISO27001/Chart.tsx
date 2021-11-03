@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import MGDLabel from '../../../MGDComponents/MGDLabel';
 import { Log27001Record, SettingRange } from './model';
 

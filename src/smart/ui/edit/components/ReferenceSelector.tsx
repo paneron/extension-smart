@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Button, FormGroup, Menu } from '@blueprintjs/core';
 import {
   IItemRendererProps,
@@ -9,6 +5,7 @@ import {
   ItemPredicate,
   MultiSelect,
 } from '@blueprintjs/select';
+import React from 'react';
 import { MMELReference } from '../../../serialize/interface/supportinterface';
 import { toRefSummary } from '../../../utils/ModelFunctions';
 

@@ -1,8 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { FormGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import {

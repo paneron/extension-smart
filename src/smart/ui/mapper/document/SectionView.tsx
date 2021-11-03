@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { DocMapIndex, DocSection, DocStatement } from '../../../model/document';
 import ParagraphView from './ParagraphView';
 

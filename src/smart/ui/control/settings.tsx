@@ -1,13 +1,12 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { IToastProps, Tab, Tabs } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
+import { IToastProps, Tab, Tabs } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useState } from 'react';
 import { mgd_label } from '../../../css/form';
 import {
-  mgd_tabs,
   mgd_tabs__item,
   mgd_tabs__item__selected,
   mgd_tabs__item__unselected,
@@ -151,7 +150,6 @@ const BasicSettingPane: React.FC<{
   return (
     <MGDDisplayPane>
       <Tabs
-        css={mgd_tabs}
         onChange={x => setPage(x as SETTINGPAGE)}
         selectedTabId={page}
         animate={false}

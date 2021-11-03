@@ -1,14 +1,10 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Checkbox } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React from 'react';
 import {
-  flow_checkbox,
-  flow_percentage_label,
-  flow_progress_label,
-  flow_progress_label_with_button,
+  flowCheckbox,
+  flowProgressLabelWithButton,
+  flowPercentageLabel,
+  flowProgressLabel,
 } from '../../../css/visual';
 import { ChecklistPackage } from '../../model/checklist';
 import {
@@ -56,22 +52,22 @@ const CheckListAddon: React.FC<{
   return (
     <>
       {!isEGate && (
-        <div css={flow_checkbox}>
+        <div style={flowCheckbox}>
           <Checkbox checked={progress === 100} onChange={onChange} />
         </div>
       )}
       {!isData && !isEGate && (
         <div
-          css={
+          style={
             isEditorProcess(element) && element.page !== ''
-              ? flow_progress_label_with_button
-              : flow_progress_label
+              ? flowProgressLabelWithButton
+              : flowProgressLabel
           }
         >
           {taskString}
         </div>
       )}
-      <div css={flow_percentage_label}>
+      <div style={flowPercentageLabel}>
         {isData ? taskString : progress !== -1 ? `${progressDisplay}%` : ''}
       </div>
     </>

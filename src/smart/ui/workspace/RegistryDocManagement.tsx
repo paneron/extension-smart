@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
 import { itemSorterByText } from '../../utils/ModelFunctions';

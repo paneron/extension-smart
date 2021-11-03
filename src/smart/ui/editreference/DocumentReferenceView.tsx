@@ -1,8 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { ControlGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useEffect } from 'react';
 import { MMELDocument } from '../../model/document';

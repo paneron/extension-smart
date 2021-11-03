@@ -1,9 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React from 'react';
-import { mgd_label } from '../../../../css/form';
+import { mgdLabel } from '../../../../css/form';
 import { MMELRole } from '../../../serialize/interface/supportinterface';
 
 export const DescriptionItem: React.FC<{
@@ -12,7 +8,7 @@ export const DescriptionItem: React.FC<{
 }> = function ({ label, value }): JSX.Element {
   return (
     <p>
-      <label css={mgd_label}>
+      <label style={mgdLabel}>
         {label === undefined ? value : `${label}: ${value}`}
       </label>
     </p>

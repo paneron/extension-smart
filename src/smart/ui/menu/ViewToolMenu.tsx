@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React from 'react';
 import { IconName, Menu, MenuItem } from '@blueprintjs/core';
 import { FunctionPage, FuntionNames } from '../mainviewer';

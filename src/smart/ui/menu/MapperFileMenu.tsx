@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React, { useContext } from 'react';
 import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
@@ -27,7 +23,7 @@ const MapperFileMenu: React.FC<{
   isRepoMode,
   onRepoSave,
   onResetMapping,
-  onMapProfileImported
+  onMapProfileImported,
 }) {
   const {
     getBlob,
@@ -70,10 +66,9 @@ const MapperFileMenu: React.FC<{
       onMapProfileChanged: onMapProfileImported,
       useDecodedBlob,
       requestFileFromFilesystem,
-      fileType: FILE_TYPE.JSON
-    })
+      fileType: FILE_TYPE.JSON,
+    });
   }
-
 
   return (
     <Menu>
@@ -99,11 +94,11 @@ const MapperFileMenu: React.FC<{
             icon="trash"
           />
           <MenuDivider />
-          <MenuItem text='Import' icon='import'>
-          <MenuItem text='JSON-LD file' onClick={handleImport}/>
+          <MenuItem text="Import" icon="import">
+            <MenuItem text="JSON-LD file" onClick={handleImport} />
           </MenuItem>
-          <MenuItem text='Export' icon='export'>
-          <MenuItem text='JSON-LD file' onClick={handleExport}/>
+          <MenuItem text="Export" icon="export">
+            <MenuItem text="JSON-LD file" onClick={handleExport} />
           </MenuItem>
         </>
       ) : (

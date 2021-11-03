@@ -1,9 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React from 'react';
-import { popover_panel_container } from '../../../css/layout';
+import { popoverPanelContainer } from '../../../css/layout';
 import MGDHeading from '../../MGDComponents/MGDHeading';
 import MGDLabel from '../../MGDComponents/MGDLabel';
 import {
@@ -40,7 +36,7 @@ const MeasurementTooltip: React.FC<{
       <MGDLabel>No test</MGDLabel>
     );
 
-  return <div css={popover_panel_container}>{contents}</div>;
+  return <div style={popoverPanelContainer}>{contents}</div>;
 };
 
 const DescribeReportList: React.FC<{ report: MTestReport }> = function ({

@@ -1,9 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button, IToastProps, Text } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
+import React from 'react';
 import { CSSProperties, useContext, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import MGDHeading from '../../MGDComponents/MGDHeading';

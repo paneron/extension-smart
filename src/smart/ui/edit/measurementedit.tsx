@@ -1,10 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { FormGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React from 'react';
-import { mgd_label } from '../../../css/form';
+import { mgdLabel } from '../../../css/form';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { EditorModel } from '../../model/editormodel';
 import {
@@ -108,35 +104,35 @@ const MeasureEditItemPage: React.FC<{
   return (
     <FormGroup>
       <div key="ui#measurement#introtext">
-        <label css={mgd_label}> Measurement types: </label>
+        <label style={mgdLabel}> Measurement types: </label>
         <ul>
           <li>
-            <label css={mgd_label}>
+            <label style={mgdLabel}>
               {VarType.DATA} : A single measurement value given by the user
             </label>
           </li>
           <li>
-            <label css={mgd_label}>
+            <label style={mgdLabel}>
               {VarType.LISTDATA} : A list of data items provided by the user
             </label>
           </li>
           <li>
-            <label css={mgd_label}>
+            <label style={mgdLabel}>
               {VarType.TEXT} : A text data item provided by the user
             </label>
           </li>
           <li>
-            <label css={mgd_label}>
+            <label style={mgdLabel}>
               {VarType.DERIVED} : Calulated from other measurement values
             </label>
           </li>
           <li>
-            <label css={mgd_label}>
+            <label style={mgdLabel}>
               {VarType.TABLE} : Look up a value in a table
             </label>
           </li>
           <li>
-            <label css={mgd_label}>
+            <label style={mgdLabel}>
               {VarType.TABLEITEM} : Select a value from the table column
             </label>
           </li>

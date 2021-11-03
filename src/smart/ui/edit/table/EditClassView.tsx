@@ -1,11 +1,7 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button, Dialog } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
 import { useMemo } from 'react';
-import { dialog_layout } from '../../../../css/layout';
+import { dialogLayout } from '../../../../css/layout';
 import { DataType } from '../../../serialize/interface/baseinterface';
 import { MMELTable } from '../../../serialize/interface/supportinterface';
 import ListWithPopoverItem from '../../common/listmanagement/listPopoverItem';
@@ -51,7 +47,7 @@ const EditClassView: React.FC<{
       <Dialog
         isOpen={open}
         title="Table class definition"
-        css={dialog_layout}
+        style={dialogLayout}
         onClose={() => setOpen(false)}
         canEscapeKeyClose={false}
         canOutsideClickClose={false}

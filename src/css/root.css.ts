@@ -23,6 +23,7 @@ export const CSSROOTVARIABLES = {
   // '--font-size--large': '21px',
   '--font-size--small': '10px',
   '--font-size--regular': '12px',
+  fontWeightRegular: 400,
   '--font-size--large': '16px',
   '--font-weight--light': '300',
   '--font-weight--regular': '400',

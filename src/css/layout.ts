@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { CSSProperties } from 'react';
 import { CSSROOTVARIABLES } from './root.css';
 
 export const flownode_top_left_button_layout = css`
@@ -7,21 +8,27 @@ export const flownode_top_left_button_layout = css`
   top: -10px;
 `;
 
-export const flownode_top_right_button_layout = css`
-  position: fixed;
-  left: -10px;
-  top: -10px;
-`;
+export const flownodeTopLeftButtonLayout: CSSProperties = {
+  position: 'fixed',
+  right: -10,
+  top: -10,
+};
 
-export const mgd_canvas = css`
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 100;
-  pointer-events: none;
-`;
+export const flownodeTopRightButtonLayout: CSSProperties = {
+  position: 'fixed',
+  left: -10,
+  top: -10,
+};
+
+export const mgdCanvas: CSSProperties = {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0,
+  zIndex: 100,
+  pointerEvents: 'none',
+};
 
 export const multi_model_container = css`
   display: flex;
@@ -39,6 +46,11 @@ export const react_flow_container_layout = css`
   position: relative;
 `;
 
+export const reactFlowContainerLayout: CSSProperties = {
+  flex: 1,
+  position: 'relative',
+};
+
 export const dialog_layout = css`
   width: calc(100vw - 60px);
   padding-bottom: 0;
@@ -48,25 +60,43 @@ export const dialog_layout = css`
   }
 `;
 
+export const dialogLayout: CSSProperties = {
+  width: 'calc(100vw - 60px)',
+  paddingBottom: 0,
+  overflowY: 'auto',
+};
+
 export const application_dialog_layout = css`
   width: 70vw;
 `;
+
+export const applicationDialogLayout: CSSProperties = {
+  width: '70vw',
+};
 
 export const dialog_layout__full = css`
   min-height: calc(100vh - 60px);
 `;
 
+export const dialogLayoutFull: CSSProperties = {
+  minHeight: 'calc(100vh - 60px)',
+};
+
 export const wrapper_container = css`
   position: relative;
 `;
 
-export const popover_panel_container = css`
-  font-weight: ${CSSROOTVARIABLES['--font-weight--regular']};
-  font-size: ${CSSROOTVARIABLES['--font-size--regular']};
-  color: ${CSSROOTVARIABLES['--colour--black']};
-  background-color: ${CSSROOTVARIABLES['--colour--bsi-pale-teal']};
-  padding: 1rem;
-  max-width: 30vw;
-  max-height: 45vh;
-  overflow-y: auto;
-`;
+export const wrapperContainer: CSSProperties = {
+  position: 'relative',
+};
+
+export const popoverPanelContainer: CSSProperties = {
+  fontWeight: CSSROOTVARIABLES.fontWeightRegular,
+  fontSize: CSSROOTVARIABLES['--font-size--regular'],
+  color: CSSROOTVARIABLES['--colour--black'],
+  backgroundColor: CSSROOTVARIABLES['--colour--bsi-pale-teal'],
+  padding: '1rem',
+  maxWidth: '30vw',
+  maxHeight: '45vh',
+  overflowY: 'auto',
+};

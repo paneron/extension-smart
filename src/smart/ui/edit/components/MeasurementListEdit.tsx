@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button, FormGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { DataType } from '../../../serialize/interface/baseinterface';
 import { findUniqueID } from '../../../utils/ModelFunctions';
 import { NormalTextField } from '../../common/fields';

@@ -1,10 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Dialog } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
-import { dialog_layout } from '../../../../css/layout';
+import { dialogLayout } from '../../../../css/layout';
 import { EditorModel } from '../../../model/editormodel';
 import { MMELObject } from '../../../serialize/interface/baseinterface';
 import { MMELTable } from '../../../serialize/interface/supportinterface';
@@ -180,7 +176,7 @@ const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
       <Dialog
         isOpen={mode !== 'None'}
         title="Attribute details"
-        css={dialog_layout}
+        style={dialogLayout}
         onClose={() => setMode('None')}
         canEscapeKeyClose={false}
         canOutsideClickClose={false}

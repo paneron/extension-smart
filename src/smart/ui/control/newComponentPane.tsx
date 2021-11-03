@@ -1,9 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React from 'react';
-import { mgd_label } from '../../../css/form';
+import { mgdLabel } from '../../../css/form';
 import MGDComponentBar from '../../MGDComponents/MGDComponentBar';
 import MGDContainer from '../../MGDComponents/MGDContainer';
 import MGDProcessBox from '../../MGDComponents/MGDProcessBox';
@@ -27,7 +23,7 @@ const NewComponentPane: React.FC = function () {
           onDragStart={event => onDragStart(event, DataType.PROCESS)}
           draggable
         >
-          <label css={mgd_label}> Process </label>
+          <label style={mgdLabel}> Process </label>
         </MGDProcessBox>
       </MGDContainer>
       <MGDContainer>
@@ -35,7 +31,7 @@ const NewComponentPane: React.FC = function () {
           onDragStart={event => onDragStart(event, DataType.APPROVAL)}
           draggable
         >
-          <label css={mgd_label}> Approval </label>
+          <label style={mgdLabel}> Approval </label>
         </MGDProcessBox>
       </MGDContainer>
       <MGDContainer>

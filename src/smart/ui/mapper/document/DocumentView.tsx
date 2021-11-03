@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useMemo } from 'react';
 import { MMELDocument } from '../../../model/document';
 import { MapSet } from '../../../model/mapmodel';

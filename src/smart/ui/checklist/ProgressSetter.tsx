@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button, ControlGroup, NumericInput } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 

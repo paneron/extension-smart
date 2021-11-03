@@ -1,17 +1,13 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
 import { NormalTextField } from '../common/fields';
 import { MappingMeta } from '../../model/mapmodel';
 import { FormGroup } from '@blueprintjs/core';
 import { EditPageButtons } from './commons';
 import MGDButton from '../../MGDComponents/MGDButton';
-import { mgd_label } from '../../../css/form';
+import { mgdLabel } from '../../../css/form';
 import { MGDButtonType } from '../../../css/MGDButton';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { wrapper_container } from '../../../css/layout';
+import { wrapperContainer } from '../../../css/layout';
 
 export interface EditElmInfo {
   id: string;
@@ -30,10 +26,10 @@ const MappingEditPage: React.FC<{
   return (
     <MGDDisplayPane>
       <FormGroup>
-        <div css={wrapper_container}>
+        <div style={wrapperContainer}>
           <EditPageButtons onUpdateClick={() => onChange(editing)} />
         </div>
-        <label css={mgd_label}>
+        <label style={mgdLabel}>
           Mapping: {from.name} ( {from.id} ) to {to.name} ( {to.id} )
         </label>
         <NormalTextField

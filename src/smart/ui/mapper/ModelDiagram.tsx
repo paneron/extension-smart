@@ -1,8 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { ControlGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useContext } from 'react';
@@ -11,7 +7,7 @@ import ReactFlow, {
   OnLoadParams,
   ReactFlowProvider,
 } from 'react-flow-renderer';
-import { react_flow_container_layout } from '../../../css/layout';
+import { reactFlowContainerLayout } from '../../../css/layout';
 import { MGDButtonType } from '../../../css/MGDButton';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { EditorModel, ModelType } from '../../model/editormodel';
@@ -265,7 +261,7 @@ const ModelDiagram: React.FC<{
         toolbar={toolbar}
         navbarProps={{ breadcrumbs }}
       >
-        <div css={react_flow_container_layout}>
+        <div style={reactFlowContainerLayout}>
           {isModelWrapper(mw) ? (
             <ReactFlow
               key="MMELModel"

@@ -3,11 +3,6 @@
 import { css } from '@emotion/react';
 import { CSSROOTVARIABLES } from './root.css';
 
-export const mgd_tabs = css`
-  font-weight: ${CSSROOTVARIABLES['--font-weight--regular']};
-  font-size: ${CSSROOTVARIABLES['--font-size--regular']};
-`;
-
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 export const mgd_tabs__item = css`
@@ -32,7 +27,6 @@ export const mgd_tabs__item__selected = css`
   background-color: ${CSSROOTVARIABLES['--colour--white']};
   border-color: ${CSSROOTVARIABLES['--colour--bsi-red']};
 `;
-
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 export const mgd_tabs__items__faux = css`
