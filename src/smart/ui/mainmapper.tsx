@@ -54,8 +54,9 @@ import {
   calculateMapping,
   filterMappings,
   filterMappingsForDocument,
+  mergeMapProfiles,
 } from '../utils/map/MappingCalculator';
-import MappingCanvus from './mapper/mappingCanvus';
+import MappingCanvus from './mapper/MappingCanvus';
 import MapperOptionMenu from './menu/mapperOptionMenu';
 import { EditMPropsInterface } from './dialog/dialogs';
 import MappingEditPage from './edit/mappingedit';
@@ -270,6 +271,11 @@ const ModelMapper: React.FC<{
     setMapProfile(mp);
   }
 
+  function onMapProfileImported(mp: MapProfile) {
+    const newMP = mergeMapProfiles(mapProfile, mp);
+    setMapProfile(newMP)
+  }
+
   function onImpModelChanged(model: EditorModel) {
     onMapProfileChanged({
       '@context': JSONContext,
@@ -410,6 +416,7 @@ const ModelMapper: React.FC<{
           <MapperFileMenu
             mapProfile={mapProfile}
             onMapProfileChanged={onMapProfileChanged}
+            onMapProfileImported={onMapProfileImported}
             onMapImport={onMapImport}
             isRepoMode={repo !== undefined}
             onRepoSave={saveMapping}

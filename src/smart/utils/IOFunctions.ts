@@ -180,12 +180,13 @@ export function handleMappingOpen(props: {
   onMapProfileChanged: (mp: MapProfile) => void;
   useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
+  fileType?:  FILE_TYPE;
 }) {
   try {
-    const { onMapProfileChanged } = props;
+    const { onMapProfileChanged, fileType } = props;
     handleFileOpen({
       ...props,
-      type: FILE_TYPE.Map,
+      type: fileType??FILE_TYPE.Map,
       postProcessing: data =>
         onMapProfileChanged(JSON.parse(data) as MapProfile),
     });
