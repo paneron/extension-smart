@@ -1,5 +1,5 @@
 {
-  "name": "@paneron/paneron-extension-hls",
+  "name": "@paneron/extension-hls",
   "version": "1.0.0-dev9",
   "description": "Paneron extension for HLS model editing",
   "main": "plugin.js",
