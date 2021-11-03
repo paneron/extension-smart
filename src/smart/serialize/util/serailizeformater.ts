@@ -379,6 +379,11 @@ export function toTableModel(table: MMELTable): string {
   let out: string = 'table ' + table.id + ' {\n';
   out += '  title "' + table.title + '"\n';
   out += '  columns "' + table.columns + '"\n';
+  out += '  domain {\n';
+  for (const d of table.domain) {
+    out += '    "' + d + '"\n';
+  }
+  out += '  }\n';
   out += '  data {\n';
   for (const row of table.data) {
     out += '    ' + row.map(x => `"${x}"`).join(' ') + '\n';

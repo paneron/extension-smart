@@ -22,8 +22,8 @@ function calOptions(
   if (table === undefined || col < 0 || col >= table.columns) {
     return [];
   }
-  let rows = table.data;
-  for (let i = 2; i + 1 < table.columns; i += 2) {
+  let rows = table.data.slice(1);
+  for (let i = 2; i + 1 < para.length; i += 2) {
     const index = parseInt(para[i]);
     const value = values[para[i + 1]];
     if (value !== undefined && value !== '') {
@@ -45,6 +45,12 @@ const TableComboBox: React.FC<VarInputInterface> = function ({
     () => calOptions(model, variable, values),
     [model, variable, values]
   );
+
+  useMemo(() => {
+    if (value !== undefined && !options.includes(value)) {
+      onChange('');
+    }
+  }, [value, options]);
 
   return profile !== undefined &&
     profile.profile[variable.id] !== undefined &&

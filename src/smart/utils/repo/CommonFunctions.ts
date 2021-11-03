@@ -10,7 +10,7 @@ import { getPathByNS, RepoFileType } from './io';
 
 export type RepoNodeType = 'own' | 'repo' | 'outside';
 
-export const RepoMapLegend: Record<RepoNodeType, LegendInterface> = {
+export const RepoLegend: Record<RepoNodeType, LegendInterface> = {
   own: { label: 'Current model', color: 'lightgreen' },
   repo: { label: 'In repository', color: 'lightblue' },
   outside: { label: 'Not in repository', color: 'lightgray' },

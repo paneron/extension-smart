@@ -294,6 +294,7 @@ export function createTable(id: string): MMELTable {
     title: id,
     columns: 3,
     data: [],
+    domain: [],
     datatype: DataType.TABLE,
   };
 }

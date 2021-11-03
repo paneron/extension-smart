@@ -5,24 +5,21 @@ import { jsx } from '@emotion/react';
 import React from 'react';
 import { useMemo } from 'react';
 import ReactFlow from 'react-flow-renderer';
-import { MapProfile } from '../../../model/mapmodel';
+import { ModelWrapper } from '../../../model/modelwrapper';
 import { MMELRepo, RepoIndex } from '../../../model/repo';
-import { MapperViewOption } from '../../../model/States';
-import { repoMapExploreNode } from '../../../utils/map/RepoMap';
 import { RepoLegend } from '../../../utils/repo/CommonFunctions';
+import { repoLinkExploreNode } from '../../../utils/repo/LinkAnalysis';
 import LegendPane from '../../common/description/LegendPane';
 import RepoEdge from '../../flowui/RepoEdge';
 
-const RepoMapDiagram: React.FC<{
+const RepoIndexDiagram: React.FC<{
   index: RepoIndex;
-  maps: Record<string, MapProfile>;
+  models?: Record<string, ModelWrapper>;
   repo: MMELRepo;
-  option: MapperViewOption;
-  loadModel: (x: string) => void;
-}> = function ({ index, maps, repo, option, loadModel }) {
+}> = function ({ index, models, repo }) {
   const elms = useMemo(
-    () => repoMapExploreNode(repo, index, maps, loadModel),
-    [repo, index, maps]
+    () => repoLinkExploreNode(index, repo, models),
+    [repo, index, models]
   );
 
   return (
@@ -36,11 +33,9 @@ const RepoMapDiagram: React.FC<{
         nodesDraggable={true}
         edgeTypes={{ repo: RepoEdge }}
       />
-      {option.repoLegendVisible && (
-        <LegendPane list={RepoLegend} onLeft bottom />
-      )}
+      <LegendPane list={RepoLegend} onLeft={false} />
     </>
   );
 };
 
-export default RepoMapDiagram;
+export default RepoIndexDiagram;

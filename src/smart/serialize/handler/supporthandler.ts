@@ -375,6 +375,7 @@ export function parseTable(id: string, data: string): MMELTable {
     title: '',
     columns: 1,
     data: [],
+    domain: [],
     datatype: DataType.TABLE,
   };
 
@@ -391,6 +392,10 @@ export function parseTable(id: string, data: string): MMELTable {
           table.columns = parseInt(MMELremovePackage(t[i++]));
         } else if (command === 'data') {
           cells = MMELtokenizePackage(t[i++]);
+        } else if (command === 'table') {
+          table.domain = MMELtokenizePackage(t[i++]).map(x =>
+            MMELremovePackage(x)
+          );
         } else {
           throw new Error(
             `Parsing error: table. ID ${id}: Unknown keyword ${command}`

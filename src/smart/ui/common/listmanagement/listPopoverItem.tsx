@@ -7,9 +7,11 @@ import React, { useState } from 'react';
 import { dialog_layout } from '../../../../css/layout';
 import { EditorModel } from '../../../model/editormodel';
 import { MMELObject } from '../../../serialize/interface/baseinterface';
+import { MMELTable } from '../../../serialize/interface/supportinterface';
 import {
   checkId,
   defaultItemSorter,
+  defaultItemSorterAsNum,
   findUniqueID,
 } from '../../../utils/ModelFunctions';
 import { IListItem, IUpdateInterface, IViewListInterface } from '../fields';
@@ -24,6 +26,7 @@ export interface PopListInterface<T> {
   items: Record<string, T>;
   setItems: (x: Record<string, T>) => void;
   model?: EditorModel;
+  table?: MMELTable;
   initObject: T;
   matchFilter: (x: T, filter: string) => boolean;
   filterName: string;
@@ -31,11 +34,13 @@ export interface PopListInterface<T> {
   Content: React.FC<{
     object: T;
     model?: EditorModel;
+    table?: MMELTable;
     setObject: (obj: T) => void;
   }>;
   label: string;
   size?: number;
   requireUniqueId?: boolean;
+  sortAsNum?: boolean;
 }
 
 function defaultGetListItem(x: IObject): IListItem {
@@ -50,6 +55,7 @@ const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
     items,
     setItems,
     model,
+    table,
     initObject,
     matchFilter,
     filterName,
@@ -58,6 +64,7 @@ const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
     label,
     size = 10,
     requireUniqueId = true,
+    sortAsNum = false,
   } = props;
   const [editing, setEditing] = useState<T>(initObject);
   const [oldId, setOldId] = useState<string>('');
@@ -67,7 +74,7 @@ const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
     return Object.values(items)
       .filter(x => matchFilter(x, filter))
       .map(x => getListItem(x))
-      .sort(defaultItemSorter);
+      .sort(sortAsNum ? defaultItemSorterAsNum : defaultItemSorter);
   }
 
   function removeItem(ids: string[]) {
@@ -134,7 +141,8 @@ const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
     isVisible: mode === 'Add',
     Content: Content,
     object: editing,
-    model: model,
+    model,
+    table,
     setObject: x => setEditing(x),
     updateButtonLabel: 'Add',
     updateButtonIcon: 'plus',
@@ -152,7 +160,8 @@ const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
     isVisible: mode === 'Update',
     Content: Content,
     object: editing,
-    model: model,
+    model,
+    table,
     setObject: x => setEditing(x),
     updateButtonLabel: 'Update',
     updateButtonIcon: 'edit',

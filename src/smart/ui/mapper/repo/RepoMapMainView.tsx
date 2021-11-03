@@ -5,19 +5,10 @@ import { Button } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useMemo } from 'react';
-import { MMELJSON } from '../../../model/json';
 import { MapProfile } from '../../../model/mapmodel';
-import {
-  createEditorModelWrapper,
-  ModelWrapper,
-} from '../../../model/modelwrapper';
 import { MMELRepo, RepoIndex } from '../../../model/repo';
 import { MapperViewOption } from '../../../model/States';
-import {
-  getAllRepoMaps,
-  getAllRepoModels,
-} from '../../../utils/repo/CommonFunctions';
-import { JSONToMMEL } from '../../../utils/repo/io';
+import { getAllRepoMaps } from '../../../utils/repo/CommonFunctions';
 import { LoadingPage } from '../../common/Loading';
 import RepoMapDiagram from './RepoMapDiagram';
 
@@ -34,9 +25,6 @@ const RepoMapMainView: React.FC<{
   const mapFiles = useObjectData({
     objectPaths: getAllRepoMaps(index),
   });
-  const modelFiles = useObjectData({
-    objectPaths: getAllRepoModels(index),
-  });
 
   const maps: Record<string, MapProfile> = useMemo(() => {
     if (!mapFiles.isUpdating) {
@@ -51,24 +39,6 @@ const RepoMapMainView: React.FC<{
     return {};
   }, [mapFiles.isUpdating]);
 
-  const models: Record<string, ModelWrapper> | undefined = useMemo(() => {
-    if (!modelFiles.isUpdating) {
-      return Object.entries(modelFiles.value.data).reduce<
-        Record<string, ModelWrapper>
-      >(
-        (obj, [ns, x]) =>
-          x !== null
-            ? {
-                ...obj,
-                [ns]: createEditorModelWrapper(JSONToMMEL(x as MMELJSON)),
-              }
-            : obj,
-        {}
-      );
-    }
-    return undefined;
-  }, [mapFiles.isUpdating]);
-
   if (repo && isVisible) {
     return (
       <Container>
@@ -80,7 +50,6 @@ const RepoMapMainView: React.FC<{
           <RepoMapDiagram
             index={index}
             maps={maps}
-            models={models}
             repo={repo}
             option={viewOption}
             loadModel={loadModel}

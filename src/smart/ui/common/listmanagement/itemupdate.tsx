@@ -15,6 +15,7 @@ const ItemUpdatePane = <T extends Object>(props: IUpdateInterface<T>) => {
     object,
     setObject,
     model,
+    table,
     updateButtonLabel,
     updateButtonIcon,
     updateClicked,
@@ -25,7 +26,12 @@ const ItemUpdatePane = <T extends Object>(props: IUpdateInterface<T>) => {
     return (
       <MGDDisplayPane>
         <FormGroup>
-          <Content object={object} setObject={setObject} model={model} />
+          <Content
+            object={object}
+            setObject={setObject}
+            model={model}
+            table={table}
+          />
           <MGDButtonGroup>
             <MGDButton icon={updateButtonIcon} onClick={() => updateClicked()}>
               {updateButtonLabel}

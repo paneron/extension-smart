@@ -187,6 +187,10 @@ export function defaultItemSorter(a: IListItem, b: IListItem): number {
   return a.id.localeCompare(b.id);
 }
 
+export function defaultItemSorterAsNum(a: IListItem, b: IListItem): number {
+  return parseInt(a.id) - parseInt(b.id);
+}
+
 export function itemSorterByText(a: IListItem, b: IListItem): number {
   return a.text.localeCompare(b.text);
 }

@@ -21,6 +21,7 @@ import {
   shame__mystery_container,
   shame__mystery_container__column,
 } from '../../../css/shame';
+import { MMELTable } from '../../serialize/interface/supportinterface';
 
 export interface IAdditionalListButton {
   text: string;
@@ -114,10 +115,12 @@ export interface IUpdateInterface<T> {
   Content: React.FC<{
     object: T;
     model?: EditorModel;
+    table?: MMELTable;
     setObject: (obj: T) => void;
   }>;
   object: T;
   model?: EditorModel;
+  table?: MMELTable;
   setObject: (obj: T) => void;
   updateButtonLabel: string;
   updateButtonIcon: IconName;
