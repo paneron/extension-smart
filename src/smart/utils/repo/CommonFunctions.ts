@@ -20,10 +20,10 @@ export const RepoLegend: Record<RepoNodeType, LegendInterface> = {
 };
 
 export const RepoDiffLegend: Record<RepoNodeDiffType, LegendInterface> = {
-  new: { label: 'New mapping', color: 'lightgreen' },
-  same: { label: 'Same mapping', color: 'lightblue' },
-  different: { label: 'Changed mapping', color: 'lightyellow' },
-  delete: { label: 'Deleted mapping', color: 'lightpink' },
+  new: { label: 'New coverage', color: 'lightgreen' },
+  same: { label: 'Same coverage', color: 'lightblue' },
+  different: { label: 'Changed coverage', color: 'lightyellow' },
+  delete: { label: 'Deleted coverage', color: 'lightpink' },
 };
 
 export function setValueToIndex(

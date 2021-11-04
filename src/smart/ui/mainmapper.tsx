@@ -28,6 +28,7 @@ import {
 } from '../model/mapmodel';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
+  Button,
   ControlGroup,
   HotkeysProvider,
   HotkeysTarget2,
@@ -56,7 +57,6 @@ import {
 import MappingCanvus from './mapper/MappingCanvus';
 import MapperOptionMenu from './menu/mapperOptionMenu';
 import { EditMPropsInterface } from './dialog/dialogs';
-import MGDButton from '../MGDComponents/MGDButton';
 import { multi_model_container } from '../../css/layout';
 import { vertical_line } from '../../css/components';
 import { findPageContainingElement } from '../utils/SearchFunctions';
@@ -434,7 +434,7 @@ const ModelMapper: React.FC<{
           />
         }
       >
-        <MGDButton> Mapping </MGDButton>
+        <Button> Mapping </Button>
       </Popover2>
       <Popover2
         minimal
@@ -447,7 +447,7 @@ const ModelMapper: React.FC<{
           />
         }
       >
-        <MGDButton> View </MGDButton>
+        <Button> View </Button>
       </Popover2>
       <Popover2
         minimal
@@ -456,14 +456,14 @@ const ModelMapper: React.FC<{
           <MapperCompareMenu opponent={diffMap} setDiffMap={setDiffMap} />
         }
       >
-        <MGDButton> Compare </MGDButton>
+        <Button> Compare </Button>
       </Popover2>
       {isModelWrapper(refMW) && (
-        <MGDButton
+        <Button
           onClick={() => setViewOption({ ...viewOption, docVisible: true })}
         >
           Report
-        </MGDButton>
+        </Button>
       )}
     </ControlGroup>
   );

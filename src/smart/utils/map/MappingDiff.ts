@@ -1,7 +1,8 @@
 import { Edge, Elements, Node, Position } from 'react-flow-renderer';
-import { MapProfile } from '../../model/mapmodel';
+import { MappingType, MapProfile } from '../../model/mapmodel';
 import { MMELRepo, RepoIndex } from '../../model/repo';
 import { createNodeContent } from '../../ui/mapper/repo/RepoMapNode';
+import { calculateDocumentMapping } from '../DocumentFunctions';
 import {
   createEdge,
   RepoDiffLegend,
@@ -77,14 +78,31 @@ export function repoMapDiffNode(
 }
 
 function checkDiffMap(
+  mappings: MappingType,
   diffMap: MapProfile,
   namespace: string
 ): RepoNodeDiffType {
   const ms = diffMap.mapSet[namespace];
   if (ms !== undefined && Object.values(ms.mappings).length > 0) {
-    return 'same';
+    return compareMappings(mappings, ms.mappings);
   }
   return 'new';
+}
+
+function compareMappings(m1: MappingType, m2: MappingType): RepoNodeDiffType {
+  const index1 = calculateDocumentMapping(m1);
+  const index2 = calculateDocumentMapping(m2);
+
+  const froms1 = Object.keys(index1);
+  if (froms1.length !== Object.values(index2).length) {
+    return 'different';
+  }
+  for (const f1 of froms1) {
+    if (index2[f1] === undefined) {
+      return 'different';
+    }
+  }
+  return 'same';
 }
 
 function exploreNodes(
@@ -119,7 +137,9 @@ function exploreNodes(
                 WIDTH * col,
                 HEIGHT * next.length,
                 nodeContent,
-                col === 1 ? checkDiffMap(diffMap, namespace) : undefined
+                col === 1
+                  ? checkDiffMap(ref.mappings, diffMap, namespace)
+                  : undefined
               );
               next.push(namespace);
             }

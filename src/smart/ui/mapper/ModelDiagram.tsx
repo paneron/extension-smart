@@ -1,4 +1,4 @@
-import { ControlGroup } from '@blueprintjs/core';
+import { Button, ControlGroup } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useContext } from 'react';
@@ -186,7 +186,7 @@ const ModelDiagram: React.FC<{
     <ControlGroup>
       {!isRepoMode && (
         <>
-          <MGDButton
+          <Button
             onClick={() => {
               handleModelOpen({
                 setModelWrapper,
@@ -199,14 +199,14 @@ const ModelDiagram: React.FC<{
           >
             {'Open ' +
               MapperModelLabel[modelProps.modelType as MapperModelType]}
-          </MGDButton>
+          </Button>
           {!isImp && (
             <Popover2
               minimal
               placement="bottom-start"
               content={<MapperDocumentMenu setDocument={onDocumentLoaded} />}
             >
-              <MGDButton>Open Document</MGDButton>
+              <Button>Open Document</Button>
             </Popover2>
           )}
         </>
