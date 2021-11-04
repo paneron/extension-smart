@@ -1,18 +1,16 @@
-import { css } from '@emotion/react';
+import { CSSProperties } from 'react';
 import { CSSROOTVARIABLES } from './root.css';
 
-export const mgd_control_button = css`
-  font-weight: ${CSSROOTVARIABLES['--font-weight--regular']};
-  font-size: ${CSSROOTVARIABLES['--font-size--regular']};
-`;
+export const mgdControlButton: CSSProperties = {
+  fontWeight: CSSROOTVARIABLES.fontWeightRegular,
+  fontSize: CSSROOTVARIABLES['--font-size--regular'],
+};
 
-export const mgd_control_button__active = css`
-  background-color: ${CSSROOTVARIABLES['--colour--bsi-teal']} !important;
-  color: ${CSSROOTVARIABLES['--colour--white']};
-`;
+export const mgdControlButtonActive: CSSProperties = {
+  backgroundColor: `${CSSROOTVARIABLES['--colour--bsi-teal']} !important`,
+  color: CSSROOTVARIABLES['--colour--white'],
+};
 
-export const mgd_control_button__inactive = css`
-  background-color: ${CSSROOTVARIABLES[
-    '--colour--10-percent-black'
-  ]} !important;
-`;
+export const mgdControlButtonInactive: CSSProperties = {
+  backgroundColor: `${CSSROOTVARIABLES['--colour--10-percent-black']} !important`,
+};

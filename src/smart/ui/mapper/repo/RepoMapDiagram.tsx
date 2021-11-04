@@ -4,21 +4,30 @@ import ReactFlow from 'react-flow-renderer';
 import { MapProfile } from '../../../model/mapmodel';
 import { MMELRepo, RepoIndex } from '../../../model/repo';
 import { MapperViewOption } from '../../../model/States';
+import { repoMapDiffNode } from '../../../utils/map/MappingDiff';
 import { repoMapExploreNode } from '../../../utils/map/RepoMap';
-import { RepoLegend } from '../../../utils/repo/CommonFunctions';
+import {
+  RepoDiffLegend,
+  RepoLegend,
+} from '../../../utils/repo/CommonFunctions';
 import LegendPane from '../../common/description/LegendPane';
 import RepoEdge from '../../flowui/RepoEdge';
 
 const RepoMapDiagram: React.FC<{
   index: RepoIndex;
   maps: Record<string, MapProfile>;
+  map: MapProfile;
+  diffMap?: MapProfile;
   repo: MMELRepo;
   option: MapperViewOption;
   loadModel: (x: string) => void;
-}> = function ({ index, maps, repo, option, loadModel }) {
+}> = function ({ index, maps, map, diffMap, repo, option, loadModel }) {
   const elms = useMemo(
-    () => repoMapExploreNode(repo, index, maps, loadModel),
-    [repo, index, maps]
+    () =>
+      diffMap
+        ? repoMapDiffNode(repo, index, map, maps, diffMap, loadModel)
+        : repoMapExploreNode(repo, index, map, maps, loadModel),
+    [repo, index, map, maps, diffMap]
   );
 
   return (
@@ -33,7 +42,11 @@ const RepoMapDiagram: React.FC<{
         edgeTypes={{ repo: RepoEdge }}
       />
       {option.repoLegendVisible && (
-        <LegendPane list={RepoLegend} onLeft bottom />
+        <LegendPane
+          list={diffMap ? RepoDiffLegend : RepoLegend}
+          onLeft
+          bottom
+        />
       )}
     </>
   );

@@ -19,6 +19,11 @@ const heading_font_style = css`
   font-size: ${CSSROOTVARIABLES['--font-size--large']};
 `;
 
+const headingFontStyle: CSSProperties = {
+  fontWeight: CSSROOTVARIABLES.fontWeightRegular,
+  fontSize: CSSROOTVARIABLES['--font-size--large'],
+};
+
 const background_style = css`
   background-color: ${CSSROOTVARIABLES['--colour--white']};
   border: 1px solid ${CSSROOTVARIABLES['--colour--50-percent-black']};
@@ -54,6 +59,10 @@ export const mgdLabel: CSSProperties = {
 export const mgd_heading = css`
   ${heading_font_style};
 `;
+
+export const mgdHeading: CSSProperties = {
+  ...headingFontStyle,
+};
 
 export const mgd_select = css`
   ${normal_font_style};

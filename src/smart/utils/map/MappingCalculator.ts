@@ -35,12 +35,17 @@ export enum MapSourceType {
   NOMAP = 'no',
 }
 
+export const MapDiffValues = ['new', 'same', 'delete'] as const;
+export type MapDiffType = typeof MapDiffValues[number];
+
 export interface MapEdgeResult {
   fromref: RefObject<HTMLElement>;
   toref: RefObject<HTMLElement>;
   fromid: string;
   toid: string;
 }
+
+export type MapDiffEdgeResult = MapEdgeResult & { type: MapDiffType };
 
 export type MapperModels = ModelType.IMP | ModelType.REF;
 

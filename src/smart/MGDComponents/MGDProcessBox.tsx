@@ -8,9 +8,9 @@ import { mgd_process_box } from '../../css/MGDProcessBox';
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 interface OwnProps {
-  children: any;
-  onDragStart?: (e: any) => void;
-  onDrop?: (e: any) => void;
+  children: React.ReactNode;
+  onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDrop?: (e: React.DragEvent<HTMLDivElement>) => void;
   styleClass?: SerializedStyles;
   draggable?: boolean;
   uiref?: React.RefObject<HTMLDivElement>;

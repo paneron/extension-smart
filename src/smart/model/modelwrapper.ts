@@ -290,6 +290,7 @@ export function getMapperReactFlowElementsFrom(
   onProcessClick: (pageid: string, processid: string) => void,
   setMapping: (fromid: string, toid: string) => void,
   mapSet: MapSet,
+  diffMapSet: MapSet | undefined,
   mapResult: MapResultType,
   setSelectedId: (id: string) => void,
   isParentFull: boolean,

@@ -1,8 +1,8 @@
-import { css } from '@emotion/react';
+import { CSSProperties } from 'react';
 
-export const mgd_container = css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50%;
-`;
+export const mgdContainer: CSSProperties = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '50%',
+};

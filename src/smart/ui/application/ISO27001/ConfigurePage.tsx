@@ -6,12 +6,13 @@ import {
   RangeSlider,
   NumberRange,
   NumericInput,
+  Text,
 } from '@blueprintjs/core';
 import React from 'react';
 import MGDContainer from '../../../MGDComponents/MGDContainer';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
 import { obtainData } from './DataFeeder';
-import { Application27001Setting } from './model';
+import { Application27001Setting, fixedlocalhost } from './model';
 
 const Application27001ConfigurePage: React.FC<{
   onClose: () => void;
@@ -40,6 +41,9 @@ const Application27001ConfigurePage: React.FC<{
   return (
     <MGDDisplayPane isBSI={false}>
       <FormGroup label="Data stream source">
+        <Text>
+          To generate artificial data for testing, use "{fixedlocalhost}"
+        </Text>
         <ControlGroup fill>
           <InputGroup
             value={setting.source}

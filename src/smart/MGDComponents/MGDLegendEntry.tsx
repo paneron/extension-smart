@@ -1,12 +1,11 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
 
-import { jsx } from '@emotion/react';
+import React from 'react';
 import {
-  mgd_legend_entry,
-  mgd_legend_entry__description,
-  mgd_legend_entry__sample,
+  mgdLegendEntry,
+  mgdLegendEntryDescription,
+  mgdLegendEntrySample,
+  mgdLineLegendSample,
 } from '../../css/MGDLegendEntry';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -14,16 +13,22 @@ import {
 interface OwnProps {
   text: string;
   backgroundColor: string;
+  arrow: boolean;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function MGDLegendEntry(props: OwnProps) {
-  const { text, backgroundColor } = props;
+  const { text, backgroundColor, arrow } = props;
   return (
-    <div css={mgd_legend_entry}>
-      <div css={mgd_legend_entry__sample} style={{ backgroundColor }} />
-      <div css={mgd_legend_entry__description}>{text}</div>
+    <div style={mgdLegendEntry}>
+      <div
+        style={{
+          ...(arrow ? mgdLineLegendSample : mgdLegendEntrySample),
+          backgroundColor,
+        }}
+      />
+      <div style={mgdLegendEntryDescription}>{text}</div>
     </div>
   );
 }

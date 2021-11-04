@@ -1,3 +1,4 @@
+import { Edge } from 'react-flow-renderer';
 import {
   RepoDocItem,
   RepoImpItem,
@@ -10,10 +11,19 @@ import { getPathByNS, RepoFileType } from './io';
 
 export type RepoNodeType = 'own' | 'repo' | 'outside';
 
+export type RepoNodeDiffType = 'new' | 'delete' | 'same' | 'different';
+
 export const RepoLegend: Record<RepoNodeType, LegendInterface> = {
   own: { label: 'Current model', color: 'lightgreen' },
   repo: { label: 'In repository', color: 'lightblue' },
   outside: { label: 'Not in repository', color: 'lightgray' },
+};
+
+export const RepoDiffLegend: Record<RepoNodeDiffType, LegendInterface> = {
+  new: { label: 'New mapping', color: 'lightgreen' },
+  same: { label: 'Same mapping', color: 'lightblue' },
+  different: { label: 'Changed mapping', color: 'lightyellow' },
+  delete: { label: 'Deleted mapping', color: 'lightpink' },
 };
 
 export function setValueToIndex(
@@ -58,4 +68,13 @@ export function getAllRepoModels(index: RepoIndex): string[] {
     x => x.type === 'Imp' || x.type === 'Ref'
   );
   return filtered.map(x => getPathByNS(x.namespace, RepoFileType.MODEL));
+}
+
+export function createEdge(id: string, source: string, target: string): Edge {
+  return {
+    id,
+    source,
+    target,
+    type: 'repo',
+  };
 }

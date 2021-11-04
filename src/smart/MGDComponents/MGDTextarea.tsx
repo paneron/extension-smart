@@ -1,16 +1,16 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 import { TextArea } from '@blueprintjs/core';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { mgdTextarea } from '../../css/form';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 interface OwnProps {
-  value: any;
+  value: string | number | undefined;
   id?: string;
   readOnly?: boolean;
-  onChange: (e: any) => void;
+  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   rows?: number;
   fill?: boolean;
 }

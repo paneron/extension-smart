@@ -50,6 +50,7 @@ import {
   calculateMapping,
   filterMappings,
   filterMappingsForDocument,
+  MapDiffEdgeResult,
   mergeMapProfiles,
 } from '../utils/map/MappingCalculator';
 import MappingCanvus from './mapper/MappingCanvus';
@@ -76,6 +77,7 @@ import { LoadingContainer } from './common/Loading';
 import { MMELDocument } from '../model/document';
 import MapperCompareMenu from './menu/MapperCompareMenu';
 import MapperDialog from './popover/MapperDialog';
+import { calEdgeDiff } from '../utils/map/MappingDiff';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -215,6 +217,7 @@ const ModelMapper: React.FC<{
     mapProfile.mapSet[refns] = createNewMapSet(refns);
   }
   const mapSet = mapProfile.mapSet[refns];
+  const diffMapSet = diffMap ? diffMap.mapSet[refns] : undefined;
   const impPage = impmodel.pages[impMW.page];
 
   const mapEdges = useMemo(
@@ -244,11 +247,10 @@ const ModelMapper: React.FC<{
   );
 
   const compareEdges = useMemo(() => {
-    if (diffMap) {
-      const ms = diffMap.mapSet[refns];
+    if (diffMapSet) {
       return isModelWrapper(refMW)
         ? filterMappings(
-            ms,
+            diffMapSet,
             impPage,
             refMW.model.pages[refMW.page],
             selected,
@@ -256,7 +258,7 @@ const ModelMapper: React.FC<{
             refMW.model.elements
           )
         : filterMappingsForDocument(
-            ms,
+            diffMapSet,
             impPage,
             refMW,
             selected,
@@ -266,11 +268,19 @@ const ModelMapper: React.FC<{
       return undefined;
     }
   }, [
-    diffMap,
+    diffMapSet,
     impPage,
     isModelWrapper(refMW) ? refMW.model.pages[refMW.page] : refMW,
     selected,
   ]);
+
+  const diffEdges: MapDiffEdgeResult[] = useMemo(
+    () =>
+      compareEdges
+        ? calEdgeDiff(mapEdges, compareEdges)
+        : mapEdges.map(x => ({ ...x, type: 'new' })),
+    [mapEdges, compareEdges]
+  );
 
   const mapResult = useMemo(
     () =>
@@ -448,11 +458,13 @@ const ModelMapper: React.FC<{
       >
         <MGDButton> Compare </MGDButton>
       </Popover2>
-      <MGDButton
-        onClick={() => setViewOption({ ...viewOption, docVisible: true })}
-      >
-        Report
-      </MGDButton>
+      {isModelWrapper(refMW) && (
+        <MGDButton
+          onClick={() => setViewOption({ ...viewOption, docVisible: true })}
+        >
+          Report
+        </MGDButton>
+      )}
     </ControlGroup>
   );
 
@@ -485,6 +497,7 @@ const ModelMapper: React.FC<{
 
   function clean() {
     onRefClose();
+    setDiffMap(undefined);
   }
 
   useEffect(() => clean, [repo]);
@@ -514,6 +527,7 @@ const ModelMapper: React.FC<{
                 setProps={onImpPropsChange}
                 className={className}
                 mapSet={mapSet}
+                diffMapSet={diffMapSet}
                 onMapSetChanged={onMapSetChanged}
                 onModelChanged={onImpModelChanged}
                 setSelected={setSelected}
@@ -540,8 +554,10 @@ const ModelMapper: React.FC<{
                   setProps={onRefPropsChange}
                   className={className}
                   mapSet={mapSet}
+                  diffMapSet={diffMapSet}
                   onMapSetChanged={onMapSetChanged}
                   mapResult={mapResult}
+                  diffMapResult={compareResult}
                   setSelected={setSelected}
                   onMappingEdit={onMappingEdit}
                   issueNavigationRequest={onImpNavigate}
@@ -555,12 +571,14 @@ const ModelMapper: React.FC<{
                 />
               )}
             </div>
-            <MappingCanvus mapEdges={mapEdges} line={lineref} />
+            <MappingCanvus mapEdges={diffEdges} line={lineref} />
             <RepoMapMainView
               isVisible={repo !== undefined && viewOption.repoMapVisible}
               viewOption={viewOption}
               repo={repo}
               loadModel={setRefRepo}
+              map={mapProfile}
+              diffMap={diffMap}
               onClose={() =>
                 setViewOption({ ...viewOption, repoMapVisible: false })
               }

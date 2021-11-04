@@ -1,17 +1,14 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import {
-  application2060_display_pane,
-  mgd_display_pane,
+  application2060DisplayPane,
+  mgdDisplayPane,
 } from '../../css/MGDDisplayPane';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 interface OwnProps {
-  children: any;
+  children: React.ReactNode;
   isBSI?: boolean;
 }
 
@@ -20,7 +17,7 @@ interface OwnProps {
 function MGDDisplayPane(props: OwnProps) {
   const { children, isBSI = true } = props;
   return (
-    <div css={isBSI ? mgd_display_pane : application2060_display_pane}>
+    <div style={isBSI ? mgdDisplayPane : application2060DisplayPane}>
       {children}
     </div>
   );

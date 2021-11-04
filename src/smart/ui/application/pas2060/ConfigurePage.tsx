@@ -13,7 +13,11 @@ import MGDContainer from '../../../MGDComponents/MGDContainer';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
 import BuildingMap from './BuildingMap';
 import { obtainData } from './DataFeeder';
-import { Application2060Setting, EmissionSource } from './model';
+import {
+  Application2060Setting,
+  EmissionSource,
+  fixedlocalhost,
+} from './model';
 import { propagateReadings } from './ReadingCalculator';
 
 const ApplicationConfigurePage: React.FC<{
@@ -76,6 +80,9 @@ const ApplicationConfigurePage: React.FC<{
   return (
     <MGDDisplayPane isBSI={false}>
       <FormGroup label="Sensor readings source">
+        <Text>
+          To generate artificial data for testing, use "{fixedlocalhost}"
+        </Text>
         <ControlGroup fill>
           <InputGroup
             value={setting.source}

@@ -1,8 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import React from 'react';
-import { css, jsx } from '@emotion/react';
 import {
   FormGroup,
   FormGroupProps as IFormGroupProps,
@@ -31,9 +27,9 @@ export const FieldWithErrors: React.FC<
   return (
     <FormGroup
       helperText={effectiveHelperText}
-      css={css`
-        margin: 0;
-      `}
+      style={{
+        margin: 0,
+      }}
       intent={intent}
       {...formGroupProps}
     >
@@ -54,10 +50,10 @@ const FieldErrors: React.FC<{ errors: ValidationError[]; className?: string }> =
   function ({ errors, className }) {
     return (
       <ul
-        css={css`
-          margin: 0;
-          padding-left: 1.25em;
-        `}
+        style={{
+          margin: 0,
+          paddingLeft: '1.25em',
+        }}
         className={className}
       >
         {errors.map((e, idx) => (

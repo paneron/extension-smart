@@ -53,15 +53,18 @@ import { Popover2 } from '@blueprintjs/popover2';
 import MapperDocumentMenu from '../menu/MapperDocumentMenu';
 import RepoMapRefMenus from './repo/RepoMapRefMenu';
 import { RepoIndex } from '../../model/repo';
+import { MapDiffStyles } from './MappingCanvus';
 
 const ModelDiagram: React.FC<{
   className?: string;
   viewOption: MapperViewOption;
   mapSet: MapSet;
+  diffMapSet: MapSet | undefined;
   onMapSetChanged: (mp: MapSet) => void;
   modelProps: MapperState;
   setProps: (mp: MapperState) => void;
   mapResult?: MapResultType;
+  diffMapResult?: MapResultType;
   onModelChanged?: (model: EditorModel) => void;
   setSelected: (s: MapperSelectedInterface) => void;
   onMappingEdit: (from: string, to: string) => void;
@@ -75,10 +78,12 @@ const ModelDiagram: React.FC<{
   className,
   viewOption,
   mapSet,
+  diffMapSet,
   onMapSetChanged,
   modelProps,
   setProps,
   mapResult = {},
+  diffMapResult,
   onModelChanged,
   setSelected,
   onMappingEdit,
@@ -273,6 +278,7 @@ const ModelDiagram: React.FC<{
                 onProcessClick,
                 setMapping,
                 mapSet,
+                diffMapSet,
                 mapResult,
                 setSelectedId,
                 isParentMapFullCovered(modelProps.history, mapResult),
@@ -297,16 +303,25 @@ const ModelDiagram: React.FC<{
               onDragOver={onDragOver}
               setMapping={setMapping}
               mapSet={mapSet}
+              diffMapSet={diffMapSet}
               MappingList={MappingList}
               setSelected={setSelectedId}
             />
           )}
-          {viewOption.legVisible && isModelWrapper(mw) && (
-            <LegendPane
-              list={isImp ? MappingSourceStyles : MappingResultStyles}
-              onLeft={isImp}
-            />
-          )}
+          {viewOption.legVisible &&
+            (isImp ? (
+              <>
+                <LegendPane list={MappingSourceStyles} onLeft />
+                {diffMapSet && (
+                  <LegendPane list={MapDiffStyles} onLeft={false} arrow />
+                )}
+              </>
+            ) : (
+              diffMapSet === undefined &&
+              isModelWrapper(mw) && (
+                <LegendPane list={MappingResultStyles} onLeft={false} />
+              )
+            ))}
         </div>
       </Workspace>
     </ReactFlowProvider>
