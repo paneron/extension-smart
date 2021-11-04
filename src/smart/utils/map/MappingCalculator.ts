@@ -1,6 +1,10 @@
 import { RefObject } from 'react';
 import { CSSROOTVARIABLES } from '../../../css/root.css';
-import { map_style__coverage, map_style__source } from '../../../css/visual';
+import {
+  map_style_diff__source,
+  map_style__coverage,
+  map_style__source,
+} from '../../../css/visual';
 import {
   EditorModel,
   EditorNode,
@@ -22,6 +26,7 @@ import {
 import { SerializedStyles } from '@emotion/react';
 import { DocStatement, MMELDocument } from '../../model/document';
 import { getNamespace } from '../ModelFunctions';
+import { getMapDiffStyleById } from './MappingDiff';
 
 export enum MapCoverType {
   FULL = 'full',
@@ -180,28 +185,73 @@ function explorePage(
   return somethingCovered ? MapCoverType.PARTIAL : MapCoverType.NONE;
 }
 
-export function getMapStyleById(
-  mapResult: MapResultType,
+function getMapStyleById(
+  mapResult: MapResultType,  
   id: string
-): SerializedStyles {
+): SerializedStyles {  
   const result = mapResult[id];
   if (result === undefined) {
     return map_style__coverage(MapCoverType.NONE);
   }
-  return map_style__coverage(result);
+  return map_style__coverage(result);  
+}
+
+export function getRefNodeStyle(isParentFull:boolean, isDiffParentFull:boolean|undefined, mapResult:MapResultType
+  , diffMapResult: MapResultType|undefined):(id:string) => SerializedStyles {
+    if (diffMapResult && isDiffParentFull !== undefined) {
+      return id => getMapDiffStyleById(isParentFull, isDiffParentFull, mapResult, diffMapResult, id);
+    } else {
+      return isParentFull
+      ? () => map_style__coverage(MapCoverType.FULL)
+      : id => getMapStyleById(mapResult, id)
+    }
 }
 
 export function getSourceStyleById(
   mapSet: MapSet,
+  diffMapSet: MapSet | undefined,
   id: string
 ): SerializedStyles {
-  if (
-    mapSet.mappings[id] === undefined ||
-    Object.keys(mapSet.mappings[id]).length === 0
-  ) {
-    return map_style__source(MapSourceType.NOMAP);
+  if (diffMapSet) {
+    const source1 = mapSet.mappings[id] ?? {};
+    const source2 = diffMapSet.mappings[id] ?? {};
+    const keys1 = Object.keys(source1);
+    const keys2 = Object.keys(source2);
+    if (keys1.length > 0) {
+      if (keys2.length > 0) {
+        return compareMapSource(keys1, keys2);
+      } else {
+        return map_style_diff__source('new');
+      }
+    } else {
+      if (keys2.length > 0) {
+        return map_style_diff__source('delete');
+      } else {
+        return map_style_diff__source('no');
+      }
+    }
+  } else {
+    if (
+      mapSet.mappings[id] === undefined ||
+      Object.keys(mapSet.mappings[id]).length === 0
+    ) {
+      return map_style__source(MapSourceType.NOMAP);
+    }
+    return map_style__source(MapSourceType.HASMAP);
   }
-  return map_style__source(MapSourceType.HASMAP);
+}
+
+function compareMapSource(s1: string[], s2: string[]): SerializedStyles {
+  if (s1.length !== s2.length) {
+    return map_style_diff__source('change');
+  }
+  const set = new Set(s1);
+  for (const x of s2) {
+    if (!set.has(x)) {
+      return map_style_diff__source('change');
+    }
+  }
+  return map_style_diff__source('same');
 }
 
 export function filterMappings(

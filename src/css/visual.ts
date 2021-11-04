@@ -7,6 +7,12 @@ import {
   MapSourceType,
 } from '../smart/utils/map/MappingCalculator';
 import {
+  MapDiffCoverType,
+  MapDiffSourceType,
+  MappingDiffResultStyles,
+  MappingDiffSourceStyles,
+} from '../smart/utils/map/MappingDiff';
+import {
   SearchHighlightType,
   SearchResultStyles,
 } from '../smart/utils/SearchFunctions';
@@ -61,8 +67,18 @@ export function map_style__coverage(result: MapCoverType): SerializedStyles {
   return flow_node__highlighed(MappingResultStyles[result].color);
 }
 
+export function map_style_diff__coverage(result: MapDiffCoverType): SerializedStyles {
+  return flow_node__highlighed(MappingDiffResultStyles[result].color);
+}
+
 export function map_style__source(result: MapSourceType): SerializedStyles {
   return flow_node__highlighed(MappingSourceStyles[result].color);
+}
+
+export function map_style_diff__source(
+  result: MapDiffSourceType
+): SerializedStyles {
+  return flow_node__highlighed(MappingDiffSourceStyles[result].color);
 }
 
 export function search_style__highlight(

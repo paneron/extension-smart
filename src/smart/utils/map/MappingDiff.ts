@@ -1,6 +1,9 @@
+import { SerializedStyles } from '@emotion/react';
 import { Edge, Elements, Node, Position } from 'react-flow-renderer';
+import { map_style_diff__coverage } from '../../../css/visual';
 import { MappingType, MapProfile } from '../../model/mapmodel';
 import { MMELRepo, RepoIndex } from '../../model/repo';
+import { LegendInterface } from '../../model/States';
 import { createNodeContent } from '../../ui/mapper/repo/RepoMapNode';
 import { calculateDocumentMapping } from '../DocumentFunctions';
 import {
@@ -9,7 +12,45 @@ import {
   RepoNodeDiffType,
 } from '../repo/CommonFunctions';
 import { getPathByNS, RepoFileType } from '../repo/io';
-import { MapDiffEdgeResult, MapEdgeResult } from './MappingCalculator';
+import { MapCoverType, MapDiffEdgeResult, MapEdgeResult, MapResultType } from './MappingCalculator';
+
+export const MapDiffSourceValues = [
+  'new',
+  'delete',
+  'same',
+  'change',
+  'no',
+] as const;
+
+export const MapDiffCoverValues = [
+  'new',
+  'delete',
+  'cover',
+  'partial',
+  'no'
+]
+
+export type MapDiffSourceType = typeof MapDiffSourceValues[number];
+export type MapDiffCoverType = typeof MapDiffCoverValues[number];
+
+export const MappingDiffSourceStyles: Record<
+  MapDiffSourceType,
+  LegendInterface
+> = {
+  new: { label: 'New source', color: 'lightgreen' },
+  delete: { label: 'Deleted source', color: 'lightpink' },
+  same: { label: 'Same mapping', color: 'lightblue' },
+  change: { label: 'Changed', color: 'lightyellow' },    
+  no: { label: 'Not a source', color: 'lightgray' },
+};
+
+export const MappingDiffResultStyles: Record<MapDiffCoverType, LegendInterface> = {
+  new: { label: 'New coverage', color: 'lightgreen' },
+  delete: { label: 'Deleted coverage', color: 'lightpink' },
+  cover: { label: 'Covered in both', color: 'lightblue' },
+  partial: { label: 'Some mappings inside', color: 'lightyellow' },  
+  no: { label: 'Not covered in both', color: 'lightgray' },
+};
 
 type Maps = Record<string, MapProfile>;
 type Nodes = Record<string, Node>;
@@ -209,4 +250,28 @@ function createNode(
       background: type ? RepoDiffLegend[type].color : 'lightgray',
     },
   };
+}
+
+export function getMapDiffStyleById(
+  isParentFull: boolean,
+  isDiffParentFull: boolean,
+  mapResult: MapResultType, 
+  diffMapResult: MapResultType, 
+  id: string
+): SerializedStyles {  
+  const result1 = isParentFull ? MapCoverType.FULL : (mapResult[id]??MapCoverType.NONE);
+  const result2 = isDiffParentFull ? MapCoverType.FULL : (diffMapResult[id]??MapCoverType.NONE);
+  const covered1 = [MapCoverType.FULL, MapCoverType.PASS].includes(result1);
+  const covered2 = [MapCoverType.FULL, MapCoverType.PASS].includes(result2);
+  if (covered1 && covered2) {
+    return map_style_diff__coverage('cover');
+  } else if (covered1) {
+    return map_style_diff__coverage('new');
+  } else if (covered2) {
+    return map_style_diff__coverage('delete');
+  }
+  if (result1 === MapCoverType.NONE && result2 === MapCoverType.NONE) {
+    return map_style_diff__coverage('no');
+  }
+  return map_style_diff__coverage('partial');
 }

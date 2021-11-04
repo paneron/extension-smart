@@ -9,14 +9,14 @@ import { LegendInterface } from '../../model/States';
 
 export const MapDiffStyles: Record<MapDiffType, LegendInterface> = {
   new: { label: 'New mapping', color: 'green' },
-  same: {
-    label: 'Same mapping',
-    color: 'blue',
-  },
   delete: {
     label: 'Deleted mapping',
     color: 'red',
   },
+  same: {
+    label: 'Same mapping',
+    color: 'blue',
+  },  
 };
 
 function colors(type: MapDiffType) {

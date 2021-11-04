@@ -54,6 +54,7 @@ import MapperDocumentMenu from '../menu/MapperDocumentMenu';
 import RepoMapRefMenus from './repo/RepoMapRefMenu';
 import { RepoIndex } from '../../model/repo';
 import { MapDiffStyles } from './MappingCanvus';
+import { MappingDiffResultStyles, MappingDiffSourceStyles } from '../../utils/map/MappingDiff';
 
 const ModelDiagram: React.FC<{
   className?: string;
@@ -280,8 +281,10 @@ const ModelDiagram: React.FC<{
                 mapSet,
                 diffMapSet,
                 mapResult,
+                diffMapResult,
                 setSelectedId,
                 isParentMapFullCovered(modelProps.history, mapResult),
+                diffMapResult ? isParentMapFullCovered(modelProps.history, diffMapResult) : undefined,
                 ComponentShortDescription,
                 MappingList,
                 viewOption.idVisible
@@ -311,15 +314,19 @@ const ModelDiagram: React.FC<{
           {viewOption.legVisible &&
             (isImp ? (
               <>
-                <LegendPane list={MappingSourceStyles} onLeft />
+                <LegendPane
+                  list={
+                    diffMapSet ? MappingDiffSourceStyles : MappingSourceStyles
+                  }
+                  onLeft
+                />
                 {diffMapSet && (
                   <LegendPane list={MapDiffStyles} onLeft={false} arrow />
                 )}
               </>
-            ) : (
-              diffMapSet === undefined &&
+            ) : (              
               isModelWrapper(mw) && (
-                <LegendPane list={MappingResultStyles} onLeft={false} />
+                <LegendPane list={diffMapSet ? MappingDiffResultStyles : MappingResultStyles} onLeft={false} />
               )
             ))}
         </div>
