@@ -29,6 +29,8 @@ jobs:
           yarn version --new-version ${{ github.event.inputs.next_version }}
           git push
 
+      - run: yarn install
+
       - run: yarn lint
 
       - run: yarn build
