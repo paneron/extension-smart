@@ -1,7 +1,6 @@
-import { FormGroup } from '@blueprintjs/core';
+import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { mgdLabel } from '../../../css/form';
-import MGDButton from '../../MGDComponents/MGDButton';
 import { EditorModel } from '../../model/editormodel';
 import {
   MMELVariable,
@@ -167,12 +166,12 @@ const MeasureEditItemPage: React.FC<{
         onChange={x => setMeasure({ ...mea, type: x as VarType })}
       />
       {mea.type === VarType.DERIVED && (
-        <MGDButton
+        <Button
           icon="derive-column"
           onClick={() => measurementValidCheck(mea.definition, model!.vars)}
         >
           Definition validity check
-        </MGDButton>
+        </Button>
       )}
       {mea.type === VarType.DERIVED ||
       mea.type === VarType.TABLE ||

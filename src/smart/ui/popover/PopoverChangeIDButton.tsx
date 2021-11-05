@@ -1,7 +1,7 @@
+import { Button } from '@blueprintjs/core';
 import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { useState } from 'react';
-import MGDButton from '../../MGDComponents/MGDButton';
 import AskIDForSaveMenu from './AskIDForSaveMenu';
 
 const PopoverChangeIDButton: React.FC<{
@@ -31,7 +31,7 @@ const PopoverChangeIDButton: React.FC<{
       }
     >
       <Tooltip2 content="Change ID">
-        <MGDButton icon="edit" onClick={() => setIsOpen(x => !x)} />
+        <Button icon="edit" onClick={() => setIsOpen(x => !x)} />
       </Tooltip2>
     </Popover2>
   );

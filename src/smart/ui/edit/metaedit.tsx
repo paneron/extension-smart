@@ -1,7 +1,6 @@
-import { FormGroup, IToastProps } from '@blueprintjs/core';
+import { Button, FormGroup, IToastProps } from '@blueprintjs/core';
 import React from 'react';
 import { useState } from 'react';
-import MGDButton from '../../MGDComponents/MGDButton';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
 import { DescriptionItem } from '../common/description/fields';
@@ -80,12 +79,12 @@ const MetaEditPage: React.FC<{
         }}
       />
       <MGDButtonGroup>
-        <MGDButton icon="floppy-disk" onClick={save}>
+        <Button icon="floppy-disk" onClick={save}>
           Update metadata
-        </MGDButton>
-        <MGDButton icon="disable" onClick={cancel}>
+        </Button>
+        <Button icon="disable" onClick={cancel}>
           Cancel
-        </MGDButton>
+        </Button>
       </MGDButtonGroup>
     </FormGroup>
   );

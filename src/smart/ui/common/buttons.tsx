@@ -1,8 +1,6 @@
-import { IconName, PopoverPosition } from '@blueprintjs/core';
+import { Button, IconName, Intent, PopoverPosition } from '@blueprintjs/core';
 import { Classes, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
-import { MGDButtonType } from '../../../css/MGDButton';
-import MGDButton from '../../MGDComponents/MGDButton';
 
 export const RemoveButton: React.FC<{
   onClick: () => void;
@@ -10,8 +8,8 @@ export const RemoveButton: React.FC<{
   return (
     <BaseButton
       tooltip="Remove Component"
-      type={MGDButtonType.Primary}
       icon="cross"
+      intent="danger"
       onClick={onClick}
     />
   );
@@ -44,7 +42,7 @@ export const AddSubprocessButton: React.FC<{
 }> = function ({ callback }) {
   return (
     <Tooltip2 content="Add subprocess">
-      <MGDButton icon="map-create" onClick={() => callback()} />;
+      <Button icon="map-create" onClick={() => callback()} />;
     </Tooltip2>
   );
 };
@@ -66,25 +64,25 @@ export const MapPartnerNavigateButton: React.FC<{
 const BaseButton: React.FC<{
   tooltip?: string;
   text?: string;
-  type?: MGDButtonType;
   icon: IconName;
   position?: PopoverPosition;
   className?: string;
   onClick: () => void;
-}> = function ({ tooltip, text, type, icon, position, className, onClick }) {
+  intent?: Intent;
+}> = function ({ tooltip, text, intent, icon, position, className, onClick }) {
   if (tooltip === undefined) {
-    return <MGDButton icon={icon} onClick={onClick} />;
+    return <Button icon={icon} intent={intent} onClick={onClick} />;
   } else {
     return (
       <Tooltip2 content={tooltip} position={position}>
-        <MGDButton
+        <Button
           className={className}
-          type={type}
+          intent={intent}
           icon={icon}
           onClick={onClick}
         >
           {text}
-        </MGDButton>
+        </Button>
       </Tooltip2>
     );
   }

@@ -2,6 +2,7 @@
 
 import { jsx } from '@emotion/react';
 import {
+  Button,
   FormGroup,
   HTMLSelect,
   IconName,
@@ -9,7 +10,6 @@ import {
 } from '@blueprintjs/core';
 import React, { RefObject, useState } from 'react';
 import { EditorModel } from '../../model/editormodel';
-import MGDButton from '../../MGDComponents/MGDButton';
 import MGDTextarea from '../../MGDComponents/MGDTextarea';
 import {
   mgd_input,
@@ -274,18 +274,18 @@ export const MultiReferenceSelector: React.FC<IMultiRefSelectField> = (
           </select>
         </div>
         <div css={shame__mystery_container__column}>
-          <MGDButton
+          <Button
             icon="chevron-left"
             onClick={() => f.add(extractOptions(reflist))}
           >
             Add
-          </MGDButton>
-          <MGDButton
+          </Button>
+          <Button
             rightIcon="chevron-right"
             onClick={() => f.remove(extractOptions(mainlist))}
           >
             Remove
-          </MGDButton>
+          </Button>
         </div>
         <div css={shame__mystery_container__column}>
           <div>
@@ -356,9 +356,9 @@ export const ReferenceSelector: React.FC<IRefSelectField> = (
           }}
           rows={1}
         />
-        <MGDButton icon="double-chevron-left" onClick={() => handleOnClick()}>
+        <Button icon="double-chevron-left" onClick={() => handleOnClick()}>
           Select
-        </MGDButton>
+        </Button>
         <div css={shame__mystery_container__column}>
           <div>
             <label css={mgd_label}>{f.filterName}</label>

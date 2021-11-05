@@ -1,7 +1,6 @@
-import { Text, FormGroup, IToastProps } from '@blueprintjs/core';
+import { Text, FormGroup, IToastProps, Button } from '@blueprintjs/core';
 import React from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import MGDButton from '../../MGDComponents/MGDButton';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import { EditorModel } from '../../model/editormodel';
 import { MeasureResult } from '../../model/Measurement';
@@ -104,16 +103,16 @@ const MeasureCheckPane: React.FC<{
         ))}
       </FormGroup>
       {alldata.length > 0 ? (
-        <MGDButton icon={branchOnly ? 'filter' : 'lab-test'} onClick={action}>
+        <Button icon={branchOnly ? 'filter' : 'lab-test'} onClick={action}>
           {branchOnly ? 'Custom view' : 'Measurement Test'}
-        </MGDButton>
+        </Button>
       ) : (
         <Text> No setting detected </Text>
       )}
       {result !== undefined && (
-        <MGDButton icon="reset" disabled={result === undefined} onClick={reset}>
+        <Button icon="reset" disabled={result === undefined} onClick={reset}>
           {branchOnly ? 'Reset view' : 'Reset result'}
-        </MGDButton>
+        </Button>
       )}
     </MGDSidebar>
   );

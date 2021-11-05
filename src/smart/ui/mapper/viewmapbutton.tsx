@@ -1,7 +1,7 @@
+import { Button } from '@blueprintjs/core';
 import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import React, { useState } from 'react';
 import { flownodeTopRightButtonLayout } from '../../../css/layout';
-import MGDButton from '../../MGDComponents/MGDButton';
 import { ModelType } from '../../model/editormodel';
 import { MapViewButtonToolTip } from '../../utils/map/MappingCalculator';
 
@@ -41,7 +41,7 @@ const ViewMappingbutton: React.FC<{
           position="top"
         >
           <Tooltip2 content={MapViewButtonToolTip[modelType]} position="top">
-            <MGDButton
+            <Button
               onMouseEnter={() => action({ ...state, isHover: true })}
               onMouseLeave={() => action({ ...state, isHover: false })}
               icon="link"

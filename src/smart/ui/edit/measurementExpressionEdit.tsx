@@ -1,6 +1,5 @@
-import { FormGroup } from '@blueprintjs/core';
+import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import MGDButton from '../../MGDComponents/MGDButton';
 import { EditorModel } from '../../model/editormodel';
 import { measurementValidCheck } from '../../utils/measurement/BasicFunctions';
 import { ReferenceSelector } from '../common/fields';
@@ -25,7 +24,6 @@ export const MeasurementItem: React.FC<{
   return (
     <FormGroup>
       <ReferenceSelector
-        key="field#measurementText"
         text="Measurement validation"
         filterName="Measurement filter"
         editable={true}
@@ -40,13 +38,12 @@ export const MeasurementItem: React.FC<{
           setMeasure({ ...measure });
         }}
       />
-      <MGDButton
-        key="ui#itemupdate#checkbutton"
+      <Button
         icon="diagnosis"
         onClick={() => measurementValidCheck(measure.measure, model!.vars)}
       >
         Expression Validator
-      </MGDButton>
+      </Button>
     </FormGroup>
   );
 };

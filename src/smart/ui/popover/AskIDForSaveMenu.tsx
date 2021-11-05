@@ -11,8 +11,10 @@ const AskIDForSaveMenu: React.FC<{
   value?: string;
   validTest: (id: string) => boolean;
   onSave: (id: string, data: string) => void;
+  buttonText?: string;
 }> = function (props) {
-  const { title, validTest, onSave, valueTitle, initID, value } = props;
+  const { title, validTest, onSave, valueTitle, initID, value, buttonText } =
+    props;
   const [id, setID] = useState<string>(initID ?? '');
   const [data, setData] = useState<string>(value ?? '');
 
@@ -37,7 +39,7 @@ const AskIDForSaveMenu: React.FC<{
         />
       )}
       <Button intent="primary" fill onClick={handleSave}>
-        Save
+        {buttonText ?? 'Save'}
       </Button>
     </div>
   );

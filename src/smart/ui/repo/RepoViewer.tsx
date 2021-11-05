@@ -1,10 +1,4 @@
-import {
-  Button,
-  ControlGroup,
-  InputGroup,
-  IToaster,
-  Toaster,
-} from '@blueprintjs/core';
+import { InputGroup, IToaster, Toaster } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import { useContext, useMemo, useState } from 'react';
@@ -29,10 +23,9 @@ import { EditorModel } from '../../model/editormodel';
 import { createNewSMARTWorkspace } from '../../model/workspace';
 import { getNamespace } from '../../utils/ModelFunctions';
 import { groupItems, setValueToIndex } from '../../utils/repo/CommonFunctions';
-import { Popover2 } from '@blueprintjs/popover2';
-import RepoImportMenu from './RepoImportMenu';
 import { MMELDocument } from '../../model/document';
 import React from 'react';
+import RepoToolbar from './RepoToolbar';
 
 function matchFilter(item: RepoItem, filter: string) {
   return (
@@ -201,27 +194,13 @@ const RepoViewer: React.FC<{
     }
   }
 
-  const toolbar = (
-    <ControlGroup>
-      <Popover2
-        minimal
-        placement="bottom-start"
-        content={
-          <RepoImportMenu
-            addImpMW={m => addMW(m, 'Imp')}
-            addRefMW={m => addMW(m, 'Ref')}
-            addDoc={addDoc}
-            isBSIEnabled={isBSI}
-          />
-        }
-      >
-        <Button>Import</Button>
-      </Popover2>
-    </ControlGroup>
-  );
+  const toolbarProps = { addMW, addDoc, isBSI, index };
 
   return isVisible ? (
-    <Workspace toolbar={toolbar} className={className}>
+    <Workspace
+      toolbar={<RepoToolbar {...toolbarProps} />}
+      className={className}
+    >
       <div style={{ height: 'calc(100vh - 50px)', overflowY: 'auto' }}>
         <RepoInfoPane
           repo={repo}
