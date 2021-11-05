@@ -67,7 +67,9 @@ export function map_style__coverage(result: MapCoverType): SerializedStyles {
   return flow_node__highlighed(MappingResultStyles[result].color);
 }
 
-export function map_style_diff__coverage(result: MapDiffCoverType): SerializedStyles {
+export function map_style_diff__coverage(
+  result: MapDiffCoverType
+): SerializedStyles {
   return flow_node__highlighed(MappingDiffResultStyles[result].color);
 }
 

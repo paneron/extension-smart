@@ -22,7 +22,7 @@ export const RepoLegend: Record<RepoNodeType, LegendInterface> = {
 export const RepoDiffLegend: Record<RepoNodeDiffType, LegendInterface> = {
   new: { label: 'New coverage', color: 'lightgreen' },
   different: { label: 'Changed coverage', color: 'lightyellow' },
-  same: { label: 'Same coverage', color: 'lightblue' },  
+  same: { label: 'Same coverage', color: 'lightblue' },
   delete: { label: 'Deleted coverage', color: 'lightpink' },
 };
 

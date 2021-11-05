@@ -12,7 +12,12 @@ import {
   RepoNodeDiffType,
 } from '../repo/CommonFunctions';
 import { getPathByNS, RepoFileType } from '../repo/io';
-import { MapCoverType, MapDiffEdgeResult, MapEdgeResult, MapResultType } from './MappingCalculator';
+import {
+  MapCoverType,
+  MapDiffEdgeResult,
+  MapEdgeResult,
+  MapResultType,
+} from './MappingCalculator';
 
 export const MapDiffSourceValues = [
   'new',
@@ -22,13 +27,7 @@ export const MapDiffSourceValues = [
   'no',
 ] as const;
 
-export const MapDiffCoverValues = [
-  'new',
-  'delete',
-  'cover',
-  'partial',
-  'no'
-]
+export const MapDiffCoverValues = ['new', 'delete', 'cover', 'partial', 'no'];
 
 export type MapDiffSourceType = typeof MapDiffSourceValues[number];
 export type MapDiffCoverType = typeof MapDiffCoverValues[number];
@@ -40,15 +39,18 @@ export const MappingDiffSourceStyles: Record<
   new: { label: 'New source', color: 'lightgreen' },
   delete: { label: 'Deleted source', color: 'lightpink' },
   same: { label: 'Same mapping', color: 'lightblue' },
-  change: { label: 'Changed', color: 'lightyellow' },    
+  change: { label: 'Changed', color: 'lightyellow' },
   no: { label: 'Not a source', color: 'lightgray' },
 };
 
-export const MappingDiffResultStyles: Record<MapDiffCoverType, LegendInterface> = {
+export const MappingDiffResultStyles: Record<
+  MapDiffCoverType,
+  LegendInterface
+> = {
   new: { label: 'New coverage', color: 'lightgreen' },
   delete: { label: 'Deleted coverage', color: 'lightpink' },
   cover: { label: 'Covered in both', color: 'lightblue' },
-  partial: { label: 'Some mappings inside', color: 'lightyellow' },  
+  partial: { label: 'Some mappings inside', color: 'lightyellow' },
   no: { label: 'Not covered in both', color: 'lightgray' },
 };
 
@@ -255,12 +257,16 @@ function createNode(
 export function getMapDiffStyleById(
   isParentFull: boolean,
   isDiffParentFull: boolean,
-  mapResult: MapResultType, 
-  diffMapResult: MapResultType, 
+  mapResult: MapResultType,
+  diffMapResult: MapResultType,
   id: string
-): SerializedStyles {  
-  const result1 = isParentFull ? MapCoverType.FULL : (mapResult[id]??MapCoverType.NONE);
-  const result2 = isDiffParentFull ? MapCoverType.FULL : (diffMapResult[id]??MapCoverType.NONE);
+): SerializedStyles {
+  const result1 = isParentFull
+    ? MapCoverType.FULL
+    : mapResult[id] ?? MapCoverType.NONE;
+  const result2 = isDiffParentFull
+    ? MapCoverType.FULL
+    : diffMapResult[id] ?? MapCoverType.NONE;
   const covered1 = [MapCoverType.FULL, MapCoverType.PASS].includes(result1);
   const covered2 = [MapCoverType.FULL, MapCoverType.PASS].includes(result2);
   if (covered1 && covered2) {

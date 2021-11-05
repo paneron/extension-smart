@@ -36,9 +36,9 @@ import {
 } from './FlowContainer';
 import { fillRDCS } from '../utils/ModelFunctions';
 import {
-  getMappedList,  
+  getMappedList,
   getRefNodeStyle,
-  getSourceStyleById,  
+  getSourceStyleById,
   MapResultType,
 } from '../utils/map/MappingCalculator';
 import { MapSet } from './mapmodel';
@@ -306,7 +306,12 @@ export function getMapperReactFlowElementsFrom(
     setMapping,
     getStyleClassById:
       type === ModelType.REF
-        ? getRefNodeStyle(isParentFull, isDiffParentFull, mapResult, diffMapResult)
+        ? getRefNodeStyle(
+            isParentFull,
+            isDiffParentFull,
+            mapResult,
+            diffMapResult
+          )
         : id => getSourceStyleById(mapSet, diffMapSet, id),
     setSelectedId,
     hasMapping:

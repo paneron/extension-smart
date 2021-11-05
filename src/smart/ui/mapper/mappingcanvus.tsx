@@ -16,7 +16,7 @@ export const MapDiffStyles: Record<MapDiffType, LegendInterface> = {
   same: {
     label: 'Same mapping',
     color: 'blue',
-  },  
+  },
 };
 
 function colors(type: MapDiffType) {

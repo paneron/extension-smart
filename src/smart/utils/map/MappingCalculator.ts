@@ -186,25 +186,36 @@ function explorePage(
 }
 
 function getMapStyleById(
-  mapResult: MapResultType,  
+  mapResult: MapResultType,
   id: string
-): SerializedStyles {  
+): SerializedStyles {
   const result = mapResult[id];
   if (result === undefined) {
     return map_style__coverage(MapCoverType.NONE);
   }
-  return map_style__coverage(result);  
+  return map_style__coverage(result);
 }
 
-export function getRefNodeStyle(isParentFull:boolean, isDiffParentFull:boolean|undefined, mapResult:MapResultType
-  , diffMapResult: MapResultType|undefined):(id:string) => SerializedStyles {
-    if (diffMapResult && isDiffParentFull !== undefined) {
-      return id => getMapDiffStyleById(isParentFull, isDiffParentFull, mapResult, diffMapResult, id);
-    } else {
-      return isParentFull
+export function getRefNodeStyle(
+  isParentFull: boolean,
+  isDiffParentFull: boolean | undefined,
+  mapResult: MapResultType,
+  diffMapResult: MapResultType | undefined
+): (id: string) => SerializedStyles {
+  if (diffMapResult && isDiffParentFull !== undefined) {
+    return id =>
+      getMapDiffStyleById(
+        isParentFull,
+        isDiffParentFull,
+        mapResult,
+        diffMapResult,
+        id
+      );
+  } else {
+    return isParentFull
       ? () => map_style__coverage(MapCoverType.FULL)
-      : id => getMapStyleById(mapResult, id)
-    }
+      : id => getMapStyleById(mapResult, id);
+  }
 }
 
 export function getSourceStyleById(
