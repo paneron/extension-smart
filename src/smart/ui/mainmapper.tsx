@@ -54,7 +54,7 @@ import {
   MapDiffEdgeResult,
   mergeMapProfiles,
 } from '../utils/map/MappingCalculator';
-import MappingCanvus from './mapper/MappingCanvus';
+import MappingCanvus from './mapper/MappingsCanvus';
 import MapperOptionMenu from './menu/mapperOptionMenu';
 import { EditMPropsInterface } from './dialog/dialogs';
 import { multi_model_container } from '../../css/layout';

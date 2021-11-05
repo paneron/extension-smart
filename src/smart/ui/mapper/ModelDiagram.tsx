@@ -53,7 +53,7 @@ import { Popover2 } from '@blueprintjs/popover2';
 import MapperDocumentMenu from '../menu/MapperDocumentMenu';
 import RepoMapRefMenus from './repo/RepoMapRefMenu';
 import { RepoIndex } from '../../model/repo';
-import { MapDiffStyles } from './MappingCanvus';
+import { MapDiffStyles } from './MappingsCanvus';
 import {
   MappingDiffResultStyles,
   MappingDiffSourceStyles,
