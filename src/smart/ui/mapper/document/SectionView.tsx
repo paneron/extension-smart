@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { DocMapIndex, DocSection, DocStatement } from '../../../model/document';
 import ParagraphView from './ParagraphView';
 
@@ -10,6 +7,7 @@ const SectionView: React.FC<{
   statements: Record<string, DocStatement>;
   setMapping?: (from: string, to: string) => void;
   docMap?: DocMapIndex;
+  diffDocMap?: DocMapIndex;
   MappingList?: React.FC<{ id: string }>;
   setSelected?: (id: string) => void;
 }> = function (props) {

@@ -11,6 +11,7 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 
 import {
+  Button,
   ControlGroup,
   IToaster,
   IToastProps,
@@ -454,7 +455,7 @@ const ModelViewer: React.FC<{
     <ControlGroup>
       {repo === undefined && (
         <>
-          <MGDButton
+          <Button
             onClick={() =>
               handleModelOpen({
                 setModelWrapper,
@@ -466,10 +467,10 @@ const ModelViewer: React.FC<{
             }
           >
             Open Model
-          </MGDButton>
-          <MGDButton onClick={() => setModelWrapper({ ...initModelWrapper })}>
+          </Button>
+          <Button onClick={() => setModelWrapper({ ...initModelWrapper })}>
             Close
-          </MGDButton>
+          </Button>
         </>
       )}
       <Popover2
@@ -477,7 +478,7 @@ const ModelViewer: React.FC<{
         placement="bottom-start"
         content={<ViewToolMenu funPage={funPage} setFunPage={setFunPage} />}
       >
-        <MGDButton>Tools</MGDButton>
+        <Button>Tools</Button>
       </Popover2>
       <MGDButton
         type={MGDButtonType.Primary}
@@ -491,7 +492,7 @@ const ModelViewer: React.FC<{
         Drill up
       </MGDButton>
       {popHis && (
-        <MGDButton type={MGDButtonType.Primary} onClick={popHis}>
+        <MGDButton type={MGDButtonType.Secondary} onClick={popHis}>
           Previous model
         </MGDButton>
       )}

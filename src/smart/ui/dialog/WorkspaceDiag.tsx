@@ -1,10 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Dialog } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React from 'react';
-import { dialog_layout } from '../../../css/layout';
+import { dialogLayout } from '../../../css/layout';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel } from '../../model/editormodel';
 import { SMARTDocumentStore, SMARTModelStore } from '../../model/workspace';
@@ -58,7 +54,7 @@ export const WorkspaceDialog: React.FC<{
     <Dialog
       isOpen={true}
       title={title}
-      css={[dialog_layout]}
+      style={dialogLayout}
       onClose={onClose}
       canEscapeKeyClose={false}
       canOutsideClickClose={false}

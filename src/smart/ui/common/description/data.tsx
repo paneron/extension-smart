@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React from 'react';
 import { EditorDataClass, EditorRegistry } from '../../../model/editormodel';
 import { MMELDataAttribute } from '../../../serialize/interface/datainterface';

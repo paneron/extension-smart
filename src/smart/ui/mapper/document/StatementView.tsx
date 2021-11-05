@@ -1,9 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
-import { jsx } from '@emotion/react';
 import React from 'react';
 import { useState } from 'react';
 import { DocStatement } from '../../../model/document';
@@ -14,6 +10,7 @@ const StatementView: React.FC<{
   showSection?: string;
   setMapping?: (from: string, to: string) => void;
   froms?: string[];
+  oldHasMap?: boolean;
   first: boolean;
   MappingList?: React.FC<{ id: string }>;
   setSelected?: (id: string) => void;
@@ -24,6 +21,7 @@ const StatementView: React.FC<{
   setMapping,
   first,
   froms,
+  oldHasMap,
   MappingList,
   setSelected,
   title,
@@ -60,11 +58,7 @@ const StatementView: React.FC<{
       <span
         style={{
           marginLeft: first ? '0' : '3px',
-          backgroundColor: hasMap
-            ? 'lightgreen'
-            : hover
-            ? 'lightgray'
-            : 'white',
+          backgroundColor: getStyle(hasMap, hover, oldHasMap),
         }}
         ref={statement.uiref}
         onDrop={setMapping !== undefined ? onDrop : undefined}
@@ -85,5 +79,26 @@ const StatementView: React.FC<{
     </>
   );
 };
+
+function getStyle(
+  hasMap: boolean,
+  hover: boolean,
+  oldHasMap?: boolean
+): string {
+  if (oldHasMap === undefined) {
+    if (hasMap) {
+      return 'lightgreen';
+    }
+  } else {
+    if (hasMap && oldHasMap) {
+      return 'lightblue';
+    } else if (hasMap) {
+      return 'lightgreen';
+    } else if (oldHasMap) {
+      return 'lightpink';
+    }
+  }
+  return hover ? 'lightgray' : 'white';
+}
 
 export default StatementView;

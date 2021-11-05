@@ -1,19 +1,19 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 import { css, SerializedStyles } from '@emotion/react';
+import { CSSProperties } from 'react';
 import { CSSROOTVARIABLES } from './root.css';
 
-export const mgd_button = css`
-  font-weight: ${CSSROOTVARIABLES['--font-weight--regular']};
-  border: 0;
-  padding: 0;
-  margin: 0;
-  border-radius: 0.2em;
-  cursor: pointer;
-  transition: background-color ${CSSROOTVARIABLES['--transition-time']}
-    ease-in-out;
-  text-transform: uppercase;
-`;
+export const mgdButton: CSSProperties = {
+  fontWeight: CSSROOTVARIABLES.fontWeightRegular,
+  border: 0,
+  padding: 0,
+  margin: 0,
+  borderRadius: '0.2em',
+  cursor: 'pointer',
+  transition: `background-color ${CSSROOTVARIABLES['--transition-time']} ease-in-out`,
+  textTransform: 'uppercase',
+};
 
 export enum MGDButtonType {
   Primary = 'primary',
@@ -67,25 +67,25 @@ export const mgd_button_type: Record<MGDButtonType, SerializedStyles> = {
   `,
 };
 
-export const mgd_button_size: Record<MGDButtonSize, SerializedStyles> = {
-  [MGDButtonSize.Small]: css`
-    font-size: ${CSSROOTVARIABLES['--font-size--small']};
-  `,
-  [MGDButtonSize.Regular]: css`
-    font-size: ${CSSROOTVARIABLES['--font-size--regular']};
-  `,
-  [MGDButtonSize.Large]: css`
-    font-size: ${CSSROOTVARIABLES['--font-size--large']};
-  `,
+export const mgdButtonSize: Record<MGDButtonSize, CSSProperties> = {
+  [MGDButtonSize.Small]: {
+    fontSize: CSSROOTVARIABLES['--font-size--small'],
+  },
+  [MGDButtonSize.Regular]: {
+    fontSize: CSSROOTVARIABLES['--font-size--regular'],
+  },
+  [MGDButtonSize.Large]: {
+    fontSize: CSSROOTVARIABLES['--font-size--large'],
+  },
 };
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-export const mgd_button__text = css`
-  padding: 0.618em;
-  display: block;
-  white-space: nowrap;
-  letter-spacing: 0.05em;
-`;
+export const mgdButtonText: CSSProperties = {
+  padding: '0.618em',
+  display: 'block',
+  whiteSpace: 'nowrap',
+  letterSpacing: '0.05em',
+};
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

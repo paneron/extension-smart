@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import {
   EditorModel,
   EditorNode,

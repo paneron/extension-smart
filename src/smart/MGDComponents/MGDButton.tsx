@@ -2,16 +2,18 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { Button, IconName } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
+
+import { Button, IconName } from '@blueprintjs/core';
 import {
+  mgdButton,
   MGDButtonSize,
+  mgdButtonText,
   MGDButtonType,
-  mgd_button,
-  mgd_button_size,
+  mgdButtonSize,
   mgd_button_type,
-  mgd_button__text,
 } from '../../css/MGDButton';
+import React from 'react';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -22,10 +24,10 @@ interface OwnProps {
   icon?: IconName;
   rightIcon?: IconName;
   id?: string;
-  onClick?: (e: any) => void;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   disabled?: boolean;
-  onMouseEnter?: (e: any) => void;
-  onMouseLeave?: (e: any) => void;
+  onMouseEnter?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onMouseLeave?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
 }
 
@@ -45,18 +47,17 @@ function MGDButton(props: OwnProps) {
     onMouseLeave,
     className,
   } = props;
-  const buttonClasses = [
-    mgd_button,
-    mgd_button_type[type],
-    mgd_button_size[size],
-  ];
-  const textClasses = [mgd_button__text];
+  const buttonStyle = {
+    ...mgdButton,
+    ...mgdButtonSize[size],
+  };
   return (
     <Button
       outlined
       small={size === MGDButtonSize.Small}
       id={id}
-      css={buttonClasses}
+      style={buttonStyle}
+      css={mgd_button_type[type]}
       onClick={onClick}
       disabled={disabled}
       className={className}
@@ -65,7 +66,7 @@ function MGDButton(props: OwnProps) {
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      {children ? <span css={textClasses}>{children.trim()}</span> : null}
+      {children ? <span style={mgdButtonText}>{children.trim()}</span> : null}
     </Button>
   );
 }

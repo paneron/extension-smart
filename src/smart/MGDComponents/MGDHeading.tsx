@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
-import { mgd_heading } from '../../css/form';
+import React from 'react';
+import { mgdHeading } from '../../css/form';
 
 interface OwnProps {
   children: React.ReactNode;
@@ -12,7 +9,7 @@ interface OwnProps {
 
 function MGDHeading(props: OwnProps) {
   const { children } = props;
-  return <label css={mgd_heading}>{children}</label>;
+  return <label style={mgdHeading}>{children}</label>;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

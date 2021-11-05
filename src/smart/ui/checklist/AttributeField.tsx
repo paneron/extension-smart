@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import { MMELReference } from '../../serialize/interface/supportinterface';
 import { ReferenceList } from '../common/description/ComponentList';

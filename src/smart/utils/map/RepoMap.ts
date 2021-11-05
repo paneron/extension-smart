@@ -2,7 +2,7 @@ import { Edge, Elements, Node, Position } from 'react-flow-renderer';
 import { MapProfile } from '../../model/mapmodel';
 import { MMELRepo, RepoIndex } from '../../model/repo';
 import { createNodeContent } from '../../ui/mapper/repo/RepoMapNode';
-import { RepoLegend, RepoNodeType } from '../repo/CommonFunctions';
+import { createEdge, RepoLegend, RepoNodeType } from '../repo/CommonFunctions';
 import { getPathByNS, RepoFileType } from '../repo/io';
 
 type Maps = Record<string, MapProfile>;
@@ -14,6 +14,7 @@ const HEIGHT = 60;
 export function repoMapExploreNode(
   repo: MMELRepo,
   index: RepoIndex,
+  map: MapProfile,
   maps: Maps,
   loadModel: (x: string) => void
 ): Elements {
@@ -29,13 +30,14 @@ export function repoMapExploreNode(
     ),
   };
   const edges: Edge[] = [];
-  exploreNodes([ns], index, maps, elms, edges, 1, loadModel);
+  exploreNodes([ns], index, map, maps, elms, edges, 1, loadModel);
   return [...Object.values(elms), ...edges];
 }
 
 function exploreNodes(
   ns: string[],
   index: RepoIndex,
+  map: MapProfile,
   maps: Maps,
   elms: Nodes,
   edges: Edge[],
@@ -44,20 +46,20 @@ function exploreNodes(
 ) {
   const next: string[] = [];
   for (const x of ns) {
-    const mp = maps[getPathByNS(x, RepoFileType.MAP)];
+    const mp = col === 1 ? map : maps[getPathByNS(x, RepoFileType.MAP)];
     if (mp !== undefined) {
       for (const ref of Object.values(mp.mapSet)) {
         if (ref.id !== 'defaultns') {
           if (Object.values(ref.mappings).length > 0) {
             const namespace = ref.id;
             edges.push(createEdge(`${x}-${namespace}`, x, namespace));
-            const item = index[namespace];
-            const nodeContent = createNodeContent(
-              item ? item.shortname : namespace,
-              item,
-              loadModel
-            );
             if (elms[namespace] === undefined) {
+              const item = index[namespace];
+              const nodeContent = createNodeContent(
+                item ? item.shortname : namespace,
+                item,
+                loadModel
+              );
               elms[namespace] = createNode(
                 namespace,
                 WIDTH * col,
@@ -73,7 +75,7 @@ function exploreNodes(
     }
   }
   if (next.length !== 0) {
-    exploreNodes(next, index, maps, elms, edges, col + 1, loadModel);
+    exploreNodes(next, index, map, maps, elms, edges, col + 1, loadModel);
   }
 }
 
@@ -95,14 +97,5 @@ function createNode(
     style: {
       background: RepoLegend[type].color,
     },
-  };
-}
-
-function createEdge(id: string, source: string, target: string): Edge {
-  return {
-    id,
-    source,
-    target,
-    type: 'repo',
   };
 }

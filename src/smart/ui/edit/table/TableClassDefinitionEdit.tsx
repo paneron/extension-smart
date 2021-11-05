@@ -1,8 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { FormGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React from 'react';
 import { MMELTable } from '../../../serialize/interface/supportinterface';
 import { defaultItemSorter } from '../../../utils/ModelFunctions';

@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { MMELRepo } from '../model/repo';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import SMARTDocumentView from './mapper/document/DocumentView';
@@ -10,6 +6,7 @@ import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { getPathByNS, RepoFileType } from '../utils/repo/io';
 import { MMELDocument } from '../model/document';
 import { LoadingScreen } from './common/Loading';
+import React from 'react';
 
 const DocumentViewer: React.FC<{
   isVisible: boolean;

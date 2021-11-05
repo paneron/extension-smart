@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Button } from '@blueprintjs/core';
+import React from 'react';
 
 const RepoCloseButton: React.FC<{
   onClose: () => void;

@@ -1,9 +1,5 @@
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
-import { mgd_button_group } from '../../css/MGDButtonGroup';
+import React from 'react';
+import { mgdButtonGroup } from '../../css/MGDButtonGroup';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -21,7 +17,7 @@ function MGDButtonGroup(props: OwnProps) {
     .map((child: JSX.Element | null, index: number) => (
       <div key={`${base}--${index}`}>{child}</div>
     ));
-  return <fieldset css={mgd_button_group}>{items}</fieldset>;
+  return <fieldset style={mgdButtonGroup}>{items}</fieldset>;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

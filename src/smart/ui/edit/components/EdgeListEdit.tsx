@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
 import { NormalTextField } from '../../common/fields';
 

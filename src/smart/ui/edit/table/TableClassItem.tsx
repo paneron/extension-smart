@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React from 'react';
 import { DataType } from '../../../serialize/interface/baseinterface';
 import { MMELTable } from '../../../serialize/interface/supportinterface';

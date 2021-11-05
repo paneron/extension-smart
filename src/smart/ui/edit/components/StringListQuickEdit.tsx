@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button, FormGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { NormalTextField } from '../../common/fields';
 
 const StringListQuickEdit: React.FC<{

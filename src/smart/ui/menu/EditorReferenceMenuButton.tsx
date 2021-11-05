@@ -1,9 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button, Dialog } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
-import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
 import { RepoIndex, RepoItemType } from '../../model/repo';
 import { ReferenceContent } from '../../model/States';

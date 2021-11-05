@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Icon, IconName } from '@blueprintjs/core';
+import React from 'react';
 import MGDControlButton from '../../MGDComponents/MGDControlButton';
 
 interface IconControlInterface {

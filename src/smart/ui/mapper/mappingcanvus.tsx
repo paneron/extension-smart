@@ -1,13 +1,31 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React, { RefObject } from 'react';
-import { MapEdgeResult } from '../../utils/map/MappingCalculator';
-import { mgd_canvas } from '../../../css/layout';
-import { CSSROOTVARIABLES } from '../../../css/root.css';
+import {
+  MapDiffEdgeResult,
+  MapDiffType,
+  MapDiffValues,
+} from '../../utils/map/MappingCalculator';
+import { mgdCanvas } from '../../../css/layout';
+import { LegendInterface } from '../../model/States';
 
-const color = CSSROOTVARIABLES['--colour--green'];
+export const MapDiffStyles: Record<MapDiffType, LegendInterface> = {
+  new: { label: 'New mapping', color: 'green' },
+  delete: {
+    label: 'Deleted mapping',
+    color: 'red',
+  },
+  same: {
+    label: 'Same mapping',
+    color: 'blue',
+  },
+};
+
+function colors(type: MapDiffType) {
+  return MapDiffStyles[type].color;
+}
+
+function markerName(type: MapDiffType): string {
+  return `triangle-${type}`;
+}
 
 interface IMappingEdge {
   fx: number;
@@ -16,10 +34,11 @@ interface IMappingEdge {
   tx: number;
   ty: number;
   toid: string;
+  type: MapDiffType;
 }
 
-function computePos(edgeResult: MapEdgeResult): IMappingEdge {
-  const { fromref, toref, fromid, toid } = edgeResult;
+function computePos(edgeResult: MapDiffEdgeResult): IMappingEdge {
+  const { fromref, toref, fromid, toid, type } = edgeResult;
   if (fromref.current === null || toref.current === null) {
     return {
       fx: 0,
@@ -28,6 +47,7 @@ function computePos(edgeResult: MapEdgeResult): IMappingEdge {
       tx: 0,
       ty: 0,
       toid,
+      type,
     };
   }
   const fPos = fromref.current.getBoundingClientRect();
@@ -43,6 +63,7 @@ function computePos(edgeResult: MapEdgeResult): IMappingEdge {
     tx,
     ty,
     toid,
+    type,
   };
 }
 
@@ -52,7 +73,7 @@ function filterResult(edgeResult: IMappingEdge, threshold: number): boolean {
 }
 
 const MappingCanvus: React.FC<{
-  mapEdges: MapEdgeResult[];
+  mapEdges: MapDiffEdgeResult[];
   line: RefObject<HTMLDivElement>;
 }> = function ({ mapEdges, line }) {
   const threshold = line.current ? line.current.getBoundingClientRect().x : 0;
@@ -60,48 +81,54 @@ const MappingCanvus: React.FC<{
     .map(r => computePos(r))
     .filter(r => filterResult(r, threshold));
   return (
-    <div css={mgd_canvas}>
+    <div style={mgdCanvas}>
       <svg width="100%" height="99%">
         <defs>
-          <marker
-            id="triangle"
-            viewBox="0 0 10 10"
-            refX="1"
-            refY="5"
-            markerUnits="strokeWidth"
-            markerWidth="5"
-            markerHeight="5"
-            orient="auto"
-            style={{ stroke: color }}
-          >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="black" />
-          </marker>
+          {MapDiffValues.map(x => (
+            <Marker key={x} type={x} />
+          ))}
         </defs>
         {edges.map(r => (
-          <MappingEdge {...r} />
+          <MappingEdge key={r.fromid + '#' + r.toid} {...r} />
         ))}
       </svg>
     </div>
   );
 };
 
+const Marker: React.FC<{
+  type: MapDiffType;
+}> = ({ type }) => (
+  <marker
+    id={markerName(type)}
+    viewBox="0 0 10 10"
+    refX="1"
+    refY="5"
+    markerUnits="strokeWidth"
+    markerWidth="5"
+    markerHeight="5"
+    orient="auto"
+    style={{ stroke: colors(type) }}
+  >
+    <path d="M 0 0 L 10 5 L 0 10 z" fill={colors(type)} />
+  </marker>
+);
+
 const MappingEdge: React.FC<IMappingEdge> = function ({
   fx,
   fy,
   tx,
   ty,
-  fromid,
-  toid,
+  type,
 }) {
   return (
     <>
       <path
-        key={'ui#mapline#' + fromid + '#' + toid}
         d={'M' + fx + ',' + fy + ' L' + tx + ',' + ty}
-        strokeWidth="1"
-        stroke={color}
+        strokeWidth="2"
+        stroke={colors(type)}
         fill="#f00"
-        markerEnd="url(#triangle)"
+        markerEnd={`url(#${markerName(type)})`}
       />
     </>
   );

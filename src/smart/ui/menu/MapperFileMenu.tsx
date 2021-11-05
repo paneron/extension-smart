@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React, { useContext } from 'react';
 import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
@@ -19,6 +15,7 @@ const MapperFileMenu: React.FC<{
   isRepoMode: boolean;
   onRepoSave: () => void;
   onResetMapping: () => void;
+  onMapProfileImported: (m: MapProfile) => void;
 }> = function ({
   mapProfile,
   onMapProfileChanged,
@@ -26,6 +23,7 @@ const MapperFileMenu: React.FC<{
   isRepoMode,
   onRepoSave,
   onResetMapping,
+  onMapProfileImported,
 }) {
   const {
     getBlob,
@@ -52,6 +50,26 @@ const MapperFileMenu: React.FC<{
     });
   }
 
+  async function handleExport() {
+    const fileData = JSON.stringify(mapProfile);
+
+    await saveToFileSystem({
+      getBlob,
+      writeFileToFilesystem,
+      fileData,
+      type: FILE_TYPE.JSON,
+    });
+  }
+
+  async function handleImport() {
+    handleMappingOpen({
+      onMapProfileChanged: onMapProfileImported,
+      useDecodedBlob,
+      requestFileFromFilesystem,
+      fileType: FILE_TYPE.JSON,
+    });
+  }
+
   return (
     <Menu>
       {isRepoMode ? (
@@ -75,6 +93,13 @@ const MapperFileMenu: React.FC<{
             intent="danger"
             icon="trash"
           />
+          <MenuDivider />
+          <MenuItem text="Import" icon="import">
+            <MenuItem text="JSON-LD file" onClick={handleImport} />
+          </MenuItem>
+          <MenuItem text="Export" icon="export">
+            <MenuItem text="JSON-LD file" onClick={handleExport} />
+          </MenuItem>
         </>
       ) : (
         <>

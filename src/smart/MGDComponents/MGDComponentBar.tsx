@@ -1,21 +1,18 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
-import { mgd_component_bar } from '../../css/MGDComponentBar';
+import React from 'react';
+import { mgdComponentBar } from '../../css/MGDComponentBar';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 interface OwnProps {
-  children: any;
+  children: React.ReactNode;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function MGDComponentBar(props: OwnProps) {
   const { children } = props;
-  return <footer css={mgd_component_bar}>{children}</footer>;
+  return <footer style={mgdComponentBar}>{children}</footer>;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

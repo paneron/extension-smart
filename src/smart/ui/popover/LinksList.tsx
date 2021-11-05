@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Intent, Menu, MenuItem } from '@blueprintjs/core';
 import React from 'react';
 import { MMELRepo, RepoIndex } from '../../model/repo';

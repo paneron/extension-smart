@@ -1,6 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import {
   Text,
   Button,
@@ -8,12 +5,11 @@ import {
   Dialog,
   IToastProps,
 } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import { useEffect, useMemo, useState } from 'react';
 import {
-  application_dialog_layout,
-  dialog_layout,
-  dialog_layout__full,
+  applicationDialogLayout,
+  dialogLayout,
+  dialogLayoutFull,
 } from '../../../../css/layout';
 import MGDContainer from '../../../MGDComponents/MGDContainer';
 import MGDHeading from '../../../MGDComponents/MGDHeading';
@@ -39,6 +35,7 @@ import {
 } from './ReadingCalculator';
 import { Popover2 } from '@blueprintjs/popover2';
 import { ViewFunctionInterface } from '../../../model/ViewFunctionModel';
+import React from 'react';
 
 const Application2060: React.FC<{
   model: EditorModel;
@@ -122,10 +119,10 @@ const Application2060: React.FC<{
         <Dialog
           isOpen={true}
           title={diagProps.title}
-          css={
+          style={
             diagProps.fullscreen
-              ? [dialog_layout, dialog_layout__full]
-              : [application_dialog_layout]
+              ? { ...dialogLayout, ...dialogLayoutFull }
+              : applicationDialogLayout
           }
           onClose={onClose}
           canEscapeKeyClose={false}

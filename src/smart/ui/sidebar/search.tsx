@@ -1,13 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { InputGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React, { useMemo, useState } from 'react';
-import {
-  search_result_container,
-  search_result_entry_row,
-} from '../../../css/shame';
+import { searchResultEntryRow } from '../../../css/shame';
 import MGDButton from '../../MGDComponents/MGDButton';
 import MGDContainer from '../../MGDComponents/MGDContainer';
 import MGDLabel from '../../MGDComponents/MGDLabel';
@@ -78,7 +71,7 @@ const SearchResultPane: React.FC<{
   const pageOptions = Array.from(Array(maxpage).keys()).map(v => v + 1);
 
   return (
-    <div css={search_result_container}>
+    <div>
       <MGDContainer>
         <MGDLabel>Total results: {result.length}</MGDLabel>
       </MGDContainer>
@@ -120,7 +113,7 @@ const SearchResultEntry: React.FC<{
   const parent =
     hisotry.length > 1 ? hisotry[hisotry.length - 1].pathtext : 'root';
   return (
-    <div css={search_result_entry_row}>
+    <div style={searchResultEntryRow}>
       <a onClick={onClick}>
         {pos}. {entry.type} : {entry.text} @ {parent}
       </a>

@@ -1,10 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React from 'react';
-import { mgd_label } from '../../../css/form';
-import { popover_panel_container } from '../../../css/layout';
+import { mgdLabel } from '../../../css/form';
+import { popoverPanelContainer } from '../../../css/layout';
 import { ModelType } from '../../model/editormodel';
 import { MappingType } from '../../model/mapmodel';
 import {
@@ -44,7 +40,7 @@ const MappingPartyList: React.FC<{
     .filter(x => x.name !== '');
 
   return (
-    <div css={popover_panel_container}>
+    <div style={popoverPanelContainer}>
       {partners.map(p => (
         <MappingPartnerEntry
           key={`popover#mapping#${p.id}`}
@@ -68,7 +64,7 @@ const MappingPartnerEntry: React.FC<{
 }> = function ({ id, name, onEdit, onNavigate }) {
   return (
     <div>
-      <label css={mgd_label}> {name} </label>
+      <label style={mgdLabel}> {name} </label>
       <EditMappingButton onClick={() => onEdit(id)} />
       {onNavigate !== undefined && (
         <MapPartnerNavigateButton onClick={() => onNavigate(id)} />

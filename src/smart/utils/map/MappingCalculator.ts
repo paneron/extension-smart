@@ -1,6 +1,10 @@
 import { RefObject } from 'react';
 import { CSSROOTVARIABLES } from '../../../css/root.css';
-import { map_style__coverage, map_style__source } from '../../../css/visual';
+import {
+  map_style_diff__source,
+  map_style__coverage,
+  map_style__source,
+} from '../../../css/visual';
 import {
   EditorModel,
   EditorNode,
@@ -12,10 +16,17 @@ import {
 } from '../../model/editormodel';
 import { PageHistory } from '../../model/history';
 import { LegendInterface, MapperSelectedInterface } from '../../model/States';
-import { MappingType, MapProfile, MapSet } from '../../model/mapmodel';
+import {
+  MappingDoc,
+  MappingMeta,
+  MappingType,
+  MapProfile,
+  MapSet,
+} from '../../model/mapmodel';
 import { SerializedStyles } from '@emotion/react';
 import { DocStatement, MMELDocument } from '../../model/document';
 import { getNamespace } from '../ModelFunctions';
+import { getMapDiffStyleById } from './MappingDiff';
 
 export enum MapCoverType {
   FULL = 'full',
@@ -29,12 +40,17 @@ export enum MapSourceType {
   NOMAP = 'no',
 }
 
+export const MapDiffValues = ['new', 'same', 'delete'] as const;
+export type MapDiffType = typeof MapDiffValues[number];
+
 export interface MapEdgeResult {
   fromref: RefObject<HTMLElement>;
   toref: RefObject<HTMLElement>;
   fromid: string;
   toid: string;
 }
+
+export type MapDiffEdgeResult = MapEdgeResult & { type: MapDiffType };
 
 export type MapperModels = ModelType.IMP | ModelType.REF;
 
@@ -169,7 +185,7 @@ function explorePage(
   return somethingCovered ? MapCoverType.PARTIAL : MapCoverType.NONE;
 }
 
-export function getMapStyleById(
+function getMapStyleById(
   mapResult: MapResultType,
   id: string
 ): SerializedStyles {
@@ -180,17 +196,73 @@ export function getMapStyleById(
   return map_style__coverage(result);
 }
 
+export function getRefNodeStyle(
+  isParentFull: boolean,
+  isDiffParentFull: boolean | undefined,
+  mapResult: MapResultType,
+  diffMapResult: MapResultType | undefined
+): (id: string) => SerializedStyles {
+  if (diffMapResult && isDiffParentFull !== undefined) {
+    return id =>
+      getMapDiffStyleById(
+        isParentFull,
+        isDiffParentFull,
+        mapResult,
+        diffMapResult,
+        id
+      );
+  } else {
+    return isParentFull
+      ? () => map_style__coverage(MapCoverType.FULL)
+      : id => getMapStyleById(mapResult, id);
+  }
+}
+
 export function getSourceStyleById(
   mapSet: MapSet,
+  diffMapSet: MapSet | undefined,
   id: string
 ): SerializedStyles {
-  if (
-    mapSet.mappings[id] === undefined ||
-    Object.keys(mapSet.mappings[id]).length === 0
-  ) {
-    return map_style__source(MapSourceType.NOMAP);
+  if (diffMapSet) {
+    const source1 = mapSet.mappings[id] ?? {};
+    const source2 = diffMapSet.mappings[id] ?? {};
+    const keys1 = Object.keys(source1);
+    const keys2 = Object.keys(source2);
+    if (keys1.length > 0) {
+      if (keys2.length > 0) {
+        return compareMapSource(keys1, keys2);
+      } else {
+        return map_style_diff__source('new');
+      }
+    } else {
+      if (keys2.length > 0) {
+        return map_style_diff__source('delete');
+      } else {
+        return map_style_diff__source('no');
+      }
+    }
+  } else {
+    if (
+      mapSet.mappings[id] === undefined ||
+      Object.keys(mapSet.mappings[id]).length === 0
+    ) {
+      return map_style__source(MapSourceType.NOMAP);
+    }
+    return map_style__source(MapSourceType.HASMAP);
   }
-  return map_style__source(MapSourceType.HASMAP);
+}
+
+function compareMapSource(s1: string[], s2: string[]): SerializedStyles {
+  if (s1.length !== s2.length) {
+    return map_style_diff__source('change');
+  }
+  const set = new Set(s1);
+  for (const x of s2) {
+    if (!set.has(x)) {
+      return map_style_diff__source('change');
+    }
+  }
+  return map_style_diff__source('same');
 }
 
 export function filterMappings(
@@ -398,4 +470,73 @@ function getChilds(model: EditorModel, id: string): string[] {
     ];
   }
   return ret;
+}
+
+export function mergeMapProfiles(mp1: MapProfile, mp2: MapProfile): MapProfile {
+  const newMP = { ...mp1 };
+  newMP.docs = mergeMapDocs(mp1.docs, mp2.docs);
+  newMP.mapSet = mergeMapSets(mp1.mapSet, mp2.mapSet);
+  return newMP;
+}
+
+function mergeMapping(
+  m1: Record<string, MappingMeta>,
+  m2: Record<string, MappingMeta>
+): Record<string, MappingMeta> {
+  const newMap = { ...m1 };
+  for (const x in m2) {
+    if (newMap[x] === undefined) {
+      newMap[x] = m2[x];
+    }
+  }
+  return newMap;
+}
+
+function mergeMapSet(s1: MapSet, s2: MapSet): MapSet {
+  const newMapSet: MapSet = { ...s1, mappings: { ...s1.mappings } };
+  const { mappings } = newMapSet;
+  for (const x in s2.mappings) {
+    if (mappings[x] !== undefined) {
+      mappings[x] = mergeMapping(mappings[x], s2.mappings[x]);
+    } else {
+      mappings[x] = s2.mappings[x];
+    }
+  }
+  return newMapSet;
+}
+
+function mergeMapSets(
+  s1: Record<string, MapSet>,
+  s2: Record<string, MapSet>
+): Record<string, MapSet> {
+  const newMapSet = { ...s1 };
+  for (const x in s2) {
+    if (newMapSet[x] !== undefined) {
+      newMapSet[x] = mergeMapSet(newMapSet[x], s2[x]);
+    } else {
+      newMapSet[x] = s2[x];
+    }
+  }
+  return newMapSet;
+}
+
+function mergeMapDocs(
+  d1: Record<string, MappingDoc>,
+  d2: Record<string, MappingDoc>
+): Record<string, MappingDoc> {
+  const newDoc = { ...d1 };
+  for (const x in d2) {
+    const doc = d2[x];
+    if (newDoc[x] === undefined) {
+      newDoc[x] = doc;
+    } else {
+      let suffix = 0;
+      while (newDoc[x + suffix] !== undefined) {
+        suffix++;
+      }
+      const newId = x + suffix;
+      newDoc[newId] = { ...doc, id: newId };
+    }
+  }
+  return newDoc;
 }

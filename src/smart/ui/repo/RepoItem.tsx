@@ -1,9 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Card, Icon, Menu, MenuItem, Text } from '@blueprintjs/core';
 import { ContextMenu2, Tooltip2 } from '@blueprintjs/popover2';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { RepoItem } from '../../model/repo';
 
 type VF = () => void;

@@ -1,9 +1,7 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx, SerializedStyles } from '@emotion/react';
+import { SerializedStyles } from '@emotion/react';
+import React from 'react';
 import { RefObject } from 'react';
-import { mgd_label } from '../../../css/form';
+import { mgdLabel } from '../../../css/form';
 import MGDProcessBox from '../../MGDComponents/MGDProcessBox';
 import { ModelType } from '../../model/editormodel';
 import {
@@ -149,7 +147,7 @@ export const ProcessBox: Record<
         draggable
         onDragStart={event => onMapDragStart(event, pid)}
       >
-        <label css={mgd_label}>{content}</label>
+        <label style={mgdLabel}>{content}</label>
       </MGDProcessBox>
     );
   },
@@ -165,7 +163,7 @@ export const ProcessBox: Record<
       styleClass={styleClass}
       onDrop={event => onMapDrop(event, pid, setMapping)}
     >
-      <label css={mgd_label}>{content}</label>
+      <label style={mgdLabel}>{content}</label>
     </MGDProcessBox>
   ),
 };

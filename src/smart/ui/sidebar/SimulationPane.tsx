@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import { EditorModel, EditorNode } from '../../model/editormodel';
 import { ViewFunctionInterface } from '../../model/ViewFunctionModel';

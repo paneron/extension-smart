@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import {
   DocMapIndex,
   DocParagraph,
@@ -16,10 +13,11 @@ const ParagraphView: React.FC<{
   showSection?: string;
   setMapping?: (from: string, to: string) => void;
   docMap?: DocMapIndex;
+  diffDocMap?: DocMapIndex;
   MappingList?: React.FC<{ id: string }>;
   setSelected?: (id: string) => void;
 }> = function (props) {
-  const { para, showSection, statements, docMap } = props;
+  const { para, showSection, statements, docMap, diffDocMap } = props;
   return (
     <div
       style={{
@@ -33,6 +31,7 @@ const ParagraphView: React.FC<{
           first={index === 0}
           statement={statements[s]}
           froms={docMap !== undefined ? docMap[s] ?? [] : undefined}
+          oldHasMap={diffDocMap ? (diffDocMap[s] ?? []).length > 0 : undefined}
           {...props}
         />
       ))}

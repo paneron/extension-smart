@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Menu, MenuItem } from '@blueprintjs/core';
+import React from 'react';
 import { RepoItemType } from '../../../model/repo';
 
 const RepoInternalFileMenu: React.FC<{

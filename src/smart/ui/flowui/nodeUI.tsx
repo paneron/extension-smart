@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Handle, NodeProps, Position } from 'react-flow-renderer';
 import { FC, useState } from 'react';
 import {
@@ -25,16 +21,16 @@ import {
 } from './shapes';
 import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
-import { handlecss } from '../../../css/visual';
+
 import {
-  shame__label,
-  shame__label__long,
-  shame__label__noaction,
-  shame__label__nudge,
-  shame__label__short,
-  tooltip__label,
+  shameLabel,
+  shameLabelLong,
+  shameLabelNoAction,
+  shameLabelNudge,
+  shameLabelShort,
+  tooltipLabel,
 } from '../../../css/shame';
-import { flownode_top_left_button_layout } from '../../../css/layout';
+import { flownodeTopLeftButtonLayout } from '../../../css/layout';
 import PopoverWrapper from '../popover/PopoverWrapper';
 import ViewMappingbutton from '../mapper/viewmapbutton';
 import ViewWorkspaceButton from '../workspace/ViewDataWorkspaceButton';
@@ -48,6 +44,7 @@ import NonTextReferenceList from '../popover/NonTextReferenceList';
 import TableViewer from '../common/description/TableViewer';
 import FigureViewer from '../common/description/FigureViewer';
 import LinksList from '../popover/LinksList';
+import { handleCSS } from '../../../css/visual';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -63,15 +60,15 @@ export const Datacube: FC<NodeProps> = function ({ data }) {
   return (
     <>
       {callback.idVisible && <NodeIDField nodeid={node.id} />}
-      <Handle type="source" position={Position.Bottom} css={handlecss} />
-      <Handle type="target" position={Position.Top} css={handlecss} />
+      <Handle type="source" position={Position.Bottom} style={handleCSS} />
+      <Handle type="target" position={Position.Top} style={handleCSS} />
       {isEditorRegistry(node) && onDataWorkspaceActive !== undefined && (
         <ViewWorkspaceButton onClick={() => onDataWorkspaceActive(node.id)} />
       )}
       <PopoverWrapper id={node.id} SD={SD}>
         <DatacubeShape color={color} />
       </PopoverWrapper>
-      <div css={[shame__label, shame__label__long]}>{label}</div>
+      <div style={{ ...shameLabel, ...shameLabelLong }}>{label}</div>
       {Addon !== undefined && <Addon id={node.id} />}
     </>
   );
@@ -105,7 +102,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
   return (
     <>
       {callback.idVisible && <NodeIDField nodeid={process.id} wide />}
-      <Handle type="source" position={Position.Bottom} css={handlecss} />
+      <Handle type="source" position={Position.Bottom} style={handleCSS} />
       <PopoverWrapper id={process.id} SD={SD}>
         <PB
           content={process.name === '' ? process.id : process.name}
@@ -119,7 +116,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           uiref={process.uiref}
         />
       </PopoverWrapper>
-      <Handle type="target" position={Position.Top} css={handlecss} />
+      <Handle type="target" position={Position.Top} style={handleCSS} />
       {refs.length > 0 && (
         <div
           style={{
@@ -162,7 +159,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
         </div>
       )}
       {process.page !== '' && (
-        <div css={flownode_top_left_button_layout}>
+        <div style={flownodeTopLeftButtonLayout}>
           <Tooltip2 content="View subprocess" position="top">
             <Button
               small
@@ -183,7 +180,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           />
         )}
       {actor !== null && (
-        <div css={[shame__label, shame__label__noaction]}>
+        <div style={{ ...shameLabel, ...shameLabelNoAction }}>
           {actorIcon}
           {actor.name}
         </div>
@@ -237,7 +234,7 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
   return (
     <>
       {callback.idVisible && <NodeIDField nodeid={approval.id} wide />}
-      <Handle type="source" position={Position.Bottom} css={handlecss} />
+      <Handle type="source" position={Position.Bottom} style={handleCSS} />
       <PopoverWrapper id={approval.id} SD={SD}>
         <PB
           content={approval.name === '' ? approval.id : approval.name}
@@ -251,7 +248,7 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
           uiref={approval.uiref}
         />
       </PopoverWrapper>
-      <Handle type="target" position={Position.Top} css={handlecss} />
+      <Handle type="target" position={Position.Top} style={handleCSS} />
       {callback.hasMapping !== undefined &&
         callback.hasMapping(approval.id) &&
         callback.MappingList !== undefined && (
@@ -265,35 +262,29 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
       {actor !== null ? (
         approver !== null ? (
           <>
-            <div
-              css={[shame__label, shame__label__noaction]}
-              key={approval.id + '#ActorLabel'}
-            >
+            <div style={{ ...shameLabel, ...shameLabelNoAction }}>
               {actorIcon}
               {actor.name}
             </div>
             <div
-              css={[shame__label, shame__label__noaction, shame__label__nudge]}
-              key={approval.id + '#ApproverLabel'}
+              style={{
+                ...shameLabel,
+                ...shameLabelNoAction,
+                ...shameLabelNudge,
+              }}
             >
               {approverIcon}
               {approver.name}
             </div>
           </>
         ) : (
-          <div
-            css={[shame__label, shame__label__noaction]}
-            key={approval.id + '#ActorLabel'}
-          >
+          <div style={{ ...shameLabel, ...shameLabelNoAction }}>
             {actorIcon}
             {actor.name}
           </div>
         )
       ) : approver !== null ? (
-        <div
-          css={[shame__label, shame__label__noaction]}
-          key={approval.id + '#ApproverLabel'}
-        >
+        <div style={{ ...shameLabel, ...shameLabelNoAction }}>
           {approverIcon}
           {approver.name}
         </div>
@@ -314,7 +305,7 @@ export const StartComponent: FC<NodeProps> = function ({ data }) {
   const SD = callback.StartEndShortDescription;
   return (
     <>
-      <Handle type="source" position={Position.Bottom} css={handlecss} />
+      <Handle type="source" position={Position.Bottom} style={handleCSS} />
       <PopoverWrapper id={data.id} SD={SD}>
         <StartShape color={color} />
       </PopoverWrapper>
@@ -331,11 +322,11 @@ export const EndComponent: FC<NodeProps> = function ({ data }) {
   const SD = callback.StartEndShortDescription;
   return (
     <>
-      <Handle type="target" position={Position.Top} css={handlecss} />
+      <Handle type="target" position={Position.Top} style={handleCSS} />
       <PopoverWrapper id={data.id} SD={SD}>
         <EndShape color={color} />
       </PopoverWrapper>
-      <div css={[shame__label, shame__label__short]}>end</div>
+      <div style={{ ...shameLabel, ...shameLabelShort }}>end</div>
     </>
   );
 };
@@ -350,12 +341,12 @@ export const TimerComponent: FC<NodeProps> = function ({ data }) {
   return (
     <>
       {callback.idVisible && <NodeIDField nodeid={data.id} />}
-      <Handle type="source" position={Position.Bottom} css={handlecss} />
-      <Handle type="target" position={Position.Top} css={handlecss} />
+      <Handle type="source" position={Position.Bottom} style={handleCSS} />
+      <Handle type="target" position={Position.Top} style={handleCSS} />
       <PopoverWrapper id={data.id} SD={SD}>
         <TimerShape color={color} />
       </PopoverWrapper>
-      <div css={[shame__label, shame__label__short]}>timer</div>
+      <div style={{ ...shameLabel, ...shameLabelShort }}>timer</div>
     </>
   );
 };
@@ -373,18 +364,19 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
   return (
     <>
       {callback.idVisible && <NodeIDField nodeid={egate.id} />}
-      <Handle type="source" position={Position.Bottom} css={handlecss} />
-      <Handle type="target" position={Position.Top} css={handlecss} />
+      <Handle type="source" position={Position.Bottom} style={handleCSS} />
+      <Handle type="target" position={Position.Top} style={handleCSS} />
       <PopoverWrapper id={egate.id} SD={SD}>
         <EgateShape color={color} />
       </PopoverWrapper>
       <Tooltip2
-        content={<div css={tooltip__label}>{egate.label}</div>}
-        css={[shame__label, shame__label__long]}
+        content={<div style={tooltipLabel}>{egate.label}</div>}
         position="top"
       >
         <div
           style={{
+            ...shameLabel,
+            ...shameLabelLong,
             flex: 1,
             display: '-webkit-box',
             WebkitLineClamp: 2,
@@ -411,12 +403,12 @@ export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
   return (
     <>
       {callback.idVisible && <NodeIDField nodeid={scevent.id} />}
-      <Handle type="source" position={Position.Bottom} css={handlecss} />
-      <Handle type="target" position={Position.Top} css={handlecss} />
+      <Handle type="source" position={Position.Bottom} style={handleCSS} />
+      <Handle type="target" position={Position.Top} style={handleCSS} />
       <PopoverWrapper id={scevent.id} SD={SD}>
         <SignalCatchShape color={color} />
       </PopoverWrapper>
-      <div css={[shame__label, shame__label__long]}>{scevent.id}</div>
+      <div style={{ ...shameLabel, ...shameLabelLong }}>{scevent.id}</div>
     </>
   );
 };

@@ -1,8 +1,8 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
-import { ControlGroup } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
+import { ControlGroup } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';

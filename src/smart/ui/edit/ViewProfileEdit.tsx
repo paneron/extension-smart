@@ -1,6 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import {
   Text,
   Checkbox,
@@ -9,7 +6,6 @@ import {
   InputGroup,
   Switch,
 } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
 import { MMELView, VarType } from '../../serialize/interface/supportinterface';

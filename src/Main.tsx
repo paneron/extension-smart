@@ -1,8 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { FocusStyleManager } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React from 'react';
 import { useContext, useMemo, useState } from 'react';

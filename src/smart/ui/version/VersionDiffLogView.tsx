@@ -1,10 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Text } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React from 'react';
-import { popover_panel_container } from '../../../css/layout';
+import { popoverPanelContainer } from '../../../css/layout';
 import { VersionState } from '../../model/versioncompare';
 
 const VersionDiffLogView: React.FC<{
@@ -18,7 +14,7 @@ const VersionDiffLogView: React.FC<{
     ? result.refcomments[pageid][id]
     : result.oricomments[pageid][id];
   return (
-    <div css={popover_panel_container}>
+    <div style={popoverPanelContainer}>
       {comments !== undefined && comments.length > 0 ? (
         comments.map((x, index) => <p key={index}>{x}</p>)
       ) : (

@@ -1,8 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useMemo } from 'react';
 import { MapProfile } from '../../../model/mapmodel';
@@ -16,10 +12,21 @@ const RepoMapMainView: React.FC<{
   isVisible: boolean;
   viewOption: MapperViewOption;
   onClose: () => void;
+  map: MapProfile;
+  diffMap?: MapProfile;
   repo?: MMELRepo;
   loadModel: (x: string) => void;
   index: RepoIndex;
-}> = function ({ isVisible, viewOption, repo, onClose, loadModel, index }) {
+}> = function ({
+  isVisible,
+  viewOption,
+  repo,
+  map,
+  diffMap,
+  onClose,
+  loadModel,
+  index,
+}) {
   const { useObjectData } = useContext(DatasetContext);
 
   const mapFiles = useObjectData({
@@ -50,6 +57,8 @@ const RepoMapMainView: React.FC<{
           <RepoMapDiagram
             index={index}
             maps={maps}
+            map={map}
+            diffMap={diffMap}
             repo={repo}
             option={viewOption}
             loadModel={loadModel}
@@ -75,7 +84,7 @@ const Container: React.FC<{ children: React.ReactNode }> = function ({
       style={{
         position: 'fixed',
         bottom: 30,
-        right: 10,
+        right: 20,
         width: '35vw',
         height: '30vh',
         borderStyle: 'solid',

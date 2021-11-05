@@ -1,13 +1,10 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Button, FormGroup, Text } from '@blueprintjs/core';
 import { MMELFigure } from '../../../serialize/interface/supportinterface';
 import { NormalTextField } from '../../common/fields';
 import { useContext } from 'react';
 import { FILE_TYPE, handleFileOpen } from '../../../utils/IOFunctions';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
+import React from 'react';
 
 const FigItemEditPage: React.FC<{
   object: MMELFigure;

@@ -7,6 +7,7 @@ import React, { useContext, useMemo, useState } from 'react';
 import ReactFlow, { Controls, ReactFlowProvider } from 'react-flow-renderer';
 
 import {
+  Button,
   ControlGroup,
   HotkeysProvider,
   HotkeysTarget2,
@@ -239,9 +240,9 @@ const ModelWorkspace: React.FC<{
           />
         }
       >
-        <MGDButton>Workspace</MGDButton>
+        <Button>Workspace</Button>
       </Popover2>
-      <MGDButton
+      <Button
         onClick={() =>
           setDiagProps({
             regid: '',
@@ -250,7 +251,7 @@ const ModelWorkspace: React.FC<{
         }
       >
         Data Registry
-      </MGDButton>
+      </Button>
       <MGDButton
         type={MGDButtonType.Primary}
         disabled={state.history.items.length <= 1}

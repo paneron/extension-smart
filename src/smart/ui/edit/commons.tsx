@@ -1,8 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Button } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React from 'react';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import {

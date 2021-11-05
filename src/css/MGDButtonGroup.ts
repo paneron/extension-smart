@@ -1,14 +1,14 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-import { css } from '@emotion/react';
+import { CSSProperties } from 'react';
 
-export const mgd_button_group = css`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  border: none;
-`;
+export const mgdButtonGroup: CSSProperties = {
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  border: 'none',
+};
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

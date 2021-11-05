@@ -1,9 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import React from 'react';
-import { popover_panel_container } from '../../../css/layout';
+import { popoverPanelContainer } from '../../../css/layout';
 
 import {
   EditorApproval,
@@ -32,7 +28,7 @@ const ComponentSummary: React.FC<{
   const elm = model.elements[id];
   const View = Describe_Node_Details[elm.datatype as DescribableNodeTypes];
   return (
-    <div css={popover_panel_container}>
+    <div style={popoverPanelContainer}>
       <View node={elm} model={model} />
     </div>
   );

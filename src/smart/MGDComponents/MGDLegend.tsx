@@ -1,14 +1,10 @@
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import {
-  mgd_legend,
-  mgd_legend__bottom,
-  mgd_legend__left,
-  mgd_legend__normal,
-  mgd_legend__right,
+  mgdLegend,
+  mgdLegendBottom,
+  mgdLegendLeft,
+  mgdLegendNormal,
+  mgdLegendRight,
 } from '../../css/MGDLegend';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -25,11 +21,11 @@ function MGDLegend(props: OwnProps) {
   const { children, onLeft, bottom } = props;
   return (
     <aside
-      css={[
-        mgd_legend,
-        onLeft ? mgd_legend__left : mgd_legend__right,
-        bottom ? mgd_legend__bottom : mgd_legend__normal,
-      ]}
+      style={{
+        ...mgdLegend,
+        ...(onLeft ? mgdLegendLeft : mgdLegendRight),
+        ...(bottom ? mgdLegendBottom : mgdLegendNormal),
+      }}
     >
       {children}
     </aside>

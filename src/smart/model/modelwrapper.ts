@@ -37,13 +37,11 @@ import {
 import { fillRDCS } from '../utils/ModelFunctions';
 import {
   getMappedList,
-  getMapStyleById,
+  getRefNodeStyle,
   getSourceStyleById,
-  MapCoverType,
   MapResultType,
 } from '../utils/map/MappingCalculator';
 import { MapSet } from './mapmodel';
-import { map_style__coverage } from '../../css/visual';
 import React from 'react';
 import { SerializedStyles } from '@emotion/react';
 import { MMELRepo, RepoIndex } from './repo';
@@ -290,9 +288,12 @@ export function getMapperReactFlowElementsFrom(
   onProcessClick: (pageid: string, processid: string) => void,
   setMapping: (fromid: string, toid: string) => void,
   mapSet: MapSet,
+  diffMapSet: MapSet | undefined,
   mapResult: MapResultType,
+  diffMapResult: MapResultType | undefined,
   setSelectedId: (id: string) => void,
   isParentFull: boolean,
+  isDiffParentFull: boolean | undefined,
   ComponentShortDescription: React.FC<{ id: string }>,
   MappingList: React.FC<{ id: string }>,
   idVisible: boolean
@@ -305,10 +306,13 @@ export function getMapperReactFlowElementsFrom(
     setMapping,
     getStyleClassById:
       type === ModelType.REF
-        ? isParentFull
-          ? () => map_style__coverage(MapCoverType.FULL)
-          : id => getMapStyleById(mapResult, id)
-        : id => getSourceStyleById(mapSet, id),
+        ? getRefNodeStyle(
+            isParentFull,
+            isDiffParentFull,
+            mapResult,
+            diffMapResult
+          )
+        : id => getSourceStyleById(mapSet, diffMapSet, id),
     setSelectedId,
     hasMapping:
       type === ModelType.REF

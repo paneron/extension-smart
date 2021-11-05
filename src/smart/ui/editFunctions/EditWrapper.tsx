@@ -1,13 +1,10 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import {
   HotkeysProvider,
   HotkeysTarget2,
   IToaster,
   Toaster,
 } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useState } from 'react';
 import {
   EditorModel,

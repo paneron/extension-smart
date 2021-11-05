@@ -1,9 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Menu, MenuItem } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
+import React from 'react';
 import { useContext } from 'react';
 import { MMELDocument } from '../../../model/document';
 import { indexModel } from '../../../model/mapmodel';

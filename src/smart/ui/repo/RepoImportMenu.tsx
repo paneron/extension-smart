@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Menu, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { useContext } from 'react';
@@ -12,6 +8,7 @@ import {
   handleModelOpen,
 } from '../../utils/IOFunctions';
 import { MMELDocument } from '../../model/document';
+import React from 'react';
 
 const RepoImportMenu: React.FC<{
   addRefMW: (x: ModelWrapper) => void;

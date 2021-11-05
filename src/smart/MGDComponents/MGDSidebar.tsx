@@ -8,7 +8,7 @@ import { mgd_sidebar } from '../../css/MGDSidebar';
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 interface OwnProps {
-  children: any;
+  children: React.ReactNode;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
 import { Button, Text } from '@blueprintjs/core';
 import { RepoItem } from '../../../model/repo';
 import { Tooltip2 } from '@blueprintjs/popover2';

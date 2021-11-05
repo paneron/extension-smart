@@ -1,10 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
-import { jsx } from '@emotion/react';
 import React, { useState } from 'react';
-import { flownode_top_right_button_layout } from '../../../css/layout';
+import { flownodeTopRightButtonLayout } from '../../../css/layout';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { ModelType } from '../../model/editormodel';
 import { MapViewButtonToolTip } from '../../utils/map/MappingCalculator';
@@ -36,7 +32,7 @@ const ViewMappingbutton: React.FC<{
 
   if (modelType === ModelType.IMP || modelType === ModelType.REF) {
     return (
-      <div css={flownode_top_right_button_layout}>
+      <div style={flownodeTopRightButtonLayout}>
         <Popover2
           content={<MappingList id={id} />}
           onOpening={() => action({ ...state, isClicked: true })}

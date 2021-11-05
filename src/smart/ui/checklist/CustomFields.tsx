@@ -1,10 +1,6 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Checkbox } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
 import React from 'react';
-import { mgd_label } from '../../../css/form';
+import { mgdLabel } from '../../../css/form';
 import { ChecklistPackage, getCheckListId } from '../../model/checklist';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import {
@@ -73,7 +69,7 @@ export const CLDescriptionItem: React.FC<{
   return (
     <p>
       <Checkbox checked={progress === 100} onChange={onChange}>
-        <label css={mgd_label}>
+        <label style={mgdLabel}>
           {label === undefined ? value : `${label}: ${value}`}
           {children}
         </label>

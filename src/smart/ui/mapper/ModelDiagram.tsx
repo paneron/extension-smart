@@ -1,8 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { ControlGroup } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
+import { Button, ControlGroup } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useContext } from 'react';
@@ -11,7 +7,7 @@ import ReactFlow, {
   OnLoadParams,
   ReactFlowProvider,
 } from 'react-flow-renderer';
-import { react_flow_container_layout } from '../../../css/layout';
+import { reactFlowContainerLayout } from '../../../css/layout';
 import { MGDButtonType } from '../../../css/MGDButton';
 import MGDButton from '../../MGDComponents/MGDButton';
 import { EditorModel, ModelType } from '../../model/editormodel';
@@ -57,15 +53,22 @@ import { Popover2 } from '@blueprintjs/popover2';
 import MapperDocumentMenu from '../menu/MapperDocumentMenu';
 import RepoMapRefMenus from './repo/RepoMapRefMenu';
 import { RepoIndex } from '../../model/repo';
+import { MapDiffStyles } from './MappingCanvus';
+import {
+  MappingDiffResultStyles,
+  MappingDiffSourceStyles,
+} from '../../utils/map/MappingDiff';
 
 const ModelDiagram: React.FC<{
   className?: string;
   viewOption: MapperViewOption;
   mapSet: MapSet;
+  diffMapSet: MapSet | undefined;
   onMapSetChanged: (mp: MapSet) => void;
   modelProps: MapperState;
   setProps: (mp: MapperState) => void;
   mapResult?: MapResultType;
+  diffMapResult?: MapResultType;
   onModelChanged?: (model: EditorModel) => void;
   setSelected: (s: MapperSelectedInterface) => void;
   onMappingEdit: (from: string, to: string) => void;
@@ -79,10 +82,12 @@ const ModelDiagram: React.FC<{
   className,
   viewOption,
   mapSet,
+  diffMapSet,
   onMapSetChanged,
   modelProps,
   setProps,
   mapResult = {},
+  diffMapResult,
   onModelChanged,
   setSelected,
   onMappingEdit,
@@ -185,7 +190,7 @@ const ModelDiagram: React.FC<{
     <ControlGroup>
       {!isRepoMode && (
         <>
-          <MGDButton
+          <Button
             onClick={() => {
               handleModelOpen({
                 setModelWrapper,
@@ -198,14 +203,14 @@ const ModelDiagram: React.FC<{
           >
             {'Open ' +
               MapperModelLabel[modelProps.modelType as MapperModelType]}
-          </MGDButton>
+          </Button>
           {!isImp && (
             <Popover2
               minimal
               placement="bottom-start"
               content={<MapperDocumentMenu setDocument={onDocumentLoaded} />}
             >
-              <MGDButton>Open Document</MGDButton>
+              <Button>Open Document</Button>
             </Popover2>
           )}
         </>
@@ -265,7 +270,7 @@ const ModelDiagram: React.FC<{
         toolbar={toolbar}
         navbarProps={{ breadcrumbs }}
       >
-        <div css={react_flow_container_layout}>
+        <div style={reactFlowContainerLayout}>
           {isModelWrapper(mw) ? (
             <ReactFlow
               key="MMELModel"
@@ -277,9 +282,14 @@ const ModelDiagram: React.FC<{
                 onProcessClick,
                 setMapping,
                 mapSet,
+                diffMapSet,
                 mapResult,
+                diffMapResult,
                 setSelectedId,
                 isParentMapFullCovered(modelProps.history, mapResult),
+                diffMapResult
+                  ? isParentMapFullCovered(modelProps.history, diffMapResult)
+                  : undefined,
                 ComponentShortDescription,
                 MappingList,
                 viewOption.idVisible
@@ -301,16 +311,34 @@ const ModelDiagram: React.FC<{
               onDragOver={onDragOver}
               setMapping={setMapping}
               mapSet={mapSet}
+              diffMapSet={diffMapSet}
               MappingList={MappingList}
               setSelected={setSelectedId}
             />
           )}
-          {viewOption.legVisible && isModelWrapper(mw) && (
-            <LegendPane
-              list={isImp ? MappingSourceStyles : MappingResultStyles}
-              onLeft={isImp}
-            />
-          )}
+          {viewOption.legVisible &&
+            (isImp ? (
+              <>
+                <LegendPane
+                  list={
+                    diffMapSet ? MappingDiffSourceStyles : MappingSourceStyles
+                  }
+                  onLeft
+                />
+                {diffMapSet && (
+                  <LegendPane list={MapDiffStyles} onLeft={false} arrow />
+                )}
+              </>
+            ) : (
+              isModelWrapper(mw) && (
+                <LegendPane
+                  list={
+                    diffMapSet ? MappingDiffResultStyles : MappingResultStyles
+                  }
+                  onLeft={false}
+                />
+              )
+            ))}
         </div>
       </Workspace>
     </ReactFlowProvider>

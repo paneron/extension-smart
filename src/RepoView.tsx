@@ -1,9 +1,11 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { jsx } from '@emotion/react';
+
 import React from 'react';
 import { useState } from 'react';
-import { jsx, css } from '@emotion/react';
+import { css } from '@emotion/react';
 import {
   Button,
   Classes,
@@ -78,33 +80,33 @@ const RepositoryView: React.FC<{
     <ControlGroup
       vertical
       className={Classes.ELEVATION_3}
-      css={css`
-        z-index: 14;
-        background: ${Colors.BLUE3};
-        width: 32px;
-        align-items: center;
-        overflow: hidden;
-      `}
+      style={{
+        zIndex: 14,
+        background: Colors.BLUE3,
+        width: 32,
+        alignItems: 'center',
+        overflow: 'hidden',
+      }}
     >
       <div
         className={Classes.ELEVATION_2}
-        css={css`
-          z-index: 14;
-          margin-bottom: -2px !important;
-          padding: 7px;
-          height: 24px;
-          display: flex;
-          flex-flow: column nowrap;
-          align-items: center;
-          align-self: stretch;
-          justify-content: center;
-          overflow: hidden;
-          background: black;
-          color: white;
-          font-weight: bold;
-          border-radius: 0 !important;
-          letter-spacing: -0.05em;
-        `}
+        style={{
+          zIndex: 14,
+          marginBottom: '-2px !important',
+          padding: 7,
+          height: 24,
+          display: 'flex',
+          flexFlow: 'column nowrap',
+          alignItems: 'center',
+          alignSelf: 'stretch',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          background: 'black',
+          color: 'white',
+          fontWeight: 'bold',
+          borderRadius: '0 !important',
+          letterSpacing: '-0.05em',
+        }}
         dangerouslySetInnerHTML={{ __html: BSI_WHITE_TEXT }}
       />
       {modules.map(moduleName => (
@@ -122,12 +124,12 @@ const RepositoryView: React.FC<{
     <HotkeysProvider>
       <HotkeysTarget2 hotkeys={hotkeys}>
         <div
-          css={css`
-            flex: 1;
-            overflow: hidden;
-            display: flex;
-            flex-flow: row nowrap;
-          `}
+          style={{
+            flex: 1,
+            overflow: 'hidden',
+            display: 'flex',
+            flexFlow: 'row nowrap',
+          }}
           onMouseUp={() => {
             for (const x of clickListener) {
               x();

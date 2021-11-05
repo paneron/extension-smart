@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useMemo } from 'react';
 import { MMELDocument } from '../../../model/document';
 import { MapSet } from '../../../model/mapmodel';
@@ -12,18 +9,27 @@ const SMARTDocumentView: React.FC<{
   mmelDoc: MMELDocument;
   setMapping?: (fromid: string, toid: string) => void;
   mapSet?: MapSet;
+  diffMapSet?: MapSet;
   onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
   MappingList?: React.FC<{ id: string }>;
   setSelected?: (id: string) => void;
   isRepo?: boolean;
 }> = function (props) {
-  const { mmelDoc, onDragOver, mapSet, setSelected, isRepo } = props;
+  const { mmelDoc, onDragOver, mapSet, diffMapSet, setSelected, isRepo } =
+    props;
   const docMap = useMemo(
     () =>
       mapSet !== undefined
         ? calculateDocumentMapping(mapSet.mappings)
         : undefined,
     [mapSet?.mappings]
+  );
+  const diffDocMap = useMemo(
+    () =>
+      diffMapSet !== undefined
+        ? calculateDocumentMapping(diffMapSet.mappings)
+        : undefined,
+    [diffMapSet?.mappings]
   );
 
   return (
@@ -55,6 +61,7 @@ const SMARTDocumentView: React.FC<{
           sec={sec}
           statements={mmelDoc.states}
           docMap={docMap}
+          diffDocMap={diffDocMap}
           {...props}
         />
       ))}

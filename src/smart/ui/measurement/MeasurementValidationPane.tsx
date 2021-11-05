@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
 import { Text, FormGroup, IToastProps } from '@blueprintjs/core';
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import MGDButton from '../../MGDComponents/MGDButton';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';

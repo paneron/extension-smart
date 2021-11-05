@@ -1,13 +1,10 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { ControlButton } from 'react-flow-renderer';
 import {
-  mgd_control_button,
-  mgd_control_button__active,
-  mgd_control_button__inactive,
+  mgdControlButton,
+  mgdControlButtonActive,
+  mgdControlButtonInactive,
 } from '../../css/MGDControlButton';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -15,19 +12,19 @@ import {
 interface OwnProps {
   children: JSX.Element;
   isActive: boolean;
-  onClick: (e: any) => void;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function MGDControlButton(props: OwnProps) {
   const { children, isActive, onClick } = props;
-  const classes = [
-    mgd_control_button,
-    isActive ? mgd_control_button__active : mgd_control_button__inactive,
-  ];
+  const classes = {
+    ...mgdControlButton,
+    ...(isActive ? mgdControlButtonActive : mgdControlButtonInactive),
+  };
   return (
-    <ControlButton css={classes} onClick={onClick}>
+    <ControlButton style={classes} onClick={onClick}>
       {children}
     </ControlButton>
   );
