@@ -1,6 +1,6 @@
 {
   "name": "@paneron/extension-hls",
-  "version": "1.0.0-dev10",
+  "version": "1.0.0-dev11",
   "description": "Paneron extension for HLS model editing",
   "main": "plugin.js",
   "repository": "https://github.com/paneron/extension-hls",

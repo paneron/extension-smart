@@ -35,6 +35,8 @@ jobs:
 
       - run: yarn build
 
+      - run: cd dist
+
       - run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PANERON_CI_NPM_TOKEN }}
