@@ -1,9 +1,5 @@
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
-import { mgd_sidebar } from '../../css/MGDSidebar';
+import React from 'react';
+import { mgdSidebar } from '../../css/MGDSidebar';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -15,7 +11,7 @@ interface OwnProps {
 
 function MGDSidebar(props: OwnProps) {
   const { children } = props;
-  return <aside css={mgd_sidebar}>{children}</aside>;
+  return <aside style={mgdSidebar}>{children}</aside>;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

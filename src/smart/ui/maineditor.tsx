@@ -655,7 +655,7 @@ const ModelEditor: React.FC<{
 
   const sidebar = (
     <Sidebar
-      stateKey="opened-register-item"
+      stateKey={`editor-sidebar-${jsx.length}`}
       css={sidebar_layout}
       title="Item metadata"
       blocks={[

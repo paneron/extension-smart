@@ -26,6 +26,7 @@ import RepoViewer from './smart/ui/repo/RepoViewer';
 import DocumentViewer from './smart/ui/docviewer';
 import { RepoHistory } from './smart/model/history';
 import LinkAnalysis from './smart/ui/LinkAnalysis';
+import NLPMain from './smart/ui/nlp/NLPMain';
 
 const RepositoryView: React.FC<{
   index: RepoIndex;
@@ -172,6 +173,7 @@ const MODULES = [
   'modelImplement',
   'docViewer',
   'linkAnalysis',
+  'nlp',
 ] as const;
 
 type ModuleName = typeof MODULES[number];
@@ -179,7 +181,14 @@ type ModuleName = typeof MODULES[number];
 const ModuleList: Record<RepoItemType | '', ModuleName[]> = {
   '': ['repo', 'modelViewer', 'modelEditor', 'modelMapper', 'modelImplement'],
   Doc: ['repo', 'docViewer'],
-  Ref: ['repo', 'modelViewer', 'modelMapper', 'modelImplement', 'linkAnalysis'],
+  Ref: [
+    'repo',
+    'modelViewer',
+    'modelMapper',
+    'modelImplement',
+    'linkAnalysis',
+    'nlp',
+  ],
   Imp: [
     'repo',
     'modelViewer',
@@ -187,6 +196,7 @@ const ModuleList: Record<RepoItemType | '', ModuleName[]> = {
     'modelMapper',
     'modelImplement',
     'linkAnalysis',
+    'nlp',
   ],
 };
 
@@ -249,6 +259,12 @@ const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {
     description: 'Analyse links between models',
     icon: 'predictive-analysis',
     view: LinkAnalysis,
+  },
+  nlp: {
+    title: 'Knowledge graph',
+    description: 'Knowledge graph',
+    icon: 'chat',
+    view: NLPMain,
   },
 };
 

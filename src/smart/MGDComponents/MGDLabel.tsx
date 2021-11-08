@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import { mgd_label } from '../../css/form';
+import { mgdLabel } from '../../css/form';
 
 interface OwnProps {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ interface OwnProps {
 
 function MGDLabel(props: OwnProps) {
   const { children } = props;
-  return <label css={mgd_label}>{children}</label>;
+  return <label style={mgdLabel}>{children}</label>;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

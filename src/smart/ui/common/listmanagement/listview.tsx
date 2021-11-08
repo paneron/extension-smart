@@ -87,7 +87,7 @@ const ListViewPane: React.FC<IViewListInterface> = ({
         <>
           {buttons?.map((b, index) => (
             <Button
-              key={'ui#listview#additionbutton#' + index}
+              key={`ui#listview#additionbutton#${jsx.length}` + index}
               icon={b.icon}
               onClick={() =>
                 b.requireSelected === undefined || b.requireSelected

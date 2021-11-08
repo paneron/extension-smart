@@ -146,7 +146,7 @@ const BasicSettingPane: React.FC<{
   const { logger } = useContext(DatasetContext);
   const [page, setPage] = useState<SETTINGPAGE>(SETTINGPAGE.METAPAGE);
 
-  logger?.log('Enter setting page: ', page);
+  logger?.log('Enter setting page: ', page, jsx.length);
   return (
     <MGDDisplayPane>
       <Tabs

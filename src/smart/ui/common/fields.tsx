@@ -200,7 +200,7 @@ export const NormalComboBox: React.FC<IComboField> = function ({
       fill={fill}
     >
       {options.map((x, index) => (
-        <option key={'option' + index} value={x}>
+        <option key={`option-${jsx.length}` + index} value={x}>
           {x}
         </option>
       ))}

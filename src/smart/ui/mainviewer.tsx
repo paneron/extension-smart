@@ -554,7 +554,7 @@ const ModelViewer: React.FC<{
 
   const sidebar = (
     <Sidebar
-      stateKey="opened-register-item"
+      stateKey={`viewer-sidebar-${jsx.length}`}
       css={sidebar_layout}
       title="Item metadata"
       blocks={addonblocks}

@@ -472,7 +472,7 @@ const ModelMapper: React.FC<{
     {
       combo: 'ctrl+s',
       global: true,
-      label: 'Save Mapping',
+      label: `Save Mapping ${jsx.length}`,
       onKeyDown: saveMapping,
     },
   ];
