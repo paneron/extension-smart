@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { NormalTextField } from '../common/fields';
 import { MappingMeta } from '../../model/mapmodel';
-import { FormGroup } from '@blueprintjs/core';
+import { Button, FormGroup } from '@blueprintjs/core';
 import { EditPageButtons } from './commons';
-import MGDButton from '../../MGDComponents/MGDButton';
 import { mgdLabel } from '../../../css/form';
-import { MGDButtonType } from '../../../css/MGDButton';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { wrapperContainer } from '../../../css/layout';
 
@@ -46,13 +44,9 @@ const MappingEditPage: React.FC<{
             setEditing({ ...editing, justification: x });
           }}
         />
-        <MGDButton
-          icon="delete"
-          type={MGDButtonType.Primary}
-          onClick={() => onDelete()}
-        >
+        <Button icon="delete" intent="danger" onClick={() => onDelete()}>
           Delete
-        </MGDButton>
+        </Button>
       </FormGroup>
     </MGDDisplayPane>
   );

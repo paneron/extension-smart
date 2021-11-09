@@ -1,6 +1,5 @@
-import { FormGroup } from '@blueprintjs/core';
+import { Button, FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
-import MGDButton from '../../MGDComponents/MGDButton';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import {
   EditorEGate,
@@ -280,7 +279,7 @@ const EditEdgePage: React.FC<{
           }
           onChange={x => setEdge(index, { ...edge, condition: x })}
         />
-        <MGDButton
+        <Button
           onClick={() =>
             setEdge(index, {
               ...edge,
@@ -290,14 +289,14 @@ const EditEdgePage: React.FC<{
           }
         >
           Set default
-        </MGDButton>
-        <MGDButton
+        </Button>
+        <Button
           onClick={() =>
             setEdge(index, { ...edge, description: '', condition: '' })
           }
         >
           Set empty
-        </MGDButton>
+        </Button>
       </div>
     </fieldset>
   );

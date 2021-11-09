@@ -1,6 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+import { Button } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
 import { RefObject, useState } from 'react';
@@ -11,7 +12,6 @@ import {
   mgd_select__restrained,
 } from '../../../../css/form';
 import { u__display__block, u__display__none } from '../../../../css/utility';
-import MGDButton from '../../../MGDComponents/MGDButton';
 import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
 import { IViewListInterface } from '../fields';
 
@@ -58,36 +58,36 @@ const ListViewPane: React.FC<IViewListInterface> = ({
 
       <MGDButtonGroup>
         {addClicked !== undefined ? (
-          <MGDButton icon="plus" onClick={() => addClicked()}>
+          <Button icon="plus" onClick={() => addClicked()}>
             Add
-          </MGDButton>
+          </Button>
         ) : (
           <></>
         )}
         {removeItems !== undefined ? (
-          <MGDButton
+          <Button
             icon="delete"
             onClick={() => removeItems(extractOptions(selectbox))}
           >
             Remove
-          </MGDButton>
+          </Button>
         ) : (
           <></>
         )}
         {updateClicked !== undefined ? (
-          <MGDButton
+          <Button
             icon="edit"
             onClick={() => actIfSelected(selectbox.current, updateClicked)}
           >
             Update
-          </MGDButton>
+          </Button>
         ) : (
           <></>
         )}
         <>
           {buttons?.map((b, index) => (
-            <MGDButton
-              key={'ui#listview#additionbutton#' + index}
+            <Button
+              key={`ui#listview#additionbutton#${jsx.length}` + index}
               icon={b.icon}
               onClick={() =>
                 b.requireSelected === undefined || b.requireSelected
@@ -96,7 +96,7 @@ const ListViewPane: React.FC<IViewListInterface> = ({
               }
             >
               {b.text}
-            </MGDButton>
+            </Button>
           ))}
         </>
       </MGDButtonGroup>

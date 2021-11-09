@@ -1,8 +1,7 @@
-import { Text } from '@blueprintjs/core';
+import { Button, Text } from '@blueprintjs/core';
 import React from 'react';
 import { useMemo, useState } from 'react';
 import { searchResultEntryRow } from '../../../css/shame';
-import MGDButton from '../../MGDComponents/MGDButton';
 import MGDContainer from '../../MGDComponents/MGDContainer';
 import MGDLabel from '../../MGDComponents/MGDLabel';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
@@ -90,7 +89,7 @@ const SearchResultPane: React.FC<{
         />
       ))}
       <MGDContainer>
-        <MGDButton
+        <Button
           disabled={page === 0}
           icon="caret-left"
           onClick={() => setPage(page - 1)}
@@ -100,7 +99,7 @@ const SearchResultPane: React.FC<{
           value={page + 1}
           onChange={x => setPage(x - 1)}
         />
-        <MGDButton
+        <Button
           disabled={page === maxpage - 1}
           icon="caret-right"
           onClick={() => setPage(page + 1)}

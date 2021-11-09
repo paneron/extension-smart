@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
-import { FormGroup } from '@blueprintjs/core';
+import { Button, FormGroup } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
-import MGDButton from '../../MGDComponents/MGDButton';
 import { NormalTextField } from '../common/fields';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { FILE_TYPE, saveToFileSystem } from '../../utils/IOFunctions';
@@ -27,20 +26,16 @@ const ReportGen: React.FC<{
       <FormGroup>
         <NormalTextField value={report} text="Report" rows={20} />
         <MGDButtonGroup>
-          <MGDButton
-            key="ui#report#save"
-            icon="floppy-disk"
-            onClick={handleSave}
-          >
+          <Button key="ui#report#save" icon="floppy-disk" onClick={handleSave}>
             Save
-          </MGDButton>
-          <MGDButton
+          </Button>
+          <Button
             key="ui#listview#removebutton"
             icon="disable"
             onClick={onClose}
           >
             Cancel
-          </MGDButton>
+          </Button>
         </MGDButtonGroup>
       </FormGroup>
     </MGDDisplayPane>

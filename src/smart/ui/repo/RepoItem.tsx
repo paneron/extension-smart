@@ -35,7 +35,9 @@ const RepoModelFile: React.FC<{ file: RepoItem; onDelete: VF; onOpen: VF }> =
                 textAlign: 'center',
               }}
             >
-              <Text ellipsize>{file.shortname}</Text>
+              <Text ellipsize>
+                {file.shortname !== '' ? file.shortname : `[${file.namespace}]`}
+              </Text>
             </div>
           </Card>
         </Tooltip2>

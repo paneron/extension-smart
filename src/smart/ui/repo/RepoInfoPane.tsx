@@ -17,7 +17,11 @@ const RepoInfoPane: React.FC<{
     >
       <p>
         Viewing:
-        {item !== undefined ? item.shortname : 'Nil'}
+        {item !== undefined
+          ? item.shortname !== ''
+            ? item.shortname
+            : `[${item.namespace}]`
+          : 'Nil'}
         {repo !== undefined && <RepoCloseButton onClose={onClose} />}
       </p>
       <DescriptionItem
