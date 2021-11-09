@@ -392,7 +392,7 @@ export function parseTable(id: string, data: string): MMELTable {
           table.columns = parseInt(MMELremovePackage(t[i++]));
         } else if (command === 'data') {
           cells = MMELtokenizePackage(t[i++]);
-        } else if (command === 'domain') {
+        } else if (command === 'table') {
           table.domain = MMELtokenizePackage(t[i++]).map(x =>
             MMELremovePackage(x)
           );
