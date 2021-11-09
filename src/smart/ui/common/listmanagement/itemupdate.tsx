@@ -1,6 +1,5 @@
-import { FormGroup } from '@blueprintjs/core';
+import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import MGDButton from '../../../MGDComponents/MGDButton';
 import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
 import { IUpdateInterface } from '../fields';
@@ -29,12 +28,12 @@ const ItemUpdatePane = <T extends Object>(props: IUpdateInterface<T>) => {
             table={table}
           />
           <MGDButtonGroup>
-            <MGDButton icon={updateButtonIcon} onClick={() => updateClicked()}>
+            <Button icon={updateButtonIcon} onClick={() => updateClicked()}>
               {updateButtonLabel}
-            </MGDButton>
-            <MGDButton icon="disable" onClick={() => cancelClicked()}>
+            </Button>
+            <Button icon="disable" onClick={() => cancelClicked()}>
               Cancel
-            </MGDButton>
+            </Button>
           </MGDButtonGroup>
         </FormGroup>
       </MGDDisplayPane>
