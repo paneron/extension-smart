@@ -6,6 +6,7 @@ import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { ReactFlowProvider } from 'react-flow-renderer';
 import { sidebar_layout } from '../../../css/layout';
 import { MMELJSON } from '../../model/json';
 import {
@@ -19,6 +20,7 @@ import { getPathByNS, JSONToMMEL, RepoFileType } from '../../utils/repo/io';
 import { LoadingScreen } from '../common/Loading';
 import RDFControlPane from './RDFControlPane';
 import RDFDiagram from './RDFDiagram';
+import RDFQueryPane from './RDFQueryPane';
 
 const NLPMain: React.FC<{
   isVisible: boolean;
@@ -82,6 +84,11 @@ const NLPMain: React.FC<{
               <LoadingScreen label="Loading" />
             ),
         },
+        {
+          key: 'NLP-query',
+          title: 'Ask a question',
+          content: <RDFQueryPane rdf={rdf} />,
+        },
       ]}
     />
   );
@@ -89,11 +96,13 @@ const NLPMain: React.FC<{
   if (isVisible && repo) {
     return (
       <Workspace className={className} sidebar={sidebar}>
-        {repo && mw ? (
-          <RDFDiagram rdf={rdf} />
-        ) : (
-          <LoadingScreen label="Loading" />
-        )}
+        <ReactFlowProvider>
+          {repo && mw ? (
+            <RDFDiagram diagram={rdf} />
+          ) : (
+            <LoadingScreen label="Loading" />
+          )}
+        </ReactFlowProvider>
       </Workspace>
     );
   } else {

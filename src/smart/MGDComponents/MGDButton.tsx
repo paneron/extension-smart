@@ -53,6 +53,7 @@ function MGDButton(props: OwnProps) {
   };
   return (
     <Button
+      key={`MGDButton-${jsx.length}`}
       outlined
       small={size === MGDButtonSize.Small}
       id={id}

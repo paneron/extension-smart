@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { mgdLabel } from '../../css/form';
 
 interface OwnProps {

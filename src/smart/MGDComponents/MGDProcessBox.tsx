@@ -29,6 +29,7 @@ function MGDProcessBox(props: OwnProps) {
   } = props;
   return (
     <div
+      key={jsx.length}
       css={[mgd_process_box, styleClass]}
       onDragStart={onDragStart}
       onDrop={onDrop}

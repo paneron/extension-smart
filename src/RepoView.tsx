@@ -112,7 +112,7 @@ const RepositoryView: React.FC<{
       />
       {modules.map(moduleName => (
         <ModuleButton
-          key={moduleName}
+          key={`${moduleName}-${jsx.length}`}
           moduleName={moduleName}
           selected={moduleName === selectedModule}
           onSelect={() => selectModule(moduleName)}

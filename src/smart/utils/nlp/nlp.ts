@@ -17,7 +17,7 @@ const nlpServer = 'http://localhost:9000';
 const width = 180;
 const height = 70;
 
-async function parseText(text: string): Promise<string> {
+export async function parseText(text: string): Promise<string> {
   if (text !== '') {
     const requestOptions = {
       method: 'POST',
@@ -93,6 +93,43 @@ function addProcessInfo(
   map[-2] = createSTNode(node.data);
   node.relationship.push(createSTRelationship('action', node.data));
   node.data = id;
+}
+
+export function converQuestionRDF(
+  x: NLPItem
+): [Record<string, STNode>, string] {
+  const tokens = x.tokens;
+  Logger.logger.log('Number of tokens:', tokens.length);
+  Logger.logger.log(tokens.map(x => x.lemma).join(','));
+  const deps = x.enhancedPlusPlusDependencies;
+  const map: Record<number, STNode> = {};
+  let root = 0;
+  for (const y of deps) {
+    if (y.governor === 0) {
+      root = y.dependent;
+    } else if (y.dep !== 'punct' && y.dep !== 'det') {
+      const from = getSTNode(map, y.governor, tokens);
+      const to = getSTNode(map, y.dependent, tokens);
+      from.relationship.push(createSTRelationship(y.dep, to.data));
+    }
+  }
+  Logger.logger.log('Root:', root);
+  const node = map[root];
+  map[0] = createSTNode(node.data);
+  node.relationship.push(createSTRelationship('action', node.data));
+  node.data = 'questionRoot';
+
+  const nodes: Record<string, STNode> = {};
+  for (const x of Object.values(map)) {
+    const key = x.data;
+    if (nodes[key] === undefined) {
+      nodes[key] = x;
+    } else {
+      nodes[key].relationship.push(...x.relationship);
+    }
+  }
+  Logger.logger.log('Return:', nodes, 'questionRoot');
+  return [nodes, 'questionRoot'];
 }
 
 function convertRDF(
