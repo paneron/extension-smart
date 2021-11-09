@@ -1,6 +1,6 @@
 {
   "name": "@paneron/extension-hls",
-  "version": "1.0.0-dev14",
+  "version": "1.0.0-dev15",
   "description": "Paneron extension for SMART model editing",
   "main": "plugin.js",
   "repository": "https://github.com/paneron/extension-hls",
