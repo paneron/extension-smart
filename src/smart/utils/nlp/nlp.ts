@@ -5,6 +5,7 @@ import {
   NLPItem,
   NLPJSON,
   NLPToken,
+  NLPTreeNode,
   ProvisionRDF,
   RDFVersion,
   STNode,
@@ -13,6 +14,8 @@ import {
 import { Logger } from '../ModelFunctions';
 
 const nlpServer = 'http://localhost:9000';
+const width = 180;
+const height = 70;
 
 async function parseText(text: string): Promise<string> {
   if (text !== '') {
@@ -36,6 +39,10 @@ function createSTNode(data: string): STNode {
 function createSTRelationship(r: string, connect: string): STRelation {
   if (r === 'amod') {
     r = 'is';
+  } else if (r === 'nsubj') {
+    r = 'subject';
+  } else if (r === 'obj') {
+    r = 'object';
   }
   return { relationship: r, connect };
 }
@@ -70,13 +77,13 @@ function addProcessInfo(
   if (role !== '') {
     let found = false;
     for (const r of node.relationship) {
-      if (r.relationship === 'nsubj') {
+      if (r.relationship === 'subject') {
         found = true;
       }
     }
     if (!found) {
       map[-1] = createSTNode(role);
-      node.relationship.push(createSTRelationship('nsubj', role));
+      node.relationship.push(createSTRelationship('subject', role));
     }
   }
   if (modality !== '') {
@@ -176,11 +183,12 @@ export function getElementsFromRDF(
   if (rdf === undefined || rdf === null) {
     return [];
   }
-  const elms: Record<string, Node> = {};
+  const elms: Record<string, NLPTreeNode> = {};
   const edges: Record<string, Edge> = {};
+  const roots: NLPTreeNode[] = [];
   for (const rs of Object.values(rdf.roots)) {
     for (const x of rs) {
-      exploreNode(x, elms, edges, rdf.nodes);
+      roots.push(exploreNode(x, elms, edges, rdf.nodes));
     }
   }
   Logger.logger.log(
@@ -189,30 +197,59 @@ export function getElementsFromRDF(
     'Number of edges',
     Object.values(edges).length
   );
-  return [...Object.values(elms), ...Object.values(edges)];
+  assignLoc(roots);
+  return [...Object.values(elms).map(x => x.data), ...Object.values(edges)];
+}
+
+function assignLoc(elms: NLPTreeNode[]) {
+  let x = 0;
+  const y = 0;
+  for (const node of elms) {
+    if (!node.checked) {
+      x += assignNode(node, x, y);
+    }
+  }
+}
+
+function assignNode(node: NLPTreeNode, x: number, y: number): number {
+  node.checked = true;
+  node.data.position = { x: x * width, y: y * height };
+  const ret = 1;
+  let level = 0;
+  for (const u of node.childs) {
+    if (!u.checked) {
+      level += assignNode(u, x + level, y + 1);
+    }
+  }
+  return Math.max(ret, level);
 }
 
 function exploreNode(
   id: string,
-  elms: Record<string, Node>,
+  elms: Record<string, NLPTreeNode>,
   edges: Record<string, Edge>,
   rdf: Record<string, STNode>
-): Node | Edge {
+): NLPTreeNode {
   const x = rdf[id];
   if (x === undefined) {
     // the node cannot be added for some. Need to investigate
     Logger.logger.log('undefined', id);
-    return createNode(id, 0, 0, id);
+    const nnode = createNode(id, 0, 0, id);
+    return { data: nnode, childs: [] };
   }
   if (elms[x.data] === undefined) {
-    const n = createNode(x.data, 0, 0, x.data);
+    const n: NLPTreeNode = {
+      data: createNode(x.data, 0, 0, x.data),
+      childs: [],
+    };
     elms[x.data] = n;
     const elm = elms[x.data];
     for (const r of x.relationship) {
       const next = exploreNode(r.connect, elms, edges, rdf);
-      const id = elm.id + '-' + next.id;
+      const id = elm.data.id + '-' + next.data.id;
       if (edges[id] === undefined) {
-        edges[id] = createEdge(id, elm.id, next.id, r.relationship);
+        edges[id] = createEdge(id, elm.data.id, next.data.id, r.relationship);
+        n.childs.push(next);
       } else {
         const edge = edges[id];
         const elabel: string = edge.label as string;

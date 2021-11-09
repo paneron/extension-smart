@@ -1,3 +1,5 @@
+import { Node } from 'react-flow-renderer';
+
 export type STNode = {
   data: string;
   relationship: STRelation[];
@@ -35,4 +37,11 @@ export type NLPDependency = {
 export type NLPToken = {
   word: string;
   lemma: string;
+};
+
+export type NLPTreeNode = {
+  data: Node;
+  childs: NLPTreeNode[];
+  width?: number;
+  checked?: true;
 };
