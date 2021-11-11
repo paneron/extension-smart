@@ -16,13 +16,11 @@ const RepoImportMenu: React.FC<{
   addDoc: (x: MMELDocument) => void;
   isBSIEnabled?: boolean;
 }> = function ({ addRefMW, addImpMW, addDoc, isBSIEnabled = false }) {
-  const { useDecodedBlob, requestFileFromFilesystem } =
-    useContext(DatasetContext);
+  const { requestFileFromFilesystem } = useContext(DatasetContext);
 
   function onImportModel(postProcess: (x: ModelWrapper) => void) {
     handleModelOpen({
       setModelWrapper: postProcess,
-      useDecodedBlob,
       requestFileFromFilesystem,
     });
   }
@@ -42,7 +40,6 @@ const RepoImportMenu: React.FC<{
         onClick={() =>
           handleDocumentOpen({
             setDocument: addDoc,
-            useDecodedBlob,
             requestFileFromFilesystem,
             fileType: FILE_TYPE.Document,
           })
@@ -53,7 +50,6 @@ const RepoImportMenu: React.FC<{
         onClick={() =>
           handleDocumentOpen({
             setDocument: addDoc,
-            useDecodedBlob,
             requestFileFromFilesystem,
             fileType: FILE_TYPE.XML,
           })
@@ -65,7 +61,6 @@ const RepoImportMenu: React.FC<{
           onClick={() =>
             handleDocumentOpen({
               setDocument: addDoc,
-              useDecodedBlob,
               requestFileFromFilesystem,
               fileType: FILE_TYPE.BSI,
             })

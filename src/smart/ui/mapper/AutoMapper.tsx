@@ -35,8 +35,7 @@ const AutoMapper: React.FC<{
   mapProfile,
   setMapProfile,
 }) {
-  const { useDecodedBlob, requestFileFromFilesystem, logger } =
-    useContext(DatasetContext);
+  const { requestFileFromFilesystem, logger } = useContext(DatasetContext);
 
   const [mw, setMW] = useState<ModelWrapper | undefined>(undefined);
   const [mapping, setMapping] = useState<MapProfile | undefined>(undefined);
@@ -46,7 +45,6 @@ const AutoMapper: React.FC<{
   async function handleOpenModel() {
     handleModelOpen({
       setModelWrapper: setMW,
-      useDecodedBlob,
       requestFileFromFilesystem,
       logger,
     });
@@ -55,7 +53,6 @@ const AutoMapper: React.FC<{
   async function handleOpenMapping() {
     handleMappingOpen({
       onMapProfileChanged: setMapping,
-      useDecodedBlob,
       requestFileFromFilesystem,
     });
   }

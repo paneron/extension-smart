@@ -25,14 +25,10 @@ const WorkspaceFileMenu: React.FC<{
   isRepoMode,
   onRepoSave,
 }) {
-  const {
-    getBlob,
-    useDecodedBlob,
-    writeFileToFilesystem,
-    requestFileFromFilesystem,
-  } = useContext(DatasetContext);
+  const { getBlob, writeFileToFilesystem, requestFileFromFilesystem } =
+    useContext(DatasetContext);
 
-  const canOpen = requestFileFromFilesystem && useDecodedBlob;
+  const canOpen = requestFileFromFilesystem;
   const canSave = getBlob && writeFileToFilesystem;
 
   function handleNewWorkspace() {
@@ -75,7 +71,6 @@ const WorkspaceFileMenu: React.FC<{
           onClick={() =>
             handleWSOpen({
               setWorkspace,
-              useDecodedBlob,
               requestFileFromFilesystem,
             })
           }
@@ -93,7 +88,6 @@ const WorkspaceFileMenu: React.FC<{
           onClick={() =>
             handleModelOpen({
               setModelWrapper,
-              useDecodedBlob,
               requestFileFromFilesystem,
             })
           }

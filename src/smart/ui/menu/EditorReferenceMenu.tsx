@@ -23,10 +23,9 @@ const EditorReferenceMenu: React.FC<{
   isRepo,
   setType,
 }) {
-  const { useDecodedBlob, requestFileFromFilesystem } =
-    useContext(DatasetContext);
+  const { requestFileFromFilesystem } = useContext(DatasetContext);
 
-  const canOpen = requestFileFromFilesystem && useDecodedBlob;
+  const canOpen = requestFileFromFilesystem;
 
   const FileModelButton = () => (
     <MenuItem
@@ -35,7 +34,6 @@ const EditorReferenceMenu: React.FC<{
       onClick={() =>
         handleModelOpen({
           setModelWrapper: setReference,
-          useDecodedBlob,
           requestFileFromFilesystem,
           indexModel,
         })
@@ -50,7 +48,6 @@ const EditorReferenceMenu: React.FC<{
       onClick={() =>
         handleDocumentOpen({
           setDocument: setReference,
-          useDecodedBlob,
           requestFileFromFilesystem,
           fileType: FILE_TYPE.Document,
         })
@@ -65,7 +62,6 @@ const EditorReferenceMenu: React.FC<{
       onClick={() =>
         handleDocumentOpen({
           setDocument: setReference,
-          useDecodedBlob,
           requestFileFromFilesystem,
           fileType: FILE_TYPE.XML,
         })
@@ -80,7 +76,6 @@ const EditorReferenceMenu: React.FC<{
       onClick={() =>
         handleDocumentOpen({
           setDocument: setReference,
-          useDecodedBlob,
           requestFileFromFilesystem,
           fileType: FILE_TYPE.BSI,
         })

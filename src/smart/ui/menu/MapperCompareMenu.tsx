@@ -8,13 +8,11 @@ const MapperCompareMenu: React.FC<{
   opponent: MapProfile | undefined;
   setDiffMap: (x: MapProfile | undefined) => void;
 }> = function ({ opponent, setDiffMap }) {
-  const { useDecodedBlob, requestFileFromFilesystem } =
-    useContext(DatasetContext);
+  const { requestFileFromFilesystem } = useContext(DatasetContext);
 
   function onClick() {
     handleMappingOpen({
       onMapProfileChanged: setDiffMap,
-      useDecodedBlob,
       requestFileFromFilesystem,
       fileType: FILE_TYPE.JSON,
     });

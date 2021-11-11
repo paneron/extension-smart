@@ -4,8 +4,9 @@ import {
   isEditorProcess,
 } from '../model/editormodel';
 import { getNamespace, referenceSorter } from './ModelFunctions';
-import { REPORTENDTAG, REPORTSTARTTAG } from './constants';
 import { MapProfile } from '../model/mapmodel';
+import { Liquid } from 'liquidjs';
+import { MMELToSerializable } from './repo/io';
 
 export function genReport(
   text: string,
@@ -26,7 +27,7 @@ export function genReport(
       clause: x.clause,
       title: x.title,
       description: '',
-      justfication: new Set<string>(),
+      justification: new Set<string>(),
     }));
   const refMap: Record<string, RefRecord> = {};
   for (const r of records) {
@@ -56,37 +57,18 @@ export function genReport(
       for (const r of clause) {
         if (map.description !== '') {
           refMap[r].description += statement;
-          refMap[r].justfication.add(map.description);
+          refMap[r].justification.add(map.description);
         }
       }
     }
   }
 
-  let remain = text;
-  let out = '';
-  do {
-    const index1 = remain.indexOf(REPORTSTARTTAG);
-    const index2 = remain.indexOf(REPORTENDTAG);
-    if (index1 !== -1 && index2 > index1) {
-      out += remain.substring(0, index1);
-      try {
-        out += parseCode(
-          remain.substring(index1 + REPORTSTARTTAG.length, index2),
-          records,
-          mapProfile,
-          imp,
-          ref
-        );
-      } catch (e) {
-        return e as string;
-      }
-      remain = remain.substring(index2 + REPORTENDTAG.length);
-    } else {
-      out += remain;
-      remain = '';
-    }
-  } while (remain.trim() !== '');
-  return out;
+  try {
+    const out = parseCode(text, records, mapProfile, imp, ref);
+    return out;
+  } catch (e) {
+    return e as string;
+  }
 }
 
 function parseCode(
@@ -96,15 +78,16 @@ function parseCode(
   imp: EditorModel,
   ref: EditorModel
 ): string {
+  const engine = new Liquid();
+  const impjson = MMELToSerializable(imp);
+  const refjson = MMELToSerializable(ref);
+  const rec: SectoinRecord[] = records.map(x => ({
+    ...x,
+    justification: [...x.justification],
+  }));
+  const params = { rec, rawMapping, impjson, refjson };
   try {
-    const program = `
-      "use strict";      
-      function customFunction(map, raw, imp, ref) {
-    	  ${code}
-      }
-  	  return customFunction;
-    `;
-    const out = Function(program)()(records, rawMapping, imp, ref);
+    const out = engine.parseAndRenderSync(code, params);
     return out;
   } catch (e: unknown) {
     if (typeof e === 'object') {
@@ -120,5 +103,13 @@ interface RefRecord {
   clause: string;
   title: string;
   description: string;
-  justfication: Set<string>;
+  justification: Set<string>;
+}
+
+interface SectoinRecord {
+  id: string;
+  clause: string;
+  title: string;
+  description: string;
+  justification: string[];
 }

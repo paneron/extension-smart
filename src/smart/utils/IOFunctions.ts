@@ -1,4 +1,3 @@
-import { Hooks } from '@riboseinc/paneron-extension-kit/types';
 import { SaveFileDialogProps } from '@riboseinc/paneron-extension-kit/types/dialogs';
 import { MMELDocument } from '../model/document';
 import { EditorModel } from '../model/editormodel';
@@ -113,7 +112,6 @@ function parseModel(props: {
 
 export function handleModelOpen(props: {
   setModelWrapper: (m: ModelWrapper) => void;
-  useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
   logger?: LoggerInterface;
   indexModel?: (model: EditorModel) => void;
@@ -134,7 +132,6 @@ export function handleModelOpen(props: {
 
 export function handleDocumentOpen(props: {
   setDocument: (doc: MMELDocument) => void;
-  useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
   fileType: FILE_TYPE.Document | FILE_TYPE.XML | FILE_TYPE.BSI;
 }) {
@@ -160,7 +157,6 @@ export function handleDocumentOpen(props: {
 
 export function handleWSOpen(props: {
   setWorkspace: (ws: SMARTWorkspace) => void;
-  useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
 }) {
   try {
@@ -178,7 +174,6 @@ export function handleWSOpen(props: {
 
 export function handleMappingOpen(props: {
   onMapProfileChanged: (mp: MapProfile) => void;
-  useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
   fileType?: FILE_TYPE;
 }) {
@@ -197,23 +192,16 @@ export function handleMappingOpen(props: {
 }
 
 export async function handleFileOpen(props: {
-  useDecodedBlob?: Hooks.UseDecodedBlob;
   requestFileFromFilesystem?: OpenFileInterface;
   logger?: LoggerInterface;
   type: FILE_TYPE;
   postProcessing: (data: string) => void;
   base64?: boolean;
 }) {
-  const {
-    useDecodedBlob,
-    requestFileFromFilesystem,
-    logger,
-    type,
-    postProcessing,
-    base64,
-  } = props;
+  const { requestFileFromFilesystem, logger, type, postProcessing, base64 } =
+    props;
   try {
-    if (requestFileFromFilesystem && useDecodedBlob) {
+    if (requestFileFromFilesystem) {
       const desc = FileTypeDescription[type];
       logger?.log('Requesting file');
       requestFileFromFilesystem(
@@ -228,21 +216,18 @@ export async function handleFileOpen(props: {
             const fileData = Object.values(selectedFiles ?? {})[0];
             logger?.log('File data');
             if (fileData) {
-              if (base64 !== undefined && base64) {
-                const result = Buffer.from(fileData).toString('base64');
-                postProcessing(result);
+              if (base64) {
+                if (fileData['asBase64'] !== undefined) {
+                  postProcessing(fileData['asBase64']);
+                } else {
+                  alert('No base64 data is found.');
+                }
               } else {
-                const fileDataAsString = useDecodedBlob({
-                  blob: fileData,
-                }).asString;
-                logger?.log(
-                  'Requesting file: Decoded blob',
-                  fileDataAsString.substring(
-                    0,
-                    Math.min(20, fileDataAsString.length)
-                  )
-                );
-                postProcessing(fileDataAsString);
+                if (fileData['asText'] !== undefined) {
+                  postProcessing(fileData['asText']);
+                } else {
+                  alert('No text data is found.');
+                }
               }
             } else {
               logger?.log('Requesting file: No file data received');

@@ -10,12 +10,10 @@ const FigItemEditPage: React.FC<{
   object: MMELFigure;
   setObject: (obj: MMELFigure) => void;
 }> = ({ object: fig, setObject: setFig }) => {
-  const { useDecodedBlob, requestFileFromFilesystem } =
-    useContext(DatasetContext);
+  const { requestFileFromFilesystem } = useContext(DatasetContext);
 
   function loadImg() {
     handleFileOpen({
-      useDecodedBlob,
       requestFileFromFilesystem,
       type: FILE_TYPE.IMG,
       postProcessing: x => setFig({ ...fig, data: x }),

@@ -129,11 +129,10 @@ const EmissionItem: React.FC<{
   onDelete: () => void;
   overlapped: boolean;
 }> = function ({ item, onChange, onDelete, index, overlapped }) {
-  const { useDecodedBlob, requestFileFromFilesystem } =
-    useContext(DatasetContext);
+  const { requestFileFromFilesystem } = useContext(DatasetContext);
 
   function handleOpen() {
-    if (requestFileFromFilesystem && useDecodedBlob) {
+    if (requestFileFromFilesystem) {
       requestFileFromFilesystem(
         {
           prompt: 'Choose a file to open',
@@ -147,11 +146,8 @@ const EmissionItem: React.FC<{
         },
         selectedFiles => {
           const fileData = Object.values(selectedFiles ?? {})[0];
-          if (fileData) {
-            const fileDataAsString = useDecodedBlob({
-              blob: fileData,
-            }).asString;
-            const parsed = JSON.parse(fileDataAsString);
+          if (fileData && fileData['asText'] !== undefined) {
+            const parsed = JSON.parse(fileData['asText']);
             const [minx, miny, minz] = (parsed.Polygon[0].Coordinates as string)
               .split(' ')
               .map(x => parseInt(x));

@@ -47,8 +47,8 @@ const RDFQueryPane: React.FC<{
               Ask
             </Button>
             <Text>
-              Note: This function requires the standford CoreNLP server
-              available at localhost:9000
+              Note: This function requires the stanford CoreNLP server available
+              at localhost:9000
             </Text>
             <div>
               {working ? (

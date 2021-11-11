@@ -21,8 +21,7 @@ const VersionTrackerSettingPane: React.FC<{
   setView: (view: ViewFunctionInterface | undefined) => void;
   setFunctionalState: (props: FunModel | undefined) => void;
 }> = function ({ mw, history, setView, setFunctionalState }) {
-  const { useDecodedBlob, requestFileFromFilesystem, logger } =
-    useContext(DatasetContext);
+  const { requestFileFromFilesystem, logger } = useContext(DatasetContext);
 
   const [change, setChange] = useState<ModelWrapper | undefined>(undefined);
   const [viewCompare, setViewCompare] = useState<boolean>(false);
@@ -57,7 +56,6 @@ const VersionTrackerSettingPane: React.FC<{
   function setVersion() {
     handleModelOpen({
       setModelWrapper,
-      useDecodedBlob,
       requestFileFromFilesystem,
       logger,
       indexModel: buildModelLinks,
