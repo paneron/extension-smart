@@ -3,7 +3,7 @@ import {
   isEditorApproval,
   isEditorProcess,
 } from '../model/editormodel';
-import { getNamespace, referenceSorter } from './ModelFunctions';
+import { getNamespace, Logger, referenceSorter } from './ModelFunctions';
 import { MapProfile } from '../model/mapmodel';
 import { Liquid } from 'liquidjs';
 import { MMELToSerializable } from './repo/io';
@@ -85,7 +85,13 @@ function parseCode(
     ...x,
     justification: [...x.justification],
   }));
-  const params = { rec, rawMapping, impjson, refjson };
+  Logger.logger.log(rec, rec.length);
+  const params = {
+    map: rec,
+    raw: rawMapping,
+    imodel: impjson,
+    rmodel: refjson,
+  };
   try {
     const out = engine.parseAndRenderSync(code, params);
     return out;

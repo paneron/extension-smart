@@ -732,9 +732,7 @@ const ModelEditor: React.FC<{
                   {...{ setModelWrapper, onMetaChanged, showMsg }}
                   modelwrapper={state.modelWrapper}
                   callback={dialogPack.callback}
-                  cancel={() => {
-                    setDialogType(null);
-                  }}
+                  cancel={() => setDialogType(null)}
                   repo={repo}
                   msg={dialogPack.msg}
                 />

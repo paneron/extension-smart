@@ -40,8 +40,8 @@ export const FileTypeDescription: Record<
     openPrompt: 'Choose a model file to open',
   },
   [FILE_TYPE.Report]: {
-    filtername: 'All files',
-    extension: ['*'],
+    filtername: 'Ascii Doc files',
+    extension: ['adoc'],
   },
   [FILE_TYPE.Map]: {
     filtername: 'MAP files',
@@ -264,18 +264,19 @@ export async function saveToFileSystem(props: {
   }>;
   fileData: string;
   type: FILE_TYPE;
-}) {
+}): Promise<string> {
   const { getBlob, writeFileToFilesystem, fileData, type } = props;
   if (getBlob && writeFileToFilesystem) {
     const desc = FileTypeDescription[type];
     const blob = await getBlob(fileData);
-    await writeFileToFilesystem({
+    const { savedToFileAtPath } = await writeFileToFilesystem({
       dialogOpts: {
         prompt: 'Choose location to save',
         filters: [{ name: desc.filtername, extensions: desc.extension }],
       },
       bufferData: blob,
     });
+    return savedToFileAtPath;
   } else {
     throw new Error('File export function(s) are not provided');
   }

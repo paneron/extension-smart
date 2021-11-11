@@ -108,38 +108,40 @@ const RepoSelectItem: React.FC<{
   onClick: () => void;
 }> = function ({ file, onSelect, highlight, onClick }) {
   return (
-    <Tooltip2 content={file.title}>
-      <Card
-        style={{
-          width: '12vw',
-          height: 100,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          backgroundColor: highlight ? 'lightblue' : undefined,
-        }}
-        onDoubleClick={onSelect}
-        onClick={onClick}
-        interactive={true}
-      >
-        <Icon
-          icon={file.type === 'Doc' ? 'document' : 'layout-hierarchy'}
-          iconSize={40}
-        />
-        <div
+    <div>
+      <Tooltip2 content={file.title}>
+        <Card
           style={{
             width: '12vw',
-            marginTop: 10,
-            fontSize: 14,
-            fontWeight: 'bold',
-            textAlign: 'center',
+            height: 100,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            backgroundColor: highlight ? 'lightblue' : undefined,
           }}
+          onDoubleClick={onSelect}
+          onClick={onClick}
+          interactive={true}
         >
-          <Text ellipsize>{file.shortname}</Text>
-        </div>
-      </Card>
-    </Tooltip2>
+          <Icon
+            icon={file.type === 'Doc' ? 'document' : 'layout-hierarchy'}
+            iconSize={40}
+          />
+          <div
+            style={{
+              width: '12vw',
+              marginTop: 10,
+              fontSize: 14,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}
+          >
+            <Text ellipsize>{file.shortname}</Text>
+          </div>
+        </Card>
+      </Tooltip2>
+    </div>
   );
 };
 

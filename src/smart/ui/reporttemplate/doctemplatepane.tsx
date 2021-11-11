@@ -92,7 +92,7 @@ const DocTemplatePane: React.FC<{
 
   const dochandler: IManageHandler<MappingDoc> = {
     filterName: 'Template filter',
-    itemName: 'Templates',
+    itemName: `Templates for ${refModel.meta.shortname}`,
     Content: DocEditItemPage,
     initObj: {
       id: '',
