@@ -7,6 +7,7 @@ import { SMARTWorkspace } from '../model/workspace';
 import { textToMMEL } from '../serialize/MMEL';
 import { LoggerInterface, OpenFileInterface } from './constants';
 import { textToDoc } from './DocumentFunctions';
+import { Logger } from './ModelFunctions';
 import { bsiToDocument } from './xml/BSIXML';
 import { xmlToDocument } from './xml/XMLDocumentFunctions';
 
@@ -216,7 +217,9 @@ export async function handleFileOpen(props: {
             const fileData = Object.values(selectedFiles ?? {})[0];
             logger?.log('File data');
             if (fileData) {
-              if (base64) {
+              if (type === FILE_TYPE.JSON) {
+                postProcessing(JSON.stringify(fileData));
+              } else if (base64) {
                 if (fileData['asBase64'] !== undefined) {
                   postProcessing(fileData['asBase64']);
                 } else {
@@ -227,6 +230,8 @@ export async function handleFileOpen(props: {
                   postProcessing(fileData['asText']);
                 } else {
                   alert('No text data is found.');
+                  Logger.logger.log(Object.keys(fileData).join(','));
+                  Logger.logger.log(Object.values(fileData).join(','));
                 }
               }
             } else {

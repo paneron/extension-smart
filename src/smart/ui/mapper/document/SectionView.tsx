@@ -27,6 +27,7 @@ const SectionView: React.FC<{
           para={para}
           showSection={index === 0 ? sec.id : undefined}
           title={sec.title ?? ''}
+          isHeader={sec.id === 'h'}
         />
       ))}
     </div>

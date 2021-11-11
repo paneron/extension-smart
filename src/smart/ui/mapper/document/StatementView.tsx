@@ -15,6 +15,7 @@ const StatementView: React.FC<{
   MappingList?: React.FC<{ id: string }>;
   setSelected?: (id: string) => void;
   title: string;
+  isHeader: boolean;
 }> = function ({
   statement,
   showSection,
@@ -25,6 +26,7 @@ const StatementView: React.FC<{
   MappingList,
   setSelected,
   title,
+  isHeader,
 }) {
   const [hover, setHover] = useState<boolean>(false);
   const hasMap = froms !== undefined && froms.length > 0;
@@ -53,7 +55,11 @@ const StatementView: React.FC<{
   const content =
     (showSection !== undefined ? `${showSection}. ` : '') + statement.text;
 
-  return (
+  return isHeader ? (
+    <div style={{ textAlign: 'center' }}>
+      <h4>{statement.text}</h4>
+    </div>
+  ) : (
     <>
       <span
         style={{
