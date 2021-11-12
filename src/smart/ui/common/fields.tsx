@@ -85,7 +85,9 @@ export type IManageHandler<T> = {
   initObj: T;
   model?: EditorModel;
   getItems: (filter: string) => IListItem[];
-  removeItems: (ids: Array<string>) => void;
+  removeItems: (ids: string[]) => void;
+  moveUp?: (id: string) => void;
+  moveDown?: (id: string) => void;
   addItem: (obj: T) => boolean;
   updateItem: (oldid: string, obj: T) => boolean;
   getObjById: (id: string) => T;
@@ -98,6 +100,8 @@ export interface IViewListInterface {
   itemName: string;
   getItems: (filter: string) => IListItem[];
   removeItems?: (ids: Array<string>) => void;
+  moveUp?: (x: string) => void;
+  moveDown?: (x: string) => void;
   addClicked?: () => void;
   updateClicked?: (selected: string) => void;
   size: number;

@@ -1,7 +1,8 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
+import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
 import { MMELTable } from '../../../serialize/interface/supportinterface';
-import { defaultItemSorter } from '../../../utils/ModelFunctions';
+import { Logger } from '../../../utils/ModelFunctions';
 import {
   IListItem,
   IManageHandler,
@@ -46,17 +47,20 @@ const TableClassDefinitionEdit: React.FC<{
   function getAttListItems(filter: string): IListItem[] {
     return data
       .filter(x => matchFilter(x, filter))
-      .map((x, index) => ({ id: `${index}`, text: x.title }))
-      .sort(defaultItemSorter);
+      .map((x, index) => ({ id: `${index}`, text: x.title }));
   }
 
   function removeAttListItem(ids: string[]) {
     const set = new Set(ids);
-    const newData = [...table.data.slice(1)];
+    let newData = [...table.data.slice(1)];
     for (let i = data.length - 1; i >= 0; i--) {
-      if (set.has(data[i].title)) {
+      if (set.has(data[i].id)) {
         data.splice(i, 1);
-        newData.forEach(r => [...r].splice(i, 1));
+        newData = newData.map(r => {
+          const newR = [...r];
+          newR.splice(i, 1);
+          return newR;
+        });
       }
     }
     const newDomain = data.map(x => x.domain);
@@ -70,8 +74,8 @@ const TableClassDefinitionEdit: React.FC<{
   }
 
   function addAtt(x: TableClassAttribute): boolean {
-    const newData = [...table.data.slice(1)];
-    newData.forEach(r => [...r, '']);
+    const oldData = [...table.data.slice(1)];
+    const newData = oldData.map(r => [...r, '']);
     const newDomain = [...data.map(x => x.domain), x.domain];
     const newRow = [...data.map(x => x.title), x.title];
     setTable({
@@ -88,12 +92,12 @@ const TableClassDefinitionEdit: React.FC<{
       if (data[i].id === oldid) {
         data[i] = att;
         const newDomain = data.map(x => x.domain);
-        const newRow = data.map(x => x.title);
+        const newHeader = data.map(x => x.title);
         const newData = [...table.data.slice(1)];
         setTable({
           ...table,
           domain: newDomain,
-          data: [newRow, ...newData],
+          data: [newHeader, ...newData],
           columns: newDomain.length,
         });
         return true;
@@ -111,6 +115,47 @@ const TableClassDefinitionEdit: React.FC<{
     return { ...initObj };
   }
 
+  function move(index: number, partner: number) {
+    const oldData = [...table.data.slice(1)];
+    const newData = oldData.map(r => {
+      const rewRow = [...r];
+      const temp = rewRow[index];
+      rewRow[index] = rewRow[partner];
+      rewRow[partner] = temp;
+      return rewRow;
+    });
+    const newDomain = data.map(x => x.domain);
+    const tempDomain = newDomain[index];
+    newDomain[index] = newDomain[partner];
+    newDomain[partner] = tempDomain;
+    const newHeader = data.map(x => x.title);
+    const tempHeader = newHeader[index];
+    newHeader[index] = newHeader[partner];
+    newHeader[partner] = tempHeader;
+
+    setTable({
+      ...table,
+      domain: newDomain,
+      data: [newHeader, ...newData],
+      columns: newDomain.length,
+    });
+  }
+
+  function moveUp(id: string) {
+    Logger.logger.log(id);
+    const index = parseInt(id);
+    if (index > 0) {
+      return move(index, index - 1);
+    }
+  }
+
+  function moveDown(id: string) {
+    const index = parseInt(id);
+    if (index < data.length - 1) {
+      return move(index, index + 1);
+    }
+  }
+
   const dchandler: IManageHandler<TableClassAttribute> = {
     filterName: 'Attribute filter',
     itemName: 'Class attributes',
@@ -121,9 +166,15 @@ const TableClassDefinitionEdit: React.FC<{
     addItem: obj => addAtt(obj),
     updateItem: (oldid, obj) => updateAtt(oldid, obj),
     getObjById: getAttById,
+    moveUp,
+    moveDown,
   };
 
-  return <ListManagePage {...dchandler} />;
+  return (
+    <MGDDisplayPane>
+      <ListManagePage {...dchandler} />
+    </MGDDisplayPane>
+  );
 };
 
 const TableClassItemPage: React.FC<{

@@ -25,11 +25,29 @@ const ListViewPane: React.FC<IViewListInterface> = ({
   size,
   buttons,
   isVisible,
+  moveUp,
+  moveDown,
 }) => {
   const [filter, setFilter] = useState<string>('');
 
   const selectbox: RefObject<HTMLSelectElement> = React.createRef();
   const options = getItems(filter.toLocaleLowerCase());
+
+  function checkMoveUp(x: string) {
+    moveUp!(x);
+    const index = parseInt(x);
+    if (index > 0) {
+      selectbox.current!.selectedIndex = index - 1;
+    }
+  }
+
+  function checkMoveDown(x: string) {
+    moveDown!(x);
+    const index = parseInt(x);
+    if (index < options.length - 1) {
+      selectbox.current!.selectedIndex = index + 1;
+    }
+  }
 
   return (
     <div css={isVisible ? u__display__block : u__display__none}>
@@ -43,18 +61,41 @@ const ListViewPane: React.FC<IViewListInterface> = ({
       </p>
 
       <p> {itemName} </p>
-      <select
-        css={[mgd_select, mgd_select__restrained]}
-        size={size}
-        ref={selectbox}
-        multiple
-      >
-        {options.map(value => (
-          <option key={'listmanage#' + value.id} value={value.id}>
-            {value.text === '' ? '( Untitled )' : value.text}
-          </option>
-        ))}
-      </select>
+      <div style={{ display: 'flex' }}>
+        <div style={{ flexGrow: 1 }}>
+          <select
+            css={[mgd_select, mgd_select__restrained]}
+            size={size}
+            ref={selectbox}
+            multiple
+          >
+            {options.map(value => (
+              <option key={'listmanage#' + value.id} value={value.id}>
+                {value.text === '' ? '( Untitled )' : value.text}
+              </option>
+            ))}
+          </select>
+        </div>
+        {moveUp && moveDown && (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              gap: 20,
+            }}
+          >
+            <Button
+              icon="symbol-triangle-up"
+              onClick={() => actIfSelected(selectbox.current, checkMoveUp)}
+            />
+            <Button
+              icon="symbol-triangle-down"
+              onClick={() => actIfSelected(selectbox.current, checkMoveDown)}
+            />
+          </div>
+        )}
+      </div>
 
       <MGDButtonGroup>
         {addClicked !== undefined ? (
