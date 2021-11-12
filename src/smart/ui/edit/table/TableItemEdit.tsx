@@ -20,12 +20,8 @@ const TableItemEditPage: React.FC<{
 }> = ({ object: table, setObject: setTable }) => {
   const [mode, setMode] = useState<TabType>('table');
 
-  const {
-    getBlob,
-    writeFileToFilesystem,
-    useDecodedBlob,
-    requestFileFromFilesystem,
-  } = useContext(DatasetContext);
+  const { getBlob, writeFileToFilesystem, requestFileFromFilesystem } =
+    useContext(DatasetContext);
 
   function saveCSV() {
     const fileData = table.data.map(row => row.join(',')).join('\n');
@@ -51,7 +47,6 @@ const TableItemEditPage: React.FC<{
 
   function loadCSV() {
     handleFileOpen({
-      useDecodedBlob,
       requestFileFromFilesystem,
       type: FILE_TYPE.CSV,
       postProcessing: x => parseTable(x),

@@ -98,8 +98,7 @@ const ModelDiagram: React.FC<{
   setRefRepo,
   index,
 }) => {
-  const { logger, useDecodedBlob, requestFileFromFilesystem } =
-    useContext(DatasetContext);
+  const { logger, requestFileFromFilesystem } = useContext(DatasetContext);
 
   const modelType = modelProps.modelType;
   const mw = modelProps.modelWrapper;
@@ -194,7 +193,6 @@ const ModelDiagram: React.FC<{
             onClick={() => {
               handleModelOpen({
                 setModelWrapper,
-                useDecodedBlob,
                 requestFileFromFilesystem,
                 logger,
                 indexModel,

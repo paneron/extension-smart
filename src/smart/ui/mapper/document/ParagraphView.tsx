@@ -16,6 +16,7 @@ const ParagraphView: React.FC<{
   diffDocMap?: DocMapIndex;
   MappingList?: React.FC<{ id: string }>;
   setSelected?: (id: string) => void;
+  isHeader: boolean;
 }> = function (props) {
   const { para, showSection, statements, docMap, diffDocMap } = props;
   return (

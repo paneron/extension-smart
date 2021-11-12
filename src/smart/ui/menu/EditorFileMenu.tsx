@@ -27,15 +27,10 @@ const EditorFileMenu: React.FC<{
   isRepoMode,
   onRepoSave,
 }) {
-  const {
-    logger,
-    getBlob,
-    useDecodedBlob,
-    writeFileToFilesystem,
-    requestFileFromFilesystem,
-  } = useContext(DatasetContext);
+  const { logger, getBlob, writeFileToFilesystem, requestFileFromFilesystem } =
+    useContext(DatasetContext);
 
-  const canOpen = requestFileFromFilesystem && useDecodedBlob;
+  const canOpen = requestFileFromFilesystem;
   const canSave = getBlob && writeFileToFilesystem;
 
   // Settings
@@ -90,7 +85,6 @@ const EditorFileMenu: React.FC<{
             onClick={() =>
               handleModelOpen({
                 setModelWrapper,
-                useDecodedBlob,
                 requestFileFromFilesystem,
                 logger,
               })

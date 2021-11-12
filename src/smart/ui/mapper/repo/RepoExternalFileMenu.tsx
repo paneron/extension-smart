@@ -15,8 +15,7 @@ const RepoExternalFileMenu: React.FC<{
   setDocument: (x: MMELDocument) => void;
   setModelWrapper: (x: ModelWrapper) => void;
 }> = function ({ setDocument, setModelWrapper }) {
-  const { useDecodedBlob, requestFileFromFilesystem } =
-    useContext(DatasetContext);
+  const { requestFileFromFilesystem } = useContext(DatasetContext);
 
   return (
     <Menu>
@@ -25,7 +24,6 @@ const RepoExternalFileMenu: React.FC<{
         onClick={() => {
           handleModelOpen({
             setModelWrapper,
-            useDecodedBlob,
             requestFileFromFilesystem,
             indexModel,
           });
@@ -36,7 +34,6 @@ const RepoExternalFileMenu: React.FC<{
         onClick={() =>
           handleDocumentOpen({
             setDocument,
-            useDecodedBlob,
             requestFileFromFilesystem,
             fileType: FILE_TYPE.Document,
           })
@@ -47,7 +44,6 @@ const RepoExternalFileMenu: React.FC<{
         onClick={() =>
           handleDocumentOpen({
             setDocument,
-            useDecodedBlob,
             requestFileFromFilesystem,
             fileType: FILE_TYPE.XML,
           })

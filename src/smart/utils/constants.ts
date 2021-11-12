@@ -1,5 +1,5 @@
-import { BufferDataset } from '@riboseinc/paneron-extension-kit/types/buffers';
 import { OpenFileDialogProps } from '@riboseinc/paneron-extension-kit/types/dialogs';
+import { ObjectDataset } from '@riboseinc/paneron-extension-kit/types/objects';
 import { DataType } from '../serialize/interface/baseinterface';
 import { VarType } from '../serialize/interface/supportinterface';
 
@@ -20,10 +20,6 @@ export const STRINGTYPE = 'string';
 export const BOOLEANTYPE = 'boolean';
 export const DATETIMETYPE = 'datetime';
 export const ROLETYPE = 'role';
-
-const REPORTSTARTTAGTEXT = 'SMARTScript';
-export const REPORTSTARTTAG = `<${REPORTSTARTTAGTEXT}>`;
-export const REPORTENDTAG = `</${REPORTSTARTTAGTEXT}>`;
 
 export const DATATYPE = [
   EMPTYTYPE,
@@ -131,5 +127,5 @@ export interface LoggerInterface {
 
 export type OpenFileInterface = (
   opts: OpenFileDialogProps,
-  cb?: (data: BufferDataset) => void
-) => Promise<BufferDataset>;
+  cb?: ((data: ObjectDataset) => void) | undefined
+) => Promise<ObjectDataset>;

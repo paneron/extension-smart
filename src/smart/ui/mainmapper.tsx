@@ -180,31 +180,29 @@ const ModelMapper: React.FC<{
       repoData !== undefined &&
       !repoModelFile.isUpdating
     ) {
-      if (repo.ns !== mainRepo) {
-        const json = repoData as MMELJSON;
-        const model = JSONToMMEL(json);
-        const mw = createEditorModelWrapper(model);
-        indexModel(mw.model);
-        setImplProps({
-          ...implementProps,
-          history: createPageHistory(mw),
-          modelWrapper: mw,
-          historyMap: buildHistoryMap(mw),
+      const json = repoData as MMELJSON;
+      const model = JSONToMMEL(json);
+      const mw = createEditorModelWrapper(model);
+      indexModel(mw.model);
+      setImplProps({
+        ...implementProps,
+        history: createPageHistory(mw),
+        modelWrapper: mw,
+        historyMap: buildHistoryMap(mw),
+      });
+      if (mapData !== undefined && mapData !== null) {
+        const mapPro = mapData as MapProfile;
+        setMapProfile(mapPro);
+      } else {
+        setMapProfile({
+          '@context': JSONContext,
+          '@type': 'MMEL_MAP',
+          id: getNamespace(mw.model),
+          mapSet: {},
+          docs: {},
         });
-        if (mapData !== undefined && mapData !== null) {
-          const mapPro = mapData as MapProfile;
-          setMapProfile(mapPro);
-        } else {
-          setMapProfile({
-            '@context': JSONContext,
-            '@type': 'MMEL_MAP',
-            id: getNamespace(mw.model),
-            mapSet: {},
-            docs: {},
-          });
-        }
-        setMainRepo(repo.ns);
       }
+      setMainRepo(repo.ns);
     }
   }, [repoData, repoModelFile.isUpdating]);
 

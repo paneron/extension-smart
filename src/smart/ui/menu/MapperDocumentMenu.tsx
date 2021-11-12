@@ -7,8 +7,7 @@ import { MMELDocument } from '../../model/document';
 const MapperDocumentMenu: React.FC<{
   setDocument: (x: MMELDocument) => void;
 }> = function ({ setDocument }) {
-  const { useDecodedBlob, requestFileFromFilesystem } =
-    useContext(DatasetContext);
+  const { requestFileFromFilesystem } = useContext(DatasetContext);
 
   return (
     <Menu>
@@ -17,7 +16,6 @@ const MapperDocumentMenu: React.FC<{
         onClick={() =>
           handleDocumentOpen({
             setDocument,
-            useDecodedBlob,
             requestFileFromFilesystem,
             fileType: FILE_TYPE.Document,
           })
@@ -29,7 +27,6 @@ const MapperDocumentMenu: React.FC<{
         onClick={() =>
           handleDocumentOpen({
             setDocument,
-            useDecodedBlob,
             requestFileFromFilesystem,
             fileType: FILE_TYPE.XML,
           })

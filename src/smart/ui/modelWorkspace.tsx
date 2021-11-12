@@ -118,22 +118,20 @@ const ModelWorkspace: React.FC<{
       repoData !== undefined &&
       !repoModelFile.isUpdating
     ) {
-      if (repo.ns !== mainRepo) {
-        const json = repoData as MMELJSON;
-        const model = JSONToMMEL(json);
-        const mw = createEditorModelWrapper(model);
-        const ws =
-          workData !== undefined && workData !== null
-            ? (workData as SMARTWorkspace)
-            : createNewSMARTWorkspace();
-        setState({
-          ...state,
-          history: createPageHistory(mw),
-          modelWrapper: mw,
-          workspace: ws,
-        });
-        setMainRepo(repo.ns);
-      }
+      const json = repoData as MMELJSON;
+      const model = JSONToMMEL(json);
+      const mw = createEditorModelWrapper(model);
+      const ws =
+        workData !== undefined && workData !== null
+          ? (workData as SMARTWorkspace)
+          : createNewSMARTWorkspace();
+      setState({
+        ...state,
+        history: createPageHistory(mw),
+        modelWrapper: mw,
+        workspace: ws,
+      });
+      setMainRepo(repo.ns);
     }
   }, [repoData, repoModelFile.isUpdating]);
 

@@ -62,7 +62,7 @@ const RDFControlPane: React.FC<{
           />
           <Button onClick={genGraph}>Generate knowledge graph</Button>
           <Text>
-            Note: This function requires the standford CoreNLP server available
+            Note: This function requires the stanford CoreNLP server available
             at localhost:9000
           </Text>
         </>

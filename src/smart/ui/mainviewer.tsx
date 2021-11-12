@@ -99,7 +99,7 @@ const ModelViewer: React.FC<{
   linktoAnotherRepo: (x: MMELRepo) => void;
   popHis?: () => void;
 }> = ({ isVisible, className, repo, index, linktoAnotherRepo, popHis }) => {
-  const { logger, useObjectData, useDecodedBlob, requestFileFromFilesystem } =
+  const { logger, useObjectData, requestFileFromFilesystem } =
     useContext(DatasetContext);
   Logger.logger = logger;
 
@@ -459,7 +459,6 @@ const ModelViewer: React.FC<{
             onClick={() =>
               handleModelOpen({
                 setModelWrapper,
-                useDecodedBlob,
                 requestFileFromFilesystem,
                 logger,
                 indexModel: buildModelLinks,

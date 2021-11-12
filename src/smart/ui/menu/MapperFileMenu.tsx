@@ -25,14 +25,10 @@ const MapperFileMenu: React.FC<{
   onResetMapping,
   onMapProfileImported,
 }) {
-  const {
-    getBlob,
-    useDecodedBlob,
-    writeFileToFilesystem,
-    requestFileFromFilesystem,
-  } = useContext(DatasetContext);
+  const { getBlob, writeFileToFilesystem, requestFileFromFilesystem } =
+    useContext(DatasetContext);
 
-  const canOpen = requestFileFromFilesystem && useDecodedBlob;
+  const canOpen = requestFileFromFilesystem;
   const canSave = getBlob && writeFileToFilesystem;
 
   function handleNew() {
@@ -64,7 +60,6 @@ const MapperFileMenu: React.FC<{
   async function handleImport() {
     handleMappingOpen({
       onMapProfileChanged: onMapProfileImported,
-      useDecodedBlob,
       requestFileFromFilesystem,
       fileType: FILE_TYPE.JSON,
     });
@@ -110,7 +105,6 @@ const MapperFileMenu: React.FC<{
             onClick={() =>
               handleMappingOpen({
                 onMapProfileChanged,
-                useDecodedBlob,
                 requestFileFromFilesystem,
               })
             }

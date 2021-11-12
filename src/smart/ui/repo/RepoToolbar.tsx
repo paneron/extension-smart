@@ -68,7 +68,7 @@ const RepoToolbar: React.FC<{
           />
         }
       >
-        <Button onClick={() => setIsOpen(true)}>New model</Button>
+        <Button onClick={() => setIsOpen(x => !x)}>New model</Button>
       </Popover2>
     </ControlGroup>
   );

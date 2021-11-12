@@ -48,9 +48,21 @@ export function getPathByNS(ns: string, type: RepoFileType) {
 
 export function MMELToSerializable(m: MMELModel): MMELJSON {
   return {
-    ...m,
     '@context': JSONContext,
     '@type': 'MMEL_SMART',
+    meta: m.meta,
+    roles: m.roles,
+    refs: m.refs,
+    enums: m.enums,
+    vars: m.vars,
+    pages: m.pages,
+    views: m.views,
+    terms: m.terms,
+    tables: m.tables,
+    figures: m.figures,
+    sections: m.sections,
+    links: m.links,
+    root: m.root,
     provisions: convertProvisions(m.provisions),
     notes: convertNotes(m.notes),
     elements: convertElements(m.elements),
@@ -92,7 +104,13 @@ function convertElements(
 function convertElement(p: MMELNode): MMELNode {
   if (isMMELProcess(p)) {
     const x: JSONProcess = {
-      ...p,
+      id: p.id,
+      name: p.name,
+      modality: p.modality,
+      actor: p.actor,
+      page: p.page,
+      measure: p.measure,
+      datatype: p.datatype,
       links: [...p.links],
       input: [...p.input],
       output: [...p.output],
@@ -104,14 +122,20 @@ function convertElement(p: MMELNode): MMELNode {
     return x;
   } else if (isMMELApproval(p)) {
     const x: JSONApproval = {
-      ...p,
+      id: p.id,
+      name: p.name,
+      modality: p.modality,
+      actor: p.actor,
+      approver: p.approver,
+      datatype: p.datatype,
       records: [...p.records],
       ref: [...p.ref],
     };
     return x;
   } else if (isMMELDataClass(p)) {
     const x: JSONDataclass = {
-      ...p,
+      id: p.id,
+      datatype: p.datatype,
       attributes: convertAttributes(p.attributes),
     };
     return x;
@@ -140,7 +164,10 @@ function convertNotes(
   const newNote: Record<string, JSONNote> = {};
   for (const [k, p] of Object.entries(notes)) {
     newNote[k] = {
-      ...p,
+      id: p.id,
+      type: p.type,
+      message: p.message,
+      datatype: p.datatype,
       ref: [...p.ref],
     };
   }
@@ -153,7 +180,11 @@ function convertProvisions(
   const newPro: Record<string, JSONProvision> = {};
   for (const [k, p] of Object.entries(pro)) {
     newPro[k] = {
-      ...p,
+      subject: p.subject,
+      id: p.id,
+      modality: p.modality,
+      condition: p.condition,
+      datatype: p.datatype,
       ref: [...p.ref],
     };
   }
