@@ -98,6 +98,7 @@ export interface MMELTable extends MMELObject {
   columns: number;
   data: string[][];
   domain: string[];
+  classDisplay: string;
   datatype: DataType.TABLE;
 }
 

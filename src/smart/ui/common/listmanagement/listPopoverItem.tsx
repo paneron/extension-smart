@@ -9,6 +9,7 @@ import {
   defaultItemSorter,
   defaultItemSorterAsNum,
   findUniqueID,
+  itemSorterByText,
 } from '../../../utils/ModelFunctions';
 import { IListItem, IUpdateInterface, IViewListInterface } from '../fields';
 import ItemUpdatePane from './itemupdate';
@@ -16,6 +17,14 @@ import ListViewPane from './listview';
 
 export type IObject = MMELObject & {
   id: string;
+};
+
+export type ListSorter = 'number' | 'id' | 'text';
+
+const Sorter: Record<ListSorter, (a: IListItem, b: IListItem) => number> = {
+  number: defaultItemSorterAsNum,
+  id: defaultItemSorter,
+  text: itemSorterByText,
 };
 
 export interface PopListInterface<T> {
@@ -36,7 +45,7 @@ export interface PopListInterface<T> {
   label: string;
   size?: number;
   requireUniqueId?: boolean;
-  sortAsNum?: boolean;
+  sort?: ListSorter;
 }
 
 function defaultGetListItem(x: IObject): IListItem {
@@ -60,7 +69,7 @@ const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
     label,
     size = 10,
     requireUniqueId = true,
-    sortAsNum = false,
+    sort = 'id',
   } = props;
   const [editing, setEditing] = useState<T>(initObject);
   const [oldId, setOldId] = useState<string>('');
@@ -70,7 +79,7 @@ const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
     return Object.values(items)
       .filter(x => matchFilter(x, filter))
       .map(x => getListItem(x))
-      .sort(sortAsNum ? defaultItemSorterAsNum : defaultItemSorter);
+      .sort(Sorter[sort]);
   }
 
   function removeItem(ids: string[]) {

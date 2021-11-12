@@ -376,6 +376,7 @@ export function parseTable(id: string, data: string): MMELTable {
     columns: 1,
     data: [],
     domain: [],
+    classDisplay: '',
     datatype: DataType.TABLE,
   };
 
@@ -390,6 +391,8 @@ export function parseTable(id: string, data: string): MMELTable {
           table.title = MMELremovePackage(t[i++]);
         } else if (command === 'columns') {
           table.columns = parseInt(MMELremovePackage(t[i++]));
+        } else if (command === 'display') {
+          table.classDisplay = MMELremovePackage(t[i++]);
         } else if (command === 'data') {
           cells = MMELtokenizePackage(t[i++]);
         } else if (command === 'domain') {

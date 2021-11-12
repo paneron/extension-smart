@@ -3,6 +3,10 @@ import { ObjectDataset } from '@riboseinc/paneron-extension-kit/types/objects';
 import { DataType } from '../serialize/interface/baseinterface';
 import { VarType } from '../serialize/interface/supportinterface';
 
+export const EXTENSIONVERSION = 'v1.0.0-dev16';
+
+export const PANERONVERSION = 'v1 beta20';
+
 export const MODALITY = ['MUST', 'SHALL', 'SHOULD', 'CAN', 'MAY'] as const;
 
 export const MODAILITYOPTIONS = ['', ...MODALITY] as const;
