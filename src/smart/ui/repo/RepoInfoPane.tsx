@@ -25,7 +25,7 @@ const RepoInfoPane: React.FC<{
         {repo !== undefined && <RepoCloseButton onClose={onClose} />}
       </p>
       <DescriptionItem
-        label="Number of items in repository:"
+        label="Number of models/documents in repository:"
         value={Object.values(index).length.toString()}
       />
     </div>
