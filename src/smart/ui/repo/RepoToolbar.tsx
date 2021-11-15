@@ -7,7 +7,11 @@ import {
   ModelWrapper,
 } from '../../model/modelwrapper';
 import { RepoIndex, RepoItemType } from '../../model/repo';
-import { EXTENSIONVERSION, PANERONVERSION } from '../../utils/constants';
+import {
+  EXTENSIONVERSION,
+  MODELVERSION,
+  PANERONVERSION,
+} from '../../utils/constants';
 import { createNewEditorModel } from '../../utils/EditorFactory';
 import AskIDForSaveMenu from '../popover/AskIDForSaveMenu';
 import RepoImportMenu from './RepoImportMenu';
@@ -42,7 +46,7 @@ const RepoToolbar: React.FC<{
 
   function showVersion() {
     alert(
-      `Extension version:\n${EXTENSIONVERSION}\nTested on Paneron version:\n${PANERONVERSION}`
+      `Extension version:\n${EXTENSIONVERSION}\nModel version\n${MODELVERSION}\nTested on Paneron version:\n${PANERONVERSION}`
     );
   }
 

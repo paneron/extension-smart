@@ -65,6 +65,13 @@ const MapperFileMenu: React.FC<{
     });
   }
 
+  async function handleImportMapping() {
+    handleMappingOpen({
+      onMapProfileChanged: onMapProfileImported,
+      requestFileFromFilesystem,
+    });
+  }
+
   return (
     <Menu>
       {isRepoMode ? (
@@ -91,9 +98,11 @@ const MapperFileMenu: React.FC<{
           <MenuDivider />
           <MenuItem text="Import" icon="import">
             <MenuItem text="JSON-LD file" onClick={handleImport} />
+            <MenuItem text="Mapping file" onClick={handleImportMapping} />
           </MenuItem>
           <MenuItem text="Export" icon="export">
             <MenuItem text="JSON-LD file" onClick={handleExport} />
+            <MenuItem text="Mapping file" onClick={handleSave} />
           </MenuItem>
         </>
       ) : (

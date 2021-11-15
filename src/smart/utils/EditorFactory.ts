@@ -35,6 +35,7 @@ import {
   EditorSubprocess,
   EditorTimerEvent,
 } from '../model/editormodel';
+import { MODELVERSION } from './constants';
 
 export function createNewEditorModel(): EditorModel {
   const start = createStartEvent('Start1');
@@ -59,6 +60,7 @@ export function createNewEditorModel(): EditorModel {
     sections: {},
     links: {},
     root: page.id,
+    version: MODELVERSION,
   };
   return m;
 }

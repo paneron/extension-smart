@@ -5,7 +5,7 @@ import { MapProfile } from '../model/mapmodel';
 import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
 import { SMARTWorkspace } from '../model/workspace';
 import { textToMMEL } from '../serialize/MMEL';
-import { LoggerInterface, OpenFileInterface } from './constants';
+import { LoggerInterface, MODELVERSION, OpenFileInterface } from './constants';
 import { textToDoc } from './DocumentFunctions';
 import { Logger } from './ModelFunctions';
 import { bsiToDocument } from './xml/BSIXML';
@@ -96,6 +96,11 @@ function parseModel(props: {
   logger?.log('Importing model');
   try {
     const model = textToMMEL(data);
+    if (model.version !== MODELVERSION) {
+      alert(
+        `Warning: Model version not matched\nModel version of the file:${model.version}`
+      );
+    }
     const mw = createEditorModelWrapper(model);
     if (indexModel !== undefined) {
       indexModel(mw.model);

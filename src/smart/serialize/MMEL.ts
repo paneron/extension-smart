@@ -13,7 +13,7 @@ import {
   parseView,
 } from './handler/supporthandler';
 import { MMELModel } from './interface/model';
-import { MMELtokenize } from './util/tokenizer';
+import { MMELremovePackage, MMELtokenize } from './util/tokenizer';
 import { parseApproval, parseProcess } from './handler/processhandler';
 import {
   parseDataClass,
@@ -45,6 +45,7 @@ import {
   toViewProfile as toViewProfileModel,
 } from './util/serailizeformater';
 import { validateModel } from './util/validation';
+import { MODELVERSION } from '../utils/constants';
 
 // the function to convert text to MMEL
 export function textToMMEL(x: string): MMELModel {
@@ -59,6 +60,7 @@ export function MMELToText(model: MMELModel): string {
   if (model.root !== '') {
     out += 'root ' + model.root + '\n\n';
   }
+  out += 'version "' + MODELVERSION + '"\n\n';
   out += toMetaDataModel(model.meta) + '\n';
   for (const r in model.roles) {
     out += toRoleModel(model.roles[r]) + '\n';
@@ -123,6 +125,7 @@ function parseModel(input: string): MMELModel {
     sections: {},
     links: {},
     root: '',
+    version: '',
   };
 
   const token: Array<string> = MMELtokenize(input);
@@ -199,6 +202,8 @@ function parseModel(input: string): MMELModel {
     } else if (command === 'link') {
       const t = parseLink(token[i++], token[i++]);
       model.links[t.id] = t;
+    } else if (command === 'version') {
+      model.version = MMELremovePackage(token[i++]);
     } else {
       throw Error('Unknown command ' + command);
     }
