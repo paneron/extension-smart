@@ -78,6 +78,7 @@ import { MMELDocument } from '../model/document';
 import MapperCompareMenu from './menu/MapperCompareMenu';
 import MapperDialog from './popover/MapperDialog';
 import { calEdgeDiff } from '../utils/map/MappingDiff';
+import { DOCVERSION, MAPVERSION } from '../utils/constants';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -156,6 +157,12 @@ const ModelMapper: React.FC<{
         });
       } else {
         const doc = data as MMELDocument;
+        if (doc && doc.version !== DOCVERSION) {
+          alert(
+            `Warning: Document version not matched\nDocument version of the file:${doc.version}`
+          );
+          doc.version = DOCVERSION;
+        }
         onRefPropsChange({
           history: { items: [] },
           historyMap: {},
@@ -192,6 +199,12 @@ const ModelMapper: React.FC<{
       });
       if (mapData !== undefined && mapData !== null) {
         const mapPro = mapData as MapProfile;
+        if (mapPro.version !== MAPVERSION) {
+          alert(
+            `Warning: Mapping version not matched\nMapping version of the file:${mapPro.version}`
+          );
+          mapPro.version = MAPVERSION;
+        }
         setMapProfile(mapPro);
       } else {
         setMapProfile({
@@ -200,6 +213,7 @@ const ModelMapper: React.FC<{
           id: getNamespace(mw.model),
           mapSet: {},
           docs: {},
+          version: MAPVERSION,
         });
       }
       setMainRepo(repo.ns);
@@ -324,6 +338,7 @@ const ModelMapper: React.FC<{
       id: getNamespace(model),
       mapSet: {},
       docs: {},
+      version: MAPVERSION,
     });
     impMW.model = model;
   }

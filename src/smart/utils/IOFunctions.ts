@@ -5,7 +5,13 @@ import { MapProfile } from '../model/mapmodel';
 import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
 import { SMARTWorkspace } from '../model/workspace';
 import { textToMMEL } from '../serialize/MMEL';
-import { LoggerInterface, MODELVERSION, OpenFileInterface } from './constants';
+import {
+  LoggerInterface,
+  MAPVERSION,
+  MODELVERSION,
+  OpenFileInterface,
+  WSVERSION,
+} from './constants';
 import { textToDoc } from './DocumentFunctions';
 import { Logger } from './ModelFunctions';
 import { bsiToDocument } from './xml/BSIXML';
@@ -100,6 +106,7 @@ function parseModel(props: {
       alert(
         `Warning: Model version not matched\nModel version of the file:${model.version}`
       );
+      model.version = MODELVERSION;
     }
     const mw = createEditorModelWrapper(model);
     if (indexModel !== undefined) {
@@ -170,7 +177,16 @@ export function handleWSOpen(props: {
     handleFileOpen({
       ...props,
       type: FILE_TYPE.Workspace,
-      postProcessing: data => setWorkspace(JSON.parse(data) as SMARTWorkspace),
+      postProcessing: data => {
+        const ws = JSON.parse(data) as SMARTWorkspace;
+        if (ws.version !== WSVERSION) {
+          alert(
+            `Warning: Workspace version not matched\nWorkspace version of the file:${ws.version}`
+          );
+          ws.version = WSVERSION;
+        }
+        setWorkspace(ws);
+      },
     });
   } catch (e: unknown) {
     const err = e as Error;
@@ -188,8 +204,16 @@ export function handleMappingOpen(props: {
     handleFileOpen({
       ...props,
       type: fileType ?? FILE_TYPE.Map,
-      postProcessing: data =>
-        onMapProfileChanged(JSON.parse(data) as MapProfile),
+      postProcessing: data => {
+        const mp = JSON.parse(data) as MapProfile;
+        if (mp.version !== MAPVERSION) {
+          alert(
+            `Warning: Mapping version not matched\nMapping version of the file:${mp.version}`
+          );
+          mp.version = MAPVERSION;
+        }
+        onMapProfileChanged(mp);
+      },
     });
   } catch (e: unknown) {
     const err = e as Error;

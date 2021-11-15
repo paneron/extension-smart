@@ -1,3 +1,4 @@
+import { WSVERSION } from '../utils/constants';
 import { JSONContext, JSONContextType } from '../utils/repo/io';
 
 export interface SMARTDocument {
@@ -23,6 +24,7 @@ export interface SMARTWorkspace {
   '@context': JSONContextType;
   '@type': 'MMEL_WORKSPACE';
   docs: Record<string, SMARTModelStore>;
+  version: string;
 }
 
 export function createNewSMARTWorkspace(): SMARTWorkspace {
@@ -30,5 +32,6 @@ export function createNewSMARTWorkspace(): SMARTWorkspace {
     '@context': JSONContext,
     '@type': 'MMEL_WORKSPACE',
     docs: {},
+    version: WSVERSION,
   };
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { DocSection, DocStatement, MMELDocument } from '../../model/document';
 import { XMLElement } from '../../model/xmlelement';
+import { DOCVERSION } from '../constants';
 import { elementToString, isXMLElement, parseXML } from './XMLParser';
 
 function getElementValue(xml: XMLElement, name: string): string {
@@ -58,6 +59,7 @@ export function bsiToDocument(data: string): MMELDocument {
     title: '',
     sections: [],
     type: 'document',
+    version: DOCVERSION,
   };
   if (front !== undefined && front.length > 0) {
     setMeta(doc, front[0]);

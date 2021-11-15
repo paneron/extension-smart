@@ -62,6 +62,7 @@ import {
 } from '../utils/repo/io';
 import { MMELJSON } from '../model/json';
 import { MMELRepo, RepoIndex } from '../model/repo';
+import { WSVERSION } from '../utils/constants';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -125,6 +126,12 @@ const ModelWorkspace: React.FC<{
         workData !== undefined && workData !== null
           ? (workData as SMARTWorkspace)
           : createNewSMARTWorkspace();
+      if (ws.version !== WSVERSION) {
+        alert(
+          `Warning: Workspace version not matched\nWorkspace version of the file:${ws.version}`
+        );
+        ws.version = WSVERSION;
+      }
       setState({
         ...state,
         history: createPageHistory(mw),

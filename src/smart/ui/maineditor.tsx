@@ -81,6 +81,7 @@ import {
 import NewComponentPane from './control/newComponentPane';
 import {
   DeletableNodeTypes,
+  DOCVERSION,
   DragAndDropImportRefType,
   DragAndDropNewFormatType,
   EditableNodeTypes,
@@ -230,6 +231,12 @@ const ModelEditor: React.FC<{
         setReference(mw);
       } else {
         const doc = data as MMELDocument;
+        if (doc && doc.version !== DOCVERSION) {
+          alert(
+            `Warning: Document version not matched\nDocument version of the file:${doc.version}`
+          );
+          doc.version = DOCVERSION;
+        }
         setReference(doc);
       }
       setRefRepo(undefined);

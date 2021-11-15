@@ -76,6 +76,7 @@ export function JSONToMMEL(m: MMELJSON): MMELModel {
     alert(
       `Warning: Model version not matched\nModel version of the file:${m.version}`
     );
+    m.version = MODELVERSION;
   }
   return {
     meta: createMetaData(),

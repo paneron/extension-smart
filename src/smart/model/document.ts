@@ -26,6 +26,7 @@ export interface MMELDocument {
   type: 'document';
   edition?: string;
   sdo?: string;
+  version: string;
 }
 
 export type DocMapIndex = Record<string, string[]>;
