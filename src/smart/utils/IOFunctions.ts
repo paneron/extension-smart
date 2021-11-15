@@ -247,7 +247,7 @@ export async function handleFileOpen(props: {
             logger?.log('File data');
             if (fileData) {
               if (type === FILE_TYPE.JSON) {
-                postProcessing(JSON.stringify(fileData));
+                postProcessing(JSON.stringify(fileData, undefined, 2));
               } else if (base64) {
                 if (fileData['asBase64'] !== undefined) {
                   postProcessing(fileData['asBase64']);

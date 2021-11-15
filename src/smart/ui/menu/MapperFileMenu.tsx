@@ -36,7 +36,7 @@ const MapperFileMenu: React.FC<{
   }
 
   async function handleSave() {
-    const fileData = JSON.stringify(mapProfile);
+    const fileData = JSON.stringify(mapProfile, undefined, 2);
 
     await saveToFileSystem({
       getBlob,
@@ -47,7 +47,7 @@ const MapperFileMenu: React.FC<{
   }
 
   async function handleExport() {
-    const fileData = JSON.stringify(mapProfile);
+    const fileData = JSON.stringify(mapProfile, undefined, 2);
 
     await saveToFileSystem({
       getBlob,

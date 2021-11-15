@@ -28,7 +28,9 @@ const ProvisionSummary: React.FC<{
         <>
           <ButtonGroup>
             <Button
-              onClick={() => onSave(JSON.stringify(result), FILE_TYPE.JSON)}
+              onClick={() =>
+                onSave(JSON.stringify(result, undefined, 2), FILE_TYPE.JSON)
+              }
             >
               Export to JSON
             </Button>

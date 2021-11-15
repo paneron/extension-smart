@@ -36,7 +36,7 @@ const WorkspaceFileMenu: React.FC<{
   }
 
   async function handleWSSave() {
-    const fileData = JSON.stringify(workspace);
+    const fileData = JSON.stringify(workspace, undefined, 2);
 
     await saveToFileSystem({
       getBlob,
