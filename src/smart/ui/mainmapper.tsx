@@ -579,7 +579,7 @@ const ModelMapper: React.FC<{
                   }
                   onClose={onRefClose}
                   isRepoMode={repo !== undefined}
-                  setRefRepo={setRefRepo}
+                  setRefRepo={x => setRefRepo(x.ns)}
                   index={index}
                 />
               )}

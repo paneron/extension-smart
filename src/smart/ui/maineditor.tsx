@@ -46,6 +46,7 @@ import {
   getBreadcrumbs,
   PageHistory,
   popPage,
+  RepoHistory,
 } from '../model/history';
 import {
   createRegistry,
@@ -208,6 +209,7 @@ const ModelEditor: React.FC<{
   const [idVisible, setIdVisible] = useState<boolean>(false);
   const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
   const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
+  const [repoHis, setRepoHis] = useState<RepoHistory>([]);
 
   const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
   const repoModelFile = useObjectData({
@@ -568,6 +570,30 @@ const ModelEditor: React.FC<{
     });
   }
 
+  function setHis(newHis: RepoHistory) {
+    if (newHis.length > 0) {
+      const last = newHis[newHis.length - 1];
+      setRefRepo(last.ns);
+      setRepoHis(newHis);
+    }
+  }
+
+  function goToNextModel(x: MMELRepo) {
+    setRefRepo(x.ns);
+    setRepoHis([...repoHis, x]);
+  }
+
+  function selectRefRepo(x: MMELRepo) {
+    setRefRepo(x.ns);
+    setRepoHis([x]);
+  }
+
+  function selectReference(x: ReferenceContent | undefined) {
+    setReference(x);
+    setRefRepo(undefined);
+    setRepoHis([]);
+  }
+
   const hotkeys = [
     {
       combo: 'ctrl+s',
@@ -580,11 +606,11 @@ const ModelEditor: React.FC<{
   const referenceMenu = (
     <>
       <EditorReferenceMenuButton
-        setReference={setReference}
+        setReference={selectReference}
         isBSIEnabled={isBSIEnabled}
         reference={reference}
         isRepo={repo !== undefined}
-        setRefRepo={setRefRepo}
+        setRefRepo={selectRefRepo}
         index={index}
       />
       {(selectionImport !== undefined ||
@@ -806,6 +832,9 @@ const ModelEditor: React.FC<{
                   setModelWrapper={setReference}
                   menuControl={referenceMenu}
                   index={index}
+                  repoHis={repoHis}
+                  setRepoHis={setHis}
+                  goToNextModel={goToNextModel}
                 />
               ) : (
                 <DocumentReferenceView

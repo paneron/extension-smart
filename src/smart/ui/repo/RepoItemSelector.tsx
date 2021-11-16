@@ -2,7 +2,7 @@ import { Button, Card, Icon, InputGroup, Text } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { CSSProperties, useState } from 'react';
-import { RepoIndex, RepoItem, RepoItemType } from '../../model/repo';
+import { MMELRepo, RepoIndex, RepoItem, RepoItemType } from '../../model/repo';
 import { LoadingContainer } from '../common/Loading';
 
 function matchFilter(item: RepoItem, filter: string) {
@@ -21,7 +21,7 @@ const buttonCSS: CSSProperties = {
 };
 
 const RepoItemSelector: React.FC<{
-  setRefRepo: (x: string) => void;
+  setRefRepo: (x: MMELRepo) => void;
   type: RepoItemType;
   onClose: () => void;
   index: RepoIndex;
@@ -30,7 +30,7 @@ const RepoItemSelector: React.FC<{
   const [selected, setSelected] = useState<string | undefined>(undefined);
 
   function onSelect(ns: string) {
-    setRefRepo(ns);
+    setRefRepo({ ns, type });
     onClose();
   }
 

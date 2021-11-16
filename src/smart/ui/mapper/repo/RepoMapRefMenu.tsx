@@ -5,13 +5,13 @@ import RepoExternalFileMenu from './RepoExternalFileMenu';
 import { MMELDocument } from '../../../model/document';
 import { ModelWrapper } from '../../../model/modelwrapper';
 import RepoInternalFileMenu from './RepoInternalFileMenu';
-import { RepoIndex, RepoItemType } from '../../../model/repo';
+import { MMELRepo, RepoIndex, RepoItemType } from '../../../model/repo';
 import RepoItemSelector from '../../repo/RepoItemSelector';
 
 const RepoMapRefMenus: React.FC<{
   setModelWrapper: (x: ModelWrapper) => void;
   setDocument: (x: MMELDocument) => void;
-  setRefRepo: (x: string) => void;
+  setRefRepo: (x: MMELRepo) => void;
   index: RepoIndex;
 }> = function (props) {
   const [type, setType] = useState<RepoItemType | undefined>(undefined);

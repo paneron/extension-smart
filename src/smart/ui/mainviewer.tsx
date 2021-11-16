@@ -32,9 +32,16 @@ import {
   getBreadcrumbs,
   PageHistory,
   popPage,
+  RepoHistory,
 } from '../model/history';
 import { createNewEditorModel } from '../utils/EditorFactory';
-import { EdgeTypes, FunModel, NodeTypes, ViewerState } from '../model/States';
+import {
+  EdgeTypes,
+  FunModel,
+  NodeTypes,
+  ViewerOption,
+  ViewerState,
+} from '../model/States';
 import { SelectedNodeDescription } from './sidebar/selected';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
@@ -65,8 +72,10 @@ import RegistrySummary from './summary/RegistrySummary';
 import ProvisionSettings from './summary/ProvisionSettings';
 import VersionTrackerSettingPane from './version/VersionTrackerSetting';
 import { getPathByNS, JSONToMMEL, RepoFileType } from '../utils/repo/io';
-import { MMELJSON } from '../model/json';
 import { MMELRepo, RepoIndex } from '../model/repo';
+import RepoBreadcrumb from './common/description/RepoBreadcrumb';
+import ViewOptionMenu from './menu/ViewOptionMenu';
+import { MMELJSON } from '../model/json';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -97,8 +106,17 @@ const ModelViewer: React.FC<{
   repo?: MMELRepo;
   index: RepoIndex;
   linktoAnotherRepo: (x: MMELRepo) => void;
-  popHis?: () => void;
-}> = ({ isVisible, className, repo, index, linktoAnotherRepo, popHis }) => {
+  repoHis: RepoHistory;
+  setRepoHis: (x: RepoHistory) => void;
+}> = ({
+  isVisible,
+  className,
+  repo,
+  index,
+  linktoAnotherRepo,
+  repoHis,
+  setRepoHis,
+}) => {
   const { logger, useObjectData, requestFileFromFilesystem } =
     useContext(DatasetContext);
   Logger.logger = logger;
@@ -111,9 +129,13 @@ const ModelViewer: React.FC<{
   );
 
   const [state, setState] = useState<ViewerState>({
-    dvisible: true,
     modelWrapper: initModelWrapper,
     history: createPageHistory(initModelWrapper),
+  });
+  const [viewOption, setViewOption] = useState<ViewerOption>({
+    dvisible: true,
+    idVisible: false,
+    repoBCVisible: true,
   });
   const [selected, setSelected] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<Set<string>>(
@@ -127,7 +149,6 @@ const ModelViewer: React.FC<{
   );
 
   const [toaster] = useState<IToaster>(Toaster.create());
-  const [idVisible, setIdVisible] = useState<boolean>(false);
   const [funMS, setFunMS] = useState<FunModel | undefined>(undefined);
 
   const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
@@ -161,7 +182,7 @@ const ModelViewer: React.FC<{
   }
 
   function toggleDataVisibility() {
-    setState({ ...state, dvisible: !state.dvisible });
+    setViewOption({ ...viewOption, dvisible: !viewOption.dvisible });
   }
 
   function setModelWrapper(mw: ModelWrapper) {
@@ -300,6 +321,14 @@ const ModelViewer: React.FC<{
       );
     }
     return false;
+  }
+
+  function popHis() {
+    if (repoHis.length > 1) {
+      const newHis = [...repoHis];
+      newHis.pop();
+      setRepoHis(newHis);
+    }
   }
 
   const mw = state.modelWrapper;
@@ -479,6 +508,18 @@ const ModelViewer: React.FC<{
       >
         <Button>Tools</Button>
       </Popover2>
+      <Popover2
+        minimal
+        placement="bottom-start"
+        content={
+          <ViewOptionMenu
+            viewOption={viewOption}
+            setViewOption={setViewOption}
+          />
+        }
+      >
+        <Button>View</Button>
+      </Popover2>
       <MGDButton
         type={MGDButtonType.Primary}
         disabled={
@@ -490,7 +531,7 @@ const ModelViewer: React.FC<{
       >
         Drill up
       </MGDButton>
-      {popHis && (
+      {repoHis.length > 1 && (
         <MGDButton type={MGDButtonType.Secondary} onClick={popHis}>
           Previous model
         </MGDButton>
@@ -574,11 +615,11 @@ const ModelViewer: React.FC<{
               elements={getViewerReactFlowElementsFrom(
                 funMS !== undefined ? funMS.mw : state.modelWrapper,
                 index,
-                state.dvisible,
+                viewOption.dvisible,
                 onProcessClick,
                 getStyleById,
                 getSVGColorById,
-                idVisible,
+                viewOption.idVisible,
                 linktoAnotherRepo,
                 view !== undefined && view.ComponentToolTip !== undefined
                   ? ViewStyleComponentDesc
@@ -602,17 +643,25 @@ const ModelViewer: React.FC<{
             >
               <Controls showInteractive={false}>
                 <DataVisibilityButton
-                  isOn={state.dvisible}
+                  isOn={viewOption.dvisible}
                   onClick={toggleDataVisibility}
                 />
                 <IdVisibleButton
-                  isOn={idVisible}
-                  onClick={() => setIdVisible(x => !x)}
+                  isOn={viewOption.idVisible}
+                  onClick={() =>
+                    setViewOption({
+                      ...viewOption,
+                      idVisible: !viewOption.idVisible,
+                    })
+                  }
                 />
               </Controls>
             </ReactFlow>
             {view !== undefined && view.legendList !== undefined && (
               <LegendPane list={view.legendList} onLeft={false} />
+            )}
+            {repoHis.length > 1 && viewOption.repoBCVisible && (
+              <RepoBreadcrumb repoHis={repoHis} setRepoHis={setRepoHis} />
             )}
           </div>
         </Workspace>

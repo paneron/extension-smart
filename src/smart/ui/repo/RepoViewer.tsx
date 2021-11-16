@@ -26,6 +26,7 @@ import { groupItems, setValueToIndex } from '../../utils/repo/CommonFunctions';
 import { MMELDocument } from '../../model/document';
 import React from 'react';
 import RepoToolbar from './RepoToolbar';
+import { createMapProfile } from '../../model/mapmodel';
 
 function matchFilter(item: RepoItem, filter: string) {
   return (
@@ -71,6 +72,8 @@ const RepoViewer: React.FC<{
   ) {
     if (updateObjects) {
       if (ns !== undefined && model !== undefined) {
+        const mp = createMapProfile();
+        mp.id = getNamespace(model);
         const task = updateObjects({
           commitMessage: COMMITMSG,
           _dangerouslySkipValidation: true,
@@ -80,7 +83,7 @@ const RepoViewer: React.FC<{
               newValue: MMELToSerializable(model),
             },
             [getPathByNS(ns, RepoFileType.MAP)]: {
-              newValue: { id: getNamespace(model), mapSet: {}, docs: {} },
+              newValue: mp,
             },
             [getPathByNS(ns, RepoFileType.WORKSPACE)]: {
               newValue: createNewSMARTWorkspace(),

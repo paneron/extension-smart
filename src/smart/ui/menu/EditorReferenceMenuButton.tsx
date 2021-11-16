@@ -1,7 +1,7 @@
 import { Button, Dialog } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import React, { useState } from 'react';
-import { RepoIndex, RepoItemType } from '../../model/repo';
+import { MMELRepo, RepoIndex, RepoItemType } from '../../model/repo';
 import { ReferenceContent } from '../../model/States';
 import RepoItemSelector from '../repo/RepoItemSelector';
 import EditorReferenceMenu from './EditorReferenceMenu';
@@ -11,7 +11,7 @@ const EditorReferenceMenuButton: React.FC<{
   isBSIEnabled?: boolean;
   reference: ReferenceContent | undefined;
   isRepo: boolean;
-  setRefRepo: (x: string) => void;
+  setRefRepo: (x: MMELRepo) => void;
   index: RepoIndex;
 }> = function (props) {
   const { reference } = props;

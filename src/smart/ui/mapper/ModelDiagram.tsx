@@ -52,7 +52,7 @@ import SMARTDocumentView from './document/DocumentView';
 import { Popover2 } from '@blueprintjs/popover2';
 import MapperDocumentMenu from '../menu/MapperDocumentMenu';
 import RepoMapRefMenus from './repo/RepoMapRefMenu';
-import { RepoIndex } from '../../model/repo';
+import { MMELRepo, RepoIndex } from '../../model/repo';
 import { MapDiffStyles } from './MappingsCanvus';
 import {
   MappingDiffResultStyles,
@@ -76,7 +76,7 @@ const ModelDiagram: React.FC<{
   getPartnerModelElementById: (id: string) => string;
   onClose: () => void;
   isRepoMode?: boolean;
-  setRefRepo?: (x: string) => void;
+  setRefRepo?: (x: MMELRepo) => void;
   index: RepoIndex;
 }> = ({
   className,
@@ -290,7 +290,8 @@ const ModelDiagram: React.FC<{
                   : undefined,
                 ComponentShortDescription,
                 MappingList,
-                viewOption.idVisible
+                viewOption.idVisible,
+                setRefRepo
               )}
               onLoad={onLoad}
               onDragOver={onDragOver}
