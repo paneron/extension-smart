@@ -26,6 +26,8 @@ const ListManagePage = <T extends Object>(props: IManageHandler<T>) => {
     updateItem,
     getObjById,
     buttons,
+    moveUp,
+    moveDown,
   } = props;
 
   const [selected, setSelected] = useState<T>(initObj);
@@ -71,10 +73,12 @@ const ListManagePage = <T extends Object>(props: IManageHandler<T>) => {
 
   const viewHandler: IViewListInterface = {
     isVisible: mode === ListManagePageType.VIEW,
-    filterName: filterName,
-    itemName: itemName,
-    getItems: getItems,
-    removeItems: removeItems,
+    filterName,
+    itemName,
+    getItems,
+    removeItems,
+    moveUp,
+    moveDown,
     addClicked: () => {
       setSelected({ ...initObj });
       setMode(ListManagePageType.ADD);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { MAPVERSION } from '../utils/constants';
 import { buildModelLinks } from '../utils/ModelFunctions';
 import { JSONContext, JSONContextType } from '../utils/repo/io';
 import {
@@ -32,6 +33,7 @@ export interface MapProfile {
   id: string; // namespace of the implementation model
   mapSet: Record<string, MapSet>;
   docs: Record<string, MappingDoc>;
+  version: string;
 }
 
 export interface MapSet {
@@ -51,6 +53,7 @@ export function createMapProfile(): MapProfile {
     id: '',
     mapSet: {},
     docs: {},
+    version: MAPVERSION,
   };
 }
 

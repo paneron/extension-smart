@@ -12,15 +12,15 @@ export const mgdLegend: CSSProperties = {
 };
 
 export const mgdLegendRight: CSSProperties = {
-  right: 0,
+  right: 2,
 };
 
 export const mgdLegendLeft: CSSProperties = {
-  left: 0,
+  left: 2,
 };
 
 export const mgdLegendNormal: CSSProperties = {
-  top: '2rem',
+  top: 20,
 };
 
 export const mgdLegendBottom: CSSProperties = {

@@ -34,4 +34,5 @@ export interface MMELModel {
   links: Record<string, MMELLink>;
 
   root: string;
+  version: string;
 }

@@ -574,10 +574,10 @@ const FullVersionEdit: React.FC<
           }}
         />
         <MultiReferenceSelector
-          text="Reference figures"
+          text="Reference multimedia"
           options={figures}
           values={editing.figures}
-          filterName="Figure filter"
+          filterName="Multimedia filter"
           add={x => {
             editing.figures = new Set([...editing.figures, ...x]);
             setEditing({ ...editing });

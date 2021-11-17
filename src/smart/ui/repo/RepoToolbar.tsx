@@ -7,6 +7,11 @@ import {
   ModelWrapper,
 } from '../../model/modelwrapper';
 import { RepoIndex, RepoItemType } from '../../model/repo';
+import {
+  EXTENSIONVERSION,
+  MODELVERSION,
+  PANERONVERSION,
+} from '../../utils/constants';
 import { createNewEditorModel } from '../../utils/EditorFactory';
 import AskIDForSaveMenu from '../popover/AskIDForSaveMenu';
 import RepoImportMenu from './RepoImportMenu';
@@ -37,6 +42,12 @@ const RepoToolbar: React.FC<{
     const mw = createEditorModelWrapper(model);
     addMW(mw, 'Imp');
     setIsOpen(false);
+  }
+
+  function showVersion() {
+    alert(
+      `Extension version:\n${EXTENSIONVERSION}\nModel version\n${MODELVERSION}\nTested on Paneron version:\n${PANERONVERSION}`
+    );
   }
 
   return (
@@ -70,6 +81,7 @@ const RepoToolbar: React.FC<{
       >
         <Button onClick={() => setIsOpen(x => !x)}>New model</Button>
       </Popover2>
+      <Button onClick={showVersion}>Version</Button>
     </ControlGroup>
   );
 };

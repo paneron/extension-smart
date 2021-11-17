@@ -1,12 +1,15 @@
 import React from 'react';
 import { DocMapIndex, MMELDocument } from '../model/document';
 import { MappingType } from '../model/mapmodel';
+import { DOCVERSION } from './constants';
 
 function addMetaField(doc: MMELDocument, id: string, value: string) {
   if (id === 'namespace') {
     doc.id = value;
   } else if (id === 'title') {
     doc.title = value;
+  } else if (id === 'version') {
+    doc.version = value;
   } else {
     throw new Error(`Unknown line ${id}#${value}`);
   }
@@ -61,6 +64,7 @@ export function textToDoc(data: string): MMELDocument {
     title: '',
     sections: [],
     type: 'document',
+    version: '',
   };
   const lines = data.split('\n');
   let metaMode = true;
@@ -88,6 +92,12 @@ export function textToDoc(data: string): MMELDocument {
         consecutive = false;
       }
     }
+  }
+  if (doc.version !== DOCVERSION) {
+    alert(
+      `Warning: Document version not matched\nDocument version of the file:${doc.version}`
+    );
+    doc.version = DOCVERSION;
   }
   return doc;
 }

@@ -1,5 +1,6 @@
 import { DataType } from '../interface/baseinterface';
 import {
+  BINARY_TYPE,
   LINK_TYPE,
   MMELFigure,
   MMELLink,
@@ -341,6 +342,7 @@ export function parseFigure(id: string, data: string): MMELFigure {
     id,
     title: '',
     data: '',
+    type: 'fig',
     datatype: DataType.FIGURE,
   };
 
@@ -354,6 +356,8 @@ export function parseFigure(id: string, data: string): MMELFigure {
           fig.title = MMELremovePackage(t[i++]);
         } else if (command === 'data') {
           fig.data = MMELremovePackage(t[i++]);
+        } else if (command === 'type') {
+          fig.type = t[i++] as BINARY_TYPE;
         } else {
           throw new Error(
             `Parsing error: figure. ID ${id}: Unknown keyword ${command}`
@@ -376,6 +380,7 @@ export function parseTable(id: string, data: string): MMELTable {
     columns: 1,
     data: [],
     domain: [],
+    classDisplay: '',
     datatype: DataType.TABLE,
   };
 
@@ -390,6 +395,8 @@ export function parseTable(id: string, data: string): MMELTable {
           table.title = MMELremovePackage(t[i++]);
         } else if (command === 'columns') {
           table.columns = parseInt(MMELremovePackage(t[i++]));
+        } else if (command === 'display') {
+          table.classDisplay = MMELremovePackage(t[i++]);
         } else if (command === 'data') {
           cells = MMELtokenizePackage(t[i++]);
         } else if (command === 'domain') {

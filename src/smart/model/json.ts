@@ -35,6 +35,7 @@ export type MMELJSON = {
   sections?: Record<string, MMELTextSection>;
   links?: Record<string, MMELLink>;
   root?: string;
+  version?: string;
 };
 
 export type JSONProvision = {

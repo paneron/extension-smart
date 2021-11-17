@@ -1,10 +1,17 @@
 import { Menu, MenuItem } from '@blueprintjs/core';
 import React from 'react';
 import {
+  BINARY_TYPE,
   MMELFigure,
   MMELTable,
 } from '../../serialize/interface/supportinterface';
 import { isMMELTable } from '../../model/editormodel';
+
+const titles: Record<BINARY_TYPE, string> = {
+  fig: 'Figure',
+  video: 'Video',
+  '3d': '3D Model',
+};
 
 const NonTextReferenceList: React.FC<{
   refs: (MMELTable | MMELFigure)[];
@@ -23,7 +30,9 @@ const NonTextReferenceList: React.FC<{
     >
       {refs.map(ref => (
         <MenuItem
-          text={(isMMELTable(ref) ? 'Table: ' : 'Figure: ') + ref.title}
+          text={
+            (isMMELTable(ref) ? 'Table: ' : `${titles[ref.type]}: `) + ref.title
+          }
           key={ref.id}
           onClick={() => showRef(ref)}
         />

@@ -109,6 +109,7 @@ export interface EditorModel {
   sections: Record<string, MMELTextSection>;
   links: Record<string, MMELLink>;
   root: string;
+  version: string;
 }
 
 export function isEditorNode(x: unknown): x is EditorNode {

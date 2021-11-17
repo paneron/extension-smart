@@ -19,11 +19,7 @@ const MMELTableRow: React.FC<{
     <tr>
       <td style={{ textAlign: 'right' }}>
         <Text>
-          {line === undefined
-            ? 'New row'
-            : line === 0
-            ? 'Header row'
-            : `Row ${line}`}
+          {line === undefined ? 'New' : line === 0 ? 'Header' : `${line}`}
         </Text>
       </td>
       {row.map((x, index) => (

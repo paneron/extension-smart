@@ -1,6 +1,7 @@
 import React from 'react';
 import { MMELFigure } from '../../../serialize/interface/supportinterface';
 import { DescriptionItem } from './fields';
+import MultimediaView from './Multimedia';
 
 const FigureViewer: React.FC<{
   fig: MMELFigure;
@@ -8,9 +9,10 @@ const FigureViewer: React.FC<{
   return (
     <>
       <DescriptionItem label="Title" value={fig.title} />
-      <img
+      <MultimediaView
+        type={fig.type}
+        base64={fig.data}
         style={{ maxWidth: '90vw' }}
-        src={`data:image/jpeg;base64,${fig.data}`}
       />
     </>
   );

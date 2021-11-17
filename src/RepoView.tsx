@@ -64,9 +64,7 @@ const RepositoryView: React.FC<{
     }
   }
 
-  function popHis() {
-    const newHis = [...repoHis];
-    newHis.pop();
+  function setHis(newHis: RepoHistory) {
     if (newHis.length > 0) {
       const last = newHis[newHis.length - 1];
       setRepo(last);
@@ -155,7 +153,8 @@ const RepositoryView: React.FC<{
                 isBSI={isBSI}
                 index={index}
                 linktoAnotherRepo={linktoAnotherRepo}
-                popHis={repoHis.length > 1 ? popHis : undefined}
+                repoHis={repoHis}
+                setRepoHis={setHis}
               />
             );
           })}
@@ -213,7 +212,8 @@ interface ModuleConfiguration {
     isBSI: boolean;
     index: RepoIndex;
     linktoAnotherRepo: (x: MMELRepo) => void;
-    popHis?: () => void;
+    repoHis: RepoHistory;
+    setRepoHis: (x: RepoHistory) => void;
   }>;
 }
 

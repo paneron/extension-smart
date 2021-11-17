@@ -36,7 +36,7 @@ const MapperFileMenu: React.FC<{
   }
 
   async function handleSave() {
-    const fileData = JSON.stringify(mapProfile);
+    const fileData = JSON.stringify(mapProfile, undefined, 2);
 
     await saveToFileSystem({
       getBlob,
@@ -47,7 +47,7 @@ const MapperFileMenu: React.FC<{
   }
 
   async function handleExport() {
-    const fileData = JSON.stringify(mapProfile);
+    const fileData = JSON.stringify(mapProfile, undefined, 2);
 
     await saveToFileSystem({
       getBlob,
@@ -62,6 +62,13 @@ const MapperFileMenu: React.FC<{
       onMapProfileChanged: onMapProfileImported,
       requestFileFromFilesystem,
       fileType: FILE_TYPE.JSON,
+    });
+  }
+
+  async function handleImportMapping() {
+    handleMappingOpen({
+      onMapProfileChanged: onMapProfileImported,
+      requestFileFromFilesystem,
     });
   }
 
@@ -91,9 +98,11 @@ const MapperFileMenu: React.FC<{
           <MenuDivider />
           <MenuItem text="Import" icon="import">
             <MenuItem text="JSON-LD file" onClick={handleImport} />
+            <MenuItem text="Mapping file" onClick={handleImportMapping} />
           </MenuItem>
           <MenuItem text="Export" icon="export">
             <MenuItem text="JSON-LD file" onClick={handleExport} />
+            <MenuItem text="Mapping file" onClick={handleSave} />
           </MenuItem>
         </>
       ) : (

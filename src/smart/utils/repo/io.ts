@@ -29,6 +29,7 @@ import {
   MMELNote,
   MMELProvision,
 } from '../../serialize/interface/supportinterface';
+import { MODELVERSION } from '../constants';
 import { createMetaData } from '../EditorFactory';
 
 export enum RepoFileType {
@@ -63,6 +64,7 @@ export function MMELToSerializable(m: MMELModel): MMELJSON {
     sections: m.sections,
     links: m.links,
     root: m.root,
+    version: m.version,
     provisions: convertProvisions(m.provisions),
     notes: convertNotes(m.notes),
     elements: convertElements(m.elements),
@@ -70,6 +72,12 @@ export function MMELToSerializable(m: MMELModel): MMELJSON {
 }
 
 export function JSONToMMEL(m: MMELJSON): MMELModel {
+  if (m.version !== MODELVERSION) {
+    alert(
+      `Warning: Model version not matched\nModel version of the file:${m.version}`
+    );
+    m.version = MODELVERSION;
+  }
   return {
     meta: createMetaData(),
     roles: {},
@@ -84,6 +92,7 @@ export function JSONToMMEL(m: MMELJSON): MMELModel {
     sections: {},
     links: {},
     root: '',
+    version: '',
     ...m,
     provisions: m.provisions ? recoverProvisions(m.provisions) : {},
     notes: m.notes ? recoverNotes(m.notes) : {},

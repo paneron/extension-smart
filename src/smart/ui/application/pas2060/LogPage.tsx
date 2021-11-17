@@ -44,7 +44,7 @@ const ApplicationLogPage: React.FC<{
   }
 
   async function onSave(log: LogRecord) {
-    const fileData = JSON.stringify(log);
+    const fileData = JSON.stringify(log, undefined, 2);
 
     await saveToFileSystem({
       getBlob,

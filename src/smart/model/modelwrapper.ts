@@ -210,7 +210,8 @@ export function getEditorReferenceFlowElementsFrom(
   onProcessClick: (pageid: string, processid: string) => void,
   getStyleById: (id: string) => SerializedStyles,
   getSVGColorById: (id: string) => string,
-  idVisible: boolean
+  idVisible: boolean,
+  goToNextModel: (x: MMELRepo) => void
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDITREF,
@@ -220,6 +221,7 @@ export function getEditorReferenceFlowElementsFrom(
     getSVGColorById,
     idVisible,
     index,
+    goToNextModel,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }
@@ -296,7 +298,8 @@ export function getMapperReactFlowElementsFrom(
   isDiffParentFull: boolean | undefined,
   ComponentShortDescription: React.FC<{ id: string }>,
   MappingList: React.FC<{ id: string }>,
-  idVisible: boolean
+  idVisible: boolean,
+  goToNextModel?: (x: MMELRepo) => void
 ): Elements {
   const destinationList = getMappedList(mapSet);
   const callback = getEditorNodeCallBack({
@@ -322,6 +325,7 @@ export function getMapperReactFlowElementsFrom(
     MappingList,
     idVisible,
     index,
+    goToNextModel,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
 }

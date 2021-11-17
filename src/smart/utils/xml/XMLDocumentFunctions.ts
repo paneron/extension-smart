@@ -1,6 +1,7 @@
 import React from 'react';
 import { DocSection, DocStatement, MMELDocument } from '../../model/document';
 import { XMLElement } from '../../model/xmlelement';
+import { DOCVERSION } from '../constants';
 import { elementToString, isXMLElement, parseXML } from './XMLParser';
 
 interface CountFigTable {
@@ -145,6 +146,7 @@ export function xmlToDocument(data: string): MMELDocument {
     title: '',
     sections: [],
     type: 'document',
+    version: DOCVERSION,
   };
   const xml = parseXML(replaceHTMLCodes(data));
   const ids = buildIdMap(xml);

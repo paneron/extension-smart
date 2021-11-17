@@ -5,7 +5,13 @@ import { MapProfile } from '../model/mapmodel';
 import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
 import { SMARTWorkspace } from '../model/workspace';
 import { textToMMEL } from '../serialize/MMEL';
-import { LoggerInterface, OpenFileInterface } from './constants';
+import {
+  LoggerInterface,
+  MAPVERSION,
+  MODELVERSION,
+  OpenFileInterface,
+  WSVERSION,
+} from './constants';
 import { textToDoc } from './DocumentFunctions';
 import { Logger } from './ModelFunctions';
 import { bsiToDocument } from './xml/BSIXML';
@@ -28,6 +34,7 @@ export enum FILE_TYPE {
   CSV = 'csv',
   BSI = 'bsi',
   IMG = 'img',
+  VIDEO = 'video',
 }
 
 export const FileTypeDescription: Record<
@@ -83,6 +90,11 @@ export const FileTypeDescription: Record<
     extension: ['jpg', 'png'],
     openPrompt: 'Choose an image file to open',
   },
+  [FILE_TYPE.VIDEO]: {
+    filtername: 'Video files',
+    extension: ['mov'],
+    openPrompt: 'Choose a video file to open',
+  },
 };
 
 // Open
@@ -96,6 +108,12 @@ function parseModel(props: {
   logger?.log('Importing model');
   try {
     const model = textToMMEL(data);
+    if (model.version !== MODELVERSION) {
+      alert(
+        `Warning: Model version not matched\nModel version of the file:${model.version}`
+      );
+      model.version = MODELVERSION;
+    }
     const mw = createEditorModelWrapper(model);
     if (indexModel !== undefined) {
       indexModel(mw.model);
@@ -165,7 +183,16 @@ export function handleWSOpen(props: {
     handleFileOpen({
       ...props,
       type: FILE_TYPE.Workspace,
-      postProcessing: data => setWorkspace(JSON.parse(data) as SMARTWorkspace),
+      postProcessing: data => {
+        const ws = JSON.parse(data) as SMARTWorkspace;
+        if (ws.version !== WSVERSION) {
+          alert(
+            `Warning: Workspace version not matched\nWorkspace version of the file:${ws.version}`
+          );
+          ws.version = WSVERSION;
+        }
+        setWorkspace(ws);
+      },
     });
   } catch (e: unknown) {
     const err = e as Error;
@@ -183,8 +210,16 @@ export function handleMappingOpen(props: {
     handleFileOpen({
       ...props,
       type: fileType ?? FILE_TYPE.Map,
-      postProcessing: data =>
-        onMapProfileChanged(JSON.parse(data) as MapProfile),
+      postProcessing: data => {
+        const mp = JSON.parse(data) as MapProfile;
+        if (mp.version !== MAPVERSION) {
+          alert(
+            `Warning: Mapping version not matched\nMapping version of the file:${mp.version}`
+          );
+          mp.version = MAPVERSION;
+        }
+        onMapProfileChanged(mp);
+      },
     });
   } catch (e: unknown) {
     const err = e as Error;
@@ -218,12 +253,14 @@ export async function handleFileOpen(props: {
             logger?.log('File data');
             if (fileData) {
               if (type === FILE_TYPE.JSON) {
-                postProcessing(JSON.stringify(fileData));
+                postProcessing(JSON.stringify(fileData, undefined, 2));
               } else if (base64) {
                 if (fileData['asBase64'] !== undefined) {
                   postProcessing(fileData['asBase64']);
                 } else {
                   alert('No base64 data is found.');
+                  Logger.logger.log(Object.keys(fileData).join(','));
+                  Logger.logger.log(Object.values(fileData).join(','));
                 }
               } else {
                 if (fileData['asText'] !== undefined) {

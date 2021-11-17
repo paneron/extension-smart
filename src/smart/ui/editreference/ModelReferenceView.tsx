@@ -20,12 +20,13 @@ import {
   getBreadcrumbs,
   PageHistory,
   popPage,
+  RepoHistory,
 } from '../../model/history';
 import {
   getEditorReferenceFlowElementsFrom,
   ModelWrapper,
 } from '../../model/modelwrapper';
-import { RepoIndex } from '../../model/repo';
+import { MMELRepo, RepoIndex } from '../../model/repo';
 import { EdgeTypes, NodeTypes } from '../../model/States';
 import {
   getHighlightedStyleById,
@@ -36,6 +37,7 @@ import LegendPane from '../common/description/LegendPane';
 import { DataVisibilityButton, IdVisibleButton } from '../control/buttons';
 import SearchComponentPane from '../sidebar/search';
 import { SelectedNodeDescription } from '../sidebar/selected';
+import RepoBreadcrumb from '../common/description/RepoBreadcrumb';
 
 const ModelReferenceView: React.FC<{
   className?: string;
@@ -43,7 +45,19 @@ const ModelReferenceView: React.FC<{
   setModelWrapper: (x: ModelWrapper) => void;
   menuControl: React.ReactNode;
   index: RepoIndex;
-}> = ({ className, modelWrapper, setModelWrapper, menuControl, index }) => {
+  repoHis: RepoHistory;
+  setRepoHis: (x: RepoHistory) => void;
+  goToNextModel: (x: MMELRepo) => void;
+}> = ({
+  className,
+  modelWrapper,
+  setModelWrapper,
+  menuControl,
+  index,
+  repoHis,
+  setRepoHis,
+  goToNextModel,
+}) => {
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
   const Sidebar = useMemo(
@@ -162,7 +176,8 @@ const ModelReferenceView: React.FC<{
               onProcessClick,
               getStyleById,
               getSVGColorById,
-              idVisible
+              idVisible,
+              goToNextModel
             )}
             onLoad={params => params.fitView()}
             nodesConnectable={false}
@@ -186,6 +201,9 @@ const ModelReferenceView: React.FC<{
           </ReactFlow>
           {searchResult.size > 0 && (
             <LegendPane list={SearchResultStyles} onLeft={false} />
+          )}
+          {repoHis.length > 1 && (
+            <RepoBreadcrumb repoHis={repoHis} setRepoHis={setRepoHis} />
           )}
         </div>
       </Workspace>
