@@ -337,30 +337,19 @@ export function toTermsModel(term: MMELTerm): string {
 
 export function toFigModel(fig: MMELFigure): string {
   return (
-    'figure ' +
-    fig.id +
-    ' {\n' +
-    '  title "' +
-    fig.title +
-    '"\n' +
-    '  data "' +
-    fig.data +
-    '"\n' +
+    `figure ${fig.id} {\n` +
+    `  title "${fig.title}"\n` +
+    `  data "${fig.data}"\n` +
+    `  type ${fig.type ?? 'fig'}\n` +
     '}\n'
   );
 }
 
 export function toSectionModel(s: MMELTextSection): string {
   return (
-    'section ' +
-    s.id +
-    ' {\n' +
-    '  title "' +
-    s.title +
-    '"\n' +
-    '  content "' +
-    s.content +
-    '"\n' +
+    `section ${s.id} {\n` +
+    `  title "${s.title}"\n` +
+    `  content "${s.content}"\n` +
     '}\n'
   );
 }

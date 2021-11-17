@@ -87,8 +87,8 @@ const FigureEditPage: React.FC<{
   }
 
   const fighandler: IManageHandler<MMELFigure> = {
-    filterName: 'Figure filter',
-    itemName: 'View figures',
+    filterName: 'Content filter',
+    itemName: 'View contents',
     Content: FigItemEditPage,
     initObj: createFig(''),
     model: model,

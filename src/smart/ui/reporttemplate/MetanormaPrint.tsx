@@ -43,18 +43,10 @@ const MetanormaPrint: React.FC<{
     }
   }
 
-  Logger.logger.log(mnStatusResponse.isUpdating);
-  Logger.logger.log(mnStatusResponse._reqCounter);
-  Logger.logger.log(mnStatus === null);
-  Logger.logger.log(
-    mnStatus?.termination === null || mnStatus?.termination === undefined
-  );
-  Logger.logger.log(mnStatus?.termination?.code === undefined);
-  Logger.logger.log('stdout:', mnStatus?.stdout === undefined);
+  Logger.logger.log('termination signal', mnStatus?.termination?.signal);
+  Logger.logger.log('termination code', mnStatus?.termination?.code);
   Logger.logger.log('stdout:', mnStatus?.stdout);
-  Logger.logger.log('stderr:', mnStatus?.stderr === undefined);
   Logger.logger.log('stderr:', mnStatus?.stderr);
-  Logger.logger.log(mnStatus?.termination?.code);
 
   return (
     <MGDDisplayPane>

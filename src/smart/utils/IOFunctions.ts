@@ -34,6 +34,7 @@ export enum FILE_TYPE {
   CSV = 'csv',
   BSI = 'bsi',
   IMG = 'img',
+  VIDEO = 'video',
 }
 
 export const FileTypeDescription: Record<
@@ -88,6 +89,11 @@ export const FileTypeDescription: Record<
     filtername: 'Image files',
     extension: ['jpg', 'png'],
     openPrompt: 'Choose an image file to open',
+  },
+  [FILE_TYPE.VIDEO]: {
+    filtername: 'Video files',
+    extension: ['mov'],
+    openPrompt: 'Choose a video file to open',
   },
 };
 
@@ -253,6 +259,8 @@ export async function handleFileOpen(props: {
                   postProcessing(fileData['asBase64']);
                 } else {
                   alert('No base64 data is found.');
+                  Logger.logger.log(Object.keys(fileData).join(','));
+                  Logger.logger.log(Object.values(fileData).join(','));
                 }
               } else {
                 if (fileData['asText'] !== undefined) {

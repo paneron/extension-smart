@@ -16,7 +16,11 @@ export const NOTE_TYPES = [
   'DEFINITION',
   'COMMENTARY',
 ] as const;
+
+export const BINARY_TYPES = ['fig', 'video', '3d'] as const;
+
 export type NOTE_TYPE = typeof NOTE_TYPES[number];
+export type BINARY_TYPE = typeof BINARY_TYPES[number];
 
 export const LINK_TYPES = ['REPO', 'URL'] as const;
 export type LINK_TYPE = typeof LINK_TYPES[number];
@@ -106,6 +110,7 @@ export interface MMELFigure extends MMELObject {
   id: string;
   title: string;
   data: string;
+  type: BINARY_TYPE;
   datatype: DataType.FIGURE;
 }
 

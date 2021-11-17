@@ -286,6 +286,7 @@ export function createFig(id: string): MMELFigure {
     id,
     title: id,
     data: '',
+    type: 'fig',
     datatype: DataType.FIGURE,
   };
 }
