@@ -12,7 +12,7 @@ const RepoModelFile: React.FC<{ file: RepoItem; onDelete: VF; onOpen: VF }> =
         <Tooltip2 content={`${file.shortname} ${file.title}`}>
           <Card
             style={{
-              width: '15vw',
+              width: 160,
               height: 200,
               display: 'flex',
               alignItems: 'center',
@@ -28,7 +28,7 @@ const RepoModelFile: React.FC<{ file: RepoItem; onDelete: VF; onOpen: VF }> =
             />
             <div
               style={{
-                width: '15vw',
+                width: 160,
                 marginTop: 10,
                 fontSize: 18,
                 fontWeight: 'bold',

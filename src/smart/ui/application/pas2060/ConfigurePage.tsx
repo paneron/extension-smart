@@ -145,9 +145,8 @@ const EmissionItem: React.FC<{
           ],
         },
         selectedFiles => {
-          const fileData = Object.values(selectedFiles ?? {})[0];
-          if (fileData && fileData['asText'] !== undefined) {
-            const parsed = JSON.parse(fileData['asText']);
+          const parsed = Object.values(selectedFiles ?? {})[0];
+          if (parsed !== null) {
             const [minx, miny, minz] = (parsed.Polygon[0].Coordinates as string)
               .split(' ')
               .map(x => parseInt(x));

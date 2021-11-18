@@ -36,7 +36,6 @@ import {
   IToastProps,
   Toaster,
 } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
 import MapperFileMenu from './menu/MapperFileMenu';
 import { createPageHistory, PageHistory } from '../model/history';
 import {
@@ -79,6 +78,7 @@ import MapperCompareMenu from './menu/MapperCompareMenu';
 import MapperDialog from './popover/MapperDialog';
 import { calEdgeDiff } from '../utils/map/MappingDiff';
 import { DOCVERSION, MAPVERSION } from '../utils/constants';
+import MenuButton from './menu/MenuButton';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -430,47 +430,35 @@ const ModelMapper: React.FC<{
     });
   }
 
+  const mappermenu = (
+    <MapperFileMenu
+      mapProfile={mapProfile}
+      onMapProfileChanged={onMapProfileChanged}
+      onMapProfileImported={onMapProfileImported}
+      onMapImport={onMapImport}
+      onRepoSave={saveMapping}
+      onResetMapping={onResetMapping}
+      repo={repo}
+    />
+  );
+
+  const viewmenu = (
+    <MapperOptionMenu
+      viewOption={viewOption}
+      setOptions={setViewOption}
+      isRepo={repo !== undefined}
+    />
+  );
+
+  const compareMenu = (
+    <MapperCompareMenu opponent={diffMap} setDiffMap={setDiffMap} />
+  );
+
   const toolbar = (
     <ControlGroup>
-      <Popover2
-        minimal
-        placement="bottom-start"
-        content={
-          <MapperFileMenu
-            mapProfile={mapProfile}
-            onMapProfileChanged={onMapProfileChanged}
-            onMapProfileImported={onMapProfileImported}
-            onMapImport={onMapImport}
-            isRepoMode={repo !== undefined}
-            onRepoSave={saveMapping}
-            onResetMapping={onResetMapping}
-          />
-        }
-      >
-        <Button> Mapping </Button>
-      </Popover2>
-      <Popover2
-        minimal
-        placement="bottom-start"
-        content={
-          <MapperOptionMenu
-            viewOption={viewOption}
-            setOptions={setViewOption}
-            isRepo={repo !== undefined}
-          />
-        }
-      >
-        <Button> View </Button>
-      </Popover2>
-      <Popover2
-        minimal
-        placement="bottom-start"
-        content={
-          <MapperCompareMenu opponent={diffMap} setDiffMap={setDiffMap} />
-        }
-      >
-        <Button> Compare </Button>
-      </Popover2>
+      <MenuButton content={mappermenu} text="Mapping" />
+      <MenuButton content={viewmenu} text="View" />
+      <MenuButton content={compareMenu} text="Compare" />
       {isModelWrapper(refMW) && (
         <Button
           onClick={() => setViewOption({ ...viewOption, docVisible: true })}
@@ -525,6 +513,8 @@ const ModelMapper: React.FC<{
     setViewOption,
     showMessage,
     impMW,
+    repo,
+    index,
   };
 
   if (isVisible) {

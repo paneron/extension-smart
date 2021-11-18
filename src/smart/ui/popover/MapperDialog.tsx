@@ -4,6 +4,7 @@ import { dialogLayout } from '../../../css/layout';
 import { EditorApproval, EditorProcess } from '../../model/editormodel';
 import { MappingMeta, MapProfile } from '../../model/mapmodel';
 import { ModelWrapper } from '../../model/modelwrapper';
+import { MMELRepo, RepoIndex } from '../../model/repo';
 import {
   isModelWrapper,
   MapperViewOption,
@@ -14,9 +15,10 @@ import { getNamespace } from '../../utils/ModelFunctions';
 import { EditMPropsInterface } from '../dialog/dialogs';
 import MappingEditPage from '../edit/mappingedit';
 import AutoMapper from '../mapper/AutoMapper';
+import RepoAutoMapper from '../mapper/repo/RepoAutoMapper';
 import DocTemplatePane from '../reporttemplate/doctemplatepane';
 
-type MapperDialogMode = 'mapping' | 'report' | 'automap';
+type MapperDialogMode = 'mapping' | 'report' | 'automap' | 'repomap';
 
 type MapperDiagConfig = {
   title: string;
@@ -34,6 +36,8 @@ const MapperDialog: React.FC<{
   setEditMProps: (x: EditMPropsInterface) => void;
   setViewOption: (x: MapperViewOption) => void;
   showMessage: (msg: IToastProps) => void;
+  repo?: MMELRepo;
+  index: RepoIndex;
 }> = function ({
   editMappingProps,
   mapProfile,
@@ -44,6 +48,8 @@ const MapperDialog: React.FC<{
   viewOption,
   setViewOption,
   showMessage,
+  repo,
+  index,
 }) {
   const refns = isModelWrapper(refMW) ? getNamespace(refMW.model) : refMW.id;
   const impmodel = impMW.model;
@@ -133,6 +139,12 @@ const MapperDialog: React.FC<{
     />
   );
 
+  const repoMapPage = repo ? (
+    <RepoAutoMapper repo={repo} index={index} setMapProfile={setMapProfile} />
+  ) : (
+    <></>
+  );
+
   const MapperConfig: Record<MapperDialogMode, MapperDiagConfig> = {
     mapping: {
       title: 'Edit Mapping',
@@ -149,9 +161,14 @@ const MapperDialog: React.FC<{
       content: autoMapPage,
       onClose: closeDialog,
     },
+    repomap: {
+      title: 'Transitive mapping discovery',
+      content: repoMapPage,
+      onClose: closeDialog,
+    },
   };
 
-  const mode = checkDiagMode(editMappingProps, viewOption);
+  const mode = checkDiagMode(editMappingProps, viewOption, repo !== undefined);
   if (mode !== undefined) {
     const config = MapperConfig[mode];
 
@@ -174,7 +191,8 @@ const MapperDialog: React.FC<{
 
 function checkDiagMode(
   map: EditMPropsInterface,
-  option: MapperViewOption
+  option: MapperViewOption,
+  isRepo: boolean
 ): MapperDialogMode | undefined {
   if (map.from !== '') {
     return 'mapping';
@@ -183,7 +201,7 @@ function checkDiagMode(
     return 'report';
   }
   if (option.mapAIVisible) {
-    return 'automap';
+    return isRepo ? 'repomap' : 'automap';
   }
   return undefined;
 }

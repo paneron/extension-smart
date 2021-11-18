@@ -54,7 +54,6 @@ import {
 } from '../utils/SearchFunctions';
 import { handleModelOpen } from '../utils/IOFunctions';
 import { SidebarBlockConfig } from '@riboseinc/paneron-extension-kit/widgets/Sidebar/Block';
-import { Popover2 } from '@blueprintjs/popover2';
 import ViewToolMenu from './menu/ViewToolMenu';
 import MeasureCheckPane from './measurement/MeasurementValidationPane';
 import { ViewFunctionInterface } from '../model/ViewFunctionModel';
@@ -76,6 +75,7 @@ import { MMELRepo, RepoIndex } from '../model/repo';
 import RepoBreadcrumb from './common/description/RepoBreadcrumb';
 import ViewOptionMenu from './menu/ViewOptionMenu';
 import { MMELJSON } from '../model/json';
+import MenuButton from './menu/MenuButton';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
@@ -480,6 +480,10 @@ const ModelViewer: React.FC<{
         }
       : undefined;
 
+  const viewMenu = (
+    <ViewOptionMenu viewOption={viewOption} setViewOption={setViewOption} />
+  );
+
   const toolbar = (
     <ControlGroup>
       {repo === undefined && (
@@ -501,25 +505,11 @@ const ModelViewer: React.FC<{
           </Button>
         </>
       )}
-      <Popover2
-        minimal
-        placement="bottom-start"
+      <MenuButton
         content={<ViewToolMenu funPage={funPage} setFunPage={setFunPage} />}
-      >
-        <Button>Tools</Button>
-      </Popover2>
-      <Popover2
-        minimal
-        placement="bottom-start"
-        content={
-          <ViewOptionMenu
-            viewOption={viewOption}
-            setViewOption={setViewOption}
-          />
-        }
-      >
-        <Button>View</Button>
-      </Popover2>
+        text="Tools"
+      />
+      <MenuButton content={viewMenu} text="View" />
       <MGDButton
         type={MGDButtonType.Primary}
         disabled={

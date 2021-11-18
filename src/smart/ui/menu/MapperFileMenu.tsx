@@ -7,23 +7,24 @@ import {
   handleMappingOpen,
   saveToFileSystem,
 } from '../../utils/IOFunctions';
+import { MMELRepo } from '../../model/repo';
 
 const MapperFileMenu: React.FC<{
   mapProfile: MapProfile;
   onMapProfileChanged: (m: MapProfile) => void;
   onMapImport: () => void;
-  isRepoMode: boolean;
   onRepoSave: () => void;
   onResetMapping: () => void;
   onMapProfileImported: (m: MapProfile) => void;
+  repo?: MMELRepo;
 }> = function ({
   mapProfile,
   onMapProfileChanged,
   onMapImport,
-  isRepoMode,
   onRepoSave,
   onResetMapping,
   onMapProfileImported,
+  repo,
 }) {
   const { getBlob, writeFileToFilesystem, requestFileFromFilesystem } =
     useContext(DatasetContext);
@@ -74,7 +75,7 @@ const MapperFileMenu: React.FC<{
 
   return (
     <Menu>
-      {isRepoMode ? (
+      {repo ? (
         <>
           <MenuItem
             text="Save"
