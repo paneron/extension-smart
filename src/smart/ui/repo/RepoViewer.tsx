@@ -8,7 +8,7 @@ import {
   MMELRepo,
   RepoIndex,
   repoIndexPath,
-  RepoItem,
+  RepoItems,
   RepoItemType,
 } from '../../model/repo';
 import {
@@ -28,7 +28,7 @@ import React from 'react';
 import RepoToolbar from './RepoToolbar';
 import { createMapProfile } from '../../model/mapmodel';
 
-function matchFilter(item: RepoItem, filter: string) {
+function matchFilter(item: RepoItems, filter: string) {
   return (
     filter === '' ||
     item.namespace.includes(filter) ||
@@ -139,7 +139,7 @@ const RepoViewer: React.FC<{
     }
   }
 
-  function addItem(x: RepoItem) {
+  function addItem(x: RepoItems) {
     if (x.namespace === '') {
       toaster.show({
         message: 'Invalid item: namespace is empty',
@@ -158,7 +158,7 @@ const RepoViewer: React.FC<{
   }
 
   function addDoc(x: MMELDocument) {
-    const item: RepoItem = {
+    const item: RepoItems = {
       namespace: `${x.id}-doc`,
       shortname: x.id,
       title: x.title,
@@ -175,7 +175,7 @@ const RepoViewer: React.FC<{
   function addMW(m: ModelWrapper, type: RepoItemType) {
     const model = m.model;
     const meta = model.meta;
-    const newItem: RepoItem = {
+    const newItem: RepoItems = {
       namespace: meta.namespace,
       shortname: meta.shortname,
       title: meta.title,
@@ -245,7 +245,7 @@ const EmptyMsg = () => <p style={{ margin: 10 }}>No item in the repository.</p>;
 
 const RepoGroup: React.FC<{
   legend: string;
-  list: RepoItem[];
+  list: RepoItems[];
   deleteItem: (ns: string) => void;
   setRepo: (x: MMELRepo | undefined) => void;
 }> = function ({ legend, list, deleteItem, setRepo }) {

@@ -1,11 +1,11 @@
 import { Card, Icon, Menu, MenuItem, Text } from '@blueprintjs/core';
 import { ContextMenu2, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
-import { RepoItem } from '../../model/repo';
+import { RepoItems } from '../../model/repo';
 
 type VF = () => void;
 
-const RepoModelFile: React.FC<{ file: RepoItem; onDelete: VF; onOpen: VF }> =
+const RepoModelFile: React.FC<{ file: RepoItems; onDelete: VF; onOpen: VF }> =
   function ({ file, onDelete, onOpen }) {
     return (
       <ContextMenu2 content={<ItemMenu onDelete={onDelete} onOpen={onOpen} />}>

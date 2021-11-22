@@ -53,10 +53,10 @@ const Application2060: React.FC<{
   const [liveCount, setLiveCount] = useState<number>(0);
   const [logs, setLogs] = useState<Log2060>({ hasFail: false, records: [] });
 
-  function updateLive() {    
+  function updateLive() {
     setLiveCount(x => {
       Logger.logger.log('Live', x);
-      return x+1;
+      return x + 1;
     });
   }
 
@@ -117,7 +117,7 @@ const Application2060: React.FC<{
   }
 
   useEffect(() => {
-    const interval = setInterval(updateLive, 5000);    
+    const interval = setInterval(updateLive, 5000);
     return () => clearInterval(interval);
   }, []);
 

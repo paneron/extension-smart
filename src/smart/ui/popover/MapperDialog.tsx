@@ -140,7 +140,13 @@ const MapperDialog: React.FC<{
   );
 
   const repoMapPage = repo ? (
-    <RepoAutoMapper repo={repo} index={index} setMapProfile={setMapProfile} />
+    <RepoAutoMapper
+      repo={repo}
+      map={mapProfile}
+      index={index}
+      setMapProfile={setMapProfile}
+      finish={closeDialog}
+    />
   ) : (
     <></>
   );

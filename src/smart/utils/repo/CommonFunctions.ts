@@ -3,7 +3,7 @@ import {
   RepoDocItem,
   RepoImpItem,
   RepoIndex,
-  RepoItem,
+  RepoItems,
   RepoRefItem,
 } from '../../model/repo';
 import { LegendInterface } from '../../model/States';
@@ -29,7 +29,7 @@ export const RepoDiffLegend: Record<RepoNodeDiffType, LegendInterface> = {
 export function setValueToIndex(
   index: RepoIndex,
   ns: string,
-  newItem: RepoItem
+  newItem: RepoItems
 ): RepoIndex {
   return { ...index, [ns]: newItem };
 }
@@ -39,7 +39,7 @@ export function createEmptyIndex(): RepoIndex {
 }
 
 export function groupItems(
-  index: Record<string, RepoItem>
+  index: Record<string, RepoItems>
 ): [RepoRefItem[], RepoImpItem[], RepoDocItem[]] {
   const refs: RepoRefItem[] = [];
   const imps: RepoImpItem[] = [];

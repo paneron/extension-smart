@@ -1,13 +1,18 @@
-import { Button, Text } from '@blueprintjs/core';
-import { RepoItems } from '../../../model/repo';
+import { Checkbox, Text } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
+import { RepoItems } from '../../../../model/repo';
+import { Logger } from '../../../../utils/ModelFunctions';
 
-export function createNodeContent(
+export function createAutoMapNode(
   label: string,
   item: RepoItems | undefined,
-  loadModel?: (x: string) => void
+  checked?: boolean,
+  setChecked?: (x: boolean) => void
 ): JSX.Element {
+  if (checked !== undefined && setChecked) {
+    Logger.logger.log('Bingo', label);
+  }
   return (
     <>
       <Tooltip2 content={item ? item.title : ''}>
@@ -26,7 +31,7 @@ export function createNodeContent(
           <Text ellipsize>{label}</Text>
         </div>
       </Tooltip2>
-      {item && loadModel && (
+      {checked !== undefined && setChecked && (
         <div
           style={{
             position: 'fixed',
@@ -34,15 +39,13 @@ export function createNodeContent(
             top: -15,
           }}
         >
-          <Tooltip2 content="View item" position="top">
-            <Button
-              style={{
-                display: 'absolute',
-              }}
-              icon="eye-open"
-              onClick={() => loadModel(item.namespace)}
-            />
-          </Tooltip2>
+          <Checkbox
+            style={{
+              display: 'absolute',
+            }}
+            checked={checked}
+            onChange={x => setChecked((x.target as HTMLInputElement).checked)}
+          />
         </div>
       )}
     </>

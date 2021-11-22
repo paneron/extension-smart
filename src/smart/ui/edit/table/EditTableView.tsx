@@ -86,7 +86,8 @@ const EditTableView: React.FC<{
           </Button>
         </td>
       </tr>
-      {rows.map((row, index) => index !== rows.length - 1 ? (
+      {rows.map((row, index) =>
+        index !== rows.length - 1 ? (
           <MMELTableRow
             key={index}
             row={row}
@@ -97,7 +98,7 @@ const EditTableView: React.FC<{
         ) : (
           <MMELTableRow key={index} row={emptyRow} setRow={newRow} />
         )
-      )}      
+      )}
     </table>
   );
 };
