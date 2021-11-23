@@ -137,7 +137,9 @@ const RepoSelectItem: React.FC<{
               textAlign: 'center',
             }}
           >
-            <Text ellipsize>{file.shortname}</Text>
+            <Text ellipsize>
+              {file.shortname !== '' ? file.shortname : `[${file.namespace}]`}
+            </Text>
           </div>
         </Card>
       </Tooltip2>

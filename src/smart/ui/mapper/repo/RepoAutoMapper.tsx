@@ -15,6 +15,7 @@ import { Logger } from '../../../utils/ModelFunctions';
 import {
   getAllRepoMaps,
   getAllRepoModels,
+  getRepoItemDesc,
 } from '../../../utils/repo/CommonFunctions';
 import { JSONToMMEL } from '../../../utils/repo/io';
 import { createAutoMapNode } from './automapper/AutoMapNode';
@@ -282,7 +283,7 @@ function fillContents(
     ...v,
     data: {
       label: createAutoMapNode(
-        item ? item.shortname : k,
+        item ? getRepoItemDesc(item) : k,
         item,
         c,
         c !== undefined ? x => setConfig({ ...config, [k]: x }) : undefined

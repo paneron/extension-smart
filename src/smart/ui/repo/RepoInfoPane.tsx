@@ -1,5 +1,6 @@
 import React from 'react';
 import { MMELRepo, RepoIndex } from '../../model/repo';
+import { getRepoItemDesc } from '../../utils/repo/CommonFunctions';
 import { DescriptionItem } from '../common/description/fields';
 import RepoCloseButton from './RepoCloseButton';
 
@@ -17,11 +18,7 @@ const RepoInfoPane: React.FC<{
     >
       <p>
         Viewing:
-        {item !== undefined
-          ? item.shortname !== ''
-            ? item.shortname
-            : `[${item.namespace}]`
-          : 'Nil'}
+        {item ? getRepoItemDesc(item) : 'Nil'}
         {repo !== undefined && <RepoCloseButton onClose={onClose} />}
       </p>
       <DescriptionItem

@@ -2,7 +2,12 @@ import { Edge, Elements, Node, Position } from 'react-flow-renderer';
 import { MapProfile } from '../../model/mapmodel';
 import { MMELRepo, RepoIndex } from '../../model/repo';
 import { createNodeContent } from '../../ui/mapper/repo/RepoMapNode';
-import { createEdge, RepoLegend, RepoNodeType } from '../repo/CommonFunctions';
+import {
+  createEdge,
+  getRepoItemDesc,
+  RepoLegend,
+  RepoNodeType,
+} from '../repo/CommonFunctions';
 import { getPathByNS, RepoFileType } from '../repo/io';
 
 type Maps = Record<string, MapProfile>;
@@ -25,7 +30,7 @@ export function repoMapExploreNode(
       ns,
       0,
       0,
-      createNodeContent(item.shortname, undefined, loadModel),
+      createNodeContent(getRepoItemDesc(item), undefined, loadModel),
       'own'
     ),
   };
@@ -56,7 +61,7 @@ function exploreNodes(
             if (elms[namespace] === undefined) {
               const item = index[namespace];
               const nodeContent = createNodeContent(
-                item ? item.shortname : namespace,
+                item ? getRepoItemDesc(item) : `[${namespace}]`,
                 item,
                 loadModel
               );

@@ -78,3 +78,7 @@ export function createEdge(id: string, source: string, target: string): Edge {
     type: 'repo',
   };
 }
+
+export function getRepoItemDesc(item: RepoItems) {
+  return item.shortname !== '' ? item.shortname : `[${item.namespace}]`;
+}

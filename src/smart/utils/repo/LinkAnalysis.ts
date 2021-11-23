@@ -2,7 +2,11 @@ import { Edge, Elements, Node, Position } from 'react-flow-renderer';
 import { ModelWrapper } from '../../model/modelwrapper';
 import { MMELRepo, RepoIndex } from '../../model/repo';
 import { createNodeContent } from '../../ui/mapper/repo/RepoMapNode';
-import { RepoLegend, RepoNodeType } from '../repo/CommonFunctions';
+import {
+  getRepoItemDesc,
+  RepoLegend,
+  RepoNodeType,
+} from '../repo/CommonFunctions';
 import { getPathByNS, RepoFileType } from './io';
 
 type Nodes = Record<string, Node>;
@@ -24,7 +28,7 @@ export function repoLinkExploreNode(
         ns,
         0,
         0,
-        createNodeContent(item.shortname, undefined),
+        createNodeContent(getRepoItemDesc(item), undefined),
         'own'
       ),
     };
