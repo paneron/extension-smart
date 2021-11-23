@@ -1,17 +1,43 @@
-import { Button } from '@blueprintjs/core';
+import { Button, ButtonGroup } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useMemo, useState } from 'react';
 import { Edge, Elements, Node } from 'react-flow-renderer';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
+import { MMELJSON } from '../../../model/json';
 import { MapProfile } from '../../../model/mapmodel';
+import {
+  createEditorModelWrapper,
+  ModelWrapper,
+} from '../../../model/modelwrapper';
 import { MMELRepo, RepoIndex } from '../../../model/repo';
-import { repoAutoMapExplore } from '../../../utils/map/AutoMap';
-import { getAllRepoMaps } from '../../../utils/repo/CommonFunctions';
+import { repoAutoMapExplore, repoMapAI } from '../../../utils/map/AutoMap';
+import { Logger } from '../../../utils/ModelFunctions';
+import {
+  getAllRepoMaps,
+  getAllRepoModels,
+} from '../../../utils/repo/CommonFunctions';
+import { JSONToMMEL } from '../../../utils/repo/io';
 import { createAutoMapNode } from './automapper/AutoMapNode';
+import AutoMapLoading from './automapper/calculating';
 import RepoLoading from './automapper/loading';
 import RepoAutoMapView from './automapper/mapview';
 
 type Status = 'initial' | 'run' | 'done';
+
+const instructions: [JSX.Element, JSX.Element, JSX.Element, JSX.Element] = [
+  <>
+    <p> Steps to use the auto mapper </p>
+    <ol>
+      <li>Wait until mapping information is loaded</li>
+      <li>Select relevant model as a bridge to discover new mappings</li>
+      <li>Select destination model to be covered</li>
+      <li>Calculate transitive mapping</li>
+    </ol>
+  </>,
+  <h3>Select relevant model as a bridge to discover new mappings</h3>,
+  <h3>Select destination model to be covered</h3>,
+  <h3>Calculate transitive mapping</h3>,
+];
 
 const RepoAutoMapper: React.FC<{
   repo: MMELRepo;
@@ -27,9 +53,14 @@ const RepoAutoMapper: React.FC<{
   const [edges, setEdges] = useState<Edge[]>([]);
   const [froms, setFroms] = useState<Record<string, boolean>>({});
   const [tos, setTos] = useState<Record<string, boolean>>({});
+  const [result, setResult] = useState<string>('');
 
   const mapFiles = useObjectData({
     objectPaths: getAllRepoMaps(index),
+  });
+
+  const modelFiles = useObjectData({
+    objectPaths: getAllRepoModels(index),
   });
 
   const maps: Record<string, MapProfile> = useMemo(() => {
@@ -45,9 +76,40 @@ const RepoAutoMapper: React.FC<{
     return {};
   }, [mapFiles.isUpdating]);
 
-  const Compos = [RepoLoading, RepoAutoMapView];
+  const models: Record<string, ModelWrapper> = useMemo(() => {
+    if (!modelFiles.isUpdating) {
+      return Object.entries(modelFiles.value.data).reduce<
+        Record<string, ModelWrapper>
+      >(
+        (obj, [ns, x]) =>
+          x !== null
+            ? {
+                ...obj,
+                [ns]: createEditorModelWrapper(JSONToMMEL(x as MMELJSON)),
+              }
+            : obj,
+        {}
+      );
+    }
+    return {};
+  }, [modelFiles.isUpdating]);
 
-  const isLoading = checkLoading(step, mapFiles.isUpdating, running);
+  const Compos = [
+    RepoLoading,
+    RepoAutoMapView,
+    RepoAutoMapView,
+    AutoMapLoading,
+  ];
+
+  const isUpdating = mapFiles.isUpdating || modelFiles.isUpdating;
+
+  const buttonDisabled = checkButtonDisabled(
+    step,
+    isUpdating,
+    running,
+    froms,
+    tos
+  );
   const isDoable = Object.keys(froms).length > 0 && Object.keys(tos).length > 0;
   const fin = !isDoable || step === 3;
 
@@ -57,16 +119,17 @@ const RepoAutoMapper: React.FC<{
   );
 
   const props = {
-    isLoading,
+    isLoading: buttonDisabled,
     isDoable,
     nextStep: () => setStep(step + 1),
     step,
     fnodes,
+    result,
   };
 
   const Compo = Compos[step];
 
-  if (step === 0 && !mapFiles.isUpdating) {
+  if (step === 0 && !isUpdating) {
     if (running === 'initial') {
       setRunning('run');
       repoAutoMapExplore(repo, index, map, maps).then(x => {
@@ -80,15 +143,45 @@ const RepoAutoMapper: React.FC<{
     }
   }
 
+  function onSelectAll(s: number, b: boolean) {
+    const newValue = s === 1 ? { ...froms } : { ...tos };
+    for (const x in newValue) {
+      newValue[x] = b;
+    }
+    s === 1 ? setFroms(newValue) : setTos(newValue);
+  }
+
+  function onSetStep(x: number) {
+    setStep(x);
+    if (x > 0 && x < 3) {
+      onSelectAll(x, false);
+    }
+    if (x === 3) {
+      setRunning('run');
+      repoMapAI(map, maps, models, froms, tos)
+        .then(x => {
+          const [newMap, result] = x;
+          setMapProfile(newMap);
+          if (result === 0) {
+            setResult('No new mapping is discovered');
+          } else {
+            setResult(`${result} mappings are found and added`);
+          }
+          setRunning('done');
+        })
+        .catch(e => {
+          Logger.logger.log(e.message);
+          Logger.logger.log(e.stack);
+        });
+    }
+  }
+
   return (
     <MGDDisplayPane>
-      <p> Steps to use the auto mapper </p>
-      <ol>
-        <li>Wait until mapping information is loaded</li>
-        <li>Select relevant model as a bridge to discover new mappings</li>
-        <li>Select destination model to be covered</li>
-        <li>Calculate transitive mapping</li>
-      </ol>
+      {instructions[step]}
+      {step > 0 && step < 3 && (
+        <SelectButtonPane onSelectAll={b => onSelectAll(step, b)} />
+      )}
       <fieldset>
         <legend>Step {step + 1}</legend>
         <div style={{ position: 'relative' }}>
@@ -99,9 +192,9 @@ const RepoAutoMapper: React.FC<{
       </fieldset>
       <ButtonPane
         fin={fin}
-        disabled={isLoading}
+        disabled={buttonDisabled}
         step={step}
-        setStep={fin ? finish : setStep}
+        setStep={fin ? finish : onSetStep}
       />
     </MGDDisplayPane>
   );
@@ -133,7 +226,7 @@ const ButtonPane: React.FC<{
 }> = function ({ step, setStep, disabled, fin }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 60 }}>
-      {step !== 0 && (
+      {step > 0 && step < 3 && (
         <Button large onClick={() => setStep(step - 1)}>
           Back
         </Button>
@@ -145,17 +238,34 @@ const ButtonPane: React.FC<{
   );
 };
 
-function checkLoading(
+const SelectButtonPane: React.FC<{ onSelectAll: (b: boolean) => void }> =
+  function ({ onSelectAll }) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <ButtonGroup>
+          <Button onClick={() => onSelectAll(true)}>Select all</Button>
+          <Button onClick={() => onSelectAll(false)}>Deselect all</Button>
+        </ButtonGroup>
+      </div>
+    );
+  };
+
+function checkButtonDisabled(
   step: number,
   isUpdating: boolean,
-  isRunning: Status
+  isRunning: Status,
+  froms: Record<string, boolean>,
+  tos: Record<string, boolean>
 ): boolean {
   switch (step) {
     case 0:
       return isUpdating || isRunning !== 'done';
     case 1:
+      return Object.values(froms).filter(x => x).length === 0;
+    case 2:
+      return Object.values(tos).filter(x => x).length === 0;
     default:
-      return false;
+      return isRunning !== 'done';
   }
 }
 

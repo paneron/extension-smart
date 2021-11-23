@@ -2,7 +2,6 @@ import { Checkbox, Text } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { RepoItems } from '../../../../model/repo';
-import { Logger } from '../../../../utils/ModelFunctions';
 
 export function createAutoMapNode(
   label: string,
@@ -10,9 +9,6 @@ export function createAutoMapNode(
   checked?: boolean,
   setChecked?: (x: boolean) => void
 ): JSX.Element {
-  if (checked !== undefined && setChecked) {
-    Logger.logger.log('Bingo', label);
-  }
   return (
     <>
       <Tooltip2 content={item ? item.title : ''}>
@@ -35,14 +31,15 @@ export function createAutoMapNode(
         <div
           style={{
             position: 'fixed',
-            right: -10,
-            top: -15,
+            left: -10,
+            top: -10,
           }}
         >
           <Checkbox
             style={{
               display: 'absolute',
             }}
+            large
             checked={checked}
             onChange={x => setChecked((x.target as HTMLInputElement).checked)}
           />
