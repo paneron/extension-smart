@@ -56,7 +56,5 @@
     "typescript": "^4.1.3"
   },
   "license": "MIT",
-  "dependencies": {
-    "@riboseinc/paneron-extension-glossarist": "1.0.0-dev34"
-  }
+  "dependencies": {}
 }
