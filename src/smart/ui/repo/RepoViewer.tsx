@@ -1,8 +1,7 @@
-import { InputGroup, IToaster, Toaster } from '@blueprintjs/core';
+import { InputGroup, IToaster, IToastProps, Toaster } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import { useContext, useMemo, useState } from 'react';
-import { reactFlowContainerLayout } from '../../../css/layout';
 import { ModelWrapper } from '../../model/modelwrapper';
 import {
   MMELRepo,
@@ -17,7 +16,6 @@ import {
   MMELToSerializable,
   RepoFileType,
 } from '../../utils/repo/io';
-import RepoModelFile from './RepoItem';
 import RepoInfoPane from './RepoInfoPane';
 import { EditorModel } from '../../model/editormodel';
 import { createNewSMARTWorkspace } from '../../model/workspace';
@@ -27,6 +25,8 @@ import { MMELDocument } from '../../model/document';
 import React from 'react';
 import RepoToolbar from './RepoToolbar';
 import { createMapProfile } from '../../model/mapmodel';
+import RepoGroup from './RepoGroup';
+import { ProvisionRDF, RDFVersion } from '../../model/SemanticTriple';
 
 function matchFilter(item: RepoItems, filter: string) {
   return (
@@ -65,20 +65,21 @@ const RepoViewer: React.FC<{
     [docs, filter]
   );
 
-  async function saveIndex(
+  async function saveIndexWithModel(
     updated: RepoIndex,
-    ns?: string,
-    model?: EditorModel
+    ns: string,
+    model: EditorModel,    
   ) {
     if (updateObjects) {
       if (ns !== undefined && model !== undefined) {
         const mp = createMapProfile();
+        const rdf: ProvisionRDF = { roots: {}, nodes: {}, version: RDFVersion };
         mp.id = getNamespace(model);
         const task = updateObjects({
           commitMessage: COMMITMSG,
           _dangerouslySkipValidation: true,
           objectChangeset: {
-            [repoIndexPath]: { oldValue: undefined, newValue: updated },
+            [repoIndexPath]: { newValue: updated },
             [getPathByNS(ns, RepoFileType.MODEL)]: {
               newValue: MMELToSerializable(model),
             },
@@ -88,21 +89,16 @@ const RepoViewer: React.FC<{
             [getPathByNS(ns, RepoFileType.WORKSPACE)]: {
               newValue: createNewSMARTWorkspace(),
             },
+            [getPathByNS(ns, RepoFileType.RDF)]: {
+              newValue: rdf,
+            },
           },
         });
-        task.then(() => {
+        task.then(() => {          
           toaster.show({
             message: `Done: model with namespace ${ns} added to the repository`,
             intent: 'success',
-          });
-        });
-      } else {
-        await updateObjects({
-          commitMessage: COMMITMSG,
-          _dangerouslySkipValidation: true,
-          objectChangeset: {
-            [repoIndexPath]: { oldValue: undefined, newValue: updated },
-          },
+          });          
         });
       }
     } else {
@@ -119,7 +115,7 @@ const RepoViewer: React.FC<{
         commitMessage: COMMITMSG,
         _dangerouslySkipValidation: true,
         objectChangeset: {
-          [repoIndexPath]: { oldValue: undefined, newValue: updated },
+          [repoIndexPath]: { newValue: updated },
           [getPathByNS(doc.id, RepoFileType.MODEL)]: {
             newValue: doc,
           },
@@ -139,22 +135,38 @@ const RepoViewer: React.FC<{
     }
   }
 
-  function addItem(x: RepoItems) {
+  function addItem(x: RepoItems): RepoIndex | undefined {
     if (x.namespace === '') {
       toaster.show({
         message: 'Invalid item: namespace is empty',
         intent: 'danger',
       });
-    } else if (index[x.namespace] !== undefined) {
+      return undefined;
+    }
+    if (x.type !== 'Imp' && index[x.namespace] !== undefined) {
       toaster.show({
         message: 'Error: item with the same namespace already exists',
         intent: 'danger',
       });
-    } else {
-      const updated = setValueToIndex(index, x.namespace, x);
-      return updated;
+      return undefined;
     }
-    return undefined;
+    let count = 0;
+    let name = x.namespace;
+    while (index[name] !== undefined) {
+      count++;
+      name = x.namespace + `-${count}`;
+    }
+    if (count !== 0) {
+      toaster.show({
+        message: `Warning: item with the same namespace already exists, renamed namespace to ${name}`,
+        intent: 'warning',
+      });
+      x.namespace = name;
+      x.shortname = x.shortname !== '' ? x.shortname + `-${count}` : '';
+      x.title = x.title !== '' ? x.title + `-${count}` : '';
+    }
+    const updated = setValueToIndex(index, x.namespace, x);
+    return updated;
   }
 
   function addDoc(x: MMELDocument) {
@@ -183,18 +195,101 @@ const RepoViewer: React.FC<{
       type,
     };
     const updated = addItem(newItem);
+    const requirePrompt = meta.namespace === newItem.namespace;
+    if (!requirePrompt) {
+      meta.namespace = newItem.namespace;
+      meta.shortname = newItem.shortname;
+      meta.title = newItem.title;
+    }
     if (updated !== undefined) {
-      saveIndex(updated, newItem.namespace, model);
+      saveIndexWithModel(updated, newItem.namespace, model);
     }
   }
 
-  function deleteItem(ns: string) {
+  function deleteIndexWithDoc(updated: RepoIndex, ns: string) {
+    if (updateObjects) {
+      const task = updateObjects({
+        commitMessage: COMMITMSG,
+        _dangerouslySkipValidation: true,
+        objectChangeset: {
+          [repoIndexPath]: { newValue: updated },
+          [getPathByNS(ns, RepoFileType.MODEL)]: {
+            newValue: null,
+          },
+        },
+      });
+      task.then(() => {
+        toaster.show({
+          message: `Done: document with id ${ns} removed from the repository`,
+          intent: 'success',
+        });
+      });
+    } else {
+      toaster.show({
+        message: 'No write access to the repository',
+        intent: 'danger',
+      });
+    }
+  }
+
+  function deleteIndexWithModel(updated: RepoIndex, ns: string) {
+    if (updateObjects) {
+      const task = updateObjects({
+        commitMessage: COMMITMSG,
+        _dangerouslySkipValidation: true,
+        objectChangeset: {
+          [repoIndexPath]: { newValue: updated },
+          [getPathByNS(ns, RepoFileType.MODEL)]: {
+            newValue: null,
+          },
+          [getPathByNS(ns, RepoFileType.MAP)]: {
+            newValue: null,
+          },
+          [getPathByNS(ns, RepoFileType.WORKSPACE)]: {
+            newValue: null,
+          },
+          [getPathByNS(ns, RepoFileType.RDF)]: {
+            newValue: null,
+          },
+        },
+      });
+      task.then(() => {
+        toaster.show({
+          message: `Done: model with namespace ${ns} removed from the repository`,
+          intent: 'success',
+        });
+      });
+    } else {
+      toaster.show({
+        message: 'No write access to the repository',
+        intent: 'danger',
+      });
+    }
+  }
+
+  function deleteItem(ns: string, type: RepoItemType) {
     const updated = { ...index };
     delete updated[ns];
-    saveIndex(updated);
+    if (type === 'Doc') {
+      deleteIndexWithDoc(updated, ns);
+    } else {
+      deleteIndexWithModel(updated, ns);
+    }
     if (ns === repo?.ns) {
       setRepo(undefined);
     }
+  }
+
+  function renameRepo(repo: MMELRepo, name: string) {
+    if (repo.ns === name) {
+      return;
+    } else {
+      deleteItem(repo.ns, repo.type);
+    }
+  }
+
+  function sendMsg(msg: IToastProps) {
+    toaster.show(msg);
   }
 
   const toolbarProps = { addMW, addDoc, isBSI, index };
@@ -227,6 +322,9 @@ const RepoViewer: React.FC<{
           list={fimps}
           deleteItem={deleteItem}
           setRepo={setRepo}
+          renameRepo={renameRepo}
+          index={index}
+          sendMsg={sendMsg}
         />
         <RepoGroup
           legend={`SMART documents [${fdocs.length} / ${docs.length}]`}
@@ -238,41 +336,6 @@ const RepoViewer: React.FC<{
     </Workspace>
   ) : (
     <div></div>
-  );
-};
-
-const EmptyMsg = () => <p style={{ margin: 10 }}>No item in the repository.</p>;
-
-const RepoGroup: React.FC<{
-  legend: string;
-  list: RepoItems[];
-  deleteItem: (ns: string) => void;
-  setRepo: (x: MMELRepo | undefined) => void;
-}> = function ({ legend, list, deleteItem, setRepo }) {
-  return (
-    <fieldset>
-      <legend>{legend}</legend>
-      <div style={reactFlowContainerLayout}>
-        {Object.values(list).length === 0 && <EmptyMsg />}
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 10,
-            margin: 10,
-          }}
-        >
-          {list.map(x => (
-            <RepoModelFile
-              key={x.namespace}
-              file={x}
-              onDelete={() => deleteItem(x.namespace)}
-              onOpen={() => setRepo({ ns: x.namespace, type: x.type })}
-            />
-          ))}
-        </div>
-      </div>
-    </fieldset>
   );
 };
 
