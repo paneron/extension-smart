@@ -123,7 +123,10 @@ function initialVisit(
           const childs = model !== undefined ? getChilds(model.model, t) : [t];
           for (const child of childs) {
             if (visited[x][child] === undefined) {
-              visited[x][child] = { from: f, path: `${f} > ${child}` };
+              visited[x][child] = {
+                from: f,
+                path: `${map.id}.${f} > ${x}.${child}`,
+              };
               queue.push({ ns: x, id: child });
             }
           }
@@ -160,14 +163,17 @@ function visitNode(
               visited[x] = {};
             }
             if (visited[x][t] === undefined) {
-              visited[x][t] = { from, path: `${path} > ${t}` };
+              visited[x][t] = { from, path: `${path} > ${x}.${t}` };
               if (froms[x]) {
                 queue.push({ ns: x, id: t });
                 const childs =
                   model !== undefined ? getChilds(model.model, t) : [t];
                 for (const child of childs) {
                   if (visited[x][child] === undefined) {
-                    visited[x][child] = { from, path: `${path} > ${child}` };
+                    visited[x][child] = {
+                      from,
+                      path: `${path} > ${x}.${child}`,
+                    };
                     queue.push({ ns: x, id: child });
                   }
                 }

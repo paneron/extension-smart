@@ -198,7 +198,7 @@ export function getEditorNodeInfoById(model: EditorModel, id: string): string {
       node !== undefined &&
       (isEditorProcess(node) || isEditorApproval(node))
     ) {
-      return node.name;
+      return node.name !== '' ? node.name : `[${id}]`;
     }
   }
   return 'Node not found';

@@ -35,15 +35,16 @@ const MappingPartyList: React.FC<{
   const method =
     type === ModelType.IMP ? findRefMapPartners : findImpMapPartners;
   const partnersIds = method(id, mapping);
-  const partners = partnersIds
-    .map(id => ({ id: id, name: getNodeInfoById(id) }))
-    .filter(x => x.name !== '');
+  const partners = partnersIds.map(id => ({
+    id: id,
+    name: getNodeInfoById(id),
+  }));
 
   return (
     <div style={popoverPanelContainer}>
       {partners.map(p => (
         <MappingPartnerEntry
-          key={`popover#mapping#${p.id}`}
+          key={p.id}
           id={p.id}
           name={p.name}
           onEdit={onEditClick}
