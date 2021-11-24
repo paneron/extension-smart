@@ -7,15 +7,15 @@ type VF = () => void;
 
 function getFullDesc(item: RepoItems): string {
   if (item.shortname !== '' && item.title !== '') {
-    return `${item.shortname}: ${item.title}`;
+    return `${item.shortname} [${item.namespace}]: ${item.title}`;
   }
   if (item.shortname !== '') {
-    return item.shortname;
+    return `${item.shortname} [${item.namespace}]`;
   }
   if (item.title !== '') {
-    return item.title;
+    return `[${item.namespace}]: ${item.title}`;
   }
-  return '';
+  return `[${item.namespace}]`;
 }
 
 const RepoModelFile: React.FC<{

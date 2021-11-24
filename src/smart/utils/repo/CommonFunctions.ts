@@ -82,3 +82,12 @@ export function createEdge(id: string, source: string, target: string): Edge {
 export function getRepoItemDesc(item: RepoItems) {
   return item.shortname !== '' ? item.shortname : `[${item.namespace}]`;
 }
+
+export function getAllObjectPaths(ns: string): string[] {
+  return [
+    RepoFileType.MODEL,
+    RepoFileType.MAP,
+    RepoFileType.WORKSPACE,
+    RepoFileType.RDF,
+  ].map(x => getPathByNS(ns, x));
+}

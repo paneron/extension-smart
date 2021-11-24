@@ -27,6 +27,7 @@ import RepoToolbar from './RepoToolbar';
 import { createMapProfile } from '../../model/mapmodel';
 import RepoGroup from './RepoGroup';
 import { ProvisionRDF, RDFVersion } from '../../model/SemanticTriple';
+import RepoRenameLoading, { RepoRenameAction } from './RepoRenameLoading';
 
 function matchFilter(item: RepoItems, filter: string) {
   return (
@@ -50,6 +51,7 @@ const RepoViewer: React.FC<{
   const [filter, setFilter] = useState<string>('');
 
   const [toaster] = useState<IToaster>(Toaster.create());
+  const [rename, setRename] = useState<RepoRenameAction | undefined>(undefined);
 
   const [refs, imps, docs] = useMemo(() => groupItems(index), [index]);
   const frefs = useMemo(
@@ -68,7 +70,7 @@ const RepoViewer: React.FC<{
   async function saveIndexWithModel(
     updated: RepoIndex,
     ns: string,
-    model: EditorModel,    
+    model: EditorModel
   ) {
     if (updateObjects) {
       if (ns !== undefined && model !== undefined) {
@@ -94,11 +96,11 @@ const RepoViewer: React.FC<{
             },
           },
         });
-        task.then(() => {          
+        task.then(() => {
           toaster.show({
             message: `Done: model with namespace ${ns} added to the repository`,
             intent: 'success',
-          });          
+          });
         });
       }
     } else {
@@ -280,16 +282,20 @@ const RepoViewer: React.FC<{
     }
   }
 
-  function renameRepo(repo: MMELRepo, name: string) {
-    if (repo.ns === name) {
-      return;
-    } else {
-      deleteItem(repo.ns, repo.type);
-    }
-  }
-
   function sendMsg(msg: IToastProps) {
     toaster.show(msg);
+  }
+
+  function renameRepo(x: MMELRepo, name: string) {
+    if (x.type === 'Imp') {
+      setRename({ old: x.ns, update: name });
+    } else {
+      toaster.show({
+        message:
+          'Cannot change namespace for models other than implementation models',
+        intent: 'danger',
+      });
+    }
   }
 
   const toolbarProps = { addMW, addDoc, isBSI, index };
@@ -299,6 +305,14 @@ const RepoViewer: React.FC<{
       toolbar={<RepoToolbar {...toolbarProps} />}
       className={className}
     >
+      {rename && (
+        <RepoRenameLoading
+          action={rename}
+          done={() => setRename(undefined)}
+          sendMsg={sendMsg}
+          index={index}
+        />
+      )}
       <div style={{ height: 'calc(100vh - 50px)', overflowY: 'auto' }}>
         <RepoInfoPane
           repo={repo}

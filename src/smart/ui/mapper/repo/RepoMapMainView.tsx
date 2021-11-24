@@ -5,7 +5,7 @@ import { MapProfile } from '../../../model/mapmodel';
 import { MMELRepo, RepoIndex } from '../../../model/repo';
 import { MapperViewOption } from '../../../model/States';
 import { getAllRepoMaps } from '../../../utils/repo/CommonFunctions';
-import { LoadingPage } from '../../common/Loading';
+import { LoadingIcon } from '../../common/Loading';
 import RepoMapDiagram from './RepoMapDiagram';
 
 const RepoMapMainView: React.FC<{
@@ -72,9 +72,9 @@ const RepoMapMainView: React.FC<{
   }
 };
 
-const LoadingIndex = LoadingPage({ label: 'Loading repository' });
+const LoadingIndex = LoadingIcon({ label: 'Loading repository' });
 
-const LoadingMap = LoadingPage({ label: 'Loading map information' });
+const LoadingMap = LoadingIcon({ label: 'Loading map information' });
 
 const Container: React.FC<{ children: React.ReactNode }> = function ({
   children,
