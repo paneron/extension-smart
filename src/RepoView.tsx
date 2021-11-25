@@ -27,6 +27,7 @@ import DocumentViewer from './smart/ui/docviewer';
 import { RepoHistory } from './smart/model/history';
 import LinkAnalysis from './smart/ui/LinkAnalysis';
 import NLPMain from './smart/ui/nlp/NLPMain';
+import DocumentEdit from './smart/ui/maindocedit';
 
 const RepositoryView: React.FC<{
   index: RepoIndex;
@@ -173,12 +174,20 @@ const MODULES = [
   'docViewer',
   'linkAnalysis',
   'nlp',
+  'docEdit',
 ] as const;
 
 type ModuleName = typeof MODULES[number];
 
 const ModuleList: Record<RepoItemType | '', ModuleName[]> = {
-  '': ['repo', 'modelViewer', 'modelEditor', 'modelMapper', 'modelImplement'],
+  '': [
+    'repo',
+    'modelViewer',
+    'modelEditor',
+    'modelMapper',
+    'modelImplement',
+    'docEdit',
+  ],
   Doc: ['repo', 'docViewer'],
   Ref: [
     'repo',
@@ -265,6 +274,12 @@ const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {
     description: 'Knowledge graph',
     icon: 'chat',
     view: NLPMain,
+  },
+  docEdit: {
+    title: 'Create SMART Document',
+    description: 'Document import',
+    icon: 'document',
+    view: DocumentEdit,
   },
 };
 

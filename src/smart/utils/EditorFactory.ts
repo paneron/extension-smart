@@ -35,7 +35,8 @@ import {
   EditorSubprocess,
   EditorTimerEvent,
 } from '../model/editormodel';
-import { MODELVERSION } from './constants';
+import { DOCVERSION, MODELVERSION } from './constants';
+import { MMELDocument } from '../model/document';
 
 export function createNewEditorModel(): EditorModel {
   const start = createStartEvent('Start1');
@@ -353,5 +354,16 @@ export function createEGate(id: string): EditorEGate {
     added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
+  };
+}
+
+export function createNewMMELDocument(): MMELDocument {
+  return {
+    states: {},
+    id: '',
+    title: '',
+    sections: [],
+    type: 'document',
+    version: DOCVERSION,
   };
 }
