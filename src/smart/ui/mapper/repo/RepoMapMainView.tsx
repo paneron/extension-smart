@@ -68,7 +68,7 @@ const RepoMapMainView: React.FC<{
       </Container>
     );
   } else {
-    return <></>;
+    return null;
   }
 };
 

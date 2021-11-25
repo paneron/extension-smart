@@ -1,22 +1,13 @@
 import { Text } from '@blueprintjs/core';
 import React, { CSSProperties } from 'react';
 import { BINARY_TYPE } from '../../../serialize/interface/supportinterface';
+import ThreeD from '../../edit/figure/ThreeD';
 
 const MultimediaView: React.FC<{
   type: BINARY_TYPE;
   style?: CSSProperties;
   base64: string;
 }> = function ({ type, style, base64 }) {
-  //   useEffect(() => {
-  //     if (type === '3d') {
-  //       const view3d = new View3D("#my-canvas");
-  //       const loader = new GLTFLoader();
-  // loader.load('~/GitHub/glTF-Sample-Models/sourceModels/2.0/WaterBottle/glTF/WaterBottle.gltf').then(model => {
-  //   view3d.display(model);
-  // }).catch(e => { Logger.logger.log(e); });
-  //     }
-  // })
-
   return type === 'fig' ? (
     <img style={style} src={`data:image/jpeg;base64,${base64}`} />
   ) : type === 'video' ? (
@@ -25,19 +16,8 @@ const MultimediaView: React.FC<{
       src="https://www.w3schools.com/html/movie.mp4"
       controls
     />
-  ) : type === '3d' ? (
-    // <Canvas>
-
-    // </Canvas>
-    //   <Canvas>
-    //   <ambientLight />
-    //   <pointLight position={[10, 10, 10]} />
-    //   <mesh position={[1.2, 0, 0]}>
-    //     <boxGeometry args={[1, 1, 1]} />
-    //     <meshStandardMaterial color={'hotpink'} />
-    //   </mesh>
-    // </Canvas>
-    <Text> Not supported</Text>
+  ) : type === '3d' ? (    
+    <ThreeD />
   ) : (
     <Text> Not supported</Text>
   );
