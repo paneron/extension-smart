@@ -369,24 +369,26 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
       <PopoverWrapper id={egate.id} SD={SD}>
         <EgateShape color={color} />
       </PopoverWrapper>
-      <Tooltip2
-        content={<div style={tooltipLabel}>{egate.label}</div>}
-        position="top"
-      >
-        <div
-          style={{
-            ...shameLabel,
-            ...shameLabelLong,
-            flex: 1,
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            overflow: 'hidden',
-            WebkitBoxOrient: 'vertical',
-          }}
+      <div style={{ width: 0, height: 0 }}>
+        <Tooltip2
+          content={<div style={tooltipLabel}>{egate.label}</div>}
+          position="top"
         >
-          {egate.label}
-        </div>
-      </Tooltip2>
+          <div
+            style={{
+              ...shameLabel,
+              ...shameLabelLong,
+              flex: 1,
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              overflow: 'hidden',
+              WebkitBoxOrient: 'vertical',
+            }}
+          >
+            {egate.label}
+          </div>
+        </Tooltip2>
+      </div>
       {Addon !== undefined && <Addon id={egate.id} />}
     </>
   );

@@ -16,7 +16,7 @@ const MultimediaView: React.FC<{
       src="https://www.w3schools.com/html/movie.mp4"
       controls
     />
-  ) : type === '3d' ? (    
+  ) : type === '3d' ? (
     <ThreeD />
   ) : (
     <Text> Not supported</Text>
