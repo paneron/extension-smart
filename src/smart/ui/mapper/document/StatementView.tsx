@@ -78,7 +78,7 @@ const StatementView: React.FC<{
         {content}
         {hasMap && MappingList !== undefined && (
           <Popover2 content={<MappingList id={statement.id} />} position="top">
-            <Button small icon="link" />
+            <Button small icon="exchange" />
           </Popover2>
         )}
       </span>

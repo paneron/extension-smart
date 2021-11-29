@@ -213,6 +213,12 @@ function searchProcess(
       return 'Process';
     }
   }
+  for (const x of process.links) {
+    const link = model.links[x];
+    if (link.title.toLowerCase().includes(search) || link.link.toLowerCase().includes(search)) {
+      return 'Process';
+    }
+  }
   return null;
 }
 

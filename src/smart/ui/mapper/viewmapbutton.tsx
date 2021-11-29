@@ -44,7 +44,7 @@ const ViewMappingbutton: React.FC<{
             <Button
               onMouseEnter={() => action({ ...state, isHover: true })}
               onMouseLeave={() => action({ ...state, isHover: false })}
-              icon="link"
+              icon="exchange"
             />
           </Tooltip2>
         </Popover2>
