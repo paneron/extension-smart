@@ -2,6 +2,7 @@ import {
   isMMELApproval,
   isMMELDataClass,
   isMMELProcess,
+  isMMELRegistry,
 } from '../../model/editormodel';
 import {
   isJSONApproval,
@@ -13,6 +14,7 @@ import {
   JSONNote,
   JSONProcess,
   JSONProvision,
+  JSONRegistry,
   MMELJSON,
 } from '../../model/json';
 import { MMELNode } from '../../serialize/interface/baseinterface';
@@ -148,6 +150,14 @@ function convertElement(p: MMELNode): MMELNode {
       attributes: convertAttributes(p.attributes),
     };
     return x;
+  } else if (isMMELRegistry(p)) {
+    const x: JSONRegistry = {
+      id: p.id,
+      datatype: p.datatype,
+      data: p.data,
+      title: p.title,
+    };
+    return x;
   } else {
     return p;
   }
@@ -159,9 +169,14 @@ function convertAttributes(
   const newAtt: Record<string, JSONDataAttribute> = {};
   for (const [k, x] of Object.entries(att)) {
     newAtt[k] = {
-      ...x,
+      id: x.id,
+      type: x.type,
+      modality: x.modality,
+      cardinality: x.cardinality,
+      definition: x.definition,
       ref: [...x.ref],
       satisfy: [...x.satisfy],
+      datatype: x.datatype,
     };
   }
   return newAtt;

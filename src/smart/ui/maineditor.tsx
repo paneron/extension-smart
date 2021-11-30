@@ -295,12 +295,17 @@ const ModelEditor: React.FC<{
           },
         },
       });
-      task.then(() =>
-        toaster.show({
-          message: 'Model saved',
-          intent: 'success',
-        })
-      );
+      task
+        .then(() =>
+          toaster.show({
+            message: 'Model saved',
+            intent: 'success',
+          })
+        )
+        .catch(e => {
+          Logger.logger.log(e.message);
+          Logger.logger.log(e.stack);
+        });
     }
   }
 

@@ -288,6 +288,9 @@ const RepoViewer: React.FC<{
 
   function renameRepo(x: MMELRepo, name: string) {
     if (x.type === 'Imp') {
+      if (x.ns === repo?.ns) {
+        setRepo(undefined);
+      }
       setRename({ old: x.ns, update: name });
     } else {
       toaster.show({

@@ -1,7 +1,7 @@
 import { Text } from '@blueprintjs/core';
 import React, { CSSProperties } from 'react';
 import { BINARY_TYPE } from '../../../serialize/interface/supportinterface';
-import ThreeD from '../../edit/figure/ThreeD';
+// import ThreeD from '../../edit/figure/ThreeD';
 
 const MultimediaView: React.FC<{
   type: BINARY_TYPE;
@@ -17,8 +17,9 @@ const MultimediaView: React.FC<{
       controls
     />
   ) : type === '3d' ? (
-    <ThreeD />
+    <Text> Not supported</Text>
   ) : (
+    // <ThreeD />
     <Text> Not supported</Text>
   );
 };
