@@ -390,7 +390,7 @@ function addDCIfNotFound(
       const reg = getRegistryReference(x.type, rmodel.elements);
       if (reg !== null) {
         x.type = getReferenceDCTypeName(
-          addRegistryIfNotFound(mw, ref, x.type, nameMap, refMap, pageid).id
+          addRegistryIfNotFound(mw, ref, reg.id, nameMap, refMap, pageid).id
         );
       }
     }
