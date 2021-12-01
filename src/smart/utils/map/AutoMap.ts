@@ -49,6 +49,10 @@ function exploreNodes(
       for (const ref of Object.values(mp.mapSet)) {
         if (ref.id !== 'defaultns') {
           if (Object.values(ref.mappings).length > 0) {
+            if (!hasMapping) {
+              hasMapping = true;
+              froms[x] = false;
+            }
             const namespace = ref.id;
             if (col !== 1 && tos[namespace] === undefined) {
               tos[namespace] = false;
@@ -56,10 +60,6 @@ function exploreNodes(
             edges.push(createEdge(`${x}-${namespace}`, x, namespace));
             if (elms[namespace] === undefined) {
               const item = index[namespace];
-              if (!hasMapping) {
-                hasMapping = true;
-                froms[x] = false;
-              }
               elms[namespace] = createNode(
                 namespace,
                 WIDTH * col,
