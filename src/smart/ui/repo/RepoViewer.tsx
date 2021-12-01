@@ -43,9 +43,8 @@ const RepoViewer: React.FC<{
   className?: string;
   repo?: MMELRepo;
   setRepo: (x: MMELRepo | undefined) => void;
-  isBSI: boolean;
   index: RepoIndex;
-}> = function ({ isVisible, className, repo, setRepo, isBSI, index }) {
+}> = function ({ isVisible, className, repo, setRepo, index }) {
   const { updateObjects } = useContext(DatasetContext);
 
   const [filter, setFilter] = useState<string>('');
@@ -301,7 +300,7 @@ const RepoViewer: React.FC<{
     }
   }
 
-  const toolbarProps = { addMW, addDoc, isBSI, index };
+  const toolbarProps = { addMW, addDoc, isBSI: true, index };
 
   return isVisible ? (
     <Workspace

@@ -117,10 +117,10 @@ function initialVisit(
     if (froms[x]) {
       visited[x] = {};
       const mapping = map.mapSet[x].mappings;
-      const model = models[getPathByNS(x, RepoFileType.MODEL)];
+      const mw = models[getPathByNS(x, RepoFileType.MODEL)];
       for (const f in mapping) {
         for (const t in mapping[f]) {
-          const childs = model !== undefined ? getChilds(model.model, t) : [t];
+          const childs = mw !== undefined ? getChilds(mw.model, t) : [t];
           for (const child of childs) {
             if (visited[x][child] === undefined) {
               visited[x][child] = {
