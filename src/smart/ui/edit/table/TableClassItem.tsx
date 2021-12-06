@@ -50,12 +50,20 @@ const EditItem: React.FC<{
     <NormalComboBox
       text={label}
       value={value}
-      options={domain.split(',')}
+      options={findDomain(domain.split(','))}
       onChange={setValue}
     />
   ) : (
     <NormalTextField text={label} value={value} onChange={setValue} />
   );
 };
+
+function findDomain(dos: string[]): string[] {
+  if (!dos.includes('')) {
+    return ['', ...dos];
+  } else {
+    return dos;
+  }
+}
 
 export default TableClassItemEdit;
