@@ -28,6 +28,7 @@ import { createMapProfile } from '../../model/mapmodel';
 import RepoGroup from './RepoGroup';
 import { ProvisionRDF, RDFVersion } from '../../model/SemanticTriple';
 import RepoRenameLoading, { RepoRenameAction } from './RepoRenameLoading';
+import AITranslateLoading from './AITranslateLoading';
 
 function matchFilter(item: RepoItems, filter: string) {
   return (
@@ -51,6 +52,7 @@ const RepoViewer: React.FC<{
 
   const [toaster] = useState<IToaster>(Toaster.create());
   const [rename, setRename] = useState<RepoRenameAction | undefined>(undefined);
+  const [aiRepo, setAiRepo] = useState<MMELRepo | undefined>(undefined);
 
   const [refs, imps, docs] = useMemo(() => groupItems(index), [index]);
   const frefs = useMemo(
@@ -300,7 +302,22 @@ const RepoViewer: React.FC<{
     }
   }
 
-  const toolbarProps = { addMW, addDoc, isBSI: true, index };
+  function updateAIResult(x: ModelWrapper | undefined) {
+    if (x) {
+      const prefix = aiRepo?.ns ?? '';
+      let count = 0;
+      let test = prefix;
+      while (index[test] !== undefined) {
+        count++;
+        test = prefix + count.toString();
+      }
+      x.model.meta.namespace = test;
+      addMW(x, 'Imp');
+    }
+    setAiRepo(undefined);
+  }
+
+  const toolbarProps = { addMW, addDoc, isBSI: true, index, setAiRepo };
 
   return isVisible ? (
     <Workspace
@@ -313,6 +330,13 @@ const RepoViewer: React.FC<{
           done={() => setRename(undefined)}
           sendMsg={sendMsg}
           index={index}
+        />
+      )}
+      {aiRepo && (
+        <AITranslateLoading
+          source={aiRepo}
+          done={updateAIResult}
+          sendMsg={sendMsg}
         />
       )}
       <div style={{ height: 'calc(100vh - 50px)', overflowY: 'auto' }}>
