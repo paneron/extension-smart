@@ -108,7 +108,7 @@ export function addProcessIfNotFound(
       pages: new Set<string>([pageid]),
       objectVersion: 'Editor',
     };
-    model.elements[newid] = newProcess;    
+    model.elements[newid] = newProcess;
     return newProcess;
   } catch (e: unknown) {
     if (typeof e === 'object') {
