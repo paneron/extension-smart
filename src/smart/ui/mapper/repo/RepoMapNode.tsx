@@ -1,11 +1,11 @@
 import { Button, Text } from '@blueprintjs/core';
-import { RepoItem } from '../../../model/repo';
+import { RepoItems } from '../../../model/repo';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 
 export function createNodeContent(
   label: string,
-  item: RepoItem | undefined,
+  item: RepoItems | undefined,
   loadModel?: (x: string) => void
 ): JSX.Element {
   return (

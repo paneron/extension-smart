@@ -2,6 +2,7 @@ import React from 'react';
 import { DocMapIndex, MMELDocument } from '../model/document';
 import { MappingType } from '../model/mapmodel';
 import { DOCVERSION } from './constants';
+import { createNewMMELDocument } from './EditorFactory';
 
 function addMetaField(doc: MMELDocument, id: string, value: string) {
   if (id === 'namespace') {
@@ -55,6 +56,76 @@ function addStatement(
       uiref: React.createRef(),
     };
   }
+}
+
+export function docToText(x: MMELDocument): string {
+  let out = `namespace#${x.id}\n`;
+  out += `title#${x.title}\n`;
+  out += `version#${x.version}\n`;
+  out += '###\n';
+  for (const sec of x.sections) {
+    for (const p of sec.contents) {
+      for (const line of p) {
+        out += `${sec.id}#${x.states[line].text}\n`;
+      }
+      out += `\n`;
+    }
+  }
+  return out;
+}
+
+function isClausePart(x: string): boolean {
+  return (x >= '0' && x <= '9') || x === '.';
+}
+
+function extractClause(x: string): string {
+  let index = 0;
+  while (index < x.length && isClausePart(x.charAt(index))) {
+    index++;
+  }
+  return x.substring(0, index);
+}
+
+function filterClasue(x: string): string {
+  let index = x.length - 1;
+  while (index >= 0 && x.charAt(index) === '.') {
+    index--;
+  }
+  if (index < 0) {
+    return '';
+  }
+  return x.substring(0, index + 1);
+}
+
+export function plainToDoc(data: string): MMELDocument {
+  const doc = createNewMMELDocument();
+  const lines = data
+    .split('\n')
+    .map(x => x.trim())
+    .filter(x => x !== '');
+  let start = true;
+  let lastClause = '';
+  let title = '';
+  for (const l of lines) {
+    const clauseUnProcess = extractClause(l);
+    const clause = filterClasue(clauseUnProcess);
+    if (clause !== '') {
+      start = false;
+      lastClause = clause;
+    }
+    const rest = l.substring(clauseUnProcess.length).trim();
+    if (start) {
+      if (title === '') {
+        title = rest;
+      } else {
+        title += ' ' + rest;
+      }
+    } else {
+      addStatement(doc, lastClause, rest, clause === lastClause);
+    }
+  }
+  doc.title = title;
+  return doc;
 }
 
 export function textToDoc(data: string): MMELDocument {

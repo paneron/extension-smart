@@ -83,7 +83,11 @@ export function calculateMapping(
 ): MapResultType {
   const mr: MapResultType = {};
   Object.values(mapping).forEach(m =>
-    Object.keys(m).forEach(k => (mr[k] = MapCoverType.FULL))
+    Object.keys(m).forEach(k => {
+      for (const child of getChilds(model, k)) {
+        mr[child] = MapCoverType.FULL;
+      }
+    })
   );
   explorePage(model.pages[model.root], mr, model);
   return mr;

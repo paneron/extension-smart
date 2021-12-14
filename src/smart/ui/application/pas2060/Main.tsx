@@ -36,6 +36,7 @@ import {
 import { Popover2 } from '@blueprintjs/popover2';
 import { ViewFunctionInterface } from '../../../model/ViewFunctionModel';
 import React from 'react';
+import { Logger } from '../../../utils/ModelFunctions';
 
 const Application2060: React.FC<{
   model: EditorModel;
@@ -51,6 +52,13 @@ const Application2060: React.FC<{
   );
   const [liveCount, setLiveCount] = useState<number>(0);
   const [logs, setLogs] = useState<Log2060>({ hasFail: false, records: [] });
+
+  function updateLive() {
+    setLiveCount(x => {
+      Logger.logger.log('Live', x);
+      return x + 1;
+    });
+  }
 
   function onClose() {
     setDiagProps(undefined);
@@ -109,7 +117,7 @@ const Application2060: React.FC<{
   }
 
   useEffect(() => {
-    const interval = setInterval(() => setLiveCount(prev => prev + 1), 5000);
+    const interval = setInterval(updateLive, 5000);
     return () => clearInterval(interval);
   }, []);
 

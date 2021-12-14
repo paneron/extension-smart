@@ -191,6 +191,10 @@ export function isMMELDataClass(x: MMELNode): x is MMELDataClass {
   return x.datatype === DataType.DATACLASS;
 }
 
+export function isMMELRegistry(x: MMELNode): x is MMELRegistry {
+  return x.datatype === DataType.REGISTRY;
+}
+
 export function getEditorNodeInfoById(model: EditorModel, id: string): string {
   if (id !== '') {
     const node = model.elements[id];
@@ -198,7 +202,7 @@ export function getEditorNodeInfoById(model: EditorModel, id: string): string {
       node !== undefined &&
       (isEditorProcess(node) || isEditorApproval(node))
     ) {
-      return node.name;
+      return node.name !== '' ? node.name : `[${id}]`;
     }
   }
   return 'Node not found';

@@ -14,7 +14,7 @@ export const DataVisibilityButton: React.FC<IconControlInterface> = function (
 };
 
 export const EdgeEditButton: React.FC<IconControlInterface> = function (props) {
-  return <IconControlButton {...props} icon="link" />;
+  return <IconControlButton {...props} icon="flows" />;
 };
 
 export const IdVisibleButton: React.FC<IconControlInterface> = function (

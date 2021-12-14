@@ -38,6 +38,8 @@ const FigItemEditPage: React.FC<{
           }
         },
       });
+    } else if (fig.type === '3d') {
+      setFig({ ...fig, data: 'aa' });
     }
   }
 

@@ -3,7 +3,7 @@ import {
   RepoDocItem,
   RepoImpItem,
   RepoIndex,
-  RepoItem,
+  RepoItems,
   RepoRefItem,
 } from '../../model/repo';
 import { LegendInterface } from '../../model/States';
@@ -29,7 +29,7 @@ export const RepoDiffLegend: Record<RepoNodeDiffType, LegendInterface> = {
 export function setValueToIndex(
   index: RepoIndex,
   ns: string,
-  newItem: RepoItem
+  newItem: RepoItems
 ): RepoIndex {
   return { ...index, [ns]: newItem };
 }
@@ -39,7 +39,7 @@ export function createEmptyIndex(): RepoIndex {
 }
 
 export function groupItems(
-  index: Record<string, RepoItem>
+  index: Record<string, RepoItems>
 ): [RepoRefItem[], RepoImpItem[], RepoDocItem[]] {
   const refs: RepoRefItem[] = [];
   const imps: RepoImpItem[] = [];
@@ -77,4 +77,17 @@ export function createEdge(id: string, source: string, target: string): Edge {
     target,
     type: 'repo',
   };
+}
+
+export function getRepoItemDesc(item: RepoItems) {
+  return item.shortname !== '' ? item.shortname : `[${item.namespace}]`;
+}
+
+export function getAllObjectPaths(ns: string): string[] {
+  return [
+    RepoFileType.MODEL,
+    RepoFileType.MAP,
+    RepoFileType.WORKSPACE,
+    RepoFileType.RDF,
+  ].map(x => getPathByNS(ns, x));
 }

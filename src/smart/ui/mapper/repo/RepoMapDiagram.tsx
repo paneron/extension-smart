@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMemo } from 'react';
-import ReactFlow from 'react-flow-renderer';
+import ReactFlow, { ReactFlowProvider } from 'react-flow-renderer';
 import { MapProfile } from '../../../model/mapmodel';
 import { MMELRepo, RepoIndex } from '../../../model/repo';
 import { MapperViewOption } from '../../../model/States';
@@ -31,7 +31,7 @@ const RepoMapDiagram: React.FC<{
   );
 
   return (
-    <>
+    <ReactFlowProvider>
       <ReactFlow
         elements={elms}
         onLoad={para => para.fitView()}
@@ -41,14 +41,14 @@ const RepoMapDiagram: React.FC<{
         nodesDraggable={true}
         edgeTypes={{ repo: RepoEdge }}
       />
-      {option.repoLegendVisible && (
+      {option && option.repoLegendVisible && (
         <LegendPane
           list={diffMap ? RepoDiffLegend : RepoLegend}
           onLeft
           bottom
         />
       )}
-    </>
+    </ReactFlowProvider>
   );
 };
 

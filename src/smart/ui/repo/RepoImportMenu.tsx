@@ -57,7 +57,7 @@ const RepoImportMenu: React.FC<{
       />
       {isBSIEnabled && (
         <MenuItem
-          text="XML Document"
+          text="NISO STS Document"
           onClick={() =>
             handleDocumentOpen({
               setDocument: addDoc,

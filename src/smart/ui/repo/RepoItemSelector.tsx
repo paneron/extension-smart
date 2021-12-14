@@ -2,10 +2,10 @@ import { Button, Card, Icon, InputGroup, Text } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { CSSProperties, useState } from 'react';
-import { MMELRepo, RepoIndex, RepoItem, RepoItemType } from '../../model/repo';
+import { MMELRepo, RepoIndex, RepoItems, RepoItemType } from '../../model/repo';
 import { LoadingContainer } from '../common/Loading';
 
-function matchFilter(item: RepoItem, filter: string) {
+function matchFilter(item: RepoItems, filter: string) {
   return (
     filter === '' ||
     item.namespace.includes(filter) ||
@@ -101,7 +101,7 @@ const RepoItemSelector: React.FC<{
 const EmptyMsg = () => <p style={{ margin: 10 }}>No item in the repository.</p>;
 
 const RepoSelectItem: React.FC<{
-  file: RepoItem;
+  file: RepoItems;
   onSelect: () => void;
   onCancel: () => void;
   highlight: boolean;
@@ -137,7 +137,9 @@ const RepoSelectItem: React.FC<{
               textAlign: 'center',
             }}
           >
-            <Text ellipsize>{file.shortname}</Text>
+            <Text ellipsize>
+              {file.shortname !== '' ? file.shortname : `[${file.namespace}]`}
+            </Text>
           </div>
         </Card>
       </Tooltip2>

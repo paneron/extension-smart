@@ -59,6 +59,8 @@ const EditTableView: React.FC<{
     });
   }
 
+  const rows = [...table.data, []];
+
   return (
     <table>
       <tr>
@@ -84,16 +86,19 @@ const EditTableView: React.FC<{
           </Button>
         </td>
       </tr>
-      {table.data.map((row, index) => (
-        <MMELTableRow
-          key={index}
-          row={row}
-          line={index}
-          setRow={row => setRow(index, row)}
-          onDelete={() => onDeleteRow(index)}
-        />
-      ))}
-      <MMELTableRow row={emptyRow} setRow={newRow} />
+      {rows.map((row, index) =>
+        index !== rows.length - 1 ? (
+          <MMELTableRow
+            key={index}
+            row={row}
+            line={index}
+            setRow={row => setRow(index, row)}
+            onDelete={() => onDeleteRow(index)}
+          />
+        ) : (
+          <MMELTableRow key={index} row={emptyRow} setRow={newRow} />
+        )
+      )}
     </table>
   );
 };

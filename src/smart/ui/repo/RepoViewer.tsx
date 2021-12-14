@@ -1,14 +1,13 @@
-import { InputGroup, IToaster, Toaster } from '@blueprintjs/core';
+import { InputGroup, IToaster, IToastProps, Toaster } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import { useContext, useMemo, useState } from 'react';
-import { reactFlowContainerLayout } from '../../../css/layout';
 import { ModelWrapper } from '../../model/modelwrapper';
 import {
   MMELRepo,
   RepoIndex,
   repoIndexPath,
-  RepoItem,
+  RepoItems,
   RepoItemType,
 } from '../../model/repo';
 import {
@@ -17,7 +16,6 @@ import {
   MMELToSerializable,
   RepoFileType,
 } from '../../utils/repo/io';
-import RepoModelFile from './RepoItem';
 import RepoInfoPane from './RepoInfoPane';
 import { EditorModel } from '../../model/editormodel';
 import { createNewSMARTWorkspace } from '../../model/workspace';
@@ -27,8 +25,12 @@ import { MMELDocument } from '../../model/document';
 import React from 'react';
 import RepoToolbar from './RepoToolbar';
 import { createMapProfile } from '../../model/mapmodel';
+import RepoGroup from './RepoGroup';
+import { ProvisionRDF, RDFVersion } from '../../model/SemanticTriple';
+import RepoRenameLoading, { RepoRenameAction } from './RepoRenameLoading';
+import AITranslateLoading from './AITranslateLoading';
 
-function matchFilter(item: RepoItem, filter: string) {
+function matchFilter(item: RepoItems, filter: string) {
   return (
     filter === '' ||
     item.namespace.includes(filter) ||
@@ -42,14 +44,15 @@ const RepoViewer: React.FC<{
   className?: string;
   repo?: MMELRepo;
   setRepo: (x: MMELRepo | undefined) => void;
-  isBSI: boolean;
   index: RepoIndex;
-}> = function ({ isVisible, className, repo, setRepo, isBSI, index }) {
+}> = function ({ isVisible, className, repo, setRepo, index }) {
   const { updateObjects } = useContext(DatasetContext);
 
   const [filter, setFilter] = useState<string>('');
 
   const [toaster] = useState<IToaster>(Toaster.create());
+  const [rename, setRename] = useState<RepoRenameAction | undefined>(undefined);
+  const [aiRepo, setAiRepo] = useState<MMELRepo | undefined>(undefined);
 
   const [refs, imps, docs] = useMemo(() => groupItems(index), [index]);
   const frefs = useMemo(
@@ -65,20 +68,21 @@ const RepoViewer: React.FC<{
     [docs, filter]
   );
 
-  async function saveIndex(
+  async function saveIndexWithModel(
     updated: RepoIndex,
-    ns?: string,
-    model?: EditorModel
+    ns: string,
+    model: EditorModel
   ) {
     if (updateObjects) {
       if (ns !== undefined && model !== undefined) {
         const mp = createMapProfile();
+        const rdf: ProvisionRDF = { roots: {}, nodes: {}, version: RDFVersion };
         mp.id = getNamespace(model);
         const task = updateObjects({
           commitMessage: COMMITMSG,
           _dangerouslySkipValidation: true,
           objectChangeset: {
-            [repoIndexPath]: { oldValue: undefined, newValue: updated },
+            [repoIndexPath]: { newValue: updated },
             [getPathByNS(ns, RepoFileType.MODEL)]: {
               newValue: MMELToSerializable(model),
             },
@@ -88,6 +92,9 @@ const RepoViewer: React.FC<{
             [getPathByNS(ns, RepoFileType.WORKSPACE)]: {
               newValue: createNewSMARTWorkspace(),
             },
+            [getPathByNS(ns, RepoFileType.RDF)]: {
+              newValue: rdf,
+            },
           },
         });
         task.then(() => {
@@ -95,14 +102,6 @@ const RepoViewer: React.FC<{
             message: `Done: model with namespace ${ns} added to the repository`,
             intent: 'success',
           });
-        });
-      } else {
-        await updateObjects({
-          commitMessage: COMMITMSG,
-          _dangerouslySkipValidation: true,
-          objectChangeset: {
-            [repoIndexPath]: { oldValue: undefined, newValue: updated },
-          },
         });
       }
     } else {
@@ -119,7 +118,7 @@ const RepoViewer: React.FC<{
         commitMessage: COMMITMSG,
         _dangerouslySkipValidation: true,
         objectChangeset: {
-          [repoIndexPath]: { oldValue: undefined, newValue: updated },
+          [repoIndexPath]: { newValue: updated },
           [getPathByNS(doc.id, RepoFileType.MODEL)]: {
             newValue: doc,
           },
@@ -139,26 +138,42 @@ const RepoViewer: React.FC<{
     }
   }
 
-  function addItem(x: RepoItem) {
+  function addItem(x: RepoItems): RepoIndex | undefined {
     if (x.namespace === '') {
       toaster.show({
         message: 'Invalid item: namespace is empty',
         intent: 'danger',
       });
-    } else if (index[x.namespace] !== undefined) {
+      return undefined;
+    }
+    if (x.type !== 'Imp' && index[x.namespace] !== undefined) {
       toaster.show({
         message: 'Error: item with the same namespace already exists',
         intent: 'danger',
       });
-    } else {
-      const updated = setValueToIndex(index, x.namespace, x);
-      return updated;
+      return undefined;
     }
-    return undefined;
+    let count = 0;
+    let name = x.namespace;
+    while (index[name] !== undefined) {
+      count++;
+      name = x.namespace + `-${count}`;
+    }
+    if (count !== 0) {
+      toaster.show({
+        message: `Warning: item with the same namespace already exists, renamed namespace to ${name}`,
+        intent: 'warning',
+      });
+      x.namespace = name;
+      x.shortname = x.shortname !== '' ? x.shortname + `-${count}` : '';
+      x.title = x.title !== '' ? x.title + `-${count}` : '';
+    }
+    const updated = setValueToIndex(index, x.namespace, x);
+    return updated;
   }
 
   function addDoc(x: MMELDocument) {
-    const item: RepoItem = {
+    const item: RepoItems = {
       namespace: `${x.id}-doc`,
       shortname: x.id,
       title: x.title,
@@ -175,7 +190,7 @@ const RepoViewer: React.FC<{
   function addMW(m: ModelWrapper, type: RepoItemType) {
     const model = m.model;
     const meta = model.meta;
-    const newItem: RepoItem = {
+    const newItem: RepoItems = {
       namespace: meta.namespace,
       shortname: meta.shortname,
       title: meta.title,
@@ -183,27 +198,147 @@ const RepoViewer: React.FC<{
       type,
     };
     const updated = addItem(newItem);
+    const requirePrompt = meta.namespace === newItem.namespace;
+    if (!requirePrompt) {
+      meta.namespace = newItem.namespace;
+      meta.shortname = newItem.shortname;
+      meta.title = newItem.title;
+    }
     if (updated !== undefined) {
-      saveIndex(updated, newItem.namespace, model);
+      saveIndexWithModel(updated, newItem.namespace, model);
     }
   }
 
-  function deleteItem(ns: string) {
+  function deleteIndexWithDoc(updated: RepoIndex, ns: string) {
+    if (updateObjects) {
+      const task = updateObjects({
+        commitMessage: COMMITMSG,
+        _dangerouslySkipValidation: true,
+        objectChangeset: {
+          [repoIndexPath]: { newValue: updated },
+          [getPathByNS(ns, RepoFileType.MODEL)]: {
+            newValue: null,
+          },
+        },
+      });
+      task.then(() => {
+        toaster.show({
+          message: `Done: document with id ${ns} removed from the repository`,
+          intent: 'success',
+        });
+      });
+    } else {
+      toaster.show({
+        message: 'No write access to the repository',
+        intent: 'danger',
+      });
+    }
+  }
+
+  function deleteIndexWithModel(updated: RepoIndex, ns: string) {
+    if (updateObjects) {
+      const task = updateObjects({
+        commitMessage: COMMITMSG,
+        _dangerouslySkipValidation: true,
+        objectChangeset: {
+          [repoIndexPath]: { newValue: updated },
+          [getPathByNS(ns, RepoFileType.MODEL)]: {
+            newValue: null,
+          },
+          [getPathByNS(ns, RepoFileType.MAP)]: {
+            newValue: null,
+          },
+          [getPathByNS(ns, RepoFileType.WORKSPACE)]: {
+            newValue: null,
+          },
+          [getPathByNS(ns, RepoFileType.RDF)]: {
+            newValue: null,
+          },
+        },
+      });
+      task.then(() => {
+        toaster.show({
+          message: `Done: model with namespace ${ns} removed from the repository`,
+          intent: 'success',
+        });
+      });
+    } else {
+      toaster.show({
+        message: 'No write access to the repository',
+        intent: 'danger',
+      });
+    }
+  }
+
+  function deleteItem(ns: string, type: RepoItemType) {
     const updated = { ...index };
     delete updated[ns];
-    saveIndex(updated);
+    if (type === 'Doc') {
+      deleteIndexWithDoc(updated, ns);
+    } else {
+      deleteIndexWithModel(updated, ns);
+    }
     if (ns === repo?.ns) {
       setRepo(undefined);
     }
   }
 
-  const toolbarProps = { addMW, addDoc, isBSI, index };
+  function sendMsg(msg: IToastProps) {
+    toaster.show(msg);
+  }
+
+  function renameRepo(x: MMELRepo, name: string) {
+    if (x.type === 'Imp') {
+      if (x.ns === repo?.ns) {
+        setRepo(undefined);
+      }
+      setRename({ old: x.ns, update: name });
+    } else {
+      toaster.show({
+        message:
+          'Cannot change namespace for models other than implementation models',
+        intent: 'danger',
+      });
+    }
+  }
+
+  function updateAIResult(x: ModelWrapper | undefined) {
+    if (x) {
+      const prefix = aiRepo?.ns ?? '';
+      let count = 0;
+      let test = prefix;
+      while (index[test] !== undefined) {
+        count++;
+        test = prefix + count.toString();
+      }
+      x.model.meta.namespace = test;
+      addMW(x, 'Imp');
+    }
+    setAiRepo(undefined);
+  }
+
+  const toolbarProps = { addMW, addDoc, isBSI: true, index, setAiRepo };
 
   return isVisible ? (
     <Workspace
       toolbar={<RepoToolbar {...toolbarProps} />}
       className={className}
     >
+      {rename && (
+        <RepoRenameLoading
+          action={rename}
+          done={() => setRename(undefined)}
+          sendMsg={sendMsg}
+          index={index}
+        />
+      )}
+      {aiRepo && (
+        <AITranslateLoading
+          source={aiRepo}
+          done={updateAIResult}
+          sendMsg={sendMsg}
+        />
+      )}
       <div style={{ height: 'calc(100vh - 50px)', overflowY: 'auto' }}>
         <RepoInfoPane
           repo={repo}
@@ -227,6 +362,9 @@ const RepoViewer: React.FC<{
           list={fimps}
           deleteItem={deleteItem}
           setRepo={setRepo}
+          renameRepo={renameRepo}
+          index={index}
+          sendMsg={sendMsg}
         />
         <RepoGroup
           legend={`SMART documents [${fdocs.length} / ${docs.length}]`}
@@ -238,41 +376,6 @@ const RepoViewer: React.FC<{
     </Workspace>
   ) : (
     <div></div>
-  );
-};
-
-const EmptyMsg = () => <p style={{ margin: 10 }}>No item in the repository.</p>;
-
-const RepoGroup: React.FC<{
-  legend: string;
-  list: RepoItem[];
-  deleteItem: (ns: string) => void;
-  setRepo: (x: MMELRepo | undefined) => void;
-}> = function ({ legend, list, deleteItem, setRepo }) {
-  return (
-    <fieldset>
-      <legend>{legend}</legend>
-      <div style={reactFlowContainerLayout}>
-        {Object.values(list).length === 0 && <EmptyMsg />}
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 10,
-            margin: 10,
-          }}
-        >
-          {list.map(x => (
-            <RepoModelFile
-              key={x.namespace}
-              file={x}
-              onDelete={() => deleteItem(x.namespace)}
-              onOpen={() => setRepo({ ns: x.namespace, type: x.type })}
-            />
-          ))}
-        </div>
-      </div>
-    </fieldset>
   );
 };
 

@@ -86,9 +86,9 @@ export const EgateShape: React.FC<{ color?: string }> = function ({
   color = 'none',
 }) {
   return (
-    <svg height="41" width="40">
+    <svg height="40" width="40">
       <polygon
-        points="2,22 20,4 38,22 20,40"
+        points="2,21 20,3 38,21 20,39"
         fill={color}
         stroke="black"
         strokeWidth="2"

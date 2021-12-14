@@ -89,6 +89,13 @@ export type JSONDataclass = {
   datatype: DataType.DATACLASS;
 };
 
+export type JSONRegistry = {
+  id: string;
+  title: string;
+  data: string;
+  datatype: DataType.REGISTRY;
+};
+
 export type JSONApproval = {
   id: string;
   name: string;

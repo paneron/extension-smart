@@ -33,7 +33,7 @@ const MetaEditPage: React.FC<{
   return (
     <FormGroup>
       {isRepoMode ? (
-        <DescriptionItem label="Namepsace" value={editing.namespace} />
+        <DescriptionItem label="Namespace" value={editing.namespace} />
       ) : (
         <NormalTextField
           text="Globally unique identifier of the Data Model (Namespace)"

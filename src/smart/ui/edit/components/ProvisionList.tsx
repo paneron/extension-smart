@@ -164,16 +164,17 @@ const ProvisionQuickEdit: React.FC<{
   );
 };
 
-interface ModOption {
+export interface ModOption {
   lowerCaseText: string;
   modality: ModalityType;
 }
 
-function detectModality(text: string): ModalityType {
-  const options: ModOption[] = MODAILITYOPTIONS.map(x => ({
-    lowerCaseText: x.toLowerCase(),
-    modality: x,
-  })).sort((a, b) => b.modality.length - a.modality.length);
+const options: ModOption[] = MODAILITYOPTIONS.map(x => ({
+  lowerCaseText: x.toLowerCase(),
+  modality: x,
+})).sort((a, b) => b.modality.length - a.modality.length);
+
+export function detectModality(text: string): ModalityType {
   const t = text.toLowerCase();
   for (const m of options) {
     if (t.includes(m.lowerCaseText)) {

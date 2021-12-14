@@ -8,6 +8,7 @@ import { createNodeContent } from '../../ui/mapper/repo/RepoMapNode';
 import { calculateDocumentMapping } from '../DocumentFunctions';
 import {
   createEdge,
+  getRepoItemDesc,
   RepoDiffLegend,
   RepoNodeDiffType,
 } from '../repo/CommonFunctions';
@@ -111,7 +112,7 @@ export function repoMapDiffNode(
       ns,
       0,
       0,
-      createNodeContent(item.shortname, undefined, loadModel),
+      createNodeContent(getRepoItemDesc(item), undefined, loadModel),
       undefined
     ),
   };
@@ -171,7 +172,7 @@ function exploreNodes(
             if (elms[namespace] === undefined) {
               const item = index[namespace];
               const nodeContent = createNodeContent(
-                item ? item.shortname : namespace,
+                item ? getRepoItemDesc(item) : namespace,
                 item,
                 loadModel
               );
@@ -200,7 +201,7 @@ function exploreNodes(
               edges.push(createEdge(`${x}-${namespace}`, x, namespace));
               const item = index[namespace];
               const nodeContent = createNodeContent(
-                item ? item.shortname : namespace,
+                item ? getRepoItemDesc(item) : namespace,
                 item,
                 loadModel
               );

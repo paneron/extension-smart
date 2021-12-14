@@ -34,7 +34,7 @@ import {
   getEditorNodeCallBack,
   NodeCallBack,
 } from './FlowContainer';
-import { fillRDCS } from '../utils/ModelFunctions';
+import { fillRDCS, Logger } from '../utils/ModelFunctions';
 import {
   getMappedList,
   getRefNodeStyle,
@@ -62,20 +62,24 @@ function exploreData(
   if (data !== undefined && isEditorDataClass(data)) {
     data.rdcs.forEach(id => {
       const e = nodes[id] as EditorDataClass;
-      if (e.mother !== '') {
-        const m = nodes[e.mother] as EditorRegistry;
-        if (!es.has(m.id)) {
-          es.set(m.id, m);
-          exploreData(m, nodes, es, elms);
+      if (e) {
+        if (e.mother !== '') {
+          const m = nodes[e.mother] as EditorRegistry;
+          if (!es.has(m.id)) {
+            es.set(m.id, m);
+            exploreData(m, nodes, es, elms);
+          }
+          const ne = createDataLinkContainer(x, m);
+          elms.push(ne);
+        } else {
+          if (!es.has(e.id)) {
+            es.set(e.id, e);
+          }
+          const ne = createDataLinkContainer(x, e);
+          elms.push(ne);
         }
-        const ne = createDataLinkContainer(x, m);
-        elms.push(ne);
       } else {
-        if (!es.has(e.id)) {
-          es.set(e.id, e);
-        }
-        const ne = createDataLinkContainer(x, e);
-        elms.push(ne);
+        Logger.logger.log('Error! Dataclass ID not found:', id);
       }
     });
   }

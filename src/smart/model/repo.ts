@@ -1,12 +1,12 @@
-export type RepoItemType = RepoItem['type'];
-export type RepoItem = RepoImpItem | RepoRefItem | RepoDocItem;
+export type RepoItemType = RepoItems['type'];
+export type RepoItems = RepoImpItem | RepoRefItem | RepoDocItem;
 
 export type MMELRepo = {
   ns: string;
   type: RepoItemType;
 };
 
-export type RepoIndex = Record<string, RepoItem>;
+export type RepoIndex = Record<string, RepoItems>;
 
 export type RepoImpItem = RepoBase & { type: 'Imp' };
 export type RepoRefItem = RepoBase & { type: 'Ref' };

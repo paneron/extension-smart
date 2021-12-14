@@ -28,6 +28,7 @@ import {
   getRegistryReference,
   getReferenceDCTypeName,
   findUniqueID,
+  Logger,
 } from './ModelFunctions';
 
 export function addProcessIfNotFound(
@@ -39,75 +40,84 @@ export function addProcessIfNotFound(
   roleMap: Record<string, string>,
   pageid: string
 ): EditorProcess {
-  const rmodel = ref.model;
-  const model = mw.model;
-  if (nameMap[id] !== undefined) {
-    return model.elements[nameMap[id]] as EditorProcess;
-  }
-  const newid = trydefaultID(id, model.elements);
-  nameMap[id] = newid;
+  try {
+    const rmodel = ref.model;
+    const model = mw.model;
+    if (nameMap[id] !== undefined) {
+      return model.elements[nameMap[id]] as EditorProcess;
+    }
+    const newid = trydefaultID(id, model.elements);
+    nameMap[id] = newid;
 
-  const process = rmodel.elements[id] as EditorProcess;
-  const actor =
-    process.actor !== ''
-      ? addRoleIfNotFound(mw, ref, process.actor, roleMap)
-      : undefined;
-  const outputs: EditorRegistry[] = [];
-  process.output.forEach(x => {
-    outputs.push(addRegistryIfNotFound(mw, ref, x, nameMap, refMap, pageid));
-  });
-  const inputs: EditorRegistry[] = [];
-  process.input.forEach(x => {
-    inputs.push(addRegistryIfNotFound(mw, ref, x, nameMap, refMap, pageid));
-  });
-  const pros: string[] = [];
-  process.provision.forEach(p =>
-    pros.push(addProvision(mw, ref, rmodel.provisions[p], refMap))
-  );
-  const ns: string[] = [];
-  process.notes.forEach(n =>
-    ns.push(addNote(mw, ref, rmodel.notes[n], refMap))
-  );
-  const newPage =
-    process.page !== ''
-      ? addPageIfNotFound(mw, ref, process.page, nameMap, refMap, roleMap)
-      : undefined;
-  for (const x of process.measure) {
-    addMeasureIfNotFound(mw.model, ref.model, x);
-  }
-  for (const x of process.tables) {
-    addTableIfNotFound(mw.model, ref.model, x);
-  }
-  for (const x of process.figures) {
-    addFigIfNotFound(mw.model, ref.model, x);
-  }
-  for (const x of process.figures) {
-    addFigIfNotFound(mw.model, ref.model, x);
-  }
-  const links: string[] = [];
-  process.links.forEach(l => links.push(addLink(mw, rmodel.links[l])));
+    const process = rmodel.elements[id] as EditorProcess;
+    const actor =
+      process.actor !== ''
+        ? addRoleIfNotFound(mw, ref, process.actor, roleMap)
+        : undefined;
+    const outputs: EditorRegistry[] = [];
+    process.output.forEach(x => {
+      outputs.push(addRegistryIfNotFound(mw, ref, x, nameMap, refMap, pageid));
+    });
+    const inputs: EditorRegistry[] = [];
+    process.input.forEach(x => {
+      inputs.push(addRegistryIfNotFound(mw, ref, x, nameMap, refMap, pageid));
+    });
+    const pros: string[] = [];
+    process.provision.forEach(p =>
+      pros.push(addProvision(mw, ref, rmodel.provisions[p], refMap))
+    );
+    const ns: string[] = [];
+    process.notes.forEach(n =>
+      ns.push(addNote(mw, ref, rmodel.notes[n], refMap))
+    );
+    const newPage =
+      process.page !== ''
+        ? addPageIfNotFound(mw, ref, process.page, nameMap, refMap, roleMap)
+        : undefined;
+    for (const x of process.measure) {
+      addMeasureIfNotFound(mw.model, ref.model, x);
+    }
+    for (const x of process.tables) {
+      addTableIfNotFound(mw.model, ref.model, x);
+    }
+    for (const x of process.figures) {
+      addFigIfNotFound(mw.model, ref.model, x);
+    }
+    for (const x of process.figures) {
+      addFigIfNotFound(mw.model, ref.model, x);
+    }
+    const links: string[] = [];
+    process.links.forEach(l => links.push(addLink(mw, rmodel.links[l])));
 
-  const newProcess: EditorProcess = {
-    id: newid,
-    name: process.name,
-    modality: process.modality,
-    actor: actor !== undefined ? actor.id : '',
-    output: new Set(outputs.map(o => o.id)),
-    input: new Set(inputs.map(o => o.id)),
-    provision: new Set(pros),
-    links: new Set(links),
-    notes: new Set(ns),
-    page: newPage !== undefined ? newPage.id : '',
-    datatype: DataType.PROCESS,
-    measure: [...process.measure],
-    tables: new Set(process.tables),
-    figures: new Set(process.figures),
-    added: false,
-    pages: new Set<string>([pageid]),
-    objectVersion: 'Editor',
-  };
-  model.elements[newid] = newProcess;
-  return newProcess;
+    const newProcess: EditorProcess = {
+      id: newid,
+      name: process.name,
+      modality: process.modality,
+      actor: actor !== undefined ? actor.id : '',
+      output: new Set(outputs.map(o => o.id)),
+      input: new Set(inputs.map(o => o.id)),
+      provision: new Set(pros),
+      links: new Set(links),
+      notes: new Set(ns),
+      page: newPage !== undefined ? newPage.id : '',
+      datatype: DataType.PROCESS,
+      measure: [...process.measure],
+      tables: new Set(process.tables),
+      figures: new Set(process.figures),
+      added: false,
+      pages: new Set<string>([pageid]),
+      objectVersion: 'Editor',
+    };
+    model.elements[newid] = newProcess;    
+    return newProcess;
+  } catch (e: unknown) {
+    if (typeof e === 'object') {
+      const error = e as Error;
+      Logger.logger.log(error.message);
+      Logger.logger.log(error.stack);
+    }
+    throw e;
+  }
 }
 
 function addComponentIfNotFound(
@@ -334,8 +344,9 @@ function addRegistryIfNotFound(
       const refdc = rmodel.elements[reg.data] as EditorDataClass;
       const cdc = model.elements[creg.data] as EditorDataClass;
       if (isSameSetAttributes(refdc.attributes, cdc.attributes)) {
-        nameMap[id] = reg.id;
-        return reg;
+        nameMap[id] = creg.id;
+        nameMap[refdc.id] = cdc.id;
+        return creg;
       }
     }
   }
@@ -390,14 +401,19 @@ function addDCIfNotFound(
       const reg = getRegistryReference(x.type, rmodel.elements);
       if (reg !== null) {
         x.type = getReferenceDCTypeName(
-          addRegistryIfNotFound(mw, ref, x.type, nameMap, refMap, pageid).id
+          addRegistryIfNotFound(mw, ref, reg.id, nameMap, refMap, pageid).id
         );
       }
     }
   });
   const newrdcs: string[] = [];
   dc.rdcs.forEach(x => {
-    newrdcs.push(nameMap[x]);
+    const newName = nameMap[x];
+    if (newName) {
+      newrdcs.push(newName);
+    } else {
+      Logger.logger.log('Error. Not on RDCS list', x);
+    }
   });
   const newDC: EditorDataClass = {
     id: newid,

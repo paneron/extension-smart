@@ -80,7 +80,7 @@ const MeasureCheckPane: React.FC<{
 
   return (
     <MGDSidebar>
-      {branchOnly && profiles.length > 1 && (
+      {branchOnly && profiles.length > 0 && (
         <ProfileControl
           values={values}
           profile={profile}

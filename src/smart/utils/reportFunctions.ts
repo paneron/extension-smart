@@ -81,7 +81,7 @@ function parseCode(
   const engine = new Liquid();
   const impjson = MMELToSerializable(imp);
   const refjson = MMELToSerializable(ref);
-  const rec: SectoinRecord[] = records.map(x => ({
+  const rec: SectionRecord[] = records.map(x => ({
     ...x,
     justification: [...x.justification],
   }));
@@ -112,7 +112,7 @@ interface RefRecord {
   justification: Set<string>;
 }
 
-interface SectoinRecord {
+interface SectionRecord {
   id: string;
   clause: string;
   title: string;
