@@ -55,6 +55,7 @@ import {
 import {
   EdgeTypes,
   EditorState,
+  EditorViewOption,
   isModelWrapper,
   NodeTypes,
   ReferenceContent,
@@ -142,6 +143,11 @@ import EditorReferenceMenuButton from './menu/EditorReferenceMenuButton';
 import { indexModel } from '../model/mapmodel';
 import { MMELDocument } from '../model/document';
 import { LoadingContainer } from './common/Loading';
+import {
+  modelAddComment,
+  modelDeleteComment,
+  modelToggleComment,
+} from '../utils/Comments';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -174,7 +180,8 @@ const ModelEditor: React.FC<{
   resetHistory,
   index,
 }) => {
-  const { logger, useObjectData, updateObjects } = useContext(DatasetContext);
+  const { logger, useObjectData, updateObjects, useRemoteUsername } =
+    useContext(DatasetContext);
 
   Logger.logger = logger!;
 
@@ -206,10 +213,23 @@ const ModelEditor: React.FC<{
   const [toaster] = useState<IToaster>(Toaster.create());
   const [isImportRoleOpen, setIsImportRoleOpen] = useState<boolean>(false);
   const [isImportRegOpen, setIsImportRegOpen] = useState<boolean>(false);
-  const [idVisible, setIdVisible] = useState<boolean>(false);
+  const [view, setView] = useState<EditorViewOption>({
+    dvisible: true,
+    edgeDeleteVisible: false,
+    idVisible: false,
+    commentVisible: true,
+  });
   const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
   const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
   const [repoHis, setRepoHis] = useState<RepoHistory>([]);
+
+  const userData = useRemoteUsername();
+  const username =
+    userData === undefined ||
+    userData.value === undefined ||
+    userData.value.username === undefined
+      ? 'Anonymous'
+      : userData.value.username;
 
   const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
   const repoModelFile = useObjectData({
@@ -382,15 +402,30 @@ const ModelEditor: React.FC<{
     return mw;
   }
 
+  function addCommentToModel(msg: string, pid: string, parent?: string) {
+    const m = modelAddComment(model, username, msg, pid, parent);
+    setState({ ...state, modelWrapper: { ...mw, model: m } }, true);
+  }
+
+  function toggleCommentResolved(cid: string) {
+    const m = modelToggleComment(model, cid);
+    setState({ ...state, modelWrapper: { ...mw, model: m } }, true);
+  }
+
+  function deleteComment(cid: string, pid: string) {
+    const m = modelDeleteComment(model, cid, pid);
+    setState({ ...state, modelWrapper: { ...mw, model: m } }, true);
+  }
+
   function toggleDataVisibility() {
-    if (state.dvisible) {
+    if (view.dvisible) {
       saveLayout();
     }
-    setState({ ...state, dvisible: !state.dvisible }, false);
+    setView({ ...view, dvisible: !view.dvisible });
   }
 
   function toggleEdgeDelete() {
-    setState({ ...state, edgeDeleteVisible: !state.edgeDeleteVisible }, false);
+    setView({ ...view, edgeDeleteVisible: !view.edgeDeleteVisible });
   }
 
   function setNewModelWrapper(mw: ModelWrapper) {
@@ -788,13 +823,17 @@ const ModelEditor: React.FC<{
                     elements={getEditorReactFlowElementsFrom(
                       state.modelWrapper,
                       index,
-                      state.dvisible,
-                      state.edgeDeleteVisible,
+                      view.dvisible,
+                      view.edgeDeleteVisible,
                       onProcessClick,
                       removeEdge,
                       getStyleById,
                       getSVGColorById,
-                      idVisible
+                      view.idVisible,
+                      view.commentVisible,
+                      addCommentToModel,
+                      toggleCommentResolved,
+                      deleteComment
                     )}
                     {...{ onLoad, onDrop, onDragOver }}
                     onConnect={connectHandle}
@@ -807,16 +846,18 @@ const ModelEditor: React.FC<{
                   >
                     <Controls>
                       <DataVisibilityButton
-                        isOn={state.dvisible}
+                        isOn={view.dvisible}
                         onClick={toggleDataVisibility}
                       />
                       <EdgeEditButton
-                        isOn={state.edgeDeleteVisible}
+                        isOn={view.edgeDeleteVisible}
                         onClick={toggleEdgeDelete}
                       />
                       <IdVisibleButton
-                        isOn={idVisible}
-                        onClick={() => setIdVisible(x => !x)}
+                        isOn={view.idVisible}
+                        onClick={() =>
+                          setView({ ...view, idVisible: !view.idVisible })
+                        }
                       />
                     </Controls>
                   </ReactFlow>

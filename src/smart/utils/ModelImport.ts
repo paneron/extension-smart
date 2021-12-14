@@ -104,6 +104,7 @@ export function addProcessIfNotFound(
       measure: [...process.measure],
       tables: new Set(process.tables),
       figures: new Set(process.figures),
+      comments: new Set(process.comments),
       added: false,
       pages: new Set<string>([pageid]),
       objectVersion: 'Editor',

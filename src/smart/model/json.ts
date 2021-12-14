@@ -34,6 +34,7 @@ export type MMELJSON = {
   figures?: Record<string, MMELFigure>;
   sections?: Record<string, MMELTextSection>;
   links?: Record<string, MMELLink>;
+  comments?: Record<string, JSONComment>;
   root?: string;
   version?: string;
 };
@@ -55,6 +56,16 @@ export type JSONNote = {
   datatype: DataType.NOTE;
 };
 
+export type JSONComment = {
+  id: string;
+  username: string;
+  message: string;
+  feedback: string[];
+  resolved: boolean;
+  timestamp: string;
+  datatype: DataType.COMMENT;
+};
+
 export type JSONProcess = {
   id: string;
   name: string;
@@ -67,6 +78,7 @@ export type JSONProcess = {
   notes: string[];
   tables: string[];
   figures: string[];
+  comments: string[];
   page: string;
   measure: string[];
   datatype: DataType.PROCESS;

@@ -25,6 +25,7 @@ import {
   MMELProcess,
 } from '../serialize/interface/processinterface';
 import {
+  MMELComment,
   MMELFigure,
   MMELLink,
   MMELMetadata,
@@ -108,6 +109,7 @@ export interface EditorModel {
   figures: Record<string, MMELFigure>;
   sections: Record<string, MMELTextSection>;
   links: Record<string, MMELLink>;
+  comments: Record<string, MMELComment>;
   root: string;
   version: string;
 }

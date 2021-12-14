@@ -129,3 +129,13 @@ export interface MMELLink extends MMELObject {
   type: LINK_TYPE;
   datatype: DataType.LINK;
 }
+
+export interface MMELComment extends MMELObject {
+  id: string;
+  username: string;
+  message: string;
+  feedback: Set<string>;
+  resolved: boolean;
+  timestamp: string;
+  datatype: DataType.COMMENT;
+}

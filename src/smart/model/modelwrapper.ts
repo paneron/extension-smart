@@ -191,7 +191,11 @@ export function getEditorReactFlowElementsFrom(
   removeEdge: (id: string) => void,
   getStyleById: (id: string) => SerializedStyles,
   getSVGColorById: (id: string) => string,
-  idVisible: boolean
+  idVisible: boolean,
+  commentVisible: boolean,
+  addComment: (msg: string, pid: string, parent?: string) => void,
+  toggleCommentResolved: (cid: string) => void,
+  deleteComment: (cid: string, pid: string) => void
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
@@ -201,6 +205,10 @@ export function getEditorReactFlowElementsFrom(
     getSVGColorById,
     idVisible,
     index,
+    commentVisible,
+    addComment,
+    toggleCommentResolved,
+    deleteComment,
   });
   return getElements(mw, dvisible, callback, e =>
     createEdgeContainer(e, edgeDelete, removeEdge)

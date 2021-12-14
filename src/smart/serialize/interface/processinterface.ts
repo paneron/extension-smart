@@ -23,6 +23,7 @@ export interface MMELProcess extends MMELNode {
   notes: Set<string>;
   tables: Set<string>;
   figures: Set<string>;
+  comments: Set<string>;
   page: string;
   measure: string[];
   datatype: DataType.PROCESS;

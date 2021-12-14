@@ -2,6 +2,7 @@ import { DataType } from '../interface/baseinterface';
 import {
   BINARY_TYPE,
   LINK_TYPE,
+  MMELComment,
   MMELFigure,
   MMELLink,
   MMELMetadata,
@@ -262,6 +263,50 @@ function to2DArray(data: string[], column: number): string[][] {
     }
   }
   return ret;
+}
+
+export function parseComment(id: string, data: string): MMELComment {
+  const c: MMELComment = {
+    id,
+    username: '',
+    message: '',
+    feedback: new Set<string>(),
+    resolved: false,
+    timestamp: '',
+    datatype: DataType.COMMENT,
+  };
+  if (data !== '') {
+    const t = MMELtokenizePackage(data);
+    let i = 0;
+    while (i < t.length) {
+      const command: string = t[i++];
+      if (i < t.length) {
+        if (command === 'username') {
+          c.username = MMELremovePackage(t[i++]);
+        } else if (command === 'message') {
+          c.message = MMELremovePackage(t[i++]);
+        } else if (command === 'feedback') {
+          c.feedback = MMELtokenizeSet(t[i++]);
+        } else if (command === 'timestamp') {
+          c.timestamp = MMELremovePackage(t[i++]);
+        } else if (command === 'resolved') {
+          c.resolved = true;
+        } else {
+          throw new Error(
+            `Parsing error: Comment. ID ${id}: Unknown keyword ${command}`
+          );
+        }
+      } else {
+        throw new Error(
+          'Parsing error: Comment. ID ' +
+            id +
+            ': Expecting value for ' +
+            command
+        );
+      }
+    }
+  }
+  return c;
 }
 
 export function parseLink(id: string, data: string): MMELLink {

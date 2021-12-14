@@ -24,10 +24,15 @@ export interface FunModel {
 }
 
 export interface EditorState {
-  dvisible: boolean; // visibility of data nodes
-  edgeDeleteVisible: boolean; // visibility of the remove edge buttons
   history: PageHistory;
   modelWrapper: ModelWrapper;
+}
+
+export interface EditorViewOption {
+  dvisible: boolean; // visibility of data nodes
+  edgeDeleteVisible: boolean; // visibility of the remove edge buttons
+  idVisible: boolean;
+  commentVisible: boolean;
 }
 
 export interface ViewerState {

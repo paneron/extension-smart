@@ -9,6 +9,7 @@ import {
 } from './editormodel';
 import { MMELtoFlowEntries } from './States';
 import {
+  MMELComment,
   MMELFigure,
   MMELLink,
   MMELRole,
@@ -53,11 +54,13 @@ export interface NodeCallBack {
   modelType: ModelType;
   index: RepoIndex;
   idVisible: boolean;
+  commentVisible: boolean;
   onProcessClick: (pageid: string, processid: string) => void;
   getRoleById: (id: string) => MMELRole | null;
   getTableById: (id: string) => MMELTable | undefined;
   getFigById: (id: string) => MMELFigure | undefined;
   getLinkById: (id: string) => MMELLink | undefined;
+  getCommentById: (id: string) => MMELComment | undefined;
   setMapping: (fromid: string, toid: string) => void;
   getStyleClassById?: (id: string) => SerializedStyles;
   getSVGColorById?: (id: string) => string;
@@ -69,6 +72,9 @@ export interface NodeCallBack {
   onDataWorkspaceActive?: (id: string) => void;
   NodeAddon?: React.FC<{ id: string }>;
   goToNextModel?: (x: MMELRepo) => void;
+  addComment?: (msg: string, pid: string, parent?: string) => void;
+  toggleCommentResolved?: (cid: string) => void;
+  deleteComment?: (cid: string, pid: string) => void;
 }
 
 export interface NodeContainer {
@@ -149,7 +155,11 @@ export function getEditorNodeCallBack(props: {
   NodeAddon?: React.FC<{ id: string }>;
   isEditMode?: boolean;
   idVisible: boolean;
+  commentVisible?: boolean;
   goToNextModel?: (x: MMELRepo) => void;
+  addComment?: (msg: string, pid: string, parent?: string) => void;
+  toggleCommentResolved?: (cid: string) => void;
+  deleteComment?: (cid: string, pid: string) => void;
 }): NodeCallBack {
   const {
     type,
@@ -168,6 +178,10 @@ export function getEditorNodeCallBack(props: {
     idVisible,
     index,
     goToNextModel,
+    commentVisible = false,
+    addComment,
+    toggleCommentResolved,
+    deleteComment,
   } = props;
 
   function getRoleById(id: string): MMELRole | null {
@@ -186,6 +200,10 @@ export function getEditorNodeCallBack(props: {
     return model.links[id];
   }
 
+  function getCommentById(id: string): MMELComment | undefined {
+    return model.comments[id];
+  }
+
   return {
     modelType: type,
     getRoleById,
@@ -197,6 +215,7 @@ export function getEditorNodeCallBack(props: {
     getSVGColorById,
     getLinkById,
     setSelectedId,
+    getCommentById,
     hasMapping,
     ComponentShortDescription,
     StartEndShortDescription: ViewStartEndComponentDesc,
@@ -206,5 +225,9 @@ export function getEditorNodeCallBack(props: {
     idVisible,
     index,
     goToNextModel,
+    commentVisible,
+    addComment,
+    toggleCommentResolved,
+    deleteComment,
   };
 }

@@ -9,6 +9,7 @@ import {
   isJSONDataClass,
   isJSONProcess,
   JSONApproval,
+  JSONComment,
   JSONDataAttribute,
   JSONDataclass,
   JSONNote,
@@ -17,7 +18,7 @@ import {
   JSONRegistry,
   MMELJSON,
 } from '../../model/json';
-import { MMELNode } from '../../serialize/interface/baseinterface';
+import { DataType, MMELNode } from '../../serialize/interface/baseinterface';
 import {
   MMELDataAttribute,
   MMELDataClass,
@@ -28,6 +29,7 @@ import {
   MMELProcess,
 } from '../../serialize/interface/processinterface';
 import {
+  MMELComment,
   MMELNote,
   MMELProvision,
 } from '../../serialize/interface/supportinterface';
@@ -69,6 +71,7 @@ export function MMELToSerializable(m: MMELModel): MMELJSON {
     version: m.version,
     provisions: convertProvisions(m.provisions),
     notes: convertNotes(m.notes),
+    comments: convertComments(m.comments),
     elements: convertElements(m.elements),
   };
 }
@@ -96,6 +99,7 @@ export function JSONToMMEL(m: MMELJSON): MMELModel {
     root: '',
     version: '',
     ...m,
+    comments: m.comments ? recoverComments(m.comments) : {},
     provisions: m.provisions ? recoverProvisions(m.provisions) : {},
     notes: m.notes ? recoverNotes(m.notes) : {},
     elements: m.elements ? recoverElements(m.elements) : {},
@@ -127,6 +131,7 @@ function convertElement(p: MMELNode): MMELNode {
       output: [...p.output],
       provision: [...p.provision],
       notes: [...p.notes],
+      comments: [...p.comments],
       tables: [...p.tables],
       figures: [...p.figures],
     };
@@ -198,6 +203,24 @@ function convertNotes(
   return newNote;
 }
 
+function convertComments(
+  comments: Record<string, MMELComment>
+): Record<string, JSONComment> {
+  const newComments: Record<string, JSONComment> = {};
+  for (const [k, p] of Object.entries(comments)) {
+    newComments[k] = {
+      id: p.id,
+      username: p.username,
+      message: p.message,
+      feedback: [...p.feedback],
+      resolved: p.resolved,
+      timestamp: p.timestamp,
+      datatype: DataType.COMMENT,
+    };
+  }
+  return newComments;
+}
+
 function convertProvisions(
   pro: Record<string, MMELProvision>
 ): Record<string, JSONProvision> {
@@ -236,6 +259,7 @@ function recoverElement(p: MMELNode): MMELNode {
       notes: new Set(p.notes),
       tables: new Set(p.tables),
       figures: new Set(p.figures),
+      comments: new Set(p.comments),
     };
     return x;
   } else if (isJSONApproval(p)) {
@@ -281,6 +305,19 @@ function recoverNotes(
     };
   }
   return newNote;
+}
+
+function recoverComments(
+  comments: Record<string, JSONComment>
+): Record<string, MMELComment> {
+  const newComment: Record<string, MMELComment> = {};
+  for (const [k, p] of Object.entries(comments)) {
+    newComment[k] = {
+      ...p,
+      feedback: new Set(p.feedback),
+    };
+  }
+  return newComment;
 }
 
 function recoverProvisions(

@@ -20,6 +20,7 @@ import {
 } from '../interface/flowcontrolinterface';
 import { MMELApproval, MMELProcess } from '../interface/processinterface';
 import {
+  MMELComment,
   MMELFigure,
   MMELLink,
   MMELMetadata,
@@ -364,6 +365,25 @@ export function toLinkModel(l: MMELLink): string {
   return out;
 }
 
+export function toCommentModel(c: MMELComment): string {
+  let out: string = 'comment ' + c.id + ' {\n';
+  out += '  username "' + c.username + '"\n';
+  out += '  message "' + c.message + '"\n';
+  out += '  timestamp "' + c.timestamp + '"\n';
+  if (c.feedback.size > 0) {
+    out += '  feedback {\n';
+    for (const r of c.feedback) {
+      out += '    ' + r + '\n';
+    }
+    out += '  }\n';
+  }
+  if (c.resolved) {
+    out += '  resolved\n';
+  }
+  out += '}\n';
+  return out;
+}
+
 export function toTableModel(table: MMELTable): string {
   let out: string = 'table ' + table.id + ' {\n';
   out += '  title "' + table.title + '"\n';
@@ -482,6 +502,13 @@ export function toProcessModel(process: MMELProcess): string {
     out += '  output {\n';
     for (const c of process.output) {
       out += '    ' + c + '\n';
+    }
+    out += '  }\n';
+  }
+  if (process.comments.size > 0) {
+    out += '  comment {\n';
+    for (const r of process.comments) {
+      out += '    ' + r + '\n';
     }
     out += '  }\n';
   }

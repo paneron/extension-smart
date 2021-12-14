@@ -50,10 +50,8 @@ const EditWrapper: React.FC<{
   index: RepoIndex;
 }> = function (props) {
   const [state, setState] = useState<EditorState>({
-    dvisible: true,
     modelWrapper: initModelWrapper,
     history: createPageHistory(initModelWrapper),
-    edgeDeleteVisible: false,
   });
 
   const [history, setHistory] = useState<EditHistory>({ past: [], future: [] });
