@@ -148,6 +148,7 @@ import {
   modelDeleteComment,
   modelToggleComment,
 } from '../utils/Comments';
+import EditorViewMenu from './menu/EditorViewMenu';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -712,6 +713,13 @@ const ModelEditor: React.FC<{
         content={<EditorEditMenu {...{ redo, undo, copy, paste }} />}
       >
         <Button>Edit</Button>
+      </Popover2>
+      <Popover2
+        minimal
+        placement="bottom-start"
+        content={<EditorViewMenu viewOption={view} setViewOption={setView} />}
+      >
+        <Button>View</Button>
       </Popover2>
       {reference === undefined && referenceMenu}
       <MGDButton
