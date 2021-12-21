@@ -17,7 +17,7 @@ import {
 } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import ModelMapper from './smart/ui/mainmapper';
-import { BSI_WHITE_TEXT } from './css/BSI.logos';
+import { BSI_WHITE_TEXT } from './resources/BSI_logo';
 import ModelViewer from './smart/ui/mainviewer';
 import ModelWorkspace from './smart/ui/modelWorkspace';
 import EditWrapper from './smart/ui/editFunctions/EditWrapper';
