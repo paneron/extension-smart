@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import { IToastProps, Tab, Tabs } from '@blueprintjs/core';
+import { Tab, Tabs } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useState } from 'react';
 import { mgd_label } from '../../../css/form';
@@ -49,7 +49,6 @@ interface TabProps {
     model: EditorModel;
     setModel: (m: EditorModel) => void;
     onMetaChanged: (meta: MMELMetadata) => void;
-    showMsg: (msg: IToastProps) => void;
     repo: MMELRepo | undefined;
   }>;
 }
@@ -57,13 +56,12 @@ interface TabProps {
 const tabs: Record<SETTINGPAGE, TabProps> = {
   [SETTINGPAGE.METAPAGE]: {
     title: 'Metadata',
-    Panel: ({ model, onMetaChanged, showMsg, repo }) => (
+    Panel: ({ model, onMetaChanged, repo }) => (
       <MetaEditPage
         meta={model.meta}
         setMetadata={(meta: MMELMetadata) => {
           onMetaChanged(meta);
         }}
-        showMsg={showMsg}
         isRepoMode={repo !== undefined}
       />
     ),
@@ -140,9 +138,8 @@ const BasicSettingPane: React.FC<{
   model: EditorModel;
   setModel: (m: EditorModel) => void;
   onMetaChanged: (meta: MMELMetadata) => void;
-  showMsg: (msg: IToastProps) => void;
   repo: MMELRepo | undefined;
-}> = ({ model, setModel, onMetaChanged, showMsg, repo }) => {
+}> = ({ model, setModel, onMetaChanged, repo }) => {
   const { logger } = useContext(DatasetContext);
   const [page, setPage] = useState<SETTINGPAGE>(SETTINGPAGE.METAPAGE);
 
@@ -174,7 +171,6 @@ const BasicSettingPane: React.FC<{
                 model={model}
                 setModel={setModel}
                 onMetaChanged={onMetaChanged}
-                showMsg={showMsg}
                 repo={repo}
               />
             }

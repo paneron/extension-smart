@@ -26,7 +26,6 @@ import {
   HotkeysProvider,
   HotkeysTarget2,
   IToaster,
-  IToastProps,
   Toaster,
 } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
@@ -328,10 +327,6 @@ const ModelEditor: React.FC<{
           Logger.logger.log(e.stack);
         });
     }
-  }
-
-  function showMsg(msg: IToastProps) {
-    toaster.show(msg);
   }
 
   function onLoad(params: OnLoadParams) {
@@ -810,7 +805,7 @@ const ModelEditor: React.FC<{
                 canOutsideClickClose={false}
               >
                 <diagProps.Panel
-                  {...{ setModelWrapper, onMetaChanged, showMsg }}
+                  {...{ setModelWrapper, onMetaChanged }}
                   modelwrapper={state.modelWrapper}
                   callback={dialogPack.callback}
                   cancel={() => setDialogType(null)}

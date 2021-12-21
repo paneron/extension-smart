@@ -19,7 +19,6 @@ import EditEGatePage from '../edit/egateedit';
 import EditTimerPage from '../edit/timeredit';
 import EditSignalEventPage from '../edit/signaleventedit';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
-import { IToastProps } from '@blueprintjs/core';
 import { MMELRepo } from '../../model/repo';
 
 export enum DiagTypes {
@@ -54,7 +53,6 @@ export interface IDiagInterface {
   onMetaChanged: (meta: MMELMetadata) => void;
   callback: () => void;
   cancel: () => void;
-  showMsg: (msg: IToastProps) => void;
   msg: string;
   repo: MMELRepo | undefined;
 }
@@ -90,20 +88,13 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.SETTING]: {
     title: 'Setting',
     fullscreen: true,
-    Panel: ({
-      modelwrapper,
-      setModelWrapper,
-      onMetaChanged,
-      showMsg,
-      repo,
-    }) => (
+    Panel: ({ modelwrapper, setModelWrapper, onMetaChanged, repo }) => (
       <BasicSettingPane
         model={modelwrapper.model}
         setModel={(model: EditorModel) =>
           updateModel(model, setModelWrapper, modelwrapper)
         }
         onMetaChanged={onMetaChanged}
-        showMsg={showMsg}
         repo={repo}
       />
     ),
