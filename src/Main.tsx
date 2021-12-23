@@ -2,7 +2,7 @@ import { FocusStyleManager } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React from 'react';
 import { useContext, useMemo, useState } from 'react';
-import RepositoryView from './RepoView';
+import RepositoryView from './smart/ui/app/RepoView';
 import { RepoIndex, repoIndexPath } from './smart/model/repo';
 import { LoadingScreen } from './smart/ui/common/Loading';
 import { Logger } from './smart/utils/ModelFunctions';

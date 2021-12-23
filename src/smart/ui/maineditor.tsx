@@ -160,8 +160,7 @@ const ModelEditor: React.FC<{
   undo?: () => void;
   copy?: () => void;
   paste?: () => void;
-  setSelectedId: (id: string | undefined) => void;
-  isBSIEnabled?: boolean;
+  setSelectedId: (id: string | undefined) => void;  
   repo?: MMELRepo;
   initState: (x: EditorState) => void;
   index: RepoIndex;
@@ -175,8 +174,7 @@ const ModelEditor: React.FC<{
   undo,
   copy,
   paste,
-  setSelectedId,
-  isBSIEnabled,
+  setSelectedId,  
   repo,
   initState,
   index,
@@ -643,8 +641,7 @@ const ModelEditor: React.FC<{
   const referenceMenu = (
     <>
       <EditorReferenceMenuButton
-        setReference={selectReference}
-        isBSIEnabled={isBSIEnabled}
+        setReference={selectReference}        
         reference={reference}
         isRepo={repo !== undefined}
         setRefRepo={selectRefRepo}

@@ -11,41 +11,29 @@ import {
   Classes,
   Colors,
   ControlGroup,
-  HotkeysProvider,
-  HotkeysTarget2,
   IconName,
 } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
-import ModelMapper from './smart/ui/mainmapper';
-import { BSI_WHITE_TEXT } from './resources/BSI_logo';
-import ModelViewer from './smart/ui/mainviewer';
-import ModelWorkspace from './smart/ui/modelWorkspace';
-import EditWrapper from './smart/ui/editFunctions/EditWrapper';
-import { MMELRepo, RepoIndex, RepoItemType } from './smart/model/repo';
-import RepoViewer from './smart/ui/repo/RepoViewer';
-import DocumentViewer from './smart/ui/docviewer';
-import { RepoHistory } from './smart/model/history';
-import LinkAnalysis from './smart/ui/LinkAnalysis';
-import NLPMain from './smart/ui/nlp/NLPMain';
-import DocumentEdit from './smart/ui/maindocedit';
+import ModelMapper from '../mainmapper';
+import { BSI_WHITE_TEXT } from '../../../resources/BSI_logo';
+import ModelViewer from '../mainviewer';
+import ModelWorkspace from '../modelWorkspace';
+import EditWrapper from '../editFunctions/EditWrapper';
+import { MMELRepo, RepoIndex, RepoItemType } from '../../model/repo';
+import RepoViewer from '../repo/RepoViewer';
+import DocumentViewer from '../docviewer';
+import { RepoHistory } from '../../model/history';
+import LinkAnalysis from '../LinkAnalysis';
+import NLPMain from '../nlp/NLPMain';
+import DocumentEdit from '../maindocedit';
 
 const RepositoryView: React.FC<{
   index: RepoIndex;
 }> = function ({ index }) {
   const [repo, setRepo] = useState<MMELRepo | undefined>(undefined);
   const [selectedModule, selectModule] = useState<ModuleName>('repo');
-  const [clickListener, setClickListener] = useState<(() => void)[]>([]);
-  const [isBSI, setIsBSI] = useState<boolean>(false);
+  const [clickListener, setClickListener] = useState<(() => void)[]>([]);  
   const [repoHis, setRepoHis] = useState<RepoHistory>([]);
-
-  const hotkeys = [
-    {
-      combo: 'ctrl+b',
-      global: true,
-      label: 'BSI',
-      onKeyDown: () => setIsBSI(x => !x),
-    },
-  ];
 
   function onRepoChange(r: MMELRepo | undefined) {
     setRepo(r);
@@ -121,8 +109,6 @@ const RepositoryView: React.FC<{
   );
 
   return (
-    <HotkeysProvider>
-      <HotkeysTarget2 hotkeys={hotkeys}>
         <div
           style={{
             flex: 1,
@@ -150,8 +136,7 @@ const RepositoryView: React.FC<{
                   overflow: hidden;
                 `}
                 repo={repo}
-                setRepo={onRepoChange}
-                isBSI={isBSI}
+                setRepo={onRepoChange}                
                 index={index}
                 linktoAnotherRepo={linktoAnotherRepo}
                 repoHis={repoHis}
@@ -160,8 +145,6 @@ const RepositoryView: React.FC<{
             );
           })}
         </div>
-      </HotkeysTarget2>
-    </HotkeysProvider>
   );
 };
 
@@ -217,8 +200,7 @@ interface ModuleConfiguration {
     className?: string;
     setClickListener: (f: (() => void)[]) => void;
     repo?: MMELRepo;
-    setRepo: (x?: MMELRepo) => void;
-    isBSI: boolean;
+    setRepo: (x?: MMELRepo) => void;    
     index: RepoIndex;
     linktoAnotherRepo: (x: MMELRepo) => void;
     repoHis: RepoHistory;

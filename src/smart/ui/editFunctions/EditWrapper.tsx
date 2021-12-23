@@ -27,8 +27,7 @@ const EditWrapper: React.FC<{
   isVisible: boolean;
   className?: string;
   setClickListener: (f: (() => void)[]) => void;
-  repo?: MMELRepo;
-  isBSI: boolean;
+  repo?: MMELRepo;  
   index: RepoIndex;
 }> = function (props) {
   const [state, act, undoState, redoState, initState] =
@@ -139,8 +138,7 @@ const EditWrapper: React.FC<{
           undo={redoState}
           copy={selected !== undefined ? copy : undefined}
           paste={copied !== undefined ? paste : undefined}
-          setSelectedId={setSelectedId}
-          isBSIEnabled={props.isBSI}
+          setSelectedId={setSelectedId}          
           initState={initState}
         />
       </HotkeysTarget2>

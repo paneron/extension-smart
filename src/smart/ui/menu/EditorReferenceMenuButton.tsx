@@ -7,8 +7,7 @@ import RepoItemSelector from '../repo/RepoItemSelector';
 import EditorReferenceMenu from './EditorReferenceMenu';
 
 const EditorReferenceMenuButton: React.FC<{
-  setReference: (x: ReferenceContent | undefined) => void;
-  isBSIEnabled?: boolean;
+  setReference: (x: ReferenceContent | undefined) => void;  
   reference: ReferenceContent | undefined;
   isRepo: boolean;
   setRefRepo: (x: MMELRepo) => void;

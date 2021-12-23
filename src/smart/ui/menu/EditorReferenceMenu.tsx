@@ -11,14 +11,12 @@ import { indexModel } from '../../model/mapmodel';
 import { RepoItemType } from '../../model/repo';
 
 const EditorReferenceMenu: React.FC<{
-  setReference: (x: ReferenceContent | undefined) => void;
-  isBSIEnabled?: boolean;
+  setReference: (x: ReferenceContent | undefined) => void;  
   isCloseEnabled: boolean;
   isRepo: boolean;
   setType: (x: RepoItemType) => void;
 }> = function ({
-  setReference,
-  isBSIEnabled = false,
+  setReference,  
   isCloseEnabled,
   isRepo,
   setType,
@@ -70,20 +68,6 @@ const EditorReferenceMenu: React.FC<{
     />
   );
 
-  const FileBSIButton = () => (
-    <MenuItem
-      text="Open XML Document"
-      onClick={() =>
-        handleDocumentOpen({
-          setDocument: setReference,
-          requestFileFromFilesystem,
-          fileType: FILE_TYPE.BSI,
-        })
-      }
-      icon="document-open"
-    />
-  );
-
   const CloseButton = () => (
     <MenuItem
       text="Close Reference"
@@ -115,8 +99,7 @@ const EditorReferenceMenu: React.FC<{
     <>
       <FileModelButton />
       <FileDocButton />
-      <FileXMLButton />
-      {isBSIEnabled && <FileBSIButton />}
+      <FileXMLButton />      
     </>
   );
 
