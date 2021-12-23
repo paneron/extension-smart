@@ -6,6 +6,7 @@ import MGDLabel from '../../MGDComponents/MGDLabel';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import { EditorModel } from '../../model/editormodel';
 import { PageHistory } from '../../model/history';
+import { Logger } from '../../utils/ModelFunctions';
 import {
   findComponent,
   SearchComponentRecord,
@@ -21,13 +22,19 @@ const SearchComponentPane: React.FC<{
 }> = function ({ model, onChange, resetSearchElements }) {
   const [search, setSearch] = useState<string>('');
   const result = useMemo(() => {
-    const result = findComponent(model, search);
-    const set = new Set<string>();
-    for (const r of result) {
-      set.add(r.id);
+    try {
+      const result = findComponent(model, search);
+      const set = new Set<string>();
+      for (const r of result) {
+        set.add(r.id);
+      }
+      resetSearchElements(set);
+      return result;
+    } catch (e: any) {
+      Logger.log(e.message);
+      Logger.log(e.stack);
     }
-    resetSearchElements(set);
-    return result;
+    return [];
   }, [model, search]);
 
   return (

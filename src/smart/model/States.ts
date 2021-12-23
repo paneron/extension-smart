@@ -37,11 +37,6 @@ export interface EditorViewOption {
   commentVisible: boolean;
 }
 
-export interface ViewerState {
-  history: PageHistory;
-  modelWrapper: ModelWrapper;
-}
-
 export interface ViewerOption {
   dvisible: boolean; // visibility of data nodes
   idVisible: boolean;

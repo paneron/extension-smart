@@ -1,6 +1,13 @@
 import React from 'react';
 import { mgdLabel } from '../../../../css/form';
+import { HistoryAction } from '../../../model/editor/history';
+import { HistoryItem } from '../../../model/history';
 import { MMELRole } from '../../../serialize/interface/supportinterface';
+
+type Breadcrumb = {
+  label: JSX.Element;
+  onNavigate: () => void;
+};
 
 export const DescriptionItem: React.FC<{
   label?: string;
@@ -38,3 +45,22 @@ export const NonEmptyFieldDescription: React.FC<{
     <>{value !== '' ? <DescriptionItem label={label} value={value} /> : ''}</>
   );
 };
+
+export function getBreadcrumbs(
+  ph: HistoryItem[],
+  onPageChange: (updated: HistoryAction, newPage: string) => void
+): Breadcrumb[] {
+  const breadcrumbs: Breadcrumb[] = ph.map((item, index) => ({
+    label: <>{item.pathtext}</>,
+    onNavigate: () => {
+      const page = ph[index].page;
+      const action: HistoryAction = {
+        type: 'history',
+        act: 'pop',
+        value: ph.length - index - 1,
+      };
+      onPageChange(action, page);
+    },
+  }));
+  return breadcrumbs;
+}

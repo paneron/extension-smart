@@ -4,11 +4,17 @@ import { UndoReducerInterface } from './interface';
 
 type PushAction = {
   act: 'push';
-  value: HistoryItem;
+  value: HistoryItem[];
 };
 
 type PopAction = {
   act: 'pop';
+  value: number;
+};
+
+type ReplaceAction = {
+  act: 'replace';
+  value: HistoryItem[];
 };
 
 type InitAction = {
@@ -16,16 +22,22 @@ type InitAction = {
   value: HistoryItem[];
 };
 
-export type HistoryAction = (PushAction | PopAction) & { type: 'history' };
+export type HistoryAction = (PushAction | PopAction | ReplaceAction) & {
+  type: 'history';
+};
 
 type OwnAction = HistoryAction | InitAction;
 
 function reducer(list: HistoryItem[], action: OwnAction) {
   switch (action.act) {
     case 'push':
-      return [...list, action.value];
+      return [...list, ...action.value];
     case 'pop':
-      return list.length > 1 ? list.slice(0, -1) : list;
+      return action.value > 0 && list.length > action.value
+        ? list.slice(0, -action.value)
+        : list;
+    case 'replace':
+      return [...action.value];
     case 'init':
       return [...action.value];
   }
@@ -35,14 +47,24 @@ function findReverse(
   his: HistoryItem[],
   action: HistoryAction
 ): HistoryAction | undefined {
-  if (action.act === 'push') {
-    return { act: 'pop', type: 'history' };
-  } else {
-    if (his.length > 1) {
-      return { act: 'push', value: his[his.length - 1], type: 'history' };
+  switch (action.act) {
+    case 'push':
+      return { act: 'pop', type: 'history', value: action.value.length };
+    case 'pop': {
+      if (his.length > action.value) {
+        return {
+          act: 'push',
+          value: his.slice(his.length - action.value),
+          type: 'history',
+        };
+      }
+      break;
     }
-    return undefined;
+    case 'replace': {
+      return { act: 'replace', value: his, type: 'history' };
+    }
   }
+  return undefined;
 }
 
 export function useHistory(
