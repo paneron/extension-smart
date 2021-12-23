@@ -19,7 +19,6 @@ import {
 } from '../model/editormodel';
 import {
   buildHistoryMap,
-  createMapProfile,
   createNewMapSet,
   getMappings,
   indexModel,
@@ -90,10 +89,12 @@ const ModelMapper: React.FC<{
   className?: string;
   repo: MMELRepo;
   index: RepoIndex;
-}> = ({ isVisible, className, repo, index }) => {
+  model: EditorModel;
+  mapping: MapProfile;
+}> = ({ isVisible, className, repo, index, model, mapping }) => {
   const { useObjectData, updateObjects } = useContext(DatasetContext);
 
-  const [mapProfile, setMapProfile] = useState<MapProfile>(createMapProfile());
+  const [mapProfile, setMapProfile] = useState<MapProfile>(mapping);
   const [viewOption, setViewOption] = useState<MapperViewOption>({
     dataVisible: true,
     legVisible: true,
@@ -104,8 +105,8 @@ const ModelMapper: React.FC<{
     repoLegendVisible: true,
   });
   const [implementProps, setImplProps] = useState<MapperState>({
-    modelWrapper: { ...initModelWrapper },
-    history: createPageHistory(initModelWrapper),
+    modelWrapper: { page: model.root, model, type: 'model' },
+    history: createPageHistory({ page: model.root, model, type: 'model' }),
     modelType: ModelType.IMP,
     historyMap: {},
   });
@@ -129,14 +130,8 @@ const ModelMapper: React.FC<{
   const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
   const [diffMap, setDiffMap] = useState<MapProfile | undefined>(undefined);
 
-  const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
-  const mapPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MAP);
+  const mapPath = getPathByNS(repo.ns, RepoFileType.MAP);
   const refPath = getPathByNS(refrepo ?? '', RepoFileType.MODEL);
-  const repoModelFile = useObjectData({
-    objectPaths: repo !== undefined ? [repoPath, mapPath] : [],
-  });
-  const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
-  const mapData = repo !== undefined ? repoModelFile.value.data[mapPath] : {};
   const repoRefFile = useObjectData({
     objectPaths: refrepo !== undefined ? [refPath] : [],
   });
@@ -180,45 +175,6 @@ const ModelMapper: React.FC<{
   if (repo === undefined && mainRepo !== undefined) {
     setMainRepo(undefined);
   }
-  useMemo(() => {
-    if (
-      repo !== undefined &&
-      repoData !== null &&
-      repoData !== undefined &&
-      !repoModelFile.isUpdating
-    ) {
-      const json = repoData as MMELJSON;
-      const model = JSONToMMEL(json);
-      const mw = createEditorModelWrapper(model);
-      indexModel(mw.model);
-      setImplProps({
-        ...implementProps,
-        history: createPageHistory(mw),
-        modelWrapper: mw,
-        historyMap: buildHistoryMap(mw),
-      });
-      if (mapData !== undefined && mapData !== null) {
-        const mapPro = mapData as MapProfile;
-        if (mapPro.version !== MAPVERSION) {
-          alert(
-            `Warning: Mapping version not matched\nMapping version of the file:${mapPro.version}`
-          );
-          mapPro.version = MAPVERSION;
-        }
-        setMapProfile(mapPro);
-      } else {
-        setMapProfile({
-          '@context': JSONContext,
-          '@type': 'MMEL_MAP',
-          id: getNamespace(mw.model),
-          mapSet: {},
-          docs: {},
-          version: MAPVERSION,
-        });
-      }
-      setMainRepo(repo.ns);
-    }
-  }, [repoData, repoModelFile.isUpdating]);
 
   const impMW = implementProps.modelWrapper as ModelWrapper;
   const refMW = referenceProps.modelWrapper;

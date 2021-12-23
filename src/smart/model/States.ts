@@ -15,7 +15,6 @@ import {
   TimerComponent,
 } from '../ui/flowui/nodeUI';
 import { EditorModel, ModelType } from './editormodel';
-import { SMARTWorkspace } from './workspace';
 import { MMELDocument } from './document';
 
 export interface FunModel {
@@ -60,13 +59,6 @@ export interface MapperState {
   modelWrapper: ReferenceContent;
   modelType: ModelType;
   historyMap: Record<string, PageHistory>;
-}
-
-export interface ActionState {
-  dvisible: boolean; // visibility of data nodes
-  history: PageHistory;
-  modelWrapper: ModelWrapper;
-  workspace: SMARTWorkspace;
 }
 
 export interface MapperSelectedInterface {

@@ -7,37 +7,24 @@ import React, { useContext, useMemo, useState } from 'react';
 import ReactFlow, { Controls, ReactFlowProvider } from 'react-flow-renderer';
 
 import {
-  Button,
-  ControlGroup,
   HotkeysProvider,
   HotkeysTarget2,
   IToaster,
   Toaster,
 } from '@blueprintjs/core';
-import { Popover2 } from '@blueprintjs/popover2';
 
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
 import {
-  createEditorModelWrapper,
   getActionReactFlowElementsFrom,
   ModelWrapper,
 } from '../model/modelwrapper';
-import {
-  addToHistory,
-  createPageHistory,
-  getBreadcrumbs,
-  PageHistory,
-  popPage,
-} from '../model/history';
-import { createNewEditorModel } from '../utils/EditorFactory';
-import { ActionState, EdgeTypes, NodeTypes } from '../model/States';
+import { createModelHistory, PageHistory } from '../model/history';
+import { EdgeTypes, NodeTypes } from '../model/States';
 import { SelectedNodeDescription } from './sidebar/selected';
 import { DataVisibilityButton, IdVisibleButton } from './control/buttons';
-import MGDButton from '../MGDComponents/MGDButton';
-import { MGDButtonType } from '../../css/MGDButton';
 import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
 import SearchComponentPane from './sidebar/search';
 import LegendPane from './common/description/LegendPane';
@@ -46,138 +33,83 @@ import {
   getHighlightedSVGColorById,
   SearchResultStyles,
 } from '../utils/SearchFunctions';
-import {
-  createNewSMARTWorkspace,
-  SMARTModelStore,
-  SMARTWorkspace,
-} from '../model/workspace';
+import { SMARTModelStore, SMARTWorkspace } from '../model/workspace';
 import WorkspaceFileMenu from './menu/WorkspaceFileMenu';
 import { WorkspaceDiagPackage, WorkspaceDialog } from './dialog/WorkspaceDiag';
 import { getNamespace } from '../utils/ModelFunctions';
-import {
-  COMMITMSG,
-  getPathByNS,
-  JSONToMMEL,
-  RepoFileType,
-} from '../utils/repo/io';
-import { MMELJSON } from '../model/json';
+import { COMMITMSG, getPathByNS, RepoFileType } from '../utils/repo/io';
 import { MMELRepo, RepoIndex } from '../model/repo';
-import { WSVERSION } from '../utils/constants';
-
-const initModel = createNewEditorModel();
-const initModelWrapper = createEditorModelWrapper(initModel);
+import { EditorModel } from '../model/editormodel';
+import { HistoryAction, useHistory } from '../model/editor/history';
+import { getBreadcrumbs } from './common/description/fields';
 
 const ModelWorkspace: React.FC<{
   isVisible: boolean;
   className?: string;
   repo: MMELRepo;
   index: RepoIndex;
-}> = ({ isVisible, className, repo, index }) => {
-  const { useObjectData, updateObjects } = useContext(DatasetContext);
-
-  const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
+  model: EditorModel;
+  ws: SMARTWorkspace;
+}> = ({ isVisible, className, repo, index, model, ws }) => {
+  const { updateObjects, usePersistentDatasetStateReducer } =
+    useContext(DatasetContext);
 
   const Sidebar = useMemo(
     () => makeSidebar(usePersistentDatasetStateReducer!),
     []
   );
 
-  const [state, setState] = useState<ActionState>({
-    dvisible: true,
-    modelWrapper: initModelWrapper,
-    history: createPageHistory(initModelWrapper),
-    workspace: createNewSMARTWorkspace(),
-  });
+  const [workspace, setWS] = useState<SMARTWorkspace>(ws);
+  const [page, setPage] = useState<string>(model.root);
+  const [history, actHistory] = useHistory(createModelHistory(model));
+
+  const mw: ModelWrapper = { page, model, type: 'model' };
 
   const [selected, setSelected] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<Set<string>>(
     new Set<string>()
   );
 
-  const [diagProps, setDiagProps] = useState<WorkspaceDiagPackage | null>(null);
+  const [diagProps, setDiagProps] = useState<WorkspaceDiagPackage | undefined>(
+    undefined
+  );
   const [idVisible, setIdVisible] = useState<boolean>(false);
-  const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
+  const [dvisible, setDVisible] = useState<boolean>(true);
 
   const [toaster] = useState<IToaster>(Toaster.create());
 
-  const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
-  const workPath = getPathByNS(repo ? repo.ns : '', RepoFileType.WORKSPACE);
-  const repoModelFile = useObjectData({
-    objectPaths: repo !== undefined ? [repoPath, workPath] : [],
-  });
-  const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
-  const workData = repo !== undefined ? repoModelFile.value.data[workPath] : {};
+  const workPath = getPathByNS(repo.ns, RepoFileType.WORKSPACE);
 
-  if (repo === undefined && mainRepo !== undefined) {
-    setMainRepo(undefined);
-  }
-
-  useMemo(() => {
-    if (
-      repo !== undefined &&
-      repoData !== null &&
-      repoData !== undefined &&
-      !repoModelFile.isUpdating
-    ) {
-      const json = repoData as MMELJSON;
-      const model = JSONToMMEL(json);
-      const mw = createEditorModelWrapper(model);
-      const ws =
-        workData !== undefined && workData !== null
-          ? (workData as SMARTWorkspace)
-          : createNewSMARTWorkspace();
-      if (ws.version !== WSVERSION) {
-        alert(
-          `Warning: Workspace version not matched\nWorkspace version of the file:${ws.version}`
-        );
-        ws.version = WSVERSION;
-      }
-      setState({
-        ...state,
-        history: createPageHistory(mw),
-        modelWrapper: mw,
-        workspace: ws,
-      });
-      setMainRepo(repo.ns);
-    }
-  }, [repoData, repoModelFile.isUpdating]);
-
-  const model = state.modelWrapper.model;
   const namespace = getNamespace(model);
-  const modelStore: SMARTModelStore = state.workspace.docs[namespace] ?? {
+  const modelStore: SMARTModelStore = workspace.docs[namespace] ?? {
     id: namespace,
     store: {},
   };
 
   function toggleDataVisibility() {
-    setState({ ...state, dvisible: !state.dvisible });
+    setDVisible(x => !x);
   }
 
-  function setModelWrapper(mw: ModelWrapper) {
-    setState({ ...state, history: createPageHistory(mw), modelWrapper: mw });
-  }
-
-  function setWorkspace(ws: SMARTWorkspace) {
-    setState({ ...state, workspace: ws });
-  }
-
-  function onPageChange(updated: PageHistory, newPage: string) {
-    state.history = updated;
-    state.modelWrapper.page = newPage;
-    setState({ ...state });
+  function onPageChange(action: HistoryAction, newPage: string) {
+    setPage(newPage);
+    actHistory(action);
   }
 
   function onProcessClick(pageid: string, processid: string): void {
-    const mw = state.modelWrapper;
-    mw.page = pageid;
-    addToHistory(state.history, mw.page, processid);
-    setState({ ...state });
+    const action: HistoryAction = {
+      type: 'history',
+      act: 'push',
+      value: [{ page: pageid, pathtext: processid }],
+    };
+    setPage(pageid);
+    actHistory(action);
   }
 
   function drillUp(): void {
-    if (state.history.items.length > 0) {
-      state.modelWrapper.page = popPage(state.history);
-      setState({ ...state });
+    if (history.length > 1) {
+      const action: HistoryAction = { type: 'history', act: 'pop', value: 1 };
+      setPage(history[history.length - 2].page);
+      actHistory(action);
     }
   }
 
@@ -187,11 +119,13 @@ const ModelWorkspace: React.FC<{
     history: PageHistory
   ) {
     setSelected(selected);
-    setState({
-      ...state,
-      history,
-      modelWrapper: { ...state.modelWrapper, page: pageid },
-    });
+    const action: HistoryAction = {
+      type: 'history',
+      act: 'replace',
+      value: history.items,
+    };
+    actHistory(action);
+    setPage(pageid);
   }
 
   function getStyleById(id: string) {
@@ -215,59 +149,20 @@ const ModelWorkspace: React.FC<{
   }
 
   function setModelStore(doc: SMARTModelStore) {
-    const workspace = { ...state.workspace };
-    workspace.docs[namespace] = doc;
-    setState({ ...state, workspace });
-  }
-
-  function onClose() {
-    setState({
-      dvisible: state.dvisible,
-      modelWrapper: initModelWrapper,
-      history: createPageHistory(initModelWrapper),
-      workspace: createNewSMARTWorkspace(),
-    });
+    const newWS = { ...workspace };
+    newWS.docs[namespace] = doc;
+    setWS(newWS);
   }
 
   const toolbar = (
-    <ControlGroup>
-      <Popover2
-        minimal
-        placement="bottom-start"
-        content={
-          <WorkspaceFileMenu
-            workspace={state.workspace}
-            setModelWrapper={setModelWrapper}
-            setWorkspace={setWorkspace}
-            onClose={onClose}
-            isRepoMode={repo !== undefined}
-            onRepoSave={saveWork}
-          />
-        }
-      >
-        <Button>Workspace</Button>
-      </Popover2>
-      <Button
-        onClick={() =>
-          setDiagProps({
-            regid: '',
-            isFromReactNode: false,
-          })
-        }
-      >
-        Data Registry
-      </Button>
-      <MGDButton
-        type={MGDButtonType.Primary}
-        disabled={state.history.items.length <= 1}
-        onClick={drillUp}
-      >
-        Drill up
-      </MGDButton>
-    </ControlGroup>
+    <WorkspaceFileMenu
+      onRepoSave={saveWork}
+      setDiagProps={setDiagProps}
+      drillUp={drillUp}
+    />
   );
 
-  const breadcrumbs = getBreadcrumbs(state.history, onPageChange);
+  const breadcrumbs = getBreadcrumbs(history, onPageChange);
 
   const sidebar = (
     <Sidebar
@@ -278,9 +173,7 @@ const ModelWorkspace: React.FC<{
         {
           key: 'selected-node',
           title: 'Selected node',
-          content: (
-            <SelectedNodeDescription modelWrapper={state.modelWrapper} />
-          ),
+          content: <SelectedNodeDescription modelWrapper={mw} />,
         },
         {
           key: 'search-node',
@@ -312,7 +205,7 @@ const ModelWorkspace: React.FC<{
         commitMessage: COMMITMSG,
         _dangerouslySkipValidation: true,
         objectChangeset: {
-          [workPath]: { newValue: state.workspace },
+          [workPath]: { newValue: workspace },
         },
       });
       task.then(() =>
@@ -329,10 +222,10 @@ const ModelWorkspace: React.FC<{
       <HotkeysProvider>
         <HotkeysTarget2 hotkeys={hotkeys}>
           <ReactFlowProvider>
-            {diagProps !== null && (
+            {diagProps && (
               <WorkspaceDialog
                 diagProps={diagProps}
-                onClose={() => setDiagProps(null)}
+                onClose={() => setDiagProps(undefined)}
                 modelStore={modelStore}
                 setModelStore={setModelStore}
                 model={model}
@@ -353,9 +246,9 @@ const ModelWorkspace: React.FC<{
               <div css={react_flow_container_layout}>
                 <ReactFlow
                   elements={getActionReactFlowElementsFrom(
-                    state.modelWrapper,
+                    mw,
                     index,
-                    state.dvisible,
+                    dvisible,
                     onProcessClick,
                     getStyleById,
                     getSVGColorById,
@@ -372,7 +265,7 @@ const ModelWorkspace: React.FC<{
                 >
                   <Controls showInteractive={false}>
                     <DataVisibilityButton
-                      isOn={state.dvisible}
+                      isOn={dvisible}
                       onClick={toggleDataVisibility}
                     />
                     <IdVisibleButton
