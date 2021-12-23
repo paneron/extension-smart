@@ -1,23 +1,22 @@
-import { EditorModel } from "../editormodel";
-import { MetaAction, useMeta } from "./components/meta";
-import { UndoReducerInterface } from "./interface";
+import { EditorModel } from '../editormodel';
+import { MetaAction, useMeta } from './components/meta';
+import { UndoReducerInterface } from './interface';
 
-export type ModelAction = MetaAction & {type: 'model'};
+export type ModelAction = MetaAction & { type: 'model' };
 
-export function useModel(x: EditorModel):UndoReducerInterface<EditorModel, ModelAction> {
-  const [meta, actMeta, initMeta] = useMeta(x.meta);      
-  const model:EditorModel = {...x, meta};
+export function useModel(
+  x: EditorModel
+): UndoReducerInterface<EditorModel, ModelAction> {
+  const [meta, actMeta, initMeta] = useMeta(x.meta);
+  const model: EditorModel = { ...x, meta };
 
   function act(action: ModelAction): ModelAction | undefined {
     switch (action.act) {
-      case 'meta': 
+      case 'meta': {
         const reverse = actMeta(action);
-        if (reverse) {
-          return {...reverse, type:'model'}
-        } else {
-          return undefined;
-        }      
-    }    
+        return reverse ? { ...reverse, type: 'model' } : undefined;
+      }
+    }
   }
 
   function init(x: EditorModel) {

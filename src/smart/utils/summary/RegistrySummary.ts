@@ -42,7 +42,7 @@ export function computeRegistrySummary(
   const history = createPageHistory({
     model: model,
     page: model.root,
-    type: 'modelwrapper',
+    type: 'model',
   });
   if (page !== undefined && id !== '') {
     searchPageForComponent(page, model, id, result, new Set<string>(), history);

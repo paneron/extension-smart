@@ -118,7 +118,7 @@ const ModelViewer: React.FC<{
   setRepoHis,
 }) => {
   const { useObjectData, requestFileFromFilesystem } =
-    useContext(DatasetContext);  
+    useContext(DatasetContext);
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
@@ -491,7 +491,7 @@ const ModelViewer: React.FC<{
             onClick={() =>
               handleModelOpen({
                 setModelWrapper,
-                requestFileFromFilesystem,                
+                requestFileFromFilesystem,
                 indexModel: buildModelLinks,
               })
             }

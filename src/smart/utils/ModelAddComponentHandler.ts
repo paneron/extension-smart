@@ -27,7 +27,7 @@ import {
   createSubprocessComponent,
   createTimerEvent,
 } from './EditorFactory';
-import { PageHistory } from '../model/history';
+import { HistoryItem } from '../model/history';
 import { MMELSubprocessComponent } from '../serialize/interface/flowcontrolinterface';
 
 const newComponent: Record<
@@ -135,7 +135,7 @@ export function createNewPage(model: EditorModel): string {
 
 export function addExisingProcessToPage(
   model: EditorModel,
-  history: PageHistory,
+  history: HistoryItem[],
   pageid: string,
   process: string
 ): EditorModel {
@@ -144,7 +144,7 @@ export function addExisingProcessToPage(
     if (page.childs[process] !== undefined) {
       throw new Error(`Process already exists`);
     } else {
-      for (const h of history.items) {
+      for (const h of history) {
         if (h.pathtext === process) {
           throw new Error(`Cannot include self in subprocess`);
         }

@@ -37,11 +37,12 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
   createEditorModelWrapper,
   getEditorReactFlowElementsFrom,
+  MMELToEditorModel,
   ModelWrapper,
 } from '../model/modelwrapper';
 import {
   addToHistory,
-  createPageHistory,
+  createModelHistory,
   getBreadcrumbs,
   PageHistory,
   popPage,
@@ -181,7 +182,7 @@ const ModelEditor: React.FC<{
   index,
 }) => {
   const { useObjectData, updateObjects, useRemoteUsername } =
-    useContext(DatasetContext);  
+    useContext(DatasetContext);
 
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
@@ -276,16 +277,19 @@ const ModelEditor: React.FC<{
     ) {
       if (repo.ns !== mainRepo) {
         const json = repoData as MMELJSON;
-        const model = JSONToMMEL(json);
-        const mw = createEditorModelWrapper(model);        
-        initState({history: createPageHistory(mw), modelWrapper: mw});        
+        const model = MMELToEditorModel(JSONToMMEL(json));
+        initState({
+          history: createModelHistory(model),
+          model,
+          page: model.root,
+          type: 'model',
+        });
         setMainRepo(repo.ns);
       }
     }
   }, [repoData, repoModelFile.isUpdating]);
 
-  const mw = state.modelWrapper;
-  const model = mw.model;
+  const model = state.model;
 
   async function saveRepo() {
     if (repo && updateObjects && isVisible) {
@@ -296,7 +300,7 @@ const ModelEditor: React.FC<{
         _dangerouslySkipValidation: true,
         objectChangeset: {
           [repoPath]: {
-            newValue: MMELToSerializable(state.modelWrapper.model),
+            newValue: MMELToSerializable(state.model),
           },
           [repoIndexPath]: {
             newValue: setValueToIndex(index, repo.ns, {
@@ -337,10 +341,7 @@ const ModelEditor: React.FC<{
     setState(
       {
         ...state,
-        modelWrapper: {
-          ...mw,
-          model: { ...model },
-        },
+        model: { ...model },
       },
       true
     );
@@ -355,7 +356,7 @@ const ModelEditor: React.FC<{
     const props: IDiagAction = {
       nodeType: nodeType,
       model: model,
-      page: mw.page,
+      page: state.page,
       id: id,
       setModelAfterDelete,
     };
@@ -363,12 +364,12 @@ const ModelEditor: React.FC<{
     setDialogPack(SetDiagAction[action](props));
   }
 
-  function saveLayout() {
+  function saveLayout(): ModelWrapper {
     Logger.log('Save Layout');
     if (rfInstance !== null) {
       for (const x of rfInstance.getElements()) {
         const data = x.data;
-        const page = model.pages[mw.page];
+        const page = model.pages[state.page];
         if (isNode(x) && isEditorNode(data)) {
           const node = isEditorData(data)
             ? page.data[data.id]
@@ -389,22 +390,22 @@ const ModelEditor: React.FC<{
         }
       }
     }
-    return mw;
+    return { page: state.page, model, type: 'model' };
   }
 
   function addCommentToModel(msg: string, pid: string, parent?: string) {
     const m = modelAddComment(model, username, msg, pid, parent);
-    setState({ ...state, modelWrapper: { ...mw, model: m } }, true);
+    setState({ ...state, model: m }, true);
   }
 
   function toggleCommentResolved(cid: string) {
     const m = modelToggleComment(model, cid);
-    setState({ ...state, modelWrapper: { ...mw, model: m } }, true);
+    setState({ ...state, model: m }, true);
   }
 
   function deleteComment(cid: string, pid: string) {
     const m = modelDeleteComment(model, cid, pid);
-    setState({ ...state, modelWrapper: { ...mw, model: m } }, true);
+    setState({ ...state, model: m }, true);
   }
 
   function toggleDataVisibility() {
@@ -420,45 +421,50 @@ const ModelEditor: React.FC<{
 
   function setNewModelWrapper(mw: ModelWrapper) {
     setState(
-      { ...state, history: createPageHistory(mw), modelWrapper: mw },
+      {
+        ...state,
+        history: createModelHistory(mw.model),
+        model: mw.model,
+        page: mw.page,
+      },
       true
     );
   }
 
   function setModelWrapper(mw: ModelWrapper) {
-    setState({ ...state, modelWrapper: mw }, true);
+    setState({ ...state, model: mw.model, page: mw.page }, true);
   }
 
   function onMetaChanged(meta: MMELMetadata) {
-    state.history.items[0].pathtext = getRootName(meta);
+    state.history[0].pathtext = getRootName(meta);
     model.meta = meta;
     setState({ ...state }, true);
   }
 
   function onPageChange(updated: PageHistory, newPage: string) {
     saveLayout();
-    state.history = updated;
-    mw.page = newPage;
+    state.history = updated.items;
+    state.page = newPage;
     setState({ ...state }, true);
   }
 
   function onProcessClick(pageid: string, processid: string): void {
     saveLayout();
-    mw.page = pageid;
+    state.page = pageid;
     Logger.log('Go to page', pageid);
-    addToHistory(state.history, mw.page, processid);
+    addToHistory({ items: state.history }, state.page, processid);
     setState({ ...state }, true);
   }
 
   function removeEdge(id: string) {
-    deleteEdge(model, mw.page, id);
+    deleteEdge(model, state.page, id);
     setState({ ...state }, true);
   }
 
   function drillUp(): void {
-    if (state.history.items.length > 0) {
+    if (state.history.length > 0) {
       saveLayout();
-      mw.page = popPage(state.history);
+      state.page = popPage({ items: state.history });
       setState({ ...state }, true);
     }
   }
@@ -476,7 +482,7 @@ const ModelEditor: React.FC<{
       });
       if (type !== '') {
         const model = addComponentToModel(
-          mw,
+          { page: state.page, model: state.model, type: 'model' },
           type as NewComponentTypes,
           pos,
           selectionImport !== undefined ? selectionImport.text : undefined
@@ -484,10 +490,7 @@ const ModelEditor: React.FC<{
         setState(
           {
             ...state,
-            modelWrapper: {
-              ...mw,
-              model: { ...model },
-            },
+            model: { ...model },
           },
           true
         );
@@ -496,10 +499,10 @@ const ModelEditor: React.FC<{
         reference !== undefined &&
         isModelWrapper(reference)
       ) {
-        const page = model.pages[mw.page];
+        const page = model.pages[state.page];
 
         const process = addProcessIfNotFound(
-          mw,
+          { page: state.page, model: state.model, type: 'model' },
           reference,
           refid,
           {},
@@ -516,10 +519,7 @@ const ModelEditor: React.FC<{
         setState(
           {
             ...state,
-            modelWrapper: {
-              ...mw,
-              model: { ...model },
-            },
+            model: { ...model },
           },
           true
         );
@@ -529,8 +529,13 @@ const ModelEditor: React.FC<{
 
   function connectHandle(x: Edge<EdgePackage> | Connection) {
     if (x.source !== null && x.target !== null) {
-      const page = model.pages[mw.page];
-      model.pages[mw.page] = addEdge(page, model.elements, x.source, x.target);
+      const page = model.pages[state.page];
+      model.pages[state.page] = addEdge(
+        page,
+        model.elements,
+        x.source,
+        x.target
+      );
       setState({ ...state }, true);
     }
   }
@@ -544,8 +549,8 @@ const ModelEditor: React.FC<{
     setState(
       {
         ...state,
-        history,
-        modelWrapper: { ...mw, page: pageid },
+        history: history.items,
+        page: pageid,
       },
       true
     );
@@ -571,8 +576,9 @@ const ModelEditor: React.FC<{
       datatype: DataType.ROLE,
     };
     setModelWrapper({
-      ...mw,
+      page: state.page,
       model: { ...model, roles: { ...model.roles, [id]: role } },
+      type: 'model',
     });
   }
 
@@ -592,11 +598,12 @@ const ModelEditor: React.FC<{
     newreg.data = dcid;
     newreg.title = data;
     setModelWrapper({
-      ...mw,
+      page: state.page,
       model: {
         ...model,
         elements: { ...model.elements, [id]: newreg, [dcid]: newdc },
       },
+      type: 'model',
     });
   }
 
@@ -713,7 +720,7 @@ const ModelEditor: React.FC<{
       {reference === undefined && referenceMenu}
       <MGDButton
         type={MGDButtonType.Primary}
-        disabled={state.history.items.length <= 1}
+        disabled={state.history.length <= 1}
         onClick={drillUp}
       >
         Drill up
@@ -721,7 +728,13 @@ const ModelEditor: React.FC<{
     </ControlGroup>
   );
 
-  const breadcrumbs = getBreadcrumbs(state.history, onPageChange);
+  const breadcrumbs = getBreadcrumbs({ items: state.history }, onPageChange);
+
+  const mw: ModelWrapper = {
+    page: state.page,
+    model: state.model,
+    type: 'model',
+  };
 
   const sidebar = (
     <Sidebar
@@ -734,11 +747,9 @@ const ModelEditor: React.FC<{
           title: 'Selected node',
           content: (
             <SelectedNodeDescription
-              modelWrapper={state.modelWrapper}
+              modelWrapper={mw}
               setDialog={setDiag}
-              setModel={m =>
-                setModelWrapper({ ...state.modelWrapper, model: m })
-              }
+              setModel={m => setModelWrapper({ ...mw, model: m })}
               provision={selectionImport}
               getLatestLayoutMW={saveLayout}
               onSelect={setSelectedId}
@@ -755,7 +766,7 @@ const ModelEditor: React.FC<{
           title: 'Search components',
           content: (
             <SearchComponentPane
-              model={state.modelWrapper.model}
+              model={state.model}
               onChange={onPageAndHistroyChange}
               resetSearchElements={resetSearchElements}
             />
@@ -800,7 +811,7 @@ const ModelEditor: React.FC<{
               >
                 <diagProps.Panel
                   {...{ setModelWrapper, onMetaChanged }}
-                  modelwrapper={state.modelWrapper}
+                  modelwrapper={mw}
                   callback={dialogPack.callback}
                   cancel={() => setDialogType(null)}
                   repo={repo}
@@ -818,7 +829,7 @@ const ModelEditor: React.FC<{
                   <ReactFlow
                     key="MMELModel"
                     elements={getEditorReactFlowElementsFrom(
-                      state.modelWrapper,
+                      mw,
                       index,
                       view.dvisible,
                       view.edgeDeleteVisible,

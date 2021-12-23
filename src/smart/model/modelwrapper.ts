@@ -49,7 +49,7 @@ import { MMELRepo, RepoIndex } from './repo';
 export interface ModelWrapper {
   model: EditorModel;
   page: string;
-  type: 'modelwrapper';
+  type: 'model';
 }
 
 function exploreData(
@@ -154,12 +154,23 @@ export function createEditorModelWrapper(m: MMELModel): ModelWrapper {
   return buildStructure({
     model: { ...m, elements: convertedElms, pages: converedPages },
     page: m.root,
-    type: 'modelwrapper',
+    type: 'model',
   });
 }
 
-function buildStructure(mw: ModelWrapper): ModelWrapper {
-  const model = mw.model;
+export function MMELToEditorModel(m: MMELModel): EditorModel {
+  const convertedElms = convertElms(m.elements);
+  const converedPages = convertPages(m.pages, convertedElms);
+  const model: EditorModel = {
+    ...m,
+    elements: convertedElms,
+    pages: converedPages,
+  };
+  indexStructure(model);
+  return model;
+}
+
+function indexStructure(model: EditorModel) {
   for (const p in model.pages) {
     const page = model.pages[p];
     for (const x in page.childs) {
@@ -179,6 +190,11 @@ function buildStructure(mw: ModelWrapper): ModelWrapper {
       }
     }
   }
+}
+
+function buildStructure(mw: ModelWrapper): ModelWrapper {
+  const model = mw.model;
+  indexStructure(model);
   return mw;
 }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { getRootName } from '../utils/ModelFunctions';
+import { EditorModel } from './editormodel';
 import { ModelWrapper } from './modelwrapper';
 import { MMELRepo } from './repo';
 
@@ -39,15 +40,19 @@ export function cloneHistory(history: PageHistory): PageHistory {
 }
 
 export function createPageHistory(mw: ModelWrapper): PageHistory {
-  const meta = mw.model.meta;
   return {
-    items: [
-      {
-        page: mw.model.root,
-        pathtext: getRootName(meta),
-      },
-    ],
+    items: createModelHistory(mw.model),
   };
+}
+
+export function createModelHistory(model: EditorModel): HistoryItem[] {
+  const meta = model.meta;
+  return [
+    {
+      page: model.root,
+      pathtext: getRootName(meta),
+    },
+  ];
 }
 
 export function getBreadcrumbs(

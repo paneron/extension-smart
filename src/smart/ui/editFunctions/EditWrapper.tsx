@@ -1,4 +1,4 @@
-import {  
+import {
   HotkeysProvider,
   HotkeysTarget2,
   IToaster,
@@ -6,10 +6,9 @@ import {
 } from '@blueprintjs/core';
 import React from 'react';
 import { useState } from 'react';
-import { useEditorState } from '../../model/editor/modelwrapper';
+import { useEditorState } from '../../model/editor/state';
 import { isEditorProcess } from '../../model/editormodel';
-import { createPageHistory } from '../../model/history';
-import { createEditorModelWrapper } from '../../model/modelwrapper';
+import { createModelHistory } from '../../model/history';
 import { MMELRepo, RepoIndex } from '../../model/repo';
 import { EditorState } from '../../model/States';
 import { createNewEditorModel } from '../../utils/EditorFactory';
@@ -17,10 +16,11 @@ import { addExisingProcessToPage } from '../../utils/ModelAddComponentHandler';
 import ModelEditor from '../maineditor';
 
 const initModel = createNewEditorModel();
-const initModelWrapper = createEditorModelWrapper(initModel);
-const initStateValue:EditorState = {
-  modelWrapper: initModelWrapper,
-  history: createPageHistory(initModelWrapper)
+const initStateValue: EditorState = {
+  model: initModel,
+  history: createModelHistory(initModel),
+  page: initModel.root,
+  type: 'model',
 };
 
 const EditWrapper: React.FC<{
@@ -30,9 +30,10 @@ const EditWrapper: React.FC<{
   repo?: MMELRepo;
   isBSI: boolean;
   index: RepoIndex;
-}> = function (props) {  
-  const [state, act, undoState, redoState, initState] = useEditorState(initStateValue);
-  
+}> = function (props) {
+  const [state, act, undoState, redoState, initState] =
+    useEditorState(initStateValue);
+
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [copied, setCopied] = useState<string | undefined>(undefined);
   const [toaster] = useState<IToaster>(Toaster.create());
@@ -64,14 +65,14 @@ const EditWrapper: React.FC<{
     },
   ];
 
-  function updateState(newState: EditorState, requireHistory: boolean) {    
+  function updateState(newState: EditorState, requireHistory: boolean) {
     // setState(newState);
   }
 
   function redo() {
     if (undoState) {
       undoState();
-    }    
+    }
   }
 
   function undo() {
@@ -92,7 +93,7 @@ const EditWrapper: React.FC<{
 
   function setSelectedId(id: string | undefined) {
     if (id !== undefined) {
-      const elm = state.modelWrapper.model.elements[id];
+      const elm = state.model.elements[id];
       if (elm !== undefined && isEditorProcess(elm)) {
         setSelected(id);
       } else {
@@ -105,21 +106,17 @@ const EditWrapper: React.FC<{
 
   function paste() {
     if (copied !== undefined) {
-      const mw = state.modelWrapper;
-      const model = mw.model;
+      const model = state.model;
       const elm = model.elements[copied];
       if (elm !== undefined) {
         try {
           const newModel = addExisingProcessToPage(
             model,
             state.history,
-            mw.page,
+            state.page,
             elm.id
           );
-          updateState(
-            { ...state, modelWrapper: { ...mw, model: newModel } },
-            true
-          );
+          updateState({ ...state, model: newModel }, true);
         } catch (e: unknown) {
           const error = e as Error;
           toaster.show({
