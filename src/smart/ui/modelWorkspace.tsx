@@ -70,7 +70,7 @@ const initModelWrapper = createEditorModelWrapper(initModel);
 const ModelWorkspace: React.FC<{
   isVisible: boolean;
   className?: string;
-  repo?: MMELRepo;
+  repo: MMELRepo;
   index: RepoIndex;
 }> = ({ isVisible, className, repo, index }) => {
   const { useObjectData, updateObjects } = useContext(DatasetContext);

@@ -103,7 +103,7 @@ export const FuntionNames: Record<FunctionPage, string> = {
 const ModelViewer: React.FC<{
   isVisible: boolean;
   className?: string;
-  repo?: MMELRepo;
+  repo: MMELRepo;
   index: RepoIndex;
   linktoAnotherRepo: (x: MMELRepo) => void;
   repoHis: RepoHistory;

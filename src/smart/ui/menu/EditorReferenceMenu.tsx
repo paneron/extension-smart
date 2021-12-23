@@ -11,16 +11,11 @@ import { indexModel } from '../../model/mapmodel';
 import { RepoItemType } from '../../model/repo';
 
 const EditorReferenceMenu: React.FC<{
-  setReference: (x: ReferenceContent | undefined) => void;  
+  setReference: (x: ReferenceContent | undefined) => void;
   isCloseEnabled: boolean;
   isRepo: boolean;
   setType: (x: RepoItemType) => void;
-}> = function ({
-  setReference,  
-  isCloseEnabled,
-  isRepo,
-  setType,
-}) {
+}> = function ({ setReference, isCloseEnabled, isRepo, setType }) {
   const { requestFileFromFilesystem } = useContext(DatasetContext);
 
   const canOpen = requestFileFromFilesystem;
@@ -99,7 +94,7 @@ const EditorReferenceMenu: React.FC<{
     <>
       <FileModelButton />
       <FileDocButton />
-      <FileXMLButton />      
+      <FileXMLButton />
     </>
   );
 
