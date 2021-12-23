@@ -59,8 +59,8 @@ function getSTNode(
   } catch (e: unknown) {
     if (typeof e === 'object') {
       const error = e as Error;
-      Logger.logger.log(error.message);
-      Logger.logger.log(error.stack);
+      Logger.log(error.message);
+      Logger.log(error.stack);
     }
   }
   return map[num];
@@ -99,8 +99,8 @@ export function converQuestionRDF(
   x: NLPItem
 ): [Record<string, STNode>, string] {
   const tokens = x.tokens;
-  Logger.logger.log('Number of tokens:', tokens.length);
-  Logger.logger.log(tokens.map(x => x.lemma).join(','));
+  Logger.log('Number of tokens:', tokens.length);
+  Logger.log(tokens.map(x => x.lemma).join(','));
   const deps = x.enhancedPlusPlusDependencies;
   const map: Record<number, STNode> = {};
   let root = 0;
@@ -113,7 +113,7 @@ export function converQuestionRDF(
       from.relationship.push(createSTRelationship(y.dep, to.data));
     }
   }
-  Logger.logger.log('Root:', root);
+  Logger.log('Root:', root);
   const node = map[root];
   map[0] = createSTNode(node.data);
   node.relationship.push(createSTRelationship('action', node.data));
@@ -128,7 +128,7 @@ export function converQuestionRDF(
       nodes[key].relationship.push(...x.relationship);
     }
   }
-  Logger.logger.log('Return:', nodes, 'questionRoot');
+  Logger.log('Return:', nodes, 'questionRoot');
   return [nodes, 'questionRoot'];
 }
 
@@ -173,8 +173,8 @@ function convertRDF(
   } catch (e: unknown) {
     if (typeof e === 'object') {
       const error = e as Error;
-      Logger.logger.log(error.message);
-      Logger.logger.log(error.stack);
+      Logger.log(error.message);
+      Logger.log(error.stack);
     }
     return '';
   }
@@ -228,7 +228,7 @@ export function getElementsFromRDF(
       roots.push(exploreNode(x, elms, edges, rdf.nodes));
     }
   }
-  Logger.logger.log(
+  Logger.log(
     'Stats: Number of nodes',
     Object.values(elms).length,
     'Number of edges',
@@ -270,7 +270,7 @@ function exploreNode(
   const x = rdf[id];
   if (x === undefined) {
     // the node cannot be added for some. Need to investigate
-    Logger.logger.log('undefined', id);
+    Logger.log('undefined', id);
     const nnode = createNode(id, 0, 0, id);
     return { data: nnode, childs: [] };
   }

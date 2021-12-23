@@ -142,7 +142,7 @@ const TableClassDefinitionEdit: React.FC<{
   }
 
   function moveUp(id: string) {
-    Logger.logger.log(id);
+    Logger.log(id);
     const index = parseInt(id);
     if (index > 0) {
       return move(index, index - 1);

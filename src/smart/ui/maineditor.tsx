@@ -162,7 +162,7 @@ const ModelEditor: React.FC<{
   setSelectedId: (id: string | undefined) => void;
   isBSIEnabled?: boolean;
   repo?: MMELRepo;
-  resetHistory: () => void;
+  initState: (x: EditorState) => void;
   index: RepoIndex;
 }> = ({
   isVisible,
@@ -177,13 +177,11 @@ const ModelEditor: React.FC<{
   setSelectedId,
   isBSIEnabled,
   repo,
-  resetHistory,
+  initState,
   index,
 }) => {
-  const { logger, useObjectData, updateObjects, useRemoteUsername } =
-    useContext(DatasetContext);
-
-  Logger.logger = logger!;
+  const { useObjectData, updateObjects, useRemoteUsername } =
+    useContext(DatasetContext);  
 
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
@@ -279,12 +277,8 @@ const ModelEditor: React.FC<{
       if (repo.ns !== mainRepo) {
         const json = repoData as MMELJSON;
         const model = JSONToMMEL(json);
-        const mw = createEditorModelWrapper(model);
-        setState(
-          { ...state, history: createPageHistory(mw), modelWrapper: mw },
-          false
-        );
-        resetHistory();
+        const mw = createEditorModelWrapper(model);        
+        initState({history: createPageHistory(mw), modelWrapper: mw});        
         setMainRepo(repo.ns);
       }
     }
@@ -323,14 +317,14 @@ const ModelEditor: React.FC<{
           })
         )
         .catch(e => {
-          Logger.logger.log(e.message);
-          Logger.logger.log(e.stack);
+          Logger.log(e.message);
+          Logger.log(e.stack);
         });
     }
   }
 
   function onLoad(params: OnLoadParams) {
-    logger?.log('flow loaded');
+    Logger.log('flow loaded');
     setRfInstance(params);
     params.fitView();
   }
@@ -370,7 +364,7 @@ const ModelEditor: React.FC<{
   }
 
   function saveLayout() {
-    logger?.log('Save Layout');
+    Logger.log('Save Layout');
     if (rfInstance !== null) {
       for (const x of rfInstance.getElements()) {
         const data = x.data;
@@ -451,7 +445,7 @@ const ModelEditor: React.FC<{
   function onProcessClick(pageid: string, processid: string): void {
     saveLayout();
     mw.page = pageid;
-    logger?.log('Go to page', pageid);
+    Logger.log('Go to page', pageid);
     addToHistory(state.history, mw.page, processid);
     setState({ ...state }, true);
   }

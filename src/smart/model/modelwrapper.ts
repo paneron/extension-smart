@@ -79,7 +79,7 @@ function exploreData(
           elms.push(ne);
         }
       } else {
-        Logger.logger.log('Error! Dataclass ID not found:', id);
+        Logger.log('Error! Dataclass ID not found:', id);
       }
     });
   }

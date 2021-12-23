@@ -24,7 +24,7 @@ const TypeReferenceTail = ')';
 
 // temp class for debug, global console logger
 export class Logger {
-  static logger: { log: (...args: unknown[]) => void };
+  static log: (...args: unknown[]) => void;
 }
 
 export function isSpace(x: string): boolean {

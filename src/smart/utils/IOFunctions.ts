@@ -259,16 +259,16 @@ export async function handleFileOpen(props: {
                   postProcessing(fileData['asBase64']);
                 } else {
                   alert('No base64 data is found.');
-                  Logger.logger.log(Object.keys(fileData).join(','));
-                  Logger.logger.log(Object.values(fileData).join(','));
+                  Logger.log(Object.keys(fileData).join(','));
+                  Logger.log(Object.values(fileData).join(','));
                 }
               } else {
                 if (fileData['asText'] !== undefined) {
                   postProcessing(fileData['asText']);
                 } else {
                   alert('No text data is found.');
-                  Logger.logger.log(Object.keys(fileData).join(','));
-                  Logger.logger.log(Object.values(fileData).join(','));
+                  Logger.log(Object.keys(fileData).join(','));
+                  Logger.log(Object.values(fileData).join(','));
                 }
               }
             } else {

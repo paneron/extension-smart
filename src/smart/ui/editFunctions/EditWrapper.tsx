@@ -1,4 +1,4 @@
-import {
+import {  
   HotkeysProvider,
   HotkeysTarget2,
   IToaster,
@@ -6,40 +6,22 @@ import {
 } from '@blueprintjs/core';
 import React from 'react';
 import { useState } from 'react';
-import {
-  EditorModel,
-  EditorNode,
-  EditorSubprocess,
-  isEditorNode,
-  isEditorPage,
-  isEditorProcess,
-} from '../../model/editormodel';
-import {
-  createPageHistory,
-  EditHistory,
-  PageHistory,
-} from '../../model/history';
-import {
-  createEditorModelWrapper,
-  ModelWrapper,
-} from '../../model/modelwrapper';
+import { useEditorState } from '../../model/editor/modelwrapper';
+import { isEditorProcess } from '../../model/editormodel';
+import { createPageHistory } from '../../model/history';
+import { createEditorModelWrapper } from '../../model/modelwrapper';
 import { MMELRepo, RepoIndex } from '../../model/repo';
 import { EditorState } from '../../model/States';
-import { MMELObject } from '../../serialize/interface/baseinterface';
-import { MMELEnum } from '../../serialize/interface/datainterface';
-import {
-  MMELProvision,
-  MMELReference,
-  MMELRole,
-  MMELVariable,
-  MMELView,
-} from '../../serialize/interface/supportinterface';
 import { createNewEditorModel } from '../../utils/EditorFactory';
 import { addExisingProcessToPage } from '../../utils/ModelAddComponentHandler';
 import ModelEditor from '../maineditor';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);
+const initStateValue:EditorState = {
+  modelWrapper: initModelWrapper,
+  history: createPageHistory(initModelWrapper)
+};
 
 const EditWrapper: React.FC<{
   isVisible: boolean;
@@ -48,13 +30,9 @@ const EditWrapper: React.FC<{
   repo?: MMELRepo;
   isBSI: boolean;
   index: RepoIndex;
-}> = function (props) {
-  const [state, setState] = useState<EditorState>({
-    modelWrapper: initModelWrapper,
-    history: createPageHistory(initModelWrapper),
-  });
-
-  const [history, setHistory] = useState<EditHistory>({ past: [], future: [] });
+}> = function (props) {  
+  const [state, act, undoState, redoState, initState] = useEditorState(initStateValue);
+  
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [copied, setCopied] = useState<string | undefined>(undefined);
   const [toaster] = useState<IToaster>(Toaster.create());
@@ -86,44 +64,19 @@ const EditWrapper: React.FC<{
     },
   ];
 
-  function updateState(newState: EditorState, requireHistory: boolean) {
-    if (requireHistory) {
-      if (history.past.length < 500) {
-        setHistory({
-          past: [...history.past, getEditHistory(state)],
-          future: [],
-        });
-      } else {
-        setHistory({
-          past: [...history.past.slice(1), getEditHistory(state)],
-          future: [],
-        });
-      }
-    }
-    setState(newState);
+  function updateState(newState: EditorState, requireHistory: boolean) {    
+    // setState(newState);
   }
 
   function redo() {
-    const { past, future } = history;
-    const s = future.pop();
-    if (s !== undefined) {
-      setState({ ...state, modelWrapper: s.mw, history: s.phistory });
-      setHistory({
-        past: [...past, getEditHistory(state)],
-        future: [...future],
-      });
-    }
+    if (undoState) {
+      undoState();
+    }    
   }
 
   function undo() {
-    const { past, future } = history;
-    const s = past.pop();
-    if (s !== undefined) {
-      setState({ ...state, modelWrapper: s.mw, history: s.phistory });
-      setHistory({
-        past: [...past],
-        future: [...future, getEditHistory(state)],
-      });
+    if (redoState) {
+      redoState();
     }
   }
 
@@ -183,78 +136,19 @@ const EditWrapper: React.FC<{
       <HotkeysTarget2 hotkeys={hotkeys}>
         <ModelEditor
           {...props}
-          state={{
-            ...state,
-            modelWrapper: deepCopyMW(state.modelWrapper),
-            history: deepCopyHistory(state.history),
-          }}
+          state={state}
           setState={updateState}
-          redo={history.future.length > 0 ? redo : undefined}
-          undo={history.past.length > 0 ? undo : undefined}
+          redo={undoState}
+          undo={redoState}
           copy={selected !== undefined ? copy : undefined}
           paste={copied !== undefined ? paste : undefined}
           setSelectedId={setSelectedId}
           isBSIEnabled={props.isBSI}
-          resetHistory={() => setHistory({ past: [], future: [] })}
+          initState={initState}
         />
       </HotkeysTarget2>
     </HotkeysProvider>
   );
 };
-
-function getEditHistory(s: EditorState) {
-  return { mw: s.modelWrapper, phistory: s.history };
-}
-
-function deepCopyHistory(history: PageHistory): PageHistory {
-  return { items: history.items.map(x => ({ ...x })) };
-}
-
-function deepCopyMW(mw: ModelWrapper): ModelWrapper {
-  return { ...mw, model: deepCopyModel(mw.model) };
-}
-
-function deepCopyModel(model: EditorModel): EditorModel {
-  return {
-    ...model,
-    elements: deepCopyElements<EditorNode>(model.elements),
-    enums: deepCopyElements<MMELEnum>(model.enums),
-    meta: { ...model.meta },
-    pages: deepCopyElements<EditorSubprocess>(model.pages),
-    provisions: deepCopyElements<MMELProvision>(model.provisions),
-    refs: deepCopyElements<MMELReference>(model.refs),
-    roles: deepCopyElements<MMELRole>(model.roles),
-    vars: deepCopyElements<MMELVariable>(model.vars),
-    views: deepCopyElements<MMELView>(model.views),
-  };
-}
-
-function deepCopyElements<T extends MMELObject>(
-  x: Record<string, T>
-): Record<string, T> {
-  const nx: Record<string, T> = {};
-  for (const key in x) {
-    nx[key] = deepCopyElement(x[key]);
-  }
-  return nx;
-}
-
-function deepCopyElement<T extends MMELObject>(x: T): T {
-  const nx = { ...x };
-  if (isEditorPage(nx)) {
-    nx.childs = { ...nx.childs };
-    nx.data = { ...nx.data };
-    nx.edges = { ...nx.edges };
-    nx.neighbor = { ...nx.neighbor };
-  }
-  if (isEditorNode(nx) && isEditorProcess(nx)) {
-    nx.input = new Set(nx.input);
-    nx.output = new Set(nx.output);
-    nx.measure = [...nx.measure];
-    nx.pages = new Set(nx.pages);
-    nx.provision = new Set(nx.provision);
-  }
-  return nx;
-}
 
 export default EditWrapper;

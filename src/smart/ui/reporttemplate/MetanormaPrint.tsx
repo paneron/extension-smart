@@ -24,7 +24,7 @@ const MetanormaPrint: React.FC<{
       fileData: report,
       type: FILE_TYPE.Report,
     });
-    Logger.logger.log('Filename', filename);
+    Logger.log('Filename', filename);
     try {
       invokeMetanorma!({
         cliArgs: [
@@ -38,15 +38,15 @@ const MetanormaPrint: React.FC<{
       mnStatusResponse.refresh();
     } catch (e) {
       const error = e as Error;
-      Logger.logger.log(error.message);
-      Logger.logger.log(error.stack);
+      Logger.log(error.message);
+      Logger.log(error.stack);
     }
   }
 
-  Logger.logger.log('termination signal', mnStatus?.termination?.signal);
-  Logger.logger.log('termination code', mnStatus?.termination?.code);
-  Logger.logger.log('stdout:', mnStatus?.stdout);
-  Logger.logger.log('stderr:', mnStatus?.stderr);
+  Logger.log('termination signal', mnStatus?.termination?.signal);
+  Logger.log('termination code', mnStatus?.termination?.code);
+  Logger.log('stdout:', mnStatus?.stdout);
+  Logger.log('stderr:', mnStatus?.stderr);
 
   return (
     <MGDDisplayPane>

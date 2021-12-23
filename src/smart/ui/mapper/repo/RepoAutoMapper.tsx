@@ -171,8 +171,8 @@ const RepoAutoMapper: React.FC<{
           setRunning('done');
         })
         .catch(e => {
-          Logger.logger.log(e.message);
-          Logger.logger.log(e.stack);
+          Logger.log(e.message);
+          Logger.log(e.stack);
         });
     }
   }

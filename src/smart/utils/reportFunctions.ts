@@ -85,7 +85,7 @@ function parseCode(
     ...x,
     justification: [...x.justification],
   }));
-  Logger.logger.log(rec, rec.length);
+  Logger.log(rec, rec.length);
   const params = {
     map: rec,
     raw: rawMapping,

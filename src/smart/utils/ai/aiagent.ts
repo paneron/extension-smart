@@ -115,8 +115,8 @@ export async function aiTranslate(doc: MMELDocument): Promise<ModelWrapper> {
   } catch (e: unknown) {
     if (typeof e === 'object') {
       const error = e as Error;
-      Logger.logger.log(error.message);
-      Logger.logger.log(error.stack);
+      Logger.log(error.message);
+      Logger.log(error.stack);
     }
     throw e;
   }

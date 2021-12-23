@@ -117,9 +117,8 @@ const ModelViewer: React.FC<{
   repoHis,
   setRepoHis,
 }) => {
-  const { logger, useObjectData, requestFileFromFilesystem } =
-    useContext(DatasetContext);
-  Logger.logger = logger;
+  const { useObjectData, requestFileFromFilesystem } =
+    useContext(DatasetContext);  
 
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
@@ -177,7 +176,7 @@ const ModelViewer: React.FC<{
   }
 
   function onLoad(params: OnLoadParams) {
-    logger?.log('flow loaded');
+    Logger.log('flow loaded');
     params.fitView();
   }
 
@@ -218,7 +217,7 @@ const ModelViewer: React.FC<{
   }
 
   function onNavigationDown(pageid: string, processid: string): void {
-    logger?.log('Go to page', pageid);
+    Logger.log('Go to page', pageid);
     if (funMS !== undefined) {
       const mw = funMS.mw;
       addToHistory(funMS.history, mw.page, processid);
@@ -492,8 +491,7 @@ const ModelViewer: React.FC<{
             onClick={() =>
               handleModelOpen({
                 setModelWrapper,
-                requestFileFromFilesystem,
-                logger,
+                requestFileFromFilesystem,                
                 indexModel: buildModelLinks,
               })
             }

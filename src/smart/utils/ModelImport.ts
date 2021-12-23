@@ -114,8 +114,8 @@ export function addProcessIfNotFound(
   } catch (e: unknown) {
     if (typeof e === 'object') {
       const error = e as Error;
-      Logger.logger.log(error.message);
-      Logger.logger.log(error.stack);
+      Logger.log(error.message);
+      Logger.log(error.stack);
     }
     throw e;
   }
@@ -413,7 +413,7 @@ function addDCIfNotFound(
     if (newName) {
       newrdcs.push(newName);
     } else {
-      Logger.logger.log('Error. Not on RDCS list', x);
+      Logger.log('Error. Not on RDCS list', x);
     }
   });
   const newDC: EditorDataClass = {

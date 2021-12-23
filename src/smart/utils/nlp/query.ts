@@ -85,7 +85,7 @@ export async function askRDF(
   }
   const sen = json.sentences[0];
   const [nodes, root] = converQuestionRDF(sen);
-  Logger.logger.log('Question:', root, nodes);
+  Logger.log('Question:', root, nodes);
   const qword = hasQuestion(nodes);
   if (qword === 0) {
     solve('No question word is found in your question', undefined);
