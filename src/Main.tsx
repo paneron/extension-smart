@@ -1,4 +1,4 @@
-import { FocusStyleManager } from '@blueprintjs/core';
+import { FocusStyleManager, HotkeysProvider } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React from 'react';
 import { useContext, useMemo, useState } from 'react';
@@ -28,10 +28,14 @@ const MainExtension: React.FC<Record<never, never>> = function () {
     }
   }, [indexFile.isUpdating, data]);
 
-  return index ? (
-    <RepositoryView index={index} />
-  ) : (
-    <LoadingScreen label="Loading index" />
+  return (
+    <HotkeysProvider>
+      {index ? (
+        <RepositoryView index={index} />
+      ) : (
+        <LoadingScreen label="Loading index" />
+      )}
+    </HotkeysProvider>
   );
 };
 

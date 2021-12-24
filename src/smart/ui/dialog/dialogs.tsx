@@ -18,8 +18,7 @@ import EditApprovalPage from '../edit/approvaledit';
 import EditEGatePage from '../edit/egateedit';
 import EditTimerPage from '../edit/timeredit';
 import EditSignalEventPage from '../edit/signaleventedit';
-import { MMELMetadata } from '../../serialize/interface/supportinterface';
-import { MMELRepo } from '../../model/repo';
+import { EditorAction } from '../../model/editor/state';
 
 export enum DiagTypes {
   SETTING = 'setting',
@@ -50,11 +49,10 @@ export interface DiagPackage {
 export interface IDiagInterface {
   modelwrapper: ModelWrapper;
   setModelWrapper: (mw: ModelWrapper) => void;
-  onMetaChanged: (meta: MMELMetadata) => void;
+  act: (x: EditorAction) => void;
   callback: () => void;
   cancel: () => void;
   msg: string;
-  repo: MMELRepo | undefined;
 }
 
 export interface EditorDiagProps {
@@ -88,14 +86,13 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.SETTING]: {
     title: 'Setting',
     fullscreen: true,
-    Panel: ({ modelwrapper, setModelWrapper, onMetaChanged, repo }) => (
+    Panel: ({ modelwrapper, setModelWrapper, act }) => (
       <BasicSettingPane
         model={modelwrapper.model}
         setModel={(model: EditorModel) =>
           updateModel(model, setModelWrapper, modelwrapper)
         }
-        onMetaChanged={onMetaChanged}
-        repo={repo}
+        act={act}
       />
     ),
   },

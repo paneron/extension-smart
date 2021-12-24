@@ -1,17 +1,17 @@
-import { useReducer, useState } from 'react';
+import { useReducer } from 'react';
 import { EditorState } from '../States';
 import { HistoryAction, useHistory } from './history';
 import { UndoManagerInterface } from './interface';
 import { ModelAction, useModel } from './model';
 
-export type MWAction = ModelAction | HistoryAction;
+export type EditorAction = ModelAction | HistoryAction;
 
 export type UndoListAction = {
   act: 'push' | 'pop' | 'new';
-  value?: MWAction;
+  value?: EditorAction;
 };
 
-function listReducer(list: MWAction[], action: UndoListAction) {
+function listReducer(list: EditorAction[], action: UndoListAction) {
   const { act, value } = action;
   if (act === 'push') {
     if (value) {
@@ -27,16 +27,17 @@ function listReducer(list: MWAction[], action: UndoListAction) {
 
 export function useEditorState(
   x: EditorState
-): UndoManagerInterface<EditorState, MWAction> {
-  const [page, setPage] = useState<string>(x.page);
-  const [model, actModel, initModel] = useModel(x.model);
-  const [history, actHistory, initHis] = useHistory(x.history);
+): UndoManagerInterface<EditorState, EditorAction> {
+  const [model, actModel] = useModel(x.model);
+  const [history, actHistory] = useHistory(x.history);
   const [undoHis, actUndoHis] = useReducer(listReducer, []);
   const [redoHis, actRedoHis] = useReducer(listReducer, []);
 
+  const page = history[history.length - 1].page;
+
   const state: EditorState = { history, page, model, type: 'model' };
 
-  function act(action: MWAction) {
+  function act(action: EditorAction) {
     switch (action.type) {
       case 'model':
         modelAction(action);
@@ -66,13 +67,7 @@ export function useEditorState(
     }
   }
 
-  function init(x: EditorState) {
-    setPage(x.page);
-    initModel(x.model);
-    initHis(x.history);
-  }
-
-  function hisAction(action: MWAction): MWAction | undefined {
+  function hisAction(action: EditorAction): EditorAction | undefined {
     switch (action.type) {
       case 'model':
         return actModel(action);
@@ -86,10 +81,11 @@ export function useEditorState(
     const len = undoHis.length;
     const his = undoHis[len - 1];
     if (
-      len === 0 ||
-      redo.length > 0 ||
-      his.act !== action.act ||
-      his.property !== action.property
+      reverse &&
+      (len === 0 ||
+        redo.length > 0 ||
+        his.act !== action.act ||
+        his.property !== action.property)
     ) {
       actUndoHis({ act: 'push', value: reverse });
       actRedoHis({ act: 'new' });
@@ -98,8 +94,10 @@ export function useEditorState(
 
   function historyAction(action: HistoryAction) {
     const reverse = actHistory(action);
-    actUndoHis({ act: 'push', value: reverse });
-    actRedoHis({ act: 'new' });
+    if (reverse) {
+      actUndoHis({ act: 'push', value: reverse });
+      actRedoHis({ act: 'new' });
+    }
   }
 
   return [
@@ -107,6 +105,5 @@ export function useEditorState(
     act,
     undoHis.length > 0 ? undo : undefined,
     redoHis.length > 0 ? redo : undefined,
-    init,
   ];
 }

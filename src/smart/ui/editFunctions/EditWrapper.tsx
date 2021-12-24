@@ -1,5 +1,5 @@
 import {
-  HotkeysProvider,
+  HotkeyConfig,
   HotkeysTarget2,
   IToaster,
   Toaster,
@@ -7,21 +7,13 @@ import {
 import React from 'react';
 import { useState } from 'react';
 import { useEditorState } from '../../model/editor/state';
-import { isEditorProcess } from '../../model/editormodel';
+import { EditorModel, isEditorProcess } from '../../model/editormodel';
 import { createModelHistory } from '../../model/history';
 import { MMELRepo, RepoIndex } from '../../model/repo';
 import { EditorState } from '../../model/States';
-import { createNewEditorModel } from '../../utils/EditorFactory';
 import { addExisingProcessToPage } from '../../utils/ModelAddComponentHandler';
+import { Logger } from '../../utils/ModelFunctions';
 import ModelEditor from '../maineditor';
-
-const initModel = createNewEditorModel();
-const initStateValue: EditorState = {
-  model: initModel,
-  history: createModelHistory(initModel),
-  page: initModel.root,
-  type: 'model',
-};
 
 const EditWrapper: React.FC<{
   isVisible: boolean;
@@ -29,26 +21,37 @@ const EditWrapper: React.FC<{
   setClickListener: (f: (() => void)[]) => void;
   repo: MMELRepo;
   index: RepoIndex;
+  model: EditorModel;
 }> = function (props) {
-  const [state, act, undoState, redoState, initState] =
-    useEditorState(initStateValue);
+  const { model } = props;
+  const initObj: EditorState = {
+    model,
+    history: createModelHistory(model),
+    page: model.root,
+    type: 'model',
+  };
+  const [state, act, undoState, redoState] = useEditorState(initObj);
 
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [copied, setCopied] = useState<string | undefined>(undefined);
   const [toaster] = useState<IToaster>(Toaster.create());
 
-  const hotkeys = [
+  Logger.log(state);
+
+  const hotkeys: HotkeyConfig[] = [
     {
       combo: 'ctrl+z',
       global: true,
       label: 'Undo',
       onKeyDown: undo,
+      allowInInput: true,
     },
     {
       combo: 'ctrl+y',
       global: true,
       label: 'Redo',
       onKeyDown: redo,
+      allowInInput: true,
     },
     {
       combo: 'ctrl+c',
@@ -64,17 +67,13 @@ const EditWrapper: React.FC<{
     },
   ];
 
-  function updateState(newState: EditorState, requireHistory: boolean) {
-    // setState(newState);
-  }
-
-  function redo() {
+  function undo() {
     if (undoState) {
       undoState();
     }
   }
 
-  function undo() {
+  function redo() {
     if (redoState) {
       redoState();
     }
@@ -88,6 +87,10 @@ const EditWrapper: React.FC<{
         intent: 'success',
       });
     }
+  }
+
+  function updateState(updated: EditorState, requireHistory: boolean) {
+    throw new Error('Function not implemented.');
   }
 
   function setSelectedId(id: string | undefined) {
@@ -128,21 +131,18 @@ const EditWrapper: React.FC<{
   }
 
   return (
-    <HotkeysProvider>
-      <HotkeysTarget2 hotkeys={hotkeys}>
-        <ModelEditor
-          {...props}
-          state={state}
-          setState={updateState}
-          redo={undoState}
-          undo={redoState}
-          copy={selected !== undefined ? copy : undefined}
-          paste={copied !== undefined ? paste : undefined}
-          setSelectedId={setSelectedId}
-          initState={initState}
-        />
-      </HotkeysTarget2>
-    </HotkeysProvider>
+    <HotkeysTarget2 hotkeys={hotkeys}>
+      <ModelEditor
+        {...props}
+        state={state}
+        act={act}
+        redo={undoState}
+        undo={redoState}
+        copy={selected !== undefined ? copy : undefined}
+        paste={copied !== undefined ? paste : undefined}
+        setSelectedId={setSelectedId}
+      />
+    </HotkeysTarget2>
   );
 };
 

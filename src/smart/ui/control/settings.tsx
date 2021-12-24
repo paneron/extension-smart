@@ -3,8 +3,7 @@
 
 import { jsx } from '@emotion/react';
 import { Tab, Tabs } from '@blueprintjs/core';
-import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { mgd_label } from '../../../css/form';
 import {
   mgd_tabs__item,
@@ -13,8 +12,6 @@ import {
 } from '../../../css/MGDTabs';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel } from '../../model/editormodel';
-import { MMELRepo } from '../../model/repo';
-import { MMELMetadata } from '../../serialize/interface/supportinterface';
 import DataClassEditPage from '../edit/dataclassedit';
 import EnumEditPage from '../edit/enumedit';
 import FigureEditPage from '../edit/figure/FigureEdit';
@@ -27,6 +24,7 @@ import SectionEditPage from '../edit/SectionEditPage';
 import TableEditPage from '../edit/table/TableEdit';
 import TermsEditPage from '../edit/TermEdit';
 import ViewProfileEditPage from '../edit/ViewProfileEdit';
+import { EditorAction } from '../../model/editor/state';
 
 export enum SETTINGPAGE {
   METAPAGE = 'meta',
@@ -48,23 +46,14 @@ interface TabProps {
   Panel: React.FC<{
     model: EditorModel;
     setModel: (m: EditorModel) => void;
-    onMetaChanged: (meta: MMELMetadata) => void;
-    repo: MMELRepo | undefined;
+    act: (x: EditorAction) => void;
   }>;
 }
 
 const tabs: Record<SETTINGPAGE, TabProps> = {
   [SETTINGPAGE.METAPAGE]: {
     title: 'Metadata',
-    Panel: ({ model, onMetaChanged, repo }) => (
-      <MetaEditPage
-        meta={model.meta}
-        setMetadata={(meta: MMELMetadata) => {
-          onMetaChanged(meta);
-        }}
-        isRepoMode={repo !== undefined}
-      />
-    ),
+    Panel: ({ model, act }) => <MetaEditPage meta={model.meta} act={act} />,
   },
   [SETTINGPAGE.SECTION]: {
     title: 'Sections',
@@ -137,13 +126,10 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
 const BasicSettingPane: React.FC<{
   model: EditorModel;
   setModel: (m: EditorModel) => void;
-  onMetaChanged: (meta: MMELMetadata) => void;
-  repo: MMELRepo | undefined;
-}> = ({ model, setModel, onMetaChanged, repo }) => {
-  const { logger } = useContext(DatasetContext);
+  act: (x: EditorAction) => void;
+}> = ({ model, setModel, act }) => {
   const [page, setPage] = useState<SETTINGPAGE>(SETTINGPAGE.METAPAGE);
 
-  logger?.log('Enter setting page: ', page, jsx.length);
   return (
     <MGDDisplayPane>
       <Tabs
@@ -166,14 +152,7 @@ const BasicSettingPane: React.FC<{
                 <label css={mgd_label}> {props.title} </label>
               </span>
             }
-            panel={
-              <props.Panel
-                model={model}
-                setModel={setModel}
-                onMetaChanged={onMetaChanged}
-                repo={repo}
-              />
-            }
+            panel={<props.Panel model={model} setModel={setModel} act={act} />}
           />
         ))}
       </Tabs>

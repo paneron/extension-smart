@@ -29,7 +29,6 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
   Button,
   ControlGroup,
-  HotkeysProvider,
   HotkeysTarget2,
   IToaster,
   IToastProps,
@@ -475,77 +474,75 @@ const ModelMapper: React.FC<{
 
   if (isVisible) {
     return (
-      <HotkeysProvider>
-        <HotkeysTarget2 hotkeys={hotkeys}>
-          <Workspace className={className} toolbar={toolbar}>
-            <MapperDialog {...diagProps} />
-            <div css={multi_model_container}>
+      <HotkeysTarget2 hotkeys={hotkeys}>
+        <Workspace className={className} toolbar={toolbar}>
+          <MapperDialog {...diagProps} />
+          <div css={multi_model_container}>
+            <ModelDiagram
+              modelProps={implementProps}
+              viewOption={viewOption}
+              setProps={onImpPropsChange}
+              className={className}
+              mapSet={mapSet}
+              diffMapSet={diffMapSet}
+              onMapSetChanged={onMapSetChanged}
+              onModelChanged={onImpModelChanged}
+              setSelected={setSelected}
+              onMappingEdit={onMappingEdit}
+              issueNavigationRequest={
+                isModelWrapper(refMW) ? onRefNavigate : undefined
+              }
+              getPartnerModelElementById={
+                isModelWrapper(refMW)
+                  ? id => getEditorNodeInfoById(refMW.model, id)
+                  : id => getDocumentMetaById(refMW, id)
+              }
+              onClose={onImpClose}
+              isRepoMode={repo !== undefined}
+              index={index}
+            />
+            <div ref={lineref} css={vertical_line} />
+            {refrepo !== undefined ? (
+              <LoadingContainer label="Loading..." />
+            ) : (
               <ModelDiagram
-                modelProps={implementProps}
+                modelProps={referenceProps}
                 viewOption={viewOption}
-                setProps={onImpPropsChange}
+                setProps={onRefPropsChange}
                 className={className}
                 mapSet={mapSet}
                 diffMapSet={diffMapSet}
                 onMapSetChanged={onMapSetChanged}
-                onModelChanged={onImpModelChanged}
+                mapResult={mapResult}
+                diffMapResult={compareResult}
                 setSelected={setSelected}
                 onMappingEdit={onMappingEdit}
-                issueNavigationRequest={
-                  isModelWrapper(refMW) ? onRefNavigate : undefined
+                issueNavigationRequest={onImpNavigate}
+                getPartnerModelElementById={id =>
+                  getEditorNodeInfoById(impmodel, id)
                 }
-                getPartnerModelElementById={
-                  isModelWrapper(refMW)
-                    ? id => getEditorNodeInfoById(refMW.model, id)
-                    : id => getDocumentMetaById(refMW, id)
-                }
-                onClose={onImpClose}
+                onClose={onRefClose}
                 isRepoMode={repo !== undefined}
+                setRefRepo={x => setRefRepo(x.ns)}
                 index={index}
               />
-              <div ref={lineref} css={vertical_line} />
-              {refrepo !== undefined ? (
-                <LoadingContainer label="Loading..." />
-              ) : (
-                <ModelDiagram
-                  modelProps={referenceProps}
-                  viewOption={viewOption}
-                  setProps={onRefPropsChange}
-                  className={className}
-                  mapSet={mapSet}
-                  diffMapSet={diffMapSet}
-                  onMapSetChanged={onMapSetChanged}
-                  mapResult={mapResult}
-                  diffMapResult={compareResult}
-                  setSelected={setSelected}
-                  onMappingEdit={onMappingEdit}
-                  issueNavigationRequest={onImpNavigate}
-                  getPartnerModelElementById={id =>
-                    getEditorNodeInfoById(impmodel, id)
-                  }
-                  onClose={onRefClose}
-                  isRepoMode={repo !== undefined}
-                  setRefRepo={x => setRefRepo(x.ns)}
-                  index={index}
-                />
-              )}
-            </div>
-            <MappingCanvus mapEdges={diffEdges} line={lineref} />
-            <RepoMapMainView
-              isVisible={repo !== undefined && viewOption.repoMapVisible}
-              viewOption={viewOption}
-              repo={repo}
-              loadModel={setRefRepo}
-              map={mapProfile}
-              diffMap={diffMap}
-              onClose={() =>
-                setViewOption({ ...viewOption, repoMapVisible: false })
-              }
-              index={index}
-            />
-          </Workspace>
-        </HotkeysTarget2>
-      </HotkeysProvider>
+            )}
+          </div>
+          <MappingCanvus mapEdges={diffEdges} line={lineref} />
+          <RepoMapMainView
+            isVisible={repo !== undefined && viewOption.repoMapVisible}
+            viewOption={viewOption}
+            repo={repo}
+            loadModel={setRefRepo}
+            map={mapProfile}
+            diffMap={diffMap}
+            onClose={() =>
+              setViewOption({ ...viewOption, repoMapVisible: false })
+            }
+            index={index}
+          />
+        </Workspace>
+      </HotkeysTarget2>
     );
   }
   return <></>;

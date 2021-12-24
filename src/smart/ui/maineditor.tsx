@@ -23,7 +23,6 @@ import {
   Button,
   ControlGroup,
   Dialog,
-  HotkeysProvider,
   HotkeysTarget2,
   IToaster,
   Toaster,
@@ -37,12 +36,10 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
   createEditorModelWrapper,
   getEditorReactFlowElementsFrom,
-  MMELToEditorModel,
   ModelWrapper,
 } from '../model/modelwrapper';
 import {
   addToHistory,
-  createModelHistory,
   getBreadcrumbs,
   PageHistory,
   popPage,
@@ -149,35 +146,34 @@ import {
   modelToggleComment,
 } from '../utils/Comments';
 import EditorViewMenu from './menu/EditorViewMenu';
+import { EditorAction } from '../model/editor/state';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
   className?: string;
   setClickListener: (f: (() => void)[]) => void;
   state: EditorState;
-  setState: (x: EditorState, rh: boolean) => void;
   redo?: () => void;
   undo?: () => void;
   copy?: () => void;
   paste?: () => void;
   setSelectedId: (id: string | undefined) => void;
   repo?: MMELRepo;
-  initState: (x: EditorState) => void;
   index: RepoIndex;
+  act: (x: EditorAction) => void;
 }> = ({
   isVisible,
   className,
   setClickListener,
   state,
-  setState,
   redo,
   undo,
   copy,
   paste,
   setSelectedId,
   repo,
-  initState,
   index,
+  act,
 }) => {
   const { useObjectData, updateObjects, useRemoteUsername } =
     useContext(DatasetContext);
@@ -229,11 +225,7 @@ const ModelEditor: React.FC<{
       : userData.value.username;
 
   const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
-  const repoModelFile = useObjectData({
-    objectPaths: repo !== undefined ? [repoPath] : [],
-  });
   const refPath = getPathByNS(refrepo ?? '', RepoFileType.MODEL);
-  const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
 
   const repoRefFile = useObjectData({
     objectPaths: refrepo !== undefined ? [refPath] : [],
@@ -266,28 +258,8 @@ const ModelEditor: React.FC<{
     setMainRepo(undefined);
   }
 
-  useMemo(() => {
-    if (
-      repo !== undefined &&
-      repoData !== null &&
-      repoData !== undefined &&
-      !repoModelFile.isUpdating
-    ) {
-      if (repo.ns !== mainRepo) {
-        const json = repoData as MMELJSON;
-        const model = MMELToEditorModel(JSONToMMEL(json));
-        initState({
-          history: createModelHistory(model),
-          model,
-          page: model.root,
-          type: 'model',
-        });
-        setMainRepo(repo.ns);
-      }
-    }
-  }, [repoData, repoModelFile.isUpdating]);
-
   const model = state.model;
+  const mw: ModelWrapper = { page: state.page, model, type: 'model' };
 
   async function saveRepo() {
     if (repo && updateObjects && isVisible) {
@@ -336,13 +308,13 @@ const ModelEditor: React.FC<{
   }
 
   function setModelAfterDelete(model: EditorModel) {
-    setState(
-      {
-        ...state,
-        model: { ...model },
-      },
-      true
-    );
+    // setState(
+    //   {
+    //     ...state,
+    //     model: { ...model },
+    //   },
+    //   true
+    // );
     setDialogType(null);
   }
 
@@ -393,17 +365,17 @@ const ModelEditor: React.FC<{
 
   function addCommentToModel(msg: string, pid: string, parent?: string) {
     const m = modelAddComment(model, username, msg, pid, parent);
-    setState({ ...state, model: m }, true);
+    // setState({ ...state, model: m }, true);
   }
 
   function toggleCommentResolved(cid: string) {
     const m = modelToggleComment(model, cid);
-    setState({ ...state, model: m }, true);
+    // setState({ ...state, model: m }, true);
   }
 
   function deleteComment(cid: string, pid: string) {
     const m = modelDeleteComment(model, cid, pid);
-    setState({ ...state, model: m }, true);
+    // setState({ ...state, model: m }, true);
   }
 
   function toggleDataVisibility() {
@@ -417,33 +389,21 @@ const ModelEditor: React.FC<{
     setView({ ...view, edgeDeleteVisible: !view.edgeDeleteVisible });
   }
 
-  function setNewModelWrapper(mw: ModelWrapper) {
-    setState(
-      {
-        ...state,
-        history: createModelHistory(mw.model),
-        model: mw.model,
-        page: mw.page,
-      },
-      true
-    );
-  }
-
   function setModelWrapper(mw: ModelWrapper) {
-    setState({ ...state, model: mw.model, page: mw.page }, true);
+    // setState({ ...state, model: mw.model, page: mw.page }, true);
   }
 
   function onMetaChanged(meta: MMELMetadata) {
     state.history[0].pathtext = getRootName(meta);
     model.meta = meta;
-    setState({ ...state }, true);
+    // setState({ ...state }, true);
   }
 
   function onPageChange(updated: PageHistory, newPage: string) {
     saveLayout();
     state.history = updated.items;
     state.page = newPage;
-    setState({ ...state }, true);
+    // setState({ ...state }, true);
   }
 
   function onProcessClick(pageid: string, processid: string): void {
@@ -451,19 +411,19 @@ const ModelEditor: React.FC<{
     state.page = pageid;
     Logger.log('Go to page', pageid);
     addToHistory({ items: state.history }, state.page, processid);
-    setState({ ...state }, true);
+    // setState({ ...state }, true);
   }
 
   function removeEdge(id: string) {
     deleteEdge(model, state.page, id);
-    setState({ ...state }, true);
+    // setState({ ...state }, true);
   }
 
   function drillUp(): void {
     if (state.history.length > 0) {
       saveLayout();
       state.page = popPage({ items: state.history });
-      setState({ ...state }, true);
+      // setState({ ...state }, true);
     }
   }
 
@@ -485,13 +445,13 @@ const ModelEditor: React.FC<{
           pos,
           selectionImport !== undefined ? selectionImport.text : undefined
         );
-        setState(
-          {
-            ...state,
-            model: { ...model },
-          },
-          true
-        );
+        // setState(
+        //   {
+        //     ...state,
+        //     model: { ...model },
+        //   },
+        //   true
+        // );
       } else if (
         refid !== '' &&
         reference !== undefined &&
@@ -514,13 +474,13 @@ const ModelEditor: React.FC<{
         nc.y = pos.y;
 
         page.childs[process.id] = nc;
-        setState(
-          {
-            ...state,
-            model: { ...model },
-          },
-          true
-        );
+        // setState(
+        //   {
+        //     ...state,
+        //     model: { ...model },
+        //   },
+        //   true
+        // );
       }
     }
   }
@@ -534,7 +494,7 @@ const ModelEditor: React.FC<{
         x.source,
         x.target
       );
-      setState({ ...state }, true);
+      // setState({ ...state }, true);
     }
   }
 
@@ -544,14 +504,14 @@ const ModelEditor: React.FC<{
     history: PageHistory
   ) {
     setSelected(selected);
-    setState(
-      {
-        ...state,
-        history: history.items,
-        page: pageid,
-      },
-      true
-    );
+    // setState(
+    //   {
+    //     ...state,
+    //     history: history.items,
+    //     page: pageid,
+    //   },
+    //   true
+    // );
   }
 
   function getStyleById(id: string) {
@@ -689,10 +649,8 @@ const ModelEditor: React.FC<{
         content={
           <EditorFileMenu
             {...{
-              setModelWrapper: setNewModelWrapper,
               getLatestLayout: saveLayout,
               setDialogType,
-              isRepoMode: repo !== undefined,
               onRepoSave: saveRepo,
             }}
           />
@@ -726,12 +684,6 @@ const ModelEditor: React.FC<{
   );
 
   const breadcrumbs = getBreadcrumbs({ items: state.history }, onPageChange);
-
-  const mw: ModelWrapper = {
-    page: state.page,
-    model: state.model,
-    type: 'model',
-  };
 
   const sidebar = (
     <Sidebar
@@ -790,115 +742,109 @@ const ModelEditor: React.FC<{
   if (isVisible) {
     const diagProps = dialogPack.type === null ? null : MyDiag[dialogPack.type];
     return (
-      <HotkeysProvider>
-        <HotkeysTarget2 hotkeys={hotkeys}>
-          <div css={multi_model_container}>
-            {diagProps !== null && (
-              <Dialog
-                isOpen={dialogPack !== null}
-                title={diagProps.title}
-                css={
-                  diagProps.fullscreen
-                    ? [dialog_layout, dialog_layout__full]
-                    : ''
-                }
-                onClose={() => setDialogType(null)}
-                canEscapeKeyClose={false}
-                canOutsideClickClose={false}
-              >
-                <diagProps.Panel
-                  {...{ setModelWrapper, onMetaChanged }}
-                  modelwrapper={mw}
-                  callback={dialogPack.callback}
-                  cancel={() => setDialogType(null)}
-                  repo={repo}
-                  msg={dialogPack.msg}
-                />
-              </Dialog>
-            )}
-            <ReactFlowProvider>
-              <Workspace
-                {...{ className, toolbar, sidebar }}
-                navbarProps={{ breadcrumbs }}
-                style={{ flex: 3 }}
-              >
-                <div css={react_flow_container_layout}>
-                  <ReactFlow
-                    key="MMELModel"
-                    elements={getEditorReactFlowElementsFrom(
-                      mw,
-                      index,
-                      view.dvisible,
-                      view.edgeDeleteVisible,
-                      onProcessClick,
-                      removeEdge,
-                      getStyleById,
-                      getSVGColorById,
-                      view.idVisible,
-                      view.commentVisible,
-                      addCommentToModel,
-                      toggleCommentResolved,
-                      deleteComment
-                    )}
-                    {...{ onLoad, onDrop, onDragOver }}
-                    onConnect={connectHandle}
-                    nodesConnectable={true}
-                    snapToGrid={true}
-                    snapGrid={[10, 10]}
-                    nodeTypes={NodeTypes}
-                    edgeTypes={EdgeTypes}
-                    ref={canvusRef}
-                  >
-                    <Controls>
-                      <DataVisibilityButton
-                        isOn={view.dvisible}
-                        onClick={toggleDataVisibility}
-                      />
-                      <EdgeEditButton
-                        isOn={view.edgeDeleteVisible}
-                        onClick={toggleEdgeDelete}
-                      />
-                      <IdVisibleButton
-                        isOn={view.idVisible}
-                        onClick={() =>
-                          setView({ ...view, idVisible: !view.idVisible })
-                        }
-                      />
-                    </Controls>
-                  </ReactFlow>
-                  {searchResult.size > 0 && (
-                    <LegendPane list={SearchResultStyles} onLeft={false} />
+      <HotkeysTarget2 hotkeys={hotkeys}>
+        <div css={multi_model_container}>
+          {diagProps !== null && (
+            <Dialog
+              isOpen={dialogPack !== null}
+              title={diagProps.title}
+              css={
+                diagProps.fullscreen ? [dialog_layout, dialog_layout__full] : ''
+              }
+              onClose={() => setDialogType(null)}
+              canEscapeKeyClose={false}
+              canOutsideClickClose={false}
+            >
+              <diagProps.Panel
+                {...{ setModelWrapper, onMetaChanged, act }}
+                modelwrapper={mw}
+                callback={dialogPack.callback}
+                cancel={() => setDialogType(null)}
+                msg={dialogPack.msg}
+              />
+            </Dialog>
+          )}
+          <ReactFlowProvider>
+            <Workspace
+              {...{ className, toolbar, sidebar }}
+              navbarProps={{ breadcrumbs }}
+              style={{ flex: 3 }}
+            >
+              <div css={react_flow_container_layout}>
+                <ReactFlow
+                  elements={getEditorReactFlowElementsFrom(
+                    mw,
+                    index,
+                    view.dvisible,
+                    view.edgeDeleteVisible,
+                    onProcessClick,
+                    removeEdge,
+                    getStyleById,
+                    getSVGColorById,
+                    view.idVisible,
+                    view.commentVisible,
+                    addCommentToModel,
+                    toggleCommentResolved,
+                    deleteComment
                   )}
-                </div>
-              </Workspace>
-            </ReactFlowProvider>
+                  {...{ onLoad, onDrop, onDragOver }}
+                  onConnect={connectHandle}
+                  nodesConnectable={true}
+                  snapToGrid={true}
+                  snapGrid={[10, 10]}
+                  nodeTypes={NodeTypes}
+                  edgeTypes={EdgeTypes}
+                  ref={canvusRef}
+                >
+                  <Controls>
+                    <DataVisibilityButton
+                      isOn={view.dvisible}
+                      onClick={toggleDataVisibility}
+                    />
+                    <EdgeEditButton
+                      isOn={view.edgeDeleteVisible}
+                      onClick={toggleEdgeDelete}
+                    />
+                    <IdVisibleButton
+                      isOn={view.idVisible}
+                      onClick={() =>
+                        setView({ ...view, idVisible: !view.idVisible })
+                      }
+                    />
+                  </Controls>
+                </ReactFlow>
+                {searchResult.size > 0 && (
+                  <LegendPane list={SearchResultStyles} onLeft={false} />
+                )}
+              </div>
+            </Workspace>
+          </ReactFlowProvider>
 
-            {reference !== undefined &&
-              (refrepo !== undefined ? (
-                <LoadingContainer label="Loading..." size={3} />
-              ) : isModelWrapper(reference) ? (
-                <ModelReferenceView
-                  className={className}
-                  modelWrapper={reference}
-                  setModelWrapper={setReference}
-                  menuControl={referenceMenu}
-                  index={index}
-                  repoHis={repoHis}
-                  setRepoHis={setHis}
-                  goToNextModel={goToNextModel}
-                />
-              ) : (
-                <DocumentReferenceView
-                  className={className}
-                  document={reference}
-                  menuControl={referenceMenu}
-                  setClickListener={setClickListener}
-                  setPImport={setSImport}
-                />
-              ))}
-          </div>
-        </HotkeysTarget2>
-      </HotkeysProvider>
+          {reference !== undefined &&
+            (refrepo !== undefined ? (
+              <LoadingContainer label="Loading..." size={3} />
+            ) : isModelWrapper(reference) ? (
+              <ModelReferenceView
+                className={className}
+                modelWrapper={reference}
+                setModelWrapper={setReference}
+                menuControl={referenceMenu}
+                index={index}
+                repoHis={repoHis}
+                setRepoHis={setHis}
+                goToNextModel={goToNextModel}
+              />
+            ) : (
+              <DocumentReferenceView
+                className={className}
+                document={reference}
+                menuControl={referenceMenu}
+                setClickListener={setClickListener}
+                setPImport={setSImport}
+              />
+            ))}
+        </div>
+      </HotkeysTarget2>
     );
   }
   return <div></div>;

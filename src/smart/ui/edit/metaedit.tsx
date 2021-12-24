@@ -1,61 +1,51 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
+import { EditorAction } from '../../model/editor/state';
 import { MMELMetadata } from '../../serialize/interface/supportinterface';
 import { DescriptionItem } from '../common/description/fields';
 import { NormalTextField } from '../common/fields';
 
 const MetaEditPage: React.FC<{
   meta: MMELMetadata;
-  setMetadata: (meta: MMELMetadata) => void;
-  isRepoMode: boolean;
-}> = ({ meta, setMetadata, isRepoMode }) => {
+  act: (x: EditorAction) => void;
+}> = ({ meta, act }) => {
   return (
     <FormGroup>
-      {isRepoMode ? (
-        <DescriptionItem label="Namespace" value={meta.namespace} />
-      ) : (
-        <NormalTextField
-          text="Globally unique identifier of the Data Model (Namespace)"
-          value={meta.namespace}
-          onChange={(x: string) => {
-            setMetadata({ ...meta, namespace: x.replaceAll(/\s+/g, '') });
-          }}
-        />
-      )}
+      <DescriptionItem label="Namespace" value={meta.namespace} />
       <NormalTextField
         text="Data Model Schema"
         value={meta.schema}
-        onChange={x => {
-          setMetadata({ ...meta, schema: x });
-        }}
+        onChange={x =>
+          act({ type: 'model', act: 'meta', property: 'schema', value: x })
+        }
       />
       <NormalTextField
         text="Author"
         value={meta.author}
-        onChange={(x: string) => {
-          setMetadata({ ...meta, author: x });
-        }}
+        onChange={x =>
+          act({ type: 'model', act: 'meta', property: 'author', value: x })
+        }
       />
       <NormalTextField
         text="Title of the Data Model"
         value={meta.title}
-        onChange={(x: string) => {
-          setMetadata({ ...meta, title: x });
-        }}
+        onChange={x =>
+          act({ type: 'model', act: 'meta', property: 'title', value: x })
+        }
       />
       <NormalTextField
         text="Edition of the Data Model"
         value={meta.edition}
-        onChange={(x: string) => {
-          setMetadata({ ...meta, edition: x });
-        }}
+        onChange={x =>
+          act({ type: 'model', act: 'meta', property: 'edition', value: x })
+        }
       />
       <NormalTextField
         text="Short name of the Data Model"
         value={meta.shortname}
-        onChange={(x: string) => {
-          setMetadata({ ...meta, shortname: x });
-        }}
+        onChange={x =>
+          act({ type: 'model', act: 'meta', property: 'shortname', value: x })
+        }
       />
     </FormGroup>
   );

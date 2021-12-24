@@ -6,12 +6,7 @@ import React, { useContext, useMemo, useState } from 'react';
 
 import ReactFlow, { Controls, ReactFlowProvider } from 'react-flow-renderer';
 
-import {
-  HotkeysProvider,
-  HotkeysTarget2,
-  IToaster,
-  Toaster,
-} from '@blueprintjs/core';
+import { HotkeysTarget2, IToaster, Toaster } from '@blueprintjs/core';
 
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
@@ -219,69 +214,67 @@ const ModelWorkspace: React.FC<{
 
   if (isVisible) {
     return (
-      <HotkeysProvider>
-        <HotkeysTarget2 hotkeys={hotkeys}>
-          <ReactFlowProvider>
-            {diagProps && (
-              <WorkspaceDialog
-                diagProps={diagProps}
-                onClose={() => setDiagProps(undefined)}
-                modelStore={modelStore}
-                setModelStore={setModelStore}
-                model={model}
-                setRegistry={id =>
-                  setDiagProps({
-                    regid: id,
-                    isFromReactNode: false,
-                  })
-                }
-              />
-            )}
-            <Workspace
-              className={className}
-              toolbar={toolbar}
-              sidebar={sidebar}
-              navbarProps={{ breadcrumbs }}
-            >
-              <div css={react_flow_container_layout}>
-                <ReactFlow
-                  elements={getActionReactFlowElementsFrom(
-                    mw,
-                    index,
-                    dvisible,
-                    onProcessClick,
-                    getStyleById,
-                    getSVGColorById,
-                    onDataWorkspaceActive,
-                    idVisible
-                  )}
-                  onLoad={para => para.fitView()}
-                  nodesConnectable={false}
-                  snapToGrid={true}
-                  snapGrid={[10, 10]}
-                  nodeTypes={NodeTypes}
-                  edgeTypes={EdgeTypes}
-                  nodesDraggable={false}
-                >
-                  <Controls showInteractive={false}>
-                    <DataVisibilityButton
-                      isOn={dvisible}
-                      onClick={toggleDataVisibility}
-                    />
-                    <IdVisibleButton
-                      isOn={idVisible}
-                      onClick={() => setIdVisible(x => !x)}
-                    />
-                  </Controls>
-                </ReactFlow>
-                {searchResult.size > 0 && (
-                  <LegendPane list={SearchResultStyles} onLeft={false} />
+      <HotkeysTarget2 hotkeys={hotkeys}>
+        <ReactFlowProvider>
+          {diagProps && (
+            <WorkspaceDialog
+              diagProps={diagProps}
+              onClose={() => setDiagProps(undefined)}
+              modelStore={modelStore}
+              setModelStore={setModelStore}
+              model={model}
+              setRegistry={id =>
+                setDiagProps({
+                  regid: id,
+                  isFromReactNode: false,
+                })
+              }
+            />
+          )}
+          <Workspace
+            className={className}
+            toolbar={toolbar}
+            sidebar={sidebar}
+            navbarProps={{ breadcrumbs }}
+          >
+            <div css={react_flow_container_layout}>
+              <ReactFlow
+                elements={getActionReactFlowElementsFrom(
+                  mw,
+                  index,
+                  dvisible,
+                  onProcessClick,
+                  getStyleById,
+                  getSVGColorById,
+                  onDataWorkspaceActive,
+                  idVisible
                 )}
-              </div>
-            </Workspace>
-          </ReactFlowProvider>
-        </HotkeysTarget2>
-      </HotkeysProvider>
+                onLoad={para => para.fitView()}
+                nodesConnectable={false}
+                snapToGrid={true}
+                snapGrid={[10, 10]}
+                nodeTypes={NodeTypes}
+                edgeTypes={EdgeTypes}
+                nodesDraggable={false}
+              >
+                <Controls showInteractive={false}>
+                  <DataVisibilityButton
+                    isOn={dvisible}
+                    onClick={toggleDataVisibility}
+                  />
+                  <IdVisibleButton
+                    isOn={idVisible}
+                    onClick={() => setIdVisible(x => !x)}
+                  />
+                </Controls>
+              </ReactFlow>
+              {searchResult.size > 0 && (
+                <LegendPane list={SearchResultStyles} onLeft={false} />
+              )}
+            </div>
+          </Workspace>
+        </ReactFlowProvider>
+      </HotkeysTarget2>
     );
   }
   return <div></div>;

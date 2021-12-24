@@ -16,6 +16,5 @@ export type UndoManagerInterface<S, A> = [
   S,
   NEW_ACTION<A>,
   EDIT_ACTION,
-  EDIT_ACTION,
-  INIT_INTERFACE<S>
+  EDIT_ACTION
 ];
