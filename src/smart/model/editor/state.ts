@@ -44,6 +44,7 @@ export function useEditorState(
         break;
       case 'history':
         historyAction(action);
+        break;
     }
   }
 
@@ -80,12 +81,10 @@ export function useEditorState(
     const reverse = actModel(action);
     const len = undoHis.length;
     const his = undoHis[len - 1];
+    // combine undo history if it is editing on the same id and same property
     if (
       reverse &&
-      (len === 0 ||
-        redo.length > 0 ||
-        his.act !== action.act ||
-        his.property !== action.property)
+      (len === 0 || redo.length > 0 || !actionCombinable(his, action))
     ) {
       actUndoHis({ act: 'push', value: reverse });
       actRedoHis({ act: 'new' });
@@ -106,4 +105,29 @@ export function useEditorState(
     undoHis.length > 0 ? undo : undefined,
     redoHis.length > 0 ? redo : undefined,
   ];
+}
+
+function actionCombinable(before: EditorAction, after: EditorAction): boolean {
+  if (before.act === 'meta' && after.act === 'meta') {
+    return before.property === after.property;
+  } else if (before.act === 'section' && after.act === 'section') {
+    return (
+      before.task === 'edit' &&
+      after.task === 'edit' &&
+      before.value.id === after.id
+    );
+  } else if (before.act === 'terms' && after.act === 'terms') {
+    return (
+      before.task === 'edit' &&
+      after.task === 'edit' &&
+      before.value.id === after.id
+    );
+  } else if (before.act === 'roles' && after.act === 'roles') {
+    return (
+      before.task === 'edit' &&
+      after.task === 'edit' &&
+      before.value.id === after.id
+    );
+  }
+  return false;
 }

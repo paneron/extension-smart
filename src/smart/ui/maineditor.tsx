@@ -23,6 +23,7 @@ import {
   Button,
   ControlGroup,
   Dialog,
+  HotkeyConfig,
   HotkeysTarget2,
   IToaster,
   Toaster,
@@ -589,11 +590,12 @@ const ModelEditor: React.FC<{
     setRepoHis([]);
   }
 
-  const hotkeys = [
+  const hotkeys: HotkeyConfig[] = [
     {
       combo: 'ctrl+s',
       global: true,
       label: 'Save',
+      allowInInput: true,
       onKeyDown: saveRepo,
     },
   ];

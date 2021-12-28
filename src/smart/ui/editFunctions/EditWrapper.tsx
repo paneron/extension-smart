@@ -12,7 +12,6 @@ import { createModelHistory } from '../../model/history';
 import { MMELRepo, RepoIndex } from '../../model/repo';
 import { EditorState } from '../../model/States';
 import { addExisingProcessToPage } from '../../utils/ModelAddComponentHandler';
-import { Logger } from '../../utils/ModelFunctions';
 import ModelEditor from '../maineditor';
 
 const EditWrapper: React.FC<{
@@ -35,8 +34,6 @@ const EditWrapper: React.FC<{
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [copied, setCopied] = useState<string | undefined>(undefined);
   const [toaster] = useState<IToaster>(Toaster.create());
-
-  Logger.log(state);
 
   const hotkeys: HotkeyConfig[] = [
     {

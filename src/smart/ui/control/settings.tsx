@@ -57,27 +57,19 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
   },
   [SETTINGPAGE.SECTION]: {
     title: 'Sections',
-    Panel: ({ model, setModel }) => (
-      <SectionEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <SectionEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.TERMPAGE]: {
     title: 'Terms',
-    Panel: ({ model, setModel }) => (
-      <TermsEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <TermsEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.ROLEPAGE]: {
     title: 'Roles',
-    Panel: ({ model, setModel }) => (
-      <RoleEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <RoleEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.REFPAGE]: {
     title: 'References',
-    Panel: ({ model, setModel }) => (
-      <ReferenceEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <ReferenceEditPage model={model} act={act} />    
   },
   [SETTINGPAGE.REGISTRYPAGE]: {
     title: 'Data Registry',
@@ -133,6 +125,7 @@ const BasicSettingPane: React.FC<{
   return (
     <MGDDisplayPane>
       <Tabs
+        key={jsx.length}
         onChange={x => setPage(x as SETTINGPAGE)}
         selectedTabId={page}
         animate={false}

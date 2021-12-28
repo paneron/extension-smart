@@ -15,11 +15,12 @@ import {
 import { createReference } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
+import { ModelAction } from '../../model/editor/model';
 
 const ReferenceEditPage: React.FC<{
   model: EditorModel;
-  setModel: (model: EditorModel) => void;
-}> = function ({ model, setModel }) {
+  act: (x: ModelAction) => void;
+}> = function ({ model, act }) {
   function matchFilter(ref: MMELReference, filter: string) {
     return (
       filter === '' ||
