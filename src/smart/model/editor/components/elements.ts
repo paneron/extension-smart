@@ -1,19 +1,28 @@
 import { useReducer } from 'react';
 import {
+  refDCReplace,
   RoleAttribute,
   roleReplace,
 } from '../../../utils/handler/cascadeModelHandler';
 import { EditorNode } from '../../editormodel';
 import { UndoReducerInterface } from '../interface';
 
-type ElementsRoleCascadeAction = {
-  task: 'cascade';
+type RoleCascadeAction = {
   subtask: 'process-role';
   role: string;
   ids: [string, RoleAttribute[]][]; // [process or approval ID, attribute name];
 };
 
-type CascadeAction = ElementsRoleCascadeAction;
+type RefCascadeAction = {
+  subtask: 'process-ref';
+  from: string | undefined; // remove from
+  to: string | undefined; // add to
+  ids: [string, string[]][];
+};
+
+type CascadeAction = (RoleCascadeAction | RefCascadeAction) & {
+  task: 'cascade';
+};
 
 type EXPORT_ACTION = CascadeAction;
 
@@ -30,9 +39,11 @@ function cascadeReducer(
   elms: Record<string, EditorNode>,
   action: CascadeAction
 ): Record<string, EditorNode> {
-  switch (action.subtask) {    
+  switch (action.subtask) {
     case 'process-role':
       return roleReplace(elms, action.ids, action.role);
+    case 'process-ref':
+      return refDCReplace(elms, action.ids, action.from, action.to);
   }
 }
 
@@ -73,7 +84,7 @@ export function useElements(
 ): UndoReducerInterface<Record<string, EditorNode>, ElmAction> {
   const [elms, dispatchElms] = useReducer(reducer, x);
 
-  function act(action: ElmAction): ElmAction | undefined {    
+  function act(action: ElmAction): ElmAction | undefined {
     dispatchElms(action);
     return findReverse(elms, action);
   }

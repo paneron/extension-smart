@@ -69,7 +69,7 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
   },
   [SETTINGPAGE.REFPAGE]: {
     title: 'References',
-    Panel: ({ model, act }) => <ReferenceEditPage model={model} act={act} />    
+    Panel: ({ model, act }) => <ReferenceEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.REGISTRYPAGE]: {
     title: 'Data Registry',

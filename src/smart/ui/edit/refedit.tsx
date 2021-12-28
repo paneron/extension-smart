@@ -1,15 +1,10 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import {
-  EditorModel,
-  isEditorApproval,
-  isEditorDataClass,
-} from '../../model/editormodel';
+import { EditorModel } from '../../model/editormodel';
 import { MMELReference } from '../../serialize/interface/supportinterface';
 import {
   checkId,
   referenceSorter,
-  replaceSet,
   toRefSummary,
 } from '../../utils/ModelFunctions';
 import { createReference } from '../../utils/EditorFactory';
@@ -37,42 +32,30 @@ const ReferenceEditPage: React.FC<{
       .map(x => ({ id: x.id, text: toRefSummary(x) }));
   }
 
-  function replaceReferences(matchid: string, replaceid: string) {
-    for (const p in model.provisions) {
-      replaceSet(model.provisions[p].ref, matchid, replaceid);
-    }
-    for (const a in model.elements) {
-      const elm = model.elements[a];
-      if (isEditorApproval(elm)) {
-        replaceSet(elm.ref, matchid, replaceid);
-      } else if (isEditorDataClass(elm)) {
-        for (const x in elm.attributes) {
-          replaceSet(elm.attributes[x].ref, matchid, replaceid);
-        }
-      }
-    }
-  }
-
   function removeRefListItem(ids: string[]) {
-    for (const id of ids) {
-      delete model.refs[id];
-      replaceReferences(id, '');
-    }
-    setModel(model);
+    const action: ModelAction = {
+      type: 'model',
+      act: 'refs',
+      task: 'delete',
+      value: ids,
+    };
+    act(action);
   }
 
   function addRef(ref: MMELReference): boolean {
     if (ref.clause.includes(',')) {
       const failed: string[] = [];
-      const clauses = ref.clause.split(',');
-      for (let c of clauses) {
-        c = c.trim();
+      const clauses = ref.clause.split(',').map(x => x.trim());
+      const newRefs: MMELReference[] = [];
+      const newIDs = new Set<string>();
+      for (const c of clauses) {
         const id = ref.id + c.replaceAll('.', '-');
-        if (model.refs[id] === undefined) {
+        if (model.refs[id] === undefined && !newIDs.has(id)) {
           const newref = createReference(id);
           newref.document = ref.document;
           newref.clause = c;
-          model.refs[id] = newref;
+          newRefs.push(newref);
+          newIDs.add(id);
         } else {
           failed.push(c);
         }
@@ -84,12 +67,23 @@ const ReferenceEditPage: React.FC<{
         );
         return false;
       }
-      setModel(model);
+      const action: ModelAction = {
+        type: 'model',
+        act: 'refs',
+        task: 'add',
+        value: newRefs,
+      };
+      act(action);
       return true;
     } else {
       if (checkId(ref.id, model.refs)) {
-        model.refs[ref.id] = ref;
-        setModel(model);
+        const action: ModelAction = {
+          type: 'model',
+          act: 'refs',
+          task: 'add',
+          value: [ref],
+        };
+        act(action);
         return true;
       }
     }
@@ -97,20 +91,18 @@ const ReferenceEditPage: React.FC<{
   }
 
   function updateRef(oldid: string, ref: MMELReference): boolean {
-    if (oldid !== ref.id) {
-      if (checkId(ref.id, model.refs)) {
-        delete model.refs[oldid];
-        model.refs[ref.id] = ref;
-        replaceReferences(oldid, ref.id);
-        setModel(model);
-        return true;
-      }
+    if (oldid !== ref.id && !checkId(ref.id, model.refs)) {
       return false;
-    } else {
-      model.refs[oldid] = ref;
-      setModel(model);
-      return true;
     }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'refs',
+      task: 'edit',
+      id: oldid,
+      value: ref,
+    };
+    act(action);
+    return true;
   }
 
   function getRefById(id: string): MMELReference {

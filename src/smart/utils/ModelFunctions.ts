@@ -45,6 +45,12 @@ export function getNamespace(model: EditorModel): string {
   return model.meta.namespace === '' ? 'defaultns' : model.meta.namespace;
 }
 
+/**
+ * Deprecated, use setReplace instead
+ * @param set
+ * @param matchid
+ * @param replaceid
+ */
 export function replaceSet(
   set: Set<string>,
   matchid: string,
@@ -56,6 +62,21 @@ export function replaceSet(
       set.add(replaceid);
     }
   }
+}
+
+export function setReplace(
+  set: Set<string>,
+  matchid: string | undefined,
+  replaceid: string | undefined
+) {
+  const newSet = new Set([...set]);
+  if (matchid && newSet.has(matchid)) {
+    newSet.delete(matchid);
+  }
+  if (replaceid) {
+    newSet.add(replaceid);
+  }
+  return newSet;
 }
 
 export function toRefSummary(r: MMELReference): string {

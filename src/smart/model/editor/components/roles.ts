@@ -40,8 +40,8 @@ export function cascadeCheckRole(
         subtask: 'process-role',
         ids: affected,
         role: action.value.id,
-      },      
-    ];    
+      },
+    ];
     return [
       {
         type: 'model',
@@ -50,10 +50,12 @@ export function cascadeCheckRole(
         subtask: 'process-role',
         ids: affected,
         role: action.id,
-      },      
+      },
     ];
   } else if (action.task === 'delete') {
-    const affected:[[string, RoleAttribute[]][], string][] = action.value.map(x => [findAffectedElements(elms, x), x]);
+    const affected: [[string, RoleAttribute[]][], string][] = action.value.map(
+      x => [findAffectedElements(elms, x), x]
+    );
     const ids = affected.flatMap(x => x[0]);
     action.cascade = [
       {
@@ -63,7 +65,7 @@ export function cascadeCheckRole(
         subtask: 'process-role',
         ids: ids,
         role: '',
-      },      
+      },
     ];
     return affected.map(([ids, role]) => ({
       type: 'model',
@@ -72,12 +74,12 @@ export function cascadeCheckRole(
       subtask: 'process-role',
       ids,
       role,
-    }))
+    }));
   }
-  return undefined;
+  return [];
 }
 
-export function findAffectedElements(
+function findAffectedElements(
   elms: Record<string, EditorNode>,
   id: string
 ): [string, RoleAttribute[]][] {
