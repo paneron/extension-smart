@@ -415,8 +415,6 @@ function getElements(
         const nn = createNodeContainer(elm, { x: com.x, y: com.y }, callback);
         elms.push(nn);
         elm.added = true;
-      } else {
-        delete page.data[x];
       }
     }
     datas.forEach(e => {

@@ -93,7 +93,7 @@ export function cascadeCheckRegs(
     const affected: [DataCascadeIDs[], [string, number, number][], string][] =
       action.value.map(x => {
         const [ids, pids] = findAffectedElements(elms, pages, x, '', '');
-        const fids = ids.filter(x => !dcs.includes(x.id));
+        const fids = ids.filter(x => !dcs.includes(x.id));        
         return [fids, pids, x];
       });
     action.cascade = affected.flatMap(([ids, pids, id]) => [
@@ -236,15 +236,13 @@ function findAffectedElements(
           const rdcs: [string, string][] = [[dcid, newdcid]];
           const attributes: [string, string][] = [];
           for (const a in elm.attributes) {
-            const att = elm.attributes[a];
-            Logger.log('check', att.type, dcid, oldrefid);
+            const att = elm.attributes[a];            
             if (att.type === dcid) {
               attributes.push([a, newreg]);
             } else if (att.type === oldrefid) {
               attributes.push([a, newrefid]);
             }
-          }
-          Logger.log('found', attributes, rdcs);
+          }          
           ids.push({
             id: x,
             type: 'dc',
@@ -258,6 +256,7 @@ function findAffectedElements(
       const page = pages[p];
       const data = page.data[id];
       if (data !== undefined) {
+        Logger.log('added action', p, data.x, data.y);
         pids.push([p, data.x, data.y]);
       }
     }

@@ -83,7 +83,6 @@ export function regElmReplace(
   from: string | undefined,
   to: string | undefined
 ) {
-  Logger.log('replace ids', ids);
   for (const item of ids) {
     switch (item.type) {
       case 'process': {
@@ -97,18 +96,14 @@ export function regElmReplace(
         break;
       }
       case 'dc': {
-        Logger.log('Performing cascade action');
-        Logger.log('ID, attributes, rdcs', item.id, item.attributes, item.rdcs);
         const elm = { ...elms[item.id] };
         if (elm && isEditorDataClass(elm)) {
           const newAtt = { ...elm.attributes };
           for (const [id, value] of item.attributes) {
-            Logger.log('Attribute id, set value:', id, value);
             newAtt[id].type = value;
           }
           const rdcs = new Set([...elm.rdcs]);
           for (const [oldid, newid] of item.rdcs) {
-            Logger.log(oldid, newid);
             if (oldid !== '') {
               rdcs.delete(oldid);
             }
@@ -117,7 +112,6 @@ export function regElmReplace(
             }
           }
           elm.rdcs = rdcs;
-          Logger.log('updated RDCS', [...elm.rdcs]);
           elm.attributes = newAtt;
           elms[item.id] = elm;
         }
@@ -175,8 +169,10 @@ export function dataPageReplace(
   from: string | undefined,
   to: string | undefined
 ): Record<string, EditorSubprocess> {
+  Logger.log('Page cascade action');
   const newPages = { ...pages };
   for (const [id, x, y] of ids) {
+    Logger.log(id, x, y, from, to);
     const page = { ...newPages[id] };
     const newData = { ...page.data };
     if (from) {
@@ -190,6 +186,7 @@ export function dataPageReplace(
         y,
       };
     }
+    Logger.log('Done all page cascade action');
     page.data = newData;
     newPages[id] = page;
   }

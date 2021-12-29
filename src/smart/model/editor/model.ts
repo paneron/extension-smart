@@ -50,7 +50,7 @@ export function useModel(
     refs,
     provisions,
     pages,
-  };
+  };  
 
   function act(action: ModelAction): ModelAction | undefined {
     try {
