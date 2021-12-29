@@ -77,9 +77,7 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
   },
   [SETTINGPAGE.DATAPAGE]: {
     title: 'Data structure',
-    Panel: ({ model, setModel }) => (
-      <DataClassEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <DataClassEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.ENUMPAGE]: {
     title: 'Enumeration',

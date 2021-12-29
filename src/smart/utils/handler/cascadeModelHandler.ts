@@ -1,4 +1,7 @@
-import { RegCascadeIDs } from '../../model/editor/components/elements';
+import {
+  DataCascadeDCID,
+  DataCascadeIDs,
+} from '../../model/editor/components/elements';
 import {
   EditorApproval,
   EditorDataClass,
@@ -12,7 +15,7 @@ import {
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELProvision } from '../../serialize/interface/supportinterface';
 import { isApproval } from '../../serialize/util/validation';
-import { setReplace } from '../ModelFunctions';
+import { Logger, setReplace } from '../ModelFunctions';
 
 export type RoleAttribute = 'actor' | 'approver';
 
@@ -21,23 +24,22 @@ export function roleReplace(
   ids: [string, RoleAttribute[]][],
   role: string
 ): Record<string, EditorNode> {
-  const newElms = { ...elms };
   for (const [id, attributes] of ids) {
     const elm = elms[id];
     if (elm) {
       if (isEditorProcess(elm)) {
         const newProcess: EditorProcess = { ...elm, actor: role };
-        newElms[elm.id] = newProcess;
+        elms[elm.id] = newProcess;
       } else if (isApproval(elm)) {
         const newApproval: EditorApproval = { ...elm };
         for (const a of attributes) {
           newApproval[a] = role;
         }
-        newElms[elm.id] = newApproval;
+        elms[elm.id] = newApproval;
       }
     }
   }
-  return newElms;
+  return elms;
 }
 
 export function refDCReplace(
@@ -46,7 +48,6 @@ export function refDCReplace(
   from: string | undefined,
   to: string | undefined
 ) {
-  const newElms = { ...elms };
   for (const [dcid, attid] of ids) {
     const elm = elms[dcid];
     if (isEditorDataClass(elm)) {
@@ -58,7 +59,7 @@ export function refDCReplace(
       newDC.attributes = newAtt;
     }
   }
-  return newElms;
+  return elms;
 }
 
 export function refProvisionReplace(
@@ -76,27 +77,73 @@ export function refProvisionReplace(
   return newPros;
 }
 
-export function regReplace(
+export function regElmReplace(
   elms: Record<string, EditorNode>,
-  ids: RegCascadeIDs[],
+  ids: DataCascadeIDs[],
   from: string | undefined,
   to: string | undefined
 ) {
-  const newElms = { ...elms };
+  Logger.log('replace ids', ids);
   for (const item of ids) {
     switch (item.type) {
       case 'process': {
-        const elm = { ...newElms[item.id] };
+        const elm = { ...elms[item.id] };
         if (isEditorProcess(elm)) {
           for (const att of item.attributes) {
             elm[att] = setReplace(elm[att], from, to);
           }
-          newElms[item.id] = elm;
+          elms[item.id] = elm;
         }
         break;
       }
       case 'dc': {
-        const elm = { ...newElms[item.id] };
+        Logger.log('Performing cascade action');
+        Logger.log('ID, attributes, rdcs', item.id, item.attributes, item.rdcs);
+        const elm = { ...elms[item.id] };
+        if (elm && isEditorDataClass(elm)) {
+          const newAtt = { ...elm.attributes };
+          for (const [id, value] of item.attributes) {
+            Logger.log('Attribute id, set value:', id, value);
+            newAtt[id].type = value;
+          }
+          const rdcs = new Set([...elm.rdcs]);
+          for (const [oldid, newid] of item.rdcs) {
+            Logger.log(oldid, newid);
+            if (oldid !== '') {
+              rdcs.delete(oldid);
+            }
+            if (newid !== '') {
+              rdcs.add(newid);
+            }
+          }
+          elm.rdcs = rdcs;
+          Logger.log('updated RDCS', [...elm.rdcs]);
+          elm.attributes = newAtt;
+          elms[item.id] = elm;
+        }
+        break;
+      }
+      case 'other': {
+        const elm = { ...elms[item.id] };
+        if (isEditorApproval(elm)) {
+          elm.records = setReplace(elm.records, from, to);
+          elms[item.id] = elm;
+        }
+        break;
+      }
+    }
+  }
+  return elms;
+}
+
+export function dcElmReplace(
+  elms: Record<string, EditorNode>,
+  ids: DataCascadeDCID[]
+) {
+  for (const item of ids) {
+    switch (item.type) {
+      case 'dc': {
+        const elm = { ...elms[item.id] };
         if (isEditorDataClass(elm)) {
           const newAtt = { ...elm.attributes };
           for (const [id, value] of item.attributes) {
@@ -113,24 +160,16 @@ export function regReplace(
           }
           elm.rdcs = rdcs;
           elm.attributes = newAtt;
-          newElms[item.id] = elm;
-        }
-        break;
-      }
-      case 'other': {
-        const elm = { ...newElms[item.id] };
-        if (isEditorApproval(elm)) {
-          elm.records = setReplace(elm.records, from, to);
-          newElms[item.id] = elm;
+          elms[item.id] = elm;
         }
         break;
       }
     }
   }
-  return newElms;
+  return elms;
 }
 
-export function regPageReplace(
+export function dataPageReplace(
   pages: Record<string, EditorSubprocess>,
   ids: [string, number, number][],
   from: string | undefined,

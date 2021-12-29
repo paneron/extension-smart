@@ -5,22 +5,19 @@ import {
   EditorModel,
   isEditorDataClass,
 } from '../../model/editormodel';
-import {
-  checkId,
-  defaultItemSorter,
-  fillRDCS,
-} from '../../utils/ModelFunctions';
+import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
 import { createDataClass } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
 import AttributeEditPage from './attributeedit';
+import { ModelAction } from '../../model/editor/model';
 
 const initObj = createDataClass('');
 
 const DataClassEditPage: React.FC<{
   model: EditorModel;
-  setModel: (model: EditorModel) => void;
-}> = function ({ model, setModel }) {
+  act: (x: ModelAction) => void;
+}> = function ({ model, act }) {
   function matchFilter(x: EditorDataClass, filter: string) {
     return filter === '' || x.id.toLowerCase().includes(filter);
   }
@@ -34,80 +31,46 @@ const DataClassEditPage: React.FC<{
       .sort(defaultItemSorter);
   }
 
-  function replaceReferences(matchid: string, replaceid: string) {
-    for (const x in model.elements) {
-      const elm = model.elements[x];
-      if (isEditorDataClass(elm)) {
-        for (const dc of elm.rdcs) {
-          if (dc === matchid) {
-            elm.rdcs.delete(dc);
-            if (replaceid !== '') {
-              elm.rdcs.add(replaceid);
-            }
-          }
-        }
-        for (const a in elm.attributes) {
-          const att = elm.attributes[a];
-          if (att.type === matchid) {
-            att.type = replaceid;
-          }
-        }
-      }
-    }
-    for (const p in model.pages) {
-      const page = model.pages[p];
-      const data = page.data[matchid];
-      if (data !== undefined) {
-        delete page.data[matchid];
-        if (replaceid !== '') {
-          data.element = replaceid;
-          page.data[replaceid] = data;
-        }
-      }
-    }
-  }
-
   function removeDCListItem(ids: string[]) {
-    for (const id of ids) {
-      const dc = model.elements[id];
-      if (isEditorDataClass(dc)) {
-        delete model.elements[id];
-        replaceReferences(id, '');
-      }
-    }
-    setModel(model);
+    const action: ModelAction = {
+      type: 'model',
+      act: 'elements',
+      task: 'delete',
+      subtask: 'dc',
+      value: ids,
+    };
+    act(action);
   }
 
   function addDC(dc: EditorDataClass): boolean {
     if (checkId(dc.id, model.elements)) {
-      const newdc = { ...dc };
-      model.elements[dc.id] = newdc;
-      fillRDCS(newdc, model.elements);
-      setModel({ ...model });
+      const action: ModelAction = {
+        type: 'model',
+        act: 'elements',
+        task: 'add',
+        subtask: 'dc',
+        value: [dc],
+      };
+      act(action);
       return true;
     }
     return false;
   }
 
   function updateDC(oldid: string, dc: EditorDataClass): boolean {
-    if (oldid !== dc.id) {
-      if (checkId(dc.id, model.elements)) {
-        delete model.elements[oldid];
-        const newdc = { ...dc };
-        model.elements[dc.id] = newdc;
-        replaceReferences(oldid, dc.id);
-        fillRDCS(newdc, model.elements);
-        setModel(model);
-        return true;
-      }
+    if (oldid !== dc.id && !checkId(dc.id, model.elements)) {
       return false;
-    } else {
-      const newdc = { ...dc };
-      model.elements[oldid] = newdc;
-      fillRDCS(dc, model.elements);
-      setModel(model);
-      return true;
     }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'elements',
+      task: 'edit',
+      subtask: 'dc',
+      id: oldid,
+      value: dc,
+    };
+    act(action);
+    return true;
   }
 
   function getDCById(id: string): EditorDataClass {

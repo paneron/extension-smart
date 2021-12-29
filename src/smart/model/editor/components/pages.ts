@@ -1,11 +1,11 @@
 import { useReducer } from 'react';
-import { regPageReplace } from '../../../utils/handler/cascadeModelHandler';
+import { dataPageReplace } from '../../../utils/handler/cascadeModelHandler';
 import { Logger } from '../../../utils/ModelFunctions';
 import { EditorSubprocess } from '../../editormodel';
 import { UndoReducerInterface } from '../interface';
 
 type RegCascadeAction = {
-  subtask: 'process-reg';
+  subtask: 'data';
   from: string | undefined; // remove from
   to: string | undefined; // add to
   ids: [string, number, number][];
@@ -31,8 +31,8 @@ function cascadeReducer(
   action: CascadeAction
 ): Record<string, EditorSubprocess> {
   switch (action.subtask) {
-    case 'process-reg':
-      return regPageReplace(pages, action.ids, action.from, action.to);
+    case 'data':
+      return dataPageReplace(pages, action.ids, action.from, action.to);
   }
 }
 

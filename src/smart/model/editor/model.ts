@@ -1,7 +1,12 @@
 import { Logger } from '../../utils/ModelFunctions';
 import { EditorModel } from '../editormodel';
+import { cascadeCheckDCs } from './components/element/dc';
 import { cascadeCheckRegs } from './components/element/registry';
-import { ElmAction, useElements } from './components/elements';
+import {
+  ElmAction,
+  findActionElement,
+  useElements,
+} from './components/elements';
 import { MetaAction, useMeta } from './components/meta';
 import { PageAction, usePages } from './components/pages';
 import { ProvisionAction, useProvisions } from './components/provision';
@@ -115,11 +120,11 @@ export function useModel(
   ): ModelAction | undefined {
     switch (action.subtask) {
       case 'registry': {
+        const oldImages =
+          action.task === 'delete'
+            ? action.value.map(x => findActionElement(elements, x))
+            : undefined;
         const reverseCascade = cascadeCheckRegs(elements, pages, action);
-        const reverse = actElements(action);
-        if (reverse) {
-          reverse.cascade = reverseCascade;
-        }
         if (action.cascade) {
           for (const a of action.cascade) {
             if (a.type === 'model') {
@@ -130,6 +135,32 @@ export function useModel(
               }
             }
           }
+        }
+        const reverse = actElements(action);
+        if (oldImages && reverse && reverse.task === 'add') {
+          reverse.value = oldImages;
+        }
+        if (reverse) {
+          reverse.cascade = reverseCascade;
+        }
+        return reverse ? { ...reverse, type: 'model' } : undefined;
+      }
+      case 'dc': {
+        const reverseCascade = cascadeCheckDCs(elements, pages, action);
+        if (action.cascade) {
+          for (const a of action.cascade) {
+            if (a.type === 'model') {
+              if (a.act === 'elements') {
+                actElements(a);
+              } else if (a.act === 'pages') {
+                actPages(a);
+              }
+            }
+          }
+        }
+        const reverse = actElements(action);
+        if (reverse) {
+          reverse.cascade = reverseCascade;
         }
         return reverse ? { ...reverse, type: 'model' } : undefined;
       }

@@ -1,7 +1,8 @@
 import { useReducer } from 'react';
 import {
   refDCReplace,
-  regReplace as regElmReplace,
+  regElmReplace,
+  dcElmReplace,
   RoleAttribute,
   roleReplace,
 } from '../../../utils/handler/cascadeModelHandler';
@@ -13,6 +14,7 @@ import {
 } from '../../editormodel';
 import { UndoReducerInterface } from '../interface';
 import { ModelAction } from '../model';
+import { addDC, delDC, editDC } from './element/dc';
 import {
   addRegistry,
   delRegistry,
@@ -38,43 +40,55 @@ type RegCascadeAction = {
   subtask: 'process-reg';
   from: string | undefined; // remove from
   to: string | undefined; // add to
-  ids: RegCascadeIDs[];
+  ids: DataCascadeIDs[];
 };
 
-type RegCascadeProcessID = {
+type DCCascadeAction = {
+  subtask: 'process-dc';
+  from: string | undefined; // remove from
+  to: string | undefined; // add to
+  ids: DataCascadeDCID[];
+};
+
+type DataCascadeProcessID = {
   id: string;
   type: 'process';
   attributes: ('input' | 'output')[];
 };
 
-type RegCascadeOtherID = {
+type DataCascadeOtherID = {
   id: string;
   type: 'other';
 };
 
-type RegCascadeDCID = {
+export type DataCascadeDCID = {
   id: string;
   type: 'dc';
   attributes: [string, string][]; // attribute id, new type
   rdcs: [string, string][]; // [oldid, newid]. Empty ==> no delete / add
 };
 
-export type RegCascadeIDs =
-  | RegCascadeProcessID
-  | RegCascadeOtherID
-  | RegCascadeDCID;
+export type DataCascadeIDs =
+  | DataCascadeProcessID
+  | DataCascadeOtherID
+  | DataCascadeDCID;
 
 type CascadeAction = (
   | RoleCascadeAction
   | RefCascadeAction
   | RegCascadeAction
+  | DCCascadeAction
 ) & {
   task: 'cascade';
 };
 
-type CommonElmAction = ItemAction<EditorNode, 'elements'> & {
-  subtask: 'registry';
-};
+type CommonElmAction = ItemAction<EditorNode, 'elements'> &
+  (
+    | {
+        subtask: 'registry';
+      }
+    | { subtask: 'dc' }
+  );
 
 type EXPORT_ACTION = CascadeAction | CommonElmAction;
 
@@ -101,6 +115,8 @@ function cascadeReducer(
       return refDCReplace(elms, action.ids, action.from, action.to);
     case 'process-reg':
       return regElmReplace(elms, action.ids, action.from, action.to);
+    case 'process-dc':
+      return dcElmReplace(elms, action.ids);
   }
 }
 
@@ -110,7 +126,7 @@ function elmReducer(
 ): Record<string, EditorNode> {
   switch (action.task) {
     case 'cascade':
-      return cascadeReducer(elms, action);
+      return cascadeReducer({ ...elms }, action);
     case 'add': {
       return addItem({ ...elms }, action);
     }
@@ -164,7 +180,7 @@ function findReverse(
         act: 'elements',
         task: 'add',
         subtask: action.subtask,
-        value: action.value.map(x => findElement(elms, x)),
+        value: action.value.map(x => findActionElement(elms, x)),
       };
     }
     case 'edit': {
@@ -173,7 +189,7 @@ function findReverse(
         task: 'edit',
         subtask: action.subtask,
         id: action.value.id,
-        value: findElement(elms, action.id),
+        value: findActionElement(elms, action.id),
       };
     }
   }
@@ -203,6 +219,8 @@ function delItem(
   switch (action.subtask) {
     case 'registry':
       return delRegistry(elms, action.value);
+    case 'dc':
+      return delDC(elms, action.value);
   }
 }
 
@@ -213,6 +231,8 @@ function addItem(
   switch (action.subtask) {
     case 'registry':
       return addRegistry(elms, action.value);
+    case 'dc':
+      return addDC(elms, action.value);
   }
 }
 
@@ -223,10 +243,15 @@ function editItem(
   switch (action.subtask) {
     case 'registry':
       return editRegistry(elms, action.id, action.value);
+    case 'dc':
+      return editDC(elms, action.id, action.value);
   }
 }
 
-function findElement(elms: Record<string, EditorNode>, id: string): EditorNode {
+export function findActionElement(
+  elms: Record<string, EditorNode>,
+  id: string
+): EditorNode {
   const elm = elms[id];
   if (isEditorRegistry(elm)) {
     const dc = elms[elm.data];

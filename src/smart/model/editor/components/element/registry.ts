@@ -6,6 +6,7 @@ import {
   fillRDCS,
   genDCIdByRegId,
   getReferenceDCTypeName,
+  Logger,
 } from '../../../../utils/ModelFunctions';
 import {
   EditorDataClass,
@@ -16,7 +17,7 @@ import {
   isEditorRegistry,
 } from '../../../editormodel';
 import { ModelAction } from '../../model';
-import { ElmAction, RegCascadeIDs } from '../elements';
+import { ElmAction, DataCascadeIDs } from '../elements';
 
 export type RegistryCombined = EditorDataClass & {
   title: string;
@@ -40,7 +41,6 @@ export function addRegistry(
   elms: Record<string, EditorNode>,
   regs: EditorNode[]
 ): Record<string, EditorNode> {
-  const newElms = { ...elms };
   for (const item of regs) {
     const reg = item as RegistryCombined;
     const dcid = genDCIdByRegId(reg.id);
@@ -48,11 +48,11 @@ export function addRegistry(
     const newdc = getDCFromCombined(dcid, reg);
     newreg.data = dcid;
     newreg.title = reg.title;
-    newElms[reg.id] = newreg;
-    newElms[dcid] = newdc;
-    fillRDCS(newdc, newElms);
+    elms[reg.id] = newreg;
+    elms[dcid] = newdc;
+    fillRDCS(newdc, elms);
   }
-  return newElms;
+  return elms;
 }
 
 export function editRegistry(
@@ -60,22 +60,21 @@ export function editRegistry(
   id: string,
   item: EditorNode
 ): Record<string, EditorNode> {
-  const newElms = { ...elms };
-  const old = newElms[id];
+  const old = elms[id];
   if (isEditorRegistry(old)) {
-    delete newElms[id];
-    delete newElms[old.data];
+    delete elms[id];
+    delete elms[old.data];
     const reg = item as RegistryCombined;
     const dcid = genDCIdByRegId(reg.id);
     const newreg = createRegistry(reg.id);
     const newdc = getDCFromCombined(dcid, reg);
     newreg.data = dcid;
     newreg.title = reg.title;
-    newElms[reg.id] = newreg;
-    newElms[dcid] = newdc;
-    fillRDCS(newdc, newElms);
+    elms[reg.id] = newreg;
+    elms[dcid] = newdc;
+    fillRDCS(newdc, elms);
   }
-  return newElms;
+  return elms;
 }
 
 export function cascadeCheckRegs(
@@ -90,8 +89,13 @@ export function cascadeCheckRegs(
     return undefined;
   }
   if (action.task === 'delete') {
-    const affected: [RegCascadeIDs[], [string, number, number][], string][] =
-      action.value.map(x => [...findAffectedElements(elms, pages, x, ''), x]);
+    const dcs = action.value.map(x => genDCIdByRegId(x));
+    const affected: [DataCascadeIDs[], [string, number, number][], string][] =
+      action.value.map(x => {
+        const [ids, pids] = findAffectedElements(elms, pages, x, '', '');
+        const fids = ids.filter(x => !dcs.includes(x.id));
+        return [fids, pids, x];
+      });
     action.cascade = affected.flatMap(([ids, pids, id]) => [
       {
         type: 'model',
@@ -106,7 +110,7 @@ export function cascadeCheckRegs(
         type: 'model',
         act: 'pages',
         task: 'cascade',
-        subtask: 'process-reg',
+        subtask: 'data',
         to: undefined,
         from: id,
         ids: pids,
@@ -120,13 +124,13 @@ export function cascadeCheckRegs(
         subtask: 'process-reg',
         from: undefined,
         to: id,
-        ids: ids,
+        ids: ids.map(x => reverseAttribute(x, elms)),
       },
       {
         type: 'model',
         act: 'pages',
         task: 'cascade',
-        subtask: 'process-reg',
+        subtask: 'data',
         from: undefined,
         to: id,
         ids: pids,
@@ -135,7 +139,13 @@ export function cascadeCheckRegs(
   } else if (action.task === 'edit') {
     const regid = action.value.id;
     const dcid = genDCIdByRegId(regid);
-    const [ids, pids] = findAffectedElements(elms, pages, action.id, dcid);
+    const [ids, pids] = findAffectedElements(
+      elms,
+      pages,
+      action.id,
+      action.value.id,
+      dcid
+    );
     action.cascade = [
       {
         type: 'model',
@@ -150,7 +160,7 @@ export function cascadeCheckRegs(
         type: 'model',
         act: 'pages',
         task: 'cascade',
-        subtask: 'process-reg',
+        subtask: 'data',
         from: action.id,
         to: action.value.id,
         ids: pids,
@@ -164,13 +174,15 @@ export function cascadeCheckRegs(
         subtask: 'process-reg',
         to: action.id,
         from: action.value.id,
-        ids,
+        ids: ids.map(x =>
+          reverseAttribute(x, elms, genDCIdByRegId(action.id), dcid)
+        ),
       },
       {
         type: 'model',
         act: 'pages',
         task: 'cascade',
-        subtask: 'process-reg',
+        subtask: 'data',
         to: action.id,
         from: action.value.id,
         ids: pids,
@@ -184,15 +196,17 @@ function findAffectedElements(
   elms: Record<string, EditorNode>,
   pages: Record<string, MMELSubprocess>,
   id: string,
-  newdc: string
-): [RegCascadeIDs[], [string, number, number][]] {
-  const ids: RegCascadeIDs[] = [];
+  newreg: string,
+  newdcid: string
+): [DataCascadeIDs[], [string, number, number][]] {
+  Logger.log('Finding affected items');
+  const ids: DataCascadeIDs[] = [];
   const pids: [string, number, number][] = [];
   const reg = elms[id];
   if (isRegistry(reg)) {
     const dcid = reg.data;
-    const oldrefdcid = getReferenceDCTypeName(dcid);
-    const newrefdcid = getReferenceDCTypeName(newdc);
+    const oldrefid = getReferenceDCTypeName(id);
+    const newrefid = getReferenceDCTypeName(newreg);
     for (const x in elms) {
       const elm = elms[x];
       if (isEditorProcess(elm)) {
@@ -219,16 +233,18 @@ function findAffectedElements(
         }
       } else if (isEditorDataClass(elm)) {
         if (elm.rdcs.has(dcid)) {
-          const rdcs: [string, string][] = [[dcid, newdc]];
+          const rdcs: [string, string][] = [[dcid, newdcid]];
           const attributes: [string, string][] = [];
           for (const a in elm.attributes) {
             const att = elm.attributes[a];
+            Logger.log('check', att.type, dcid, oldrefid);
             if (att.type === dcid) {
-              attributes.push([a, newdc]);
-            } else if (att.type === oldrefdcid) {
-              attributes.push([a, newrefdcid]);
+              attributes.push([a, newreg]);
+            } else if (att.type === oldrefid) {
+              attributes.push([a, newrefid]);
             }
           }
+          Logger.log('found', attributes, rdcs);
           ids.push({
             id: x,
             type: 'dc',
@@ -246,6 +262,7 @@ function findAffectedElements(
       }
     }
   }
+  Logger.log('Finished looking for affected items');
   return [ids, pids];
 }
 
@@ -263,4 +280,30 @@ function getDCFromCombined(
     rdcs: new Set([...reg.rdcs]),
     mother: reg.id,
   };
+}
+
+function reverseAttribute(
+  item: DataCascadeIDs,
+  elms: Record<string, EditorNode>,
+  dcid?: string,
+  newdcid?: string
+): DataCascadeIDs {
+  switch (item.type) {
+    case 'dc': {
+      const dc = elms[item.id];
+      if (isEditorDataClass(dc)) {
+        return {
+          id: dcid !== undefined && item.id === dcid ? newdcid ?? '' : item.id,
+          type: 'dc',
+          attributes: item.attributes.map(([aid]) => [
+            aid,
+            dc.attributes[aid].type,
+          ]),
+          rdcs: item.rdcs.map(([a, b]) => [b, a]),
+        };
+      }
+      break;
+    }
+  }
+  return item;
 }
