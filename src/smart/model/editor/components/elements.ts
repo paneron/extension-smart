@@ -1,11 +1,25 @@
 import { useReducer } from 'react';
 import {
   refDCReplace,
+  regReplace as regElmReplace,
   RoleAttribute,
   roleReplace,
 } from '../../../utils/handler/cascadeModelHandler';
-import { EditorNode } from '../../editormodel';
+import { Logger } from '../../../utils/ModelFunctions';
+import {
+  EditorNode,
+  isEditorDataClass,
+  isEditorRegistry,
+} from '../../editormodel';
 import { UndoReducerInterface } from '../interface';
+import { ModelAction } from '../model';
+import {
+  addRegistry,
+  delRegistry,
+  editRegistry,
+  RegistryCombined,
+} from './element/registry';
+import { ItemAction } from './itemTemplate';
 
 type RoleCascadeAction = {
   subtask: 'process-role';
@@ -20,13 +34,54 @@ type RefCascadeAction = {
   ids: [string, string[]][];
 };
 
-type CascadeAction = (RoleCascadeAction | RefCascadeAction) & {
+type RegCascadeAction = {
+  subtask: 'process-reg';
+  from: string | undefined; // remove from
+  to: string | undefined; // add to
+  ids: RegCascadeIDs[];
+};
+
+type RegCascadeProcessID = {
+  id: string;
+  type: 'process';
+  attributes: ('input' | 'output')[];
+};
+
+type RegCascadeOtherID = {
+  id: string;
+  type: 'other';
+};
+
+type RegCascadeDCID = {
+  id: string;
+  type: 'dc';
+  attributes: [string, string][]; // attribute id, new type
+  rdcs: [string, string][]; // [oldid, newid]. Empty ==> no delete / add
+};
+
+export type RegCascadeIDs =
+  | RegCascadeProcessID
+  | RegCascadeOtherID
+  | RegCascadeDCID;
+
+type CascadeAction = (
+  | RoleCascadeAction
+  | RefCascadeAction
+  | RegCascadeAction
+) & {
   task: 'cascade';
 };
 
-type EXPORT_ACTION = CascadeAction;
+type CommonElmAction = ItemAction<EditorNode, 'elements'> & {
+  subtask: 'registry';
+};
 
-export type ElmAction = EXPORT_ACTION & { act: 'elements' };
+type EXPORT_ACTION = CascadeAction | CommonElmAction;
+
+export type ElmAction = EXPORT_ACTION & {
+  act: 'elements';
+  cascade?: ModelAction[];
+};
 
 type InitAction = {
   act: 'init';
@@ -44,6 +99,8 @@ function cascadeReducer(
       return roleReplace(elms, action.ids, action.role);
     case 'process-ref':
       return refDCReplace(elms, action.ids, action.from, action.to);
+    case 'process-reg':
+      return regElmReplace(elms, action.ids, action.from, action.to);
   }
 }
 
@@ -54,6 +111,15 @@ function elmReducer(
   switch (action.task) {
     case 'cascade':
       return cascadeReducer(elms, action);
+    case 'add': {
+      return addItem({ ...elms }, action);
+    }
+    case 'delete': {
+      return delItem({ ...elms }, action);
+    }
+    case 'edit': {
+      return editItem({ ...elms }, action);
+    }
   }
 }
 
@@ -61,12 +127,21 @@ function reducer(
   elms: Record<string, EditorNode>,
   action: OwnAction
 ): Record<string, EditorNode> {
-  switch (action.act) {
-    case 'init':
-      return { ...action.value };
-    case 'elements':
-      return elmReducer(elms, action);
+  try {
+    switch (action.act) {
+      case 'init':
+        return { ...action.value };
+      case 'elements':
+        return elmReducer(elms, action);
+    }
+  } catch (e: unknown) {
+    if (typeof e === 'object') {
+      const error = e as Error;
+      Logger.log(error.message);
+      Logger.log(error.stack);
+    }
   }
+  return elms;
 }
 
 function findReverse(
@@ -76,6 +151,31 @@ function findReverse(
   switch (action.task) {
     case 'cascade':
       return undefined;
+    case 'add': {
+      return {
+        act: 'elements',
+        task: 'delete',
+        subtask: action.subtask,
+        value: action.value.map(x => x.id),
+      };
+    }
+    case 'delete': {
+      return {
+        act: 'elements',
+        task: 'add',
+        subtask: action.subtask,
+        value: action.value.map(x => findElement(elms, x)),
+      };
+    }
+    case 'edit': {
+      return {
+        act: 'elements',
+        task: 'edit',
+        subtask: action.subtask,
+        id: action.value.id,
+        value: findElement(elms, action.id),
+      };
+    }
   }
 }
 
@@ -94,4 +194,46 @@ export function useElements(
   }
 
   return [elms, act, init];
+}
+
+function delItem(
+  elms: Record<string, EditorNode>,
+  action: CommonElmAction & { task: 'delete' }
+): Record<string, EditorNode> {
+  switch (action.subtask) {
+    case 'registry':
+      return delRegistry(elms, action.value);
+  }
+}
+
+function addItem(
+  elms: Record<string, EditorNode>,
+  action: CommonElmAction & { task: 'add' }
+): Record<string, EditorNode> {
+  switch (action.subtask) {
+    case 'registry':
+      return addRegistry(elms, action.value);
+  }
+}
+
+function editItem(
+  elms: Record<string, EditorNode>,
+  action: CommonElmAction & { task: 'edit' }
+): Record<string, EditorNode> {
+  switch (action.subtask) {
+    case 'registry':
+      return editRegistry(elms, action.id, action.value);
+  }
+}
+
+function findElement(elms: Record<string, EditorNode>, id: string): EditorNode {
+  const elm = elms[id];
+  if (isEditorRegistry(elm)) {
+    const dc = elms[elm.data];
+    if (isEditorDataClass(dc)) {
+      const combined: RegistryCombined = { ...dc, id, title: elm.title };
+      return combined;
+    }
+  }
+  return elm;
 }

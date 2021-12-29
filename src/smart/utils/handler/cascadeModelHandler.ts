@@ -1,11 +1,15 @@
+import { RegCascadeIDs } from '../../model/editor/components/elements';
 import {
   EditorApproval,
   EditorDataClass,
   EditorNode,
   EditorProcess,
+  EditorSubprocess,
+  isEditorApproval,
   isEditorDataClass,
   isEditorProcess,
 } from '../../model/editormodel';
+import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELProvision } from '../../serialize/interface/supportinterface';
 import { isApproval } from '../../serialize/util/validation';
 import { setReplace } from '../ModelFunctions';
@@ -70,4 +74,85 @@ export function refProvisionReplace(
     newPros[id] = pro;
   }
   return newPros;
+}
+
+export function regReplace(
+  elms: Record<string, EditorNode>,
+  ids: RegCascadeIDs[],
+  from: string | undefined,
+  to: string | undefined
+) {
+  const newElms = { ...elms };
+  for (const item of ids) {
+    switch (item.type) {
+      case 'process': {
+        const elm = { ...newElms[item.id] };
+        if (isEditorProcess(elm)) {
+          for (const att of item.attributes) {
+            elm[att] = setReplace(elm[att], from, to);
+          }
+          newElms[item.id] = elm;
+        }
+        break;
+      }
+      case 'dc': {
+        const elm = { ...newElms[item.id] };
+        if (isEditorDataClass(elm)) {
+          const newAtt = { ...elm.attributes };
+          for (const [id, value] of item.attributes) {
+            newAtt[id].type = value;
+          }
+          const rdcs = new Set([...elm.rdcs]);
+          for (const [oldid, newid] of item.rdcs) {
+            if (oldid !== '') {
+              rdcs.delete(oldid);
+            }
+            if (newid !== '') {
+              rdcs.add(newid);
+            }
+          }
+          elm.rdcs = rdcs;
+          elm.attributes = newAtt;
+          newElms[item.id] = elm;
+        }
+        break;
+      }
+      case 'other': {
+        const elm = { ...newElms[item.id] };
+        if (isEditorApproval(elm)) {
+          elm.records = setReplace(elm.records, from, to);
+          newElms[item.id] = elm;
+        }
+        break;
+      }
+    }
+  }
+  return newElms;
+}
+
+export function regPageReplace(
+  pages: Record<string, EditorSubprocess>,
+  ids: [string, number, number][],
+  from: string | undefined,
+  to: string | undefined
+): Record<string, EditorSubprocess> {
+  const newPages = { ...pages };
+  for (const [id, x, y] of ids) {
+    const page = { ...newPages[id] };
+    const newData = { ...page.data };
+    if (from) {
+      delete newData[from];
+    }
+    if (to) {
+      newData[to] = {
+        element: to,
+        datatype: DataType.SUBPROCESSCOMPONENT,
+        x,
+        y,
+      };
+    }
+    page.data = newData;
+    newPages[id] = page;
+  }
+  return newPages;
 }

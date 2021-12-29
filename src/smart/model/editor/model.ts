@@ -1,6 +1,9 @@
+import { Logger } from '../../utils/ModelFunctions';
 import { EditorModel } from '../editormodel';
+import { cascadeCheckRegs } from './components/element/registry';
 import { ElmAction, useElements } from './components/elements';
 import { MetaAction, useMeta } from './components/meta';
+import { PageAction, usePages } from './components/pages';
 import { ProvisionAction, useProvisions } from './components/provision';
 import { cascadeCheckRefs, RefAction, useRefs } from './components/ref';
 import { RoleAction, useRoles, cascadeCheckRole } from './components/roles';
@@ -15,7 +18,8 @@ type ALLACTION =
   | TermsAction
   | RoleAction
   | RefAction
-  | ProvisionAction;
+  | ProvisionAction
+  | PageAction;
 
 export type ModelAction = ALLACTION & { type: 'model' };
 
@@ -28,6 +32,7 @@ export function useModel(
   const [roles, actRoles, initRoles] = useRoles(x.roles);
   const [refs, actRefs, initRefs] = useRefs(x.refs);
   const [provisions, actProvision, initProvision] = useProvisions(x.provisions);
+  const [pages, actPages, initPages] = usePages(x.pages);
 
   const [elements, actElements, initElms] = useElements(x.elements);
   const model: EditorModel = {
@@ -39,40 +44,79 @@ export function useModel(
     elements,
     refs,
     provisions,
+    pages,
   };
 
   function act(action: ModelAction): ModelAction | undefined {
-    switch (action.act) {
-      case 'meta': {
-        const reverse = actMeta(action);
-        return reverse ? { ...reverse, type: 'model' } : undefined;
-      }
-      case 'section': {
-        const reverse = actSections(action);
-        return reverse ? { ...reverse, type: 'model' } : undefined;
-      }
-      case 'terms': {
-        const reverse = actTerms(action);
-        return reverse ? { ...reverse, type: 'model' } : undefined;
-      }
-      case 'roles': {
-        const reverseCascade = cascadeCheckRole(elements, action);
-        const reverse = actRoles(action);
-        if (reverse) {
-          reverse.cascade = reverseCascade;
+    try {
+      switch (action.act) {
+        case 'meta': {
+          const reverse = actMeta(action);
+          return reverse ? { ...reverse, type: 'model' } : undefined;
         }
-        if (action.cascade) {
-          for (const a of action.cascade) {
-            if (a.type === 'model' && a.act === 'elements') {
-              actElements(a);
+        case 'section': {
+          const reverse = actSections(action);
+          return reverse ? { ...reverse, type: 'model' } : undefined;
+        }
+        case 'terms': {
+          const reverse = actTerms(action);
+          return reverse ? { ...reverse, type: 'model' } : undefined;
+        }
+        case 'roles': {
+          const reverseCascade = cascadeCheckRole(elements, action);
+          const reverse = actRoles(action);
+          if (reverse) {
+            reverse.cascade = reverseCascade;
+          }
+          if (action.cascade) {
+            for (const a of action.cascade) {
+              if (a.type === 'model' && a.act === 'elements') {
+                actElements(a);
+              }
             }
           }
+          return reverse ? { ...reverse, type: 'model' } : undefined;
         }
-        return reverse ? { ...reverse, type: 'model' } : undefined;
+        case 'refs': {
+          const reverseCascade = cascadeCheckRefs(elements, provisions, action);
+          const reverse = actRefs(action);
+          if (reverse) {
+            reverse.cascade = reverseCascade;
+          }
+          if (action.cascade) {
+            for (const a of action.cascade) {
+              if (a.type === 'model') {
+                if (a.act === 'elements') {
+                  actElements(a);
+                } else if (a.act === 'provision') {
+                  actProvision(a);
+                }
+              }
+            }
+          }
+          return reverse ? { ...reverse, type: 'model' } : undefined;
+        }
+        case 'elements': {
+          return elementAct(action);
+        }
       }
-      case 'refs': {
-        const reverseCascade = cascadeCheckRefs(elements, provisions, action);
-        const reverse = actRefs(action);
+    } catch (e: unknown) {
+      if (typeof e === 'object') {
+        const error = e as Error;
+        Logger.log(error.message);
+        Logger.log(error.stack);
+      }
+    }
+    return undefined;
+  }
+
+  function elementAct(
+    action: ElmAction & { act: 'elements' }
+  ): ModelAction | undefined {
+    switch (action.subtask) {
+      case 'registry': {
+        const reverseCascade = cascadeCheckRegs(elements, pages, action);
+        const reverse = actElements(action);
         if (reverse) {
           reverse.cascade = reverseCascade;
         }
@@ -81,8 +125,8 @@ export function useModel(
             if (a.type === 'model') {
               if (a.act === 'elements') {
                 actElements(a);
-              } else if (a.act === 'provision') {
-                actProvision(a);
+              } else if (a.act === 'pages') {
+                actPages(a);
               }
             }
           }
@@ -101,6 +145,7 @@ export function useModel(
     initElms(x.elements);
     initRefs(x.refs);
     initProvision(x.provisions);
+    initPages(x.pages);
   }
 
   return [model, act, init];

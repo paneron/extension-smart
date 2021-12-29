@@ -73,9 +73,7 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
   },
   [SETTINGPAGE.REGISTRYPAGE]: {
     title: 'Data Registry',
-    Panel: ({ model, setModel }) => (
-      <RegistryEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <RegistryEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.DATAPAGE]: {
     title: 'Data structure',

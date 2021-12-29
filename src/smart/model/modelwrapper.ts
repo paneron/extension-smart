@@ -226,9 +226,16 @@ export function getEditorReactFlowElementsFrom(
     toggleCommentResolved,
     deleteComment,
   });
-  return getElements(mw, dvisible, callback, e =>
-    createEdgeContainer(e, edgeDelete, removeEdge)
-  );
+  try {
+    return getElements(mw, dvisible, callback, e =>
+      createEdgeContainer(e, edgeDelete, removeEdge)
+    );
+  } catch (e: unknown) {
+    const error = e as Error;
+    Logger.log(error.message);
+    Logger.log(error.stack);
+  }
+  return [];
 }
 
 export function getEditorReferenceFlowElementsFrom(
@@ -374,7 +381,7 @@ function getElements(
     if (child !== undefined && !child.added) {
       const exploreDataNode = (r: string, incoming: boolean) => {
         const reg = mw.model.elements[r];
-        if (isEditorRegistry(reg)) {
+        if (reg && isEditorRegistry(reg)) {
           if (!datas.has(reg.id)) {
             datas.set(reg.id, reg);
             exploreData(reg, mw.model.elements, datas, elms);
