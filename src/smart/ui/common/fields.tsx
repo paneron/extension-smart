@@ -92,7 +92,7 @@ export type IManageHandler<T> = {
   addItem: (obj: T) => boolean;
   updateItem: (oldid: string, obj: T) => boolean;
   getObjById: (id: string) => T;
-  buttons?: IAdditionalListButton[];  
+  buttons?: IAdditionalListButton[];
 };
 
 export interface IViewListInterface {

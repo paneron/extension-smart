@@ -25,7 +25,7 @@ import { CardinalityField } from './components/CardinalityEdit';
 const AttributeEditPage: React.FC<{
   attributes: Record<string, MMELDataAttribute>;
   setAtts: (x: Record<string, MMELDataAttribute>) => void;
-  model: EditorModel;  
+  model: EditorModel;
   oldid?: string;
 }> = ({ attributes, setAtts, model, oldid }) => {
   function matchFilter(att: MMELDataAttribute, filter: string): boolean {
@@ -46,20 +46,24 @@ const AttributeEditPage: React.FC<{
       const elm = model!.elements[x];
       if (isEditorRegistry(elm)) {
         types.push(getReferenceDCTypeName(elm.id));
-      } else if (isEditorDataClass(elm) && elm.mother === '' && elm.id !== oldid) {
+      } else if (
+        isEditorDataClass(elm) &&
+        elm.mother === '' &&
+        elm.id !== oldid
+      ) {
         types.push(elm.id);
       }
     }
-  
+
     for (const x in model!.enums) {
       const en = model!.enums[x];
       types.push(en.id);
     }
-  
+
     const refs = Object.values(model!.refs)
       .sort(referenceSorter)
       .map(r => r.id);
-  
+
     return (
       <MGDDisplayPane>
         <FormGroup>

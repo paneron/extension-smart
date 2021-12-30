@@ -50,7 +50,7 @@ export function useModel(
     refs,
     provisions,
     pages,
-  };  
+  };
 
   function act(action: ModelAction): ModelAction | undefined {
     try {
@@ -120,6 +120,7 @@ export function useModel(
   ): ModelAction | undefined {
     switch (action.subtask) {
       case 'registry': {
+        // oldImages are required for handling self-referencing
         const oldImages =
           action.task === 'delete'
             ? action.value.map(x => findActionElement(elements, x))
@@ -137,6 +138,7 @@ export function useModel(
           }
         }
         const reverse = actElements(action);
+        // reverse actions omitted the cascade updates on self. Replacing the correct images here
         if (oldImages && reverse && reverse.task === 'add') {
           reverse.value = oldImages;
         }

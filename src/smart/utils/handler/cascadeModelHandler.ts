@@ -15,7 +15,7 @@ import {
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELProvision } from '../../serialize/interface/supportinterface';
 import { isApproval } from '../../serialize/util/validation';
-import { Logger, setReplace } from '../ModelFunctions';
+import { setReplace } from '../ModelFunctions';
 
 export type RoleAttribute = 'actor' | 'approver';
 
@@ -169,10 +169,8 @@ export function dataPageReplace(
   from: string | undefined,
   to: string | undefined
 ): Record<string, EditorSubprocess> {
-  Logger.log('Page cascade action');
   const newPages = { ...pages };
   for (const [id, x, y] of ids) {
-    Logger.log(id, x, y, from, to);
     const page = { ...newPages[id] };
     const newData = { ...page.data };
     if (from) {
@@ -186,7 +184,6 @@ export function dataPageReplace(
         y,
       };
     }
-    Logger.log('Done all page cascade action');
     page.data = newData;
     newPages[id] = page;
   }

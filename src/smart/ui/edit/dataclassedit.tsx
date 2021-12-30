@@ -105,15 +105,15 @@ const DataClassItemPage: React.FC<{
 }> = ({ object: dc, model, setObject: setDC, oldid }) => {
   return (
     <FormGroup>
-      <NormalTextField        
+      <NormalTextField
         text="Dataclass ID"
         value={dc.id}
         onChange={x => setDC({ ...dc, id: x.replaceAll(/\s+/g, '') })}
       />
-      <AttributeEditPage        
+      <AttributeEditPage
         attributes={{ ...dc.attributes }}
         model={model!}
-        setAtts={x => setDC({ ...dc, attributes: x })}        
+        setAtts={x => setDC({ ...dc, attributes: x })}
         oldid={oldid}
       />
     </FormGroup>

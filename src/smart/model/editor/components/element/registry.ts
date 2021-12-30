@@ -6,7 +6,6 @@ import {
   fillRDCS,
   genDCIdByRegId,
   getReferenceDCTypeName,
-  Logger,
 } from '../../../../utils/ModelFunctions';
 import {
   EditorDataClass,
@@ -93,7 +92,7 @@ export function cascadeCheckRegs(
     const affected: [DataCascadeIDs[], [string, number, number][], string][] =
       action.value.map(x => {
         const [ids, pids] = findAffectedElements(elms, pages, x, '', '');
-        const fids = ids.filter(x => !dcs.includes(x.id));        
+        const fids = ids.filter(x => !dcs.includes(x.id));
         return [fids, pids, x];
       });
     action.cascade = affected.flatMap(([ids, pids, id]) => [
@@ -199,7 +198,6 @@ function findAffectedElements(
   newreg: string,
   newdcid: string
 ): [DataCascadeIDs[], [string, number, number][]] {
-  Logger.log('Finding affected items');
   const ids: DataCascadeIDs[] = [];
   const pids: [string, number, number][] = [];
   const reg = elms[id];
@@ -236,13 +234,13 @@ function findAffectedElements(
           const rdcs: [string, string][] = [[dcid, newdcid]];
           const attributes: [string, string][] = [];
           for (const a in elm.attributes) {
-            const att = elm.attributes[a];            
+            const att = elm.attributes[a];
             if (att.type === dcid) {
               attributes.push([a, newreg]);
             } else if (att.type === oldrefid) {
               attributes.push([a, newrefid]);
             }
-          }          
+          }
           ids.push({
             id: x,
             type: 'dc',
@@ -255,13 +253,11 @@ function findAffectedElements(
     for (const p in pages) {
       const page = pages[p];
       const data = page.data[id];
-      if (data !== undefined) {
-        Logger.log('added action', p, data.x, data.y);
+      if (data) {
         pids.push([p, data.x, data.y]);
       }
     }
   }
-  Logger.log('Finished looking for affected items');
   return [ids, pids];
 }
 

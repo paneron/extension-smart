@@ -1,8 +1,5 @@
 import { MMELSubprocess } from '../../../../serialize/interface/flowcontrolinterface';
-import {
-  fillRDCS,
-  getReferenceDCTypeName,
-} from '../../../../utils/ModelFunctions';
+import { fillRDCS } from '../../../../utils/ModelFunctions';
 import {
   EditorDataClass,
   EditorNode,
@@ -87,7 +84,7 @@ export function cascadeCheckDCs(
         subtask: 'process-dc',
         from: undefined,
         to: id,
-        ids: ids,
+        ids: ids.map(x => reverseAttribute(x, elms)),
       },
       {
         type: 'model',
@@ -134,7 +131,7 @@ export function cascadeCheckDCs(
         subtask: 'process-dc',
         to: action.id,
         from: action.value.id,
-        ids,
+        ids: ids.map(x => reverseAttribute(x, elms)),
       },
       {
         type: 'model',
@@ -159,8 +156,6 @@ function findAffectedElements(
   const ids: DataCascadeDCID[] = [];
   const pids: [string, number, number][] = [];
 
-  const oldrefdcid = getReferenceDCTypeName(id);
-  const newrefdcid = getReferenceDCTypeName(newdc);
   for (const x in elms) {
     const elm = elms[x];
     if (isEditorDataClass(elm)) {
@@ -171,8 +166,6 @@ function findAffectedElements(
           const att = elm.attributes[a];
           if (att.type === id) {
             attributes.push([a, newdc]);
-          } else if (att.type === oldrefdcid) {
-            attributes.push([a, newrefdcid]);
           }
         }
         ids.push({
@@ -187,9 +180,28 @@ function findAffectedElements(
   for (const p in pages) {
     const page = pages[p];
     const data = page.data[id];
-    if (data !== undefined) {
+    if (data) {
       pids.push([p, data.x, data.y]);
     }
   }
   return [ids, pids];
+}
+
+function reverseAttribute(
+  item: DataCascadeDCID,
+  elms: Record<string, EditorNode>
+): DataCascadeDCID {
+  const dc = elms[item.id];
+  if (isEditorDataClass(dc)) {
+    return {
+      id: item.id,
+      type: 'dc',
+      attributes: item.attributes.map(([aid]) => [
+        aid,
+        dc.attributes[aid].type,
+      ]),
+      rdcs: item.rdcs.map(([a, b]) => [b, a]),
+    };
+  }
+  return item;
 }
