@@ -81,9 +81,7 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
   },
   [SETTINGPAGE.ENUMPAGE]: {
     title: 'Enumeration',
-    Panel: ({ model, setModel }) => (
-      <EnumEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <EnumEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.MEASUREMENT]: {
     title: 'Measurement',

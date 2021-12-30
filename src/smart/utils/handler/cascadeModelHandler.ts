@@ -163,6 +163,29 @@ export function dcElmReplace(
   return elms;
 }
 
+export function typeEnumReplace(
+  elms: Record<string, EditorNode>,
+  ids: [string, string[]][],
+  type: string
+) {
+  for (const [dcid, aids] of ids) {
+    const dc = { ...elms[dcid] };
+    if (dc && isEditorDataClass(dc)) {
+      const att = { ...dc.attributes };
+      for (const aid of aids) {
+        const a = { ...att[aid] };
+        if (a) {
+          a.type = type;
+          att[aid] = a;
+        }
+      }
+      dc.attributes = att;
+      elms[dcid] = dc;
+    }
+  }
+  return elms;
+}
+
 export function dataPageReplace(
   pages: Record<string, EditorSubprocess>,
   ids: [string, number, number][],

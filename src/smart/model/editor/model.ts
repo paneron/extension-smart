@@ -7,6 +7,7 @@ import {
   findActionElement,
   useElements,
 } from './components/elements';
+import { cascadeCheckEnum, EnumAction, useEnums } from './components/enums';
 import { MetaAction, useMeta } from './components/meta';
 import { PageAction, usePages } from './components/pages';
 import { ProvisionAction, useProvisions } from './components/provision';
@@ -24,7 +25,8 @@ type ALLACTION =
   | RoleAction
   | RefAction
   | ProvisionAction
-  | PageAction;
+  | PageAction
+  | EnumAction;
 
 export type ModelAction = ALLACTION & { type: 'model' };
 
@@ -38,6 +40,7 @@ export function useModel(
   const [refs, actRefs, initRefs] = useRefs(x.refs);
   const [provisions, actProvision, initProvision] = useProvisions(x.provisions);
   const [pages, actPages, initPages] = usePages(x.pages);
+  const [enums, actEnums, initEnums] = useEnums(x.enums);
 
   const [elements, actElements, initElms] = useElements(x.elements);
   const model: EditorModel = {
@@ -50,6 +53,7 @@ export function useModel(
     refs,
     provisions,
     pages,
+    enums,
   };
 
   function act(action: ModelAction): ModelAction | undefined {
@@ -73,13 +77,7 @@ export function useModel(
           if (reverse) {
             reverse.cascade = reverseCascade;
           }
-          if (action.cascade) {
-            for (const a of action.cascade) {
-              if (a.type === 'model' && a.act === 'elements') {
-                actElements(a);
-              }
-            }
-          }
+          actCascade(action.cascade);
           return reverse ? { ...reverse, type: 'model' } : undefined;
         }
         case 'refs': {
@@ -88,21 +86,20 @@ export function useModel(
           if (reverse) {
             reverse.cascade = reverseCascade;
           }
-          if (action.cascade) {
-            for (const a of action.cascade) {
-              if (a.type === 'model') {
-                if (a.act === 'elements') {
-                  actElements(a);
-                } else if (a.act === 'provision') {
-                  actProvision(a);
-                }
-              }
-            }
-          }
+          actCascade(action.cascade);
           return reverse ? { ...reverse, type: 'model' } : undefined;
         }
         case 'elements': {
           return elementAct(action);
+        }
+        case 'enums': {
+          const reverseCascade = cascadeCheckEnum(elements, action);
+          const reverse = actEnums(action);
+          if (reverse) {
+            reverse.cascade = reverseCascade;
+          }
+          actCascade(action.cascade);
+          return reverse ? { ...reverse, type: 'model' } : undefined;
         }
       }
     } catch (e: unknown) {
@@ -113,6 +110,29 @@ export function useModel(
       }
     }
     return undefined;
+  }
+
+  function actCascade(actions: ModelAction[] | undefined) {
+    if (actions) {
+      for (const a of actions) {
+        if (a.type === 'model') {
+          switch (a.act) {
+            case 'elements': {
+              actElements(a);
+              break;
+            }
+            case 'provision': {
+              actProvision(a);
+              break;
+            }
+            case 'pages': {
+              actPages(a);
+              break;
+            }
+          }
+        }
+      }
+    }
   }
 
   function elementAct(
@@ -126,17 +146,7 @@ export function useModel(
             ? action.value.map(x => findActionElement(elements, x))
             : undefined;
         const reverseCascade = cascadeCheckRegs(elements, pages, action);
-        if (action.cascade) {
-          for (const a of action.cascade) {
-            if (a.type === 'model') {
-              if (a.act === 'elements') {
-                actElements(a);
-              } else if (a.act === 'pages') {
-                actPages(a);
-              }
-            }
-          }
-        }
+        actCascade(action.cascade);
         const reverse = actElements(action);
         // reverse actions omitted the cascade updates on self. Replacing the correct images here
         if (oldImages && reverse && reverse.task === 'add') {
@@ -149,17 +159,7 @@ export function useModel(
       }
       case 'dc': {
         const reverseCascade = cascadeCheckDCs(elements, pages, action);
-        if (action.cascade) {
-          for (const a of action.cascade) {
-            if (a.type === 'model') {
-              if (a.act === 'elements') {
-                actElements(a);
-              } else if (a.act === 'pages') {
-                actPages(a);
-              }
-            }
-          }
-        }
+        actCascade(action.cascade);
         const reverse = actElements(action);
         if (reverse) {
           reverse.cascade = reverseCascade;
@@ -179,6 +179,7 @@ export function useModel(
     initRefs(x.refs);
     initProvision(x.provisions);
     initPages(x.pages);
+    initEnums(x.enums);
   }
 
   return [model, act, init];

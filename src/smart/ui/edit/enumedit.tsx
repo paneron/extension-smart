@@ -1,19 +1,20 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import { EditorModel, isEditorDataClass } from '../../model/editormodel';
+import { EditorModel } from '../../model/editormodel';
 import { MMELEnum } from '../../serialize/interface/datainterface';
 import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
 import { createEnum } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
 import EnumValueEditPage from './enumvalueedit';
+import { ModelAction } from '../../model/editor/model';
 
 const initObj = createEnum('');
 
 const EnumEditPage: React.FC<{
   model: EditorModel;
-  setModel: (model: EditorModel) => void;
-}> = function ({ model, setModel }) {
+  act: (x: ModelAction) => void;
+}> = function ({ model, act }) {
   function matchFilter(x: MMELEnum, filter: string) {
     return filter === '' || x.id.toLowerCase().includes(filter);
   }
@@ -25,52 +26,43 @@ const EnumEditPage: React.FC<{
       .sort(defaultItemSorter);
   }
 
-  function replaceReferences(matchid: string, replaceid: string) {
-    for (const x in model.elements) {
-      const elm = model.elements[x];
-      if (isEditorDataClass(elm)) {
-        for (const a in elm.attributes) {
-          const att = elm.attributes[a];
-          if (att.type === matchid) {
-            att.type = replaceid;
-          }
-        }
-      }
-    }
-  }
-
   function removeEnumListItem(ids: string[]) {
-    for (const id of ids) {
-      delete model.enums[id];
-      replaceReferences(id, '');
-    }
-    setModel(model);
+    const action: ModelAction = {
+      type: 'model',
+      act: 'enums',
+      task: 'delete',
+      value: ids,
+    };
+    act(action);
   }
 
   function addEnum(en: MMELEnum): boolean {
     if (checkId(en.id, model.enums)) {
-      model.enums[en.id] = { ...en };
-      setModel(model);
+      const action: ModelAction = {
+        type: 'model',
+        act: 'enums',
+        task: 'add',
+        value: [en],
+      };
+      act(action);
       return true;
     }
     return false;
   }
 
   function updateEnum(oldid: string, en: MMELEnum): boolean {
-    if (oldid !== en.id) {
-      if (checkId(en.id, model.enums)) {
-        delete model.enums[oldid];
-        model.enums[en.id] = { ...en };
-        replaceReferences(oldid, en.id);
-        setModel(model);
-        return true;
-      }
+    if (oldid !== en.id && !checkId(en.id, model.enums)) {
       return false;
-    } else {
-      model.enums[oldid] = { ...en };
-      setModel(model);
-      return true;
     }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'enums',
+      task: 'edit',
+      id: oldid,
+      value: en,
+    };
+    act(action);
+    return true;
   }
 
   function getEnumById(id: string): MMELEnum {
