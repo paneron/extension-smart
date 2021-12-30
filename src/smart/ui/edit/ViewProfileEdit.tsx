@@ -19,11 +19,12 @@ import {
 } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
 import { InputableVarType } from '../../model/Measurement';
+import { ModelAction } from '../../model/editor/model';
 
 const ViewProfileEditPage: React.FC<{
   model: EditorModel;
-  setModel: (model: EditorModel) => void;
-}> = function ({ model, setModel }) {
+  act: (x: ModelAction) => void;
+}> = function ({ model, act }) {
   function matchFilter(x: MMELView, filter: string) {
     return (
       filter === '' ||
@@ -40,35 +41,42 @@ const ViewProfileEditPage: React.FC<{
   }
 
   function removeViewListItem(ids: string[]) {
-    for (const id of ids) {
-      delete model.views[id];
-    }
-    setModel(model);
+    const action: ModelAction = {
+      type: 'model',
+      act: 'view',
+      task: 'delete',
+      value: ids,
+    };
+    act(action);
   }
 
   function addView(x: MMELView): boolean {
     if (checkId(x.id, model.views)) {
-      model.views[x.id] = { ...x };
-      setModel(model);
+      const action: ModelAction = {
+        type: 'model',
+        act: 'view',
+        task: 'add',
+        value: [x],
+      };
+      act(action);
       return true;
     }
     return false;
   }
 
   function updateView(oldid: string, x: MMELView): boolean {
-    if (oldid !== x.id) {
-      if (checkId(x.id, model.views)) {
-        delete model.views[oldid];
-        model.views[x.id] = { ...x };
-        setModel(model);
-        return true;
-      }
+    if (oldid !== x.id && !checkId(x.id, model.views)) {
       return false;
-    } else {
-      model.views[oldid] = { ...x };
-      setModel(model);
-      return true;
     }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'view',
+      task: 'edit',
+      id: oldid,
+      value: x,
+    };
+    act(action);
+    return true;
   }
 
   function getViewById(id: string): MMELView {
@@ -104,16 +112,17 @@ const ViewEditItemPage: React.FC<{
   const profile = view.profile;
 
   function onItemChange(on: boolean, id: string, value: string) {
+    const newProfile = { ...profile };
     if (on) {
-      profile[id] = {
+      newProfile[id] = {
         id,
         isConst: false,
         value,
       };
     } else {
-      delete profile[id];
+      delete newProfile[id];
     }
-    setView({ ...view });
+    setView({ ...view, profile: newProfile });
   }
 
   function onEditableChange(x: boolean, id: string) {
@@ -161,8 +170,9 @@ const ViewEditItemPage: React.FC<{
                   <InputTool
                     value={profile[v.id].value}
                     onChange={x => {
-                      profile[v.id].value = x;
-                      setView({ ...view });
+                      const newProfile = { ...profile };
+                      newProfile[v.id] = { ...profile[v.id], value: x };
+                      setView({ ...view, profile: newProfile });
                     }}
                   />
                   <Switch

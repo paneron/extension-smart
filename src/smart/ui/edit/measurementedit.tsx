@@ -18,11 +18,12 @@ import {
 } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
 import { measurementValidCheck } from '../../utils/measurement/BasicFunctions';
+import { ModelAction } from '../../model/editor/model';
 
 const MeasurementEditPage: React.FC<{
   model: EditorModel;
-  setModel: (model: EditorModel) => void;
-}> = function ({ model, setModel }) {
+  act: (x: ModelAction) => void;
+}> = function ({ model, act }) {
   function matchFilter(x: MMELVariable, filter: string) {
     return (
       filter === '' ||
@@ -39,35 +40,42 @@ const MeasurementEditPage: React.FC<{
   }
 
   function removeMeasureListItem(ids: string[]) {
-    for (const id of ids) {
-      delete model.vars[id];
-    }
-    setModel(model);
+    const action: ModelAction = {
+      type: 'model',
+      act: 'vars',
+      task: 'delete',
+      value: ids,
+    };
+    act(action);
   }
 
   function addMeasure(x: MMELVariable): boolean {
     if (checkId(x.id, model.vars)) {
-      model.vars[x.id] = { ...x };
-      setModel(model);
+      const action: ModelAction = {
+        type: 'model',
+        act: 'vars',
+        task: 'add',
+        value: [x],
+      };
+      act(action);
       return true;
     }
     return false;
   }
 
   function updateMeasure(oldid: string, x: MMELVariable): boolean {
-    if (oldid !== x.id) {
-      if (checkId(x.id, model.vars)) {
-        delete model.vars[oldid];
-        model.vars[x.id] = { ...x };
-        setModel(model);
-        return true;
-      }
+    if (oldid !== x.id && !checkId(x.id, model.vars)) {
       return false;
-    } else {
-      model.vars[oldid] = { ...x };
-      setModel(model);
-      return true;
     }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'vars',
+      task: 'edit',
+      id: oldid,
+      value: x,
+    };
+    act(action);
+    return true;
   }
 
   function getMeasureById(id: string): MMELVariable {

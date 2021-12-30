@@ -10,11 +10,13 @@ import {
 import { cascadeCheckEnum, EnumAction, useEnums } from './components/enums';
 import { MetaAction, useMeta } from './components/meta';
 import { PageAction, usePages } from './components/pages';
+import { useView, ViewAction } from './components/view';
 import { ProvisionAction, useProvisions } from './components/provision';
 import { cascadeCheckRefs, RefAction, useRefs } from './components/ref';
 import { RoleAction, useRoles, cascadeCheckRole } from './components/roles';
 import { SectionAction, useSections } from './components/sections';
 import { TermsAction, useTerms } from './components/terms';
+import { useVars, VarAction } from './components/vars';
 import { UndoReducerInterface } from './interface';
 
 type ALLACTION =
@@ -26,7 +28,9 @@ type ALLACTION =
   | RefAction
   | ProvisionAction
   | PageAction
-  | EnumAction;
+  | EnumAction
+  | VarAction
+  | ViewAction;
 
 export type ModelAction = ALLACTION & { type: 'model' };
 
@@ -41,6 +45,8 @@ export function useModel(
   const [provisions, actProvision, initProvision] = useProvisions(x.provisions);
   const [pages, actPages, initPages] = usePages(x.pages);
   const [enums, actEnums, initEnums] = useEnums(x.enums);
+  const [vars, actVars, initVars] = useVars(x.vars);
+  const [views, actViews, initViews] = useView(x.views);
 
   const [elements, actElements, initElms] = useElements(x.elements);
   const model: EditorModel = {
@@ -54,6 +60,8 @@ export function useModel(
     provisions,
     pages,
     enums,
+    vars,
+    views,
   };
 
   function act(action: ModelAction): ModelAction | undefined {
@@ -61,15 +69,15 @@ export function useModel(
       switch (action.act) {
         case 'meta': {
           const reverse = actMeta(action);
-          return reverse ? { ...reverse, type: 'model' } : undefined;
+          return convertAction(reverse);
         }
         case 'section': {
           const reverse = actSections(action);
-          return reverse ? { ...reverse, type: 'model' } : undefined;
+          return convertAction(reverse);
         }
         case 'terms': {
           const reverse = actTerms(action);
-          return reverse ? { ...reverse, type: 'model' } : undefined;
+          return convertAction(reverse);
         }
         case 'roles': {
           const reverseCascade = cascadeCheckRole(elements, action);
@@ -78,7 +86,7 @@ export function useModel(
             reverse.cascade = reverseCascade;
           }
           actCascade(action.cascade);
-          return reverse ? { ...reverse, type: 'model' } : undefined;
+          return convertAction(reverse);
         }
         case 'refs': {
           const reverseCascade = cascadeCheckRefs(elements, provisions, action);
@@ -87,7 +95,7 @@ export function useModel(
             reverse.cascade = reverseCascade;
           }
           actCascade(action.cascade);
-          return reverse ? { ...reverse, type: 'model' } : undefined;
+          return convertAction(reverse);
         }
         case 'elements': {
           return elementAct(action);
@@ -99,7 +107,15 @@ export function useModel(
             reverse.cascade = reverseCascade;
           }
           actCascade(action.cascade);
-          return reverse ? { ...reverse, type: 'model' } : undefined;
+          return convertAction(reverse);
+        }
+        case 'vars': {
+          const reverse = actVars(action);
+          return convertAction(reverse);
+        }
+        case 'view': {
+          const reverse = actViews(action);
+          return convertAction(reverse);
         }
       }
     } catch (e: unknown) {
@@ -155,7 +171,7 @@ export function useModel(
         if (reverse) {
           reverse.cascade = reverseCascade;
         }
-        return reverse ? { ...reverse, type: 'model' } : undefined;
+        return convertAction(reverse);
       }
       case 'dc': {
         const reverseCascade = cascadeCheckDCs(elements, pages, action);
@@ -164,7 +180,7 @@ export function useModel(
         if (reverse) {
           reverse.cascade = reverseCascade;
         }
-        return reverse ? { ...reverse, type: 'model' } : undefined;
+        return convertAction(reverse);
       }
     }
     return undefined;
@@ -180,7 +196,13 @@ export function useModel(
     initProvision(x.provisions);
     initPages(x.pages);
     initEnums(x.enums);
+    initVars(x.vars);
+    initViews(x.views);
   }
 
   return [model, act, init];
+}
+
+function convertAction(x: ALLACTION | undefined): ModelAction | undefined {
+  return x ? { ...x, type: 'model' } : undefined;
 }

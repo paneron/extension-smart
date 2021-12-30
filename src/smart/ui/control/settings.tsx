@@ -85,15 +85,11 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
   },
   [SETTINGPAGE.MEASUREMENT]: {
     title: 'Measurement',
-    Panel: ({ model, setModel }) => (
-      <MeasurementEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <MeasurementEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.PROFILE]: {
     title: 'View profiles',
-    Panel: ({ model, setModel }) => (
-      <ViewProfileEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <ViewProfileEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.TABLEPAGE]: {
     title: 'Tables',
