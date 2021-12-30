@@ -361,6 +361,7 @@ const RepoViewer: React.FC<{
           legend={`Implementation models [${fimps.length} / ${imps.length}]`}
           list={fimps}
           deleteItem={deleteItem}
+          repo={repo}
           setRepo={setRepo}
           renameRepo={renameRepo}
           index={index}

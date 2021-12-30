@@ -44,8 +44,7 @@ export enum SETTINGPAGE {
 interface TabProps {
   title: string;
   Panel: React.FC<{
-    model: EditorModel;
-    setModel: (m: EditorModel) => void;
+    model: EditorModel;    
     act: (x: EditorAction) => void;
   }>;
 }
@@ -102,10 +101,9 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
 };
 
 const BasicSettingPane: React.FC<{
-  model: EditorModel;
-  setModel: (m: EditorModel) => void;
+  model: EditorModel;  
   act: (x: EditorAction) => void;
-}> = ({ model, setModel, act }) => {
+}> = ({ model, act }) => {
   const [page, setPage] = useState<SETTINGPAGE>(SETTINGPAGE.METAPAGE);
 
   return (
@@ -131,7 +129,7 @@ const BasicSettingPane: React.FC<{
                 <label css={mgd_label}> {props.title} </label>
               </span>
             }
-            panel={<props.Panel model={model} setModel={setModel} act={act} />}
+            panel={<props.Panel model={model} act={act} />}
           />
         ))}
       </Tabs>

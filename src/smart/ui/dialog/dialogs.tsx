@@ -19,6 +19,7 @@ import EditEGatePage from '../edit/egateedit';
 import EditTimerPage from '../edit/timeredit';
 import EditSignalEventPage from '../edit/signaleventedit';
 import { EditorAction } from '../../model/editor/state';
+import { EditorState } from '../../model/States';
 
 export enum DiagTypes {
   SETTING = 'setting',
@@ -47,7 +48,7 @@ export interface DiagPackage {
 }
 
 export interface IDiagInterface {
-  modelwrapper: ModelWrapper;
+  state: EditorState;
   setModelWrapper: (mw: ModelWrapper) => void;
   act: (x: EditorAction) => void;
   callback: () => void;
@@ -86,12 +87,9 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.SETTING]: {
     title: 'Setting',
     fullscreen: true,
-    Panel: ({ modelwrapper, setModelWrapper, act }) => (
+    Panel: ({ state, act }) => (
       <BasicSettingPane
-        model={modelwrapper.model}
-        setModel={(model: EditorModel) =>
-          updateModel(model, setModelWrapper, modelwrapper)
-        }
+        model={state.model}
         act={act}
       />
     ),
@@ -106,11 +104,11 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.EDITPROCESS]: {
     title: 'Edit Process',
     fullscreen: true,
-    Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
+    Panel: ({ state, setModelWrapper, cancel, msg }) => (
       <EditProcessPage
-        model={modelwrapper.model}
+        model={state.model}
         setModel={(m: EditorModel) =>
-          updateModel(m, setModelWrapper, modelwrapper)
+          updateModel(m, setModelWrapper, {model: state.model, page: state.page, type:'model'})
         }
         id={msg}
         closeDialog={cancel}
@@ -120,11 +118,11 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.EDITAPPROVAL]: {
     title: 'Edit Approval',
     fullscreen: true,
-    Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
+    Panel: ({ state, setModelWrapper, cancel, msg }) => (
       <EditApprovalPage
-        modelWrapper={modelwrapper}
+        modelWrapper={{model: state.model, page: state.page, type:'model'}}
         setModel={(m: EditorModel) =>
-          updateModel(m, setModelWrapper, modelwrapper)
+          updateModel(m, setModelWrapper, {model: state.model, page: state.page, type:'model'})
         }
         id={msg}
         closeDialog={cancel}
@@ -134,12 +132,12 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.EDITEGATE]: {
     title: 'Edit Gateway',
     fullscreen: true,
-    Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
+    Panel: ({ state, setModelWrapper, cancel, msg }) => (
       <EditEGatePage
-        modelWrapper={modelwrapper}
-        setModel={(m: EditorModel) =>
-          updateModel(m, setModelWrapper, modelwrapper)
-        }
+      modelWrapper={{model: state.model, page: state.page, type:'model'}}
+      setModel={(m: EditorModel) =>
+        updateModel(m, setModelWrapper, {model: state.model, page: state.page, type:'model'})
+      }
         id={msg}
         closeDialog={cancel}
       />
@@ -148,12 +146,12 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.EDITTIMER]: {
     title: 'Edit Timer',
     fullscreen: true,
-    Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
+    Panel: ({ state, setModelWrapper, cancel, msg }) => (
       <EditTimerPage
-        modelWrapper={modelwrapper}
-        setModel={(m: EditorModel) =>
-          updateModel(m, setModelWrapper, modelwrapper)
-        }
+      modelWrapper={{model: state.model, page: state.page, type:'model'}}
+      setModel={(m: EditorModel) =>
+        updateModel(m, setModelWrapper, {model: state.model, page: state.page, type:'model'})
+      }
         id={msg}
         closeDialog={cancel}
       />
@@ -162,12 +160,12 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.EDITSIGNAL]: {
     title: 'Edit Signal Catch Event',
     fullscreen: true,
-    Panel: ({ modelwrapper, setModelWrapper, cancel, msg }) => (
+    Panel: ({ state, setModelWrapper, cancel, msg }) => (
       <EditSignalEventPage
-        modelWrapper={modelwrapper}
-        setModel={(m: EditorModel) =>
-          updateModel(m, setModelWrapper, modelwrapper)
-        }
+      modelWrapper={{model: state.model, page: state.page, type:'model'}}
+      setModel={(m: EditorModel) =>
+        updateModel(m, setModelWrapper, {model: state.model, page: state.page, type:'model'})
+      }
         id={msg}
         closeDialog={cancel}
       />

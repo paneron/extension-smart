@@ -13,6 +13,7 @@ const RepoGroup: React.FC<{
   renameRepo?: (x: MMELRepo, newName: string) => void;
   index?: RepoIndex;
   sendMsg?: (x: IToastProps) => void;
+  repo?: MMELRepo;
 }> = function ({
   legend,
   list,
@@ -21,6 +22,7 @@ const RepoGroup: React.FC<{
   renameRepo,
   index,
   sendMsg,
+  repo
 }) {
   return (
     <fieldset>
@@ -43,7 +45,7 @@ const RepoGroup: React.FC<{
                 onDelete={() => deleteItem(x.namespace, x.type)}
                 onOpen={() => setRepo({ ns: x.namespace, type: x.type })}
               />
-              {renameRepo && index && sendMsg && (
+              {renameRepo && index && sendMsg && repo?.ns !== x.namespace && (
                 <div
                   style={{
                     position: 'absolute',

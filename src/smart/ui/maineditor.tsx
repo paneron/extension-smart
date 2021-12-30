@@ -758,8 +758,9 @@ const ModelEditor: React.FC<{
               canOutsideClickClose={false}
             >
               <diagProps.Panel
-                {...{ setModelWrapper, onMetaChanged, act }}
-                modelwrapper={mw}
+                {...{ setModelWrapper, onMetaChanged }}
+                act={act}
+                state={state}
                 callback={dialogPack.callback}
                 cancel={() => setDialogType(null)}
                 msg={dialogPack.msg}
