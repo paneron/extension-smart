@@ -19,6 +19,7 @@ import { TermsAction, useTerms } from './components/terms';
 import { useVars, VarAction } from './components/vars';
 import { UndoReducerInterface } from './interface';
 import { cascadeCheckTable, TableAction, useTable } from './components/table';
+import { cascadeCheckFigure, FigAction, useFigure } from './components/figure';
 
 type ALLACTION =
   | ElmAction
@@ -32,7 +33,8 @@ type ALLACTION =
   | EnumAction
   | VarAction
   | ViewAction
-  | TableAction;
+  | TableAction
+  | FigAction;
 
 export type ModelAction = ALLACTION & { type: 'model' };
 
@@ -50,6 +52,7 @@ export function useModel(
   const [vars, actVars, initVars] = useVars(x.vars);
   const [views, actViews, initViews] = useView(x.views);
   const [tables, actTables, initTables] = useTable(x.tables);
+  const [figures, actFigures, initFigures] = useFigure(x.figures);
 
   const [elements, actElements, initElms] = useElements(x.elements);
   const model: EditorModel = {
@@ -66,6 +69,7 @@ export function useModel(
     vars,
     views,
     tables,
+    figures,
   };
 
   function act(action: ModelAction): ModelAction | undefined {
@@ -124,6 +128,15 @@ export function useModel(
         case 'table': {
           const reverseCascade = cascadeCheckTable(elements, action);
           const reverse = actTables(action);
+          if (reverse) {
+            reverse.cascade = reverseCascade;
+          }
+          actCascade(action.cascade);
+          return convertAction(reverse);
+        }
+        case 'figure': {
+          const reverseCascade = cascadeCheckFigure(elements, action);
+          const reverse = actFigures(action);
           if (reverse) {
             reverse.cascade = reverseCascade;
           }
@@ -212,6 +225,7 @@ export function useModel(
     initVars(x.vars);
     initViews(x.views);
     initTables(x.tables);
+    initFigures(x.figures);
   }
 
   return [model, act, init];

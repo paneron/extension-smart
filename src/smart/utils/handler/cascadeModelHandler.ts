@@ -92,6 +92,22 @@ export function tableReplace(
   return elms;
 }
 
+export function figReplace(
+  elms: Record<string, EditorNode>,
+  ids: string[],
+  from: string | undefined,
+  to: string | undefined
+) {
+  for (const id of ids) {
+    const process = { ...elms[id] };
+    if (isEditorProcess(process)) {
+      process.figures = setReplace(process.figures, from, to);
+      elms[id] = process;
+    }
+  }
+  return elms;
+}
+
 export function regElmReplace(
   elms: Record<string, EditorNode>,
   ids: DataCascadeIDs[],

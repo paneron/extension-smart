@@ -97,9 +97,7 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
   },
   [SETTINGPAGE.FIGUREPAGE]: {
     title: 'Multimedia',
-    Panel: ({ model, setModel }) => (
-      <FigureEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <FigureEditPage model={model} act={act} />
   },
 };
 
