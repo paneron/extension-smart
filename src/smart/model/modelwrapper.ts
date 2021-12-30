@@ -53,13 +53,13 @@ export interface ModelWrapper {
 }
 
 function exploreData(
-  x: EditorRegistry,
+  x: EditorRegistry | EditorDataClass,
   nodes: Record<string, EditorNode>,
   es: Map<string, MMELRegistry | MMELDataClass>,
   elms: Elements
-) {
-  const data = nodes[x.data];
-  if (data !== undefined && isEditorDataClass(data)) {
+) {  
+  const data = isEditorRegistry(x) ? nodes[x.data] : x;
+  if (data && isEditorDataClass(data)) {
     data.rdcs.forEach(id => {
       const e = nodes[id] as EditorDataClass;
       if (e) {
@@ -73,7 +73,8 @@ function exploreData(
           elms.push(ne);
         } else {
           if (!es.has(e.id)) {
-            es.set(e.id, e);
+            es.set(e.id, e);            
+            exploreData(e, nodes, es, elms);
           }
           const ne = createDataLinkContainer(x, e);
           elms.push(ne);
