@@ -89,7 +89,7 @@ import {
   NewComponentTypes,
 } from '../utils/constants';
 import {
-  addComponentToModel,
+  getaddComponentAction,
   addEdge,
 } from '../utils/ModelAddComponentHandler';
 import { EdgePackage } from '../model/FlowContainer';
@@ -106,8 +106,7 @@ import {
 import SearchComponentPane from './sidebar/search';
 import {
   checkId,
-  genDCIdByRegId,
-  getRootName,
+  genDCIdByRegId,  
   Logger,
 } from '../utils/ModelFunctions';
 import LegendPane from './common/description/LegendPane';
@@ -116,10 +115,7 @@ import {
   getHighlightedSVGColorById,
   SearchResultStyles,
 } from '../utils/SearchFunctions';
-import {
-  MMELMetadata,
-  MMELRole,
-} from '../serialize/interface/supportinterface';
+import { MMELRole } from '../serialize/interface/supportinterface';
 import ModelReferenceView from './editreference/ModelReferenceView';
 import { addProcessIfNotFound } from '../utils/ModelImport';
 import DocumentReferenceView from './editreference/DocumentReferenceView';
@@ -298,8 +294,7 @@ const ModelEditor: React.FC<{
     }
   }
 
-  function onLoad(params: OnLoadParams) {
-    Logger.log('flow loaded');
+  function onLoad(params: OnLoadParams) {    
     setRfInstance(params);
     params.fitView();
   }
@@ -394,12 +389,6 @@ const ModelEditor: React.FC<{
     // setState({ ...state, model: mw.model, page: mw.page }, true);
   }
 
-  function onMetaChanged(meta: MMELMetadata) {
-    state.history[0].pathtext = getRootName(meta);
-    model.meta = meta;
-    // setState({ ...state }, true);
-  }
-
   function onPageChange(updated: PageHistory, newPage: string) {
     saveLayout();
     state.history = updated.items;
@@ -438,26 +427,20 @@ const ModelEditor: React.FC<{
       const pos = rfInstance.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
-      });
+      });      
       if (type !== '') {
-        const model = addComponentToModel(
-          { page: state.page, model: state.model, type: 'model' },
+        const action = getaddComponentAction(state.page, state.model.elements, 
           type as NewComponentTypes,
           pos,
-          selectionImport !== undefined ? selectionImport.text : undefined
+          selectionImport ? selectionImport.text : undefined
         );
-        // setState(
-        //   {
-        //     ...state,
-        //     model: { ...model },
-        //   },
-        //   true
-        // );
+        act(action);        
       } else if (
         refid !== '' &&
         reference !== undefined &&
         isModelWrapper(reference)
       ) {
+        // import is not done yet
         const page = model.pages[state.page];
 
         const process = addProcessIfNotFound(
@@ -758,7 +741,7 @@ const ModelEditor: React.FC<{
               canOutsideClickClose={false}
             >
               <diagProps.Panel
-                {...{ setModelWrapper, onMetaChanged }}
+                {...{ setModelWrapper }}
                 act={act}
                 state={state}
                 callback={dialogPack.callback}

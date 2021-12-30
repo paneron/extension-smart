@@ -17,7 +17,8 @@ import {
 } from '../../editormodel';
 import { UndoReducerInterface } from '../interface';
 import { ModelAction } from '../model';
-import { addDC, delDC, editDC } from './element/dc';
+import { addCommonElms, delCommonElms, editCommonElms } from './element/common';
+import { addDC, editDC } from './element/dc';
 import {
   addRegistry,
   delRegistry,
@@ -110,10 +111,9 @@ type CascadeAction = (
 
 type CommonElmAction = ItemAction<EditorNode, 'elements'> &
   (
-    | {
-        subtask: 'registry';
-      }
+    | { subtask: 'registry' }
     | { subtask: 'dc' }
+    | { subtask: 'flowunit' }    
   );
 
 type EXPORT_ACTION = CascadeAction | CommonElmAction;
@@ -251,8 +251,8 @@ function delItem(
   switch (action.subtask) {
     case 'registry':
       return delRegistry(elms, action.value);
-    case 'dc':
-      return delDC(elms, action.value);
+    default:
+      return delCommonElms(elms, action.value);
   }
 }
 
@@ -265,6 +265,8 @@ function addItem(
       return addRegistry(elms, action.value);
     case 'dc':
       return addDC(elms, action.value);
+    default:
+      return addCommonElms(elms, action.value);
   }
 }
 
@@ -277,6 +279,8 @@ function editItem(
       return editRegistry(elms, action.id, action.value);
     case 'dc':
       return editDC(elms, action.id, action.value);
+    default:
+      return editCommonElms(elms, action.id, action.value);
   }
 }
 

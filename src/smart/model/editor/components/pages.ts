@@ -1,8 +1,9 @@
 import { useReducer } from 'react';
-import { dataPageReplace } from '../../../utils/handler/cascadeModelHandler';
+import { dataPageReplace, elmPageReplace } from '../../../utils/handler/cascadeModelHandler';
 import { Logger } from '../../../utils/ModelFunctions';
-import { EditorSubprocess } from '../../editormodel';
+import { EditorNode, EditorSubprocess } from '../../editormodel';
 import { UndoReducerInterface } from '../interface';
+import { ModelAction } from '../model';
 
 type RegCascadeAction = {
   subtask: 'data';
@@ -11,13 +12,37 @@ type RegCascadeAction = {
   ids: [string, number, number][];
 };
 
-type CascadeAction = RegCascadeAction & {
+type ElmCascadeAction = {
+  subtask: 'element';
+  from: string | undefined; // remove from
+  to: string | undefined; // add to
+  ids: [string, number, number][];
+};
+
+type CascadeAction = (RegCascadeAction | ElmCascadeAction) & {
   task: 'cascade';
 };
 
-type EXPORT_ACTION = CascadeAction;
+type NewElementAction = {
+  task: 'new-element';
+  value: EditorNode;
+  page: string;
+  x: number;
+  y: number;  
+}
 
-export type PageAction = EXPORT_ACTION & { act: 'pages' };
+type DeleteElementAction = {
+  task: 'delete-element';
+  value: EditorNode;
+  page: string;    
+}
+
+type EXPORT_ACTION = CascadeAction | NewElementAction | DeleteElementAction;
+
+export type PageAction = EXPORT_ACTION & { 
+  act: 'pages' 
+  cascade?: ModelAction[];
+};
 
 type InitAction = {
   act: 'init';
@@ -33,16 +58,24 @@ function cascadeReducer(
   switch (action.subtask) {
     case 'data':
       return dataPageReplace(pages, action.ids, action.from, action.to);
+      case 'element':
+        return elmPageReplace(pages, action.ids, action.from, action.to);
   }
 }
 
 function pageReducer(
-  elms: Record<string, EditorSubprocess>,
+  pages: Record<string, EditorSubprocess>,
   action: PageAction
 ): Record<string, EditorSubprocess> {
   switch (action.task) {
     case 'cascade':
-      return cascadeReducer(elms, action);
+      return cascadeReducer(pages, action);
+    case 'new-element': {
+      return elmPageReplace(pages, [[action.page, action.x, action.y]], undefined, action.value.id);
+    }      
+    case 'delete-element': {
+      return elmPageReplace(pages, [[action.page, 0, 0]], action.value.id, undefined);
+    }      
   }
 }
 
@@ -55,7 +88,7 @@ function reducer(
       case 'init':
         return { ...action.value };
       case 'pages':
-        return pageReducer(pages, action);
+        return pageReducer({...pages}, action);
     }
   } catch (e: unknown) {
     if (typeof e === 'object') {
@@ -74,6 +107,24 @@ function findReverse(
   switch (action.task) {
     case 'cascade':
       return undefined;
+      case 'new-element':
+        return {
+          act: 'pages',
+          task: 'delete-element',
+          page: action.page,
+          value: action.value
+        }
+      case 'delete-element': {
+        const compo = pages[action.page].childs[action.value.id];
+        return {
+          act: 'pages',
+          task: 'new-element',
+          page: action.page,
+          value: action.value,
+          x: compo.x,
+          y: compo.y
+        }
+      }
   }
 }
 
@@ -92,4 +143,30 @@ export function usePages(
   }
 
   return [elms, act, init];
+}
+
+export function cascadeCheckPages(
+  action: PageAction
+): ModelAction[] | undefined {
+  if (action.cascade) {
+    return undefined;
+  }  
+  if (action.task === 'new-element') {
+    action.cascade = [{
+      type: 'model',
+      act: 'elements',
+      task: 'add',
+      subtask: 'flowunit',
+      value: [action.value]
+    }];
+    return [{
+      type: 'model',
+      act: 'elements',
+      task: 'delete',
+      subtask: 'flowunit',
+      value: [action.value.id]
+    }
+    ];
+  }
+  return [];
 }

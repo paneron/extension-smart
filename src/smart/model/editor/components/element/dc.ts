@@ -8,16 +8,6 @@ import {
 import { ModelAction } from '../../model';
 import { ElmAction, DataCascadeDCID } from '../elements';
 
-export function delDC(
-  elms: Record<string, EditorNode>,
-  ids: string[]
-): Record<string, EditorNode> {
-  for (const id of ids) {
-    delete elms[id];
-  }
-  return elms;
-}
-
 export function addDC(
   elms: Record<string, EditorNode>,
   dcs: EditorNode[]

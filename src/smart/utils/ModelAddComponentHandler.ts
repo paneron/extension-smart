@@ -11,7 +11,6 @@ import {
   EditorTimerEvent,
   isEditorData,
 } from '../model/editormodel';
-import { ModelWrapper } from '../model/modelwrapper';
 import { DataType } from '../serialize/interface/baseinterface';
 import { capitalizeString, findUniqueID, trydefaultID } from './ModelFunctions';
 import { NewComponentTypes } from './constants';
@@ -29,10 +28,13 @@ import {
 } from './EditorFactory';
 import { HistoryItem } from '../model/history';
 import { MMELSubprocessComponent } from '../serialize/interface/flowcontrolinterface';
+import { ModelAction } from '../model/editor/model';
+
+type Elements = Record<string, EditorNode>;
 
 const newComponent: Record<
   NewComponentTypes,
-  (model: EditorModel, title?: string) => EditorNode
+  (elms: Elements, page: string, title?: string) => EditorNode
 > = {
   [DataType.PROCESS]: newProcess,
   [DataType.APPROVAL]: newApproval,
@@ -42,60 +44,62 @@ const newComponent: Record<
   [DataType.EGATE]: newEGate,
 };
 
-export function addComponentToModel(
-  mw: ModelWrapper,
+export function getaddComponentAction(
+  page: string,
+  elms: Elements,
   type: NewComponentTypes,
   pos: XYPosition,
   title?: string
-): EditorModel {
-  const model = mw.model;
-  const elm = newComponent[type](model, title);
-  model.elements[elm.id] = elm;
-  const nc = createSubprocessComponent(elm.id);
-  nc.x = pos.x;
-  nc.y = pos.y;
-  const page = model.pages[mw.page];
-  page.childs[elm.id] = nc;
-  elm.pages.add(mw.page);
-  return model;
+): ModelAction {
+  const elm = newComponent[type](elms, page, title);
+  return {
+    type: 'model',
+    act: 'pages',
+    task: 'new-element',
+    value: elm,
+    x: pos.x,
+    y: pos.y,
+    page
+  };
 }
 
-function newProcess(model: EditorModel, title?: string): EditorProcess {
+function newProcess(elms: Elements, page: string, title?: string): EditorProcess {
   const id =
     title !== undefined
-      ? trydefaultID(capitalizeString(title), model.elements)
-      : findUniqueID('Process', model.elements);
+      ? trydefaultID(capitalizeString(title), elms)
+      : findUniqueID('Process', elms);
   const process = createProcess(id);
-  if (title !== undefined) {
+  process.pages.add(page);
+  if (title) {
     process.name = title;
   }
   return process;
 }
 
-function newApproval(model: EditorModel, title?: string): EditorApproval {
-  const approval = createApproval(findUniqueID('Approval', model.elements));
+function newApproval(elms: Elements, page: string, title?: string): EditorApproval {
+  const approval = createApproval(findUniqueID('Approval', elms));
   if (title !== undefined) {
     approval.name = title;
   }
   return approval;
 }
 
-function newEndEvent(model: EditorModel): EditorEndEvent {
-  return createEndEvent(findUniqueID('EndEvent', model.elements));
+function newEndEvent(elms: Elements): EditorEndEvent {
+  return createEndEvent(findUniqueID('EndEvent', elms));
 }
 
-function newEvent(model: EditorModel): EditorTimerEvent {
-  return createTimerEvent(findUniqueID('TimerEvent', model.elements));
+function newEvent(elms: Elements): EditorTimerEvent {
+  return createTimerEvent(findUniqueID('TimerEvent', elms));
 }
 
-function newSignalCatch(model: EditorModel): EditorSignalEvent {
+function newSignalCatch(elms: Elements): EditorSignalEvent {
   return createSignalCatchEvent(
-    findUniqueID('SignalCatchEvent', model.elements)
+    findUniqueID('SignalCatchEvent', elms)
   );
 }
 
-function newEGate(model: EditorModel): EditorEGate {
-  return createEGate(findUniqueID('EGate', model.elements));
+function newEGate(elms: Elements): EditorEGate {
+  return createEGate(findUniqueID('EGate', elms));
 }
 
 export function addEdge(

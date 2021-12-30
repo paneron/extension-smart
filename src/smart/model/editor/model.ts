@@ -9,7 +9,7 @@ import {
 } from './components/elements';
 import { cascadeCheckEnum, EnumAction, useEnums } from './components/enums';
 import { MetaAction, useMeta } from './components/meta';
-import { PageAction, usePages } from './components/pages';
+import { cascadeCheckPages, PageAction, usePages } from './components/pages';
 import { useView, ViewAction } from './components/view';
 import { ProvisionAction, useProvisions } from './components/provision';
 import { cascadeCheckRefs, RefAction, useRefs } from './components/ref';
@@ -137,6 +137,15 @@ export function useModel(
         case 'figure': {
           const reverseCascade = cascadeCheckFigure(elements, action);
           const reverse = actFigures(action);
+          if (reverse) {
+            reverse.cascade = reverseCascade;
+          }
+          actCascade(action.cascade);
+          return convertAction(reverse);
+        }
+        case 'pages': {
+          const reverseCascade = cascadeCheckPages(action);
+          const reverse = actPages(action);
           if (reverse) {
             reverse.cascade = reverseCascade;
           }
