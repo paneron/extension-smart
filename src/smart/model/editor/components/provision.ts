@@ -51,7 +51,7 @@ function reducer(
     case 'init':
       return { ...action.value };
     case 'provision':
-      return proReducer(pros, action);
+      return proReducer({ ...pros }, action);
   }
 }
 

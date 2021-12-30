@@ -6,6 +6,7 @@ import {
   RoleAttribute,
   roleReplace,
   typeEnumReplace,
+  tableReplace,
 } from '../../../utils/handler/cascadeModelHandler';
 import { Logger } from '../../../utils/ModelFunctions';
 import {
@@ -57,6 +58,13 @@ type EnumCascadeAction = {
   ids: [string, string[]][]; // dcid, attribute ids
 };
 
+type TableCascadeAction = {
+  subtask: 'process-table';
+  from: string | undefined; // remove from
+  to: string | undefined; // add to
+  ids: string[]; // Process id
+};
+
 type DataCascadeProcessID = {
   id: string;
   type: 'process';
@@ -86,6 +94,7 @@ type CascadeAction = (
   | RegCascadeAction
   | DCCascadeAction
   | EnumCascadeAction
+  | TableCascadeAction
 ) & {
   task: 'cascade';
 };
@@ -127,6 +136,8 @@ function cascadeReducer(
       return dcElmReplace(elms, action.ids);
     case 'process-enum':
       return typeEnumReplace(elms, action.ids, action.datatype);
+    case 'process-table':
+      return tableReplace(elms, action.ids, action.from, action.to);
   }
 }
 

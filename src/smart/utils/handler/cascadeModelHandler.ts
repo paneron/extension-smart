@@ -68,13 +68,28 @@ export function refProvisionReplace(
   from: string | undefined,
   to: string | undefined
 ) {
-  const newPros = { ...pros };
   for (const id of ids) {
-    const pro = { ...newPros[id] };
+    const pro = { ...pros[id] };
     pro.ref = setReplace(pro.ref, from, to);
-    newPros[id] = pro;
+    pros[id] = pro;
   }
-  return newPros;
+  return pros;
+}
+
+export function tableReplace(
+  elms: Record<string, EditorNode>,
+  ids: string[],
+  from: string | undefined,
+  to: string | undefined
+) {
+  for (const id of ids) {
+    const process = { ...elms[id] };
+    if (isEditorProcess(process)) {
+      process.tables = setReplace(process.tables, from, to);
+      elms[id] = process;
+    }
+  }
+  return elms;
 }
 
 export function regElmReplace(
