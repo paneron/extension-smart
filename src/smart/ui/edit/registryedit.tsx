@@ -146,7 +146,7 @@ const RegistryEditItemPage: React.FC<{
       <AttributeEditPage
         attributes={{ ...reg.attributes }}
         model={model!}
-        setAtts={x => setReg({ ...reg, attributes: x })}
+        setAtts={x => setReg({ ...reg, attributes: x })}        
       />
     </FormGroup>
   );
