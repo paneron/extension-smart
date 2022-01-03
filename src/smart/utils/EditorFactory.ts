@@ -186,7 +186,6 @@ export function createDataClass(id: string): EditorDataClass {
     attributes: {},
     datatype: DataType.DATACLASS,
     objectVersion: 'Editor',
-    added: false,
     pages: new Set<string>(),
     rdcs: new Set<string>(),
     mother: '',
@@ -200,7 +199,6 @@ export function createRegistry(id: string): EditorRegistry {
     data: '',
     datatype: DataType.REGISTRY,
     objectVersion: 'Editor',
-    added: false,
     pages: new Set<string>(),
   };
 }
@@ -209,7 +207,6 @@ export function createStartEvent(id: string): EditorStartEvent {
   return {
     id: id,
     datatype: DataType.STARTEVENT,
-    added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
   };
@@ -252,7 +249,6 @@ export function createProcess(id: string): EditorProcess {
     comments: new Set<string>(),
     page: '',
     measure: [],
-    added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
   };
@@ -268,7 +264,6 @@ export function createApproval(id: string): EditorApproval {
     approver: '',
     records: new Set<string>(),
     ref: new Set<string>(),
-    added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
   };
@@ -319,7 +314,6 @@ export function createEndEvent(id: string): EditorEndEvent {
   return {
     id: id,
     datatype: DataType.ENDEVENT,
-    added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
   };
@@ -331,7 +325,6 @@ export function createTimerEvent(id: string): EditorTimerEvent {
     datatype: DataType.TIMEREVENT,
     type: '',
     para: '',
-    added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
   };
@@ -342,7 +335,6 @@ export function createSignalCatchEvent(id: string): EditorSignalEvent {
     id: id,
     datatype: DataType.SIGNALCATCHEVENT,
     signal: '',
-    added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
   };
@@ -353,7 +345,6 @@ export function createEGate(id: string): EditorEGate {
     id: id,
     datatype: DataType.EGATE,
     label: '',
-    added: false,
     objectVersion: 'Editor',
     pages: new Set<string>(),
   };

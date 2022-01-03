@@ -105,7 +105,6 @@ export function addProcessIfNotFound(
       tables: new Set(process.tables),
       figures: new Set(process.figures),
       comments: new Set(process.comments),
-      added: false,
       pages: new Set<string>([pageid]),
       objectVersion: 'Editor',
     };
@@ -361,7 +360,6 @@ function addRegistryIfNotFound(
     title: reg.title,
     data: dc.id,
     datatype: DataType.REGISTRY,
-    added: false,
     pages: new Set<string>([pageid]),
     objectVersion: 'Editor',
   };
@@ -422,7 +420,6 @@ function addDCIfNotFound(
     datatype: DataType.DATACLASS,
     mother: dc.mother === '' ? '' : nameMap[dc.mother],
     rdcs: new Set(newrdcs),
-    added: false,
     pages: new Set<string>([pageid]),
     objectVersion: 'Editor',
   };

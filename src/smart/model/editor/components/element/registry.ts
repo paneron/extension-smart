@@ -269,7 +269,6 @@ function getDCFromCombined(
     attributes: { ...reg.attributes },
     id: dcid,
     datatype: DataType.DATACLASS,
-    added: reg.added,
     pages: reg.pages,
     objectVersion: reg.objectVersion,
     rdcs: new Set([...reg.rdcs]),

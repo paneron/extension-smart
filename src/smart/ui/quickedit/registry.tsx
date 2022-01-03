@@ -121,7 +121,6 @@ function save(
     attributes,
     id: registry.data,
     datatype: DataType.DATACLASS,
-    added: registry.added,
     pages: registry.pages,
     objectVersion: registry.objectVersion,
     rdcs: new Set<string>(),
