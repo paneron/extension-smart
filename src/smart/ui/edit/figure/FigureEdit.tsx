@@ -28,23 +28,23 @@ const FigureEditPage: React.FC<{
   }
 
   function removeFigListItem(ids: string[]) {
-    const action:ModelAction = {
-      type:'model',
-      act:'figure',
+    const action: ModelAction = {
+      type: 'model',
+      act: 'figure',
       task: 'delete',
-      value: ids
-    }
-    act(action);    
+      value: ids,
+    };
+    act(action);
   }
 
   function addFig(x: MMELFigure): boolean {
     if (checkId(x.id, model.figures)) {
-      const action:ModelAction = {
-        type:'model',
-        act:'figure',
+      const action: ModelAction = {
+        type: 'model',
+        act: 'figure',
         task: 'add',
-        value: [x]
-      }
+        value: [x],
+      };
       act(action);
       return true;
     }
@@ -55,13 +55,13 @@ const FigureEditPage: React.FC<{
     if (oldid !== x.id && !checkId(x.id, model.figures)) {
       return false;
     }
-    const action:ModelAction = {
-      type:'model',
-      act:'figure',
+    const action: ModelAction = {
+      type: 'model',
+      act: 'figure',
       task: 'edit',
-      id: oldid,      
-      value: x
-    }
+      id: oldid,
+      value: x,
+    };
     act(action);
     return true;
   }

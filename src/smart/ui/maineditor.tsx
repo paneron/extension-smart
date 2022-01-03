@@ -58,12 +58,7 @@ import {
   NodeTypes,
   ReferenceContent,
 } from '../model/States';
-import {
-  EditorDataClass,
-  EditorModel,
-  isEditorData,
-  isEditorNode,
-} from '../model/editormodel';
+import { EditorDataClass, EditorModel } from '../model/editormodel';
 import EditorFileMenu from './menu/EditorFileMenu';
 import { SelectedNodeDescription } from './sidebar/selected';
 import {
@@ -104,11 +99,7 @@ import {
   sidebar_layout,
 } from '../../css/layout';
 import SearchComponentPane from './sidebar/search';
-import {
-  checkId,
-  genDCIdByRegId,  
-  Logger,
-} from '../utils/ModelFunctions';
+import { checkId, genDCIdByRegId, Logger } from '../utils/ModelFunctions';
 import LegendPane from './common/description/LegendPane';
 import {
   getHighlightedStyleById,
@@ -144,6 +135,7 @@ import {
 } from '../utils/Comments';
 import EditorViewMenu from './menu/EditorViewMenu';
 import { EditorAction } from '../model/editor/state';
+import { ModelAction } from '../model/editor/model';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -184,7 +176,7 @@ const ModelEditor: React.FC<{
     []
   );
 
-  const [rfInstance, setRfInstance] = useState<OnLoadParams | null>(null);
+  const [reactFlow, setRfInstance] = useState<OnLoadParams | null>(null);
   const [dialogPack, setDialogPack] = useState<DiagPackage>({
     type: null,
     callback: () => {},
@@ -212,6 +204,10 @@ const ModelEditor: React.FC<{
   const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
   const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
   const [repoHis, setRepoHis] = useState<RepoHistory>([]);
+  const [dragStart, setDragStart] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
 
   const userData = useRemoteUsername();
   const username =
@@ -260,7 +256,6 @@ const ModelEditor: React.FC<{
 
   async function saveRepo() {
     if (repo && updateObjects && isVisible) {
-      saveLayout();
       const meta = model.meta;
       const task = updateObjects({
         commitMessage: COMMITMSG,
@@ -294,7 +289,7 @@ const ModelEditor: React.FC<{
     }
   }
 
-  function onLoad(params: OnLoadParams) {    
+  function onLoad(params: OnLoadParams) {
     setRfInstance(params);
     params.fitView();
   }
@@ -326,38 +321,37 @@ const ModelEditor: React.FC<{
       id: id,
       setModelAfterDelete,
     };
-    saveLayout();
     setDialogPack(SetDiagAction[action](props));
   }
 
-  function saveLayout(): ModelWrapper {
-    Logger.log('Save Layout');
-    if (rfInstance !== null) {
-      for (const x of rfInstance.getElements()) {
-        const data = x.data;
-        const page = model.pages[state.page];
-        if (isNode(x) && isEditorNode(data)) {
-          const node = isEditorData(data)
-            ? page.data[data.id]
-            : page.childs[data.id];
-          if (node !== undefined) {
-            node.x = x.position.x;
-            node.y = x.position.y;
-          } else {
-            const nc = createSubprocessComponent(data.id);
-            if (isEditorData(data)) {
-              page.data[data.id] = nc;
-            } else {
-              page.childs[data.id] = nc;
-            }
-            nc.x = x.position.x;
-            nc.y = x.position.y;
-          }
-        }
-      }
-    }
-    return { page: state.page, model, type: 'model' };
-  }
+  // function saveLayout(): ModelWrapper {
+  //   Logger.log('Save Layout');
+  //   if (reactFlow !== null) {
+  //     for (const x of reactFlow.getElements()) {
+  //       const data = x.data;
+  //       const page = model.pages[state.page];
+  //       if (isNode(x) && isEditorNode(data)) {
+  //         const node = isEditorData(data)
+  //           ? page.data[data.id]
+  //           : page.childs[data.id];
+  //         if (node !== undefined) {
+  //           node.x = x.position.x;
+  //           node.y = x.position.y;
+  //         } else {
+  //           const nc = createSubprocessComponent(data.id);
+  //           if (isEditorData(data)) {
+  //             page.data[data.id] = nc;
+  //           } else {
+  //             page.childs[data.id] = nc;
+  //           }
+  //           nc.x = x.position.x;
+  //           nc.y = x.position.y;
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return { page: state.page, model, type: 'model' };
+  // }
 
   function addCommentToModel(msg: string, pid: string, parent?: string) {
     const m = modelAddComment(model, username, msg, pid, parent);
@@ -375,9 +369,6 @@ const ModelEditor: React.FC<{
   }
 
   function toggleDataVisibility() {
-    if (view.dvisible) {
-      saveLayout();
-    }
     setView({ ...view, dvisible: !view.dvisible });
   }
 
@@ -390,14 +381,12 @@ const ModelEditor: React.FC<{
   }
 
   function onPageChange(updated: PageHistory, newPage: string) {
-    saveLayout();
     state.history = updated.items;
     state.page = newPage;
     // setState({ ...state }, true);
   }
 
   function onProcessClick(pageid: string, processid: string): void {
-    saveLayout();
     state.page = pageid;
     Logger.log('Go to page', pageid);
     addToHistory({ items: state.history }, state.page, processid);
@@ -411,7 +400,6 @@ const ModelEditor: React.FC<{
 
   function drillUp(): void {
     if (state.history.length > 0) {
-      saveLayout();
       state.page = popPage({ items: state.history });
       // setState({ ...state }, true);
     }
@@ -419,22 +407,24 @@ const ModelEditor: React.FC<{
 
   function onDrop(event: React.DragEvent<unknown>) {
     event.preventDefault();
-    if (canvusRef.current !== null && rfInstance !== null) {
+    if (canvusRef.current !== null && reactFlow !== null) {
       const reactFlowBounds = canvusRef.current.getBoundingClientRect();
       const type = event.dataTransfer.getData(DragAndDropNewFormatType);
       const refid = event.dataTransfer.getData(DragAndDropImportRefType);
 
-      const pos = rfInstance.project({
+      const pos = reactFlow.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
-      });      
+      });
       if (type !== '') {
-        const action = getaddComponentAction(state.page, state.model.elements, 
+        const action = getaddComponentAction(
+          state.page,
+          state.model.elements,
           type as NewComponentTypes,
           pos,
           selectionImport ? selectionImport.text : undefined
         );
-        act(action);        
+        act(action);
       } else if (
         refid !== '' &&
         reference !== undefined &&
@@ -634,7 +624,7 @@ const ModelEditor: React.FC<{
         content={
           <EditorFileMenu
             {...{
-              getLatestLayout: saveLayout,
+              getLatestLayout: () => mw,
               setDialogType,
               onRepoSave: saveRepo,
             }}
@@ -685,7 +675,7 @@ const ModelEditor: React.FC<{
               setDialog={setDiag}
               setModel={m => setModelWrapper({ ...mw, model: m })}
               provision={selectionImport}
-              getLatestLayoutMW={saveLayout}
+              getLatestLayoutMW={() => mw}
               onSelect={setSelectedId}
             />
           ),
@@ -712,17 +702,41 @@ const ModelEditor: React.FC<{
 
   useEffect(
     () => () => {
-      saveLayout();
-    },
-    [isVisible]
-  );
-
-  useEffect(
-    () => () => {
       setReference(undefined);
     },
     [repo]
   );
+
+  function nodeDrag(id: string) {
+    if (reactFlow !== null) {
+      for (const flowNode of reactFlow.getElements()) {
+        if (flowNode.id === id && isNode(flowNode)) {
+          const action: ModelAction = {
+            type: 'model',
+            act: 'pages',
+            task: 'move',
+            page: state.page,
+            node: flowNode.id,
+            x: flowNode.position.x,
+            y: flowNode.position.y,
+            fromx: dragStart.x,
+            fromy: dragStart.y,
+          };
+          act(action);
+        }
+      }
+    }
+  }
+
+  function startDrag(id: string) {
+    if (reactFlow !== null) {
+      for (const flowNode of reactFlow.getElements()) {
+        if (flowNode.id === id && isNode(flowNode)) {
+          setDragStart({ x: flowNode.position.x, y: flowNode.position.y });
+        }
+      }
+    }
+  }
 
   if (isVisible) {
     const diagProps = dialogPack.type === null ? null : MyDiag[dialogPack.type];
@@ -781,6 +795,8 @@ const ModelEditor: React.FC<{
                   nodeTypes={NodeTypes}
                   edgeTypes={EdgeTypes}
                   ref={canvusRef}
+                  onNodeDragStop={(e, node) => nodeDrag(node.id)}
+                  onNodeDragStart={(e, node) => startDrag(node.id)}
                 >
                   <Controls>
                     <DataVisibilityButton

@@ -1,7 +1,17 @@
 import { useReducer } from 'react';
-import { dataPageReplace, elmPageReplace } from '../../../utils/handler/cascadeModelHandler';
+import {
+  dataPageReplace,
+  elmPageReplace,
+} from '../../../utils/handler/cascadeModelHandler';
 import { Logger } from '../../../utils/ModelFunctions';
-import { EditorNode, EditorSubprocess } from '../../editormodel';
+import {
+  EditorNode,
+  EditorSubprocess,
+  isEditorApproval,
+  isEditorDataClass,
+  isEditorProcess,
+  isEditorRegistry,
+} from '../../editormodel';
 import { UndoReducerInterface } from '../interface';
 import { ModelAction } from '../model';
 
@@ -28,19 +38,33 @@ type NewElementAction = {
   value: EditorNode;
   page: string;
   x: number;
-  y: number;  
-}
+  y: number;
+};
 
 type DeleteElementAction = {
   task: 'delete-element';
   value: EditorNode;
-  page: string;    
-}
+  page: string;
+};
 
-type EXPORT_ACTION = CascadeAction | NewElementAction | DeleteElementAction;
+type MoveAction = {
+  task: 'move';
+  node: string;
+  page: string;
+  x: number;
+  y: number;
+  fromx: number;
+  fromy: number;
+};
 
-export type PageAction = EXPORT_ACTION & { 
-  act: 'pages' 
+type EXPORT_ACTION =
+  | CascadeAction
+  | NewElementAction
+  | DeleteElementAction
+  | MoveAction;
+
+export type PageAction = EXPORT_ACTION & {
+  act: 'pages';
   cascade?: ModelAction[];
 };
 
@@ -58,8 +82,8 @@ function cascadeReducer(
   switch (action.subtask) {
     case 'data':
       return dataPageReplace(pages, action.ids, action.from, action.to);
-      case 'element':
-        return elmPageReplace(pages, action.ids, action.from, action.to);
+    case 'element':
+      return elmPageReplace(pages, action.ids, action.from, action.to);
   }
 }
 
@@ -71,11 +95,23 @@ function pageReducer(
     case 'cascade':
       return cascadeReducer(pages, action);
     case 'new-element': {
-      return elmPageReplace(pages, [[action.page, action.x, action.y]], undefined, action.value.id);
-    }      
+      return elmPageReplace(
+        pages,
+        [[action.page, action.x, action.y]],
+        undefined,
+        action.value.id
+      );
+    }
     case 'delete-element': {
-      return elmPageReplace(pages, [[action.page, 0, 0]], action.value.id, undefined);
-    }      
+      return elmPageReplace(
+        pages,
+        [[action.page, 0, 0]],
+        action.value.id,
+        undefined
+      );
+    }
+    case 'move':
+      return moveElm(pages, action.page, action.node, action.x, action.y);
   }
 }
 
@@ -88,7 +124,7 @@ function reducer(
       case 'init':
         return { ...action.value };
       case 'pages':
-        return pageReducer({...pages}, action);
+        return pageReducer({ ...pages }, action);
     }
   } catch (e: unknown) {
     if (typeof e === 'object') {
@@ -107,24 +143,36 @@ function findReverse(
   switch (action.task) {
     case 'cascade':
       return undefined;
-      case 'new-element':
-        return {
-          act: 'pages',
-          task: 'delete-element',
-          page: action.page,
-          value: action.value
-        }
-      case 'delete-element': {
-        const compo = pages[action.page].childs[action.value.id];
-        return {
-          act: 'pages',
-          task: 'new-element',
-          page: action.page,
-          value: action.value,
-          x: compo.x,
-          y: compo.y
-        }
-      }
+    case 'new-element':
+      return {
+        act: 'pages',
+        task: 'delete-element',
+        page: action.page,
+        value: action.value,
+      };
+    case 'delete-element': {
+      const compo = pages[action.page].childs[action.value.id];
+      return {
+        act: 'pages',
+        task: 'new-element',
+        page: action.page,
+        value: action.value,
+        x: compo.x,
+        y: compo.y,
+      };
+    }
+    case 'move': {
+      return {
+        act: 'pages',
+        task: 'move',
+        page: action.page,
+        node: action.node,
+        x: action.fromx,
+        y: action.fromy,
+        fromx: action.x,
+        fromy: action.y,
+      };
+    }
   }
 }
 
@@ -150,23 +198,126 @@ export function cascadeCheckPages(
 ): ModelAction[] | undefined {
   if (action.cascade) {
     return undefined;
-  }  
+  }
   if (action.task === 'new-element') {
-    action.cascade = [{
-      type: 'model',
-      act: 'elements',
-      task: 'add',
-      subtask: 'flowunit',
-      value: [action.value]
-    }];
-    return [{
-      type: 'model',
-      act: 'elements',
-      task: 'delete',
-      subtask: 'flowunit',
-      value: [action.value.id]
-    }
+    action.cascade = [
+      {
+        type: 'model',
+        act: 'elements',
+        task: 'add',
+        subtask: 'flowunit',
+        value: [action.value],
+      },
+    ];
+    return [
+      {
+        type: 'model',
+        act: 'elements',
+        task: 'delete',
+        subtask: 'flowunit',
+        value: [action.value.id],
+      },
     ];
   }
   return [];
+}
+
+function moveElm(
+  pages: Record<string, EditorSubprocess>,
+  page: string,
+  id: string,
+  x: number,
+  y: number
+): Record<string, EditorSubprocess> {
+  Logger.log('new move:', id, x, y);
+  const p = { ...pages[page] };
+  p.childs[id] = { ...p.childs[id], x: Math.round(x), y: Math.round(y) };
+  pages[page] = p;
+  return pages;
+}
+
+export function explorePageDataNodes(
+  page: EditorSubprocess,
+  elms: Record<string, EditorNode>
+): [PageAction[], PageAction[]] {
+  const actions: PageAction[] = [];
+  const reverse: PageAction[] = [];
+  const set = new Set<string>();
+  for (const x of Object.values(page.childs)) {
+    const elm = elms[x.element];
+    if (elm) {
+      if (isEditorProcess(elm)) {
+        exploreList(elm.input, elms, set);
+        exploreList(elm.output, elms, set);
+      } else if (isEditorApproval(elm)) {
+        exploreList(elm.records, elms, set);
+      }
+    }
+  }
+  for (const x of Object.values(page.data)) {
+    if (set.has(x.element)) {
+      set.delete(x.element);
+    } else {
+      actions.push({
+        act: 'pages',
+        task: 'cascade',
+        subtask: 'data',
+        from: x.element,
+        to: undefined,
+        ids: [[page.id, 0, 0]],
+      });
+      reverse.push({
+        act: 'pages',
+        task: 'cascade',
+        subtask: 'data',
+        to: x.element,
+        from: undefined,
+        ids: [[page.id, x.x, x.y]],
+      });
+    }
+  }
+  for (const x of set) {
+    actions.push({
+      act: 'pages',
+      task: 'cascade',
+      subtask: 'data',
+      from: undefined,
+      to: x,
+      ids: [[page.id, 0, 0]],
+    });
+    reverse.push({
+      act: 'pages',
+      task: 'cascade',
+      subtask: 'data',
+      to: undefined,
+      from: x,
+      ids: [[page.id, 0, 0]],
+    });
+  }
+  return [actions, reverse];
+}
+
+function exploreList(
+  list: Set<string>,
+  elms: Record<string, EditorNode>,
+  set: Set<string>
+) {
+  for (const x of list) {
+    if (!set.has(x)) {
+      set.add(x);
+      exploreData(x, elms, set);
+    }
+  }
+}
+
+function exploreData(
+  id: string,
+  elms: Record<string, EditorNode>,
+  set: Set<string>
+) {
+  const node = elms[id];
+  const data = isEditorRegistry(node) ? elms[node.data] : node;
+  if (data && isEditorDataClass(data)) {
+    exploreList(data.rdcs, elms, set);
+  }
 }

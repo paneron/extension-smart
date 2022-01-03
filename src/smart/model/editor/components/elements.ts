@@ -110,11 +110,7 @@ type CascadeAction = (
 };
 
 type CommonElmAction = ItemAction<EditorNode, 'elements'> &
-  (
-    | { subtask: 'registry' }
-    | { subtask: 'dc' }
-    | { subtask: 'flowunit' }    
-  );
+  ({ subtask: 'registry' } | { subtask: 'dc' } | { subtask: 'flowunit' });
 
 type EXPORT_ACTION = CascadeAction | CommonElmAction;
 

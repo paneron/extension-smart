@@ -88,10 +88,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
     title: 'Setting',
     fullscreen: true,
     Panel: ({ state, act }) => (
-      <BasicSettingPane
-        model={state.model}
-        act={act}
-      />
+      <BasicSettingPane model={state.model} act={act} />
     ),
   },
   [DiagTypes.DELETECONFIRM]: {
@@ -108,7 +105,11 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
       <EditProcessPage
         model={state.model}
         setModel={(m: EditorModel) =>
-          updateModel(m, setModelWrapper, {model: state.model, page: state.page, type:'model'})
+          updateModel(m, setModelWrapper, {
+            model: state.model,
+            page: state.page,
+            type: 'model',
+          })
         }
         id={msg}
         closeDialog={cancel}
@@ -120,9 +121,13 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
     fullscreen: true,
     Panel: ({ state, setModelWrapper, cancel, msg }) => (
       <EditApprovalPage
-        modelWrapper={{model: state.model, page: state.page, type:'model'}}
+        modelWrapper={{ model: state.model, page: state.page, type: 'model' }}
         setModel={(m: EditorModel) =>
-          updateModel(m, setModelWrapper, {model: state.model, page: state.page, type:'model'})
+          updateModel(m, setModelWrapper, {
+            model: state.model,
+            page: state.page,
+            type: 'model',
+          })
         }
         id={msg}
         closeDialog={cancel}
@@ -134,10 +139,14 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
     fullscreen: true,
     Panel: ({ state, setModelWrapper, cancel, msg }) => (
       <EditEGatePage
-      modelWrapper={{model: state.model, page: state.page, type:'model'}}
-      setModel={(m: EditorModel) =>
-        updateModel(m, setModelWrapper, {model: state.model, page: state.page, type:'model'})
-      }
+        modelWrapper={{ model: state.model, page: state.page, type: 'model' }}
+        setModel={(m: EditorModel) =>
+          updateModel(m, setModelWrapper, {
+            model: state.model,
+            page: state.page,
+            type: 'model',
+          })
+        }
         id={msg}
         closeDialog={cancel}
       />
@@ -148,10 +157,14 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
     fullscreen: true,
     Panel: ({ state, setModelWrapper, cancel, msg }) => (
       <EditTimerPage
-      modelWrapper={{model: state.model, page: state.page, type:'model'}}
-      setModel={(m: EditorModel) =>
-        updateModel(m, setModelWrapper, {model: state.model, page: state.page, type:'model'})
-      }
+        modelWrapper={{ model: state.model, page: state.page, type: 'model' }}
+        setModel={(m: EditorModel) =>
+          updateModel(m, setModelWrapper, {
+            model: state.model,
+            page: state.page,
+            type: 'model',
+          })
+        }
         id={msg}
         closeDialog={cancel}
       />
@@ -162,10 +175,14 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
     fullscreen: true,
     Panel: ({ state, setModelWrapper, cancel, msg }) => (
       <EditSignalEventPage
-      modelWrapper={{model: state.model, page: state.page, type:'model'}}
-      setModel={(m: EditorModel) =>
-        updateModel(m, setModelWrapper, {model: state.model, page: state.page, type:'model'})
-      }
+        modelWrapper={{ model: state.model, page: state.page, type: 'model' }}
+        setModel={(m: EditorModel) =>
+          updateModel(m, setModelWrapper, {
+            model: state.model,
+            page: state.page,
+            type: 'model',
+          })
+        }
         id={msg}
         closeDialog={cancel}
       />

@@ -59,11 +59,15 @@ export function getaddComponentAction(
     value: elm,
     x: pos.x,
     y: pos.y,
-    page
+    page,
   };
 }
 
-function newProcess(elms: Elements, page: string, title?: string): EditorProcess {
+function newProcess(
+  elms: Elements,
+  page: string,
+  title?: string
+): EditorProcess {
   const id =
     title !== undefined
       ? trydefaultID(capitalizeString(title), elms)
@@ -76,7 +80,11 @@ function newProcess(elms: Elements, page: string, title?: string): EditorProcess
   return process;
 }
 
-function newApproval(elms: Elements, page: string, title?: string): EditorApproval {
+function newApproval(
+  elms: Elements,
+  page: string,
+  title?: string
+): EditorApproval {
   const approval = createApproval(findUniqueID('Approval', elms));
   if (title !== undefined) {
     approval.name = title;
@@ -93,9 +101,7 @@ function newEvent(elms: Elements): EditorTimerEvent {
 }
 
 function newSignalCatch(elms: Elements): EditorSignalEvent {
-  return createSignalCatchEvent(
-    findUniqueID('SignalCatchEvent', elms)
-  );
+  return createSignalCatchEvent(findUniqueID('SignalCatchEvent', elms));
 }
 
 function newEGate(elms: Elements): EditorEGate {

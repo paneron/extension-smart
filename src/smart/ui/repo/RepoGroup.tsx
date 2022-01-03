@@ -22,7 +22,7 @@ const RepoGroup: React.FC<{
   renameRepo,
   index,
   sendMsg,
-  repo
+  repo,
 }) {
   return (
     <fieldset>

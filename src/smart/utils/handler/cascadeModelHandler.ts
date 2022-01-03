@@ -222,7 +222,7 @@ export function dataPageReplace(
   ids: [string, number, number][],
   from: string | undefined,
   to: string | undefined
-): Record<string, EditorSubprocess> {  
+): Record<string, EditorSubprocess> {
   for (const [id, x, y] of ids) {
     const page = { ...pages[id] };
     const newData = { ...page.data };
@@ -248,12 +248,12 @@ export function elmPageReplace(
   ids: [string, number, number][],
   from: string | undefined,
   to: string | undefined
-): Record<string, EditorSubprocess> {  
+): Record<string, EditorSubprocess> {
   for (const [id, x, y] of ids) {
-    const page = { ...pages[id] };    
+    const page = { ...pages[id] };
     const newElm = { ...page.childs };
     if (from) {
-      delete newElm[from];      
+      delete newElm[from];
     }
     if (to) {
       newElm[to] = {
@@ -263,8 +263,8 @@ export function elmPageReplace(
         y,
       };
     }
-    page.childs = newElm;    
-    pages[id] = page;    
+    page.childs = newElm;
+    pages[id] = page;
   }
   return pages;
 }

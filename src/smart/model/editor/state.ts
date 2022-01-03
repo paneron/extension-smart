@@ -1,4 +1,5 @@
-import { useReducer } from 'react';
+import { useReducer, useState } from 'react';
+import { Logger } from '../../utils/ModelFunctions';
 import { EditorState } from '../States';
 import { HistoryAction, useHistory } from './history';
 import { UndoManagerInterface } from './interface';
@@ -7,7 +8,7 @@ import { ModelAction, useModel } from './model';
 export type EditorAction = ModelAction | HistoryAction;
 
 export type UndoListAction = {
-  act: 'push' | 'pop' | 'new';
+  act: 'push' | 'pop' | 'new' | 'post';
   value?: EditorAction;
 };
 
@@ -20,8 +21,31 @@ function listReducer(list: EditorAction[], action: UndoListAction) {
     return list;
   } else if (act === 'new') {
     return value ? [value] : [];
-  } else {
+  } else if (act === 'pop') {
     return list.length === 0 ? [] : list.slice(0, -1);
+  } else {
+    Logger.log('Edit undo history', list, list.length);
+    const last = list[list.length - 1];
+    if (last && last.type === 'model' && value && value.type === 'model') {
+      Logger.log('Reverse actions', value);
+      Logger.log('Append to', last);
+      if (
+        value &&
+        last &&
+        (last.act === 'elements' || last.act === 'pages') &&
+        value.act === 'validate-page'
+      ) {
+        Logger.log('Actual actions', value.cascade);
+        const cascade = value.cascade;
+        if (last.cascade && cascade) {
+          for (const c of cascade) {
+            last.cascade.push(c);
+          }
+          Logger.log('Appended', last);
+        }
+      }
+    }
+    return list;
   }
 }
 
@@ -32,10 +56,20 @@ export function useEditorState(
   const [history, actHistory] = useHistory(x.history);
   const [undoHis, actUndoHis] = useReducer(listReducer, []);
   const [redoHis, actRedoHis] = useReducer(listReducer, []);
+  const [post, setPost] = useState<ModelAction | undefined>(undefined);
 
   const page = history[history.length - 1].page;
 
   const state: EditorState = { history, page, model, type: 'model' };
+
+  Logger.log(model.pages[page]);
+
+  if (post) {
+    Logger.log('Post processing');
+    const reverse = actModel(post);
+    actUndoHis({ act: 'post', value: reverse });
+    setPost(undefined);
+  }
 
   function act(action: EditorAction) {
     switch (action.type) {
@@ -59,19 +93,37 @@ export function useEditorState(
   }
 
   function redo() {
-    const len = redoHis.length;
-    if (len > 0) {
-      const action = redoHis[len - 1];
-      const reverse = hisAction(action);
-      actUndoHis({ act: 'push', value: reverse });
-      actRedoHis({ act: 'pop' });
+    try {
+      const len = redoHis.length;
+      if (len > 0) {
+        const action = redoHis[len - 1];
+        const reverse = hisAction(action);
+        actUndoHis({ act: 'push', value: reverse });
+        actRedoHis({ act: 'pop' });
+        if (action.type === 'model') {
+          const post: ModelAction = {
+            type: 'model',
+            act: 'validate-page',
+            page,
+            refAction: action,
+          };
+          setPost(post);
+        }
+      }
+    } catch (e: unknown) {
+      if (typeof e === 'object') {
+        const error = e as Error;
+        Logger.log(error.message);
+        Logger.log(error.stack);
+      }
     }
   }
 
   function hisAction(action: EditorAction): EditorAction | undefined {
     switch (action.type) {
-      case 'model':
+      case 'model': {
         return actModel(action);
+      }
       case 'history':
         return actHistory(action);
     }
@@ -81,6 +133,13 @@ export function useEditorState(
     const reverse = actModel(action);
     const len = undoHis.length;
     const his = undoHis[len - 1];
+    const post: ModelAction = {
+      type: 'model',
+      act: 'validate-page',
+      page,
+      refAction: action,
+    };
+    setPost(post);
     // combine undo history if it is editing on the same id and same property
     if (
       reverse &&

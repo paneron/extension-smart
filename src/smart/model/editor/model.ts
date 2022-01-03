@@ -9,7 +9,12 @@ import {
 } from './components/elements';
 import { cascadeCheckEnum, EnumAction, useEnums } from './components/enums';
 import { MetaAction, useMeta } from './components/meta';
-import { cascadeCheckPages, PageAction, usePages } from './components/pages';
+import {
+  cascadeCheckPages,
+  explorePageDataNodes,
+  PageAction,
+  usePages,
+} from './components/pages';
 import { useView, ViewAction } from './components/view';
 import { ProvisionAction, useProvisions } from './components/provision';
 import { cascadeCheckRefs, RefAction, useRefs } from './components/ref';
@@ -17,9 +22,9 @@ import { RoleAction, useRoles, cascadeCheckRole } from './components/roles';
 import { SectionAction, useSections } from './components/sections';
 import { TermsAction, useTerms } from './components/terms';
 import { useVars, VarAction } from './components/vars';
-import { UndoReducerInterface } from './interface';
 import { cascadeCheckTable, TableAction, useTable } from './components/table';
 import { cascadeCheckFigure, FigAction, useFigure } from './components/figure';
+import { UndoReducerInterface } from './interface';
 
 type ALLACTION =
   | ElmAction
@@ -36,7 +41,16 @@ type ALLACTION =
   | TableAction
   | FigAction;
 
-export type ModelAction = ALLACTION & { type: 'model' };
+type ValidateAction = {
+  act: 'validate-page';
+  refAction: ModelAction;
+  cascade?: ModelAction[];
+  page: string;
+};
+
+type OwnAction = ValidateAction;
+
+export type ModelAction = (ALLACTION | OwnAction) & { type: 'model' };
 
 export function useModel(
   x: EditorModel
@@ -73,6 +87,7 @@ export function useModel(
   };
 
   function act(action: ModelAction): ModelAction | undefined {
+    Logger.log('Action:', action);
     try {
       switch (action.act) {
         case 'meta': {
@@ -151,6 +166,12 @@ export function useModel(
           }
           actCascade(action.cascade);
           return convertAction(reverse);
+        }
+        case 'validate-page': {
+          action.cascade = validatePage(action.page, action.refAction).map(
+            x => ({ ...x, type: 'model' })
+          );
+          return action;
         }
       }
     } catch (e: unknown) {
@@ -235,6 +256,26 @@ export function useModel(
     initViews(x.views);
     initTables(x.tables);
     initFigures(x.figures);
+  }
+
+  /**
+   * Called to validate the current page
+   * Lazy update mechanism
+   * Remove unreachable nodes
+   * Add new dependant data if found
+   */
+  function validatePage(page: string, action: ModelAction): PageAction[] {
+    Logger.log('Doing post processing', action);
+    if (action.act === 'elements' || action.act === 'pages') {
+      const p = pages[page];
+      if (p) {
+        const [actions, reverse] = explorePageDataNodes(p, elements);
+        Logger.log('Actions: ', actions);
+        actions.forEach(x => actPages(x));
+        return reverse;
+      }
+    }
+    return [];
   }
 
   return [model, act, init];

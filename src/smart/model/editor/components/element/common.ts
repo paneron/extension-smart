@@ -1,4 +1,4 @@
-import { EditorNode } from "../../../editormodel";
+import { EditorNode } from '../../../editormodel';
 
 export function delCommonElms(
   elms: Record<string, EditorNode>,
@@ -14,7 +14,7 @@ export function addCommonElms(
   elms: Record<string, EditorNode>,
   items: EditorNode[]
 ): Record<string, EditorNode> {
-  for (const item of items) {    
+  for (const item of items) {
     elms[item.id] = { ...item };
   }
   return elms;
@@ -25,7 +25,7 @@ export function editCommonElms(
   id: string,
   item: EditorNode
 ): Record<string, EditorNode> {
-  delete elms[id];  
+  delete elms[id];
   elms[item.id] = { ...item };
   return elms;
 }
