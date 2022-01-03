@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
 import {
   dataPageReplace,
   elmPageReplace,
@@ -47,6 +48,18 @@ type DeleteElementAction = {
   page: string;
 };
 
+type NewEdgeAction = {
+  task: 'new-edge';
+  value: MMELEdge;
+  page: string;
+};
+
+type DeleteEdgeAction = {
+  task: 'delete-edge';
+  value: string;
+  page: string;
+};
+
 type MoveAction = {
   task: 'move';
   node: string;
@@ -62,7 +75,9 @@ type EXPORT_ACTION =
   | CascadeAction
   | NewElementAction
   | DeleteElementAction
-  | MoveAction;
+  | MoveAction
+  | NewEdgeAction
+  | DeleteEdgeAction;
 
 export type PageAction = EXPORT_ACTION & {
   act: 'pages';
@@ -110,6 +125,12 @@ function pageReducer(
         action.value.id,
         undefined
       );
+    }
+    case 'new-edge': {
+      return newEdge(pages, action.page, action.value);
+    }
+    case 'delete-edge': {
+      return deleteEdge(pages, action.page, action.value);
     }
     case 'move': {
       return moveElm(
@@ -168,6 +189,22 @@ function findReverse(
         value: action.value,
         x: compo.x,
         y: compo.y,
+      };
+    }
+    case 'new-edge':
+      return {
+        act: 'pages',
+        task: 'delete-edge',
+        page: action.page,
+        value: action.value.id,
+      };
+    case 'delete-edge': {
+      const edge = pages[action.page].edges[action.value];
+      return {
+        act: 'pages',
+        task: 'new-edge',
+        page: action.page,
+        value: edge,
       };
     }
     case 'move': {
@@ -347,4 +384,28 @@ function exploreData(
   if (data && isEditorDataClass(data)) {
     exploreList(data.rdcs, elms, set);
   }
+}
+
+function newEdge(
+  pages: Record<string, EditorSubprocess>,
+  page: string,
+  edge: MMELEdge
+): Record<string, EditorSubprocess> {
+  const newPage = { ...pages[page] };
+  newPage.edges = { ...newPage.edges, [edge.id]: edge };
+  pages[page] = newPage;
+  return pages;
+}
+
+function deleteEdge(
+  pages: Record<string, EditorSubprocess>,
+  page: string,
+  edge: string
+): Record<string, EditorSubprocess> {
+  const newPage = { ...pages[page] };
+  const edges = { ...newPage.edges };
+  delete edges[edge];
+  newPage.edges = edges;
+  pages[page] = newPage;
+  return pages;
 }

@@ -47,6 +47,7 @@ import {
   RepoHistory,
 } from '../model/history';
 import {
+  createEdge,
   createRegistry,
   createSubprocessComponent,
 } from '../utils/EditorFactory';
@@ -87,10 +88,7 @@ import {
   EditAction,
   NewComponentTypes,
 } from '../utils/constants';
-import {
-  getaddComponentAction,
-  addEdge,
-} from '../utils/ModelAddComponentHandler';
+import { getaddComponentAction } from '../utils/ModelAddComponentHandler';
 import { EdgePackage } from '../model/FlowContainer';
 import { deleteEdge } from '../utils/ModelRemoveComponentHandler';
 import MGDButton from '../MGDComponents/MGDButton';
@@ -103,7 +101,12 @@ import {
   sidebar_layout,
 } from '../../css/layout';
 import SearchComponentPane from './sidebar/search';
-import { checkId, genDCIdByRegId, Logger } from '../utils/ModelFunctions';
+import {
+  checkId,
+  findUniqueID,
+  genDCIdByRegId,
+  Logger,
+} from '../utils/ModelFunctions';
 import LegendPane from './common/description/LegendPane';
 import {
   getHighlightedStyleById,
@@ -505,13 +508,21 @@ const ModelEditor: React.FC<{
   function connectHandle(x: Edge<EdgePackage> | Connection) {
     if (x.source !== null && x.target !== null) {
       const page = model.pages[state.page];
-      model.pages[state.page] = addEdge(
-        page,
-        model.elements,
-        x.source,
-        x.target
-      );
-      // setState({ ...state }, true);
+      const s = page.childs[x.source];
+      const t = page.childs[x.target];
+      if (s && t) {
+        const newEdge = createEdge(findUniqueID('Edge', page.edges));
+        newEdge.from = x.source;
+        newEdge.to = x.target;
+        const action: ModelAction = {
+          type: 'model',
+          act: 'pages',
+          task: 'new-edge',
+          value: newEdge,
+          page: page.id,
+        };
+        act(action);
+      }
     }
   }
 

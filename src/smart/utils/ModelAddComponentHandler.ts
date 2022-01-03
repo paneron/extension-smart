@@ -6,17 +6,14 @@ import {
   EditorModel,
   EditorNode,
   EditorProcess,
-  EditorSignalEvent,
-  EditorSubprocess,
-  EditorTimerEvent,
-  isEditorData,
+  EditorSignalEvent,  
+  EditorTimerEvent,  
 } from '../model/editormodel';
 import { DataType } from '../serialize/interface/baseinterface';
 import { capitalizeString, findUniqueID, trydefaultID } from './ModelFunctions';
 import { NewComponentTypes } from './constants';
 import {
-  createApproval,
-  createEdge,
+  createApproval,  
   createEGate,
   createEndEvent,
   createProcess,
@@ -106,30 +103,6 @@ function newSignalCatch(elms: Elements): EditorSignalEvent {
 
 function newEGate(elms: Elements): EditorEGate {
   return createEGate(findUniqueID('EGate', elms));
-}
-
-export function addEdge(
-  page: EditorSubprocess,
-  elements: Record<string, EditorNode>,
-  source: string,
-  target: string
-): EditorSubprocess {
-  const newPage = { ...page };
-  const s = page.childs[source];
-  const t = page.childs[target];
-  if (s !== undefined && t !== undefined) {
-    const selm = elements[s.element];
-    const telm = elements[s.element];
-    if (isEditorData(selm) || isEditorData(telm)) {
-      return newPage;
-    }
-
-    const newEdge = createEdge(findUniqueID('Edge', page.edges));
-    newEdge.from = source;
-    newEdge.to = target;
-    newPage.edges = { ...page.edges, [newEdge.id]: newEdge };
-  }
-  return newPage;
 }
 
 export function createNewPage(model: EditorModel): string {
