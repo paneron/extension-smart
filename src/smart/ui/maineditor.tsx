@@ -58,7 +58,11 @@ import {
   NodeTypes,
   ReferenceContent,
 } from '../model/States';
-import { EditorDataClass, EditorModel } from '../model/editormodel';
+import {
+  EditorDataClass,
+  EditorModel,
+  isEditorData,
+} from '../model/editormodel';
 import EditorFileMenu from './menu/EditorFileMenu';
 import { SelectedNodeDescription } from './sidebar/selected';
 import {
@@ -249,6 +253,23 @@ const ModelEditor: React.FC<{
 
   const model = state.model;
   const mw: ModelWrapper = { page: state.page, model, type: 'model' };
+
+  const elements = getEditorReactFlowElementsFrom(
+    state.page,
+    model,
+    index,
+    view.dvisible,
+    view.edgeDeleteVisible,
+    onProcessClick,
+    removeEdge,
+    getStyleById,
+    getSVGColorById,
+    view.idVisible,
+    view.commentVisible,
+    addCommentToModel,
+    toggleCommentResolved,
+    deleteComment
+  );
 
   async function saveRepo() {
     if (repo && updateObjects && isVisible) {
@@ -739,6 +760,9 @@ const ModelEditor: React.FC<{
             task: 'move',
             page: state.page,
             node: flowNode.id,
+            nodetype: isEditorData(model.elements[flowNode.id])
+              ? 'data'
+              : 'node',
             x: flowNode.position.x,
             y: flowNode.position.y,
             fromx: dragStart.x,
@@ -794,21 +818,7 @@ const ModelEditor: React.FC<{
             >
               <div css={react_flow_container_layout}>
                 <ReactFlow
-                  elements={getEditorReactFlowElementsFrom(
-                    mw,
-                    index,
-                    view.dvisible,
-                    view.edgeDeleteVisible,
-                    onProcessClick,
-                    removeEdge,
-                    getStyleById,
-                    getSVGColorById,
-                    view.idVisible,
-                    view.commentVisible,
-                    addCommentToModel,
-                    toggleCommentResolved,
-                    deleteComment
-                  )}
+                  elements={elements}
                   {...{ onLoad, onDrop, onDragOver }}
                   onConnect={connectHandle}
                   nodesConnectable={true}

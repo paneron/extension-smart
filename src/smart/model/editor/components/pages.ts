@@ -51,6 +51,7 @@ type MoveAction = {
   task: 'move';
   node: string;
   page: string;
+  nodetype: 'node' | 'data';
   x: number;
   y: number;
   fromx: number;
@@ -110,8 +111,16 @@ function pageReducer(
         undefined
       );
     }
-    case 'move':
-      return moveElm(pages, action.page, action.node, action.x, action.y);
+    case 'move': {
+      return moveElm(
+        pages,
+        action.page,
+        action.nodetype,
+        action.node,
+        action.x,
+        action.y
+      );
+    }
   }
 }
 
@@ -167,6 +176,7 @@ function findReverse(
         task: 'move',
         page: action.page,
         node: action.node,
+        nodetype: action.nodetype,
         x: action.fromx,
         y: action.fromy,
         fromx: action.x,
@@ -225,14 +235,27 @@ export function cascadeCheckPages(
 function moveElm(
   pages: Record<string, EditorSubprocess>,
   page: string,
+  nodetype: 'node' | 'data',
   id: string,
   x: number,
   y: number
 ): Record<string, EditorSubprocess> {
-  Logger.log('new move:', id, x, y);
+  // Logger.log('move', id, nodetype, x, y);
+  // Logger.log('before change', pages[page]);
   const p = { ...pages[page] };
-  p.childs[id] = { ...p.childs[id], x: Math.round(x), y: Math.round(y) };
+  if (nodetype === 'node') {
+    p.childs = {
+      ...p.childs,
+      [id]: { ...p.childs[id], x: Math.round(x), y: Math.round(y) },
+    };
+  } else {
+    p.data = {
+      ...p.data,
+      [id]: { ...p.data[id], x: Math.round(x), y: Math.round(y) },
+    };
+  }
   pages[page] = p;
+  // Logger.log('after change', pages[page]);
   return pages;
 }
 
@@ -240,6 +263,7 @@ export function explorePageDataNodes(
   page: EditorSubprocess,
   elms: Record<string, EditorNode>
 ): [PageAction[], PageAction[]] {
+  // Logger.log('Explore data');
   const actions: PageAction[] = [];
   const reverse: PageAction[] = [];
   const set = new Set<string>();
@@ -294,6 +318,7 @@ export function explorePageDataNodes(
       ids: [[page.id, 0, 0]],
     });
   }
+  // Logger.log('Actions', actions, reverse);
   return [actions, reverse];
 }
 
@@ -303,8 +328,10 @@ function exploreList(
   set: Set<string>
 ) {
   for (const x of list) {
-    if (!set.has(x)) {
-      set.add(x);
+    const elm = elms[x];
+    const data = isEditorDataClass(elm) && elm.mother !== '' ? elm.mother : x;
+    if (!set.has(data)) {
+      set.add(data);
       exploreData(x, elms, set);
     }
   }

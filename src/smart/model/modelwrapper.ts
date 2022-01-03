@@ -200,7 +200,8 @@ function buildStructure(mw: ModelWrapper): ModelWrapper {
 }
 
 export function getEditorReactFlowElementsFrom(
-  mw: ModelWrapper,
+  page: string,
+  model: EditorModel,
   index: RepoIndex,
   dvisible: boolean,
   edgeDelete: boolean,
@@ -216,7 +217,7 @@ export function getEditorReactFlowElementsFrom(
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,
-    model: mw.model,
+    model: model,
     onProcessClick,
     getStyleClassById: getStyleById,
     getSVGColorById,
@@ -228,8 +229,14 @@ export function getEditorReactFlowElementsFrom(
     deleteComment,
   });
   try {
-    return getElements(mw, dvisible, callback, e =>
-      createEdgeContainer(e, edgeDelete, removeEdge)
+    // return getElements({page, model, type:'model'}, dvisible, callback, e =>
+    //   createEdgeContainer(e, edgeDelete, removeEdge)
+    return pageToFlowElements(
+      model.pages[page],
+      model.elements,
+      dvisible,
+      callback,
+      e => createEdgeContainer(e, edgeDelete, removeEdge)
     );
   } catch (e: unknown) {
     const error = e as Error;
@@ -364,6 +371,60 @@ export function getMapperReactFlowElementsFrom(
     goToNextModel,
   });
   return getElements(mw, dvisible, callback, e => createEdgeContainer(e));
+}
+
+function pageToFlowElements(
+  page: EditorSubprocess,
+  elms: Record<string, EditorNode>,
+  dvisible: boolean,
+  callback: NodeCallBack,
+  createEdge: (e: MMELEdge) => EdgeContainer
+): Elements {
+  const nodes: Elements = Object.values(page.childs).flatMap(x =>
+    elms[x.element]
+      ? [createNodeContainer(elms[x.element], { x: x.x, y: x.y }, callback)]
+      : []
+  );
+  const data: Elements = dvisible
+    ? Object.values(page.data).flatMap(x =>
+        elms[x.element]
+          ? [createNodeContainer(elms[x.element], { x: x.x, y: x.y }, callback)]
+          : []
+      )
+    : [];
+  const edges: Elements = Object.values(page.edges).map(x => createEdge(x));
+  if (dvisible) {
+    for (const x of Object.values(page.childs)) {
+      const elm = elms[x.element];
+      if (isEditorProcess(elm)) {
+        for (const input of elm.input) {
+          edges.push(createDataLinkContainer(elms[input], elm));
+        }
+        for (const input of elm.output) {
+          edges.push(createDataLinkContainer(elm, elms[input]));
+        }
+      } else if (isEditorApproval(elm)) {
+        for (const input of elm.records) {
+          edges.push(createDataLinkContainer(elm, elms[input]));
+        }
+      }
+    }
+    for (const x of Object.values(page.data)) {
+      const data = elms[x.element];
+      const dc = isEditorRegistry(data) ? elms[data.data] : data;
+      if (isEditorDataClass(dc)) {
+        for (const y of dc.rdcs) {
+          const target = elms[y];
+          const dep =
+            isEditorDataClass(target) && elms[target.mother]
+              ? elms[target.mother]
+              : target;
+          edges.push(createDataLinkContainer(data, dep));
+        }
+      }
+    }
+  }
+  return [...nodes, ...data, ...edges];
 }
 
 function getElements(

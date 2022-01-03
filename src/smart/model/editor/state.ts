@@ -59,10 +59,9 @@ export function useEditorState(
   const [post, setPost] = useState<ModelAction | undefined>(undefined);
 
   const page = history[history.length - 1].page;
-
   const state: EditorState = { history, page, model, type: 'model' };
 
-  // Logger.log(model.pages[page]);
+  // Logger.log('Page', model.pages[page].data);
 
   if (post) {
     // Logger.log('Post processing');
@@ -133,13 +132,15 @@ export function useEditorState(
     const reverse = actModel(action);
     const len = undoHis.length;
     const his = undoHis[len - 1];
-    const post: ModelAction = {
-      type: 'model',
-      act: 'validate-page',
-      page,
-      refAction: action,
-    };
-    setPost(post);
+    if (needCheck(action)) {
+      const post: ModelAction = {
+        type: 'model',
+        act: 'validate-page',
+        page,
+        refAction: action,
+      };
+      setPost(post);
+    }
     // combine undo history if it is editing on the same id and same property
     if (
       reverse &&
@@ -189,4 +190,39 @@ function actionCombinable(before: EditorAction, after: EditorAction): boolean {
     );
   }
   return false;
+}
+
+function needCheck(action: ModelAction): boolean {
+  switch (action.act) {
+    case 'comment':
+      return false;
+    case 'elements':
+      return true;
+    case 'enums':
+      return false;
+    case 'figure':
+      return false;
+    case 'meta':
+      return false;
+    case 'pages':
+      return action.task !== 'move';
+    case 'provision':
+      return false;
+    case 'refs':
+      return false;
+    case 'roles':
+      return false;
+    case 'section':
+      return false;
+    case 'table':
+      return false;
+    case 'terms':
+      return false;
+    case 'vars':
+      return false;
+    case 'view':
+      return false;
+    default:
+      throw new Error('Checking for post actions not handled');
+  }
 }
