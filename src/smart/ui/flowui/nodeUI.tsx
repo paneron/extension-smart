@@ -113,7 +113,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
             getCommentById={callback.getCommentById}
             addComment={(msg, parent) => addComment(msg, process.id, parent)}
             toggleCommentResolved={toggleCommentResolved}
-            deleteComment={x => deleteComment(x, process.id)}
+            deleteComment={(x, parent) => deleteComment(x, process.id, parent)}
           />
         )}
       <Handle type="source" position={Position.Bottom} style={handleCSS} />

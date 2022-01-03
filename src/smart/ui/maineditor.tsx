@@ -128,11 +128,7 @@ import EditorReferenceMenuButton from './menu/EditorReferenceMenuButton';
 import { indexModel } from '../model/mapmodel';
 import { MMELDocument } from '../model/document';
 import { LoadingContainer } from './common/Loading';
-import {
-  modelAddComment,
-  modelDeleteComment,
-  modelToggleComment,
-} from '../utils/Comments';
+import { createNewComment } from '../utils/Comments';
 import EditorViewMenu from './menu/EditorViewMenu';
 import { EditorAction } from '../model/editor/state';
 import { ModelAction } from '../model/editor/model';
@@ -354,18 +350,44 @@ const ModelEditor: React.FC<{
   // }
 
   function addCommentToModel(msg: string, pid: string, parent?: string) {
-    const m = modelAddComment(model, username, msg, pid, parent);
-    // setState({ ...state, model: m }, true);
+    const m = createNewComment(model.comments, username, msg);
+    const action: ModelAction = {
+      type: 'model',
+      act: 'comment',
+      task: 'add',
+      value: [m],
+      attach: {
+        id: pid,
+        parent,
+      },
+    };
+    act(action);
   }
 
   function toggleCommentResolved(cid: string) {
-    const m = modelToggleComment(model, cid);
-    // setState({ ...state, model: m }, true);
+    const com = model.comments[cid];
+    const action: ModelAction = {
+      type: 'model',
+      act: 'comment',
+      task: 'edit',
+      id: cid,
+      value: { ...com, resolved: !com.resolved },
+    };
+    act(action);
   }
 
-  function deleteComment(cid: string, pid: string) {
-    const m = modelDeleteComment(model, cid, pid);
-    // setState({ ...state, model: m }, true);
+  function deleteComment(cid: string, pid: string, parent?: string) {
+    const action: ModelAction = {
+      type: 'model',
+      act: 'comment',
+      task: 'delete',
+      value: [cid],
+      attach: {
+        id: pid,
+        parent,
+      },
+    };
+    act(action);
   }
 
   function toggleDataVisibility() {

@@ -9,7 +9,7 @@ const NodeComment: React.FC<{
   cids: Set<string>;
   getCommentById: (id: string) => MMELComment | undefined;
   addComment: (msg: string, parent?: string) => void;
-  deleteComment: (cid: string) => void;
+  deleteComment: (cid: string, parent?: string) => void;
   toggleCommentResolved: (cid: string) => void;
 }> = function ({
   cids,

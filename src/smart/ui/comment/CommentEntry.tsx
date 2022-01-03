@@ -6,9 +6,16 @@ import CommentField from './CommentField';
 const CommentEntry: React.FC<{
   comment: CommentInstance;
   addComment: (msg: string, parent?: string) => void;
-  deleteComment: (cid: string) => void;
+  deleteComment: (cid: string, parent?: string) => void;
   toggleCommentResolved?: (cid: string) => void;
-}> = function ({ comment, addComment, toggleCommentResolved, deleteComment }) {
+  parent?: string;
+}> = function ({
+  comment,
+  addComment,
+  toggleCommentResolved,
+  deleteComment,
+  parent,
+}) {
   function onComment(msg: string) {
     addComment(msg, comment.id);
   }
@@ -30,7 +37,10 @@ const CommentEntry: React.FC<{
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <ButtonGroup>
           <CommentField title="Reply" onComment={onComment} />
-          <Button intent="danger" onClick={() => deleteComment(comment.id)}>
+          <Button
+            intent="danger"
+            onClick={() => deleteComment(comment.id, parent)}
+          >
             Delete
           </Button>
         </ButtonGroup>
@@ -40,6 +50,7 @@ const CommentEntry: React.FC<{
           comment={x}
           addComment={addComment}
           deleteComment={deleteComment}
+          parent={comment.id}
         />
       ))}
     </fieldset>

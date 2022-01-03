@@ -24,24 +24,24 @@ function listReducer(list: EditorAction[], action: UndoListAction) {
   } else if (act === 'pop') {
     return list.length === 0 ? [] : list.slice(0, -1);
   } else {
-    Logger.log('Edit undo history', list, list.length);
+    // Logger.log('Edit undo history', list, list.length);
     const last = list[list.length - 1];
     if (last && last.type === 'model' && value && value.type === 'model') {
-      Logger.log('Reverse actions', value);
-      Logger.log('Append to', last);
+      // Logger.log('Reverse actions', value);
+      // Logger.log('Append to', last);
       if (
         value &&
         last &&
         (last.act === 'elements' || last.act === 'pages') &&
         value.act === 'validate-page'
       ) {
-        Logger.log('Actual actions', value.cascade);
+        // Logger.log('Actual actions', value.cascade);
         const cascade = value.cascade;
         if (last.cascade && cascade) {
           for (const c of cascade) {
             last.cascade.push(c);
           }
-          Logger.log('Appended', last);
+          // Logger.log('Appended', last);
         }
       }
     }
@@ -62,10 +62,10 @@ export function useEditorState(
 
   const state: EditorState = { history, page, model, type: 'model' };
 
-  Logger.log(model.pages[page]);
+  // Logger.log(model.pages[page]);
 
   if (post) {
-    Logger.log('Post processing');
+    // Logger.log('Post processing');
     const reverse = actModel(post);
     actUndoHis({ act: 'post', value: reverse });
     setPost(undefined);

@@ -212,7 +212,7 @@ export function getEditorReactFlowElementsFrom(
   commentVisible: boolean,
   addComment: (msg: string, pid: string, parent?: string) => void,
   toggleCommentResolved: (cid: string) => void,
-  deleteComment: (cid: string, pid: string) => void
+  deleteComment: (cid: string, pid: string, parent?: string) => void
 ): Elements {
   const callback = getEditorNodeCallBack({
     type: ModelType.EDIT,

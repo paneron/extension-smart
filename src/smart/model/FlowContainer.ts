@@ -74,7 +74,7 @@ export interface NodeCallBack {
   goToNextModel?: (x: MMELRepo) => void;
   addComment?: (msg: string, pid: string, parent?: string) => void;
   toggleCommentResolved?: (cid: string) => void;
-  deleteComment?: (cid: string, pid: string) => void;
+  deleteComment?: (cid: string, pid: string, parent?: string) => void;
 }
 
 export interface NodeContainer {
@@ -159,7 +159,7 @@ export function getEditorNodeCallBack(props: {
   goToNextModel?: (x: MMELRepo) => void;
   addComment?: (msg: string, pid: string, parent?: string) => void;
   toggleCommentResolved?: (cid: string) => void;
-  deleteComment?: (cid: string, pid: string) => void;
+  deleteComment?: (cid: string, pid: string, parent?: string) => void;
 }): NodeCallBack {
   const {
     type,

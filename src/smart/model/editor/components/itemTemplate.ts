@@ -37,18 +37,18 @@ export function useItems<T extends CoreComponent, L extends string>(
   x: Record<string, T>,
   type: L
 ): UndoReducerInterface<Record<string, T>, ItemAction<T, L>> {
-  const [secs, dispatchSec] = useReducer(reducer, x);
+  const [items, dispatchSec] = useReducer(reducer, x);
 
   function act(action: ItemAction<T, L>): ItemAction<T, L> | undefined {
     dispatchSec(action);
-    return findReverse(secs, action, type);
+    return findReverse(items, action, type);
   }
 
   function init(x: Record<string, T>) {
     dispatchSec({ task: 'init', value: x });
   }
 
-  return [secs, act, init];
+  return [items, act, init];
 
   function reducer(
     secs: Record<string, T>,

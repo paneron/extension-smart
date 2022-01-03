@@ -7,7 +7,7 @@ import CommentField from './CommentField';
 const CommentContainer: React.FC<{
   comments: CommentInstance[];
   addComment: (msg: string, parent?: string) => void;
-  deleteComment: (cid: string) => void;
+  deleteComment: (cid: string, parent?: string) => void;
   toggleCommentResolved: (cid: string) => void;
 }> = function ({ comments, addComment, toggleCommentResolved, deleteComment }) {
   function onComment(msg: string) {

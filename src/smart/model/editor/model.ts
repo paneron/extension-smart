@@ -25,6 +25,11 @@ import { useVars, VarAction } from './components/vars';
 import { cascadeCheckTable, TableAction, useTable } from './components/table';
 import { cascadeCheckFigure, FigAction, useFigure } from './components/figure';
 import { UndoReducerInterface } from './interface';
+import {
+  cascadeCheckComment,
+  CommentAction,
+  useComment,
+} from './components/comment';
 
 type ALLACTION =
   | ElmAction
@@ -39,7 +44,8 @@ type ALLACTION =
   | VarAction
   | ViewAction
   | TableAction
-  | FigAction;
+  | FigAction
+  | CommentAction;
 
 type ValidateAction = {
   act: 'validate-page';
@@ -67,8 +73,9 @@ export function useModel(
   const [views, actViews, initViews] = useView(x.views);
   const [tables, actTables, initTables] = useTable(x.tables);
   const [figures, actFigures, initFigures] = useFigure(x.figures);
-
+  const [comments, actComments, initComments] = useComment(x.comments);
   const [elements, actElements, initElms] = useElements(x.elements);
+
   const model: EditorModel = {
     ...x,
     meta,
@@ -84,10 +91,12 @@ export function useModel(
     views,
     tables,
     figures,
+    comments,
+    root: x.root,
   };
 
   function act(action: ModelAction): ModelAction | undefined {
-    Logger.log('Action:', action);
+    // Logger.log('Action:', action);
     try {
       switch (action.act) {
         case 'meta': {
@@ -167,6 +176,19 @@ export function useModel(
           actCascade(action.cascade);
           return convertAction(reverse);
         }
+        case 'comment': {
+          const reverseCascade = cascadeCheckComment(
+            elements,
+            comments,
+            action
+          );
+          const reverse = actComments(action);
+          if (reverse) {
+            reverse.cascade = reverseCascade;
+          }
+          actCascade(action.cascade);
+          return convertAction(reverse);
+        }
         case 'validate-page': {
           action.cascade = validatePage(action.page, action.refAction).map(
             x => ({ ...x, type: 'model' })
@@ -199,6 +221,10 @@ export function useModel(
             }
             case 'pages': {
               actPages(a);
+              break;
+            }
+            case 'comment': {
+              actComments(a);
               break;
             }
           }
@@ -256,6 +282,7 @@ export function useModel(
     initViews(x.views);
     initTables(x.tables);
     initFigures(x.figures);
+    initComments(x.comments);
   }
 
   /**
@@ -265,12 +292,12 @@ export function useModel(
    * Add new dependant data if found
    */
   function validatePage(page: string, action: ModelAction): PageAction[] {
-    Logger.log('Doing post processing', action);
+    // Logger.log('Doing post processing', action);
     if (action.act === 'elements' || action.act === 'pages') {
       const p = pages[page];
       if (p) {
         const [actions, reverse] = explorePageDataNodes(p, elements);
-        Logger.log('Actions: ', actions);
+        // Logger.log('Actions: ', actions);
         actions.forEach(x => actPages(x));
         return reverse;
       }
