@@ -29,7 +29,6 @@ const EditSignalEventPage: React.FC<{
   minimal?: boolean;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
-  getLatestLayoutMW?: () => ModelWrapper;
   setSelectedNode?: (id: string) => void;
 }> = function ({
   modelWrapper,
@@ -39,7 +38,6 @@ const EditSignalEventPage: React.FC<{
   minimal,
   onFullEditClick,
   onDeleteClick,
-  getLatestLayoutMW,
   setSelectedNode,
 }) {
   const model = modelWrapper.model;
@@ -89,21 +87,19 @@ const EditSignalEventPage: React.FC<{
 
   function onNewID(id: string) {
     const oldid = scEvent.id;
-    if (getLatestLayoutMW !== undefined) {
-      const mw = getLatestLayoutMW();
-      const updated = save(
-        oldid,
-        { ...editing, id },
-        modelWrapper.page,
-        mw.model
-      );
-      if (updated !== null) {
-        setModel({ ...updated });
-      }
-      setHasChange(false);
-      if (setSelectedNode !== undefined) {
-        setSelectedNode(id);
-      }
+    const mw = modelWrapper;
+    const updated = save(
+      oldid,
+      { ...editing, id },
+      modelWrapper.page,
+      mw.model
+    );
+    if (updated !== null) {
+      setModel({ ...updated });
+    }
+    setHasChange(false);
+    if (setSelectedNode !== undefined) {
+      setSelectedNode(id);
     }
   }
 

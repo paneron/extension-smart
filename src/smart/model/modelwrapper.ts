@@ -366,6 +366,7 @@ function pageToFlowElements(
   if (dvisible) {
     for (const x of Object.values(page.childs)) {
       const elm = elms[x.element];
+      if (elm) {
       if (isEditorProcess(elm)) {
         for (const input of elm.input) {
           if (elms[input]) {
@@ -384,6 +385,7 @@ function pageToFlowElements(
           }
         }
       }
+    }
     }
     for (const x of Object.values(page.data)) {
       const data = elms[x.element];

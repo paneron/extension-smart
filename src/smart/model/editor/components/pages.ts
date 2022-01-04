@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
+import { MMELEdge, MMELSubprocess } from '../../../serialize/interface/flowcontrolinterface';
 import {
   dataPageReplace,
   elmPageReplace,
@@ -50,13 +50,13 @@ type DeleteElementAction = {
 
 type NewEdgeAction = {
   task: 'new-edge';
-  value: MMELEdge;
+  value: MMELEdge[];
   page: string;
 };
 
 type DeleteEdgeAction = {
   task: 'delete-edge';
-  value: string;
+  value: string[];
   page: string;
 };
 
@@ -196,10 +196,10 @@ function findReverse(
         act: 'pages',
         task: 'delete-edge',
         page: action.page,
-        value: action.value.id,
+        value: action.value.map(x => x.id),
       };
     case 'delete-edge': {
-      const edge = pages[action.page].edges[action.value];
+      const edge = action.value.map(x => pages[action.page].edges[x]);
       return {
         act: 'pages',
         task: 'new-edge',
@@ -241,6 +241,7 @@ export function usePages(
 }
 
 export function cascadeCheckPages(
+  pages: Record<string, MMELSubprocess>,
   action: PageAction
 ): ModelAction[] | undefined {
   if (action.cascade) {
@@ -264,6 +265,41 @@ export function cascadeCheckPages(
         subtask: 'flowunit',
         value: [action.value.id],
       },
+    ];
+  } else if (action.task === 'delete-element') {
+    const edges = pages[action.page].edges;
+    const eids = findRelatedEdges(edges, action.value.id);
+    action.cascade = [
+      {
+        type: 'model',
+        act: 'elements',
+        task: 'delete',
+        subtask: 'flowunit',
+        value: [action.value.id],
+      },
+      {
+        type: 'model',
+        act: 'pages',
+        task: 'delete-edge',        
+        page: action.page,
+        value: eids,
+      }
+    ];
+    return [
+      {
+        type: 'model',
+        act: 'elements',
+        task: 'add',
+        subtask: 'flowunit',
+        value: [action.value],
+      },
+      {
+        type: 'model',
+        act: 'pages',
+        task: 'new-edge',        
+        page: action.page,
+        value: eids.map(x => edges[x]),
+      }
     ];
   }
   return [];
@@ -389,10 +425,12 @@ function exploreData(
 function newEdge(
   pages: Record<string, EditorSubprocess>,
   page: string,
-  edge: MMELEdge
+  edges: MMELEdge[]
 ): Record<string, EditorSubprocess> {
   const newPage = { ...pages[page] };
-  newPage.edges = { ...newPage.edges, [edge.id]: edge };
+  for (const edge of edges) {
+    newPage.edges = { ...newPage.edges, [edge.id]: edge };
+  }
   pages[page] = newPage;
   return pages;
 }
@@ -400,12 +438,24 @@ function newEdge(
 function deleteEdge(
   pages: Record<string, EditorSubprocess>,
   page: string,
-  edge: string
+  edgeids: string[]
 ): Record<string, EditorSubprocess> {
   const newPage = { ...pages[page] };
   const edges = { ...newPage.edges };
-  delete edges[edge];
+  for (const id of edgeids) {
+    delete edges[id];
+  }
   newPage.edges = edges;
   pages[page] = newPage;
   return pages;
+}
+
+function findRelatedEdges(edges: Record<string, MMELEdge>, id: string): string[] {
+  const ids: string[] = [];
+  for (const e of Object.values(edges)) {    
+    if (e.from === id || e.to === id) {
+      ids.push(e.id);
+    }
+  }
+  return ids;
 }

@@ -29,7 +29,6 @@ const EditTimerPage: React.FC<{
   minimal?: boolean;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
-  getLatestLayoutMW?: () => ModelWrapper;
   setSelectedNode?: (id: string) => void;
 }> = function ({
   modelWrapper,
@@ -39,7 +38,6 @@ const EditTimerPage: React.FC<{
   closeDialog,
   onDeleteClick,
   onFullEditClick,
-  getLatestLayoutMW,
   setSelectedNode,
 }) {
   const model = modelWrapper.model;
@@ -87,21 +85,19 @@ const EditTimerPage: React.FC<{
 
   function onNewID(id: string) {
     const oldid = timer.id;
-    if (getLatestLayoutMW !== undefined) {
-      const mw = getLatestLayoutMW();
-      const updated = save(
-        oldid,
-        { ...editing, id },
-        modelWrapper.page,
-        mw.model
-      );
-      if (updated !== null) {
-        setModel({ ...updated });
-      }
-      setHasChange(false);
-      if (setSelectedNode !== undefined) {
-        setSelectedNode(id);
-      }
+    const mw = modelWrapper;
+    const updated = save(
+      oldid,
+      { ...editing, id },
+      modelWrapper.page,
+      mw.model
+    );
+    if (updated !== null) {
+      setModel({ ...updated });
+    }
+    setHasChange(false);
+    if (setSelectedNode !== undefined) {
+      setSelectedNode(id);
     }
   }
 

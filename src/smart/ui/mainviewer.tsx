@@ -27,7 +27,7 @@ import {
   RepoHistory,
 } from '../model/history';
 import { EdgeTypes, FunModel, NodeTypes, ViewerOption } from '../model/States';
-import { SelectedNodeDescription } from './sidebar/selected';
+import { SelectedNodeDescription } from './sidebar/selected_deprecated';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
 import { react_flow_container_layout, sidebar_layout } from '../../css/layout';

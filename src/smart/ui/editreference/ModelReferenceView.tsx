@@ -36,7 +36,7 @@ import {
 import LegendPane from '../common/description/LegendPane';
 import { DataVisibilityButton, IdVisibleButton } from '../control/buttons';
 import SearchComponentPane from '../sidebar/search_deprecated';
-import { SelectedNodeDescription } from '../sidebar/selected';
+import { SelectedNodeDescription } from '../sidebar/selected_deprecated';
 import RepoBreadcrumb from '../common/description/RepoBreadcrumb';
 
 const ModelReferenceView: React.FC<{

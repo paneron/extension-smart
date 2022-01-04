@@ -18,7 +18,6 @@ const QuickEditSignalEvent: React.FC<{
     action: EditAction,
     id: string
   ) => void;
-  getLatestLayoutMW?: () => ModelWrapper;
   setSelectedNode: (id: string) => void;
 }> = props => {
   const { event, setDialog } = props;

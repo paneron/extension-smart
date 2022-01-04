@@ -9,7 +9,7 @@ export function removeEdgeCommand(page: string, id: string) {
     type: 'model',
     act: 'pages',
     task: 'delete-edge',
-    value: id,
+    value: [id],
     page,
   };
   return action;
@@ -27,7 +27,7 @@ export function newEdgeCommand(
     type: 'model',
     act: 'pages',
     task: 'new-edge',
-    value: newEdge,
+    value: [newEdge],
     page: page.id,
   };
   return action;

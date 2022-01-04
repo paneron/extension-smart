@@ -18,7 +18,6 @@ const QuickEditApproval: React.FC<{
     action: EditAction,
     id: string
   ) => void;
-  getLatestLayoutMW?: () => ModelWrapper;
   setSelectedNode: (id: string) => void;
 }> = props => {
   const { approval, setDialog } = props;

@@ -3,8 +3,7 @@ import React from 'react';
 import { EditorEndEvent } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
+  DeletableNodeTypes,  
   EditAction,
 } from '../../utils/constants';
 import { DescribeEnd } from '../common/description/ComponentDescription';
@@ -13,7 +12,7 @@ import { EditPageButtons } from '../edit/commons';
 const QuickEditEnd: React.FC<{
   end: EditorEndEvent;
   setDialog: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
+    nodeType: DeletableNodeTypes,
     action: EditAction,
     id: string
   ) => void;

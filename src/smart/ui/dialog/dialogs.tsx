@@ -8,10 +8,7 @@ import {
   EditableNodeTypes,
   EditAction,
 } from '../../utils/constants';
-import {
-  DeleteAction,
-  DeleteConfirmMessgae,
-} from '../../utils/ModelRemoveComponentHandler';
+import { DeleteConfirmMessgae, deleteNodeAction } from '../../utils/ModelRemoveComponentHandler';
 import { DataType } from '../../serialize/interface/baseinterface';
 import EditProcessPage from '../edit/processedit';
 import EditApprovalPage from '../edit/approvaledit';
@@ -20,6 +17,7 @@ import EditTimerPage from '../edit/timeredit';
 import EditSignalEventPage from '../edit/signaleventedit';
 import { EditorAction } from '../../model/editor/state';
 import { EditorState } from '../../model/States';
+import { ModelAction } from '../../model/editor/model';
 
 export enum DiagTypes {
   SETTING = 'setting',
@@ -52,7 +50,7 @@ export interface IDiagInterface {
   setModelWrapper: (mw: ModelWrapper) => void;
   act: (x: EditorAction) => void;
   callback: () => void;
-  cancel: () => void;
+  done: () => void;
   msg: string;
 }
 
@@ -66,8 +64,8 @@ export interface IDiagAction {
   nodeType: DeletableNodeTypes | EditableNodeTypes;
   model: EditorModel;
   page: string;
-  id: string;
-  setModelAfterDelete: (model: EditorModel) => void;
+  id: string;  
+  act: (x: ModelAction) => void;
 }
 
 export interface EditMPropsInterface {
@@ -94,14 +92,14 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.DELETECONFIRM]: {
     title: 'Confirmation',
     fullscreen: false,
-    Panel: ({ callback, cancel, msg }) => (
-      <ConfirmDialog callback={callback} cancel={cancel} msg={msg} />
+    Panel: ({ callback, done, msg }) => (
+      <ConfirmDialog callback={callback} done={done} msg={msg} />
     ),
   },
   [DiagTypes.EDITPROCESS]: {
     title: 'Edit Process',
     fullscreen: true,
-    Panel: ({ state, setModelWrapper, cancel, msg }) => (
+    Panel: ({ state, setModelWrapper, done: cancel, msg }) => (
       <EditProcessPage
         model={state.model}
         setModel={(m: EditorModel) =>
@@ -119,7 +117,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.EDITAPPROVAL]: {
     title: 'Edit Approval',
     fullscreen: true,
-    Panel: ({ state, setModelWrapper, cancel, msg }) => (
+    Panel: ({ state, setModelWrapper, done: cancel, msg }) => (
       <EditApprovalPage
         modelWrapper={{ model: state.model, page: state.page, type: 'model' }}
         setModel={(m: EditorModel) =>
@@ -137,7 +135,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.EDITEGATE]: {
     title: 'Edit Gateway',
     fullscreen: true,
-    Panel: ({ state, setModelWrapper, cancel, msg }) => (
+    Panel: ({ state, setModelWrapper, done: cancel, msg }) => (
       <EditEGatePage
         modelWrapper={{ model: state.model, page: state.page, type: 'model' }}
         setModel={(m: EditorModel) =>
@@ -155,7 +153,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.EDITTIMER]: {
     title: 'Edit Timer',
     fullscreen: true,
-    Panel: ({ state, setModelWrapper, cancel, msg }) => (
+    Panel: ({ state, setModelWrapper, done: cancel, msg }) => (
       <EditTimerPage
         modelWrapper={{ model: state.model, page: state.page, type: 'model' }}
         setModel={(m: EditorModel) =>
@@ -173,7 +171,7 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.EDITSIGNAL]: {
     title: 'Edit Signal Catch Event',
     fullscreen: true,
-    Panel: ({ state, setModelWrapper, cancel, msg }) => (
+    Panel: ({ state, setModelWrapper, done: cancel, msg }) => (
       <EditSignalEventPage
         modelWrapper={{ model: state.model, page: state.page, type: 'model' }}
         setModel={(m: EditorModel) =>
@@ -218,12 +216,12 @@ function setDeleteAction(props: IDiagAction): DiagPackage {
   return {
     type: DiagTypes.DELETECONFIRM,
     callback: () => {
-      const updated = DeleteAction[props.nodeType](
+      const action = deleteNodeAction(
         props.model,
         props.page,
         props.id
       );
-      props.setModelAfterDelete(updated);
+      props.act(action);      
     },
     msg: DeleteConfirmMessgae[props.nodeType],
   };

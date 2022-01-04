@@ -56,9 +56,8 @@ import {
   NodeTypes,
   ReferenceContent,
 } from '../model/States';
-import { EditorDataClass, EditorModel } from '../model/editormodel';
+import { EditorDataClass } from '../model/editormodel';
 import EditorFileMenu from './menu/EditorFileMenu';
-import { SelectedNodeDescription } from './sidebar/selected';
 import {
   DiagPackage,
   DiagTypes,
@@ -124,7 +123,6 @@ import { LoadingContainer } from './common/Loading';
 import { createNewComment } from '../utils/Comments';
 import EditorViewMenu from './menu/EditorViewMenu';
 import { EditorAction } from '../model/editor/state';
-import { HistoryAction } from '../model/editor/history';
 import {
   addCommentCommand,
   deleteCommentCommand,
@@ -141,6 +139,7 @@ import {
   removeEdgeCommand,
 } from '../model/editor/commands/page';
 import SearchComponentPane from './sidebar/search';
+import { SelectedNodeDescription } from './sidebar/selected';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -262,7 +261,6 @@ const ModelEditor: React.FC<{
   }
 
   const model = state.model;
-  const mw: ModelWrapper = { page: state.page, model, type: 'model' };
 
   const elements = getEditorReactFlowElementsFrom(
     state.page,
@@ -277,8 +275,6 @@ const ModelEditor: React.FC<{
     toggleCommentResolved,
     deleteComment
   );
-
-  Logger.log(selected);
 
   async function saveRepo() {
     if (repo && updateObjects && isVisible) {
@@ -324,17 +320,6 @@ const ModelEditor: React.FC<{
     setDialogPack({ ...dialogPack, type: x });
   }
 
-  function setModelAfterDelete(model: EditorModel) {
-    // setState(
-    //   {
-    //     ...state,
-    //     model: { ...model },
-    //   },
-    //   true
-    // );
-    setDialogType(null);
-  }
-
   function setDiag(
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
@@ -344,8 +329,8 @@ const ModelEditor: React.FC<{
       nodeType: nodeType,
       model: model,
       page: state.page,
-      id: id,
-      setModelAfterDelete,
+      id: id,      
+      act,
     };
     setDialogPack(SetDiagAction[action](props));
   }
@@ -374,10 +359,6 @@ const ModelEditor: React.FC<{
 
   function setModelWrapper(mw: ModelWrapper) {
     // setState({ ...state, model: mw.model, page: mw.page }, true);
-  }
-
-  function onPageChange(action: HistoryAction) {
-    act(action);
   }
 
   function onProcessClick(pageid: string, processid: string): void {
@@ -630,7 +611,7 @@ const ModelEditor: React.FC<{
     </ControlGroup>
   );
 
-  const breadcrumbs = getBreadcrumbsActions(state.history, onPageChange);
+  const breadcrumbs = getBreadcrumbsActions(state.history, act);
 
   const sidebar = (
     <Sidebar
@@ -643,11 +624,11 @@ const ModelEditor: React.FC<{
           title: 'Selected node',
           content: (
             <SelectedNodeDescription
-              modelWrapper={mw}
+              model={model}
+              page={state.page}
               setDialog={setDiag}
-              setModel={m => setModelWrapper({ ...mw, model: m })}
+              act={act}
               provision={selectionImport}
-              getLatestLayoutMW={() => mw}
               onSelect={setSelectedId}
             />
           ),
@@ -672,12 +653,11 @@ const ModelEditor: React.FC<{
     />
   );
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    return function () {
       setReference(undefined);
-    },
-    [repo]
-  );
+    };
+  }, [repo]);
 
   function nodeDrag(id: string) {
     if (reactFlow !== null) {
@@ -721,7 +701,7 @@ const ModelEditor: React.FC<{
                 act={act}
                 state={state}
                 callback={dialogPack.callback}
-                cancel={() => setDialogType(null)}
+                done={() => setDialogType(null)}
                 msg={dialogPack.msg}
               />
             </Dialog>

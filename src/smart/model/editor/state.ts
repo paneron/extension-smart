@@ -61,7 +61,9 @@ export function useEditorState(
   const page = history[history.length - 1].page;
   const state: EditorState = { history, page, model, type: 'model' };
 
-  // Logger.log('Page', model.pages[page].data);
+  // Logger.log('Page', Object.values(model.pages[page].childs).map(x => x.element));
+  // Logger.log('Edges', Object.values(model.pages[page].edges).map(x => `${x.from}-${x.to}`));
+  // Logger.log('Elements', Object.values(model.elements).map(x => x.id));
 
   if (post) {
     // Logger.log('Post processing');

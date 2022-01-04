@@ -1,3 +1,4 @@
+import { ModelAction } from '../model/editor/model';
 import {
   EditorModel,
   EditorProcess,
@@ -7,7 +8,7 @@ import {
 import { DataType } from '../serialize/interface/baseinterface';
 import { DeletableNodeTypes } from './constants';
 
-function deleteProcess(model: EditorModel, pageid: string, id: string) {
+function deleteProcess_deprecated(model: EditorModel, pageid: string, id: string) {
   const page = model.pages[pageid];
   delete page.childs[id];
   deleteRelatedEdges(page, id);
@@ -33,7 +34,7 @@ export function deletePage(model: EditorModel, pageid: string) {
     const child = page.childs[c];
     const elm = model.elements[child.element];
     if (isEditorProcess(elm)) {
-      deleteProcess(model, pageid, elm.id);
+      deleteProcess_deprecated(model, pageid, elm.id);
     } else {
       delete model.elements[elm.id];
     }
@@ -42,13 +43,24 @@ export function deletePage(model: EditorModel, pageid: string) {
   delete model.pages[pageid];
 }
 
-function deleteNode(model: EditorModel, pageid: string, id: string) {
+function deleteNode_deprecated(model: EditorModel, pageid: string, id: string) {
   const page = { ...model.pages[pageid] };
   delete page.childs[id];
   model.pages[pageid] = page;
   deleteRelatedEdges(page, id);
   delete model.elements[id];
   return model;
+}
+
+export function deleteNodeAction(model: EditorModel, pageid: string, id: string): ModelAction {
+  const action:ModelAction = {
+    type: 'model',
+    act: 'pages',
+    task: 'delete-element',
+    value: model.elements[id],
+    page: pageid    
+  }
+  return action;
 }
 
 function deleteRelatedEdges(page: EditorSubprocess, id: string) {
@@ -60,16 +72,16 @@ function deleteRelatedEdges(page: EditorSubprocess, id: string) {
   }
 }
 
-export const DeleteAction: Record<
+export const DeleteAction_deprecated: Record<
   DeletableNodeTypes,
   (model: EditorModel, pageid: string, id: string) => EditorModel
 > = {
-  [DataType.PROCESS]: deleteProcess,
-  [DataType.APPROVAL]: deleteNode,
-  [DataType.TIMEREVENT]: deleteNode,
-  [DataType.SIGNALCATCHEVENT]: deleteNode,
-  [DataType.EGATE]: deleteNode,
-  [DataType.ENDEVENT]: deleteNode,
+  [DataType.PROCESS]: deleteProcess_deprecated,
+  [DataType.APPROVAL]: deleteNode_deprecated,
+  [DataType.TIMEREVENT]: deleteNode_deprecated,
+  [DataType.SIGNALCATCHEVENT]: deleteNode_deprecated,
+  [DataType.EGATE]: deleteNode_deprecated,
+  [DataType.ENDEVENT]: deleteNode_deprecated,
 };
 
 export const DeleteConfirmMessgae: Record<DeletableNodeTypes, string> = {

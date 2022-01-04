@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react';
-import { useStoreState, Elements, isNode } from 'react-flow-renderer';
+import React, { useMemo, useState } from 'react';
+import { useStoreState } from 'react-flow-renderer';
 import { EditorNodeWithInfoCallback } from '../../model/FlowContainer';
 import {
   EditorModel,
-  isEditorData,
+  EditorNode,  
   isEditorStartEvent,
 } from '../../model/editormodel';
 import {
@@ -19,11 +19,12 @@ import {
   MMELReference,
 } from '../../serialize/interface/supportinterface';
 import QuickEdit from './QuickEditComponents';
-import { ModelWrapper } from '../../model/modelwrapper';
 import { RefTextSelection } from '../../model/selectionImport';
+import { ModelAction } from '../../model/editor/model';
 
 export const SelectedNodeDescription: React.FC<{
-  modelWrapper: ModelWrapper;
+  model: EditorModel;
+  page: string;
   setDialog?: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
@@ -38,73 +39,77 @@ export const SelectedNodeDescription: React.FC<{
     provision: MMELProvision;
     getRefById?: (id: string) => MMELReference | null;
   }>;
-  setModel?: (m: EditorModel) => void;
+  act?: (x: ModelAction) => void;
   provision?: RefTextSelection;
-  getLatestLayoutMW?: () => ModelWrapper;
   onSelect?: (id: string | undefined) => void;
 }> = function ({
-  modelWrapper,
+  model,
+  page,
   setDialog,
   CustomAttribute,
   CustomProvision,
-  setModel,
+  act,
   provision,
-  getLatestLayoutMW,
   onSelect,
 }) {
-  const model = modelWrapper.model;
-  const pageid = modelWrapper.page;
-  const selected = useStoreState(store => store.selectedElements);
+  const flowSelect = useStoreState(store => store.selectedElements);
+  const [selectedPage, setSelectedPage] = useState<string|undefined>(undefined);
+  const [selected, setSelected] = useState<EditorNodeWithInfoCallback|undefined>(undefined);
 
-  const elm: EditorNodeWithInfoCallback | null = getSelectedElement(selected);
+  const current = model.pages[page];
 
-  useMemo(
-    () => onSelect !== undefined && onSelect(elm !== null ? elm.id : undefined),
-    [elm]
-  );
-
-  function getSelectedElement(
-    selected: Elements<unknown> | null
-  ): EditorNodeWithInfoCallback | null {
-    if (selected !== null && selected.length > 0) {
-      const s = selected[0];
-      const page = model.pages[pageid];
-      const elm = model.elements[s.id];
-      if (isNode(s) && elm !== undefined) {
-        if (
-          (page !== undefined && page.childs[s.id] !== undefined) ||
-          isEditorData(elm)
-        ) {
-          return {
-            ...(s.data as EditorNodeWithInfoCallback),
-            ...model.elements[s.id],
-          };
-        }
-      }
-    }
-    return null;
+  function deselect() {
+    setSelected(undefined);
+      if (onSelect) {
+        onSelect(undefined);
+      }       
   }
+
+  useMemo(() => {
+    if (flowSelect && flowSelect.length > 0) {      
+      const s = flowSelect[0];         
+      if (current.childs[s.id] || current.data[s.id]) {
+        setSelected(s.data as EditorNodeWithInfoCallback);
+        setSelectedPage(page);
+        if (onSelect) {
+          onSelect(s.id);
+        }        
+      }      
+    } else {
+      deselect();
+    }
+  }, [flowSelect]);
+
+  if (selected && selectedPage) {
+    if (page !== selectedPage) {      
+      deselect();
+    }
+    if (!(current.childs[selected.id] || current.data[selected.id])) {
+      deselect();
+    }
+  }
+
+  const elm: EditorNodeWithInfoCallback | undefined = getElement(model.elements, selected);  
 
   return (
     <MGDSidebar>
-      {elm !== null ? (
-        setModel !== undefined &&
-        setDialog !== undefined &&
-        !isEditorStartEvent(elm) ? (
+      {elm ? (
+        act && setDialog && !isEditorStartEvent(elm) ? (
           <QuickEdit
             node={elm}
-            modelWrapper={modelWrapper}
-            setModel={setModel}
+            modelWrapper={{ page, model, type: 'model' }}
+            setModel={() => {}}
             setDialog={setDialog}
-            page={model.pages[pageid]}
+            page={model.pages[page]}
+            model={model}
+            act={act}
             provision={provision}
-            getLatestLayoutMW={getLatestLayoutMW}
           />
         ) : (
           <Describe
             node={elm}
             model={model}
-            page={model.pages[pageid]}
+            page={model.pages[page]}
             CustomAttribute={CustomAttribute}
             CustomProvision={CustomProvision}
           />
@@ -115,3 +120,19 @@ export const SelectedNodeDescription: React.FC<{
     </MGDSidebar>
   );
 };
+
+function getElement(  
+  elms: Record<string, EditorNode>,
+  selected: EditorNodeWithInfoCallback | undefined
+): EditorNodeWithInfoCallback | undefined {
+  if (selected) {
+    const elm = elms[selected.id];
+    if (elm) {
+      return {
+        ...selected,
+        ...elm
+      }
+    }         
+  }
+  return undefined;  
+}

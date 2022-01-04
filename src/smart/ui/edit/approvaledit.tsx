@@ -49,7 +49,6 @@ const EditApprovalPage: React.FC<{
   minimal?: boolean;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
-  getLatestLayoutMW?: () => ModelWrapper;
   setSelectedNode?: (id: string) => void;
 }> = function ({
   modelWrapper,
@@ -59,7 +58,6 @@ const EditApprovalPage: React.FC<{
   minimal = false,
   onFullEditClick,
   onDeleteClick,
-  getLatestLayoutMW,
   setSelectedNode,
 }) {
   const model = modelWrapper.model;
@@ -118,21 +116,19 @@ const EditApprovalPage: React.FC<{
 
   function onNewID(id: string) {
     const oldid = approval.id;
-    if (getLatestLayoutMW !== undefined) {
-      const mw = getLatestLayoutMW();
-      const updated = save(
-        oldid,
-        { ...editing, id },
-        modelWrapper.page,
-        mw.model
-      );
-      if (updated !== null) {
-        setModel({ ...updated });
-      }
-      setHasChange(false);
-      if (setSelectedNode !== undefined) {
-        setSelectedNode(id);
-      }
+    const mw = modelWrapper;
+    const updated = save(
+      oldid,
+      { ...editing, id },
+      modelWrapper.page,
+      mw.model
+    );
+    if (updated !== null) {
+      setModel({ ...updated });
+    }
+    setHasChange(false);
+    if (setSelectedNode !== undefined) {
+      setSelectedNode(id);
     }
   }
 

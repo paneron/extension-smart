@@ -4,17 +4,17 @@ import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 
 export const ConfirmDialog: React.FC<{
   callback: () => void;
-  cancel: () => void;
+  done: () => void;
   msg: string;
-}> = function ({ callback, cancel, msg }) {
+}> = function ({ callback, done, msg }) {
   return (
     <div style={{ textAlign: 'center' }}>
       <p> {msg} </p>
       <MGDButtonGroup>
-        <Button intent="danger" icon="confirm" onClick={() => callback()}>
+        <Button intent="danger" icon="confirm" onClick={() => {callback();done();}}>
           Confirm
         </Button>
-        <Button icon="disable" onClick={() => cancel()}>
+        <Button icon="disable" onClick={() => done()}>
           Cancel
         </Button>
       </MGDButtonGroup>

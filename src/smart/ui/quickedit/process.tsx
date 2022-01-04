@@ -1,6 +1,5 @@
 import React from 'react';
 import { EditorModel, EditorProcess } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
 import { RefTextSelection } from '../../model/selectionImport';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
@@ -21,7 +20,6 @@ const QuickEditProcess: React.FC<{
     id: string
   ) => void;
   provision?: RefTextSelection;
-  getLatestLayoutMW?: () => ModelWrapper;
   setSelectedNode: (id: string) => void;
 }> = props => {
   const { process, model, setModel, setDialog } = props;

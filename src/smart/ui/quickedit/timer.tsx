@@ -18,7 +18,6 @@ const QuickEditTimer: React.FC<{
     action: EditAction,
     id: string
   ) => void;
-  getLatestLayoutMW?: () => ModelWrapper;
   setSelectedNode: (id: string) => void;
 }> = props => {
   const { timer, setDialog } = props;

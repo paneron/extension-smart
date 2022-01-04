@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStoreActions } from 'react-flow-renderer';
+import { ModelAction } from '../../model/editor/model';
 import {
   EditorApproval,
   EditorDataClass,
@@ -36,7 +37,9 @@ const NODE_EDIT_VIEWS: Record<
   React.FC<{
     node: EditorNode;
     modelWrapper: ModelWrapper;
+    model: EditorModel;
     setModel: (m: EditorModel) => void;
+    act: (x: ModelAction) => void;
     setDialog: (
       nodeType: EditableNodeTypes | DeletableNodeTypes,
       action: EditAction,
@@ -44,7 +47,6 @@ const NODE_EDIT_VIEWS: Record<
     ) => void;
     page: EditorSubprocess;
     provision?: RefTextSelection;
-    getLatestLayoutMW?: () => ModelWrapper;
     setSelectedNode: (id: string) => void;
   }>
 > = {
@@ -90,8 +92,10 @@ const NODE_EDIT_VIEWS: Record<
 
 const QuickEdit: React.FC<{
   node: EditorNode;
-  modelWrapper: ModelWrapper;
+  model: EditorModel;  
+  modelWrapper: ModelWrapper; // will be removed
   setModel: (m: EditorModel) => void;
+  act: (x: ModelAction) => void;
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
@@ -99,7 +103,6 @@ const QuickEdit: React.FC<{
   ) => void;
   page: EditorSubprocess;
   provision?: RefTextSelection;
-  getLatestLayoutMW?: () => ModelWrapper;
 }> = function (props) {
   const { node } = props;
   const Edit = NODE_EDIT_VIEWS[node.datatype as QuickEditableNodeTypes];

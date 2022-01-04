@@ -187,7 +187,7 @@ export function useModel(
           return convertAction(reverse);
         }
         case 'pages': {
-          const reverseCascade = cascadeCheckPages(action);
+          const reverseCascade = cascadeCheckPages(pages, action);
           const reverse = actPages(action);
           if (reverse) {
             reverse.cascade = reverseCascade;

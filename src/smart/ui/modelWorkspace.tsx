@@ -18,7 +18,7 @@ import {
 } from '../model/modelwrapper';
 import { createModelHistory, PageHistory } from '../model/history';
 import { EdgeTypes, NodeTypes } from '../model/States';
-import { SelectedNodeDescription } from './sidebar/selected';
+import { SelectedNodeDescription } from './sidebar/selected_deprecated';
 import { DataVisibilityButton, IdVisibleButton } from './control/buttons';
 import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
 import SearchComponentPane from './sidebar/search_deprecated';
