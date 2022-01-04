@@ -1,8 +1,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { EditorModel, EditorTimerEvent } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
+import { EditorModel, EditorSubprocess, EditorTimerEvent } from '../../model/editormodel';
 import {
   checkId,
   removeSpace,
@@ -12,6 +11,7 @@ import { TimerType } from '../../utils/constants';
 import { NormalComboBox, NormalTextField } from '../common/fields';
 import { EditPageButtons } from './commons';
 import { DescriptionItem } from '../common/description/fields';
+import { ModelAction } from '../../model/editor/model';
 
 interface CommonTimerEditProps {
   onUpdateClick: () => void;
@@ -22,8 +22,9 @@ interface CommonTimerEditProps {
 }
 
 const EditTimerPage: React.FC<{
-  modelWrapper: ModelWrapper;
-  setModel: (m: EditorModel) => void;
+  model: EditorModel;
+  act: (x: ModelAction) => void;
+  page: EditorSubprocess;
   id: string;
   closeDialog?: () => void;
   minimal?: boolean;
@@ -31,25 +32,25 @@ const EditTimerPage: React.FC<{
   onDeleteClick?: () => void;
   setSelectedNode?: (id: string) => void;
 }> = function ({
-  modelWrapper,
-  setModel,
+  model,
+  act,
+  page,
   id,
   minimal,
   closeDialog,
   onDeleteClick,
   onFullEditClick,
   setSelectedNode,
-}) {
-  const model = modelWrapper.model;
+}) {  
   const timer = model.elements[id] as EditorTimerEvent;
 
   const [editing, setEditing] = useState<EditorTimerEvent>({ ...timer });
   const [hasChange, setHasChange] = useState<boolean>(false);
 
   function onUpdateClick() {
-    const updated = save(id, editing, modelWrapper.page, model);
+    const updated = save(id, editing, page.id, model);
     if (updated !== null) {
-      setModel({ ...updated });
+      // setModel({ ...updated });
       if (closeDialog !== undefined) {
         closeDialog();
       }
@@ -72,10 +73,10 @@ const EditTimerPage: React.FC<{
     setHasChange(hc => {
       if (hc) {
         setEditing(edit => {
-          const updated = save(id, edit, modelWrapper.page, model);
-          if (updated !== null) {
-            setModel({ ...updated });
-          }
+          // const updated = save(id, edit, modelWrapper.page, model);
+          // if (updated !== null) {
+          //   setModel({ ...updated });
+          // }
           return edit;
         });
       }
@@ -85,16 +86,16 @@ const EditTimerPage: React.FC<{
 
   function onNewID(id: string) {
     const oldid = timer.id;
-    const mw = modelWrapper;
-    const updated = save(
-      oldid,
-      { ...editing, id },
-      modelWrapper.page,
-      mw.model
-    );
-    if (updated !== null) {
-      setModel({ ...updated });
-    }
+    // const mw = modelWrapper;
+    // const updated = save(
+    //   oldid,
+    //   { ...editing, id },
+    //   modelWrapper.page,
+    //   mw.model
+    // );
+    // if (updated !== null) {
+    //   setModel({ ...updated });
+    // }
     setHasChange(false);
     if (setSelectedNode !== undefined) {
       setSelectedNode(id);

@@ -153,17 +153,12 @@ export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
   [DiagTypes.EDITTIMER]: {
     title: 'Edit Timer',
     fullscreen: true,
-    Panel: ({ state, setModelWrapper, done: cancel, msg }) => (
+    Panel: ({ state, act, done: cancel, msg }) => (
       <EditTimerPage
-        modelWrapper={{ model: state.model, page: state.page, type: 'model' }}
-        setModel={(m: EditorModel) =>
-          updateModel(m, setModelWrapper, {
-            model: state.model,
-            page: state.page,
-            type: 'model',
-          })
-        }
+        model={state.model}
+        act={act}
         id={msg}
+        page={state.model.pages[state.page]}
         closeDialog={cancel}
       />
     ),

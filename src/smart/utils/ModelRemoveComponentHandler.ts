@@ -43,15 +43,6 @@ export function deletePage(model: EditorModel, pageid: string) {
   delete model.pages[pageid];
 }
 
-function deleteNode_deprecated(model: EditorModel, pageid: string, id: string) {
-  const page = { ...model.pages[pageid] };
-  delete page.childs[id];
-  model.pages[pageid] = page;
-  deleteRelatedEdges(page, id);
-  delete model.elements[id];
-  return model;
-}
-
 export function deleteNodeAction(model: EditorModel, pageid: string, id: string): ModelAction {
   const action:ModelAction = {
     type: 'model',
@@ -71,18 +62,6 @@ function deleteRelatedEdges(page: EditorSubprocess, id: string) {
     }
   }
 }
-
-export const DeleteAction_deprecated: Record<
-  DeletableNodeTypes,
-  (model: EditorModel, pageid: string, id: string) => EditorModel
-> = {
-  [DataType.PROCESS]: deleteProcess_deprecated,
-  [DataType.APPROVAL]: deleteNode_deprecated,
-  [DataType.TIMEREVENT]: deleteNode_deprecated,
-  [DataType.SIGNALCATCHEVENT]: deleteNode_deprecated,
-  [DataType.EGATE]: deleteNode_deprecated,
-  [DataType.ENDEVENT]: deleteNode_deprecated,
-};
 
 export const DeleteConfirmMessgae: Record<DeletableNodeTypes, string> = {
   [DataType.PROCESS]: 'Confirm deleting the process?',

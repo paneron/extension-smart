@@ -1,6 +1,6 @@
 import React from 'react';
-import { EditorModel, EditorTimerEvent } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
+import { ModelAction } from '../../model/editor/model';
+import { EditorModel, EditorSubprocess, EditorTimerEvent } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
   DeletableNodeTypes,
@@ -11,14 +11,15 @@ import EditTimerPage from '../edit/timeredit';
 
 const QuickEditTimer: React.FC<{
   timer: EditorTimerEvent;
-  modelWrapper: ModelWrapper;
-  setModel: (m: EditorModel) => void;
+  model: EditorModel;
+  act: (x: ModelAction) => void;  
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
     id: string
   ) => void;
   setSelectedNode: (id: string) => void;
+  page: EditorSubprocess;
 }> = props => {
   const { timer, setDialog } = props;
 

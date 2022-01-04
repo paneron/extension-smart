@@ -1,9 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useStoreState } from 'react-flow-renderer';
-import { EditorNodeWithInfoCallback } from '../../model/FlowContainer';
 import {
-  EditorModel,
-  EditorNode,  
+  EditorModel,  
   isEditorStartEvent,
 } from '../../model/editormodel';
 import {
@@ -54,7 +52,7 @@ export const SelectedNodeDescription: React.FC<{
 }) {
   const flowSelect = useStoreState(store => store.selectedElements);
   const [selectedPage, setSelectedPage] = useState<string|undefined>(undefined);
-  const [selected, setSelected] = useState<EditorNodeWithInfoCallback|undefined>(undefined);
+  const [selected, setSelected] = useState<string|undefined>(undefined);
 
   const current = model.pages[page];
 
@@ -69,7 +67,7 @@ export const SelectedNodeDescription: React.FC<{
     if (flowSelect && flowSelect.length > 0) {      
       const s = flowSelect[0];         
       if (current.childs[s.id] || current.data[s.id]) {
-        setSelected(s.data as EditorNodeWithInfoCallback);
+        setSelected(s.id);
         setSelectedPage(page);
         if (onSelect) {
           onSelect(s.id);
@@ -84,12 +82,12 @@ export const SelectedNodeDescription: React.FC<{
     if (page !== selectedPage) {      
       deselect();
     }
-    if (!(current.childs[selected.id] || current.data[selected.id])) {
+    if (!(current.childs[selected] || current.data[selected])) {
       deselect();
     }
   }
 
-  const elm: EditorNodeWithInfoCallback | undefined = getElement(model.elements, selected);  
+  const elm = selected ? model.elements[selected]: undefined;
 
   return (
     <MGDSidebar>
@@ -120,19 +118,3 @@ export const SelectedNodeDescription: React.FC<{
     </MGDSidebar>
   );
 };
-
-function getElement(  
-  elms: Record<string, EditorNode>,
-  selected: EditorNodeWithInfoCallback | undefined
-): EditorNodeWithInfoCallback | undefined {
-  if (selected) {
-    const elm = elms[selected.id];
-    if (elm) {
-      return {
-        ...selected,
-        ...elm
-      }
-    }         
-  }
-  return undefined;  
-}
