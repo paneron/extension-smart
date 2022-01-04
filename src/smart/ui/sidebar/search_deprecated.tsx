@@ -5,11 +5,11 @@ import MGDContainer from '../../MGDComponents/MGDContainer';
 import MGDLabel from '../../MGDComponents/MGDLabel';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import { EditorModel } from '../../model/editormodel';
-import { HistoryItem } from '../../model/history';
+import { PageHistory } from '../../model/history';
 import { Logger } from '../../utils/ModelFunctions';
 import {
-  findComponent,
-  SearchComponentRecord,
+  findComponent_deprecated,
+  SearchComponentRecord_deprecated,
 } from '../../utils/SearchFunctions';
 import { NumericComboBox } from '../common/fields';
 
@@ -17,14 +17,13 @@ const RECORD_PER_PAGE = 10;
 
 const SearchComponentPane: React.FC<{
   model: EditorModel;
-  onChange: (selected: string, history: HistoryItem[]) => void;
+  onChange: (selected: string, pageid: string, history: PageHistory) => void;
   resetSearchElements: (set: Set<string>) => void;
 }> = function ({ model, onChange, resetSearchElements }) {
   const [search, setSearch] = useState<string>('');
-
   const result = useMemo(() => {
     try {
-      const result = findComponent(model, search);
+      const result = findComponent_deprecated(model, search);
       const set = new Set<string>();
       for (const r of result) {
         set.add(r.id);
@@ -59,8 +58,8 @@ const SearchComponentPane: React.FC<{
 
 const SearchResultPane: React.FC<{
   key: string;
-  result: SearchComponentRecord[];
-  onChange: (selected: string, history: HistoryItem[]) => void;
+  result: SearchComponentRecord_deprecated[];
+  onChange: (selected: string, pageid: string, history: PageHistory) => void;
 }> = function ({ key, result, onChange }) {
   const [page, setPage] = useState<number>(0);
   if (result.length === 0) {
@@ -87,7 +86,7 @@ const SearchResultPane: React.FC<{
           key={`searchentry#${key}#page${page}#${index}`}
           pos={page * RECORD_PER_PAGE + index + 1}
           entry={r}
-          onClick={() => onChange(r.id, r.history)}
+          onClick={() => onChange(r.id, r.page, r.history)}
         />
       ))}
       <MGDContainer>
@@ -113,10 +112,10 @@ const SearchResultPane: React.FC<{
 
 const SearchResultEntry: React.FC<{
   pos: number;
-  entry: SearchComponentRecord;
+  entry: SearchComponentRecord_deprecated;
   onClick: () => void;
 }> = function ({ pos, entry, onClick }) {
-  const hisotry = entry.history;
+  const hisotry = entry.history.items;
   const parent =
     hisotry.length > 1 ? hisotry[hisotry.length - 1].pathtext : 'root';
   return (

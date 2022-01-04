@@ -30,6 +30,7 @@ import {
   CommentAction,
   useComment,
 } from './components/comment';
+import { useMemo } from 'react';
 
 type ALLACTION =
   | ElmAction
@@ -76,24 +77,42 @@ export function useModel(
   const [comments, actComments, initComments] = useComment(x.comments);
   const [elements, actElements, initElms] = useElements(x.elements);
 
-  const model: EditorModel = {
-    ...x,
-    meta,
-    sections,
-    terms,
-    roles,
-    elements,
-    refs,
-    provisions,
-    pages,
-    enums,
-    vars,
-    views,
-    tables,
-    figures,
-    comments,
-    root: x.root,
-  };
+  const model: EditorModel = useMemo(
+    () => ({
+      ...x,
+      meta,
+      sections,
+      terms,
+      roles,
+      elements,
+      refs,
+      provisions,
+      pages,
+      enums,
+      vars,
+      views,
+      tables,
+      figures,
+      comments,
+      root: x.root,
+    }),
+    [
+      meta,
+      sections,
+      terms,
+      roles,
+      elements,
+      refs,
+      provisions,
+      pages,
+      enums,
+      vars,
+      views,
+      tables,
+      figures,
+      comments,
+    ]
+  );
 
   function act(action: ModelAction): ModelAction | undefined {
     // Logger.log('Action:', action);

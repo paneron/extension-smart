@@ -32,7 +32,7 @@ import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
 import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
 import { DataVisibilityButton, IdVisibleButton } from './control/buttons';
-import SearchComponentPane from './sidebar/search';
+import SearchComponentPane from './sidebar/search_deprecated';
 import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,

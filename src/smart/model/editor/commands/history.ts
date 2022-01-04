@@ -14,11 +14,20 @@ export function pageChangeCommand(pageid: string, text: string) {
   return action;
 }
 
-export function drillUpAction() {
+export function drillUpCommand() {
   const action: HistoryAction = {
     type: 'history',
     act: 'pop',
     value: 1,
+  };
+  return action;
+}
+
+export function replaceHisCommand(history: HistoryItem[]) {
+  const action: HistoryAction = {
+    type: 'history',
+    act: 'replace',
+    value: history,
   };
   return action;
 }

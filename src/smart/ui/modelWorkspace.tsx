@@ -21,7 +21,7 @@ import { EdgeTypes, NodeTypes } from '../model/States';
 import { SelectedNodeDescription } from './sidebar/selected';
 import { DataVisibilityButton, IdVisibleButton } from './control/buttons';
 import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
-import SearchComponentPane from './sidebar/search';
+import SearchComponentPane from './sidebar/search_deprecated';
 import LegendPane from './common/description/LegendPane';
 import {
   getHighlightedStyleById,

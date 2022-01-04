@@ -36,18 +36,21 @@ export function newEdgeCommand(
 type DragStartRecord = {
   x: number;
   y: number;
-}
+};
 
-export function dragCommand(page: string, model: EditorModel, flowNode: Node, ds: DragStartRecord) {
+export function dragCommand(
+  page: string,
+  model: EditorModel,
+  flowNode: Node,
+  ds: DragStartRecord
+) {
   const action: ModelAction = {
     type: 'model',
     act: 'pages',
     task: 'move',
     page: page,
     node: flowNode.id,
-    nodetype: isEditorData(model.elements[flowNode.id])
-      ? 'data'
-      : 'node',
+    nodetype: isEditorData(model.elements[flowNode.id]) ? 'data' : 'node',
     x: flowNode.position.x,
     y: flowNode.position.y,
     fromx: ds.x,

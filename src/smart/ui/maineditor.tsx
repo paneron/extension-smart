@@ -41,7 +41,7 @@ import {
 } from '../model/modelwrapper';
 import {
   getBreadcrumbsActions,
-  PageHistory,
+  HistoryItem,
   RepoHistory,
 } from '../model/history';
 import {
@@ -56,10 +56,7 @@ import {
   NodeTypes,
   ReferenceContent,
 } from '../model/States';
-import {
-  EditorDataClass,
-  EditorModel,  
-} from '../model/editormodel';
+import { EditorDataClass, EditorModel } from '../model/editormodel';
 import EditorFileMenu from './menu/EditorFileMenu';
 import { SelectedNodeDescription } from './sidebar/selected';
 import {
@@ -95,7 +92,6 @@ import {
   react_flow_container_layout,
   sidebar_layout,
 } from '../../css/layout';
-import SearchComponentPane from './sidebar/search';
 import { checkId, genDCIdByRegId, Logger } from '../utils/ModelFunctions';
 import LegendPane from './common/description/LegendPane';
 import {
@@ -135,14 +131,16 @@ import {
   resolveCommentCommand,
 } from '../model/editor/commands/comment';
 import {
-  drillUpAction,
+  drillUpCommand,
   pageChangeCommand,
+  replaceHisCommand,
 } from '../model/editor/commands/history';
 import {
   dragCommand,
   newEdgeCommand,
   removeEdgeCommand,
 } from '../model/editor/commands/page';
+import SearchComponentPane from './sidebar/search';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -211,7 +209,11 @@ const ModelEditor: React.FC<{
   const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
   const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
   const [repoHis, setRepoHis] = useState<RepoHistory>([]);
-  const [dragStart, setDragStart] = useState<{ id: string; x: number; y: number }>({
+  const [dragStart, setDragStart] = useState<{
+    id: string;
+    x: number;
+    y: number;
+  }>({
     id: '',
     x: 0,
     y: 0,
@@ -275,6 +277,8 @@ const ModelEditor: React.FC<{
     toggleCommentResolved,
     deleteComment
   );
+
+  Logger.log(selected);
 
   async function saveRepo() {
     if (repo && updateObjects && isVisible) {
@@ -381,7 +385,7 @@ const ModelEditor: React.FC<{
   }
 
   function drillUp(): void {
-    act(drillUpAction());
+    act(drillUpCommand());
   }
 
   function onDrop(event: React.DragEvent<unknown>) {
@@ -454,20 +458,9 @@ const ModelEditor: React.FC<{
     }
   }
 
-  function onPageAndHistroyChange(
-    selected: string,
-    pageid: string,
-    history: PageHistory
-  ) {
+  function onPageAndHistroyChange(selected: string, history: HistoryItem[]) {
     setSelected(selected);
-    // setState(
-    //   {
-    //     ...state,
-    //     history: history.items,
-    //     page: pageid,
-    //   },
-    //   true
-    // );
+    act(replaceHisCommand(history));
   }
 
   function getStyleById(id: string) {
