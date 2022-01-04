@@ -40,6 +40,7 @@ import { MapSet } from './mapmodel';
 import React from 'react';
 import { SerializedStyles } from '@emotion/react';
 import { MMELRepo, RepoIndex } from './repo';
+import { EditorViewOption } from './States';
 
 export interface ModelWrapper {
   model: EditorModel;
@@ -156,27 +157,23 @@ export function getEditorReactFlowElementsFrom(
   page: string,
   model: EditorModel,
   index: RepoIndex,
-  dvisible: boolean,
-  edgeDelete: boolean,
+  view: EditorViewOption,
   onProcessClick: (pageid: string, processid: string) => void,
   removeEdge: (id: string) => void,
   getStyleById: (id: string) => SerializedStyles,
   getSVGColorById: (id: string) => string,
-  idVisible: boolean,
-  commentVisible: boolean,
   addComment: (msg: string, pid: string, parent?: string) => void,
   toggleCommentResolved: (cid: string) => void,
   deleteComment: (cid: string, pid: string, parent?: string) => void
 ): Elements {
   const callback = getEditorNodeCallBack({
+    ...view,
     type: ModelType.EDIT,
     model: model,
     onProcessClick,
     getStyleClassById: getStyleById,
     getSVGColorById,
-    idVisible,
     index,
-    commentVisible,
     addComment,
     toggleCommentResolved,
     deleteComment,
@@ -185,9 +182,9 @@ export function getEditorReactFlowElementsFrom(
     return pageToFlowElements(
       model.pages[page],
       model.elements,
-      dvisible,
+      view.dvisible,
       callback,
-      e => createEdgeContainer(e, edgeDelete, removeEdge)
+      e => createEdgeContainer(e, view.edgeDeleteVisible, removeEdge)
     );
   } catch (e: unknown) {
     const error = e as Error;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { getRootName } from '../utils/ModelFunctions';
+import { HistoryAction } from './editor/history';
 import { EditorModel } from './editormodel';
 import { ModelWrapper } from './modelwrapper';
 import { MMELRepo } from './repo';
@@ -70,6 +71,21 @@ export function getBreadcrumbs(
     });
   });
   return breadcrumbs;
+}
+
+export function getBreadcrumbsActions(
+  history: HistoryItem[],
+  onPageChange: (x: HistoryAction) => void
+): Breadcrumb[] {
+  return history.map((his, index) => ({
+    label: <>{his.pathtext}</>,
+    onNavigate: () =>
+      onPageChange({
+        type: 'history',
+        act: 'pop',
+        value: history.length - index - 1,
+      }),
+  }));
 }
 
 export function addToHistory(

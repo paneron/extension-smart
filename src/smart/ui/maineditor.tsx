@@ -40,10 +40,9 @@ import {
   ModelWrapper,
 } from '../model/modelwrapper';
 import {
-  addToHistory,
-  getBreadcrumbs,
+  getBreadcrumbsActions,
+  HistoryItem,
   PageHistory,
-  popPage,
   RepoHistory,
 } from '../model/history';
 import {
@@ -138,6 +137,7 @@ import { createNewComment } from '../utils/Comments';
 import EditorViewMenu from './menu/EditorViewMenu';
 import { EditorAction } from '../model/editor/state';
 import { ModelAction } from '../model/editor/model';
+import { HistoryAction } from '../model/editor/history';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -178,7 +178,7 @@ const ModelEditor: React.FC<{
     []
   );
 
-  const [reactFlow, setRfInstance] = useState<OnLoadParams | null>(null);
+  const [reactFlow, setReactFlow] = useState<OnLoadParams | null>(null);
   const [dialogPack, setDialogPack] = useState<DiagPackage>({
     type: null,
     callback: () => {},
@@ -260,14 +260,11 @@ const ModelEditor: React.FC<{
     state.page,
     model,
     index,
-    view.dvisible,
-    view.edgeDeleteVisible,
+    view,
     onProcessClick,
     removeEdge,
     getStyleById,
     getSVGColorById,
-    view.idVisible,
-    view.commentVisible,
     addCommentToModel,
     toggleCommentResolved,
     deleteComment
@@ -309,7 +306,7 @@ const ModelEditor: React.FC<{
   }
 
   function onLoad(params: OnLoadParams) {
-    setRfInstance(params);
+    setReactFlow(params);
     params.fitView();
   }
 
@@ -342,35 +339,6 @@ const ModelEditor: React.FC<{
     };
     setDialogPack(SetDiagAction[action](props));
   }
-
-  // function saveLayout(): ModelWrapper {
-  //   Logger.log('Save Layout');
-  //   if (reactFlow !== null) {
-  //     for (const x of reactFlow.getElements()) {
-  //       const data = x.data;
-  //       const page = model.pages[state.page];
-  //       if (isNode(x) && isEditorNode(data)) {
-  //         const node = isEditorData(data)
-  //           ? page.data[data.id]
-  //           : page.childs[data.id];
-  //         if (node !== undefined) {
-  //           node.x = x.position.x;
-  //           node.y = x.position.y;
-  //         } else {
-  //           const nc = createSubprocessComponent(data.id);
-  //           if (isEditorData(data)) {
-  //             page.data[data.id] = nc;
-  //           } else {
-  //             page.childs[data.id] = nc;
-  //           }
-  //           nc.x = x.position.x;
-  //           nc.y = x.position.y;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   return { page: state.page, model, type: 'model' };
-  // }
 
   function addCommentToModel(msg: string, pid: string, parent?: string) {
     const m = createNewComment(model.comments, username, msg);
@@ -425,24 +393,33 @@ const ModelEditor: React.FC<{
     // setState({ ...state, model: mw.model, page: mw.page }, true);
   }
 
-  function onPageChange(updated: PageHistory, newPage: string) {
-    state.history = updated.items;
-    state.page = newPage;
+  function onPageChange(action: HistoryAction) {
+    act(action);
+    // state.history = updated.items;
+    // state.page = newPage;
     // setState({ ...state }, true);
   }
 
   function onProcessClick(pageid: string, processid: string): void {
-    state.page = pageid;
-    Logger.log('Go to page', pageid);
-    addToHistory({ items: state.history }, state.page, processid);
-    // setState({ ...state }, true);
-  }  
+    const item: HistoryItem = {
+      page: pageid,
+      pathtext: processid,
+    };
+    const action: HistoryAction = {
+      type: 'history',
+      act: 'push',
+      value: [item],
+    };
+    act(action);
+  }
 
   function drillUp(): void {
-    if (state.history.length > 0) {
-      state.page = popPage({ items: state.history });
-      // setState({ ...state }, true);
-    }
+    const action: HistoryAction = {
+      type: 'history',
+      act: 'pop',
+      value: 1,
+    };
+    act(action);
   }
 
   function onDrop(event: React.DragEvent<unknown>) {
@@ -505,8 +482,8 @@ const ModelEditor: React.FC<{
       act: 'pages',
       task: 'delete-edge',
       value: id,
-      page: state.page
-    }
+      page: state.page,
+    };
     act(action);
   }
 
@@ -716,7 +693,7 @@ const ModelEditor: React.FC<{
     </ControlGroup>
   );
 
-  const breadcrumbs = getBreadcrumbs({ items: state.history }, onPageChange);
+  const breadcrumbs = getBreadcrumbsActions(state.history, onPageChange);
 
   const sidebar = (
     <Sidebar

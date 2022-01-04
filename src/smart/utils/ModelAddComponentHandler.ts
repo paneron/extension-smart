@@ -6,14 +6,14 @@ import {
   EditorModel,
   EditorNode,
   EditorProcess,
-  EditorSignalEvent,  
-  EditorTimerEvent,  
+  EditorSignalEvent,
+  EditorTimerEvent,
 } from '../model/editormodel';
 import { DataType } from '../serialize/interface/baseinterface';
 import { capitalizeString, findUniqueID, trydefaultID } from './ModelFunctions';
 import { NewComponentTypes } from './constants';
 import {
-  createApproval,  
+  createApproval,
   createEGate,
   createEndEvent,
   createProcess,
