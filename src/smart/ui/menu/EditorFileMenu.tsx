@@ -1,24 +1,23 @@
 import React, { useContext } from 'react';
 import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { ModelWrapper } from '../../model/modelwrapper';
 import { MMELToText } from '../../serialize/MMEL';
 import { DiagTypes } from '../dialog/dialogs';
 import { FILE_TYPE, saveToFileSystem } from '../../utils/IOFunctions';
+import { EditorModel } from '../../model/editormodel';
 
 const EditorFileMenu: React.FC<{
-  getLatestLayout: () => ModelWrapper;
+  model: EditorModel;
   setDialogType: (x: DiagTypes) => void;
   onRepoSave: () => void;
-}> = function ({ getLatestLayout, setDialogType, onRepoSave }) {
+}> = function ({ model, setDialogType, onRepoSave }) {
   const { getBlob, writeFileToFilesystem } = useContext(DatasetContext);
 
   const canSave = getBlob && writeFileToFilesystem;
 
   // Export
   async function handleSave() {
-    const mw = getLatestLayout();
-    const fileData = MMELToText(mw.model);
+    const fileData = MMELToText(model);
 
     await saveToFileSystem({
       getBlob,
@@ -36,7 +35,7 @@ const EditorFileMenu: React.FC<{
         onClick={onRepoSave}
         icon="floppy-disk"
       />
-      <MenuItem text="Export" onClick={onRepoSave} icon="export">
+      <MenuItem text="Export" icon="export">
         <MenuItem text="SMART file" onClick={handleSave} disabled={!canSave} />
       </MenuItem>
       <MenuDivider />

@@ -368,28 +368,36 @@ function pageToFlowElements(
       const elm = elms[x.element];
       if (isEditorProcess(elm)) {
         for (const input of elm.input) {
-          edges.push(createDataLinkContainer(elms[input], elm));
+          if (elms[input]) {
+            edges.push(createDataLinkContainer(elms[input], elm));
+          }
         }
         for (const input of elm.output) {
-          edges.push(createDataLinkContainer(elm, elms[input]));
+          if (elms[input]) {
+            edges.push(createDataLinkContainer(elm, elms[input]));
+          }
         }
       } else if (isEditorApproval(elm)) {
         for (const input of elm.records) {
-          edges.push(createDataLinkContainer(elm, elms[input]));
+          if (elms[input]) {
+            edges.push(createDataLinkContainer(elm, elms[input]));
+          }
         }
       }
     }
     for (const x of Object.values(page.data)) {
       const data = elms[x.element];
-      const dc = isEditorRegistry(data) ? elms[data.data] : data;
-      if (isEditorDataClass(dc)) {
+      const dc = data && isEditorRegistry(data) ? elms[data.data] : data;
+      if (dc && isEditorDataClass(dc)) {
         for (const y of dc.rdcs) {
           const target = elms[y];
-          const dep =
-            isEditorDataClass(target) && elms[target.mother]
-              ? elms[target.mother]
-              : target;
-          edges.push(createDataLinkContainer(data, dep));
+          if (target) {
+            const dep =
+              isEditorDataClass(target) && elms[target.mother]
+                ? elms[target.mother]
+                : target;
+            edges.push(createDataLinkContainer(data, dep));
+          }
         }
       }
     }

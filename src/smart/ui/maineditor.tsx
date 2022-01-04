@@ -41,12 +41,10 @@ import {
 } from '../model/modelwrapper';
 import {
   getBreadcrumbsActions,
-  HistoryItem,
   PageHistory,
   RepoHistory,
 } from '../model/history';
 import {
-  createEdge,
   createRegistry,
   createSubprocessComponent,
 } from '../utils/EditorFactory';
@@ -60,8 +58,7 @@ import {
 } from '../model/States';
 import {
   EditorDataClass,
-  EditorModel,
-  isEditorData,
+  EditorModel,  
 } from '../model/editormodel';
 import EditorFileMenu from './menu/EditorFileMenu';
 import { SelectedNodeDescription } from './sidebar/selected';
@@ -99,12 +96,7 @@ import {
   sidebar_layout,
 } from '../../css/layout';
 import SearchComponentPane from './sidebar/search';
-import {
-  checkId,
-  findUniqueID,
-  genDCIdByRegId,
-  Logger,
-} from '../utils/ModelFunctions';
+import { checkId, genDCIdByRegId, Logger } from '../utils/ModelFunctions';
 import LegendPane from './common/description/LegendPane';
 import {
   getHighlightedStyleById,
@@ -136,8 +128,21 @@ import { LoadingContainer } from './common/Loading';
 import { createNewComment } from '../utils/Comments';
 import EditorViewMenu from './menu/EditorViewMenu';
 import { EditorAction } from '../model/editor/state';
-import { ModelAction } from '../model/editor/model';
 import { HistoryAction } from '../model/editor/history';
+import {
+  addCommentCommand,
+  deleteCommentCommand,
+  resolveCommentCommand,
+} from '../model/editor/commands/comment';
+import {
+  drillUpAction,
+  pageChangeCommand,
+} from '../model/editor/commands/history';
+import {
+  dragCommand,
+  newEdgeCommand,
+  removeEdgeCommand,
+} from '../model/editor/commands/page';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -206,7 +211,8 @@ const ModelEditor: React.FC<{
   const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
   const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
   const [repoHis, setRepoHis] = useState<RepoHistory>([]);
-  const [dragStart, setDragStart] = useState<{ x: number; y: number }>({
+  const [dragStart, setDragStart] = useState<{ id: string; x: number; y: number }>({
+    id: '',
     x: 0,
     y: 0,
   });
@@ -342,43 +348,16 @@ const ModelEditor: React.FC<{
 
   function addCommentToModel(msg: string, pid: string, parent?: string) {
     const m = createNewComment(model.comments, username, msg);
-    const action: ModelAction = {
-      type: 'model',
-      act: 'comment',
-      task: 'add',
-      value: [m],
-      attach: {
-        id: pid,
-        parent,
-      },
-    };
-    act(action);
+    act(addCommentCommand(m, pid, parent));
   }
 
   function toggleCommentResolved(cid: string) {
     const com = model.comments[cid];
-    const action: ModelAction = {
-      type: 'model',
-      act: 'comment',
-      task: 'edit',
-      id: cid,
-      value: { ...com, resolved: !com.resolved },
-    };
-    act(action);
+    act(resolveCommentCommand(com));
   }
 
   function deleteComment(cid: string, pid: string, parent?: string) {
-    const action: ModelAction = {
-      type: 'model',
-      act: 'comment',
-      task: 'delete',
-      value: [cid],
-      attach: {
-        id: pid,
-        parent,
-      },
-    };
-    act(action);
+    act(deleteCommentCommand(cid, pid, parent));
   }
 
   function toggleDataVisibility() {
@@ -395,31 +374,14 @@ const ModelEditor: React.FC<{
 
   function onPageChange(action: HistoryAction) {
     act(action);
-    // state.history = updated.items;
-    // state.page = newPage;
-    // setState({ ...state }, true);
   }
 
   function onProcessClick(pageid: string, processid: string): void {
-    const item: HistoryItem = {
-      page: pageid,
-      pathtext: processid,
-    };
-    const action: HistoryAction = {
-      type: 'history',
-      act: 'push',
-      value: [item],
-    };
-    act(action);
+    act(pageChangeCommand(pageid, processid));
   }
 
   function drillUp(): void {
-    const action: HistoryAction = {
-      type: 'history',
-      act: 'pop',
-      value: 1,
-    };
-    act(action);
+    act(drillUpAction());
   }
 
   function onDrop(event: React.DragEvent<unknown>) {
@@ -477,14 +439,7 @@ const ModelEditor: React.FC<{
   }
 
   function removeEdge(id: string) {
-    const action: ModelAction = {
-      type: 'model',
-      act: 'pages',
-      task: 'delete-edge',
-      value: id,
-      page: state.page,
-    };
-    act(action);
+    act(removeEdgeCommand(state.page, id));
   }
 
   function connectHandle(x: Edge<EdgePackage> | Connection) {
@@ -493,16 +448,7 @@ const ModelEditor: React.FC<{
       const s = page.childs[x.source];
       const t = page.childs[x.target];
       if (s && t) {
-        const newEdge = createEdge(findUniqueID('Edge', page.edges));
-        newEdge.from = x.source;
-        newEdge.to = x.target;
-        const action: ModelAction = {
-          type: 'model',
-          act: 'pages',
-          task: 'new-edge',
-          value: newEdge,
-          page: page.id,
-        };
+        const action = newEdgeCommand(page, s.element, t.element);
         act(action);
       }
     }
@@ -658,11 +604,9 @@ const ModelEditor: React.FC<{
         placement="bottom-start"
         content={
           <EditorFileMenu
-            {...{
-              getLatestLayout: () => mw,
-              setDialogType,
-              onRepoSave: saveRepo,
-            }}
+            model={model}
+            setDialogType={setDialogType}
+            onRepoSave={saveRepo}
           />
         }
       >
@@ -745,21 +689,8 @@ const ModelEditor: React.FC<{
   function nodeDrag(id: string) {
     if (reactFlow !== null) {
       for (const flowNode of reactFlow.getElements()) {
-        if (flowNode.id === id && isNode(flowNode)) {
-          const action: ModelAction = {
-            type: 'model',
-            act: 'pages',
-            task: 'move',
-            page: state.page,
-            node: flowNode.id,
-            nodetype: isEditorData(model.elements[flowNode.id])
-              ? 'data'
-              : 'node',
-            x: flowNode.position.x,
-            y: flowNode.position.y,
-            fromx: dragStart.x,
-            fromy: dragStart.y,
-          };
+        if (flowNode.id === id && dragStart.id === id && isNode(flowNode)) {
+          const action = dragCommand(state.page, model, flowNode, dragStart);
           act(action);
         }
       }
@@ -770,7 +701,7 @@ const ModelEditor: React.FC<{
     if (reactFlow !== null) {
       for (const flowNode of reactFlow.getElements()) {
         if (flowNode.id === id && isNode(flowNode)) {
-          setDragStart({ x: flowNode.position.x, y: flowNode.position.y });
+          setDragStart({ id, x: flowNode.position.x, y: flowNode.position.y });
         }
       }
     }
