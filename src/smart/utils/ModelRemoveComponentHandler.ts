@@ -7,18 +7,6 @@ import {
 import { DataType } from '../serialize/interface/baseinterface';
 import { DeletableNodeTypes } from './constants';
 
-export function deleteEdge(
-  model: EditorModel,
-  pageid: string,
-  edgeid: string
-): EditorModel {
-  const page = model.pages[pageid];
-  const edges = { ...page.edges };
-  delete edges[edgeid];
-  page.edges = edges;
-  return model;
-}
-
 function deleteProcess(model: EditorModel, pageid: string, id: string) {
   const page = model.pages[pageid];
   delete page.childs[id];

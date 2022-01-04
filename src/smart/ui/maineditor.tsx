@@ -90,7 +90,6 @@ import {
 } from '../utils/constants';
 import { getaddComponentAction } from '../utils/ModelAddComponentHandler';
 import { EdgePackage } from '../model/FlowContainer';
-import { deleteEdge } from '../utils/ModelRemoveComponentHandler';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
 import {
@@ -437,12 +436,7 @@ const ModelEditor: React.FC<{
     Logger.log('Go to page', pageid);
     addToHistory({ items: state.history }, state.page, processid);
     // setState({ ...state }, true);
-  }
-
-  function removeEdge(id: string) {
-    deleteEdge(model, state.page, id);
-    // setState({ ...state }, true);
-  }
+  }  
 
   function drillUp(): void {
     if (state.history.length > 0) {
@@ -503,6 +497,17 @@ const ModelEditor: React.FC<{
         // );
       }
     }
+  }
+
+  function removeEdge(id: string) {
+    const action: ModelAction = {
+      type: 'model',
+      act: 'pages',
+      task: 'delete-edge',
+      value: id,
+      page: state.page
+    }
+    act(action);
   }
 
   function connectHandle(x: Edge<EdgePackage> | Connection) {
