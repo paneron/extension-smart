@@ -1,7 +1,15 @@
 import React from 'react';
-import { EditorModel, EditorTimerEvent } from '../../model/editormodel';
+import {
+  EditorModel,
+  EditorSignalEvent,
+  EditorTimerEvent,
+} from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
-import { EditableNodeTypes } from '../../utils/constants';
+import {
+  DeletableNodeTypes,
+  EditableNodeTypes,
+  EditAction,
+} from '../../utils/constants';
 import { DataType } from '../../serialize/interface/baseinterface';
 import EditProcessPage from '../edit/processedit';
 import EditApprovalPage from '../edit/approvaledit';
@@ -10,6 +18,12 @@ import EditTimerPage from '../edit/timeredit';
 import EditSignalEventPage from '../edit/signaleventedit';
 import { EditorAction } from '../../model/editor/state';
 import { ConfirmDialog } from './confirmdialog';
+
+export type DialogSetterInterface = (
+  nodeType: EditableNodeTypes | DeletableNodeTypes,
+  action: EditAction,
+  id: string
+) => void;
 
 export enum EditorDiagTypes {
   DELETECONFIRM = 'confirm',
@@ -28,7 +42,7 @@ export interface EditorDiagPackage {
 
 export type EditorDialogInterface = {
   model: EditorModel;
-  page: string;  
+  page: string;
   setModelWrapper: (mw: ModelWrapper) => void;
   act: (x: EditorAction) => void;
   onDelete?: () => void;
@@ -109,11 +123,11 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITSIGNAL]: {
     title: 'Edit Signal Catch Event',
     fullscreen: true,
-    Panel: ({ model, page, done, msg, setSelectedNode }) => (
+    Panel: ({ model, act, done, msg, setSelectedNode }) => (
       <EditSignalEventPage
-        modelWrapper={{ model, page, type: 'model' }}
-        setModel={() => {}}
-        id={msg}
+        model={model}
+        act={act}
+        event={model.elements[msg] as EditorSignalEvent}
         closeDialog={done}
         setSelectedNode={setSelectedNode}
       />

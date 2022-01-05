@@ -16,12 +16,8 @@ import {
 import { ModelWrapper } from '../../model/modelwrapper';
 import { RefTextSelection } from '../../model/selectionImport';
 import { DataType } from '../../serialize/interface/baseinterface';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-  QuickEditableNodeTypes,
-} from '../../utils/constants';
+import { QuickEditableNodeTypes } from '../../utils/constants';
+import { DialogSetterInterface } from '../dialog/EditorDialogs';
 import QuickEditApproval from '../quickedit/approval';
 import QuickEditDataClass from '../quickedit/dataclass';
 import QuickEditEGate from '../quickedit/egate';
@@ -39,11 +35,7 @@ const NODE_EDIT_VIEWS: Record<
     model: EditorModel;
     setModel: (m: EditorModel) => void;
     act: (x: ModelAction) => void;
-    setDialog: (
-      nodeType: EditableNodeTypes | DeletableNodeTypes,
-      action: EditAction,
-      id: string
-    ) => void;
+    setDialog: DialogSetterInterface;
     page: EditorSubprocess;
     provision?: RefTextSelection;
     setSelectedNode: (id: string) => void;
@@ -95,11 +87,7 @@ const QuickEdit: React.FC<{
   modelWrapper: ModelWrapper; // will be removed
   setModel: (m: EditorModel) => void;
   act: (x: ModelAction) => void;
-  setDialog: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
+  setDialog: DialogSetterInterface;
   page: EditorSubprocess;
   provision?: RefTextSelection;
   setSelectedNode: (id: string) => void;

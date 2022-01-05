@@ -1,23 +1,16 @@
 import React from 'react';
+import { ModelAction } from '../../model/editor/model';
 import { EditorModel, EditorSignalEvent } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
 import { DataType } from '../../serialize/interface/baseinterface';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-} from '../../utils/constants';
+import { EditAction } from '../../utils/constants';
+import { DialogSetterInterface } from '../dialog/EditorDialogs';
 import EditSignalEventPage from '../edit/signaleventedit';
 
 const QuickEditSignalEvent: React.FC<{
   event: EditorSignalEvent;
-  modelWrapper: ModelWrapper;
-  setModel: (m: EditorModel) => void;
-  setDialog: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
+  model: EditorModel;
+  act: (x: ModelAction) => void;
+  setDialog: DialogSetterInterface;
   setSelectedNode: (id: string) => void;
 }> = props => {
   const { event, setDialog } = props;
@@ -36,7 +29,7 @@ const QuickEditSignalEvent: React.FC<{
   };
 
   return (
-    <EditSignalEventPage {...props} {...functionProps} id={event.id} minimal />
+    <EditSignalEventPage {...props} {...functionProps} event={event} minimal />
   );
 };
 

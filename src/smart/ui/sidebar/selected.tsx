@@ -25,10 +25,10 @@ import { dialog_layout, dialog_layout__full } from '../../../css/layout';
 import { EditorAction } from '../../model/editor/state';
 import {
   EditNodeType,
-  EditorDiag,  
+  EditorDiag,
   EditorDiagPackage,
   EditorDiagTypes,
-} from '../dialog/editorDialogs';
+} from '../dialog/EditorDialogs';
 import {
   DeleteConfirmMessgae,
   deleteNodeAction,
@@ -89,7 +89,7 @@ export const SelectedNodeDescription: React.FC<{
     action: EditAction,
     id: string
   ) {
-    if (act) {      
+    if (act) {
       if (action === EditAction.EDIT) {
         setDialogPack({
           type: EditNodeType[nodeType as EditableNodeTypes],
@@ -131,7 +131,7 @@ export const SelectedNodeDescription: React.FC<{
   }
 
   const elm = selected ? model.elements[selected] : undefined;
-  const diagProps = dialogPack ? EditorDiag[dialogPack.type] : undefined;  
+  const diagProps = dialogPack ? EditorDiag[dialogPack.type] : undefined;
 
   return (
     <MGDSidebar>
