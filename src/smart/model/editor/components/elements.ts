@@ -272,7 +272,7 @@ function editItem(
 ): Record<string, EditorNode> {
   switch (action.subtask) {
     case 'registry':
-      return editRegistry(elms, action.id, action.value);
+      return editRegistry(elms, action.id, action.value as RegistryCombined);
     case 'dc':
       return editDC(elms, action.id, action.value);
     default:

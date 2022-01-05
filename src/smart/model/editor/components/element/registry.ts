@@ -6,6 +6,7 @@ import {
   fillRDCS,
   genDCIdByRegId,
   getReferenceDCTypeName,
+  setReplace,
 } from '../../../../utils/ModelFunctions';
 import {
   EditorDataClass,
@@ -57,19 +58,18 @@ export function addRegistry(
 export function editRegistry(
   elms: Record<string, EditorNode>,
   id: string,
-  item: EditorNode
+  item: RegistryCombined
 ): Record<string, EditorNode> {
   const old = elms[id];
   if (isEditorRegistry(old)) {
     delete elms[id];
-    delete elms[old.data];
-    const reg = item as RegistryCombined;
-    const dcid = genDCIdByRegId(reg.id);
-    const newreg = createRegistry(reg.id);
-    const newdc = getDCFromCombined(dcid, reg);
+    delete elms[old.data];    
+    const dcid = genDCIdByRegId(item.id);
+    const newreg = createRegistry(item.id);
+    const newdc = getDCFromCombined(dcid, item);
     newreg.data = dcid;
-    newreg.title = reg.title;
-    elms[reg.id] = newreg;
+    newreg.title = item.title;
+    elms[item.id] = newreg;
     elms[dcid] = newdc;
     fillRDCS(newdc, elms);
   }
@@ -138,6 +138,9 @@ export function cascadeCheckRegs(
   } else if (action.task === 'edit') {
     const regid = action.value.id;
     const dcid = genDCIdByRegId(regid);
+    if (action.id !== regid) {
+      action.value = replaceSelf(action.id, dcid, action.value as RegistryCombined, elms);
+    }
     const [ids, pids] = findAffectedElements(
       elms,
       pages,
@@ -229,7 +232,7 @@ function findAffectedElements(
             type: 'other',
           });
         }
-      } else if (isEditorDataClass(elm)) {
+      } else if (isEditorDataClass(elm) && x !== dcid) {
         if (elm.rdcs.has(dcid)) {
           const rdcs: [string, string][] = [[dcid, newdcid]];
           const attributes: [string, string][] = [];
@@ -300,4 +303,31 @@ function reverseAttribute(
     }
   }
   return item;
+}
+
+function replaceSelf(
+  id: string,  
+  newDCid: string,
+  value: RegistryCombined,  
+  elms: Record<string, EditorNode>
+): RegistryCombined {
+  const attributes = {...value.attributes};
+  const oldrefid = getReferenceDCTypeName(id);
+  const newrefid = getReferenceDCTypeName(value.id);
+  const reg = elms[id];
+  if (isEditorRegistry(reg)) {
+    let found = false;
+    for (const x in attributes) {
+      const a = attributes[x];
+      if (a.type === oldrefid) {
+        attributes[x] = {...a, type: newrefid};
+        found = true;
+      }
+    }
+    if (found) {
+      const retValue = {...value, attributes};
+      retValue.rdcs = setReplace(value.rdcs, reg.data, newDCid)
+    }  
+  }
+  return value;
 }

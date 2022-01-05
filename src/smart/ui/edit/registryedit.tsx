@@ -1,7 +1,6 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import {
-  EditorDataClass,
+import {  
   EditorModel,
   EditorRegistry,
   isEditorDataClass,
@@ -17,10 +16,8 @@ import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
 import AttributeEditPage from './attributeedit';
 import { ModelAction } from '../../model/editor/model';
-
-type RegistryCombined = EditorDataClass & {
-  title: string;
-};
+import { RegistryCombined } from '../../model/editor/components/element/registry';
+import { addRegistryCommand, delRegistryCommand, editRegistryCommand } from '../../model/editor/commands/data';
 
 const initObj: RegistryCombined = { ...createDataClass(''), title: '' };
 
@@ -43,15 +40,8 @@ const RegistryEditPage: React.FC<{
       .sort(defaultItemSorter);
   }
 
-  function removeRegListItem(ids: string[]) {
-    const action: ModelAction = {
-      type: 'model',
-      act: 'elements',
-      task: 'delete',
-      subtask: 'registry',
-      value: ids,
-    };
-    act(action);
+  function removeRegListItem(ids: string[]) {    
+    act(delRegistryCommand(ids));
   }
 
   function addRegistry(reg: RegistryCombined): boolean {
@@ -59,15 +49,8 @@ const RegistryEditPage: React.FC<{
     if (
       checkId(reg.id, model.elements) &&
       checkId(dcid, model.elements, true)
-    ) {
-      const action: ModelAction = {
-        type: 'model',
-        act: 'elements',
-        task: 'add',
-        subtask: 'registry',
-        value: [reg],
-      };
-      act(action);
+    ) {      
+      act(addRegistryCommand(reg));
       return true;
     }
     return false;
@@ -83,16 +66,8 @@ const RegistryEditPage: React.FC<{
           !checkId(dcid, model.elements, true))
       ) {
         return false;
-      }
-      const action: ModelAction = {
-        type: 'model',
-        act: 'elements',
-        task: 'edit',
-        subtask: 'registry',
-        id: oldid,
-        value: reg,
-      };
-      act(action);
+      }      
+      act(editRegistryCommand(oldid, reg));
       return true;
     }
     return false;

@@ -78,7 +78,7 @@ const AttributeListQuickEdit: React.FC<{
   const refs = useMemo(() => getModelAllRefs(model), [model]);
 
   function addAttribute() {
-    const id = findUniqueID('a', attributes);
+    const id = findUniqueID('att', attributes);
     attributes[id] = createDataAttribute('');
     setAttributes({ ...attributes });
   }
@@ -176,12 +176,7 @@ const AttributeQuickEdit: React.FC<{
         position: 'relative',
       }}
     >
-      <fieldset>
-        <NormalTextField
-          text="Attribute ID"
-          value={attribute.id}
-          onChange={x => setAttribute({ ...attribute, id: x })}
-        />
+      <fieldset>        
         <NormalTextField
           text="Definition"
           value={attribute.definition}

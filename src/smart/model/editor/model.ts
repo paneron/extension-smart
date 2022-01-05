@@ -3,8 +3,7 @@ import { EditorModel } from '../editormodel';
 import { cascadeCheckDCs } from './components/element/dc';
 import { cascadeCheckRegs } from './components/element/registry';
 import {
-  ElmAction,
-  findActionElement,
+  ElmAction,  
   useElements,
 } from './components/elements';
 import { cascadeCheckEnum, EnumAction, useEnums } from './components/enums';
@@ -261,19 +260,10 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
     page: string
   ): ModelAction | undefined {
     switch (action.subtask) {
-      case 'registry': {
-        // oldImages are required for handling self-referencing
-        const oldImages =
-          action.task === 'delete'
-            ? action.value.map(x => findActionElement(elements, x))
-            : undefined;
+      case 'registry': {        
         const reverseCascade = cascadeCheckRegs(elements, pages, action);
         actCascade(action.cascade);
-        const reverse = actElements(action);
-        // reverse actions omitted the cascade updates on self. Replacing the correct images here
-        if (oldImages && reverse && reverse.task === 'add') {
-          reverse.value = oldImages;
-        }
+        const reverse = actElements(action);                
         if (reverse) {
           reverse.cascade = reverseCascade;
         }

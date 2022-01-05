@@ -11,6 +11,7 @@ import { createReference } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
 import { ModelAction } from '../../model/editor/model';
+import { addRefCommand, delRefCommand, editRefCommand } from '../../model/editor/commands/reference';
 
 const ReferenceEditPage: React.FC<{
   model: EditorModel;
@@ -32,14 +33,8 @@ const ReferenceEditPage: React.FC<{
       .map(x => ({ id: x.id, text: toRefSummary(x) }));
   }
 
-  function removeRefListItem(ids: string[]) {
-    const action: ModelAction = {
-      type: 'model',
-      act: 'refs',
-      task: 'delete',
-      value: ids,
-    };
-    act(action);
+  function removeRefListItem(ids: string[]) {    
+    act(delRefCommand(ids));
   }
 
   function addRef(ref: MMELReference): boolean {
@@ -66,24 +61,12 @@ const ReferenceEditPage: React.FC<{
             failed.join(', ')
         );
         return false;
-      }
-      const action: ModelAction = {
-        type: 'model',
-        act: 'refs',
-        task: 'add',
-        value: newRefs,
-      };
-      act(action);
+      }      
+      act(addRefCommand(newRefs));
       return true;
     } else {
       if (checkId(ref.id, model.refs)) {
-        const action: ModelAction = {
-          type: 'model',
-          act: 'refs',
-          task: 'add',
-          value: [ref],
-        };
-        act(action);
+        act(addRefCommand([ref]));
         return true;
       }
     }
@@ -93,15 +76,8 @@ const ReferenceEditPage: React.FC<{
   function updateRef(oldid: string, ref: MMELReference): boolean {
     if (oldid !== ref.id && !checkId(ref.id, model.refs)) {
       return false;
-    }
-    const action: ModelAction = {
-      type: 'model',
-      act: 'refs',
-      task: 'edit',
-      id: oldid,
-      value: ref,
-    };
-    act(action);
+    }    
+    act(editRefCommand(oldid, ref));
     return true;
   }
 
