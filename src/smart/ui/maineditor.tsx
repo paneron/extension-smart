@@ -58,7 +58,6 @@ import {
 } from '../model/States';
 import { EditorDataClass } from '../model/editormodel';
 import EditorFileMenu from './menu/EditorFileMenu';
-import { DiagPackage, DiagTypes, MyDiag } from './dialog/dialogs';
 import {
   DataVisibilityButton,
   EdgeEditButton,
@@ -131,6 +130,7 @@ import {
 } from '../model/editor/commands/page';
 import SearchComponentPane from './sidebar/search';
 import { SelectedNodeDescription } from './sidebar/selected';
+import BasicSettingPane from './control/settings';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -172,11 +172,7 @@ const ModelEditor: React.FC<{
   );
 
   const [reactFlow, setReactFlow] = useState<OnLoadParams | null>(null);
-  const [dialogPack, setDialogPack] = useState<DiagPackage>({
-    type: null,
-    callback: () => {},
-    msg: '',
-  });
+  const [settingOpen, openSetting] = useState<boolean>(false);
   const [reference, setReference] = useState<ReferenceContent | undefined>(
     undefined
   );
@@ -305,10 +301,6 @@ const ModelEditor: React.FC<{
   function onLoad(params: OnLoadParams) {
     setReactFlow(params);
     params.fitView();
-  }
-
-  function setDialogType(x: DiagTypes | null) {
-    setDialogPack({ ...dialogPack, type: x });
   }
 
   function addCommentToModel(msg: string, pid: string, parent?: string) {
@@ -555,7 +547,7 @@ const ModelEditor: React.FC<{
         content={
           <EditorFileMenu
             model={model}
-            setDialogType={setDialogType}
+            openSetting={() => openSetting(true)}
             onRepoSave={saveRepo}
           />
         }
@@ -656,29 +648,19 @@ const ModelEditor: React.FC<{
   }
 
   if (isVisible) {
-    const diagProps = dialogPack.type === null ? null : MyDiag[dialogPack.type];
     return (
       <HotkeysTarget2 hotkeys={hotkeys}>
         <div css={multi_model_container}>
-          {diagProps !== null && (
+          {settingOpen && (
             <Dialog
-              isOpen={dialogPack !== null}
-              title={diagProps.title}
-              css={
-                diagProps.fullscreen ? [dialog_layout, dialog_layout__full] : ''
-              }
-              onClose={() => setDialogType(null)}
+              isOpen={settingOpen}
+              title="Settings"
+              css={[dialog_layout, dialog_layout__full]}
+              onClose={() => openSetting(false)}
               canEscapeKeyClose={false}
               canOutsideClickClose={false}
             >
-              <diagProps.Panel
-                {...{ setModelWrapper }}
-                act={act}
-                state={state}
-                callback={dialogPack.callback}
-                done={() => setDialogType(null)}
-                msg={dialogPack.msg}
-              />
+              <BasicSettingPane model={model} act={act} />
             </Dialog>
           )}
           <ReactFlowProvider>

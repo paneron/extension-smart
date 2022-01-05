@@ -24,13 +24,15 @@ import { Dialog } from '@blueprintjs/core';
 import { dialog_layout, dialog_layout__full } from '../../../css/layout';
 import { EditorAction } from '../../model/editor/state';
 import {
-  EditorDiag,
-  EditorDiagAction,
+  EditNodeType,
+  EditorDiag,  
   EditorDiagPackage,
   EditorDiagTypes,
-  SetEditorDiagAction,
 } from '../dialog/editorDialogs';
-import { EditorState } from '../../model/States';
+import {
+  DeleteConfirmMessgae,
+  deleteNodeAction,
+} from '../../utils/ModelRemoveComponentHandler';
 
 export const SelectedNodeDescription: React.FC<{
   model: EditorModel;
@@ -61,11 +63,9 @@ export const SelectedNodeDescription: React.FC<{
     undefined
   );
   const [selected, setSelected] = useState<string | undefined>(undefined);
-  const [dialogPack, setDialogPack] = useState<EditorDiagPackage>({
-    type: undefined,
-    callback: () => {},
-    msg: '',
-  });
+  const [dialogPack, setDialogPack] = useState<EditorDiagPackage | undefined>(
+    undefined
+  );
 
   const setSelectedElements = useStoreActions(a => a.setSelectedElements);
 
@@ -89,20 +89,23 @@ export const SelectedNodeDescription: React.FC<{
     action: EditAction,
     id: string
   ) {
-    if (act) {
-      const props: EditorDiagAction = {
-        nodeType: nodeType,
-        model: model,
-        page: page,
-        id: id,
-        act,
-      };
-      setDialogPack(SetEditorDiagAction[action](props));
+    if (act) {      
+      if (action === EditAction.EDIT) {
+        setDialogPack({
+          type: EditNodeType[nodeType as EditableNodeTypes],
+          msg: id,
+        });
+      } else if (action === EditAction.DELETE) {
+        setDialogPack({
+          type: EditorDiagTypes.DELETECONFIRM,
+          onDelete: () => {
+            const action = deleteNodeAction(model, page, id);
+            act(action);
+          },
+          msg: DeleteConfirmMessgae[nodeType],
+        });
+      }
     }
-  }
-
-  function setDialogType(x: EditorDiagTypes | undefined) {
-    setDialogPack({ ...dialogPack, type: x });
   }
 
   useMemo(() => {
@@ -128,31 +131,26 @@ export const SelectedNodeDescription: React.FC<{
   }
 
   const elm = selected ? model.elements[selected] : undefined;
-  const diagProps = dialogPack.type ? EditorDiag[dialogPack.type] : undefined;
-  const state: EditorState = {
-    model,
-    page,
-    history: [],
-    type: 'model',
-  };
+  const diagProps = dialogPack ? EditorDiag[dialogPack.type] : undefined;  
 
   return (
     <MGDSidebar>
-      {diagProps && act && (
+      {diagProps && dialogPack && act && (
         <Dialog
           isOpen={dialogPack !== undefined}
           title={diagProps.title}
           css={diagProps.fullscreen ? [dialog_layout, dialog_layout__full] : ''}
-          onClose={() => setDialogType(undefined)}
+          onClose={() => setDialogPack(undefined)}
           canEscapeKeyClose={false}
           canOutsideClickClose={false}
         >
           <diagProps.Panel
             setModelWrapper={() => {}}
             act={act}
-            state={state}
-            callback={dialogPack.callback}
-            done={() => setDialogType(undefined)}
+            model={model}
+            page={page}
+            onDelete={dialogPack.onDelete}
+            done={() => setDialogPack(undefined)}
             msg={dialogPack.msg}
             setSelectedNode={setSelectedNodeId}
           />
