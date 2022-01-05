@@ -125,8 +125,9 @@ export function useEditorState(
       case 'model': {
         return actModel(action, page);
       }
-      case 'history':
+      case 'history': {
         return actHistory(action);
+      }
     }
   }
 
@@ -223,6 +224,8 @@ function needCheck(action: ModelAction): boolean {
     case 'vars':
       return false;
     case 'view':
+      return false;
+    case 'hybird-edit':
       return false;
     default:
       throw new Error('Checking for post actions not handled');

@@ -28,9 +28,7 @@ const QuickEditSignalEvent: React.FC<{
     onDeleteClick,
   };
 
-  return (
-    <EditSignalEventPage {...props} {...functionProps} event={event} minimal />
-  );
+  return <EditSignalEventPage {...props} {...functionProps} minimal />;
 };
 
 export default QuickEditSignalEvent;

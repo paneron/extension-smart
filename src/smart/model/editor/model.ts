@@ -32,6 +32,7 @@ import {
 } from './components/comment';
 import { useMemo } from 'react';
 import { cascadeCheckElm } from './components/element/common';
+import { compileHybird, HyEditAction } from './hybird/pageedit';
 
 type ALLACTION =
   | ElmAction
@@ -47,7 +48,8 @@ type ALLACTION =
   | ViewAction
   | TableAction
   | FigAction
-  | CommentAction;
+  | CommentAction
+  | HyEditAction;
 
 type ValidateAction = {
   act: 'validate-page';
@@ -213,6 +215,9 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
           );
           return action;
         }
+        case 'hybird-edit': {
+          return hybirdAction(action, page);
+        }
       }
     } catch (e: unknown) {
       if (typeof e === 'object') {
@@ -331,6 +336,16 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
       }
     }
     return [];
+  }
+
+  function hybirdAction(action: HyEditAction, page: string) {
+    const reverse = compileHybird(action, model, page);
+    if (action.actions) {
+      for (const a of action.actions) {        
+        act(a, page);
+      }
+    }    
+    return reverse;
   }
 
   return [model, act, init];

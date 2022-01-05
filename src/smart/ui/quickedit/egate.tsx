@@ -1,23 +1,21 @@
 import React from 'react';
-import { EditorEGate, EditorModel } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
-import { DataType } from '../../serialize/interface/baseinterface';
+import { ModelAction } from '../../model/editor/model';
 import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-} from '../../utils/constants';
+  EditorEGate,
+  EditorModel,
+  EditorSubprocess,
+} from '../../model/editormodel';
+import { DataType } from '../../serialize/interface/baseinterface';
+import { EditAction } from '../../utils/constants';
+import { DialogSetterInterface } from '../dialog/EditorDialogs';
 import EditEGatePage from '../edit/egateedit';
 
 const QuickEditEGate: React.FC<{
   egate: EditorEGate;
-  modelWrapper: ModelWrapper;
-  setModel: (m: EditorModel) => void;
-  setDialog: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
+  model: EditorModel;
+  page: EditorSubprocess;
+  act: (x: ModelAction) => void;
+  setDialog: DialogSetterInterface;
   setSelectedNode: (id: string) => void;
 }> = props => {
   const { egate, setDialog } = props;
@@ -35,7 +33,7 @@ const QuickEditEGate: React.FC<{
     onDeleteClick,
   };
 
-  return <EditEGatePage {...props} {...functionProps} id={egate.id} minimal />;
+  return <EditEGatePage {...props} {...functionProps} egate={egate} minimal />;
 };
 
 export default QuickEditEGate;

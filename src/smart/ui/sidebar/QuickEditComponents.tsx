@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModelAction } from '../../model/editor/model';
+import { EditorAction } from '../../model/editor/state';
 import {
   EditorApproval,
   EditorDataClass,
@@ -34,7 +34,7 @@ const NODE_EDIT_VIEWS: Record<
     modelWrapper: ModelWrapper;
     model: EditorModel;
     setModel: (m: EditorModel) => void;
-    act: (x: ModelAction) => void;
+    act: (x: EditorAction) => void;
     setDialog: DialogSetterInterface;
     page: EditorSubprocess;
     provision?: RefTextSelection;
@@ -86,7 +86,7 @@ const QuickEdit: React.FC<{
   model: EditorModel;
   modelWrapper: ModelWrapper; // will be removed
   setModel: (m: EditorModel) => void;
-  act: (x: ModelAction) => void;
+  act: (x: EditorAction) => void;
   setDialog: DialogSetterInterface;
   page: EditorSubprocess;
   provision?: RefTextSelection;

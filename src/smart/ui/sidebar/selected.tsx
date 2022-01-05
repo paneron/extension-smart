@@ -19,7 +19,6 @@ import {
 } from '../../serialize/interface/supportinterface';
 import QuickEdit from './QuickEditComponents';
 import { RefTextSelection } from '../../model/selectionImport';
-import { Logger } from '../../utils/ModelFunctions';
 import { Dialog } from '@blueprintjs/core';
 import { dialog_layout, dialog_layout__full } from '../../../css/layout';
 import { EditorAction } from '../../model/editor/state';
@@ -75,8 +74,6 @@ export const SelectedNodeDescription: React.FC<{
 
   const current = model.pages[page];
 
-  Logger.log('Selected:', selected);
-
   function deselect() {
     setSelected(undefined);
     if (onSelect) {
@@ -111,7 +108,6 @@ export const SelectedNodeDescription: React.FC<{
   useMemo(() => {
     if (flowSelect && flowSelect.length > 0) {
       const s = flowSelect[0];
-      Logger.log('FlowSelect:', s.id);
       if (current.childs[s.id] || current.data[s.id]) {
         setSelected(s.id);
         setSelectedPage(page);
@@ -159,6 +155,7 @@ export const SelectedNodeDescription: React.FC<{
       {elm ? (
         act && !isEditorStartEvent(elm) ? (
           <QuickEdit
+            key={jsx.length}
             node={elm}
             modelWrapper={{ page, model, type: 'model' }}
             setModel={() => {}}

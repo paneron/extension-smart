@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  EditorEGate,
   EditorModel,
   EditorSignalEvent,
   EditorTimerEvent,
@@ -97,11 +98,12 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITEGATE]: {
     title: 'Edit Gateway',
     fullscreen: true,
-    Panel: ({ model, page, done, msg, setSelectedNode }) => (
+    Panel: ({ model, page, act, done, msg, setSelectedNode }) => (
       <EditEGatePage
-        modelWrapper={{ model, page, type: 'model' }}
-        setModel={() => {}}
-        id={msg}
+        model={model}
+        page={model.pages[page]}
+        act={act}
+        egate={model.elements[msg] as EditorEGate}
         closeDialog={done}
         setSelectedNode={setSelectedNode}
       />

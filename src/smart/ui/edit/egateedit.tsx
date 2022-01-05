@@ -1,21 +1,21 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
+import { ModelAction } from '../../model/editor/model';
 import {
   EditorEGate,
   EditorModel,
   EditorSubprocess,
 } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
 import {
   checkId,
   getModelAllMeasures,
   removeSpace,
-  updatePageElement,
 } from '../../utils/ModelFunctions';
 import { DescriptionItem } from '../common/description/fields';
 import { NormalTextField, ReferenceSelector } from '../common/fields';
+import PopoverChangeIDButton from '../popover/PopoverChangeIDButton';
 import { EditPageButtons } from './commons';
 import EdgeQuickEdit from './components/EdgeListEdit';
 
@@ -30,29 +30,28 @@ interface CommonEGateEditProps {
 }
 
 const EditEGatePage: React.FC<{
-  modelWrapper: ModelWrapper;
-  setModel: (m: EditorModel) => void;
-  id: string;
+  model: EditorModel;
+  act: (x: ModelAction) => void;
+  egate: EditorEGate;
   closeDialog?: () => void;
   minimal?: boolean;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
   setSelectedNode?: (id: string) => void;
+  page: EditorSubprocess;
 }> = function ({
-  modelWrapper,
-  setModel,
-  id,
+  model,
+  act,
+  page,
+  egate,
   closeDialog,
   minimal,
   onDeleteClick,
   onFullEditClick,
   setSelectedNode,
 }) {
-  const model = modelWrapper.model;
-  const page = model.pages[modelWrapper.page];
-
-  const egate = model.elements[id] as EditorEGate;
   const measures = getModelAllMeasures(model);
+  const id = egate.id;
 
   const [editing, setEditing] = useState<EditorEGate>({ ...egate });
   const [edges, setEdges] = useState<MMELEdge[]>(
@@ -61,14 +60,23 @@ const EditEGatePage: React.FC<{
   const [hasChange, setHasChange] = useState<boolean>(false);
 
   function onUpdateClick() {
-    const updated = save(id, editing, modelWrapper.page, model, edges);
-    if (updated !== null) {
-      setModel({ ...updated });
-      if (closeDialog !== undefined) {
-        closeDialog();
-      }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'hybird-edit',
+      task: 'egate-edit',
+      id: egate.id,
+      page: page.id,
+      update: editing,
+      edges: edges,
+    };
+    act(action);
+    if (closeDialog) {
+      closeDialog();
     }
     setHasChange(false);
+    if (setSelectedNode !== undefined && egate.id !== editing.id) {
+      setSelectedNode(editing.id);
+    }
   }
 
   function setEdit(x: EditorEGate) {
@@ -92,10 +100,16 @@ const EditEGatePage: React.FC<{
       if (hc) {
         setEditing(edit => {
           setEdges(es => {
-            const updated = save(id, edit, modelWrapper.page, model, es);
-            if (updated !== null) {
-              setModel({ ...updated });
-            }
+            const action: ModelAction = {
+              type: 'model',
+              act: 'hybird-edit',
+              task: 'egate-edit',
+              id: egate.id,
+              page: page.id,
+              update: edit,
+              edges: es,
+            };
+            act(action);
             return es;
           });
           return edit;
@@ -106,18 +120,16 @@ const EditEGatePage: React.FC<{
   }
 
   function onNewID(id: string) {
-    const oldid = egate.id;
-    const mw = modelWrapper;
-    const updated = save(
-      oldid,
-      { ...editing, id },
-      modelWrapper.page,
-      mw.model,
-      edges
-    );
-    if (updated !== null) {
-      setModel({ ...updated });
-    }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'hybird-edit',
+      task: 'egate-edit',
+      id: egate.id,
+      page: page.id,
+      update: { ...editing, id },
+      edges: edges,
+    };
+    act(action);
     setHasChange(false);
     if (setSelectedNode !== undefined) {
       setSelectedNode(id);
@@ -157,6 +169,7 @@ const EditEGatePage: React.FC<{
     initID: egate.id,
     validTest: (id: string) => id === egate.id || checkId(id, model.elements),
     onNewID,
+    model,
   };
 
   useEffect(() => {
@@ -179,16 +192,43 @@ const QuickVersionEdit: React.FC<
   CommonEGateEditProps & {
     egate: EditorEGate;
     saveOnExit: () => void;
+    onNewID: (id: string) => void;
+    model: EditorModel;
   }
 > = function (props) {
-  const { editing, setEditing, edges, setEdges, egate, saveOnExit } = props;
+  const {
+    model,
+    editing,
+    setEditing,
+    edges,
+    setEdges,
+    egate,
+    saveOnExit,
+    onNewID,
+  } = props;
 
   useEffect(() => saveOnExit, [egate]);
+
+  function idTest(id: string) {
+    return id === egate.id || checkId(id, model.elements);
+  }
+
+  const idButton = (
+    <PopoverChangeIDButton
+      initValue={editing.id}
+      validTest={idTest}
+      save={onNewID}
+    />
+  );
 
   return (
     <FormGroup>
       <EditPageButtons {...props} />
-      <DescriptionItem label="Gateway ID" value={editing.id} />
+      <DescriptionItem
+        label="Gateway ID"
+        value={editing.id}
+        extend={idButton}
+      />
       <NormalTextField
         text="Label"
         value={editing.label}
@@ -297,36 +337,5 @@ const EditEdgePage: React.FC<{
     </fieldset>
   );
 };
-
-function save(
-  oldId: string,
-  egate: EditorEGate,
-  pageid: string,
-  model: EditorModel,
-  edges: MMELEdge[]
-): EditorModel | null {
-  const page = model.pages[pageid];
-  if (oldId !== egate.id) {
-    if (checkId(egate.id, model.elements)) {
-      updateEdges(page, edges);
-      delete model.elements[oldId];
-      updatePageElement(page, oldId, egate.id);
-      model.elements[egate.id] = egate;
-    } else {
-      return null;
-    }
-  } else {
-    updateEdges(page, edges);
-    model.elements[oldId] = egate;
-  }
-  return model;
-}
-
-function updateEdges(page: EditorSubprocess, edges: MMELEdge[]) {
-  for (const edge of edges) {
-    page.edges[edge.id] = edge;
-  }
-  page.edges = { ...page.edges };
-}
 
 export default EditEGatePage;

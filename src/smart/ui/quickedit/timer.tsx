@@ -28,7 +28,7 @@ const QuickEditTimer: React.FC<{
     onDeleteClick,
   };
 
-  return <EditTimerPage {...props} {...functionProps} timer={timer} minimal />;
+  return <EditTimerPage {...props} {...functionProps} minimal />;
 };
 
 export default QuickEditTimer;

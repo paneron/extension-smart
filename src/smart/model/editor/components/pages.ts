@@ -63,6 +63,12 @@ type DeleteEdgeAction = {
   page: string;
 };
 
+type EditEdgeAction = {
+  task: 'edit-edge';
+  value: MMELEdge[];
+  page: string;
+};
+
 type MoveAction = {
   task: 'move';
   node: string;
@@ -88,6 +94,7 @@ type EXPORT_ACTION =
   | MoveAction
   | NewEdgeAction
   | DeleteEdgeAction
+  | EditEdgeAction
   | ReplaceElmIdAction;
 
 export type PageAction = EXPORT_ACTION & {
@@ -142,6 +149,9 @@ function pageReducer(
     }
     case 'delete-edge': {
       return deleteEdge(pages, action.page, action.value);
+    }
+    case 'edit-edge': {
+      return editEdge(pages, action.page, action.value);
     }
     case 'move': {
       return moveElm(
@@ -217,6 +227,15 @@ function findReverse(
       return {
         act: 'pages',
         task: 'new-edge',
+        page: action.page,
+        value: edge,
+      };
+    }
+    case 'edit-edge': {
+      const edge = action.value.map(x => pages[action.page].edges[x.id]);
+      return {
+        act: 'pages',
+        task: 'edit-edge',
         page: action.page,
         value: edge,
       };
@@ -481,6 +500,19 @@ function deleteEdge(
     delete edges[id];
   }
   newPage.edges = edges;
+  pages[page] = newPage;
+  return pages;
+}
+
+function editEdge(
+  pages: Record<string, EditorSubprocess>,
+  page: string,
+  edges: MMELEdge[]
+): Record<string, EditorSubprocess> {
+  const newPage = { ...pages[page] };
+  for (const edge of edges) {
+    newPage.edges = { ...newPage.edges, [edge.id]: { ...edge } };
+  }
   pages[page] = newPage;
   return pages;
 }
