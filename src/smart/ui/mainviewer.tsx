@@ -472,9 +472,7 @@ const ModelViewer: React.FC<{
     title: 'Selected node',
     content: (
       <SelectedNodeDescription
-        model={
-          funMS !== undefined ? funMS.mw.model : model
-        }
+        model={funMS !== undefined ? funMS.mw.model : model}
         page={page}
         CustomAttribute={CustomAttribute}
         CustomProvision={CustomProvision}

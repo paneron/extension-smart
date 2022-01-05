@@ -341,10 +341,10 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
   function hybirdAction(action: HyEditAction, page: string) {
     const reverse = compileHybird(action, model, page);
     if (action.actions) {
-      for (const a of action.actions) {        
+      for (const a of action.actions) {
         act(a, page);
       }
-    }    
+    }
     return reverse;
   }
 

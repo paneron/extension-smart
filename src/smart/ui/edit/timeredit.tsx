@@ -9,6 +9,7 @@ import { EditPageButtons } from './commons';
 import { DescriptionItem } from '../common/description/fields';
 import { ModelAction } from '../../model/editor/model';
 import PopoverChangeIDButton from '../popover/PopoverChangeIDButton';
+import { editElmCommand } from '../../model/editor/commands/elements';
 
 interface CommonTimerEditProps {
   onUpdateClick: () => void;
@@ -42,15 +43,7 @@ const EditTimerPage: React.FC<{
   const [hasChange, setHasChange] = useState<boolean>(false);
 
   function onUpdateClick() {
-    const action: ModelAction = {
-      type: 'model',
-      act: 'elements',
-      task: 'edit',
-      subtask: 'flowunit',
-      id: timer.id,
-      value: editing,
-    };
-    act(action);
+    act(editElmCommand(timer.id, editing));
     if (closeDialog) {
       closeDialog();
     }
@@ -75,15 +68,7 @@ const EditTimerPage: React.FC<{
     setHasChange(hc => {
       if (hc) {
         setEditing(edit => {
-          const action: ModelAction = {
-            type: 'model',
-            act: 'elements',
-            task: 'edit',
-            subtask: 'flowunit',
-            id: timer.id,
-            value: edit,
-          };
-          act(action);
+          act(editElmCommand(timer.id, edit));
           return edit;
         });
       }
@@ -92,15 +77,7 @@ const EditTimerPage: React.FC<{
   }
 
   function onNewID(id: string) {
-    const action: ModelAction = {
-      type: 'model',
-      act: 'elements',
-      task: 'edit',
-      subtask: 'flowunit',
-      id: timer.id,
-      value: { ...editing, id },
-    };
-    act(action);
+    act(editElmCommand(timer.id, { ...editing, id }));
     setHasChange(false);
     if (setSelectedNode !== undefined) {
       setSelectedNode(id);

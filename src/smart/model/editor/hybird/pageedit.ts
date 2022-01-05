@@ -57,7 +57,7 @@ export function compileHybird(
         task: 'edit',
         subtask: 'flowunit',
         id: action.id,
-        value: action.update,        
+        value: action.update,
       },
       {
         type: 'model',
@@ -76,7 +76,7 @@ export function compileHybird(
           task: 'edit',
           subtask: 'flowunit',
           id: action.update.id,
-          value: model.elements[action.id],          
+          value: model.elements[action.id],
         },
         {
           type: 'model',

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  EditorApproval,
   EditorEGate,
   EditorModel,
   EditorSignalEvent,
@@ -85,11 +86,11 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITAPPROVAL]: {
     title: 'Edit Approval',
     fullscreen: true,
-    Panel: ({ model, page, done, msg, setSelectedNode }) => (
+    Panel: ({ model, act, done, msg, setSelectedNode }) => (
       <EditApprovalPage
-        modelWrapper={{ model, page, type: 'model' }}
-        setModel={(m: EditorModel) => {}}
-        id={msg}
+        model={model}
+        act={act}
+        approval={model.elements[msg] as EditorApproval}
         closeDialog={done}
         setSelectedNode={setSelectedNode}
       />

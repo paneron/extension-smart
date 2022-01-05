@@ -1,23 +1,16 @@
 import React from 'react';
+import { ModelAction } from '../../model/editor/model';
 import { EditorApproval, EditorModel } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
 import { DataType } from '../../serialize/interface/baseinterface';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-} from '../../utils/constants';
+import { EditAction } from '../../utils/constants';
+import { DialogSetterInterface } from '../dialog/EditorDialogs';
 import EditApprovalPage from '../edit/approvaledit';
 
 const QuickEditApproval: React.FC<{
   approval: EditorApproval;
-  modelWrapper: ModelWrapper;
-  setModel: (m: EditorModel) => void;
-  setDialog: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
+  model: EditorModel;
+  act: (x: ModelAction) => void;
+  setDialog: DialogSetterInterface;
   setSelectedNode: (id: string) => void;
 }> = props => {
   const { approval, setDialog } = props;
@@ -35,9 +28,7 @@ const QuickEditApproval: React.FC<{
     onDeleteClick,
   };
 
-  return (
-    <EditApprovalPage {...props} {...functionProps} id={approval.id} minimal />
-  );
+  return <EditApprovalPage {...props} {...functionProps} minimal />;
 };
 
 export default QuickEditApproval;

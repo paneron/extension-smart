@@ -1,6 +1,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
+import { editElmCommand } from '../../model/editor/commands/elements';
 import { ModelAction } from '../../model/editor/model';
 import { EditorModel, EditorSignalEvent } from '../../model/editormodel';
 import {
@@ -46,15 +47,7 @@ const EditSignalEventPage: React.FC<{
   const [hasChange, setHasChange] = useState<boolean>(false);
 
   function onUpdateClick() {
-    const action: ModelAction = {
-      type: 'model',
-      act: 'elements',
-      task: 'edit',
-      subtask: 'flowunit',
-      id: event.id,
-      value: editing,
-    };
-    act(action);
+    act(editElmCommand(event.id, editing));
     if (closeDialog) {
       closeDialog();
     }
@@ -79,15 +72,7 @@ const EditSignalEventPage: React.FC<{
     setHasChange(hc => {
       if (hc) {
         setEditing(edit => {
-          const action: ModelAction = {
-            type: 'model',
-            act: 'elements',
-            task: 'edit',
-            subtask: 'flowunit',
-            id: event.id,
-            value: edit,
-          };
-          act(action);
+          act(editElmCommand(event.id, edit));
           return edit;
         });
       }
@@ -96,15 +81,7 @@ const EditSignalEventPage: React.FC<{
   }
 
   function onNewID(id: string) {
-    const action: ModelAction = {
-      type: 'model',
-      act: 'elements',
-      task: 'edit',
-      subtask: 'flowunit',
-      id: event.id,
-      value: { ...editing, id },
-    };
-    act(action);
+    act(editElmCommand(event.id, { ...editing, id }));
     setHasChange(false);
     if (setSelectedNode !== undefined) {
       setSelectedNode(id);

@@ -63,7 +63,7 @@ const ModelReferenceView: React.FC<{
 }) => {
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
-  const modelWrapper: ModelWrapper = {model, page, type: 'model'};
+  const modelWrapper: ModelWrapper = { model, page, type: 'model' };
 
   const Sidebar = useMemo(
     () => makeSidebar(usePersistentDatasetStateReducer!),

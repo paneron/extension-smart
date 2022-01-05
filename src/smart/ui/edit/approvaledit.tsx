@@ -6,14 +6,12 @@ import {
   EditorModel,
   EditorRegistry,
 } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
 import {
   checkId,
   getModelAllRefs,
   getModelAllRegs,
   getModelAllRoles,
   removeSpace,
-  updatePageElement,
 } from '../../utils/ModelFunctions';
 import { MODAILITYOPTIONS } from '../../utils/constants';
 import {
@@ -31,6 +29,9 @@ import { DescriptionItem } from '../common/description/fields';
 import RoleSelector from './components/RoleSelector';
 import RegistrySelector from './components/RegistrySelector';
 import SimpleReferenceSelector from './components/ReferenceSelector';
+import { ModelAction } from '../../model/editor/model';
+import PopoverChangeIDButton from '../popover/PopoverChangeIDButton';
+import { editElmCommand } from '../../model/editor/commands/elements';
 
 interface CommonApprovalEditProps {
   onUpdateClick: () => void;
@@ -42,28 +43,24 @@ interface CommonApprovalEditProps {
 }
 
 const EditApprovalPage: React.FC<{
-  modelWrapper: ModelWrapper;
-  setModel: (m: EditorModel) => void;
-  id: string;
+  model: EditorModel;
+  act: (x: ModelAction) => void;
+  approval: EditorApproval;
   closeDialog?: () => void;
   minimal?: boolean;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
   setSelectedNode?: (id: string) => void;
 }> = function ({
-  modelWrapper,
-  setModel,
-  id,
+  model,
+  act,
+  approval,
   closeDialog,
   minimal = false,
   onFullEditClick,
   onDeleteClick,
   setSelectedNode,
 }) {
-  const model = modelWrapper.model;
-
-  const approval = model.elements[id] as EditorApproval;
-
   const [editing, setEditing] = useState<EditorApproval>({ ...approval });
   const [hasChange, setHasChange] = useState<boolean>(false);
 
@@ -78,14 +75,14 @@ const EditApprovalPage: React.FC<{
   const refs = useMemo(() => refObjects.map(r => r.id), [refObjects]);
 
   function onUpdateClick() {
-    const updated = save(id, editing, modelWrapper.page, model);
-    if (updated !== null) {
-      setModel({ ...updated });
-      if (closeDialog !== undefined) {
-        closeDialog();
-      }
+    act(editElmCommand(approval.id, editing));
+    if (closeDialog) {
+      closeDialog();
     }
     setHasChange(false);
+    if (setSelectedNode !== undefined && approval.id !== editing.id) {
+      setSelectedNode(editing.id);
+    }
   }
 
   function setEdit(x: EditorApproval) {
@@ -103,10 +100,7 @@ const EditApprovalPage: React.FC<{
     setHasChange(hc => {
       if (hc) {
         setEditing(edit => {
-          const updated = save(id, edit, modelWrapper.page, model);
-          if (updated !== null) {
-            setModel({ ...updated });
-          }
+          act(editElmCommand(approval.id, edit));
           return edit;
         });
       }
@@ -115,17 +109,7 @@ const EditApprovalPage: React.FC<{
   }
 
   function onNewID(id: string) {
-    const oldid = approval.id;
-    const mw = modelWrapper;
-    const updated = save(
-      oldid,
-      { ...editing, id },
-      modelWrapper.page,
-      mw.model
-    );
-    if (updated !== null) {
-      setModel({ ...updated });
-    }
+    act(editElmCommand(approval.id, { ...editing, id }));
     setHasChange(false);
     if (setSelectedNode !== undefined) {
       setSelectedNode(id);
@@ -187,6 +171,7 @@ const QuickVersionEdit: React.FC<
     refObjects: MMELReference[];
     saveOnExit: () => void;
     approval: EditorApproval;
+    onNewID: (id: string) => void;
   }
 > = function (props) {
   const {
@@ -198,14 +183,31 @@ const QuickVersionEdit: React.FC<
     refObjects,
     saveOnExit,
     approval,
+    onNewID,
   } = props;
 
   useEffect(() => saveOnExit, [approval]);
 
+  function idTest(id: string) {
+    return id === approval.id || checkId(id, model.elements);
+  }
+
+  const idButton = (
+    <PopoverChangeIDButton
+      initValue={editing.id}
+      validTest={idTest}
+      save={onNewID}
+    />
+  );
+
   return (
     <FormGroup>
       <EditPageButtons {...props} />
-      <DescriptionItem label="Approval ID" value={editing.id} />
+      <DescriptionItem
+        label="Approval ID"
+        value={editing.id}
+        extend={idButton}
+      />
       <NormalTextField
         text="Approval Process Name"
         value={editing.name}
@@ -342,26 +344,5 @@ const FullVersionEdit: React.FC<
     </MGDDisplayPane>
   );
 };
-
-function save(
-  oldId: string,
-  approval: EditorApproval,
-  pageid: string,
-  model: EditorModel
-): EditorModel | null {
-  if (oldId !== approval.id) {
-    if (checkId(approval.id, model.elements)) {
-      delete model.elements[oldId];
-      const page = model.pages[pageid];
-      updatePageElement(page, oldId, approval.id);
-      model.elements[approval.id] = approval;
-    } else {
-      return null;
-    }
-  } else {
-    model.elements[oldId] = approval;
-  }
-  return model;
-}
 
 export default EditApprovalPage;

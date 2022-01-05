@@ -1,6 +1,7 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
+import { editEGateCommand } from '../../model/editor/commands/elements';
 import { ModelAction } from '../../model/editor/model';
 import {
   EditorEGate,
@@ -60,16 +61,7 @@ const EditEGatePage: React.FC<{
   const [hasChange, setHasChange] = useState<boolean>(false);
 
   function onUpdateClick() {
-    const action: ModelAction = {
-      type: 'model',
-      act: 'hybird-edit',
-      task: 'egate-edit',
-      id: egate.id,
-      page: page.id,
-      update: editing,
-      edges: edges,
-    };
-    act(action);
+    act(editEGateCommand(egate.id, page.id, editing, edges));
     if (closeDialog) {
       closeDialog();
     }
@@ -100,16 +92,7 @@ const EditEGatePage: React.FC<{
       if (hc) {
         setEditing(edit => {
           setEdges(es => {
-            const action: ModelAction = {
-              type: 'model',
-              act: 'hybird-edit',
-              task: 'egate-edit',
-              id: egate.id,
-              page: page.id,
-              update: edit,
-              edges: es,
-            };
-            act(action);
+            act(editEGateCommand(egate.id, page.id, edit, es));
             return es;
           });
           return edit;
@@ -120,16 +103,7 @@ const EditEGatePage: React.FC<{
   }
 
   function onNewID(id: string) {
-    const action: ModelAction = {
-      type: 'model',
-      act: 'hybird-edit',
-      task: 'egate-edit',
-      id: egate.id,
-      page: page.id,
-      update: { ...editing, id },
-      edges: edges,
-    };
-    act(action);
+    act(editEGateCommand(egate.id, page.id, { ...editing, id }, edges));
     setHasChange(false);
     if (setSelectedNode !== undefined) {
       setSelectedNode(id);
