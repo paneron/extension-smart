@@ -18,7 +18,6 @@ import {
 } from '../model/modelwrapper';
 import { createModelHistory, PageHistory } from '../model/history';
 import { EdgeTypes, NodeTypes } from '../model/States';
-import { SelectedNodeDescription } from './sidebar/selected_deprecated';
 import { DataVisibilityButton, IdVisibleButton } from './control/buttons';
 import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
 import SearchComponentPane from './sidebar/search_deprecated';
@@ -37,6 +36,7 @@ import { MMELRepo, RepoIndex } from '../model/repo';
 import { EditorModel } from '../model/editormodel';
 import { HistoryAction, useHistory } from '../model/editor/history';
 import { getBreadcrumbs } from './common/description/fields';
+import { SelectedNodeDescription } from './sidebar/selected';
 
 const ModelWorkspace: React.FC<{
   isVisible: boolean;
@@ -168,7 +168,7 @@ const ModelWorkspace: React.FC<{
         {
           key: 'selected-node',
           title: 'Selected node',
-          content: <SelectedNodeDescription modelWrapper={mw} />,
+          content: <SelectedNodeDescription model={model} page={page} />,
         },
         {
           key: 'search-node',

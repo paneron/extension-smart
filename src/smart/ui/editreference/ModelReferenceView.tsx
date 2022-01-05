@@ -36,12 +36,14 @@ import {
 import LegendPane from '../common/description/LegendPane';
 import { DataVisibilityButton, IdVisibleButton } from '../control/buttons';
 import SearchComponentPane from '../sidebar/search_deprecated';
-import { SelectedNodeDescription } from '../sidebar/selected_deprecated';
 import RepoBreadcrumb from '../common/description/RepoBreadcrumb';
+import { SelectedNodeDescription } from '../sidebar/selected';
+import { EditorModel } from '../../model/editormodel';
 
 const ModelReferenceView: React.FC<{
   className?: string;
-  modelWrapper: ModelWrapper;
+  model: EditorModel;
+  page: string;
   setModelWrapper: (x: ModelWrapper) => void;
   menuControl: React.ReactNode;
   index: RepoIndex;
@@ -50,7 +52,8 @@ const ModelReferenceView: React.FC<{
   goToNextModel: (x: MMELRepo) => void;
 }> = ({
   className,
-  modelWrapper,
+  model,
+  page,
   setModelWrapper,
   menuControl,
   index,
@@ -59,6 +62,8 @@ const ModelReferenceView: React.FC<{
   goToNextModel,
 }) => {
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
+
+  const modelWrapper: ModelWrapper = {model, page, type: 'model'};
 
   const Sidebar = useMemo(
     () => makeSidebar(usePersistentDatasetStateReducer!),
@@ -138,7 +143,7 @@ const ModelReferenceView: React.FC<{
         {
           key: 'selected-node',
           title: 'Selected node',
-          content: <SelectedNodeDescription modelWrapper={modelWrapper} />,
+          content: <SelectedNodeDescription model={model} page={page} />,
         },
         {
           key: 'search-node',

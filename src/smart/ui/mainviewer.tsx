@@ -27,7 +27,6 @@ import {
   RepoHistory,
 } from '../model/history';
 import { EdgeTypes, FunModel, NodeTypes, ViewerOption } from '../model/States';
-import { SelectedNodeDescription } from './sidebar/selected_deprecated';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
 import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
@@ -61,6 +60,7 @@ import MenuButton from './menu/MenuButton';
 import { EditorModel } from '../model/editormodel';
 import { HistoryAction, useHistory } from '../model/editor/history';
 import { getBreadcrumbs } from './common/description/fields';
+import { SelectedNodeDescription } from './sidebar/selected';
 
 export enum FunctionPage {
   Simulation = 'simulation',
@@ -472,9 +472,10 @@ const ModelViewer: React.FC<{
     title: 'Selected node',
     content: (
       <SelectedNodeDescription
-        modelWrapper={
-          funMS !== undefined ? funMS.mw : { page, model, type: 'model' }
+        model={
+          funMS !== undefined ? funMS.mw.model : model
         }
+        page={page}
         CustomAttribute={CustomAttribute}
         CustomProvision={CustomProvision}
       />

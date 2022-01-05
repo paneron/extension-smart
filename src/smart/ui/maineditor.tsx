@@ -713,7 +713,8 @@ const ModelEditor: React.FC<{
             ) : isModelWrapper(reference) ? (
               <ModelReferenceView
                 className={className}
-                modelWrapper={reference}
+                model={reference.model}
+                page={reference.page}
                 setModelWrapper={setReference}
                 menuControl={referenceMenu}
                 index={index}
