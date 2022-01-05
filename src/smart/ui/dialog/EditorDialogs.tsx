@@ -1,17 +1,11 @@
 import React from 'react';
-import BasicSettingPane from '../control/settings';
 import { EditorModel, EditorTimerEvent } from '../../model/editormodel';
 import { ModelWrapper } from '../../model/modelwrapper';
-import { ConfirmDialog } from './confirmdialog';
 import {
   DeletableNodeTypes,
   EditableNodeTypes,
   EditAction,
 } from '../../utils/constants';
-import {
-  DeleteConfirmMessgae,
-  deleteNodeAction,
-} from '../../utils/ModelRemoveComponentHandler';
 import { DataType } from '../../serialize/interface/baseinterface';
 import EditProcessPage from '../edit/processedit';
 import EditApprovalPage from '../edit/approvaledit';
@@ -21,9 +15,13 @@ import EditSignalEventPage from '../edit/signaleventedit';
 import { EditorAction } from '../../model/editor/state';
 import { EditorState } from '../../model/States';
 import { ModelAction } from '../../model/editor/model';
+import { ConfirmDialog } from './confirmdialog';
+import {
+  DeleteConfirmMessgae,
+  deleteNodeAction,
+} from '../../utils/ModelRemoveComponentHandler';
 
-export enum DiagTypes {
-  SETTING = 'setting',
+export enum EditorDiagTypes {
   DELETECONFIRM = 'confirm',
   EDITPROCESS = 'process',
   EDITAPPROVAL = 'approval',
@@ -32,176 +30,128 @@ export enum DiagTypes {
   EDITEGATE = 'gate',
 }
 
-export enum MapperDiagTypes {
-  EDITMAPPING = 'map',
-  DOCUMENT = 'document',
-}
-
-export interface MapperDiagPackage {
-  type: MapperDiagTypes | null;
-  payload: EditMPropsInterface;
-}
-
-export interface DiagPackage {
-  type: DiagTypes | null;
+export interface EditorDiagPackage {
+  type: EditorDiagTypes | undefined;
   callback: () => void;
   msg: string;
 }
 
-export interface IDiagInterface {
+export type EditorDialogInterface = {
   state: EditorState;
   setModelWrapper: (mw: ModelWrapper) => void;
   act: (x: EditorAction) => void;
   callback: () => void;
   done: () => void;
   msg: string;
-}
+  setSelectedNode: (id: string) => void;
+};
 
-export interface EditorDiagProps {
+export type EditorDiagProps = {
   title: string;
-  Panel: React.FC<IDiagInterface>;
+  Panel: React.FC<EditorDialogInterface>;
   fullscreen: boolean;
-}
+};
 
-export interface IDiagAction {
+export type EditorDiagAction = {
   nodeType: DeletableNodeTypes | EditableNodeTypes;
   model: EditorModel;
   page: string;
   id: string;
   act: (x: ModelAction) => void;
-}
+};
 
-export interface EditMPropsInterface {
-  from: string;
-  to: string;
-}
-
-function updateModel(
-  model: EditorModel,
-  setModelWrapper: (mw: ModelWrapper) => void,
-  mw: ModelWrapper
-) {
-  setModelWrapper({ ...mw, model: { ...model } });
-}
-
-export const MyDiag: Record<DiagTypes, EditorDiagProps> = {
-  [DiagTypes.SETTING]: {
-    title: 'Setting',
-    fullscreen: true,
-    Panel: ({ state, act }) => (
-      <BasicSettingPane model={state.model} act={act} />
-    ),
-  },
-  [DiagTypes.DELETECONFIRM]: {
+export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
+  [EditorDiagTypes.DELETECONFIRM]: {
     title: 'Confirmation',
     fullscreen: false,
     Panel: ({ callback, done, msg }) => (
       <ConfirmDialog callback={callback} done={done} msg={msg} />
     ),
   },
-  [DiagTypes.EDITPROCESS]: {
+  [EditorDiagTypes.EDITPROCESS]: {
     title: 'Edit Process',
     fullscreen: true,
-    Panel: ({ state, setModelWrapper, done: cancel, msg }) => (
+    Panel: ({ state, done: cancel, msg, setSelectedNode }) => (
       <EditProcessPage
         model={state.model}
-        setModel={(m: EditorModel) =>
-          updateModel(m, setModelWrapper, {
-            model: state.model,
-            page: state.page,
-            type: 'model',
-          })
-        }
+        setModel={(m: EditorModel) => {}}
         id={msg}
         closeDialog={cancel}
+        setSelectedNode={setSelectedNode}
       />
     ),
   },
-  [DiagTypes.EDITAPPROVAL]: {
+  [EditorDiagTypes.EDITAPPROVAL]: {
     title: 'Edit Approval',
     fullscreen: true,
-    Panel: ({ state, setModelWrapper, done: cancel, msg }) => (
+    Panel: ({ state, done: cancel, msg, setSelectedNode }) => (
       <EditApprovalPage
         modelWrapper={{ model: state.model, page: state.page, type: 'model' }}
-        setModel={(m: EditorModel) =>
-          updateModel(m, setModelWrapper, {
-            model: state.model,
-            page: state.page,
-            type: 'model',
-          })
-        }
+        setModel={(m: EditorModel) => {}}
         id={msg}
         closeDialog={cancel}
+        setSelectedNode={setSelectedNode}
       />
     ),
   },
-  [DiagTypes.EDITEGATE]: {
+  [EditorDiagTypes.EDITEGATE]: {
     title: 'Edit Gateway',
     fullscreen: true,
-    Panel: ({ state, setModelWrapper, done: cancel, msg }) => (
+    Panel: ({ state, setModelWrapper, done: cancel, msg, setSelectedNode }) => (
       <EditEGatePage
         modelWrapper={{ model: state.model, page: state.page, type: 'model' }}
-        setModel={(m: EditorModel) =>
-          updateModel(m, setModelWrapper, {
-            model: state.model,
-            page: state.page,
-            type: 'model',
-          })
-        }
+        setModel={() => {}}
         id={msg}
         closeDialog={cancel}
+        setSelectedNode={setSelectedNode}
       />
     ),
   },
-  [DiagTypes.EDITTIMER]: {
+  [EditorDiagTypes.EDITTIMER]: {
     title: 'Edit Timer',
     fullscreen: true,
-    Panel: ({ state, act, done: cancel, msg }) => (
+    Panel: ({ state, act, done: cancel, msg, setSelectedNode }) => (
       <EditTimerPage
         model={state.model}
         act={act}
         timer={state.model.elements[msg] as EditorTimerEvent}
         closeDialog={cancel}
+        setSelectedNode={setSelectedNode}
       />
     ),
   },
-  [DiagTypes.EDITSIGNAL]: {
+  [EditorDiagTypes.EDITSIGNAL]: {
     title: 'Edit Signal Catch Event',
     fullscreen: true,
-    Panel: ({ state, setModelWrapper, done: cancel, msg }) => (
+    Panel: ({ state, done: cancel, msg, setSelectedNode }) => (
       <EditSignalEventPage
         modelWrapper={{ model: state.model, page: state.page, type: 'model' }}
-        setModel={(m: EditorModel) =>
-          updateModel(m, setModelWrapper, {
-            model: state.model,
-            page: state.page,
-            type: 'model',
-          })
-        }
+        setModel={() => {}}
         id={msg}
         closeDialog={cancel}
+        setSelectedNode={setSelectedNode}
       />
     ),
   },
 };
 
-export const SetDiagAction: Record<
+export const SetEditorDiagAction: Record<
   EditAction,
-  (props: IDiagAction) => DiagPackage
+  (props: EditorDiagAction) => EditorDiagPackage
 > = {
   [EditAction.DELETE]: setDeleteAction,
   [EditAction.EDIT]: setEditAction,
 };
 
-const EditNodeType: Record<EditableNodeTypes, DiagTypes> = {
-  [DataType.PROCESS]: DiagTypes.EDITPROCESS,
-  [DataType.APPROVAL]: DiagTypes.EDITAPPROVAL,
-  [DataType.TIMEREVENT]: DiagTypes.EDITTIMER,
-  [DataType.SIGNALCATCHEVENT]: DiagTypes.EDITSIGNAL,
-  [DataType.EGATE]: DiagTypes.EDITEGATE,
+const EditNodeType: Record<EditableNodeTypes, EditorDiagTypes> = {
+  [DataType.PROCESS]: EditorDiagTypes.EDITPROCESS,
+  [DataType.APPROVAL]: EditorDiagTypes.EDITAPPROVAL,
+  [DataType.TIMEREVENT]: EditorDiagTypes.EDITTIMER,
+  [DataType.SIGNALCATCHEVENT]: EditorDiagTypes.EDITSIGNAL,
+  [DataType.EGATE]: EditorDiagTypes.EDITEGATE,
 };
 
-function setEditAction(props: IDiagAction): DiagPackage {
+function setEditAction(props: EditorDiagAction): EditorDiagPackage {
   return {
     type: EditNodeType[props.nodeType as EditableNodeTypes],
     callback: () => {},
@@ -209,9 +159,9 @@ function setEditAction(props: IDiagAction): DiagPackage {
   };
 }
 
-function setDeleteAction(props: IDiagAction): DiagPackage {
+function setDeleteAction(props: EditorDiagAction): EditorDiagPackage {
   return {
-    type: DiagTypes.DELETECONFIRM,
+    type: EditorDiagTypes.DELETECONFIRM,
     callback: () => {
       const action = deleteNodeAction(props.model, props.page, props.id);
       props.act(action);

@@ -1,5 +1,4 @@
 import React from 'react';
-import { useStoreActions } from 'react-flow-renderer';
 import { ModelAction } from '../../model/editor/model';
 import {
   EditorApproval,
@@ -92,7 +91,7 @@ const NODE_EDIT_VIEWS: Record<
 
 const QuickEdit: React.FC<{
   node: EditorNode;
-  model: EditorModel;  
+  model: EditorModel;
   modelWrapper: ModelWrapper; // will be removed
   setModel: (m: EditorModel) => void;
   act: (x: ModelAction) => void;
@@ -103,17 +102,12 @@ const QuickEdit: React.FC<{
   ) => void;
   page: EditorSubprocess;
   provision?: RefTextSelection;
+  setSelectedNode: (id: string) => void;
 }> = function (props) {
   const { node } = props;
   const Edit = NODE_EDIT_VIEWS[node.datatype as QuickEditableNodeTypes];
 
-  const setSelectedElements = useStoreActions(a => a.setSelectedElements);
-
-  function setSelectedNodeId(id: string) {
-    setSelectedElements([{ id, position: { x: 0, y: 0 } }]);
-  }
-
-  return <Edit {...props} setSelectedNode={setSelectedNodeId} />;
+  return <Edit {...props} />;
 };
 
 export default QuickEdit;

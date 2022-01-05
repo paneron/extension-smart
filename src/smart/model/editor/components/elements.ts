@@ -285,12 +285,16 @@ export function findActionElement(
   id: string
 ): EditorNode {
   const elm = elms[id];
-  if (isEditorRegistry(elm)) {
-    const dc = elms[elm.data];
-    if (isEditorDataClass(dc)) {
-      const combined: RegistryCombined = { ...dc, id, title: elm.title };
-      return combined;
+  if (elm) {
+    if (isEditorRegistry(elm)) {
+      const dc = elms[elm.data];
+      if (isEditorDataClass(dc)) {
+        const combined: RegistryCombined = { ...dc, id, title: elm.title };
+        return combined;
+      }
     }
+  } else {
+    Logger.log('Cannot find element', id, elms);
   }
   return elm;
 }

@@ -1,10 +1,13 @@
 import { useReducer } from 'react';
-import { MMELEdge, MMELSubprocess } from '../../../serialize/interface/flowcontrolinterface';
+import {
+  MMELEdge,
+  MMELSubprocess,
+} from '../../../serialize/interface/flowcontrolinterface';
 import {
   dataPageReplace,
   elmPageReplace,
 } from '../../../utils/handler/cascadeModelHandler';
-import { Logger } from '../../../utils/ModelFunctions';
+import { Logger, updatePageElement } from '../../../utils/ModelFunctions';
 import {
   EditorNode,
   EditorSubprocess,
@@ -71,13 +74,21 @@ type MoveAction = {
   fromy: number;
 };
 
+type ReplaceElmIdAction = {
+  task: 'replace-id';
+  page: string;
+  id: string;
+  value: string;
+};
+
 type EXPORT_ACTION =
   | CascadeAction
   | NewElementAction
   | DeleteElementAction
   | MoveAction
   | NewEdgeAction
-  | DeleteEdgeAction;
+  | DeleteEdgeAction
+  | ReplaceElmIdAction;
 
 export type PageAction = EXPORT_ACTION & {
   act: 'pages';
@@ -141,6 +152,9 @@ function pageReducer(
         action.x,
         action.y
       );
+    }
+    case 'replace-id': {
+      return replaceId(pages, action.page, action.id, action.value);
     }
   }
 }
@@ -220,6 +234,15 @@ function findReverse(
         fromy: action.y,
       };
     }
+    case 'replace-id': {
+      return {
+        act: 'pages',
+        task: 'replace-id',
+        page: action.page,
+        id: action.value,
+        value: action.id,
+      };
+    }
   }
 }
 
@@ -280,10 +303,10 @@ export function cascadeCheckPages(
       {
         type: 'model',
         act: 'pages',
-        task: 'delete-edge',        
+        task: 'delete-edge',
         page: action.page,
         value: eids,
-      }
+      },
     ];
     return [
       {
@@ -296,10 +319,10 @@ export function cascadeCheckPages(
       {
         type: 'model',
         act: 'pages',
-        task: 'new-edge',        
+        task: 'new-edge',
         page: action.page,
         value: eids.map(x => edges[x]),
-      }
+      },
     ];
   }
   return [];
@@ -435,6 +458,18 @@ function newEdge(
   return pages;
 }
 
+function replaceId(
+  pages: Record<string, EditorSubprocess>,
+  page: string,
+  id: string,
+  newId: string
+) {
+  const p = { ...pages[page] };
+  updatePageElement(p, id, newId);
+  pages[page] = p;
+  return pages;
+}
+
 function deleteEdge(
   pages: Record<string, EditorSubprocess>,
   page: string,
@@ -450,9 +485,12 @@ function deleteEdge(
   return pages;
 }
 
-function findRelatedEdges(edges: Record<string, MMELEdge>, id: string): string[] {
+function findRelatedEdges(
+  edges: Record<string, MMELEdge>,
+  id: string
+): string[] {
   const ids: string[] = [];
-  for (const e of Object.values(edges)) {    
+  for (const e of Object.values(edges)) {
     if (e.from === id || e.to === id) {
       ids.push(e.id);
     }

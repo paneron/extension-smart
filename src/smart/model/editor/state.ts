@@ -67,7 +67,7 @@ export function useEditorState(
 
   if (post) {
     // Logger.log('Post processing');
-    const reverse = actModel(post);
+    const reverse = actModel(post, page);
     actUndoHis({ act: 'post', value: reverse });
     setPost(undefined);
   }
@@ -123,7 +123,7 @@ export function useEditorState(
   function hisAction(action: EditorAction): EditorAction | undefined {
     switch (action.type) {
       case 'model': {
-        return actModel(action);
+        return actModel(action, page);
       }
       case 'history':
         return actHistory(action);
@@ -131,7 +131,7 @@ export function useEditorState(
   }
 
   function modelAction(action: ModelAction) {
-    const reverse = actModel(action);
+    const reverse = actModel(action, page);
     const len = undoHis.length;
     const his = undoHis[len - 1];
     if (needCheck(action)) {

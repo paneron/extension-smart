@@ -367,25 +367,25 @@ function pageToFlowElements(
     for (const x of Object.values(page.childs)) {
       const elm = elms[x.element];
       if (elm) {
-      if (isEditorProcess(elm)) {
-        for (const input of elm.input) {
-          if (elms[input]) {
-            edges.push(createDataLinkContainer(elms[input], elm));
+        if (isEditorProcess(elm)) {
+          for (const input of elm.input) {
+            if (elms[input]) {
+              edges.push(createDataLinkContainer(elms[input], elm));
+            }
           }
-        }
-        for (const input of elm.output) {
-          if (elms[input]) {
-            edges.push(createDataLinkContainer(elm, elms[input]));
+          for (const input of elm.output) {
+            if (elms[input]) {
+              edges.push(createDataLinkContainer(elm, elms[input]));
+            }
           }
-        }
-      } else if (isEditorApproval(elm)) {
-        for (const input of elm.records) {
-          if (elms[input]) {
-            edges.push(createDataLinkContainer(elm, elms[input]));
+        } else if (isEditorApproval(elm)) {
+          for (const input of elm.records) {
+            if (elms[input]) {
+              edges.push(createDataLinkContainer(elm, elms[input]));
+            }
           }
         }
       }
-    }
     }
     for (const x of Object.values(page.data)) {
       const data = elms[x.element];

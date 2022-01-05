@@ -310,7 +310,7 @@ function save(
     if (checkId(egate.id, model.elements)) {
       updateEdges(page, edges);
       delete model.elements[oldId];
-      updatePageElement(page, oldId, egate);
+      updatePageElement(page, oldId, egate.id);
       model.elements[egate.id] = egate;
     } else {
       return null;

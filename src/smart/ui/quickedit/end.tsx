@@ -2,10 +2,7 @@ import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { EditorEndEvent } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
-import {
-  DeletableNodeTypes,  
-  EditAction,
-} from '../../utils/constants';
+import { DeletableNodeTypes, EditAction } from '../../utils/constants';
 import { DescribeEnd } from '../common/description/ComponentDescription';
 import { EditPageButtons } from '../edit/commons';
 

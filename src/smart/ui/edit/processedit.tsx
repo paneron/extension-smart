@@ -671,7 +671,7 @@ function save(
       delete model.elements[oldId];
       for (const p in model.pages) {
         const page = model.pages[p];
-        updatePageElement(page, oldId, process);
+        updatePageElement(page, oldId, process.id);
       }
       model.elements[process.id] = process;
       checkPage(model, oldProcess.page, process);

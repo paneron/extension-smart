@@ -11,7 +11,14 @@ export const ConfirmDialog: React.FC<{
     <div style={{ textAlign: 'center' }}>
       <p> {msg} </p>
       <MGDButtonGroup>
-        <Button intent="danger" icon="confirm" onClick={() => {callback();done();}}>
+        <Button
+          intent="danger"
+          icon="confirm"
+          onClick={() => {
+            callback();
+            done();
+          }}
+        >
           Confirm
         </Button>
         <Button icon="disable" onClick={() => done()}>

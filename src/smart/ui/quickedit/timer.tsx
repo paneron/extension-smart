@@ -1,6 +1,10 @@
 import React from 'react';
 import { ModelAction } from '../../model/editor/model';
-import { EditorModel, EditorSubprocess, EditorTimerEvent } from '../../model/editormodel';
+import {
+  EditorModel,
+  EditorSubprocess,
+  EditorTimerEvent,
+} from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
 import {
   DeletableNodeTypes,
@@ -12,7 +16,7 @@ import EditTimerPage from '../edit/timeredit';
 const QuickEditTimer: React.FC<{
   timer: EditorTimerEvent;
   model: EditorModel;
-  act: (x: ModelAction) => void;  
+  act: (x: ModelAction) => void;
   setDialog: (
     nodeType: EditableNodeTypes | DeletableNodeTypes,
     action: EditAction,
@@ -36,7 +40,7 @@ const QuickEditTimer: React.FC<{
     onDeleteClick,
   };
 
-  return <EditTimerPage {...props} {...functionProps} id={timer.id} minimal />;
+  return <EditTimerPage {...props} {...functionProps} timer={timer} minimal />;
 };
 
 export default QuickEditTimer;

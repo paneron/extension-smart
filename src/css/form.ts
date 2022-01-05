@@ -54,6 +54,7 @@ export const mgd_label = css`
 
 export const mgdLabel: CSSProperties = {
   ...normalFontStyle,
+  marginRight: 3,
 };
 
 export const mgd_heading = css`

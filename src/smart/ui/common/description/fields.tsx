@@ -12,12 +12,14 @@ type Breadcrumb = {
 export const DescriptionItem: React.FC<{
   label?: string;
   value: string;
-}> = function ({ label, value }): JSX.Element {
+  extend?: JSX.Element;
+}> = function ({ label, value, extend }): JSX.Element {
   return (
     <p>
       <label style={mgdLabel}>
         {label === undefined ? value : `${label}: ${value}`}
       </label>
+      {extend}
     </p>
   );
 };

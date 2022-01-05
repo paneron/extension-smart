@@ -8,7 +8,11 @@ import {
 import { DataType } from '../serialize/interface/baseinterface';
 import { DeletableNodeTypes } from './constants';
 
-function deleteProcess_deprecated(model: EditorModel, pageid: string, id: string) {
+function deleteProcess_deprecated(
+  model: EditorModel,
+  pageid: string,
+  id: string
+) {
   const page = model.pages[pageid];
   delete page.childs[id];
   deleteRelatedEdges(page, id);
@@ -43,14 +47,18 @@ export function deletePage(model: EditorModel, pageid: string) {
   delete model.pages[pageid];
 }
 
-export function deleteNodeAction(model: EditorModel, pageid: string, id: string): ModelAction {
-  const action:ModelAction = {
+export function deleteNodeAction(
+  model: EditorModel,
+  pageid: string,
+  id: string
+): ModelAction {
+  const action: ModelAction = {
     type: 'model',
     act: 'pages',
     task: 'delete-element',
     value: model.elements[id],
-    page: pageid    
-  }
+    page: pageid,
+  };
   return action;
 }
 

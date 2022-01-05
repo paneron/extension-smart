@@ -58,13 +58,7 @@ import {
 } from '../model/States';
 import { EditorDataClass } from '../model/editormodel';
 import EditorFileMenu from './menu/EditorFileMenu';
-import {
-  DiagPackage,
-  DiagTypes,
-  IDiagAction,
-  MyDiag,
-  SetDiagAction,
-} from './dialog/dialogs';
+import { DiagPackage, DiagTypes, MyDiag } from './dialog/dialogs';
 import {
   DataVisibilityButton,
   EdgeEditButton,
@@ -72,12 +66,9 @@ import {
 } from './control/buttons';
 import NewComponentPane from './control/newComponentPane';
 import {
-  DeletableNodeTypes,
   DOCVERSION,
   DragAndDropImportRefType,
   DragAndDropNewFormatType,
-  EditableNodeTypes,
-  EditAction,
   NewComponentTypes,
 } from '../utils/constants';
 import { getaddComponentAction } from '../utils/ModelAddComponentHandler';
@@ -318,21 +309,6 @@ const ModelEditor: React.FC<{
 
   function setDialogType(x: DiagTypes | null) {
     setDialogPack({ ...dialogPack, type: x });
-  }
-
-  function setDiag(
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) {
-    const props: IDiagAction = {
-      nodeType: nodeType,
-      model: model,
-      page: state.page,
-      id: id,      
-      act,
-    };
-    setDialogPack(SetDiagAction[action](props));
   }
 
   function addCommentToModel(msg: string, pid: string, parent?: string) {
@@ -626,7 +602,6 @@ const ModelEditor: React.FC<{
             <SelectedNodeDescription
               model={model}
               page={state.page}
-              setDialog={setDiag}
               act={act}
               provision={selectionImport}
               onSelect={setSelectedId}

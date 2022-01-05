@@ -1,17 +1,14 @@
 import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { EditorModel, EditorSubprocess, EditorTimerEvent } from '../../model/editormodel';
-import {
-  checkId,
-  removeSpace,
-  updatePageElement,
-} from '../../utils/ModelFunctions';
+import { EditorModel, EditorTimerEvent } from '../../model/editormodel';
+import { checkId, removeSpace } from '../../utils/ModelFunctions';
 import { TimerType } from '../../utils/constants';
 import { NormalComboBox, NormalTextField } from '../common/fields';
 import { EditPageButtons } from './commons';
 import { DescriptionItem } from '../common/description/fields';
 import { ModelAction } from '../../model/editor/model';
+import PopoverChangeIDButton from '../popover/PopoverChangeIDButton';
 
 interface CommonTimerEditProps {
   onUpdateClick: () => void;
@@ -19,13 +16,13 @@ interface CommonTimerEditProps {
   setEditing: (x: EditorTimerEvent) => void;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
+  model: EditorModel;
 }
 
 const EditTimerPage: React.FC<{
   model: EditorModel;
   act: (x: ModelAction) => void;
-  page: EditorSubprocess;
-  id: string;
+  timer: EditorTimerEvent;
   closeDialog?: () => void;
   minimal?: boolean;
   onFullEditClick?: () => void;
@@ -34,28 +31,33 @@ const EditTimerPage: React.FC<{
 }> = function ({
   model,
   act,
-  page,
-  id,
+  timer,
   minimal,
   closeDialog,
   onDeleteClick,
   onFullEditClick,
   setSelectedNode,
-}) {  
-  const timer = model.elements[id] as EditorTimerEvent;
-
+}) {
   const [editing, setEditing] = useState<EditorTimerEvent>({ ...timer });
   const [hasChange, setHasChange] = useState<boolean>(false);
 
   function onUpdateClick() {
-    const updated = save(id, editing, page.id, model);
-    if (updated !== null) {
-      // setModel({ ...updated });
-      if (closeDialog !== undefined) {
-        closeDialog();
-      }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'elements',
+      task: 'edit',
+      subtask: 'flowunit',
+      id: timer.id,
+      value: editing,
+    };
+    act(action);
+    if (closeDialog) {
+      closeDialog();
     }
     setHasChange(false);
+    if (setSelectedNode !== undefined && timer.id !== editing.id) {
+      setSelectedNode(editing.id);
+    }
   }
 
   function setEdit(x: EditorTimerEvent) {
@@ -73,10 +75,15 @@ const EditTimerPage: React.FC<{
     setHasChange(hc => {
       if (hc) {
         setEditing(edit => {
-          // const updated = save(id, edit, modelWrapper.page, model);
-          // if (updated !== null) {
-          //   setModel({ ...updated });
-          // }
+          const action: ModelAction = {
+            type: 'model',
+            act: 'elements',
+            task: 'edit',
+            subtask: 'flowunit',
+            id: timer.id,
+            value: edit,
+          };
+          act(action);
           return edit;
         });
       }
@@ -85,17 +92,15 @@ const EditTimerPage: React.FC<{
   }
 
   function onNewID(id: string) {
-    const oldid = timer.id;
-    // const mw = modelWrapper;
-    // const updated = save(
-    //   oldid,
-    //   { ...editing, id },
-    //   modelWrapper.page,
-    //   mw.model
-    // );
-    // if (updated !== null) {
-    //   setModel({ ...updated });
-    // }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'elements',
+      task: 'edit',
+      subtask: 'flowunit',
+      id: timer.id,
+      value: { ...editing, id },
+    };
+    act(action);
     setHasChange(false);
     if (setSelectedNode !== undefined) {
       setSelectedNode(id);
@@ -118,6 +123,7 @@ const EditTimerPage: React.FC<{
     setEditing,
     onDeleteClick,
     onFullEditClick: fullEditClick,
+    model,
   };
 
   const fullEditProps = { closeDialog };
@@ -127,7 +133,6 @@ const EditTimerPage: React.FC<{
     timer,
     setEditing: setEdit,
     initID: timer.id,
-    validTest: (id: string) => id === timer.id || checkId(id, model.elements),
     onNewID,
   };
 
@@ -144,16 +149,29 @@ const QuickVersionEdit: React.FC<
   CommonTimerEditProps & {
     timer: EditorTimerEvent;
     saveOnExit: () => void;
+    onNewID: (id: string) => void;
   }
 > = function (props) {
-  const { editing, setEditing, timer, saveOnExit } = props;
+  const { editing, setEditing, model, timer, saveOnExit, onNewID } = props;
 
   useEffect(() => saveOnExit, [timer]);
+
+  function idTest(id: string) {
+    return id === timer.id || checkId(id, model.elements);
+  }
+
+  const idButton = (
+    <PopoverChangeIDButton
+      initValue={editing.id}
+      validTest={idTest}
+      save={onNewID}
+    />
+  );
 
   return (
     <FormGroup>
       <EditPageButtons {...props} />
-      <DescriptionItem label="Timer ID" value={editing.id} />
+      <DescriptionItem label="Timer ID" value={editing.id} extend={idButton} />
       <NormalComboBox
         text="Timer Type"
         value={editing.type}
@@ -199,26 +217,5 @@ const FullVersionEdit: React.FC<
     </MGDDisplayPane>
   );
 };
-
-function save(
-  oldId: string,
-  timer: EditorTimerEvent,
-  pageid: string,
-  model: EditorModel
-): EditorModel | null {
-  const page = model.pages[pageid];
-  if (oldId !== timer.id) {
-    if (checkId(timer.id, model.elements)) {
-      delete model.elements[oldId];
-      updatePageElement(page, oldId, timer);
-      model.elements[timer.id] = timer;
-    } else {
-      return null;
-    }
-  } else {
-    model.elements[oldId] = timer;
-  }
-  return model;
-}
 
 export default EditTimerPage;

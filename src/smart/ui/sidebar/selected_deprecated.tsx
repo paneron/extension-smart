@@ -1,10 +1,7 @@
 import React, { useMemo } from 'react';
 import { useStoreState, Elements, isNode } from 'react-flow-renderer';
 import { EditorNodeWithInfoCallback } from '../../model/FlowContainer';
-import {
-  EditorModel,
-  isEditorData,  
-} from '../../model/editormodel';
+import { EditorModel, isEditorData } from '../../model/editormodel';
 import {
   DeletableNodeTypes,
   EditableNodeTypes,
@@ -86,13 +83,13 @@ export const SelectedNodeDescription: React.FC<{
   return (
     <MGDSidebar>
       {elm !== null ? (
-          <Describe
-            node={elm}
-            model={model}
-            page={model.pages[pageid]}
-            CustomAttribute={CustomAttribute}
-            CustomProvision={CustomProvision}
-          />        
+        <Describe
+          node={elm}
+          model={model}
+          page={model.pages[pageid]}
+          CustomAttribute={CustomAttribute}
+          CustomProvision={CustomProvision}
+        />
       ) : (
         'Nothing is selected'
       )}

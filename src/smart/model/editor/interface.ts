@@ -1,3 +1,6 @@
+import { EditorModel } from '../editormodel';
+import { ModelAction } from './model';
+
 // undo / redo returns the opposite action
 export type ACTION_INTERFACE<A> = (a: A) => A | undefined;
 type INIT_INTERFACE<S> = (s: S) => void;
@@ -17,4 +20,10 @@ export type UndoManagerInterface<S, A> = [
   NEW_ACTION<A>,
   EDIT_ACTION,
   EDIT_ACTION
+];
+
+export type UndoReducerModelInterface = [
+  EditorModel,
+  (x: ModelAction, page: string) => ModelAction | undefined,
+  INIT_INTERFACE<EditorModel>
 ];

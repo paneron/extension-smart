@@ -204,7 +204,7 @@ function save(
   if (oldId !== scEvent.id) {
     if (checkId(scEvent.id, model.elements)) {
       delete model.elements[oldId];
-      updatePageElement(page, oldId, scEvent);
+      updatePageElement(page, oldId, scEvent.id);
       model.elements[scEvent.id] = scEvent;
     } else {
       return null;

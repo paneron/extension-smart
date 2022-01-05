@@ -260,24 +260,21 @@ export function trydefaultID(name: string, ids: Record<string, MMELObject>) {
 export function updatePageElement(
   page: EditorSubprocess,
   oldId: string,
-  node: EditorNode
+  newId: string
 ) {
-  const newId = node.id;
-  const elm = page.childs[oldId];
-  if (elm !== undefined) {
-    delete page.childs[oldId];
-    page.childs[newId] = elm;
-    elm.element = node.id;
-    for (const e in page.edges) {
-      const edge = page.edges[e];
-      if (edge.from === oldId) {
-        edge.from = newId;
-      }
-      if (edge.to === oldId) {
-        edge.to = newId;
-      }
+  page.childs = { ...page.childs };
+  const elm = { ...page.childs[oldId], element: newId };
+  delete page.childs[oldId];
+  page.childs[newId] = elm;
+  page.edges = { ...page.edges };
+  for (const e in page.edges) {
+    const edge = page.edges[e];
+    if (edge.from === oldId) {
+      page.edges[e] = { ...edge, from: newId };
     }
-    node.pages.add(page.id);
+    if (edge.to === oldId) {
+      page.edges[e] = { ...page.edges[e], to: newId };
+    }
   }
 }
 

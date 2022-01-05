@@ -24,13 +24,14 @@ import { TermsAction, useTerms } from './components/terms';
 import { useVars, VarAction } from './components/vars';
 import { cascadeCheckTable, TableAction, useTable } from './components/table';
 import { cascadeCheckFigure, FigAction, useFigure } from './components/figure';
-import { UndoReducerInterface } from './interface';
+import { UndoReducerModelInterface } from './interface';
 import {
   cascadeCheckComment,
   CommentAction,
   useComment,
 } from './components/comment';
 import { useMemo } from 'react';
+import { cascadeCheckElm } from './components/element/common';
 
 type ALLACTION =
   | ElmAction
@@ -59,9 +60,7 @@ type OwnAction = ValidateAction;
 
 export type ModelAction = (ALLACTION | OwnAction) & { type: 'model' };
 
-export function useModel(
-  x: EditorModel
-): UndoReducerInterface<EditorModel, ModelAction> {
+export function useModel(x: EditorModel): UndoReducerModelInterface {
   const [meta, actMeta, initMeta] = useMeta(x.meta);
   const [sections, actSections, initSection] = useSections(x.sections);
   const [terms, actTerms, initTerms] = useTerms(x.terms);
@@ -114,7 +113,7 @@ export function useModel(
     ]
   );
 
-  function act(action: ModelAction): ModelAction | undefined {
+  function act(action: ModelAction, page: string): ModelAction | undefined {
     // Logger.log('Action:', action);
     try {
       switch (action.act) {
@@ -149,7 +148,7 @@ export function useModel(
           return convertAction(reverse);
         }
         case 'elements': {
-          return elementAct(action);
+          return elementAct(action, page);
         }
         case 'enums': {
           const reverseCascade = cascadeCheckEnum(elements, action);
@@ -253,7 +252,8 @@ export function useModel(
   }
 
   function elementAct(
-    action: ElmAction & { act: 'elements' }
+    action: ElmAction & { act: 'elements' },
+    page: string
   ): ModelAction | undefined {
     switch (action.subtask) {
       case 'registry': {
@@ -276,6 +276,15 @@ export function useModel(
       }
       case 'dc': {
         const reverseCascade = cascadeCheckDCs(elements, pages, action);
+        actCascade(action.cascade);
+        const reverse = actElements(action);
+        if (reverse) {
+          reverse.cascade = reverseCascade;
+        }
+        return convertAction(reverse);
+      }
+      case 'flowunit': {
+        const reverseCascade = cascadeCheckElm(elements, page, action);
         actCascade(action.cascade);
         const reverse = actElements(action);
         if (reverse) {

@@ -353,7 +353,7 @@ function save(
     if (checkId(approval.id, model.elements)) {
       delete model.elements[oldId];
       const page = model.pages[pageid];
-      updatePageElement(page, oldId, approval);
+      updatePageElement(page, oldId, approval.id);
       model.elements[approval.id] = approval;
     } else {
       return null;
