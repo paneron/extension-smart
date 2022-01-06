@@ -79,7 +79,7 @@ const AttributeListQuickEdit: React.FC<{
 
   function addAttribute() {
     const id = findUniqueID('att', attributes);
-    setAttributes({ ...attributes, id: createDataAttribute(id) });
+    setAttributes({ ...attributes, [id]: createDataAttribute(id) });
   }
 
   function onImport() {
@@ -107,7 +107,7 @@ const AttributeListQuickEdit: React.FC<{
       }
 
       const id = findUniqueID('attribute', attributes);
-      attributes[id] = {
+      const newAtt: MMELDataAttribute = {
         id,
         modality: '',
         type: '',
@@ -117,7 +117,7 @@ const AttributeListQuickEdit: React.FC<{
         ref: new Set<string>([refid]),
         datatype: DataType.DATAATTRIBUTE,
       };
-      setAttributes({ ...attributes });
+      setAttributes({ ...attributes, [id]: newAtt });
     }
   }
 

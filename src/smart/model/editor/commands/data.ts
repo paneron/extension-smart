@@ -1,4 +1,4 @@
-import { Logger } from '../../../utils/ModelFunctions';
+import { EditorDataClass } from '../../editormodel';
 import { RegistryCombined } from '../components/element/registry';
 import { ModelAction } from '../model';
 
@@ -33,7 +33,39 @@ export function editRegistryCommand(id: string, value: RegistryCombined) {
     id,
     value,
   };
-  Logger.log('Command:', action);
-  Logger.log(value);
+  return action;
+}
+
+export function delDCCommand(ids: string[]) {
+  const action: ModelAction = {
+    type: 'model',
+    act: 'elements',
+    task: 'delete',
+    subtask: 'dc',
+    value: ids,
+  };
+  return action;
+}
+
+export function addDCCommand(dc: EditorDataClass) {
+  const action: ModelAction = {
+    type: 'model',
+    act: 'elements',
+    task: 'add',
+    subtask: 'dc',
+    value: [dc],
+  };
+  return action;
+}
+
+export function editDCCommand(id: string, value: EditorDataClass) {
+  const action: ModelAction = {
+    type: 'model',
+    act: 'elements',
+    task: 'edit',
+    subtask: 'dc',
+    id,
+    value,
+  };
   return action;
 }

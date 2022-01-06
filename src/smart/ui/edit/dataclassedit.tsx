@@ -11,6 +11,11 @@ import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
 import AttributeEditPage from './attributeedit';
 import { ModelAction } from '../../model/editor/model';
+import {
+  addDCCommand,
+  delDCCommand,
+  editDCCommand,
+} from '../../model/editor/commands/data';
 
 const initObj = createDataClass('');
 
@@ -32,26 +37,12 @@ const DataClassEditPage: React.FC<{
   }
 
   function removeDCListItem(ids: string[]) {
-    const action: ModelAction = {
-      type: 'model',
-      act: 'elements',
-      task: 'delete',
-      subtask: 'dc',
-      value: ids,
-    };
-    act(action);
+    act(delDCCommand(ids));
   }
 
   function addDC(dc: EditorDataClass): boolean {
     if (checkId(dc.id, model.elements)) {
-      const action: ModelAction = {
-        type: 'model',
-        act: 'elements',
-        task: 'add',
-        subtask: 'dc',
-        value: [dc],
-      };
-      act(action);
+      act(addDCCommand(dc));
       return true;
     }
     return false;
@@ -61,15 +52,7 @@ const DataClassEditPage: React.FC<{
     if (oldid !== dc.id && !checkId(dc.id, model.elements)) {
       return false;
     }
-    const action: ModelAction = {
-      type: 'model',
-      act: 'elements',
-      task: 'edit',
-      subtask: 'dc',
-      id: oldid,
-      value: dc,
-    };
-    act(action);
+    act(editDCCommand(oldid, dc));
     return true;
   }
 

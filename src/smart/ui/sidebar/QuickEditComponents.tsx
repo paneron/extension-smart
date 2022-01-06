@@ -67,12 +67,7 @@ const NODE_EDIT_VIEWS: Record<
     <QuickEditRegistry {...props} registry={props.node as EditorRegistry} />
   ),
   [DataType.DATACLASS]: props => (
-    <QuickEditDataClass
-      setModel={props.setModel}
-      provision={props.provision}
-      dataclass={props.node as EditorDataClass}
-      model={props.modelWrapper.model}
-    />
+    <QuickEditDataClass {...props} dataclass={props.node as EditorDataClass} />
   ),
 };
 

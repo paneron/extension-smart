@@ -1,37 +1,30 @@
 import { FormGroup } from '@blueprintjs/core';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { editDCCommand } from '../../model/editor/commands/data';
+import { ModelAction } from '../../model/editor/model';
 import {
   EditorDataClass,
-  EditorModel,
-  isEditorDataClass,
+  EditorModel,  
 } from '../../model/editormodel';
 import { RefTextSelection } from '../../model/selectionImport';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import { MMELReference } from '../../serialize/interface/supportinterface';
-import { fillRDCS, trydefaultID } from '../../utils/ModelFunctions';
 import { DescriptionItem } from '../common/description/fields';
 import { EditPageButtons } from '../edit/commons';
 import AttributeListQuickEdit, {
   findAllAttributeTypes,
 } from '../edit/components/AttributeList';
 
-interface StateTracker {
-  hasChange: boolean;
-  model: EditorModel;
-  attributes: Record<string, MMELDataAttribute>;
-}
-
 const QuickEditDataClass: React.FC<{
   dataclass: EditorDataClass;
   model: EditorModel;
-  setModel: (m: EditorModel) => void;
+  act: (x: ModelAction) => void;
   provision?: RefTextSelection;
+  setSelectedNode?: (id: string) => void;
 }> = props => {
-  const { dataclass, model, setModel, provision } = props;
+  const { dataclass, model, act, provision, setSelectedNode } = props;
 
-  const [attributes, setAttributes] = useState<
-    Record<string, MMELDataAttribute>
-  >(getInitAttributes(dataclass));
+  const [editing, setEditing] = useState<EditorDataClass>(dataclass);
   const [hasChange, setHasChange] = useState<boolean>(false);
 
   const types = useMemo(() => findAllAttributeTypes(model), [model]);
@@ -40,15 +33,16 @@ const QuickEditDataClass: React.FC<{
     [types]
   );
 
-  const stateRef = useRef<StateTracker>();
-  stateRef.current = { hasChange, model, attributes };
-
   function onAddReference(refs: Record<string, MMELReference>) {
-    setModel({ ...model, refs });
+    throw new Error('Not yet migrated');
   }
 
   function onUpdateClick() {
-    setModel(save(dataclass, attributes, model));
+    act(editDCCommand(dataclass.id, editing));
+    setHasChange(false);
+    if (setSelectedNode && dataclass.id !== editing.id) {
+      setSelectedNode(editing.id);
+    }
   }
 
   function onChange() {
@@ -58,22 +52,24 @@ const QuickEditDataClass: React.FC<{
   }
 
   function setAtt(x: Record<string, MMELDataAttribute>) {
-    setAttributes(x);
+    setEditing({ ...editing, attributes: x });
     onChange();
   }
 
   function saveOnExit() {
-    if (stateRef.current !== undefined) {
-      const { hasChange, model, attributes } = stateRef.current;
-      if (hasChange) {
-        setModel(save(dataclass, attributes, model));
-        setHasChange(false);
+    setHasChange(hc => {
+      if (hc) {
+        setEditing(edit => {
+          act(editDCCommand(dataclass.id, edit));
+          return edit;
+        });
       }
-    }
+      return false;
+    });
   }
 
   useEffect(() => {
-    setAttributes(getInitAttributes(dataclass));
+    setEditing(dataclass);
     return saveOnExit;
   }, [dataclass]);
 
@@ -82,7 +78,7 @@ const QuickEditDataClass: React.FC<{
       <EditPageButtons onUpdateClick={onUpdateClick} />
       <DescriptionItem label="Dataclass ID" value={dataclass.id} />
       <AttributeListQuickEdit
-        attributes={attributes}
+        attributes={editing.attributes}
         setAttributes={setAtt}
         selected={provision}
         model={model}
@@ -93,44 +89,5 @@ const QuickEditDataClass: React.FC<{
     </FormGroup>
   );
 };
-
-function save(
-  dc: EditorDataClass,
-  raw: Record<string, MMELDataAttribute>,
-  model: EditorModel
-): EditorModel {
-  const newModel = { ...model };
-  const attributes = processAttributes(raw);
-  dc = { ...dc, attributes };
-  fillRDCS(dc, model.elements);
-  newModel.elements = {
-    ...model.elements,
-    [dc.id]: dc,
-  };
-  return newModel;
-}
-
-function processAttributes(
-  raw: Record<string, MMELDataAttribute>
-): Record<string, MMELDataAttribute> {
-  const attributes: Record<string, MMELDataAttribute> = {};
-  for (const x of Object.values(raw)) {
-    const id = trydefaultID(x.id, attributes);
-    attributes[id] = { ...x, id };
-  }
-  return attributes;
-}
-
-function getInitAttributes(
-  dc: EditorDataClass
-): Record<string, MMELDataAttribute> {
-  const atts: Record<string, MMELDataAttribute> = {};
-  if (dc !== undefined && isEditorDataClass(dc)) {
-    Object.values(dc.attributes).forEach((a, index) => {
-      atts['a' + index.toString()] = { ...a };
-    });
-  }
-  return atts;
-}
 
 export default QuickEditDataClass;
