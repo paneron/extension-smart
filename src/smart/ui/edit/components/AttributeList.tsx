@@ -112,8 +112,7 @@ const AttributeListQuickEdit: React.FC<{
         modality: '',
         type: '',
         cardinality: '',
-        definition: selected.text,
-        satisfy: new Set<string>(),
+        definition: selected.text,        
         ref: new Set<string>([refid]),
         datatype: DataType.DATAATTRIBUTE,
       };

@@ -179,8 +179,7 @@ function convertAttributes(
       modality: x.modality,
       cardinality: x.cardinality,
       definition: x.definition,
-      ref: [...x.ref],
-      satisfy: [...x.satisfy],
+      ref: [...x.ref],      
       datatype: x.datatype,
     };
   }
@@ -226,8 +225,7 @@ function convertProvisions(
 ): Record<string, JSONProvision> {
   const newPro: Record<string, JSONProvision> = {};
   for (const [k, p] of Object.entries(pro)) {
-    newPro[k] = {
-      subject: p.subject,
+    newPro[k] = {      
       id: p.id,
       modality: p.modality,
       condition: p.condition,
@@ -287,8 +285,7 @@ function recoverAttributes(
   for (const [k, x] of Object.entries(att)) {
     newAtt[k] = {
       ...x,
-      ref: new Set(x.ref),
-      satisfy: new Set(x.satisfy),
+      ref: new Set(x.ref),      
     };
   }
   return newAtt;

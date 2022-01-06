@@ -82,14 +82,7 @@ function toDataAttributeModel(a: MMELDataAttribute): string {
   out += '    definition "' + a.definition + '"\n';
   if (a.modality !== '') {
     out += '    modality ' + a.modality + '\n';
-  }
-  if (a.satisfy.size > 0) {
-    out += '    satisfy {\n';
-    for (const s of a.satisfy) {
-      out += '      ' + s + '\n';
-    }
-    out += '    }\n';
-  }
+  }  
   if (a.ref.size > 0) {
     out += '    reference {\n';
     for (const r of a.ref) {
@@ -285,10 +278,7 @@ export function toMetaDataModel(meta: MMELMetadata): string {
 }
 
 export function toProvisionModel(pro: MMELProvision): string {
-  let out: string = 'provision ' + pro.id + ' {\n';
-  for (const x in pro.subject) {
-    out += '  ' + x + ' ' + pro.subject[x] + '\n';
-  }
+  let out: string = 'provision ' + pro.id + ' {\n';  
   out += '  condition "' + pro.condition + '"\n';
   if (pro.modality !== '') {
     out += '  modality ' + pro.modality + '\n';

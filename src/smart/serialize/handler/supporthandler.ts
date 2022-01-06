@@ -69,8 +69,7 @@ export function parseMetaData(x: string): MMELMetadata {
 }
 
 export function parseProvision(id: string, data: string): MMELProvision {
-  const pro: MMELProvision = {
-    subject: {},
+  const pro: MMELProvision = {    
     id: id,
     modality: '',
     condition: '',
@@ -90,8 +89,6 @@ export function parseProvision(id: string, data: string): MMELProvision {
           pro.condition = MMELremovePackage(t[i++]);
         } else if (command === 'reference') {
           pro.ref = MMELtokenizeSet(t[i++]);
-        } else {
-          pro.subject[command] = t[i++];
         }
       } else {
         throw new Error(

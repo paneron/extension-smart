@@ -43,8 +43,7 @@ export interface MMELReference extends MMELObject {
   datatype: DataType.REFERENCE;
 }
 
-export interface MMELProvision extends MMELObject {
-  subject: Record<string, string>;
+export interface MMELProvision extends MMELObject {  
   id: string;
   modality: string;
   condition: string;

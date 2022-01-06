@@ -30,8 +30,7 @@ const ProvisionListQuickEdit: React.FC<{
 
   function addProvision() {
     const id = findUniqueID('Provision', provisions);
-    provisions[id] = createProvision(id);
-    setProvisions({ ...provisions });
+    setProvisions({ ...provisions, [id]: createProvision(id) });
   }
 
   function onImport() {
@@ -59,15 +58,14 @@ const ProvisionListQuickEdit: React.FC<{
       }
 
       const id = findUniqueID('Provision', provisions);
-      provisions[id] = {
-        subject: {},
+      const newPro:MMELProvision = {        
         id,
         modality: detectModality(selected.text),
         condition: selected.text,
         ref: new Set<string>([refid]),
         datatype: DataType.PROVISION,
       };
-      setProvisions({ ...provisions });
+      setProvisions({ ...provisions, [id]: newPro });
     }
   }
 
@@ -92,13 +90,13 @@ const ProvisionListQuickEdit: React.FC<{
           key={index}
           provision={p}
           refs={refs}
-          setProvision={x => {
-            provisions[index] = x;
-            setProvisions({ ...provisions });
+          setProvision={x => {            
+            setProvisions({ ...provisions, [index]: x });
           }}
           onDelete={() => {
-            delete provisions[index];
-            setProvisions({ ...provisions });
+            const newProvisions = {...provisions};
+            delete newProvisions[index];
+            setProvisions(newProvisions);
           }}
         />
       ))}
@@ -142,9 +140,8 @@ const ProvisionQuickEdit: React.FC<{
               ref: new Set([...provision.ref, x.id]),
             })
           }
-          onTagRemove={x => {
-            provision.ref = new Set([...provision.ref].filter(s => x !== s));
-            setProvision({ ...provision });
+          onTagRemove={x => {            
+            setProvision({ ...provision, ref: new Set([...provision.ref].filter(s => x !== s)) });
           }}
         />
         <div
