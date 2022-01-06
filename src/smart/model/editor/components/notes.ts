@@ -10,9 +10,15 @@ type RefCascadeAction = {
   ids: string[];
 };
 
+type ReplaceNotesAction = {
+  task: 'replace';
+  from: string[]; // remove from
+  to: MMELNote[]; // add to
+};
+
 type CascadeAction = RefCascadeAction & { task: 'cascade' };
 
-type EXPORT_ACTION = CascadeAction;
+type EXPORT_ACTION = CascadeAction | ReplaceNotesAction;
 
 export type NotesAction = EXPORT_ACTION & { act: 'notes' };
 
@@ -40,6 +46,8 @@ function proReducer(
   switch (action.task) {
     case 'cascade':
       return cascadeReducer(notes, action);
+    case 'replace':
+      return notesReplace(notes, action.from, action.to);
   }
 }
 
@@ -55,24 +63,14 @@ function reducer(
   }
 }
 
-function findReverse(
-  notes: Record<string, MMELNote>,
-  action: NotesAction
-): NotesAction | undefined {
-  switch (action.task) {
-    case 'cascade':
-      return undefined;
-  }
-}
-
 export function useNotes(
   x: Record<string, MMELNote>
 ): UndoReducerInterface<Record<string, MMELNote>, NotesAction> {
   const [notes, dispatchElms] = useReducer(reducer, x);
 
-  function act(action: NotesAction): NotesAction | undefined {
+  function act(action: NotesAction): undefined {
     dispatchElms(action);
-    return findReverse(notes, action);
+    return undefined;
   }
 
   function init(x: Record<string, MMELNote>) {
@@ -80,4 +78,18 @@ export function useNotes(
   }
 
   return [notes, act, init];
+}
+
+function notesReplace(
+  notes: Record<string, MMELNote>,
+  from: string[],
+  to: MMELNote[]
+): Record<string, MMELNote> {
+  for (const f of from) {
+    delete notes[f];
+  }
+  for (const p of to) {
+    notes[p.id] = p;
+  }
+  return notes;
 }

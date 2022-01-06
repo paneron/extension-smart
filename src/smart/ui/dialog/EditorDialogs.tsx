@@ -7,7 +7,6 @@ import {
   EditorSignalEvent,
   EditorTimerEvent,
 } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
 import {
   DeletableNodeTypes,
   EditableNodeTypes,
@@ -46,7 +45,6 @@ export interface EditorDiagPackage {
 export type EditorDialogInterface = {
   model: EditorModel;
   page: string;
-  setModelWrapper: (mw: ModelWrapper) => void;
   act: (x: EditorAction) => void;
   onDelete?: () => void;
   done: () => void;

@@ -1,38 +1,35 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import { DataType } from '../../../serialize/interface/baseinterface';
-import { findUniqueID } from '../../../utils/ModelFunctions';
 import { NormalTextField } from '../../common/fields';
-import { IMeasure } from '../measurementExpressionEdit';
 
 const MeasureListQuickEdit: React.FC<{
-  measurements: Record<string, IMeasure>;
-  setMeasurements: (x: Record<string, IMeasure>) => void;
+  measurements: string[];
+  setMeasurements: (x: string[]) => void;
 }> = function ({ measurements, setMeasurements }) {
   function addMeasurement() {
-    const id = findUniqueID('test', measurements);
-    measurements[id] = {
-      id,
-      datatype: DataType.VARIABLE,
-      measure: '',
-    };
-    setMeasurements({ ...measurements });
+    setMeasurements([...measurements, '']);
+  }
+
+  function onDelete(index: number) {
+    const newM = [...measurements];
+    newM.splice(index, 1);
+    setMeasurements(newM);
+  }
+
+  function setM(index: number, x: string) {
+    const newM = [...measurements];
+    newM[index] = x;
+    setMeasurements(newM);
   }
 
   return (
     <FormGroup label="Measurement Tests">
-      {Object.entries(measurements).map(([index, m]) => (
+      {measurements.map((m, index) => (
         <MeasurementQuickEdit
           key={index}
           measurement={m}
-          setMeasurement={x => {
-            measurements[index] = x;
-            setMeasurements({ ...measurements });
-          }}
-          onDelete={() => {
-            delete measurements[index];
-            setMeasurements({ ...measurements });
-          }}
+          setMeasurement={x => setM(index, x)}
+          onDelete={() => onDelete(index)}
         />
       ))}
       <Button icon="plus" onClick={addMeasurement}>
@@ -43,8 +40,8 @@ const MeasureListQuickEdit: React.FC<{
 };
 
 const MeasurementQuickEdit: React.FC<{
-  measurement: IMeasure;
-  setMeasurement: (x: IMeasure) => void;
+  measurement: string;
+  setMeasurement: (x: string) => void;
   onDelete: () => void;
 }> = function ({ measurement, setMeasurement, onDelete }) {
   return (
@@ -56,8 +53,8 @@ const MeasurementQuickEdit: React.FC<{
       <fieldset>
         <NormalTextField
           text="Test"
-          value={measurement.measure}
-          onChange={x => setMeasurement({ ...measurement, measure: x })}
+          value={measurement}
+          onChange={x => setMeasurement(x)}
         />
         <div
           style={{

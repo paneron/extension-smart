@@ -1,6 +1,7 @@
 import { useReducer } from 'react';
 import { MMELProvision } from '../../../serialize/interface/supportinterface';
 import { refProvisionReplace } from '../../../utils/handler/cascadeModelHandler';
+import { Logger } from '../../../utils/ModelFunctions';
 import { UndoReducerInterface } from '../interface';
 
 type RefCascadeAction = {
@@ -10,9 +11,15 @@ type RefCascadeAction = {
   ids: string[];
 };
 
+type ReplaceProvisionsAction = {
+  task: 'replace';
+  from: string[]; // remove from
+  to: MMELProvision[]; // add to
+};
+
 type CascadeAction = RefCascadeAction & { task: 'cascade' };
 
-type EXPORT_ACTION = CascadeAction;
+type EXPORT_ACTION = ReplaceProvisionsAction | CascadeAction;
 
 export type ProvisionAction = EXPORT_ACTION & { act: 'provision' };
 
@@ -40,6 +47,8 @@ function proReducer(
   switch (action.task) {
     case 'cascade':
       return cascadeReducer(pros, action);
+    case 'replace':
+      return provisionReplace(pros, action.from, action.to);
   }
 }
 
@@ -55,24 +64,18 @@ function reducer(
   }
 }
 
-function findReverse(
-  pros: Record<string, MMELProvision>,
-  action: ProvisionAction
-): ProvisionAction | undefined {
-  switch (action.task) {
-    case 'cascade':
-      return undefined;
-  }
-}
-
 export function useProvisions(
   x: Record<string, MMELProvision>
 ): UndoReducerInterface<Record<string, MMELProvision>, ProvisionAction> {
   const [pros, dispatchElms] = useReducer(reducer, x);
 
-  function act(action: ProvisionAction): ProvisionAction | undefined {
+  /**
+   * No action should be done directly on provisions
+   * No reverse actions here
+   */
+  function act(action: ProvisionAction): undefined {
     dispatchElms(action);
-    return findReverse(pros, action);
+    return undefined;
   }
 
   function init(x: Record<string, MMELProvision>) {
@@ -80,4 +83,19 @@ export function useProvisions(
   }
 
   return [pros, act, init];
+}
+
+function provisionReplace(
+  pros: Record<string, MMELProvision>,
+  from: string[],
+  to: MMELProvision[]
+): Record<string, MMELProvision> {
+  Logger.log('Action', pros, from, to);
+  for (const f of from) {
+    delete pros[f];
+  }
+  for (const p of to) {
+    pros[p.id] = p;
+  }
+  return pros;
 }

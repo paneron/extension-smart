@@ -118,16 +118,18 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
       figures,
       comments,
       notes,
-      links
+      links,
     ]
   );
 
-  for (const e of Object.values(notes)) {
-    Logger.log(e.id, [...e.ref]);
-  }
+  // for (const e of Object.values(notes)) {
+  //   Logger.log(e.id, [...e.ref]);
+  // }
+  Logger.log('Model check');
+  Logger.log(provisions);
   for (const e of Object.values(elements)) {
     if (isEditorProcess(e)) {
-      Logger.log(e.id, [...e.notes]);
+      Logger.log(e.id, [...e.provision]);
     }
   }
 
@@ -239,6 +241,20 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
         case 'hybird': {
           return hybirdAction(action, page);
         }
+        case 'provision': {
+          actProvision(action);
+          return undefined;
+        }
+        case 'notes': {
+          actNotes(action);
+          return undefined;
+        }
+        case 'link': {
+          actLinks(action);
+          return undefined;
+        }
+        default:
+          throw new Error(`Action not handled? ${JSON.stringify(action)}`);
       }
     } catch (e: unknown) {
       if (typeof e === 'object') {

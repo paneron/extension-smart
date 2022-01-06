@@ -1,8 +1,17 @@
 import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
-import { EditorEGate, EditorModel } from '../../editormodel';
+import {
+  MMELLink,
+  MMELNote,
+  MMELProvision,
+} from '../../../serialize/interface/supportinterface';
+import { EditorEGate, EditorModel, EditorProcess } from '../../editormodel';
 import { ModelAction } from '../model';
 import { compileEGateEdit } from './egateedit';
-import { compileProcessAddPage, compileProcessRemovePage } from './process';
+import {
+  compileProcessAddPage,
+  compileProcessEdit,
+  compileProcessRemovePage,
+} from './process';
 
 export type EGateEditAction = {
   task: 'egate-edit';
@@ -22,10 +31,20 @@ export type ProcessRemovePageAction = {
   id: string; // process ID
 };
 
+export type ProcessEditAction = {
+  task: 'process-edit';
+  id: string;
+  process: EditorProcess;
+  provisions: MMELProvision[];
+  notes: MMELNote[];
+  links: MMELLink[];
+};
+
 type EXPORT_ACTION =
   | EGateEditAction
   | ProcessAddPageAction
-  | ProcessRemovePageAction;
+  | ProcessRemovePageAction
+  | ProcessEditAction;
 
 export type HyEditAction = EXPORT_ACTION & {
   act: 'hybird';
@@ -51,5 +70,7 @@ export function compileHybird(
       return compileProcessAddPage(action, model);
     case 'process-remove-page':
       return compileProcessRemovePage(action, model);
+    case 'process-edit':
+      return compileProcessEdit(action, model);
   }
 }

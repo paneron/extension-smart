@@ -31,8 +31,7 @@ const NoteListQuickEdit: React.FC<{
 
   function addNote() {
     const id = findUniqueID('Note', notes);
-    notes[id] = createNote(id);
-    setNotes({ ...notes });
+    setNotes({ ...notes, [id]: createNote(id) });
   }
 
   function onImport() {
@@ -60,14 +59,14 @@ const NoteListQuickEdit: React.FC<{
       }
 
       const id = findUniqueID('Note', notes);
-      notes[id] = {
+      const newNote: MMELNote = {
         id,
         type: detectType(selected.text),
         message: selected.text,
         ref: new Set<string>([refid]),
         datatype: DataType.NOTE,
       };
-      setNotes({ ...notes });
+      setNotes({ ...notes, [id]: newNote });
     }
   }
 
@@ -94,8 +93,9 @@ const NoteListQuickEdit: React.FC<{
           refs={refs}
           setNote={x => setNotes({ ...notes, [index]: x })}
           onDelete={() => {
-            delete notes[index];
-            setNotes({ ...notes });
+            const newNotes = { ...notes };
+            delete newNotes[index];
+            setNotes(newNotes);
           }}
         />
       ))}

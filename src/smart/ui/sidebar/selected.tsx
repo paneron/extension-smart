@@ -141,7 +141,6 @@ export const SelectedNodeDescription: React.FC<{
           canOutsideClickClose={false}
         >
           <diagProps.Panel
-            setModelWrapper={() => {}}
             act={act}
             model={model}
             page={page}

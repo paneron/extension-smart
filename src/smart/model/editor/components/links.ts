@@ -9,9 +9,15 @@ type RefCascadeAction = {
   ids: string[];
 };
 
+type ReplaceLinksAction = {
+  task: 'replace';
+  from: string[]; // remove from
+  to: MMELLink[]; // add to
+};
+
 type CascadeAction = RefCascadeAction & { task: 'cascade' };
 
-type EXPORT_ACTION = CascadeAction;
+type EXPORT_ACTION = CascadeAction | ReplaceLinksAction;
 
 export type LinkAction = EXPORT_ACTION & { act: 'link' };
 
@@ -39,6 +45,8 @@ function proReducer(
   switch (action.task) {
     case 'cascade':
       return cascadeReducer(links, action);
+    case 'replace':
+      return linksReplace(links, action.from, action.to);
   }
 }
 
@@ -54,24 +62,14 @@ function reducer(
   }
 }
 
-function findReverse(
-  links: Record<string, MMELLink>,
-  action: LinkAction
-): LinkAction | undefined {
-  switch (action.task) {
-    case 'cascade':
-      return undefined;
-  }
-}
-
 export function useLinks(
   x: Record<string, MMELLink>
 ): UndoReducerInterface<Record<string, MMELLink>, LinkAction> {
   const [links, dispatchElms] = useReducer(reducer, x);
 
-  function act(action: LinkAction): LinkAction | undefined {
+  function act(action: LinkAction): undefined {
     dispatchElms(action);
-    return findReverse(links, action);
+    return undefined;
   }
 
   function init(x: Record<string, MMELLink>) {
@@ -79,4 +77,18 @@ export function useLinks(
   }
 
   return [links, act, init];
+}
+
+function linksReplace(
+  links: Record<string, MMELLink>,
+  from: string[],
+  to: MMELLink[]
+): Record<string, MMELLink> {
+  for (const f of from) {
+    delete links[f];
+  }
+  for (const p of to) {
+    links[p.id] = p;
+  }
+  return links;
 }

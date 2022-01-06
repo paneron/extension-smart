@@ -1,5 +1,10 @@
 import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
-import { EditorEGate, EditorNode } from '../../editormodel';
+import {
+  MMELLink,
+  MMELNote,
+  MMELProvision,
+} from '../../../serialize/interface/supportinterface';
+import { EditorEGate, EditorNode, EditorProcess } from '../../editormodel';
 import { ModelAction } from '../model';
 
 export function editElmCommand(id: string, value: EditorNode) {
@@ -38,6 +43,32 @@ export function createSubprocessCommand(id: string) {
     act: 'hybird',
     task: 'process-add-page',
     id,
+  };
+  return action;
+}
+
+export function editProcessCommand(
+  id: string,
+  process: EditorProcess,
+  provisions: MMELProvision[],
+  notes: MMELNote[],
+  links: MMELLink[]
+) {
+  const newProcess: EditorProcess = {
+    ...process,
+    provision: new Set(provisions.map(x => x.id)),
+    links: new Set(links.map(x => x.id)),
+    notes: new Set(notes.map(x => x.id)),
+  };
+  const action: ModelAction = {
+    type: 'model',
+    act: 'hybird',
+    task: 'process-edit',
+    id,
+    process: newProcess,
+    provisions,
+    notes,
+    links,
   };
   return action;
 }

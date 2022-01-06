@@ -5,6 +5,7 @@ import { HyEditAction } from './distributor';
 
 type ProcessAddPageHybird = HyEditAction & { task: 'process-add-page' };
 type ProcessRemovePageHybird = HyEditAction & { task: 'process-remove-page' };
+type ProcessEditHybird = HyEditAction & { task: 'process-edit' };
 
 export function compileProcessAddPage(
   action: ProcessAddPageHybird,
@@ -96,4 +97,100 @@ function reverseRemovePageAction(action: ProcessRemovePageHybird): ModelAction {
     task: 'process-add-page',
     id: action.id,
   };
+}
+
+export function compileProcessEdit(
+  action: ProcessEditHybird,
+  model: EditorModel
+): ModelAction | undefined {
+  const reverse = reverseProcessEditAction(action, model);
+  const elm = model.elements[action.id];
+  if (elm && isEditorProcess(elm) && action.actions === undefined) {
+    const actions: ModelAction[] = [
+      {
+        type: 'model',
+        act: 'elements',
+        task: 'edit',
+        subtask: 'flowunit',
+        id: action.id,
+        value: action.process,
+      },
+      {
+        type: 'model',
+        act: 'provision',
+        task: 'replace',
+        from: [...elm.provision],
+        to: action.provisions,
+      },
+      {
+        type: 'model',
+        act: 'notes',
+        task: 'replace',
+        from: [...elm.notes],
+        to: action.notes,
+      },
+      {
+        type: 'model',
+        act: 'link',
+        task: 'replace',
+        from: [...elm.links],
+        to: action.links,
+      },
+    ];
+    action.actions = actions;
+    if (reverse && reverse.act === 'hybird') {
+      reverse.actions = [
+        {
+          type: 'model',
+          act: 'elements',
+          task: 'edit',
+          subtask: 'flowunit',
+          id: action.process.id,
+          value: elm,
+        },
+        {
+          type: 'model',
+          act: 'provision',
+          task: 'replace',
+          from: action.provisions.map(x => x.id),
+          to: [...elm.provision].map(x => model.provisions[x]),
+        },
+        {
+          type: 'model',
+          act: 'notes',
+          task: 'replace',
+          from: action.notes.map(x => x.id),
+          to: [...elm.notes].map(x => model.notes[x]),
+        },
+        {
+          type: 'model',
+          act: 'link',
+          task: 'replace',
+          from: action.links.map(x => x.id),
+          to: [...elm.links].map(x => model.links[x]),
+        },
+      ];
+    }
+  }
+  return reverse;
+}
+
+function reverseProcessEditAction(
+  action: ProcessEditHybird,
+  model: EditorModel
+): ModelAction {
+  const elm = model.elements[action.id];
+  if (elm && isEditorProcess(elm)) {
+    return {
+      type: 'model',
+      act: 'hybird',
+      task: 'process-edit',
+      id: action.process.id,
+      process: elm,
+      provisions: [...elm.provision].map(x => model.provisions[x]),
+      notes: [...elm.notes].map(x => model.notes[x]),
+      links: [...elm.links].map(x => model.links[x]),
+    };
+  }
+  throw new Error(`Process with ${action.id} not found`);
 }
