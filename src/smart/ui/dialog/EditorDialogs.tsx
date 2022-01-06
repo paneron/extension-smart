@@ -3,6 +3,7 @@ import {
   EditorApproval,
   EditorEGate,
   EditorModel,
+  EditorProcess,
   EditorSignalEvent,
   EditorTimerEvent,
 } from '../../model/editormodel';
@@ -73,11 +74,11 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITPROCESS]: {
     title: 'Edit Process',
     fullscreen: true,
-    Panel: ({ model, done, msg, setSelectedNode }) => (
+    Panel: ({ model, act, done, msg, setSelectedNode }) => (
       <EditProcessPage
         model={model}
-        setModel={(m: EditorModel) => {}}
-        id={msg}
+        act={act}
+        process={model.elements[msg] as EditorProcess}
         closeDialog={done}
         setSelectedNode={setSelectedNode}
       />

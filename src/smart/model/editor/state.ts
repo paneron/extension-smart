@@ -225,7 +225,7 @@ function needCheck(action: ModelAction): boolean {
       return false;
     case 'view':
       return false;
-    case 'hybird-edit':
+    case 'hybird':
       return false;
     default:
       throw new Error('Checking for post actions not handled');

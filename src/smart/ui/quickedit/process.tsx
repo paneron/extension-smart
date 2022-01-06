@@ -1,33 +1,25 @@
 import React from 'react';
+import { createSubprocessCommand } from '../../model/editor/commands/elements';
+import { ModelAction } from '../../model/editor/model';
 import { EditorModel, EditorProcess } from '../../model/editormodel';
 import { RefTextSelection } from '../../model/selectionImport';
 import { DataType } from '../../serialize/interface/baseinterface';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-} from '../../utils/constants';
-import { createNewPage } from '../../utils/ModelAddComponentHandler';
+import { EditAction } from '../../utils/constants';
+import { DialogSetterInterface } from '../dialog/EditorDialogs';
 import EditProcessPage from '../edit/processedit';
 
 const QuickEditProcess: React.FC<{
   process: EditorProcess;
   model: EditorModel;
-  setModel: (m: EditorModel) => void;
-  setDialog: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
+  act: (x: ModelAction) => void;
+  setDialog: DialogSetterInterface;
   provision?: RefTextSelection;
   setSelectedNode: (id: string) => void;
 }> = props => {
-  const { process, model, setModel, setDialog } = props;
+  const { process, act, setDialog } = props;
 
   function onSubprocessClick(): void {
-    const p = model.elements[process.id] as EditorProcess;
-    p.page = createNewPage(model);
-    setModel({ ...model });
+    act(createSubprocessCommand(process.id));
   }
 
   function onFullEditClick() {
@@ -44,9 +36,7 @@ const QuickEditProcess: React.FC<{
     onSubprocessClick: process.page === '' ? onSubprocessClick : undefined,
   };
 
-  return (
-    <EditProcessPage {...props} {...functionProps} id={process.id} minimal />
-  );
+  return <EditProcessPage {...props} {...functionProps} minimal />;
 };
 
 export default QuickEditProcess;

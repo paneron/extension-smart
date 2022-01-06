@@ -69,7 +69,7 @@ export function parseMetaData(x: string): MMELMetadata {
 }
 
 export function parseProvision(id: string, data: string): MMELProvision {
-  const pro: MMELProvision = {    
+  const pro: MMELProvision = {
     id: id,
     modality: '',
     condition: '',

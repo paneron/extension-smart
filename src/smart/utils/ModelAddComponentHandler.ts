@@ -7,6 +7,8 @@ import {
   EditorNode,
   EditorProcess,
   EditorSignalEvent,
+  EditorStartEvent,
+  EditorSubprocess,
   EditorTimerEvent,
 } from '../model/editormodel';
 import { DataType } from '../serialize/interface/baseinterface';
@@ -41,7 +43,7 @@ const newComponent: Record<
   [DataType.EGATE]: newEGate,
 };
 
-export function getaddComponentAction(
+export function getAddComponentAction(
   page: string,
   elms: Elements,
   type: NewComponentTypes,
@@ -105,15 +107,15 @@ function newEGate(elms: Elements): EditorEGate {
   return createEGate(findUniqueID('EGate', elms));
 }
 
-export function createNewPage(model: EditorModel): string {
+export function createNewPage(
+  model: EditorModel
+): [EditorSubprocess, EditorStartEvent] {
   const start = createStartEvent(findUniqueID('Start', model.elements));
   const page = createSubprocess(findUniqueID('Page', model.pages), start.id);
   start.pages.add(page.id);
   const com = createSubprocessComponent(start.id);
-  model.elements[start.id] = start;
   page.childs[start.id] = com;
-  model.pages[page.id] = page;
-  return page.id;
+  return [page, start];
 }
 
 export function addExisingProcessToPage(

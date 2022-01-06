@@ -39,7 +39,7 @@ export type MMELJSON = {
   version?: string;
 };
 
-export type JSONProvision = {  
+export type JSONProvision = {
   id: string;
   modality: string;
   condition: string;
@@ -89,7 +89,7 @@ export type JSONDataAttribute = {
   modality: string;
   cardinality: string;
   definition: string;
-  ref: string[];  
+  ref: string[];
   datatype: DataType.DATAATTRIBUTE;
 };
 

@@ -28,7 +28,7 @@ import {
 } from './components/comment';
 import { useMemo } from 'react';
 import { cascadeCheckElm } from './components/element/common';
-import { compileHybird, HyEditAction } from './hybird/pageedit';
+import { compileHybird, HyEditAction } from './hybird/distributor';
 
 type ALLACTION =
   | ElmAction
@@ -211,7 +211,7 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
           );
           return action;
         }
-        case 'hybird-edit': {
+        case 'hybird': {
           return hybirdAction(action, page);
         }
       }

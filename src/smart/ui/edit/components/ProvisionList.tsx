@@ -58,7 +58,7 @@ const ProvisionListQuickEdit: React.FC<{
       }
 
       const id = findUniqueID('Provision', provisions);
-      const newPro:MMELProvision = {        
+      const newPro: MMELProvision = {
         id,
         modality: detectModality(selected.text),
         condition: selected.text,
@@ -90,11 +90,11 @@ const ProvisionListQuickEdit: React.FC<{
           key={index}
           provision={p}
           refs={refs}
-          setProvision={x => {            
+          setProvision={x => {
             setProvisions({ ...provisions, [index]: x });
           }}
           onDelete={() => {
-            const newProvisions = {...provisions};
+            const newProvisions = { ...provisions };
             delete newProvisions[index];
             setProvisions(newProvisions);
           }}
@@ -140,8 +140,11 @@ const ProvisionQuickEdit: React.FC<{
               ref: new Set([...provision.ref, x.id]),
             })
           }
-          onTagRemove={x => {            
-            setProvision({ ...provision, ref: new Set([...provision.ref].filter(s => x !== s)) });
+          onTagRemove={x => {
+            setProvision({
+              ...provision,
+              ref: new Set([...provision.ref].filter(s => x !== s)),
+            });
           }}
         />
         <div

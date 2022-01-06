@@ -31,9 +31,12 @@ const SearchComponentPane: React.FC<{
       }
       resetSearchElements(set);
       return result;
-    } catch (e: any) {
-      Logger.log(e.message);
-      Logger.log(e.stack);
+    } catch (e: unknown) {
+      if (typeof e === 'object') {
+        const error = e as Error;
+        Logger.log(error.message);
+        Logger.log(error.stack);
+      }      
     }
     return [];
   }, [model, search]);

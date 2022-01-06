@@ -157,8 +157,6 @@ export const SelectedNodeDescription: React.FC<{
           <QuickEdit
             key={jsx.length}
             node={elm}
-            modelWrapper={{ page, model, type: 'model' }}
-            setModel={() => {}}
             setDialog={setDiag}
             page={model.pages[page]}
             model={model}

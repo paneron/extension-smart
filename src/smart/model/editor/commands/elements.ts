@@ -22,12 +22,22 @@ export function editEGateCommand(
 ) {
   const action: ModelAction = {
     type: 'model',
-    act: 'hybird-edit',
+    act: 'hybird',
     task: 'egate-edit',
     id,
     page,
     update,
     edges,
+  };
+  return action;
+}
+
+export function createSubprocessCommand(id: string) {
+  const action: ModelAction = {
+    type: 'model',
+    act: 'hybird',
+    task: 'process-add-page',
+    id,
   };
   return action;
 }

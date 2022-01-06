@@ -13,7 +13,6 @@ import {
   EditorSubprocess,
   EditorTimerEvent,
 } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
 import { RefTextSelection } from '../../model/selectionImport';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { QuickEditableNodeTypes } from '../../utils/constants';
@@ -31,9 +30,7 @@ const NODE_EDIT_VIEWS: Record<
   QuickEditableNodeTypes,
   React.FC<{
     node: EditorNode;
-    modelWrapper: ModelWrapper;
     model: EditorModel;
-    setModel: (m: EditorModel) => void;
     act: (x: EditorAction) => void;
     setDialog: DialogSetterInterface;
     page: EditorSubprocess;
@@ -57,11 +54,7 @@ const NODE_EDIT_VIEWS: Record<
     <QuickEditApproval {...props} approval={props.node as EditorApproval} />
   ),
   [DataType.PROCESS]: props => (
-    <QuickEditProcess
-      {...props}
-      process={props.node as EditorProcess}
-      model={props.modelWrapper.model}
-    />
+    <QuickEditProcess {...props} process={props.node as EditorProcess} />
   ),
   [DataType.REGISTRY]: props => (
     <QuickEditRegistry {...props} registry={props.node as EditorRegistry} />
@@ -74,8 +67,6 @@ const NODE_EDIT_VIEWS: Record<
 const QuickEdit: React.FC<{
   node: EditorNode;
   model: EditorModel;
-  modelWrapper: ModelWrapper; // will be removed
-  setModel: (m: EditorModel) => void;
   act: (x: EditorAction) => void;
   setDialog: DialogSetterInterface;
   page: EditorSubprocess;

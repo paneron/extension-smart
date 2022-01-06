@@ -7,7 +7,7 @@ export interface MMELDataAttribute extends MMELObject {
   modality: string;
   cardinality: string;
   definition: string;
-  ref: Set<string>;  
+  ref: Set<string>;
   datatype: DataType.DATAATTRIBUTE;
 }
 

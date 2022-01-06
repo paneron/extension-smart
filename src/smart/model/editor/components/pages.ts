@@ -69,6 +69,16 @@ type EditEdgeAction = {
   page: string;
 };
 
+type NewPageAction = {
+  task: 'new-page';
+  value: EditorSubprocess;
+};
+
+type DeletePageAction = {
+  task: 'delete-page';
+  value: string;
+};
+
 type MoveAction = {
   task: 'move';
   node: string;
@@ -95,7 +105,9 @@ type EXPORT_ACTION =
   | NewEdgeAction
   | DeleteEdgeAction
   | EditEdgeAction
-  | ReplaceElmIdAction;
+  | ReplaceElmIdAction
+  | NewPageAction
+  | DeletePageAction;
 
 export type PageAction = EXPORT_ACTION & {
   act: 'pages';
@@ -165,6 +177,12 @@ function pageReducer(
     }
     case 'replace-id': {
       return replaceId(pages, action.page, action.id, action.value);
+    }
+    case 'new-page': {
+      return addPage(pages, action.value);
+    }
+    case 'delete-page': {
+      return deletePage(pages, action.value);
     }
   }
 }
@@ -260,6 +278,20 @@ function findReverse(
         page: action.page,
         id: action.value,
         value: action.id,
+      };
+    }
+    case 'new-page': {
+      return {
+        act: 'pages',
+        task: 'delete-page',
+        value: action.value.id,
+      };
+    }
+    case 'delete-page': {
+      return {
+        act: 'pages',
+        task: 'new-page',
+        value: pages[action.value],
       };
     }
   }
@@ -486,6 +518,19 @@ function replaceId(
   const p = { ...pages[page] };
   updatePageElement(p, id, newId);
   pages[page] = p;
+  return pages;
+}
+
+function addPage(
+  pages: Record<string, EditorSubprocess>,
+  value: EditorSubprocess
+) {
+  pages[value.id] = value;
+  return pages;
+}
+
+function deletePage(pages: Record<string, EditorSubprocess>, value: string) {
+  delete pages[value];
   return pages;
 }
 

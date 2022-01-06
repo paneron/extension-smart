@@ -2,10 +2,7 @@ import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useMemo, useState } from 'react';
 import { editDCCommand } from '../../model/editor/commands/data';
 import { ModelAction } from '../../model/editor/model';
-import {
-  EditorDataClass,
-  EditorModel,  
-} from '../../model/editormodel';
+import { EditorDataClass, EditorModel } from '../../model/editormodel';
 import { RefTextSelection } from '../../model/selectionImport';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import { MMELReference } from '../../serialize/interface/supportinterface';

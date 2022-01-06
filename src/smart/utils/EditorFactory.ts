@@ -96,7 +96,7 @@ export function createMetaData(): MMELMetadata {
 }
 
 export function createProvision(id: string): MMELProvision {
-  return {    
+  return {
     id: id,
     modality: '',
     condition: '',
@@ -173,7 +173,7 @@ export function createDataAttribute(id: string): MMELDataAttribute {
     modality: '',
     cardinality: '',
     definition: '',
-    ref: new Set<string>(),    
+    ref: new Set<string>(),
     datatype: DataType.DATAATTRIBUTE,
   };
 }

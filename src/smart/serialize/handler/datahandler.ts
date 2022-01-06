@@ -23,7 +23,7 @@ export function parseDataAttribute(
     modality: '',
     cardinality: '',
     definition: '',
-    ref: new Set<string>(),    
+    ref: new Set<string>(),
     datatype: DataType.DATAATTRIBUTE,
   };
 

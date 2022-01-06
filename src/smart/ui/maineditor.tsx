@@ -70,7 +70,7 @@ import {
   DragAndDropNewFormatType,
   NewComponentTypes,
 } from '../utils/constants';
-import { getaddComponentAction } from '../utils/ModelAddComponentHandler';
+import { getAddComponentAction } from '../utils/ModelAddComponentHandler';
 import { EdgePackage } from '../model/FlowContainer';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
@@ -349,7 +349,7 @@ const ModelEditor: React.FC<{
         y: event.clientY - reactFlowBounds.top,
       });
       if (type !== '') {
-        const action = getaddComponentAction(
+        const action = getAddComponentAction(
           state.page,
           state.model.elements,
           type as NewComponentTypes,

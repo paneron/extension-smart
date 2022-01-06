@@ -22,7 +22,6 @@ import {
   updatePageElement,
 } from '../../utils/ModelFunctions';
 import { createNote, createProvision } from '../../utils/EditorFactory';
-import { createNewPage } from '../../utils/ModelAddComponentHandler';
 import { deletePage } from '../../utils/ModelRemoveComponentHandler';
 import {
   MultiReferenceSelector,
@@ -47,6 +46,7 @@ import { RefTextSelection } from '../../model/selectionImport';
 import { matchNoteFilter, NoteItem } from './NoteEdit';
 import NoteListQuickEdit from './components/NoteList';
 import { LinkItem, matchLinkFilter } from './LinkEdit';
+import { ModelAction } from '../../model/editor/model';
 
 const NEEDSUBPROCESS = 'need sub';
 
@@ -140,8 +140,8 @@ interface CommonProcessEditProps {
 
 const EditProcessPage: React.FC<{
   model: EditorModel;
-  setModel: (m: EditorModel) => void;
-  id: string;
+  act: (x: ModelAction) => void;
+  process: EditorProcess;
   closeDialog?: () => void;
   minimal?: boolean;
   onFullEditClick?: () => void;
@@ -151,8 +151,8 @@ const EditProcessPage: React.FC<{
   setSelectedNode?: (id: string) => void;
 }> = function ({
   model,
-  setModel,
-  id,
+  act,
+  process,
   closeDialog,
   minimal = false,
   onFullEditClick,
@@ -161,8 +161,6 @@ const EditProcessPage: React.FC<{
   provision,
   setSelectedNode,
 }) {
-  const process = model.elements[id] as EditorProcess;
-
   const [editing, setEditing] = useState<EditorProcess>({ ...process });
   const [provisions, setProvisions] = useState<Record<string, MMELProvision>>(
     getInitProvisions(model, process)
@@ -204,9 +202,11 @@ const EditProcessPage: React.FC<{
     }
   }
 
+  function setModel(x: EditorModel) {}
+
   function onUpdateClick() {
     const updated = save(
-      id,
+      process.id,
       editing,
       provisions,
       measurements,
@@ -261,7 +261,7 @@ const EditProcessPage: React.FC<{
             setProvisions(pros => {
               setNotes(nos => {
                 const updated = save(
-                  id,
+                  process.id,
                   edit,
                   pros,
                   mea,
@@ -769,7 +769,7 @@ function checkPage(
   const oldHasPage = oldPage !== '';
   const newHasPage = process.page !== '';
   if (!oldHasPage && newHasPage) {
-    process.page = createNewPage(model);
+    // process.page = createNewPage(model);
   } else if (oldHasPage && !newHasPage) {
     deletePage(model, oldPage);
   }
