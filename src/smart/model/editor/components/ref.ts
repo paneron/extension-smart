@@ -1,4 +1,5 @@
 import {
+  MMELNote,
   MMELProvision,
   MMELReference,
 } from '../../../serialize/interface/supportinterface';
@@ -24,13 +25,19 @@ export function useRefs(
 export function cascadeCheckRefs(
   elms: Record<string, EditorNode>,
   provisions: Record<string, MMELProvision>,
+  notes: Record<string, MMELNote>,
   action: RefAction
 ): ModelAction[] | undefined {
   if (action.cascade) {
     return undefined;
   }
   if (action.task === 'edit') {
-    const [dcs, pros] = findAffectedElements(elms, provisions, action.id);
+    const [dcs, pros, nids] = findAffectedElements(
+      elms,
+      provisions,
+      notes,
+      action.id
+    );
     action.cascade = [
       {
         type: 'model',
@@ -49,6 +56,15 @@ export function cascadeCheckRefs(
         from: action.id,
         to: action.value.id,
         ids: pros,
+      },
+      {
+        type: 'model',
+        act: 'notes',
+        task: 'cascade',
+        subtask: 'process-ref',
+        from: action.id,
+        to: action.value.id,
+        ids: nids,
       },
     ];
     return [
@@ -70,11 +86,23 @@ export function cascadeCheckRefs(
         from: action.value.id,
         ids: pros,
       },
+      {
+        type: 'model',
+        act: 'notes',
+        task: 'cascade',
+        subtask: 'process-ref',
+        to: action.id,
+        from: action.value.id,
+        ids: nids,
+      },
     ];
   } else if (action.task === 'delete') {
-    const affected: [[string, string[]][], string[], string][] =
-      action.value.map(x => [...findAffectedElements(elms, provisions, x), x]);
-    action.cascade = affected.flatMap(([dcids, pros, id]) => [
+    const affected: [[string, string[]][], string[], string[], string][] =
+      action.value.map(x => [
+        ...findAffectedElements(elms, provisions, notes, x),
+        x,
+      ]);
+    action.cascade = affected.flatMap(([dcids, pros, nids, id]) => [
       {
         type: 'model',
         act: 'elements',
@@ -92,9 +120,18 @@ export function cascadeCheckRefs(
         to: undefined,
         from: id,
         ids: pros,
+      },
+      {
+        type: 'model',
+        act: 'notes',
+        task: 'cascade',
+        subtask: 'process-ref',
+        to: undefined,
+        from: id,
+        ids: nids,
       },
     ]);
-    return affected.flatMap(([dcids, pros, id]) => [
+    return affected.flatMap(([dcids, pros, nids, id]) => [
       {
         type: 'model',
         act: 'elements',
@@ -112,6 +149,15 @@ export function cascadeCheckRefs(
         from: undefined,
         to: id,
         ids: pros,
+      },
+      {
+        type: 'model',
+        act: 'notes',
+        task: 'cascade',
+        subtask: 'process-ref',
+        from: undefined,
+        to: id,
+        ids: nids,
       },
     ]);
   }
@@ -121,8 +167,9 @@ export function cascadeCheckRefs(
 function findAffectedElements(
   elms: Record<string, EditorNode>,
   provisions: Record<string, MMELProvision>,
+  notes: Record<string, MMELNote>,
   id: string
-): [[string, string[]][], string[]] {
+): [[string, string[]][], string[], string[]] {
   const dcs: [string, string[]][] = [];
   for (const x in elms) {
     const elm = elms[x];
@@ -141,5 +188,8 @@ function findAffectedElements(
   const pros = Object.values(provisions)
     .filter(x => x.ref.has(id))
     .map(x => x.id);
-  return [dcs, pros];
+  const nids = Object.values(notes)
+    .filter(x => x.ref.has(id))
+    .map(x => x.id);
+  return [dcs, pros, nids];
 }

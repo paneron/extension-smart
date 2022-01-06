@@ -13,7 +13,10 @@ import {
   isEditorProcess,
 } from '../../model/editormodel';
 import { DataType } from '../../serialize/interface/baseinterface';
-import { MMELProvision } from '../../serialize/interface/supportinterface';
+import {
+  MMELNote,
+  MMELProvision,
+} from '../../serialize/interface/supportinterface';
 import { isApproval } from '../../serialize/util/validation';
 import { setReplace } from '../ModelFunctions';
 
@@ -74,6 +77,20 @@ export function refProvisionReplace(
     pros[id] = pro;
   }
   return pros;
+}
+
+export function refNotesReplace(
+  notes: Record<string, MMELNote>,
+  ids: string[],
+  from: string | undefined,
+  to: string | undefined
+) {
+  for (const id of ids) {
+    const pro = { ...notes[id] };
+    pro.ref = setReplace(pro.ref, from, to);
+    notes[id] = pro;
+  }
+  return notes;
 }
 
 export function tableReplace(

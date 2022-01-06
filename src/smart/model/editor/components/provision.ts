@@ -56,7 +56,7 @@ function reducer(
 }
 
 function findReverse(
-  elms: Record<string, MMELProvision>,
+  pros: Record<string, MMELProvision>,
   action: ProvisionAction
 ): ProvisionAction | undefined {
   switch (action.task) {

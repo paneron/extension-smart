@@ -1,5 +1,5 @@
 import { Logger } from '../../utils/ModelFunctions';
-import { EditorModel } from '../editormodel';
+import { EditorModel, isEditorProcess } from '../editormodel';
 import { cascadeCheckDCs } from './components/element/dc';
 import { cascadeCheckRegs } from './components/element/registry';
 import { ElmAction, useElements } from './components/elements';
@@ -29,6 +29,9 @@ import {
 import { useMemo } from 'react';
 import { cascadeCheckElm } from './components/element/common';
 import { compileHybird, HyEditAction } from './hybird/distributor';
+import { NotesAction, useNotes } from './components/notes';
+import { MODELVERSION } from '../../utils/constants';
+import { LinkAction, useLinks } from './components/links';
 
 type ALLACTION =
   | ElmAction
@@ -38,6 +41,8 @@ type ALLACTION =
   | RoleAction
   | RefAction
   | ProvisionAction
+  | NotesAction
+  | LinkAction
   | PageAction
   | EnumAction
   | VarAction
@@ -65,6 +70,8 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
   const [roles, actRoles, initRoles] = useRoles(x.roles);
   const [refs, actRefs, initRefs] = useRefs(x.refs);
   const [provisions, actProvision, initProvision] = useProvisions(x.provisions);
+  const [notes, actNotes, initNotes] = useNotes(x.notes);
+  const [links, actLinks, initLinks] = useLinks(x.links);
   const [pages, actPages, initPages] = usePages(x.pages);
   const [enums, actEnums, initEnums] = useEnums(x.enums);
   const [vars, actVars, initVars] = useVars(x.vars);
@@ -76,7 +83,7 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
 
   const model: EditorModel = useMemo(
     () => ({
-      ...x,
+      links,
       meta,
       sections,
       terms,
@@ -91,6 +98,8 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
       tables,
       figures,
       comments,
+      notes,
+      version: MODELVERSION,
       root: x.root,
     }),
     [
@@ -108,8 +117,19 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
       tables,
       figures,
       comments,
+      notes,
+      links
     ]
   );
+
+  for (const e of Object.values(notes)) {
+    Logger.log(e.id, [...e.ref]);
+  }
+  for (const e of Object.values(elements)) {
+    if (isEditorProcess(e)) {
+      Logger.log(e.id, [...e.notes]);
+    }
+  }
 
   function act(action: ModelAction, page: string): ModelAction | undefined {
     // Logger.log('Action:', action);
@@ -137,7 +157,12 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
           return convertAction(reverse);
         }
         case 'refs': {
-          const reverseCascade = cascadeCheckRefs(elements, provisions, action);
+          const reverseCascade = cascadeCheckRefs(
+            elements,
+            provisions,
+            notes,
+            action
+          );
           const reverse = actRefs(action);
           if (reverse) {
             reverse.cascade = reverseCascade;
@@ -234,6 +259,10 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
               actElements(a);
               break;
             }
+            case 'notes': {
+              actNotes(a);
+              break;
+            }
             case 'provision': {
               actProvision(a);
               break;
@@ -244,6 +273,10 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
             }
             case 'comment': {
               actComments(a);
+              break;
+            }
+            case 'link': {
+              actLinks(a);
               break;
             }
           }
@@ -296,6 +329,7 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
     initElms(x.elements);
     initRefs(x.refs);
     initProvision(x.provisions);
+    initNotes(x.notes);
     initPages(x.pages);
     initEnums(x.enums);
     initVars(x.vars);
@@ -303,6 +337,7 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
     initTables(x.tables);
     initFigures(x.figures);
     initComments(x.comments);
+    initLinks(x.links);
   }
 
   /**

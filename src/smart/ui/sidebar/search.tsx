@@ -36,7 +36,7 @@ const SearchComponentPane: React.FC<{
         const error = e as Error;
         Logger.log(error.message);
         Logger.log(error.stack);
-      }      
+      }
     }
     return [];
   }, [model, search]);
