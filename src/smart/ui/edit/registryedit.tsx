@@ -1,6 +1,6 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import {  
+import {
   EditorModel,
   EditorRegistry,
   isEditorDataClass,
@@ -17,7 +17,11 @@ import ListManagePage from '../common/listmanagement/listmanagement';
 import AttributeEditPage from './attributeedit';
 import { ModelAction } from '../../model/editor/model';
 import { RegistryCombined } from '../../model/editor/components/element/registry';
-import { addRegistryCommand, delRegistryCommand, editRegistryCommand } from '../../model/editor/commands/data';
+import {
+  addRegistryCommand,
+  delRegistryCommand,
+  editRegistryCommand,
+} from '../../model/editor/commands/data';
 
 const initObj: RegistryCombined = { ...createDataClass(''), title: '' };
 
@@ -40,7 +44,7 @@ const RegistryEditPage: React.FC<{
       .sort(defaultItemSorter);
   }
 
-  function removeRegListItem(ids: string[]) {    
+  function removeRegListItem(ids: string[]) {
     act(delRegistryCommand(ids));
   }
 
@@ -49,7 +53,7 @@ const RegistryEditPage: React.FC<{
     if (
       checkId(reg.id, model.elements) &&
       checkId(dcid, model.elements, true)
-    ) {      
+    ) {
       act(addRegistryCommand(reg));
       return true;
     }
@@ -66,7 +70,7 @@ const RegistryEditPage: React.FC<{
           !checkId(dcid, model.elements, true))
       ) {
         return false;
-      }      
+      }
       act(editRegistryCommand(oldid, reg));
       return true;
     }

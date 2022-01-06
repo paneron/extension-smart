@@ -6,7 +6,7 @@ import { ModelAction } from '../../model/editor/model';
 import {
   EditorDataClass,
   EditorModel,
-  EditorRegistry,  
+  EditorRegistry,
 } from '../../model/editormodel';
 import { RefTextSelection } from '../../model/selectionImport';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
@@ -23,13 +23,19 @@ const QuickEditRegistry: React.FC<{
   model: EditorModel;
   act: (x: ModelAction) => void;
   provision?: RefTextSelection;
+  setSelectedNode?: (id: string) => void;
 }> = props => {
-  const { registry, model, act, provision } = props;
+  const { registry, model, act, provision, setSelectedNode } = props;
 
   const dc = model.elements[registry.data] as EditorDataClass;
-  const regCombined = { ...dc, id: registry.id, title: registry.title };
+  const regCombined: RegistryCombined = {
+    ...dc,
+    id: registry.id,
+    title: registry.title,
+    rdcs: new Set(dc.rdcs),
+  };
 
-  const [editing, setEditing] = useState<RegistryCombined>(regCombined);  
+  const [editing, setEditing] = useState<RegistryCombined>(regCombined);
   const [hasChange, setHasChange] = useState<boolean>(false);
 
   const types = useMemo(() => findAllAttributeTypes(model), [model]);
@@ -39,11 +45,15 @@ const QuickEditRegistry: React.FC<{
   );
 
   function onAddReference(refs: Record<string, MMELReference>) {
-    throw new Error ('Not yet migrated');
+    throw new Error('Not yet migrated');
   }
 
   function onUpdateClick() {
     act(editRegistryCommand(registry.id, editing));
+    setHasChange(false);
+    if (setSelectedNode && registry.id !== editing.id) {
+      setSelectedNode(editing.id);
+    }
   }
 
   function onChange() {
@@ -58,16 +68,16 @@ const QuickEditRegistry: React.FC<{
   }
 
   function setAtt(x: Record<string, MMELDataAttribute>) {
-    setEditing({...editing, attributes: x});
+    setEditing({ ...editing, attributes: { ...x } });
     onChange();
   }
 
   function saveOnExit() {
     setHasChange(hc => {
       if (hc) {
-        setEditing(edit => {          
+        setEditing(edit => {
           act(editRegistryCommand(registry.id, edit));
-          return edit;          
+          return edit;
         });
       }
       return false;
@@ -75,7 +85,7 @@ const QuickEditRegistry: React.FC<{
   }
 
   useEffect(() => {
-    setEditing(regCombined);    
+    setEditing(regCombined);
     return saveOnExit;
   }, [registry]);
 

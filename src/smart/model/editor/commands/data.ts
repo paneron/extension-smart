@@ -1,5 +1,6 @@
-import { RegistryCombined } from "../components/element/registry";
-import { ModelAction } from "../model";
+import { Logger } from '../../../utils/ModelFunctions';
+import { RegistryCombined } from '../components/element/registry';
+import { ModelAction } from '../model';
 
 export function delRegistryCommand(ids: string[]) {
   const action: ModelAction = {
@@ -23,7 +24,7 @@ export function addRegistryCommand(reg: RegistryCombined) {
   return action;
 }
 
-export function editRegistryCommand(id: string, value: RegistryCombined){
+export function editRegistryCommand(id: string, value: RegistryCombined) {
   const action: ModelAction = {
     type: 'model',
     act: 'elements',
@@ -32,5 +33,7 @@ export function editRegistryCommand(id: string, value: RegistryCombined){
     id,
     value,
   };
+  Logger.log('Command:', action);
+  Logger.log(value);
   return action;
 }

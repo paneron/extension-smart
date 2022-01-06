@@ -1,5 +1,5 @@
-import { MMELReference } from "../../../serialize/interface/supportinterface";
-import { ModelAction } from "../model";
+import { MMELReference } from '../../../serialize/interface/supportinterface';
+import { ModelAction } from '../model';
 
 export function delRefCommand(ids: string[]) {
   const action: ModelAction = {
@@ -21,7 +21,7 @@ export function addRefCommand(value: MMELReference[]) {
   return action;
 }
 
-export function editRefCommand(id: string, value: MMELReference){
+export function editRefCommand(id: string, value: MMELReference) {
   const action: ModelAction = {
     type: 'model',
     act: 'refs',

@@ -2,10 +2,7 @@ import { Logger } from '../../utils/ModelFunctions';
 import { EditorModel } from '../editormodel';
 import { cascadeCheckDCs } from './components/element/dc';
 import { cascadeCheckRegs } from './components/element/registry';
-import {
-  ElmAction,  
-  useElements,
-} from './components/elements';
+import { ElmAction, useElements } from './components/elements';
 import { cascadeCheckEnum, EnumAction, useEnums } from './components/enums';
 import { MetaAction, useMeta } from './components/meta';
 import {
@@ -260,10 +257,10 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
     page: string
   ): ModelAction | undefined {
     switch (action.subtask) {
-      case 'registry': {        
+      case 'registry': {
         const reverseCascade = cascadeCheckRegs(elements, pages, action);
         actCascade(action.cascade);
-        const reverse = actElements(action);                
+        const reverse = actElements(action);
         if (reverse) {
           reverse.cascade = reverseCascade;
         }

@@ -63,7 +63,7 @@ export function editRegistry(
   const old = elms[id];
   if (isEditorRegistry(old)) {
     delete elms[id];
-    delete elms[old.data];    
+    delete elms[old.data];
     const dcid = genDCIdByRegId(item.id);
     const newreg = createRegistry(item.id);
     const newdc = getDCFromCombined(dcid, item);
@@ -139,7 +139,12 @@ export function cascadeCheckRegs(
     const regid = action.value.id;
     const dcid = genDCIdByRegId(regid);
     if (action.id !== regid) {
-      action.value = replaceSelf(action.id, dcid, action.value as RegistryCombined, elms);
+      action.value = replaceSelf(
+        action.id,
+        dcid,
+        action.value as RegistryCombined,
+        elms
+      );
     }
     const [ids, pids] = findAffectedElements(
       elms,
@@ -306,12 +311,12 @@ function reverseAttribute(
 }
 
 function replaceSelf(
-  id: string,  
+  id: string,
   newDCid: string,
-  value: RegistryCombined,  
+  value: RegistryCombined,
   elms: Record<string, EditorNode>
 ): RegistryCombined {
-  const attributes = {...value.attributes};
+  const attributes = { ...value.attributes };
   const oldrefid = getReferenceDCTypeName(id);
   const newrefid = getReferenceDCTypeName(value.id);
   const reg = elms[id];
@@ -320,14 +325,14 @@ function replaceSelf(
     for (const x in attributes) {
       const a = attributes[x];
       if (a.type === oldrefid) {
-        attributes[x] = {...a, type: newrefid};
+        attributes[x] = { ...a, type: newrefid };
         found = true;
       }
     }
     if (found) {
-      const retValue = {...value, attributes};
-      retValue.rdcs = setReplace(value.rdcs, reg.data, newDCid)
-    }  
+      const retValue = { ...value, attributes };
+      retValue.rdcs = setReplace(value.rdcs, reg.data, newDCid);
+    }
   }
   return value;
 }

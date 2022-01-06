@@ -79,8 +79,7 @@ const AttributeListQuickEdit: React.FC<{
 
   function addAttribute() {
     const id = findUniqueID('att', attributes);
-    attributes[id] = createDataAttribute('');
-    setAttributes({ ...attributes });
+    setAttributes({ ...attributes, id: createDataAttribute(id) });
   }
 
   function onImport() {
@@ -144,12 +143,12 @@ const AttributeListQuickEdit: React.FC<{
           attribute={a}
           refs={refs}
           setAttribute={x => {
-            attributes[index] = x;
-            setAttributes({ ...attributes });
+            setAttributes({ ...attributes, [index]: x });
           }}
           onDelete={() => {
-            delete attributes[index];
-            setAttributes({ ...attributes });
+            const newAttributes = { ...attributes };
+            delete newAttributes[index];
+            setAttributes(newAttributes);
           }}
           types={types}
           typesObj={typesObj}
@@ -176,14 +175,14 @@ const AttributeQuickEdit: React.FC<{
         position: 'relative',
       }}
     >
-      <fieldset>        
+      <fieldset>
         <NormalTextField
           text="Definition"
           value={attribute.definition}
           onChange={x => setAttribute({ ...attribute, definition: x })}
         />
         <NormalComboBox
-          text="Provision Modality"
+          text="Attribute Modality"
           value={attribute.modality}
           options={MODAILITYOPTIONS}
           onChange={x => setAttribute({ ...attribute, modality: x })}
