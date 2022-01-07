@@ -112,7 +112,6 @@ export function createNewPage(
 ): [EditorSubprocess, EditorStartEvent] {
   const start = createStartEvent(findUniqueID('Start', model.elements));
   const page = createSubprocess(findUniqueID('Page', model.pages), start.id);
-  start.pages.add(page.id);
   const com = createSubprocessComponent(start.id);
   page.childs[start.id] = com;
   return [page, start];

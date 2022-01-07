@@ -41,7 +41,6 @@ import { MMELDocument } from '../model/document';
 export function createNewEditorModel(): EditorModel {
   const start = createStartEvent('Start1');
   const page = createSubprocess('Root', start.id);
-  start.pages.add(page.id);
   const com = createSubprocessComponent(start.id);
   page.childs[start.id] = com;
   const m: EditorModel = {
@@ -184,7 +183,6 @@ export function createDataClass(id: string): EditorDataClass {
     attributes: {},
     datatype: DataType.DATACLASS,
     objectVersion: 'Editor',
-    pages: new Set<string>(),
     rdcs: new Set<string>(),
     mother: '',
   };
@@ -197,7 +195,6 @@ export function createRegistry(id: string): EditorRegistry {
     data: '',
     datatype: DataType.REGISTRY,
     objectVersion: 'Editor',
-    pages: new Set<string>(),
   };
 }
 
@@ -206,7 +203,6 @@ export function createStartEvent(id: string): EditorStartEvent {
     id: id,
     datatype: DataType.STARTEVENT,
     objectVersion: 'Editor',
-    pages: new Set<string>(),
   };
 }
 
@@ -263,7 +259,6 @@ export function createApproval(id: string): EditorApproval {
     records: new Set<string>(),
     ref: new Set<string>(),
     objectVersion: 'Editor',
-    pages: new Set<string>(),
   };
 }
 
@@ -313,7 +308,6 @@ export function createEndEvent(id: string): EditorEndEvent {
     id: id,
     datatype: DataType.ENDEVENT,
     objectVersion: 'Editor',
-    pages: new Set<string>(),
   };
 }
 
@@ -324,7 +318,6 @@ export function createTimerEvent(id: string): EditorTimerEvent {
     type: '',
     para: '',
     objectVersion: 'Editor',
-    pages: new Set<string>(),
   };
 }
 
@@ -334,7 +327,6 @@ export function createSignalCatchEvent(id: string): EditorSignalEvent {
     datatype: DataType.SIGNALCATCHEVENT,
     signal: '',
     objectVersion: 'Editor',
-    pages: new Set<string>(),
   };
 }
 
@@ -344,7 +336,6 @@ export function createEGate(id: string): EditorEGate {
     datatype: DataType.EGATE,
     label: '',
     objectVersion: 'Editor',
-    pages: new Set<string>(),
   };
 }
 

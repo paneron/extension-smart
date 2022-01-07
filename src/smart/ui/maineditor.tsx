@@ -445,7 +445,6 @@ const ModelEditor: React.FC<{
       attributes: {},
       id: dcid,
       datatype: DataType.DATACLASS,
-      pages: new Set<string>(),
       objectVersion: 'Editor',
       rdcs: new Set<string>(),
       mother: id,

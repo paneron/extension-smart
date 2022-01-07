@@ -131,7 +131,7 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
   Logger.log(Object.values(pages).map(p => p.id));
   for (const e of Object.values(elements)) {
     if (isEditorProcess(e)) {
-      Logger.log(e.id, e.page);
+      Logger.log(e.id, e.page, [...e.pages]);
     } else {
       Logger.log(e.id);
     }

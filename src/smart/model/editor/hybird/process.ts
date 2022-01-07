@@ -85,7 +85,7 @@ export function compileProcessRemovePage(
   const ract = reverseRemovePageAction(action);
   const elm = model.elements[action.id];
   if (elm && isEditorProcess(elm) && action.actions === undefined) {
-    throw new Error('No action should come to this directly');
+    // const page =
   }
   return ract;
 }

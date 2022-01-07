@@ -360,7 +360,6 @@ function addRegistryIfNotFound(
     title: reg.title,
     data: dc.id,
     datatype: DataType.REGISTRY,
-    pages: new Set<string>([pageid]),
     objectVersion: 'Editor',
   };
   model.elements[newid] = newReg;
@@ -420,7 +419,6 @@ function addDCIfNotFound(
     datatype: DataType.DATACLASS,
     mother: dc.mother === '' ? '' : nameMap[dc.mother],
     rdcs: new Set(newrdcs),
-    pages: new Set<string>([pageid]),
     objectVersion: 'Editor',
   };
   model.elements[newid] = newDC;

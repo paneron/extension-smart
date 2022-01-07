@@ -8,6 +8,7 @@ import {
   EditorDataClass,
   EditorModel,
   EditorNode,
+  EditorProcess,
   EditorSubprocess,
   isEditorApproval,
   isEditorDataClass,
@@ -20,7 +21,11 @@ import {
   MMELSubprocess,
   MMELSubprocessComponent,
 } from '../serialize/interface/flowcontrolinterface';
-import { isDataClass, isStartEvent } from '../serialize/util/validation';
+import {
+  isDataClass,
+  isProcess,
+  isStartEvent,
+} from '../serialize/util/validation';
 import {
   createDataLinkContainer,
   createEdgeContainer,
@@ -57,16 +62,22 @@ function convertElms(
     if (isDataClass(item)) {
       const newdc: EditorDataClass = {
         ...item,
-        pages: new Set<string>(),
         objectVersion: 'Editor',
         rdcs: new Set<string>(),
         mother: '',
       };
       output[x] = newdc;
+    }
+    if (isProcess(item)) {
+      const newProcess: EditorProcess = {
+        ...item,
+        pages: new Set<string>(),
+        objectVersion: 'Editor',
+      };
+      output[x] = newProcess;
     } else {
       output[x] = {
         ...item,
-        pages: new Set<string>(),
         objectVersion: 'Editor',
       };
     }
@@ -131,7 +142,9 @@ function indexStructure(model: EditorModel) {
     for (const x in page.childs) {
       const com = page.childs[x];
       const elm = model.elements[com.element];
-      elm.pages.add(page.id);
+      if (isEditorProcess(elm)) {
+        elm.pages.add(page.id);
+      }
     }
   }
   for (const d in model.elements) {
