@@ -85,7 +85,136 @@ export function compileProcessRemovePage(
   const ract = reverseRemovePageAction(action);
   const elm = model.elements[action.id];
   if (elm && isEditorProcess(elm) && action.actions === undefined) {
-    // const page =
+    const waiting: Record<string, EditorProcess> = {};
+    const delElm: string[] = [];
+    const delPage: string[] = [];
+    const delProvs: string[] = [];
+    const delNotes: string[] = [];
+    const delLinks: string[] = [];
+    const newProcess: EditorProcess = { ...elm, page: '' };
+    checkRemovePage(
+      model,
+      elm.page,
+      waiting,
+      delElm,
+      delPage,
+      delProvs,
+      delNotes,
+      delLinks
+    );
+    const actions: ModelAction[] = [
+      {
+        type: 'model',
+        act: 'elements',
+        task: 'edit',
+        subtask: 'flowunit',
+        id: action.id,
+        value: newProcess,
+      },
+      {
+        type: 'model',
+        act: 'elements',
+        task: 'delete',
+        subtask: 'flowunit',
+        value: delElm,
+      },
+      {
+        type: 'model',
+        act: 'pages',
+        task: 'delete-page',
+        value: delPage,
+      },
+      {
+        type: 'model',
+        act: 'provision',
+        task: 'replace',
+        from: delProvs,
+        to: [],
+      },
+      {
+        type: 'model',
+        act: 'notes',
+        task: 'replace',
+        from: delNotes,
+        to: [],
+      },
+      {
+        type: 'model',
+        act: 'link',
+        task: 'replace',
+        from: delLinks,
+        to: [],
+      },
+    ];
+    for (const w of Object.values(waiting)) {
+      const newAct: ModelAction = {
+        type: 'model',
+        act: 'elements',
+        task: 'edit',
+        subtask: 'flowunit',
+        id: w.id,
+        value: w,
+      };
+      actions.push(newAct);
+    }
+    action.actions = actions;
+    if (ract && ract.act === 'hybird') {
+      ract.actions = [
+        {
+          type: 'model',
+          act: 'elements',
+          task: 'edit',
+          subtask: 'flowunit',
+          id: action.id,
+          value: model.elements[action.id],
+        },
+        {
+          type: 'model',
+          act: 'elements',
+          task: 'add',
+          subtask: 'flowunit',
+          value: delElm.map(x => model.elements[x]),
+        },
+        {
+          type: 'model',
+          act: 'pages',
+          task: 'new-page',
+          value: delPage.map(x => model.pages[x]),
+        },
+        {
+          type: 'model',
+          act: 'provision',
+          task: 'replace',
+          from: [],
+          to: delProvs.map(x => model.provisions[x]),
+        },
+        {
+          type: 'model',
+          act: 'notes',
+          task: 'replace',
+          from: [],
+          to: delNotes.map(x => model.notes[x]),
+        },
+        {
+          type: 'model',
+          act: 'link',
+          task: 'replace',
+          from: [],
+          to: delLinks.map(x => model.links[x]),
+        },
+      ];
+      for (const w of Object.values(waiting)) {
+        const newAct: ModelAction = {
+          type: 'model',
+          act: 'elements',
+          task: 'edit',
+          subtask: 'flowunit',
+          id: w.id,
+          value: model.elements[w.id],
+        };
+        ract.actions.push(newAct);
+      }
+    }
   }
   return ract;
 }
@@ -193,4 +322,55 @@ function reverseProcessEditAction(
     };
   }
   throw new Error(`Process with ${action.id} not found`);
+}
+
+function checkRemovePage(
+  model: EditorModel,
+  pageid: string,
+  waiting: Record<string, EditorProcess>,
+  delElm: string[],
+  delPage: string[],
+  delPros: string[],
+  delNotes: string[],
+  delLinks: string[]
+) {
+  delPage.push(pageid);
+  const page = model.pages[pageid];
+  for (const c of Object.values(page.childs)) {
+    const elm = model.elements[c.element];
+    if (isEditorProcess(elm)) {
+      const original = waiting[elm.id] ?? elm;
+      const process = { ...original, pages: new Set([...original.pages]) };
+      process.pages.delete(pageid);
+      if (process.pages.size === 0) {
+        delElm.push(process.id);
+        delete waiting[process.id];
+        if (process.page !== '') {
+          checkRemovePage(
+            model,
+            process.page,
+            waiting,
+            delElm,
+            delPage,
+            delPros,
+            delNotes,
+            delLinks
+          );
+        }
+      } else {
+        waiting[process.id] = process;
+      }
+      for (const x of process.provision) {
+        delPros.push(x);
+      }
+      for (const x of process.notes) {
+        delNotes.push(x);
+      }
+      for (const x of process.links) {
+        delLinks.push(x);
+      }
+    } else {
+      delElm.push(elm.id);
+    }
+  }
 }
