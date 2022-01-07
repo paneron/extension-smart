@@ -28,10 +28,8 @@ import {
   EditorDiagPackage,
   EditorDiagTypes,
 } from '../dialog/EditorDialogs';
-import {
-  DeleteConfirmMessgae,
-  deleteNodeAction,
-} from '../../utils/ModelRemoveComponentHandler';
+import { DeleteConfirmMessgae } from '../../utils/ModelRemoveComponentHandler';
+import { deleteNodeAction } from '../../model/editor/commands/elements';
 
 export const SelectedNodeDescription: React.FC<{
   model: EditorModel;

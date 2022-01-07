@@ -125,11 +125,15 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
   // for (const e of Object.values(notes)) {
   //   Logger.log(e.id, [...e.ref]);
   // }
-  Logger.log('Model check');
-  Logger.log(provisions);
+  // Logger.log('Model check');
+  // Logger.log(provisions);
+  Logger.log('Checking status');
+  Logger.log(Object.values(pages).map(p => p.id));
   for (const e of Object.values(elements)) {
     if (isEditorProcess(e)) {
-      Logger.log(e.id, [...e.provision]);
+      Logger.log(e.id, e.page);
+    } else {
+      Logger.log(e.id);
     }
   }
 

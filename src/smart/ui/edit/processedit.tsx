@@ -19,13 +19,10 @@ import {
   getModelAllRegs,
   getModelAllRoles,
   removeSpace,
-  updatePageElement,
 } from '../../utils/ModelFunctions';
 import { createNote, createProvision } from '../../utils/EditorFactory';
-import { deletePage } from '../../utils/ModelRemoveComponentHandler';
 import {
   MultiReferenceSelector,
-  NormalComboBox,
   NormalTextField,
   ReferenceSelector,
 } from '../common/fields';
@@ -49,13 +46,6 @@ import { LinkItem, matchLinkFilter } from './LinkEdit';
 import { ModelAction } from '../../model/editor/model';
 import PopoverChangeIDButton from '../popover/PopoverChangeIDButton';
 import { editProcessCommand } from '../../model/editor/commands/elements';
-
-const NEEDSUBPROCESS = 'need sub';
-
-const SUBPROCESSYES = 'Yes';
-const SUBPROCESSNO = 'No';
-
-const SUBPROCESSOPTIONS = [SUBPROCESSYES, SUBPROCESSNO];
 
 function getInitProvisions(
   model: EditorModel,
@@ -120,7 +110,6 @@ interface CommonProcessEditProps {
   model: EditorModel;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
-  onSubprocessClick?: () => void;
   notes: Record<string, MMELNote>;
   setNotes: (x: Record<string, MMELNote>) => void;
   setMeasurements: (x: string[]) => void;
@@ -135,6 +124,7 @@ const EditProcessPage: React.FC<{
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
   onSubprocessClick?: () => void;
+  onSubprocessRemoveClick?: () => void;
   provision?: RefTextSelection;
   setSelectedNode?: (id: string) => void;
 }> = function ({
@@ -146,6 +136,7 @@ const EditProcessPage: React.FC<{
   onFullEditClick,
   onDeleteClick,
   onSubprocessClick,
+  onSubprocessRemoveClick,
   provision,
   setSelectedNode,
 }) {
@@ -178,14 +169,6 @@ const EditProcessPage: React.FC<{
   );
   const modelRef = useRef<EditorModel>();
   modelRef.current = model;
-
-  function setPStart(x: string) {
-    if (x === SUBPROCESSYES) {
-      setEditing({ ...editing, page: NEEDSUBPROCESS });
-    } else {
-      setEditing({ ...editing, page: '' });
-    }
-  }
 
   function onUpdateClick() {
     const action = editProcessCommand(
@@ -298,13 +281,11 @@ const EditProcessPage: React.FC<{
     model,
     onFullEditClick: fullEditClick,
     onDeleteClick,
-    onSubprocessClick,
     setMeasurements,
   };
 
   const fullEditProps = {
     closeDialog,
-    setPStart,
     roles,
     regs,
     tables,
@@ -321,6 +302,8 @@ const EditProcessPage: React.FC<{
     provision,
     onAddReference,
     initID: process.id,
+    onSubprocessClick,
+    onSubprocessRemoveClick,
     validTest: (id: string) => id === process.id || checkId(id, model.elements),
     onNewID,
   };
@@ -348,6 +331,8 @@ const QuickVersionEdit: React.FC<
     provision?: RefTextSelection;
     onAddReference: (refs: Record<string, MMELReference>) => void;
     onNewID: (id: string) => void;
+    onSubprocessClick?: () => void;
+    onSubprocessRemoveClick?: () => void;
   }
 > = function (props) {
   const {
@@ -452,7 +437,6 @@ const QuickVersionEdit: React.FC<
 const FullVersionEdit: React.FC<
   CommonProcessEditProps & {
     closeDialog?: () => void;
-    setPStart: (x: string) => void;
     roles: string[];
     regs: string[];
     tables: string[];
@@ -466,7 +450,6 @@ const FullVersionEdit: React.FC<
     setEditing,
     provisions,
     setProvisions,
-    setPStart,
     model,
     roles,
     regs,
@@ -498,12 +481,6 @@ const FullVersionEdit: React.FC<
           text="Process Name"
           value={editing.name}
           onChange={x => setEditing({ ...editing, name: x })}
-        />
-        <NormalComboBox
-          text="Subprocess"
-          value={editing.page === '' ? SUBPROCESSNO : SUBPROCESSYES}
-          options={SUBPROCESSOPTIONS}
-          onChange={setPStart}
         />
         <ReferenceSelector
           text="Actor"
@@ -548,14 +525,14 @@ const FullVersionEdit: React.FC<
           values={editing.tables}
           filterName="Table filter"
           add={x => {
-            editing.tables = new Set([...editing.tables, ...x]);
-            setEditing({ ...editing });
+            const newTables = new Set([...editing.tables, ...x]);
+            setEditing({ ...editing, tables: newTables });
           }}
           remove={x => {
-            editing.tables = new Set(
+            const newTables = new Set(
               [...editing.tables].filter(s => !x.has(s))
             );
-            setEditing({ ...editing });
+            setEditing({ ...editing, tables: newTables });
           }}
         />
         <MultiReferenceSelector
@@ -563,15 +540,15 @@ const FullVersionEdit: React.FC<
           options={figures}
           values={editing.figures}
           filterName="Multimedia filter"
-          add={x => {
-            editing.figures = new Set([...editing.figures, ...x]);
-            setEditing({ ...editing });
-          }}
+          add={x =>
+            setEditing({
+              ...editing,
+              figures: new Set([...editing.figures, ...x]),
+            })
+          }
           remove={x => {
-            editing.figures = new Set(
-              [...editing.figures].filter(s => !x.has(s))
-            );
-            setEditing({ ...editing });
+            const newFig = new Set([...editing.figures].filter(s => !x.has(s)));
+            setEditing({ ...editing, figures: newFig });
           }}
         />
         <ListWithPopoverItem
@@ -645,125 +622,5 @@ const FullVersionEdit: React.FC<
     </MGDDisplayPane>
   );
 };
-
-function save(
-  oldId: string,
-  process: EditorProcess,
-  provisions: Record<string, MMELProvision>,
-  measurements: Record<string, IMeasure>,
-  notes: Record<string, MMELNote>,
-  links: Record<string, MMELLink>,
-  model: EditorModel
-): EditorModel | null {
-  process.measure = Object.values(measurements).map(m => m.measure);
-  const oldProcess = model.elements[oldId] as EditorProcess;
-  if (oldId !== process.id) {
-    if (checkId(process.id, model.elements)) {
-      delete model.elements[oldId];
-      for (const p in model.pages) {
-        const page = model.pages[p];
-        updatePageElement(page, oldId, process.id);
-      }
-      model.elements[process.id] = process;
-      checkPage(model, oldProcess.page, process);
-    } else {
-      return null;
-    }
-  } else {
-    model.elements[oldId] = process;
-    checkPage(model, oldProcess.page, process);
-  }
-  model.provisions = updateProvisions(
-    model.provisions,
-    oldProcess.provision,
-    provisions
-  );
-  process.provision = new Set(Object.values(provisions).map(p => p.id));
-  model.notes = updateNotes(model.notes, oldProcess.notes, notes);
-  process.notes = new Set(Object.values(notes).map(n => n.id));
-  model.links = updateLinks(model.links, oldProcess.links, links);
-  process.links = new Set(Object.values(links).map(n => n.id));
-  return model;
-}
-
-function updateProvisions(
-  provisions: Record<string, MMELProvision>,
-  old: Set<string>,
-  update: Record<string, MMELProvision>
-): Record<string, MMELProvision> {
-  const newP = { ...provisions };
-  for (const x of old) {
-    delete newP[x];
-  }
-  let x = 1;
-  for (const p in update) {
-    const pro = update[p];
-    while (newP['Provision' + x] !== undefined) {
-      x++;
-    }
-    pro.id = 'Provision' + x;
-    newP[pro.id] = pro;
-    x++;
-  }
-  return newP;
-}
-
-function updateNotes(
-  notes: Record<string, MMELNote>,
-  old: Set<string>,
-  update: Record<string, MMELNote>
-): Record<string, MMELNote> {
-  const newNotes = { ...notes };
-  for (const x of old) {
-    delete newNotes[x];
-  }
-  let x = 1;
-  for (const p in update) {
-    const pro = update[p];
-    while (newNotes['Note' + x] !== undefined) {
-      x++;
-    }
-    pro.id = 'Note' + x;
-    newNotes[pro.id] = pro;
-    x++;
-  }
-  return newNotes;
-}
-
-function updateLinks(
-  links: Record<string, MMELLink>,
-  old: Set<string>,
-  update: Record<string, MMELLink>
-): Record<string, MMELLink> {
-  const newLinks = { ...links };
-  for (const x of old) {
-    delete newLinks[x];
-  }
-  let x = 1;
-  for (const p in update) {
-    const link = update[p];
-    while (newLinks['Link' + x] !== undefined) {
-      x++;
-    }
-    link.id = 'Link' + x;
-    newLinks[link.id] = link;
-    x++;
-  }
-  return newLinks;
-}
-
-function checkPage(
-  model: EditorModel,
-  oldPage: string,
-  process: EditorProcess
-) {
-  const oldHasPage = oldPage !== '';
-  const newHasPage = process.page !== '';
-  if (!oldHasPage && newHasPage) {
-    // process.page = createNewPage(model);
-  } else if (oldHasPage && !newHasPage) {
-    deletePage(model, oldPage);
-  }
-}
 
 export default EditProcessPage;

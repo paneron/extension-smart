@@ -36,7 +36,7 @@ export function compileProcessAddPage(
         type: 'model',
         act: 'pages',
         task: 'new-page',
-        value: page,
+        value: [page],
       },
     ];
     action.actions = actions;
@@ -61,7 +61,7 @@ export function compileProcessAddPage(
           type: 'model',
           act: 'pages',
           task: 'delete-page',
-          value: page.id,
+          value: [page.id],
         },
       ];
     }

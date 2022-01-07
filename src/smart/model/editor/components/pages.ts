@@ -71,12 +71,12 @@ type EditEdgeAction = {
 
 type NewPageAction = {
   task: 'new-page';
-  value: EditorSubprocess;
+  value: EditorSubprocess[];
 };
 
 type DeletePageAction = {
   task: 'delete-page';
-  value: string;
+  value: string[];
 };
 
 type MoveAction = {
@@ -284,14 +284,14 @@ function findReverse(
       return {
         act: 'pages',
         task: 'delete-page',
-        value: action.value.id,
+        value: action.value.map(v => v.id),
       };
     }
     case 'delete-page': {
       return {
         act: 'pages',
         task: 'new-page',
-        value: pages[action.value],
+        value: action.value.map(v => pages[v]),
       };
     }
   }
@@ -523,14 +523,18 @@ function replaceId(
 
 function addPage(
   pages: Record<string, EditorSubprocess>,
-  value: EditorSubprocess
+  value: EditorSubprocess[]
 ) {
-  pages[value.id] = value;
+  for (const v of value) {
+    pages[v.id] = v;
+  }
   return pages;
 }
 
-function deletePage(pages: Record<string, EditorSubprocess>, value: string) {
-  delete pages[value];
+function deletePage(pages: Record<string, EditorSubprocess>, value: string[]) {
+  for (const v of value) {
+    delete pages[v];
+  }
   return pages;
 }
 

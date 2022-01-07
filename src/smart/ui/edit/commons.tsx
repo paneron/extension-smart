@@ -5,6 +5,7 @@ import {
   AddSubprocessButton,
   EditButton,
   RemoveButton,
+  RemoveSubprocessButton,
 } from '../common/buttons';
 
 export const EditPageButtons: React.FC<{
@@ -12,15 +13,17 @@ export const EditPageButtons: React.FC<{
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
   onSubprocessClick?: () => void;
+  onSubprocessRemoveClick?: () => void;
 }> = function ({
   onUpdateClick,
   onDeleteClick,
   onFullEditClick,
   onSubprocessClick,
+  onSubprocessRemoveClick,
 }) {
   return (
     <MGDButtonGroup>
-      {onUpdateClick !== undefined ? (
+      {onUpdateClick ? (
         <Button
           icon="floppy-disk"
           intent="success"
@@ -29,11 +32,12 @@ export const EditPageButtons: React.FC<{
           Save
         </Button>
       ) : null}
-      {onFullEditClick !== undefined ? (
-        <EditButton onClick={onFullEditClick} />
-      ) : null}
-      {onSubprocessClick !== undefined ? (
+      {onFullEditClick ? <EditButton onClick={onFullEditClick} /> : null}
+      {onSubprocessClick ? (
         <AddSubprocessButton callback={onSubprocessClick} />
+      ) : null}
+      {onSubprocessRemoveClick ? (
+        <RemoveSubprocessButton callback={onSubprocessRemoveClick} />
       ) : null}
       {onDeleteClick !== undefined ? (
         <RemoveButton onClick={onDeleteClick} />

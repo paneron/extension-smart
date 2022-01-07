@@ -1,4 +1,3 @@
-import { ModelAction } from '../model/editor/model';
 import {
   EditorModel,
   EditorProcess,
@@ -26,13 +25,13 @@ function deleteProcess_deprecated(
       delete model.provisions[provision];
     }
     if (process.page !== '') {
-      deletePage(model, process.page);
+      deletePage_deprecated(model, process.page);
     }
   }
   return model;
 }
 
-export function deletePage(model: EditorModel, pageid: string) {
+export function deletePage_deprecated(model: EditorModel, pageid: string) {
   const page = model.pages[pageid];
   for (const c in page.childs) {
     const child = page.childs[c];
@@ -45,21 +44,6 @@ export function deletePage(model: EditorModel, pageid: string) {
     delete page.childs[c];
   }
   delete model.pages[pageid];
-}
-
-export function deleteNodeAction(
-  model: EditorModel,
-  pageid: string,
-  id: string
-): ModelAction {
-  const action: ModelAction = {
-    type: 'model',
-    act: 'pages',
-    task: 'delete-element',
-    value: model.elements[id],
-    page: pageid,
-  };
-  return action;
 }
 
 function deleteRelatedEdges(page: EditorSubprocess, id: string) {

@@ -4,7 +4,12 @@ import {
   MMELNote,
   MMELProvision,
 } from '../../../serialize/interface/supportinterface';
-import { EditorEGate, EditorNode, EditorProcess } from '../../editormodel';
+import {
+  EditorEGate,
+  EditorModel,
+  EditorNode,
+  EditorProcess,
+} from '../../editormodel';
 import { ModelAction } from '../model';
 
 export function editElmCommand(id: string, value: EditorNode) {
@@ -47,6 +52,16 @@ export function createSubprocessCommand(id: string) {
   return action;
 }
 
+export function deleteSubprocessCommand(id: string) {
+  const action: ModelAction = {
+    type: 'model',
+    act: 'hybird',
+    task: 'process-remove-page',
+    id,
+  };
+  return action;
+}
+
 export function editProcessCommand(
   id: string,
   process: EditorProcess,
@@ -69,6 +84,21 @@ export function editProcessCommand(
     provisions,
     notes,
     links,
+  };
+  return action;
+}
+
+export function deleteNodeAction(
+  model: EditorModel,
+  pageid: string,
+  id: string
+): ModelAction {
+  const action: ModelAction = {
+    type: 'model',
+    act: 'pages',
+    task: 'delete-element',
+    value: model.elements[id],
+    page: pageid,
   };
   return action;
 }

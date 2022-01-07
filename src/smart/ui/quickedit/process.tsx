@@ -1,5 +1,8 @@
 import React from 'react';
-import { createSubprocessCommand } from '../../model/editor/commands/elements';
+import {
+  createSubprocessCommand,
+  deleteSubprocessCommand,
+} from '../../model/editor/commands/elements';
 import { ModelAction } from '../../model/editor/model';
 import { EditorModel, EditorProcess } from '../../model/editormodel';
 import { RefTextSelection } from '../../model/selectionImport';
@@ -22,6 +25,10 @@ const QuickEditProcess: React.FC<{
     act(createSubprocessCommand(process.id));
   }
 
+  function onSubprocessRemoveClick(): void {
+    act(deleteSubprocessCommand(process.id));
+  }
+
   function onFullEditClick() {
     setDialog(DataType.PROCESS, EditAction.EDIT, process.id);
   }
@@ -34,6 +41,8 @@ const QuickEditProcess: React.FC<{
     onFullEditClick,
     onDeleteClick,
     onSubprocessClick: process.page === '' ? onSubprocessClick : undefined,
+    onSubprocessRemoveClick:
+      process.page !== '' ? onSubprocessRemoveClick : undefined,
   };
 
   return <EditProcessPage {...props} {...functionProps} minimal />;
