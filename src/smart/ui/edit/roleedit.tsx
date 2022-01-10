@@ -7,6 +7,11 @@ import { createRole } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
 import { ModelAction } from '../../model/editor/model';
+import {
+  addRoleCommand,
+  deleteRoleCommand,
+  editRoleCommand,
+} from '../../model/editor/commands/role';
 
 const RoleEditPage: React.FC<{
   model: EditorModel;
@@ -28,26 +33,14 @@ const RoleEditPage: React.FC<{
   }
 
   function removeRoleListItem(ids: string[]) {
-    const action: ModelAction = {
-      type: 'model',
-      act: 'roles',
-      task: 'delete',
-      value: ids,
-    };
-    act(action);
+    act(deleteRoleCommand(ids));
   }
 
   function addRole(role: MMELRole): boolean {
     if (!checkId(role.id, model.roles)) {
       return false;
     }
-    const action: ModelAction = {
-      type: 'model',
-      act: 'roles',
-      task: 'add',
-      value: [role],
-    };
-    act(action);
+    act(addRoleCommand(role));
     return true;
   }
 
@@ -55,14 +48,7 @@ const RoleEditPage: React.FC<{
     if (oldid !== role.id && !checkId(role.id, model.sections)) {
       return false;
     }
-    const action: ModelAction = {
-      type: 'model',
-      act: 'roles',
-      task: 'edit',
-      id: oldid,
-      value: role,
-    };
-    act(action);
+    act(editRoleCommand(oldid, role));
     return true;
   }
 

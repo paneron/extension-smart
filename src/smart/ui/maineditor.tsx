@@ -37,17 +37,13 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
   createEditorModelWrapper,
   getEditorReactFlowElementsFrom,
-  ModelWrapper,
 } from '../model/modelwrapper';
 import {
   getBreadcrumbsActions,
   HistoryItem,
   RepoHistory,
 } from '../model/history';
-import {
-  createRegistry,
-  createSubprocessComponent,
-} from '../utils/EditorFactory';
+import { createSubprocessComponent } from '../utils/EditorFactory';
 import {
   EdgeTypes,
   EditorState,
@@ -131,6 +127,9 @@ import {
 import SearchComponentPane from './sidebar/search';
 import { SelectedNodeDescription } from './sidebar/selected';
 import BasicSettingPane from './control/settings';
+import { addRoleCommand } from '../model/editor/commands/role';
+import { addRegistryCommand } from '../model/editor/commands/data';
+import { RegistryCombined } from '../model/editor/components/element/registry';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -325,10 +324,6 @@ const ModelEditor: React.FC<{
     setView({ ...view, edgeDeleteVisible: !view.edgeDeleteVisible });
   }
 
-  function setModelWrapper(mw: ModelWrapper) {
-    // setState({ ...state, model: mw.model, page: mw.page }, true);
-  }
-
   function onProcessClick(pageid: string, processid: string): void {
     act(pageChangeCommand(pageid, processid));
   }
@@ -431,34 +426,20 @@ const ModelEditor: React.FC<{
       name: data,
       datatype: DataType.ROLE,
     };
-    setModelWrapper({
-      page: state.page,
-      model: { ...model, roles: { ...model.roles, [id]: role } },
-      type: 'model',
-    });
+    act(addRoleCommand(role));
   }
 
   function importRegistry(id: string, data: string) {
-    const dcid = genDCIdByRegId(id);
-    const newreg = createRegistry(id);
     const newdc: EditorDataClass = {
       attributes: {},
-      id: dcid,
+      id,
       datatype: DataType.DATACLASS,
       objectVersion: 'Editor',
       rdcs: new Set<string>(),
       mother: id,
     };
-    newreg.data = dcid;
-    newreg.title = data;
-    setModelWrapper({
-      page: state.page,
-      model: {
-        ...model,
-        elements: { ...model.elements, [id]: newreg, [dcid]: newdc },
-      },
-      type: 'model',
-    });
+    const combined: RegistryCombined = { ...newdc, title: data };
+    act(addRegistryCommand(combined));
   }
 
   function setHis(newHis: RepoHistory) {
