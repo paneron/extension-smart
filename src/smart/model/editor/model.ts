@@ -1,5 +1,5 @@
 import { Logger } from '../../utils/ModelFunctions';
-import { EditorModel, isEditorProcess } from '../editormodel';
+import { EditorModel } from '../editormodel';
 import { cascadeCheckDCs } from './components/element/dc';
 import { cascadeCheckRegs } from './components/element/registry';
 import { ElmAction, useElements } from './components/elements';
@@ -127,15 +127,15 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
   // }
   // Logger.log('Model check');
   // Logger.log(provisions);
-  Logger.log('Checking status');
-  Logger.log(Object.values(pages).map(p => p.id));
-  for (const e of Object.values(elements)) {
-    if (isEditorProcess(e)) {
-      Logger.log(e.id, e.page, [...e.pages]);
-    } else {
-      Logger.log(e.id);
-    }
-  }
+  // Logger.log('Checking status');
+  // Logger.log(Object.values(pages).map(p => p.id));
+  // for (const e of Object.values(elements)) {
+  //   if (isEditorProcess(e)) {
+  //     Logger.log(e.id, e.page, [...e.pages]);
+  //   } else {
+  //     Logger.log(e.id);
+  //   }
+  // }
 
   function act(action: ModelAction, page: string): ModelAction | undefined {
     // Logger.log('Action:', action);

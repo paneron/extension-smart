@@ -8,6 +8,10 @@ type ProcessRemovePageHybird = HyEditAction & { task: 'process-remove-page' };
 type ProcessEditHybird = HyEditAction & { task: 'process-edit' };
 type ProcessBringoutHybird = HyEditAction & { task: 'process-bringout' };
 type ProcessBringInHybird = HyEditAction & { task: 'process-bringin' };
+type ProcessDeleteHybird = HyEditAction & { task: 'process-delete' };
+type ProcessDeleteReverseHybird = HyEditAction & {
+  task: 'process-delete-reverse';
+};
 
 export function compileProcessAddPage(
   action: ProcessAddPageHybird,
@@ -310,7 +314,7 @@ export function compileProcessBringout(
   action: ProcessBringoutHybird,
   model: EditorModel
 ): ModelAction | undefined {
-  const reverse = reverseProcessDeleteAction(action, model);
+  const reverse = reverseProcessBringOutAction(action, model);
   const elm = model.elements[action.id];
   if (elm && isEditorProcess(elm) && action.actions === undefined) {
     const updated = { ...elm };
@@ -430,7 +434,7 @@ function reverseProcessBringInAction(
   throw new Error(`Process with ${action.id} not found`);
 }
 
-function reverseProcessDeleteAction(
+function reverseProcessBringOutAction(
   action: ProcessBringoutHybird,
   model: EditorModel
 ): ModelAction {
@@ -516,4 +520,195 @@ function checkRemovePage(
       delElm.push(elm.id);
     }
   }
+}
+
+export function compileProcessDelete(
+  action: ProcessDeleteHybird,
+  model: EditorModel,
+  pageid: string
+): ModelAction | undefined {
+  const ract = reverseProcessDeleteAction(action);
+  const elm = model.elements[action.id];
+  if (elm && isEditorProcess(elm) && action.actions === undefined) {
+    if (elm.page === '') {
+      action.actions = [
+        {
+          type: 'model',
+          act: 'pages',
+          task: 'delete-element',
+          value: elm,
+          page: pageid,
+        },
+      ];
+      if (ract && ract.act === 'hybird') {
+        const compo = model.pages[pageid].childs[elm.id];
+        ract.actions = [
+          {
+            type: 'model',
+            act: 'pages',
+            task: 'new-element',
+            value: elm,
+            page: pageid,
+            x: compo.x,
+            y: compo.y,
+          },
+        ];
+      }
+    } else {
+      const waiting: Record<string, EditorProcess> = {};
+      const delElm: string[] = [];
+      const delPage: string[] = [];
+      const delProvs: string[] = [];
+      const delNotes: string[] = [];
+      const delLinks: string[] = [];
+      checkRemovePage(
+        model,
+        elm.page,
+        waiting,
+        delElm,
+        delPage,
+        delProvs,
+        delNotes,
+        delLinks
+      );
+
+      const actions: ModelAction[] = [
+        {
+          type: 'model',
+          act: 'pages',
+          task: 'delete-element',
+          value: elm,
+          page: pageid,
+        },
+        {
+          type: 'model',
+          act: 'elements',
+          task: 'delete',
+          subtask: 'flowunit',
+          value: delElm,
+        },
+        {
+          type: 'model',
+          act: 'pages',
+          task: 'delete-page',
+          value: delPage,
+        },
+        {
+          type: 'model',
+          act: 'provision',
+          task: 'replace',
+          from: delProvs,
+          to: [],
+        },
+        {
+          type: 'model',
+          act: 'notes',
+          task: 'replace',
+          from: delNotes,
+          to: [],
+        },
+        {
+          type: 'model',
+          act: 'link',
+          task: 'replace',
+          from: delLinks,
+          to: [],
+        },
+      ];
+      for (const w of Object.values(waiting)) {
+        const newAct: ModelAction = {
+          type: 'model',
+          act: 'elements',
+          task: 'edit',
+          subtask: 'flowunit',
+          id: w.id,
+          value: w,
+        };
+        actions.push(newAct);
+      }
+      action.actions = actions;
+      if (ract && ract.act === 'hybird') {
+        const compo = model.pages[pageid].childs[elm.id];
+        ract.actions = [
+          {
+            type: 'model',
+            act: 'pages',
+            task: 'new-element',
+            value: elm,
+            page: pageid,
+            x: compo.x,
+            y: compo.y,
+          },
+          {
+            type: 'model',
+            act: 'elements',
+            task: 'add',
+            subtask: 'flowunit',
+            value: delElm.map(x => model.elements[x]),
+          },
+          {
+            type: 'model',
+            act: 'pages',
+            task: 'new-page',
+            value: delPage.map(x => model.pages[x]),
+          },
+          {
+            type: 'model',
+            act: 'provision',
+            task: 'replace',
+            from: [],
+            to: delProvs.map(x => model.provisions[x]),
+          },
+          {
+            type: 'model',
+            act: 'notes',
+            task: 'replace',
+            from: [],
+            to: delNotes.map(x => model.notes[x]),
+          },
+          {
+            type: 'model',
+            act: 'link',
+            task: 'replace',
+            from: [],
+            to: delLinks.map(x => model.links[x]),
+          },
+        ];
+        for (const w of Object.values(waiting)) {
+          const newAct: ModelAction = {
+            type: 'model',
+            act: 'elements',
+            task: 'edit',
+            subtask: 'flowunit',
+            id: w.id,
+            value: model.elements[w.id],
+          };
+          ract.actions.push(newAct);
+        }
+      }
+    }
+  }
+  return ract;
+}
+
+function reverseProcessDeleteAction(action: ProcessDeleteHybird): ModelAction {
+  return {
+    type: 'model',
+    act: 'hybird',
+    task: 'process-delete-reverse',
+    page: action.page,
+    id: action.id,
+  };
+}
+
+export function compileProcessDeleteReverse(
+  action: ProcessDeleteReverseHybird
+): ModelAction {
+  return {
+    type: 'model',
+    act: 'hybird',
+    task: 'process-delete',
+    page: action.page,
+    id: action.id,
+  };
 }

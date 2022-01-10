@@ -1,7 +1,6 @@
 import { useReducer } from 'react';
 import { MMELProvision } from '../../../serialize/interface/supportinterface';
 import { refProvisionReplace } from '../../../utils/handler/cascadeModelHandler';
-import { Logger } from '../../../utils/ModelFunctions';
 import { UndoReducerInterface } from '../interface';
 
 type RefCascadeAction = {
@@ -90,7 +89,7 @@ function provisionReplace(
   from: string[],
   to: MMELProvision[]
 ): Record<string, MMELProvision> {
-  Logger.log('Action', pros, from, to);
+  // Logger.log('Action', pros, from, to);
   for (const f of from) {
     delete pros[f];
   }

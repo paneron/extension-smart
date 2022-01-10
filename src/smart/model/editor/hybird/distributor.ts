@@ -4,7 +4,6 @@ import {
   MMELNote,
   MMELProvision,
 } from '../../../serialize/interface/supportinterface';
-import { Logger } from '../../../utils/ModelFunctions';
 import { EditorEGate, EditorModel, EditorProcess } from '../../editormodel';
 import { ModelAction } from '../model';
 import { compileEGateEdit } from './egateedit';
@@ -12,6 +11,8 @@ import {
   compileProcessAddPage,
   compileProcessBringin,
   compileProcessBringout,
+  compileProcessDelete,
+  compileProcessDeleteReverse,
   compileProcessEdit,
   compileProcessRemovePage,
 } from './process';
@@ -49,6 +50,12 @@ type ProcessDeleteAction = {
   page: string;
 };
 
+type ReverseProcessDeleteAction = {
+  task: 'process-delete-reverse';
+  id: string;
+  page: string;
+};
+
 type ProcessBringInAction = {
   task: 'process-bringin';
   id: string;
@@ -67,6 +74,7 @@ type EXPORT_ACTION =
   | ProcessRemovePageAction
   | ProcessEditAction
   | ProcessDeleteAction
+  | ReverseProcessDeleteAction
   | ProcessBringInAction
   | ProcessBringOutAction;
 
@@ -87,7 +95,6 @@ export function compileHybird(
   model: EditorModel,
   page: string
 ): ModelAction | undefined {
-  Logger.log(action);
   switch (action.task) {
     case 'egate-edit':
       return compileEGateEdit(action, model, page);
@@ -98,10 +105,12 @@ export function compileHybird(
     case 'process-edit':
       return compileProcessEdit(action, model);
     case 'process-delete':
-      return undefined;
+      return compileProcessDelete(action, model, page);
     case 'process-bringin':
       return compileProcessBringin(action, model);
     case 'process-bringout':
       return compileProcessBringout(action, model);
+    case 'process-delete-reverse':
+      return compileProcessDeleteReverse(action);
   }
 }
