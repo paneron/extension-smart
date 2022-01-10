@@ -3,6 +3,7 @@ import {
   MMELEdge,
   MMELSubprocess,
 } from '../../../serialize/interface/flowcontrolinterface';
+import { createSubprocessComponent } from '../../../utils/EditorFactory';
 import {
   dataPageReplace,
   elmPageReplace,
@@ -48,6 +49,18 @@ type NewElementAction = {
 type DeleteElementAction = {
   task: 'delete-element';
   value: EditorNode;
+  page: string;
+};
+
+type AddChildAction = {
+  task: 'add-child';
+  ids: [string, number, number][];
+  page: string;
+};
+
+type RemoveChildAction = {
+  task: 'remove-child';
+  ids: string[];
   page: string;
 };
 
@@ -107,7 +120,9 @@ type EXPORT_ACTION =
   | EditEdgeAction
   | ReplaceElmIdAction
   | NewPageAction
-  | DeletePageAction;
+  | DeletePageAction
+  | AddChildAction
+  | RemoveChildAction;
 
 export type PageAction = EXPORT_ACTION & {
   act: 'pages';
@@ -183,6 +198,12 @@ function pageReducer(
     }
     case 'delete-page': {
       return deletePage(pages, action.value);
+    }
+    case 'add-child': {
+      return addChild(pages, action.page, action.ids);
+    }
+    case 'remove-child': {
+      return removeChild(pages, action.page, action.ids);
     }
   }
 }
@@ -292,6 +313,26 @@ function findReverse(
         act: 'pages',
         task: 'new-page',
         value: action.value.map(v => pages[v]),
+      };
+    }
+    case 'add-child': {
+      return {
+        act: 'pages',
+        task: 'remove-child',
+        page: action.page,
+        ids: action.ids.map(x => x[0]),
+      };
+    }
+    case 'remove-child': {
+      return {
+        act: 'pages',
+        task: 'add-child',
+        page: action.page,
+        ids: action.ids.map(x => {
+          const p = pages[action.page];
+          const compo = p.childs[x];
+          return [x, compo ? compo.x : 0, compo ? compo.y : 0];
+        }),
       };
     }
   }
@@ -528,6 +569,41 @@ function addPage(
   for (const v of value) {
     pages[v.id] = v;
   }
+  return pages;
+}
+
+function addChild(
+  pages: Record<string, EditorSubprocess>,
+  pageid: string,
+  ids: [string, number, number][]
+): Record<string, EditorSubprocess> {
+  // Logger.log('Adding', ids, pageid);
+  const page = { ...pages[pageid] };
+  const childs = { ...page.childs };
+  for (const item of ids) {
+    const [elm, x, y] = item;
+    const compo = createSubprocessComponent(elm);
+    compo.x = x;
+    compo.y = y;
+    childs[elm] = compo;
+  }
+  page.childs = childs;
+  pages[pageid] = page;
+  return pages;
+}
+
+function removeChild(
+  pages: Record<string, EditorSubprocess>,
+  pageid: string,
+  ids: string[]
+): Record<string, EditorSubprocess> {
+  const page = { ...pages[pageid] };
+  const childs = { ...page.childs };
+  for (const item of ids) {
+    delete childs[item];
+  }
+  page.childs = childs;
+  pages[pageid] = page;
   return pages;
 }
 

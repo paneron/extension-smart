@@ -9,6 +9,7 @@ import {
   EditorModel,
   EditorNode,
   EditorProcess,
+  isEditorProcess,
 } from '../../editormodel';
 import { ModelAction } from '../model';
 
@@ -62,6 +63,17 @@ export function deleteSubprocessCommand(id: string) {
   return action;
 }
 
+export function bringoutProcessCommand(id: string, page: string) {
+  const action: ModelAction = {
+    type: 'model',
+    act: 'hybird',
+    task: 'process-bringout',
+    id,
+    page,
+  };
+  return action;
+}
+
 export function editProcessCommand(
   id: string,
   process: EditorProcess,
@@ -93,11 +105,22 @@ export function deleteNodeAction(
   pageid: string,
   id: string
 ): ModelAction {
+  const elm = model.elements[id];
+  if (isEditorProcess(elm)) {
+    const action: ModelAction = {
+      type: 'model',
+      act: 'hybird',
+      task: 'process-delete',
+      id: elm.id,
+      page: pageid,
+    };
+    return action;
+  }
   const action: ModelAction = {
     type: 'model',
     act: 'pages',
     task: 'delete-element',
-    value: model.elements[id],
+    value: elm,
     page: pageid,
   };
   return action;

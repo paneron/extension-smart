@@ -6,6 +6,8 @@ import { HyEditAction } from './distributor';
 type ProcessAddPageHybird = HyEditAction & { task: 'process-add-page' };
 type ProcessRemovePageHybird = HyEditAction & { task: 'process-remove-page' };
 type ProcessEditHybird = HyEditAction & { task: 'process-edit' };
+type ProcessBringoutHybird = HyEditAction & { task: 'process-bringout' };
+type ProcessBringInHybird = HyEditAction & { task: 'process-bringin' };
 
 export function compileProcessAddPage(
   action: ProcessAddPageHybird,
@@ -302,6 +304,147 @@ export function compileProcessEdit(
     }
   }
   return reverse;
+}
+
+export function compileProcessBringout(
+  action: ProcessBringoutHybird,
+  model: EditorModel
+): ModelAction | undefined {
+  const reverse = reverseProcessDeleteAction(action, model);
+  const elm = model.elements[action.id];
+  if (elm && isEditorProcess(elm) && action.actions === undefined) {
+    const updated = { ...elm };
+    updated.pages = new Set([...elm.pages]);
+    updated.pages.delete(action.page);
+    const actions: ModelAction[] = [
+      {
+        type: 'model',
+        act: 'pages',
+        task: 'remove-child',
+        ids: [action.id],
+        page: action.page,
+      },
+      {
+        type: 'model',
+        act: 'elements',
+        task: 'edit',
+        subtask: 'flowunit',
+        id: action.id,
+        value: updated,
+      },
+    ];
+    action.actions = actions;
+    if (reverse && reverse.act === 'hybird') {
+      const page = model.pages[action.page];
+      const compo = page.childs[action.id];
+      const actions: ModelAction[] = [
+        {
+          type: 'model',
+          act: 'pages',
+          task: 'add-child',
+          ids: [[action.id, compo.x, compo.y]],
+          page: action.page,
+        },
+        {
+          type: 'model',
+          act: 'elements',
+          task: 'edit',
+          subtask: 'flowunit',
+          id: action.id,
+          value: elm,
+        },
+      ];
+      reverse.actions = actions;
+    }
+  }
+  return reverse;
+}
+
+export function compileProcessBringin(
+  action: ProcessBringInHybird,
+  model: EditorModel
+): ModelAction | undefined {
+  // Logger.log('Performing action', action);
+  const reverse = reverseProcessBringInAction(action, model);
+  const elm = model.elements[action.id];
+  if (elm && isEditorProcess(elm) && action.actions === undefined) {
+    const updated = { ...elm };
+    updated.pages = new Set([...elm.pages, action.page]);
+    const actions: ModelAction[] = [
+      {
+        type: 'model',
+        act: 'pages',
+        task: 'add-child',
+        ids: [[action.id, 0, 0]],
+        page: action.page,
+      },
+      {
+        type: 'model',
+        act: 'elements',
+        task: 'edit',
+        subtask: 'flowunit',
+        id: action.id,
+        value: updated,
+      },
+    ];
+    action.actions = actions;
+    // Logger.log('Actual actions', action.actions);
+    if (reverse && reverse.act === 'hybird') {
+      const actions: ModelAction[] = [
+        {
+          type: 'model',
+          act: 'pages',
+          task: 'remove-child',
+          ids: [action.id],
+          page: action.page,
+        },
+        {
+          type: 'model',
+          act: 'elements',
+          task: 'edit',
+          subtask: 'flowunit',
+          id: action.id,
+          value: elm,
+        },
+      ];
+      reverse.actions = actions;
+    }
+  }
+  return reverse;
+}
+
+function reverseProcessBringInAction(
+  action: ProcessBringInHybird,
+  model: EditorModel
+): ModelAction {
+  const elm = model.elements[action.id];
+  if (elm && isEditorProcess(elm)) {
+    return {
+      type: 'model',
+      act: 'hybird',
+      task: 'process-bringout',
+      id: action.id,
+      page: action.page,
+    };
+  }
+  throw new Error(`Process with ${action.id} not found`);
+}
+
+function reverseProcessDeleteAction(
+  action: ProcessBringoutHybird,
+  model: EditorModel
+): ModelAction {
+  const elm = model.elements[action.id];
+  if (elm && isEditorProcess(elm)) {
+    return {
+      type: 'model',
+      act: 'hybird',
+      task: 'process-bringin',
+      id: action.id,
+      page: action.page,
+    };
+  }
+  throw new Error(`Process with ${action.id} not found`);
 }
 
 function reverseProcessEditAction(

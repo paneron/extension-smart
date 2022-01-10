@@ -226,7 +226,11 @@ function needCheck(action: ModelAction): boolean {
     case 'view':
       return false;
     case 'hybird':
-      return false;
+      return (
+        action.task === 'process-delete' ||
+        action.task === 'process-bringin' ||
+        action.task === 'process-edit'
+      );
     default:
       throw new Error('Checking for post actions not handled');
   }

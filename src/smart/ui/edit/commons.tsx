@@ -3,6 +3,7 @@ import React from 'react';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 import {
   AddSubprocessButton,
+  BringOutButton,
   EditButton,
   RemoveButton,
   RemoveSubprocessButton,
@@ -14,12 +15,14 @@ export const EditPageButtons: React.FC<{
   onDeleteClick?: () => void;
   onSubprocessClick?: () => void;
   onSubprocessRemoveClick?: () => void;
+  onBringoutClick?: () => void;
 }> = function ({
   onUpdateClick,
   onDeleteClick,
   onFullEditClick,
   onSubprocessClick,
   onSubprocessRemoveClick,
+  onBringoutClick,
 }) {
   return (
     <MGDButtonGroup>
@@ -41,6 +44,9 @@ export const EditPageButtons: React.FC<{
       ) : null}
       {onDeleteClick !== undefined ? (
         <RemoveButton onClick={onDeleteClick} />
+      ) : null}
+      {onBringoutClick !== undefined ? (
+        <BringOutButton onClick={onBringoutClick} />
       ) : null}
     </MGDButtonGroup>
   );

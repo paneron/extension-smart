@@ -4,16 +4,19 @@ import {
   MMELNote,
   MMELProvision,
 } from '../../../serialize/interface/supportinterface';
+import { Logger } from '../../../utils/ModelFunctions';
 import { EditorEGate, EditorModel, EditorProcess } from '../../editormodel';
 import { ModelAction } from '../model';
 import { compileEGateEdit } from './egateedit';
 import {
   compileProcessAddPage,
+  compileProcessBringin,
+  compileProcessBringout,
   compileProcessEdit,
   compileProcessRemovePage,
 } from './process';
 
-export type EGateEditAction = {
+type EGateEditAction = {
   task: 'egate-edit';
   id: string;
   page: string;
@@ -21,17 +24,17 @@ export type EGateEditAction = {
   edges: MMELEdge[];
 };
 
-export type ProcessAddPageAction = {
+type ProcessAddPageAction = {
   task: 'process-add-page';
   id: string; // process ID
 };
 
-export type ProcessRemovePageAction = {
+type ProcessRemovePageAction = {
   task: 'process-remove-page';
   id: string; // process ID
 };
 
-export type ProcessEditAction = {
+type ProcessEditAction = {
   task: 'process-edit';
   id: string;
   process: EditorProcess;
@@ -40,11 +43,32 @@ export type ProcessEditAction = {
   links: MMELLink[];
 };
 
+type ProcessDeleteAction = {
+  task: 'process-delete';
+  id: string;
+  page: string;
+};
+
+type ProcessBringInAction = {
+  task: 'process-bringin';
+  id: string;
+  page: string;
+};
+
+type ProcessBringOutAction = {
+  task: 'process-bringout';
+  id: string;
+  page: string;
+};
+
 type EXPORT_ACTION =
   | EGateEditAction
   | ProcessAddPageAction
   | ProcessRemovePageAction
-  | ProcessEditAction;
+  | ProcessEditAction
+  | ProcessDeleteAction
+  | ProcessBringInAction
+  | ProcessBringOutAction;
 
 export type HyEditAction = EXPORT_ACTION & {
   act: 'hybird';
@@ -63,6 +87,7 @@ export function compileHybird(
   model: EditorModel,
   page: string
 ): ModelAction | undefined {
+  Logger.log(action);
   switch (action.task) {
     case 'egate-edit':
       return compileEGateEdit(action, model, page);
@@ -72,5 +97,11 @@ export function compileHybird(
       return compileProcessRemovePage(action, model);
     case 'process-edit':
       return compileProcessEdit(action, model);
+    case 'process-delete':
+      return undefined;
+    case 'process-bringin':
+      return compileProcessBringin(action, model);
+    case 'process-bringout':
+      return compileProcessBringout(action, model);
   }
 }

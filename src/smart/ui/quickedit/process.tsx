@@ -1,10 +1,15 @@
 import React from 'react';
 import {
+  bringoutProcessCommand,
   createSubprocessCommand,
   deleteSubprocessCommand,
 } from '../../model/editor/commands/elements';
 import { ModelAction } from '../../model/editor/model';
-import { EditorModel, EditorProcess } from '../../model/editormodel';
+import {
+  EditorModel,
+  EditorProcess,
+  EditorSubprocess,
+} from '../../model/editormodel';
 import { RefTextSelection } from '../../model/selectionImport';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { EditAction } from '../../utils/constants';
@@ -18,8 +23,9 @@ const QuickEditProcess: React.FC<{
   setDialog: DialogSetterInterface;
   provision?: RefTextSelection;
   setSelectedNode: (id: string) => void;
+  page: EditorSubprocess;
 }> = props => {
-  const { process, act, setDialog } = props;
+  const { process, act, page, setDialog } = props;
 
   function onSubprocessClick(): void {
     act(createSubprocessCommand(process.id));
@@ -37,12 +43,17 @@ const QuickEditProcess: React.FC<{
     setDialog(DataType.PROCESS, EditAction.DELETE, process.id);
   }
 
+  function onBringoutClick() {
+    act(bringoutProcessCommand(process.id, page.id));
+  }
+
   const functionProps = {
     onFullEditClick,
-    onDeleteClick,
+    onDeleteClick: process.pages.size > 1 ? undefined : onDeleteClick,
     onSubprocessClick: process.page === '' ? onSubprocessClick : undefined,
     onSubprocessRemoveClick:
       process.page !== '' ? onSubprocessRemoveClick : undefined,
+    onBringoutClick: process.pages.size > 1 ? onBringoutClick : undefined,
   };
 
   return <EditProcessPage {...props} {...functionProps} minimal />;

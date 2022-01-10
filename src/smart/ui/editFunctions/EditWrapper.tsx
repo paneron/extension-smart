@@ -86,10 +86,6 @@ const EditWrapper: React.FC<{
     }
   }
 
-  function updateState(updated: EditorState, requireHistory: boolean) {
-    throw new Error('Function not implemented.');
-  }
-
   function setSelectedId(id: string | undefined) {
     if (id !== undefined) {
       const elm = state.model.elements[id];
@@ -109,13 +105,13 @@ const EditWrapper: React.FC<{
       const elm = model.elements[copied];
       if (elm !== undefined) {
         try {
-          const newModel = addExisingProcessToPage(
+          addExisingProcessToPage(
             model,
             state.history,
             state.page,
-            elm.id
+            elm.id,
+            act
           );
-          updateState({ ...state, model: newModel }, true);
         } catch (e: unknown) {
           const error = e as Error;
           toaster.show({

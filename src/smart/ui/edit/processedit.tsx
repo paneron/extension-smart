@@ -123,6 +123,7 @@ const EditProcessPage: React.FC<{
   minimal?: boolean;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
+  onBringoutClick?: () => void;
   onSubprocessClick?: () => void;
   onSubprocessRemoveClick?: () => void;
   provision?: RefTextSelection;
@@ -137,6 +138,7 @@ const EditProcessPage: React.FC<{
   onDeleteClick,
   onSubprocessClick,
   onSubprocessRemoveClick,
+  onBringoutClick,
   provision,
   setSelectedNode,
 }) {
@@ -304,6 +306,7 @@ const EditProcessPage: React.FC<{
     initID: process.id,
     onSubprocessClick,
     onSubprocessRemoveClick,
+    onBringoutClick,
     validTest: (id: string) => id === process.id || checkId(id, model.elements),
     onNewID,
   };
@@ -313,7 +316,7 @@ const EditProcessPage: React.FC<{
     setProvisions(getInitProvisions(model, process));
     setNotes(getInitNotes(model, process));
     setLinks(getInitLinks(model, process));
-  }, [model]);
+  }, [model, process]);
 
   return minimal ? (
     <QuickVersionEdit {...commonProps} {...quickEditProps} />
@@ -333,6 +336,7 @@ const QuickVersionEdit: React.FC<
     onNewID: (id: string) => void;
     onSubprocessClick?: () => void;
     onSubprocessRemoveClick?: () => void;
+    onBringoutClick?: () => void;
   }
 > = function (props) {
   const {
@@ -353,7 +357,7 @@ const QuickVersionEdit: React.FC<
     setMeasurements,
   } = props;
 
-  useEffect(() => saveOnExit, [model]);
+  useEffect(() => saveOnExit, [model, process]);
 
   function idTest(id: string) {
     return id === process.id || checkId(id, model.elements);

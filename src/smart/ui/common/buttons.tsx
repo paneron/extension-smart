@@ -15,6 +15,19 @@ export const RemoveButton: React.FC<{
   );
 };
 
+export const BringOutButton: React.FC<{
+  onClick: () => void;
+}> = function ({ onClick }) {
+  return (
+    <BaseButton
+      tooltip="Remove Component"
+      icon="cross"
+      intent="warning"
+      onClick={onClick}
+    />
+  );
+};
+
 export const EditButton: React.FC<{
   onClick: () => void;
 }> = function ({ onClick }) {

@@ -26,7 +26,6 @@ import {
   createTimerEvent,
 } from './EditorFactory';
 import { HistoryItem } from '../model/history';
-import { MMELSubprocessComponent } from '../serialize/interface/flowcontrolinterface';
 import { ModelAction } from '../model/editor/model';
 
 type Elements = Record<string, EditorNode>;
@@ -121,11 +120,12 @@ export function addExisingProcessToPage(
   model: EditorModel,
   history: HistoryItem[],
   pageid: string,
-  process: string
-): EditorModel {
+  process: string,
+  act: (x: ModelAction) => void
+) {
   const page = model.pages[pageid];
-  if (page !== undefined) {
-    if (page.childs[process] !== undefined) {
+  if (page) {
+    if (page.childs[process]) {
       throw new Error(`Process already exists`);
     } else {
       for (const h of history) {
@@ -133,17 +133,14 @@ export function addExisingProcessToPage(
           throw new Error(`Cannot include self in subprocess`);
         }
       }
-      const newComponent: MMELSubprocessComponent = {
-        element: process,
-        x: 0,
-        y: 0,
-        datatype: DataType.SUBPROCESSCOMPONENT,
+      const action: ModelAction = {
+        type: 'model',
+        act: 'hybird',
+        task: 'process-bringin',
+        id: process,
+        page: pageid,
       };
-      const newPage = {
-        ...page,
-        childs: { ...page.childs, [process]: newComponent },
-      };
-      return { ...model, pages: { ...model.pages, [pageid]: newPage } };
+      act(action);
     }
   } else {
     throw new Error(`Current page not found: ${pageid}`);
