@@ -113,7 +113,7 @@ interface CommonProcessEditProps {
   notes: Record<string, MMELNote>;
   setNotes: (x: Record<string, MMELNote>) => void;
   setMeasurements: (x: string[]) => void;
-  setUndoListener: (x: (() => void) | undefined) => void;  
+  setUndoListener: (x: (() => void) | undefined) => void;
 }
 
 const EditProcessPage: React.FC<{
@@ -145,7 +145,7 @@ const EditProcessPage: React.FC<{
   provision,
   setSelectedNode,
   setUndoListener,
-  clearRedo
+  clearRedo,
 }) {
   const [editing, setEditing] = useState<EditorProcess>({ ...process });
   const [provisions, setProvisions] = useState<Record<string, MMELProvision>>(
@@ -293,7 +293,7 @@ const EditProcessPage: React.FC<{
     onFullEditClick: fullEditClick,
     onDeleteClick,
     setMeasurements,
-    setUndoListener
+    setUndoListener,
   };
 
   const fullEditProps = {
@@ -319,7 +319,7 @@ const EditProcessPage: React.FC<{
     onBringoutClick,
     validTest: (id: string) => id === process.id || checkId(id, model.elements),
     onNewID,
-    setHasChange
+    setHasChange,
   };
 
   useEffect(() => {
@@ -369,8 +369,8 @@ const QuickVersionEdit: React.FC<
     onNewID,
     setMeasurements,
     setUndoListener,
-    setHasChange
-  } = props;  
+    setHasChange,
+  } = props;
 
   function idTest(id: string) {
     return id === process.id || checkId(id, model.elements);
@@ -487,7 +487,7 @@ const FullVersionEdit: React.FC<
     setLinks,
     setMeasurements,
     closeDialog,
-    setUndoListener
+    setUndoListener,
   } = props;
 
   useEffect(() => {

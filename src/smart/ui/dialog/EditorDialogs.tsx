@@ -74,34 +74,34 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITPROCESS]: {
     title: 'Edit Process',
     fullscreen: true,
-    Panel: (props) => (
+    Panel: props => (
       <EditProcessPage
-        {...props}        
-        closeDialog={props.done}        
-        process={props.model.elements[props.msg] as EditorProcess}        
+        {...props}
+        closeDialog={props.done}
+        process={props.model.elements[props.msg] as EditorProcess}
       />
     ),
   },
   [EditorDiagTypes.EDITAPPROVAL]: {
     title: 'Edit Approval',
     fullscreen: true,
-    Panel: (props) => (
+    Panel: props => (
       <EditApprovalPage
-        {...props}        
-        closeDialog={props.done}        
-        approval={props.model.elements[props.msg] as EditorApproval}        
+        {...props}
+        closeDialog={props.done}
+        approval={props.model.elements[props.msg] as EditorApproval}
       />
     ),
   },
   [EditorDiagTypes.EDITEGATE]: {
     title: 'Edit Gateway',
     fullscreen: true,
-    Panel: (props) => (
+    Panel: props => (
       <EditEGatePage
-        {...props}        
-        closeDialog={props.done}        
-        page={props.model.pages[props.page]}        
-        egate={props.model.elements[props.msg] as EditorEGate}        
+        {...props}
+        closeDialog={props.done}
+        page={props.model.pages[props.page]}
+        egate={props.model.elements[props.msg] as EditorEGate}
       />
     ),
   },

@@ -40,7 +40,7 @@ interface CommonApprovalEditProps {
   model: EditorModel;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
-  setUndoListener: (x: (() => void) | undefined) => void;  
+  setUndoListener: (x: (() => void) | undefined) => void;
 }
 
 const EditApprovalPage: React.FC<{
@@ -64,7 +64,7 @@ const EditApprovalPage: React.FC<{
   onDeleteClick,
   setSelectedNode,
   setUndoListener,
-  clearRedo
+  clearRedo,
 }) {
   const [editing, setEditing] = useState<EditorApproval>({ ...approval });
   const [hasChange, setHasChange] = useState<boolean>(false);
@@ -97,6 +97,7 @@ const EditApprovalPage: React.FC<{
 
   function onChange() {
     if (!hasChange) {
+      clearRedo();
       setHasChange(true);
     }
   }
@@ -138,7 +139,7 @@ const EditApprovalPage: React.FC<{
     model,
     onFullEditClick: fullEditClick,
     onDeleteClick,
-    setUndoListener
+    setUndoListener,
   };
 
   const fullEditProps = {
@@ -159,7 +160,7 @@ const EditApprovalPage: React.FC<{
     validTest: (id: string) =>
       id === approval.id || checkId(id, model.elements),
     onNewID,
-    setHasChange
+    setHasChange,
   };
 
   useEffect(() => setEditing(approval), [approval]);
@@ -194,8 +195,8 @@ const QuickVersionEdit: React.FC<
     approval,
     onNewID,
     setUndoListener,
-    setHasChange
-  } = props;  
+    setHasChange,
+  } = props;
 
   function idTest(id: string) {
     return id === approval.id || checkId(id, model.elements);
@@ -293,14 +294,22 @@ const FullVersionEdit: React.FC<
     setUndoListener: (x: (() => void) | undefined) => void;
   }
 > = function (props) {
-  const { editing, setEditing, roles, regs, refs, closeDialog, setUndoListener } = props;
+  const {
+    editing,
+    setEditing,
+    roles,
+    regs,
+    refs,
+    closeDialog,
+    setUndoListener,
+  } = props;
 
   useEffect(() => {
     setUndoListener(() => closeDialog && closeDialog());
     return () => {
       setUndoListener(undefined);
     };
-  }, []);  
+  }, []);
 
   return (
     <MGDDisplayPane>

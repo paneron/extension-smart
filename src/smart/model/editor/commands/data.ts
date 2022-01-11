@@ -1,3 +1,4 @@
+import { MMELReference } from '../../../serialize/interface/supportinterface';
 import { EditorDataClass } from '../../editormodel';
 import { RegistryCombined } from '../components/element/registry';
 import { ModelAction } from '../model';
@@ -32,6 +33,23 @@ export function editRegistryCommand(id: string, value: RegistryCombined) {
     subtask: 'registry',
     id,
     value,
+  };
+  return action;
+}
+
+export function editImportRegistryCommand(
+  id: string,
+  value: RegistryCombined,
+  refs: MMELReference[]
+) {
+  const action: ModelAction = {
+    type: 'model',
+    act: 'hybird',
+    task: 'registry-import-ref',
+    id,
+    value,
+    newRefs: refs,
+    delRefs: [],
   };
   return action;
 }

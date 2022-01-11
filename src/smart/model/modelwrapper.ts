@@ -117,8 +117,9 @@ function findStart(
 export function createEditorModelWrapper(m: MMELModel): ModelWrapper {
   const convertedElms = convertElms(m.elements);
   const converedPages = convertPages(m.pages, convertedElms);
+  const model = { ...m, elements: convertedElms, pages: converedPages };
   return buildStructure({
-    model: { ...m, elements: convertedElms, pages: converedPages },
+    model,
     page: m.root,
     type: 'model',
   });
@@ -161,8 +162,7 @@ function indexStructure(model: EditorModel) {
 }
 
 function buildStructure(mw: ModelWrapper): ModelWrapper {
-  const model = mw.model;
-  indexStructure(model);
+  indexStructure(mw.model);
   return mw;
 }
 

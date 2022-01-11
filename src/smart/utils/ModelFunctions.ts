@@ -127,7 +127,11 @@ export function fillRDCS(
   data: EditorDataClass,
   elements: Record<string, EditorNode>
 ) {
-  data.rdcs.clear();
+  if (data.rdcs) {
+    data.rdcs.clear();
+  } else {
+    data.rdcs = new Set<string>();
+  }
   for (const a in data.attributes) {
     const att = data.attributes[a];
     const dc = elements[att.type];

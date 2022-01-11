@@ -1,6 +1,9 @@
 import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useMemo, useState } from 'react';
-import { editRegistryCommand } from '../../model/editor/commands/data';
+import {
+  editImportRegistryCommand,
+  editRegistryCommand,
+} from '../../model/editor/commands/data';
 import { RegistryCombined } from '../../model/editor/components/element/registry';
 import { ModelAction } from '../../model/editor/model';
 import {
@@ -27,7 +30,15 @@ const QuickEditRegistry: React.FC<{
   setUndoListener: (x: (() => void) | undefined) => void;
   clearRedo: () => void;
 }> = props => {
-  const { registry, model, act, provision, setSelectedNode } = props;
+  const {
+    registry,
+    model,
+    act,
+    provision,
+    setSelectedNode,
+    setUndoListener,
+    clearRedo,
+  } = props;
 
   const dc = model.elements[registry.data] as EditorDataClass;
   const regCombined: RegistryCombined = {
@@ -46,8 +57,8 @@ const QuickEditRegistry: React.FC<{
     [types]
   );
 
-  function onAddReference(refs: Record<string, MMELReference>) {
-    throw new Error('Not yet migrated');
+  function onAddReference(refs: MMELReference[]) {
+    saveOnExit(refs);
   }
 
   function onUpdateClick() {
@@ -60,6 +71,7 @@ const QuickEditRegistry: React.FC<{
 
   function onChange() {
     if (!hasChange) {
+      clearRedo();
       setHasChange(true);
     }
   }
@@ -74,11 +86,11 @@ const QuickEditRegistry: React.FC<{
     onChange();
   }
 
-  function saveOnExit() {
+  function saveOnExit(refs?: MMELReference[]) {
     setHasChange(hc => {
       if (hc) {
         setEditing(edit => {
-          act(editRegistryCommand(registry.id, edit));
+          act(editImportRegistryCommand(registry.id, edit, refs ?? []));
           return edit;
         });
       }
@@ -88,7 +100,11 @@ const QuickEditRegistry: React.FC<{
 
   useEffect(() => {
     setEditing(regCombined);
-    return saveOnExit;
+    setUndoListener(() => setHasChange(false));
+    return () => {
+      setUndoListener(undefined);
+      saveOnExit();
+    };
   }, [registry]);
 
   return (

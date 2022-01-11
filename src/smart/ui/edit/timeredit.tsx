@@ -72,7 +72,7 @@ const EditTimerPage: React.FC<{
 
   function saveOnExit() {
     setHasChange(hc => {
-      if (hc) {        
+      if (hc) {
         setEditing(edit => {
           act(editElmCommand(timer.id, edit));
           return edit;

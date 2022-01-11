@@ -28,7 +28,7 @@ interface CommonEGateEditProps {
   setEdges: (es: MMELEdge[]) => void;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
-  setUndoListener: (x: (() => void) | undefined) => void;  
+  setUndoListener: (x: (() => void) | undefined) => void;
 }
 
 const EditEGatePage: React.FC<{
@@ -54,7 +54,7 @@ const EditEGatePage: React.FC<{
   onFullEditClick,
   setSelectedNode,
   setUndoListener,
-  clearRedo
+  clearRedo,
 }) {
   const measures = getModelAllMeasures(model);
   const id = egate.id;
@@ -88,6 +88,7 @@ const EditEGatePage: React.FC<{
 
   function onChange() {
     if (!hasChange) {
+      clearRedo();
       setHasChange(true);
     }
   }
@@ -133,7 +134,7 @@ const EditEGatePage: React.FC<{
     setEdges,
     onDeleteClick,
     onFullEditClick: fullEditClick,
-    setUndoListener
+    setUndoListener,
   };
 
   const fullEditProps = {
@@ -150,7 +151,7 @@ const EditEGatePage: React.FC<{
     validTest: (id: string) => id === egate.id || checkId(id, model.elements),
     onNewID,
     model,
-    setHasChange
+    setHasChange,
   };
 
   useEffect(() => {
@@ -189,8 +190,8 @@ const QuickVersionEdit: React.FC<
     saveOnExit,
     onNewID,
     setUndoListener,
-    setHasChange
-  } = props;  
+    setHasChange,
+  } = props;
 
   function idTest(id: string) {
     return id === egate.id || checkId(id, model.elements);
@@ -246,7 +247,15 @@ const FullVersionEdit: React.FC<
     setUndoListener: (x: (() => void) | undefined) => void;
   }
 > = function (props) {
-  const { editing, setEditing, edges, setEdges, measures, closeDialog, setUndoListener } = props;
+  const {
+    editing,
+    setEditing,
+    edges,
+    setEdges,
+    measures,
+    closeDialog,
+    setUndoListener,
+  } = props;
 
   useEffect(() => {
     setUndoListener(() => closeDialog && closeDialog());
@@ -290,7 +299,7 @@ const EditEdgePage: React.FC<{
   edge: MMELEdge;
   index: number;
   types: string[];
-  setEdge: (x: number, edge: MMELEdge) => void;  
+  setEdge: (x: number, edge: MMELEdge) => void;
 }> = function ({ edge, index, types, setEdge }) {
   return (
     <fieldset>

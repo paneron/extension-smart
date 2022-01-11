@@ -21,7 +21,15 @@ const QuickEditDataClass: React.FC<{
   setUndoListener: (x: (() => void) | undefined) => void;
   clearRedo: () => void;
 }> = props => {
-  const { dataclass, model, act, provision, setSelectedNode } = props;
+  const {
+    dataclass,
+    model,
+    act,
+    provision,
+    setSelectedNode,
+    setUndoListener,
+    clearRedo,
+  } = props;
 
   const [editing, setEditing] = useState<EditorDataClass>(dataclass);
   const [hasChange, setHasChange] = useState<boolean>(false);
@@ -32,7 +40,7 @@ const QuickEditDataClass: React.FC<{
     [types]
   );
 
-  function onAddReference(refs: Record<string, MMELReference>) {
+  function onAddReference(refs: MMELReference[]) {
     throw new Error('Not yet migrated');
   }
 
@@ -46,6 +54,7 @@ const QuickEditDataClass: React.FC<{
 
   function onChange() {
     if (!hasChange) {
+      clearRedo();
       setHasChange(true);
     }
   }
@@ -69,7 +78,11 @@ const QuickEditDataClass: React.FC<{
 
   useEffect(() => {
     setEditing(dataclass);
-    return saveOnExit;
+    setUndoListener(() => setHasChange(false));
+    return () => {
+      setUndoListener(undefined);
+      saveOnExit();
+    };
   }, [dataclass]);
 
   return (

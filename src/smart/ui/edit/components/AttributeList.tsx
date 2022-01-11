@@ -63,7 +63,7 @@ const AttributeListQuickEdit: React.FC<{
   setAttributes: (x: Record<string, MMELDataAttribute>) => void;
   model: EditorModel;
   selected?: RefTextSelection;
-  onAddReference: (refs: Record<string, MMELReference>) => void;
+  onAddReference: (refs: MMELReference[]) => void;
   types: AttributeType[];
   typesObj: Record<string, AttributeType>;
 }> = function ({
@@ -92,20 +92,12 @@ const AttributeListQuickEdit: React.FC<{
         datatype: DataType.REFERENCE,
       };
       const existing = findExistingRef(model, ref, false);
-      const refid =
-        existing !== null
-          ? existing.id
-          : trydefaultID(
-              `${selected.namespace}-ref${selected.clause.replaceAll(
-                '.',
-                '-'
-              )}`,
-              model.refs
-            );
-      if (existing === null) {
-        onAddReference({ ...model.refs, [refid]: { ...ref, id: refid } });
-      }
-
+      ref.id = existing
+        ? existing.id
+        : trydefaultID(
+            `${selected.namespace}-ref${selected.clause.replaceAll('.', '-')}`,
+            model.refs
+          );
       const id = findUniqueID('attribute', attributes);
       const newAtt: MMELDataAttribute = {
         id,
@@ -113,10 +105,13 @@ const AttributeListQuickEdit: React.FC<{
         type: '',
         cardinality: '',
         definition: selected.text,
-        ref: new Set<string>([refid]),
+        ref: new Set<string>([ref.id]),
         datatype: DataType.DATAATTRIBUTE,
       };
       setAttributes({ ...attributes, [id]: newAtt });
+      if (existing === null) {
+        onAddReference([ref]);
+      }
     }
   }
 
