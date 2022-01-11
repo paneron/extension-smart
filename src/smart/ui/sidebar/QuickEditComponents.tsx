@@ -36,6 +36,8 @@ const NODE_EDIT_VIEWS: Record<
     page: EditorSubprocess;
     provision?: RefTextSelection;
     setSelectedNode: (id: string) => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
+    clearRedo: () => void;
   }>
 > = {
   [DataType.ENDEVENT]: props => (
@@ -72,6 +74,8 @@ const QuickEdit: React.FC<{
   page: EditorSubprocess;
   provision?: RefTextSelection;
   setSelectedNode: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = function (props) {
   const { node } = props;
   const Edit = NODE_EDIT_VIEWS[node.datatype as QuickEditableNodeTypes];

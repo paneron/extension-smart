@@ -29,11 +29,12 @@ const EditWrapper: React.FC<{
     page: model.root,
     type: 'model',
   };
-  const [state, act, undoState, redoState] = useEditorState(initObj);
+  const [state, act, undoState, redoState, clearRedo] = useEditorState(initObj);
 
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [copied, setCopied] = useState<string | undefined>(undefined);
   const [toaster] = useState<IToaster>(Toaster.create());
+  const [, setUndoListener] = useState<(() => void) | undefined>(undefined);
 
   const hotkeys: HotkeyConfig[] = [
     {
@@ -66,6 +67,12 @@ const EditWrapper: React.FC<{
 
   function undo() {
     if (undoState) {
+      setUndoListener(u => {
+        if (u) {
+          u();
+        }
+        return u;
+      });
       undoState();
     }
   }
@@ -129,11 +136,13 @@ const EditWrapper: React.FC<{
         {...props}
         state={state}
         act={act}
-        redo={undoState}
-        undo={redoState}
+        redo={redoState ? redo : undefined}
+        undo={undoState ? undo : undefined}
         copy={selected !== undefined ? copy : undefined}
         paste={copied !== undefined ? paste : undefined}
         setSelectedId={setSelectedId}
+        setUndoListener={x => setUndoListener(() => x)}
+        clearRedo={clearRedo}
       />
     </HotkeysTarget2>
   );

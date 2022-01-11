@@ -46,6 +46,8 @@ export const SelectedNodeDescription: React.FC<{
   act?: (x: EditorAction) => void;
   provision?: RefTextSelection;
   onSelect?: (id: string | undefined) => void;
+  setUndoListener?: (x: (() => void) | undefined) => void;
+  clearRedo?: () => void;
 }> = function ({
   model,
   page,
@@ -54,6 +56,8 @@ export const SelectedNodeDescription: React.FC<{
   act,
   provision,
   onSelect,
+  setUndoListener,
+  clearRedo,
 }) {
   const flowSelect = useStoreState(store => store.selectedElements);
   const [selectedPage, setSelectedPage] = useState<string | undefined>(
@@ -129,7 +133,7 @@ export const SelectedNodeDescription: React.FC<{
 
   return (
     <MGDSidebar>
-      {diagProps && dialogPack && act && (
+      {diagProps && dialogPack && act && setUndoListener && clearRedo && (
         <Dialog
           isOpen={dialogPack !== undefined}
           title={diagProps.title}
@@ -146,11 +150,13 @@ export const SelectedNodeDescription: React.FC<{
             done={() => setDialogPack(undefined)}
             msg={dialogPack.msg}
             setSelectedNode={setSelectedNodeId}
+            setUndoListener={setUndoListener}
+            clearRedo={clearRedo}
           />
         </Dialog>
       )}
       {elm ? (
-        act && !isEditorStartEvent(elm) ? (
+        act && !isEditorStartEvent(elm) && setUndoListener && clearRedo ? (
           <QuickEdit
             key={jsx.length}
             node={elm}
@@ -160,6 +166,8 @@ export const SelectedNodeDescription: React.FC<{
             act={act}
             provision={provision}
             setSelectedNode={setSelectedNodeId}
+            setUndoListener={setUndoListener}
+            clearRedo={clearRedo}
           />
         ) : (
           <Describe

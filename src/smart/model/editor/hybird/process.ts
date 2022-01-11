@@ -271,6 +271,13 @@ export function compileProcessEdit(
         from: [...elm.links],
         to: action.links,
       },
+      {
+        type: 'model',
+        act: 'refs',
+        task: 'add',
+        value: action.newRefs,
+        cascade: [],
+      },
     ];
     action.actions = actions;
     if (reverse && reverse.act === 'hybird') {
@@ -303,6 +310,13 @@ export function compileProcessEdit(
           task: 'replace',
           from: action.links.map(x => x.id),
           to: [...elm.links].map(x => model.links[x]),
+        },
+        {
+          type: 'model',
+          act: 'refs',
+          task: 'delete',
+          value: action.newRefs.map(x => x.id),
+          cascade: [],
         },
       ];
     }
@@ -466,6 +480,8 @@ function reverseProcessEditAction(
       provisions: [...elm.provision].map(x => model.provisions[x]),
       notes: [...elm.notes].map(x => model.notes[x]),
       links: [...elm.links].map(x => model.links[x]),
+      newRefs: action.delRefs.map(x => model.refs[x]),
+      delRefs: action.newRefs.map(x => x.id),
     };
   }
   throw new Error(`Process with ${action.id} not found`);

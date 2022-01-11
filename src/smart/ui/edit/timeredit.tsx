@@ -2,7 +2,7 @@ import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel, EditorTimerEvent } from '../../model/editormodel';
-import { checkId, removeSpace } from '../../utils/ModelFunctions';
+import { checkId, Logger, removeSpace } from '../../utils/ModelFunctions';
 import { TimerType } from '../../utils/constants';
 import { NormalComboBox, NormalTextField } from '../common/fields';
 import { EditPageButtons } from './commons';
@@ -18,6 +18,7 @@ interface CommonTimerEditProps {
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
   model: EditorModel;
+  setUndoListener: (x: (() => void) | undefined) => void;
 }
 
 const EditTimerPage: React.FC<{
@@ -29,6 +30,8 @@ const EditTimerPage: React.FC<{
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
   setSelectedNode?: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = function ({
   model,
   act,
@@ -38,6 +41,8 @@ const EditTimerPage: React.FC<{
   onDeleteClick,
   onFullEditClick,
   setSelectedNode,
+  setUndoListener,
+  clearRedo,
 }) {
   const [editing, setEditing] = useState<EditorTimerEvent>({ ...timer });
   const [hasChange, setHasChange] = useState<boolean>(false);
@@ -60,6 +65,7 @@ const EditTimerPage: React.FC<{
 
   function onChange() {
     if (!hasChange) {
+      clearRedo();
       setHasChange(true);
     }
   }
@@ -67,6 +73,7 @@ const EditTimerPage: React.FC<{
   function saveOnExit() {
     setHasChange(hc => {
       if (hc) {
+        Logger.log('Save on exit');
         setEditing(edit => {
           act(editElmCommand(timer.id, edit));
           return edit;
@@ -101,6 +108,7 @@ const EditTimerPage: React.FC<{
     onDeleteClick,
     onFullEditClick: fullEditClick,
     model,
+    setUndoListener,
   };
 
   const fullEditProps = { closeDialog };
@@ -111,6 +119,7 @@ const EditTimerPage: React.FC<{
     setEditing: setEdit,
     initID: timer.id,
     onNewID,
+    setHasChange,
   };
 
   useEffect(() => setEditing(timer), [timer]);
@@ -127,11 +136,20 @@ const QuickVersionEdit: React.FC<
     timer: EditorTimerEvent;
     saveOnExit: () => void;
     onNewID: (id: string) => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
+    setHasChange: (x: boolean) => void;
   }
 > = function (props) {
-  const { editing, setEditing, model, timer, saveOnExit, onNewID } = props;
-
-  useEffect(() => saveOnExit, [timer]);
+  const {
+    editing,
+    setEditing,
+    model,
+    timer,
+    saveOnExit,
+    onNewID,
+    setUndoListener,
+    setHasChange,
+  } = props;
 
   function idTest(id: string) {
     return id === timer.id || checkId(id, model.elements);
@@ -144,6 +162,14 @@ const QuickVersionEdit: React.FC<
       save={onNewID}
     />
   );
+
+  useEffect(() => {
+    setUndoListener(() => setHasChange(false));
+    return () => {
+      setUndoListener(undefined);
+      saveOnExit();
+    };
+  }, [timer]);
 
   return (
     <FormGroup>
@@ -167,9 +193,18 @@ const QuickVersionEdit: React.FC<
 const FullVersionEdit: React.FC<
   CommonTimerEditProps & {
     closeDialog?: () => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
   }
 > = function (props) {
-  const { editing, setEditing } = props;
+  const { editing, setEditing, setUndoListener, closeDialog } = props;
+
+  useEffect(() => {
+    setUndoListener(() => closeDialog && closeDialog());
+    return () => {
+      setUndoListener(undefined);
+    };
+  }, []);
+
   return (
     <MGDDisplayPane>
       <FormGroup>

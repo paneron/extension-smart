@@ -120,6 +120,10 @@ export function useEditorState(
     }
   }
 
+  function clearRedo() {
+    actRedoHis({ act: 'new' });
+  }
+
   function hisAction(action: EditorAction): EditorAction | undefined {
     switch (action.type) {
       case 'model': {
@@ -167,6 +171,7 @@ export function useEditorState(
     act,
     undoHis.length > 0 ? undo : undefined,
     redoHis.length > 0 ? redo : undefined,
+    clearRedo,
   ];
 }
 

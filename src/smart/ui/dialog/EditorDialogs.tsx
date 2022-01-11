@@ -50,6 +50,8 @@ export type EditorDialogInterface = {
   done: () => void;
   msg: string;
   setSelectedNode: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 };
 
 export type EditorDiagProps = {
@@ -112,26 +114,22 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITTIMER]: {
     title: 'Edit Timer',
     fullscreen: true,
-    Panel: ({ model, act, done, msg, setSelectedNode }) => (
+    Panel: props => (
       <EditTimerPage
-        model={model}
-        act={act}
-        timer={model.elements[msg] as EditorTimerEvent}
-        closeDialog={done}
-        setSelectedNode={setSelectedNode}
+        {...props}
+        timer={props.model.elements[props.msg] as EditorTimerEvent}
+        closeDialog={props.done}
       />
     ),
   },
   [EditorDiagTypes.EDITSIGNAL]: {
     title: 'Edit Signal Catch Event',
     fullscreen: true,
-    Panel: ({ model, act, done, msg, setSelectedNode }) => (
+    Panel: props => (
       <EditSignalEventPage
-        model={model}
-        act={act}
-        event={model.elements[msg] as EditorSignalEvent}
-        closeDialog={done}
-        setSelectedNode={setSelectedNode}
+        {...props}
+        event={props.model.elements[props.msg] as EditorSignalEvent}
+        closeDialog={props.done}
       />
     ),
   },

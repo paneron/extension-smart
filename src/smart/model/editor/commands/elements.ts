@@ -3,6 +3,7 @@ import {
   MMELLink,
   MMELNote,
   MMELProvision,
+  MMELReference,
 } from '../../../serialize/interface/supportinterface';
 import {
   EditorEGate,
@@ -79,7 +80,8 @@ export function editProcessCommand(
   process: EditorProcess,
   provisions: MMELProvision[],
   notes: MMELNote[],
-  links: MMELLink[]
+  links: MMELLink[],
+  refs: MMELReference[]
 ) {
   const newProcess: EditorProcess = {
     ...process,
@@ -96,6 +98,8 @@ export function editProcessCommand(
     provisions,
     notes,
     links,
+    newRefs: refs,
+    delRefs: [],
   };
   return action;
 }

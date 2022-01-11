@@ -144,6 +144,8 @@ const ModelEditor: React.FC<{
   repo?: MMELRepo;
   index: RepoIndex;
   act: (x: EditorAction) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = ({
   isVisible,
   className,
@@ -157,6 +159,8 @@ const ModelEditor: React.FC<{
   repo,
   index,
   act,
+  setUndoListener,
+  clearRedo,
 }) => {
   const { useObjectData, updateObjects, useRemoteUsername } =
     useContext(DatasetContext);
@@ -577,6 +581,8 @@ const ModelEditor: React.FC<{
               act={act}
               provision={selectionImport}
               onSelect={setSelectedId}
+              setUndoListener={setUndoListener}
+              clearRedo={clearRedo}
             />
           ),
         },

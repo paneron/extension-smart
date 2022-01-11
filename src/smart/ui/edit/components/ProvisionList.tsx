@@ -24,7 +24,7 @@ const ProvisionListQuickEdit: React.FC<{
   setProvisions: (x: Record<string, MMELProvision>) => void;
   model: EditorModel;
   selected?: RefTextSelection;
-  onAddReference: (refs: Record<string, MMELReference>) => void;
+  onAddReference: (refs: MMELReference[]) => void;
 }> = function ({ provisions, setProvisions, model, selected, onAddReference }) {
   const refs = useMemo(() => getModelAllRefs(model), [model]);
 
@@ -34,7 +34,7 @@ const ProvisionListQuickEdit: React.FC<{
   }
 
   function onImport() {
-    if (selected !== undefined) {
+    if (selected) {
       const ref: MMELReference = {
         id: '',
         title: selected.clauseTitle,
@@ -43,29 +43,24 @@ const ProvisionListQuickEdit: React.FC<{
         datatype: DataType.REFERENCE,
       };
       const existing = findExistingRef(model, ref, false);
-      const refid =
-        existing !== null
-          ? existing.id
-          : trydefaultID(
-              `${selected.namespace}-ref${selected.clause.replaceAll(
-                '.',
-                '-'
-              )}`,
-              model.refs
-            );
-      if (existing === null) {
-        onAddReference({ ...model.refs, [refid]: { ...ref, id: refid } });
-      }
-
+      ref.id = existing
+        ? existing.id
+        : trydefaultID(
+            `${selected.namespace}-ref${selected.clause.replaceAll('.', '-')}`,
+            model.refs
+          );
       const id = findUniqueID('Provision', provisions);
       const newPro: MMELProvision = {
         id,
         modality: detectModality(selected.text),
         condition: selected.text,
-        ref: new Set<string>([refid]),
+        ref: new Set<string>([ref.id]),
         datatype: DataType.PROVISION,
       };
       setProvisions({ ...provisions, [id]: newPro });
+      if (existing === null) {
+        onAddReference([ref]);
+      }
     }
   }
 

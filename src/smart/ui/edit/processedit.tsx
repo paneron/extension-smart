@@ -178,7 +178,8 @@ const EditProcessPage: React.FC<{
       editing,
       Object.values(provisions),
       Object.values(notes),
-      Object.values(links)
+      Object.values(links),
+      []
     );
     act(action);
     if (closeDialog) {
@@ -190,8 +191,8 @@ const EditProcessPage: React.FC<{
     }
   }
 
-  function onAddReference(refs: Record<string, MMELReference>) {
-    throw new Error('Not migrated yet');
+  function onAddReference(refs: MMELReference[]) {
+    saveOnExit(refs);
   }
 
   function setEdit(x: EditorProcess) {
@@ -219,7 +220,7 @@ const EditProcessPage: React.FC<{
     }
   }
 
-  function saveOnExit() {
+  function saveOnExit(refs?: MMELReference[]) {
     setHasChange(hc => {
       if (hc) {
         setEditing(edit => {
@@ -231,7 +232,8 @@ const EditProcessPage: React.FC<{
                   edit,
                   Object.values(pros),
                   Object.values(nos),
-                  Object.values(ls)
+                  Object.values(ls),
+                  refs ?? []
                 );
                 act(action);
                 return nos;
@@ -253,7 +255,8 @@ const EditProcessPage: React.FC<{
       { ...editing, id },
       Object.values(provisions),
       Object.values(notes),
-      Object.values(links)
+      Object.values(links),
+      []
     );
     act(action);
     setHasChange(false);
@@ -332,7 +335,7 @@ const QuickVersionEdit: React.FC<
     process: EditorProcess;
     saveOnExit: () => void;
     provision?: RefTextSelection;
-    onAddReference: (refs: Record<string, MMELReference>) => void;
+    onAddReference: (refs: MMELReference[]) => void;
     onNewID: (id: string) => void;
     onSubprocessClick?: () => void;
     onSubprocessRemoveClick?: () => void;

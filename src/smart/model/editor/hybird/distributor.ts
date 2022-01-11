@@ -3,6 +3,7 @@ import {
   MMELLink,
   MMELNote,
   MMELProvision,
+  MMELReference,
 } from '../../../serialize/interface/supportinterface';
 import { EditorEGate, EditorModel, EditorProcess } from '../../editormodel';
 import { ModelAction } from '../model';
@@ -42,6 +43,8 @@ type ProcessEditAction = {
   provisions: MMELProvision[];
   notes: MMELNote[];
   links: MMELLink[];
+  newRefs: MMELReference[];
+  delRefs: string[];
 };
 
 type ProcessDeleteAction = {
