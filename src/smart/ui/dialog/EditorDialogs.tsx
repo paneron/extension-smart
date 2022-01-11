@@ -85,27 +85,23 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITAPPROVAL]: {
     title: 'Edit Approval',
     fullscreen: true,
-    Panel: ({ model, act, done, msg, setSelectedNode }) => (
+    Panel: (props) => (
       <EditApprovalPage
-        model={model}
-        act={act}
-        approval={model.elements[msg] as EditorApproval}
-        closeDialog={done}
-        setSelectedNode={setSelectedNode}
+        {...props}        
+        closeDialog={props.done}        
+        approval={props.model.elements[props.msg] as EditorApproval}        
       />
     ),
   },
   [EditorDiagTypes.EDITEGATE]: {
     title: 'Edit Gateway',
     fullscreen: true,
-    Panel: ({ model, page, act, done, msg, setSelectedNode }) => (
+    Panel: (props) => (
       <EditEGatePage
-        model={model}
-        page={model.pages[page]}
-        act={act}
-        egate={model.elements[msg] as EditorEGate}
-        closeDialog={done}
-        setSelectedNode={setSelectedNode}
+        {...props}        
+        closeDialog={props.done}        
+        page={props.model.pages[props.page]}        
+        egate={props.model.elements[props.msg] as EditorEGate}        
       />
     ),
   },

@@ -40,6 +40,7 @@ interface CommonApprovalEditProps {
   model: EditorModel;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
+  setUndoListener: (x: (() => void) | undefined) => void;  
 }
 
 const EditApprovalPage: React.FC<{
@@ -51,6 +52,8 @@ const EditApprovalPage: React.FC<{
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
   setSelectedNode?: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = function ({
   model,
   act,
@@ -60,6 +63,8 @@ const EditApprovalPage: React.FC<{
   onFullEditClick,
   onDeleteClick,
   setSelectedNode,
+  setUndoListener,
+  clearRedo
 }) {
   const [editing, setEditing] = useState<EditorApproval>({ ...approval });
   const [hasChange, setHasChange] = useState<boolean>(false);
@@ -133,6 +138,7 @@ const EditApprovalPage: React.FC<{
     model,
     onFullEditClick: fullEditClick,
     onDeleteClick,
+    setUndoListener
   };
 
   const fullEditProps = {
@@ -153,6 +159,7 @@ const EditApprovalPage: React.FC<{
     validTest: (id: string) =>
       id === approval.id || checkId(id, model.elements),
     onNewID,
+    setHasChange
   };
 
   useEffect(() => setEditing(approval), [approval]);
@@ -172,6 +179,8 @@ const QuickVersionEdit: React.FC<
     saveOnExit: () => void;
     approval: EditorApproval;
     onNewID: (id: string) => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
+    setHasChange: (x: boolean) => void;
   }
 > = function (props) {
   const {
@@ -184,9 +193,9 @@ const QuickVersionEdit: React.FC<
     saveOnExit,
     approval,
     onNewID,
-  } = props;
-
-  useEffect(() => saveOnExit, [approval]);
+    setUndoListener,
+    setHasChange
+  } = props;  
 
   function idTest(id: string) {
     return id === approval.id || checkId(id, model.elements);
@@ -199,6 +208,14 @@ const QuickVersionEdit: React.FC<
       save={onNewID}
     />
   );
+
+  useEffect(() => {
+    setUndoListener(() => setHasChange(false));
+    return () => {
+      setUndoListener(undefined);
+      saveOnExit();
+    };
+  }, [approval]);
 
   return (
     <FormGroup>
@@ -273,9 +290,18 @@ const FullVersionEdit: React.FC<
     roles: string[];
     regs: string[];
     refs: string[];
+    setUndoListener: (x: (() => void) | undefined) => void;
   }
 > = function (props) {
-  const { editing, setEditing, roles, regs, refs } = props;
+  const { editing, setEditing, roles, regs, refs, closeDialog, setUndoListener } = props;
+
+  useEffect(() => {
+    setUndoListener(() => closeDialog && closeDialog());
+    return () => {
+      setUndoListener(undefined);
+    };
+  }, []);  
+
   return (
     <MGDDisplayPane>
       <FormGroup>

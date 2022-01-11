@@ -20,6 +20,7 @@ interface CommonSignalEditProps {
   setEditing: (x: EditorSignalEvent) => void;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
+  setUndoListener: (x: (() => void) | undefined) => void;  
 }
 
 const EditSignalEventPage: React.FC<{
@@ -31,6 +32,8 @@ const EditSignalEventPage: React.FC<{
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
   setSelectedNode?: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = function ({
   model,
   act,
@@ -40,6 +43,8 @@ const EditSignalEventPage: React.FC<{
   onFullEditClick,
   onDeleteClick,
   setSelectedNode,
+  setUndoListener,
+  clearRedo
 }) {
   const signals = getModelAllSignals(model);
 
@@ -104,6 +109,7 @@ const EditSignalEventPage: React.FC<{
     setEditing,
     onDeleteClick,
     onFullEditClick: fullEditClick,
+    setUndoListener
   };
 
   const fullEditProps = { closeDialog, signals };
@@ -116,6 +122,7 @@ const EditSignalEventPage: React.FC<{
     validTest: (id: string) => id === event.id || checkId(id, model.elements),
     onNewID,
     model,
+    setHasChange
   };
 
   useEffect(() => setEditing(event), [event]);
@@ -133,11 +140,11 @@ const QuickVersionEdit: React.FC<
     scEvent: EditorSignalEvent;
     model: EditorModel;
     onNewID: (id: string) => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
+    setHasChange: (x: boolean) => void;
   }
 > = function (props) {
-  const { model, editing, setEditing, scEvent, saveOnExit, onNewID } = props;
-
-  useEffect(() => saveOnExit, [scEvent]);
+  const { model, editing, setEditing, scEvent, saveOnExit, onNewID, setUndoListener, setHasChange } = props;
 
   function idTest(id: string) {
     return id === scEvent.id || checkId(id, model.elements);
@@ -150,6 +157,14 @@ const QuickVersionEdit: React.FC<
       save={onNewID}
     />
   );
+
+  useEffect(() => {
+    setUndoListener(() => setHasChange(false));
+    return () => {
+      setUndoListener(undefined);
+      saveOnExit();
+    };
+  }, [scEvent]);
 
   return (
     <FormGroup>
@@ -172,9 +187,18 @@ const FullVersionEdit: React.FC<
   CommonSignalEditProps & {
     closeDialog?: () => void;
     signals: string[];
+    setUndoListener: (x: (() => void) | undefined) => void;  
   }
 > = function (props) {
-  const { editing, setEditing, signals } = props;
+  const { editing, setEditing, signals, closeDialog, setUndoListener } = props;
+
+  useEffect(() => {
+    setUndoListener(() => closeDialog && closeDialog());
+    return () => {
+      setUndoListener(undefined);
+    };
+  }, []);
+
   return (
     <MGDDisplayPane>
       <FormGroup>

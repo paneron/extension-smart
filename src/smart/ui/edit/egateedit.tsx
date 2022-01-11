@@ -28,6 +28,7 @@ interface CommonEGateEditProps {
   setEdges: (es: MMELEdge[]) => void;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
+  setUndoListener: (x: (() => void) | undefined) => void;  
 }
 
 const EditEGatePage: React.FC<{
@@ -40,6 +41,8 @@ const EditEGatePage: React.FC<{
   onDeleteClick?: () => void;
   setSelectedNode?: (id: string) => void;
   page: EditorSubprocess;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = function ({
   model,
   act,
@@ -50,6 +53,8 @@ const EditEGatePage: React.FC<{
   onDeleteClick,
   onFullEditClick,
   setSelectedNode,
+  setUndoListener,
+  clearRedo
 }) {
   const measures = getModelAllMeasures(model);
   const id = egate.id;
@@ -128,6 +133,7 @@ const EditEGatePage: React.FC<{
     setEdges,
     onDeleteClick,
     onFullEditClick: fullEditClick,
+    setUndoListener
   };
 
   const fullEditProps = {
@@ -144,6 +150,7 @@ const EditEGatePage: React.FC<{
     validTest: (id: string) => id === egate.id || checkId(id, model.elements),
     onNewID,
     model,
+    setHasChange
   };
 
   useEffect(() => {
@@ -168,6 +175,8 @@ const QuickVersionEdit: React.FC<
     saveOnExit: () => void;
     onNewID: (id: string) => void;
     model: EditorModel;
+    setUndoListener: (x: (() => void) | undefined) => void;
+    setHasChange: (x: boolean) => void;
   }
 > = function (props) {
   const {
@@ -179,9 +188,9 @@ const QuickVersionEdit: React.FC<
     egate,
     saveOnExit,
     onNewID,
-  } = props;
-
-  useEffect(() => saveOnExit, [egate]);
+    setUndoListener,
+    setHasChange
+  } = props;  
 
   function idTest(id: string) {
     return id === egate.id || checkId(id, model.elements);
@@ -194,6 +203,14 @@ const QuickVersionEdit: React.FC<
       save={onNewID}
     />
   );
+
+  useEffect(() => {
+    setUndoListener(() => setHasChange(false));
+    return () => {
+      setUndoListener(undefined);
+      saveOnExit();
+    };
+  }, [model, egate]);
 
   return (
     <FormGroup>
@@ -226,9 +243,18 @@ const FullVersionEdit: React.FC<
   CommonEGateEditProps & {
     closeDialog?: () => void;
     measures: string[];
+    setUndoListener: (x: (() => void) | undefined) => void;
   }
 > = function (props) {
-  const { editing, setEditing, edges, setEdges, measures } = props;
+  const { editing, setEditing, edges, setEdges, measures, closeDialog, setUndoListener } = props;
+
+  useEffect(() => {
+    setUndoListener(() => closeDialog && closeDialog());
+    return () => {
+      setUndoListener(undefined);
+    };
+  }, []);
+
   return (
     <MGDDisplayPane>
       <FormGroup>
@@ -264,7 +290,7 @@ const EditEdgePage: React.FC<{
   edge: MMELEdge;
   index: number;
   types: string[];
-  setEdge: (x: number, edge: MMELEdge) => void;
+  setEdge: (x: number, edge: MMELEdge) => void;  
 }> = function ({ edge, index, types, setEdge }) {
   return (
     <fieldset>

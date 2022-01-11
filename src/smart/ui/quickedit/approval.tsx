@@ -12,6 +12,8 @@ const QuickEditApproval: React.FC<{
   act: (x: ModelAction) => void;
   setDialog: DialogSetterInterface;
   setSelectedNode: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = props => {
   const { approval, setDialog } = props;
 

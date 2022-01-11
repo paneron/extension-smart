@@ -12,6 +12,8 @@ const QuickEditSignalEvent: React.FC<{
   act: (x: ModelAction) => void;
   setDialog: DialogSetterInterface;
   setSelectedNode: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = props => {
   const { event, setDialog } = props;
 

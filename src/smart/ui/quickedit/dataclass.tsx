@@ -18,6 +18,8 @@ const QuickEditDataClass: React.FC<{
   act: (x: ModelAction) => void;
   provision?: RefTextSelection;
   setSelectedNode?: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = props => {
   const { dataclass, model, act, provision, setSelectedNode } = props;
 
