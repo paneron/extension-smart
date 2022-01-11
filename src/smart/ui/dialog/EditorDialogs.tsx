@@ -74,13 +74,11 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITPROCESS]: {
     title: 'Edit Process',
     fullscreen: true,
-    Panel: ({ model, act, done, msg, setSelectedNode }) => (
+    Panel: (props) => (
       <EditProcessPage
-        model={model}
-        act={act}
-        process={model.elements[msg] as EditorProcess}
-        closeDialog={done}
-        setSelectedNode={setSelectedNode}
+        {...props}        
+        closeDialog={props.done}        
+        process={props.model.elements[props.msg] as EditorProcess}        
       />
     ),
   },

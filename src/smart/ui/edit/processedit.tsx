@@ -113,6 +113,7 @@ interface CommonProcessEditProps {
   notes: Record<string, MMELNote>;
   setNotes: (x: Record<string, MMELNote>) => void;
   setMeasurements: (x: string[]) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;  
 }
 
 const EditProcessPage: React.FC<{
@@ -128,6 +129,8 @@ const EditProcessPage: React.FC<{
   onSubprocessRemoveClick?: () => void;
   provision?: RefTextSelection;
   setSelectedNode?: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = function ({
   model,
   act,
@@ -141,6 +144,8 @@ const EditProcessPage: React.FC<{
   onBringoutClick,
   provision,
   setSelectedNode,
+  setUndoListener,
+  clearRedo
 }) {
   const [editing, setEditing] = useState<EditorProcess>({ ...process });
   const [provisions, setProvisions] = useState<Record<string, MMELProvision>>(
@@ -216,6 +221,7 @@ const EditProcessPage: React.FC<{
 
   function onChange() {
     if (!hasChange) {
+      clearRedo();
       setHasChange(true);
     }
   }
@@ -287,6 +293,7 @@ const EditProcessPage: React.FC<{
     onFullEditClick: fullEditClick,
     onDeleteClick,
     setMeasurements,
+    setUndoListener
   };
 
   const fullEditProps = {
@@ -312,6 +319,7 @@ const EditProcessPage: React.FC<{
     onBringoutClick,
     validTest: (id: string) => id === process.id || checkId(id, model.elements),
     onNewID,
+    setHasChange
   };
 
   useEffect(() => {
@@ -340,6 +348,8 @@ const QuickVersionEdit: React.FC<
     onSubprocessClick?: () => void;
     onSubprocessRemoveClick?: () => void;
     onBringoutClick?: () => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
+    setHasChange: (x: boolean) => void;
   }
 > = function (props) {
   const {
@@ -358,9 +368,9 @@ const QuickVersionEdit: React.FC<
     setNotes,
     onNewID,
     setMeasurements,
-  } = props;
-
-  useEffect(() => saveOnExit, [model, process]);
+    setUndoListener,
+    setHasChange
+  } = props;  
 
   function idTest(id: string) {
     return id === process.id || checkId(id, model.elements);
@@ -373,6 +383,14 @@ const QuickVersionEdit: React.FC<
       save={onNewID}
     />
   );
+
+  useEffect(() => {
+    setUndoListener(() => setHasChange(false));
+    return () => {
+      setUndoListener(undefined);
+      saveOnExit();
+    };
+  }, [model, process]);
 
   return (
     <FormGroup>
@@ -450,6 +468,7 @@ const FullVersionEdit: React.FC<
     figures: string[];
     links: Record<string, MMELLink>;
     setLinks: (x: Record<string, MMELLink>) => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
   }
 > = function (props) {
   const {
@@ -467,7 +486,17 @@ const FullVersionEdit: React.FC<
     links,
     setLinks,
     setMeasurements,
+    closeDialog,
+    setUndoListener
   } = props;
+
+  useEffect(() => {
+    setUndoListener(() => closeDialog && closeDialog());
+    return () => {
+      setUndoListener(undefined);
+    };
+  }, []);
+
   const measures: Record<string, IMeasure> = editing.measure.reduce(
     (obj, x, index) => ({
       ...obj,

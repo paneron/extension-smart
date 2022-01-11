@@ -2,7 +2,7 @@ import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel, EditorTimerEvent } from '../../model/editormodel';
-import { checkId, Logger, removeSpace } from '../../utils/ModelFunctions';
+import { checkId, removeSpace } from '../../utils/ModelFunctions';
 import { TimerType } from '../../utils/constants';
 import { NormalComboBox, NormalTextField } from '../common/fields';
 import { EditPageButtons } from './commons';
@@ -72,8 +72,7 @@ const EditTimerPage: React.FC<{
 
   function saveOnExit() {
     setHasChange(hc => {
-      if (hc) {
-        Logger.log('Save on exit');
+      if (hc) {        
         setEditing(edit => {
           act(editElmCommand(timer.id, edit));
           return edit;

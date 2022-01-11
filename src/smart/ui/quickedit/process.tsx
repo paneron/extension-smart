@@ -24,6 +24,8 @@ const QuickEditProcess: React.FC<{
   provision?: RefTextSelection;
   setSelectedNode: (id: string) => void;
   page: EditorSubprocess;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = props => {
   const { process, act, page, setDialog } = props;
 
