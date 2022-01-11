@@ -132,6 +132,9 @@ export function fillRDCS(
   } else {
     data.rdcs = new Set<string>();
   }
+  if (data.mother === undefined) {
+    data.mother = '';
+  }
   for (const a in data.attributes) {
     const att = data.attributes[a];
     const dc = elements[att.type];

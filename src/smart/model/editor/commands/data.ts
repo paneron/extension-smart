@@ -87,3 +87,20 @@ export function editDCCommand(id: string, value: EditorDataClass) {
   };
   return action;
 }
+
+export function editImportDCCommand(
+  id: string,
+  value: EditorDataClass,
+  refs: MMELReference[]
+) {
+  const action: ModelAction = {
+    type: 'model',
+    act: 'hybird',
+    task: 'dc-import-ref',
+    id,
+    value,
+    newRefs: refs,
+    delRefs: [],
+  };
+  return action;
+}

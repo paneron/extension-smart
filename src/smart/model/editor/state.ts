@@ -234,7 +234,9 @@ function needCheck(action: ModelAction): boolean {
       return (
         action.task === 'process-delete' ||
         action.task === 'process-bringin' ||
-        action.task === 'process-edit'
+        action.task === 'process-edit' ||
+        action.task === 'registry-import-ref' ||
+        action.task === 'dc-import-ref'
       );
     default:
       throw new Error('Checking for post actions not handled');

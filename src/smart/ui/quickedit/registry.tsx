@@ -1,5 +1,5 @@
 import { FormGroup } from '@blueprintjs/core';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   editImportRegistryCommand,
   editRegistryCommand,
@@ -17,9 +17,7 @@ import { MMELReference } from '../../serialize/interface/supportinterface';
 import { DescriptionItem } from '../common/description/fields';
 import { NormalTextField } from '../common/fields';
 import { EditPageButtons } from '../edit/commons';
-import AttributeListQuickEdit, {
-  findAllAttributeTypes,
-} from '../edit/components/AttributeList';
+import AttributeListQuickEdit, { findAllAttributeTypes } from '../edit/components/AttributeList';
 
 const QuickEditRegistry: React.FC<{
   registry: EditorRegistry;
@@ -56,9 +54,15 @@ const QuickEditRegistry: React.FC<{
     () => types.reduce((obj, x) => ({ ...obj, [x.id]: x }), {}),
     [types]
   );
+  const exitRef = useRef<{exit: ()=>void}>({exit: saveOnExit});
+  exitRef.current.exit = saveOnExit;
 
   function onAddReference(refs: MMELReference[]) {
-    saveOnExit(refs);
+    setHasChange(false);
+    setEditing(edit => {      
+      act(editImportRegistryCommand(registry.id, edit, refs));      
+      return edit;
+    });
   }
 
   function onUpdateClick() {
@@ -86,26 +90,21 @@ const QuickEditRegistry: React.FC<{
     onChange();
   }
 
-  function saveOnExit(refs?: MMELReference[]) {
-    setHasChange(hc => {
-      if (hc) {
-        setEditing(edit => {
-          act(editImportRegistryCommand(registry.id, edit, refs ?? []));
-          return edit;
-        });
-      }
-      return false;
-    });
-  }
+  function saveOnExit() {    
+    if (hasChange) {      
+      act(editRegistryCommand(registry.id, editing));
+      setHasChange(false);
+    }    
+  }  
 
-  useEffect(() => {
-    setEditing(regCombined);
+  useEffect(() => {    
+    setEditing(regCombined)
     setUndoListener(() => setHasChange(false));
-    return () => {
+    return () => {      
       setUndoListener(undefined);
-      saveOnExit();
+      exitRef.current.exit();
     };
-  }, [registry]);
+  }, [registry]);  
 
   return (
     <FormGroup>

@@ -5,10 +5,15 @@ import {
   MMELProvision,
   MMELReference,
 } from '../../../serialize/interface/supportinterface';
-import { EditorEGate, EditorModel, EditorProcess } from '../../editormodel';
+import {
+  EditorDataClass,
+  EditorEGate,
+  EditorModel,
+  EditorProcess,
+} from '../../editormodel';
 import { RegistryCombined } from '../components/element/registry';
 import { ModelAction } from '../model';
-import { compileRegistryRefImport } from './data';
+import { compileDCRefImport, compileRegistryRefImport } from './data';
 import { compileEGateEdit } from './egateedit';
 import {
   compileProcessAddPage,
@@ -81,6 +86,14 @@ type RegistryImportReference = {
   delRefs: string[];
 };
 
+type DCImportReference = {
+  task: 'dc-import-ref';
+  id: string;
+  value: EditorDataClass;
+  newRefs: MMELReference[];
+  delRefs: string[];
+};
+
 type EXPORT_ACTION =
   | EGateEditAction
   | ProcessAddPageAction
@@ -90,7 +103,8 @@ type EXPORT_ACTION =
   | ReverseProcessDeleteAction
   | ProcessBringInAction
   | ProcessBringOutAction
-  | RegistryImportReference;
+  | RegistryImportReference
+  | DCImportReference;
 
 export type HyEditAction = EXPORT_ACTION & {
   act: 'hybird';
@@ -128,5 +142,7 @@ export function compileHybird(
       return compileProcessDeleteReverse(action);
     case 'registry-import-ref':
       return compileRegistryRefImport(action, model);
+    case 'dc-import-ref':
+      return compileDCRefImport(action, model);
   }
 }

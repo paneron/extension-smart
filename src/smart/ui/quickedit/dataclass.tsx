@@ -1,6 +1,9 @@
 import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useMemo, useState } from 'react';
-import { editDCCommand } from '../../model/editor/commands/data';
+import {
+  editDCCommand,
+  editImportDCCommand,
+} from '../../model/editor/commands/data';
 import { ModelAction } from '../../model/editor/model';
 import { EditorDataClass, EditorModel } from '../../model/editormodel';
 import { RefTextSelection } from '../../model/selectionImport';
@@ -41,7 +44,7 @@ const QuickEditDataClass: React.FC<{
   );
 
   function onAddReference(refs: MMELReference[]) {
-    throw new Error('Not yet migrated');
+    saveOnExit(refs);
   }
 
   function onUpdateClick() {
@@ -64,11 +67,11 @@ const QuickEditDataClass: React.FC<{
     onChange();
   }
 
-  function saveOnExit() {
+  function saveOnExit(refs?: MMELReference[]) {
     setHasChange(hc => {
       if (hc) {
         setEditing(edit => {
-          act(editDCCommand(dataclass.id, edit));
+          act(editImportDCCommand(dataclass.id, edit, refs ?? []));
           return edit;
         });
       }
