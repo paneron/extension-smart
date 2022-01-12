@@ -466,6 +466,7 @@ export function explorePageDataNodes(
       }
     }
   }
+  // Logger.log('Updated data list', [...set]);
   for (const x of Object.values(page.data)) {
     if (set.has(x.element)) {
       set.delete(x.element);

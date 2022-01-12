@@ -421,8 +421,8 @@ const QuickVersionEdit: React.FC<
           setEditing({ ...editing, input: new Set([...editing.input, x.id]) })
         }
         onTagRemove={x => {
-          editing.input = new Set([...editing.input].filter(s => x !== s));
-          setEditing({ ...editing });
+          const newSet = new Set([...editing.input].filter(s => x !== s));
+          setEditing({ ...editing, input: newSet });
         }}
       />
       <RegistrySelector
@@ -433,8 +433,8 @@ const QuickVersionEdit: React.FC<
           setEditing({ ...editing, output: new Set([...editing.output, x.id]) })
         }
         onTagRemove={x => {
-          editing.output = new Set([...editing.output].filter(s => x !== s));
-          setEditing({ ...editing });
+          const newSet = new Set([...editing.output].filter(s => x !== s));
+          setEditing({ ...editing, output: newSet });
         }}
       />
       <ProvisionListQuickEdit

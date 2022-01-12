@@ -26,20 +26,29 @@ function listReducer(list: EditorAction[], action: UndoListAction) {
   } else {
     // Logger.log('Edit undo history', list, list.length);
     const last = list[list.length - 1];
-    if (last && last.type === 'model' && value && value.type === 'model') {
+    if (
+      last &&
+      last.type === 'model' &&
+      value &&
+      value.type === 'model' &&
+      value.act === 'validate-page'
+    ) {
       // Logger.log('Reverse actions', value);
       // Logger.log('Append to', last);
-      if (
-        value &&
-        last &&
-        (last.act === 'elements' || last.act === 'pages') &&
-        value.act === 'validate-page'
-      ) {
+      if (last.act === 'elements' || last.act === 'pages') {
         // Logger.log('Actual actions', value.cascade);
         const cascade = value.cascade;
         if (last.cascade && cascade) {
           for (const c of cascade) {
             last.cascade.push(c);
+          }
+          // Logger.log('Appended', last);
+        }
+      } else if (last.act === 'hybird') {
+        const cascade = value.cascade;
+        if (last.actions && cascade) {
+          for (const c of cascade) {
+            last.actions.push(c);
           }
           // Logger.log('Appended', last);
         }
@@ -68,6 +77,7 @@ export function useEditorState(
   if (post) {
     // Logger.log('Post processing');
     const reverse = actModel(post, page);
+    Logger.log('Reverse:', reverse);
     actUndoHis({ act: 'post', value: reverse });
     setPost(undefined);
   }
@@ -127,7 +137,8 @@ export function useEditorState(
   function hisAction(action: EditorAction): EditorAction | undefined {
     switch (action.type) {
       case 'model': {
-        return actModel(action, page);
+        const reverse = actModel(action, page);
+        return reverse;
       }
       case 'history': {
         return actHistory(action);

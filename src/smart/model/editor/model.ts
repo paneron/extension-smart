@@ -237,9 +237,10 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
           return convertAction(reverse);
         }
         case 'validate-page': {
-          action.cascade = validatePage(action.page, action.refAction).map(
-            x => ({ ...x, type: 'model' })
-          );
+          action.cascade = validatePage(action.page).map(x => ({
+            ...x,
+            type: 'model',
+          }));
           return action;
         }
         case 'hybird': {
@@ -366,16 +367,12 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
    * Remove unreachable nodes
    * Add new dependant data if found
    */
-  function validatePage(page: string, action: ModelAction): PageAction[] {
-    // Logger.log('Doing post processing', action);
-    if (action.act === 'elements' || action.act === 'pages') {
-      const p = pages[page];
-      if (p) {
-        const [actions, reverse] = explorePageDataNodes(p, elements);
-        // Logger.log('Actions: ', actions);
-        actions.forEach(x => actPages(x));
-        return reverse;
-      }
+  function validatePage(page: string): PageAction[] {
+    const p = pages[page];
+    if (p) {
+      const [actions, reverse] = explorePageDataNodes(p, elements);
+      actions.forEach(x => actPages(x));
+      return reverse;
     }
     return [];
   }

@@ -266,8 +266,8 @@ const QuickVersionEdit: React.FC<
           })
         }
         onTagRemove={x => {
-          editing.records = new Set([...editing.records].filter(s => x !== s));
-          setEditing({ ...editing });
+          const newSet = new Set([...editing.records].filter(s => x !== s));
+          setEditing({ ...editing, records: newSet });
         }}
       />
       <SimpleReferenceSelector

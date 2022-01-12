@@ -15,7 +15,7 @@ import { createDataAttribute } from '../../../utils/EditorFactory';
 import {
   findUniqueID,
   getModelAllRefs,
-  getReferenceDCTypeName,  
+  getReferenceDCTypeName,
   trydefaultID,
 } from '../../../utils/ModelFunctions';
 import { findExistingRef } from '../../../utils/ModelImport';

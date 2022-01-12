@@ -17,7 +17,9 @@ import { MMELReference } from '../../serialize/interface/supportinterface';
 import { DescriptionItem } from '../common/description/fields';
 import { NormalTextField } from '../common/fields';
 import { EditPageButtons } from '../edit/commons';
-import AttributeListQuickEdit, { findAllAttributeTypes } from '../edit/components/AttributeList';
+import AttributeListQuickEdit, {
+  findAllAttributeTypes,
+} from '../edit/components/AttributeList';
 
 const QuickEditRegistry: React.FC<{
   registry: EditorRegistry;
@@ -54,13 +56,13 @@ const QuickEditRegistry: React.FC<{
     () => types.reduce((obj, x) => ({ ...obj, [x.id]: x }), {}),
     [types]
   );
-  const exitRef = useRef<{exit: ()=>void}>({exit: saveOnExit});
+  const exitRef = useRef<{ exit: () => void }>({ exit: saveOnExit });
   exitRef.current.exit = saveOnExit;
 
   function onAddReference(refs: MMELReference[]) {
     setHasChange(false);
-    setEditing(edit => {      
-      act(editImportRegistryCommand(registry.id, edit, refs));      
+    setEditing(edit => {
+      act(editImportRegistryCommand(registry.id, edit, refs));
       return edit;
     });
   }
@@ -90,21 +92,21 @@ const QuickEditRegistry: React.FC<{
     onChange();
   }
 
-  function saveOnExit() {    
-    if (hasChange) {      
+  function saveOnExit() {
+    if (hasChange) {
       act(editRegistryCommand(registry.id, editing));
       setHasChange(false);
-    }    
-  }  
+    }
+  }
 
-  useEffect(() => {    
-    setEditing(regCombined)
+  useEffect(() => {
+    setEditing(regCombined);
     setUndoListener(() => setHasChange(false));
-    return () => {      
+    return () => {
       setUndoListener(undefined);
       exitRef.current.exit();
     };
-  }, [registry]);  
+  }, [registry]);
 
   return (
     <FormGroup>
