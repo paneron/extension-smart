@@ -138,7 +138,7 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
   // }
 
   function act(action: ModelAction, page: string): ModelAction | undefined {
-    Logger.log('Action:', action);
+    // Logger.log('Action:', action);
     try {
       switch (action.act) {
         case 'meta': {

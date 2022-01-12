@@ -77,7 +77,7 @@ export function useEditorState(
   if (post) {
     // Logger.log('Post processing');
     const reverse = actModel(post, page);
-    Logger.log('Reverse:', reverse);
+    // Logger.log('Reverse:', reverse);
     actUndoHis({ act: 'post', value: reverse });
     setPost(undefined);
   }

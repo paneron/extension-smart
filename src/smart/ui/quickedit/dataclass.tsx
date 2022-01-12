@@ -1,5 +1,5 @@
 import { FormGroup } from '@blueprintjs/core';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   editDCCommand,
   editImportDCCommand,
@@ -36,6 +36,8 @@ const QuickEditDataClass: React.FC<{
 
   const [editing, setEditing] = useState<EditorDataClass>(dataclass);
   const [hasChange, setHasChange] = useState<boolean>(false);
+  const exitRef = useRef<{ exit: () => void }>({ exit: saveOnExit });
+  exitRef.current.exit = saveOnExit;
 
   const types = useMemo(() => findAllAttributeTypes(model), [model]);
   const typesObj = useMemo(
@@ -44,7 +46,11 @@ const QuickEditDataClass: React.FC<{
   );
 
   function onAddReference(refs: MMELReference[]) {
-    saveOnExit(refs);
+    setHasChange(false);
+    setEditing(edit => {
+      act(editImportDCCommand(dataclass.id, edit, refs));
+      return edit;
+    });
   }
 
   function onUpdateClick() {
@@ -67,16 +73,11 @@ const QuickEditDataClass: React.FC<{
     onChange();
   }
 
-  function saveOnExit(refs?: MMELReference[]) {
-    setHasChange(hc => {
-      if (hc) {
-        setEditing(edit => {
-          act(editImportDCCommand(dataclass.id, edit, refs ?? []));
-          return edit;
-        });
-      }
-      return false;
-    });
+  function saveOnExit() {
+    if (hasChange) {
+      act(editDCCommand(dataclass.id, editing));
+      setHasChange(false);
+    }
   }
 
   useEffect(() => {
@@ -84,7 +85,7 @@ const QuickEditDataClass: React.FC<{
     setUndoListener(() => setHasChange(false));
     return () => {
       setUndoListener(undefined);
-      saveOnExit();
+      exitRef.current.exit();
     };
   }, [dataclass]);
 
