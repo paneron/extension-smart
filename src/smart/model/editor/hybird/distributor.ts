@@ -15,6 +15,7 @@ import { RegistryCombined } from '../components/element/registry';
 import { ModelAction } from '../model';
 import { compileDCRefImport, compileRegistryRefImport } from './data';
 import { compileEGateEdit } from './egateedit';
+import { compileProcessImport } from './import';
 import {
   compileProcessAddPage,
   compileProcessBringin,
@@ -94,6 +95,15 @@ type DCImportReference = {
   delRefs: string[];
 };
 
+type ElmImportReference = {
+  task: 'elm-import';
+  id: string;
+  ref: EditorModel;
+  x: number;
+  y: number;
+  page: string;
+};
+
 type EXPORT_ACTION =
   | EGateEditAction
   | ProcessAddPageAction
@@ -104,7 +114,8 @@ type EXPORT_ACTION =
   | ProcessBringInAction
   | ProcessBringOutAction
   | RegistryImportReference
-  | DCImportReference;
+  | DCImportReference
+  | ElmImportReference;
 
 export type HyEditAction = EXPORT_ACTION & {
   act: 'hybird';
@@ -144,5 +155,7 @@ export function compileHybird(
       return compileRegistryRefImport(action, model);
     case 'dc-import-ref':
       return compileDCRefImport(action, model);
+    case 'elm-import':
+      return compileProcessImport(action, model);
   }
 }

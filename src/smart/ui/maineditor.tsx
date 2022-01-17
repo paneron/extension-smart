@@ -43,7 +43,6 @@ import {
   HistoryItem,
   RepoHistory,
 } from '../model/history';
-import { createSubprocessComponent } from '../utils/EditorFactory';
 import {
   EdgeTypes,
   EditorState,
@@ -86,7 +85,6 @@ import {
 } from '../utils/SearchFunctions';
 import { MMELRole } from '../serialize/interface/supportinterface';
 import ModelReferenceView from './editreference/ModelReferenceView';
-import { addProcessIfNotFound } from '../utils/ModelImport';
 import DocumentReferenceView from './editreference/DocumentReferenceView';
 import { RefTextSelection } from '../model/selectionImport';
 import ImportFromSelectionButton from './popover/ImportFromSelectionButton';
@@ -130,6 +128,7 @@ import BasicSettingPane from './control/settings';
 import { addRoleCommand } from '../model/editor/commands/role';
 import { addRegistryCommand } from '../model/editor/commands/data';
 import { RegistryCombined } from '../model/editor/components/element/registry';
+import { importElmCommand } from '../model/editor/commands/import';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -361,31 +360,8 @@ const ModelEditor: React.FC<{
         reference !== undefined &&
         isModelWrapper(reference)
       ) {
-        // import is not done yet
-        const page = model.pages[state.page];
-
-        const process = addProcessIfNotFound(
-          { page: state.page, model: state.model, type: 'model' },
-          reference,
-          refid,
-          {},
-          {},
-          {},
-          page.id
-        );
-
-        const nc = createSubprocessComponent(process.id);
-        nc.x = pos.x;
-        nc.y = pos.y;
-
-        page.childs[process.id] = nc;
-        // setState(
-        //   {
-        //     ...state,
-        //     model: { ...model },
-        //   },
-        //   true
-        // );
+        const rmodel = reference.model;
+        act(importElmCommand(refid, rmodel, pos.x, pos.y, state.page));
       }
     }
   }
