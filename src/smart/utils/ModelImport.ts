@@ -588,7 +588,7 @@ function addMeasureIfNotFound(
     const name = r[0].substring(1, r[0].length - 1);
     if (model.vars[name] === undefined && ref.vars[name] !== undefined) {
       newItems.vars[name] = { ...ref.vars[name] };
-      addMeasureIfNotFound(model, ref, model.vars[name].definition, newItems);
+      addMeasureIfNotFound(model, ref, ref.vars[name].definition, newItems);
     }
   }
 }
