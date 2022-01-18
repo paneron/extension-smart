@@ -247,7 +247,8 @@ function needCheck(action: ModelAction): boolean {
         action.task === 'process-bringin' ||
         action.task === 'process-edit' ||
         action.task === 'registry-import-ref' ||
-        action.task === 'dc-import-ref'
+        action.task === 'dc-import-ref' ||
+        action.task === 'elm-import'
       );
     default:
       throw new Error('Checking for post actions not handled');

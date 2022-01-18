@@ -99,8 +99,137 @@ export function compileProcessImport(
       task: 'delete-page',
       value: Object.keys(newItems.pages),
     };
-    action.actions = [newCompo, newElmsAction, newPageAction];
-    ract.actions = [removeCompo, undoNewElmsAction, undoNewPageAction];
+    const addProAction: ModelAction = {
+      type: 'model',
+      act: 'provision',
+      task: 'replace',
+      from: [],
+      to: Object.values(newItems.provisions),
+    };
+    const removeProAction: ModelAction = {
+      type: 'model',
+      act: 'provision',
+      task: 'replace',
+      from: Object.keys(newItems.provisions),
+      to: [],
+    };
+    const addRoleAction: ModelAction = {
+      type: 'model',
+      act: 'roles',
+      task: 'add',
+      value: Object.values(newItems.roles),
+    };
+    const removeRoleAction: ModelAction = {
+      type: 'model',
+      act: 'roles',
+      task: 'delete',
+      value: Object.keys(newItems.roles),
+    };
+    const addFigAction: ModelAction = {
+      type: 'model',
+      act: 'figure',
+      task: 'add',
+      value: Object.values(newItems.figures),
+    };
+    const removeFigAction: ModelAction = {
+      type: 'model',
+      act: 'figure',
+      task: 'delete',
+      value: Object.keys(newItems.figures),
+    };
+    const addTableAction: ModelAction = {
+      type: 'model',
+      act: 'table',
+      task: 'add',
+      value: Object.values(newItems.tables),
+    };
+    const removeTableAction: ModelAction = {
+      type: 'model',
+      act: 'table',
+      task: 'delete',
+      value: Object.keys(newItems.tables),
+    };
+    const addVarAction: ModelAction = {
+      type: 'model',
+      act: 'vars',
+      task: 'add',
+      value: Object.values(newItems.vars),
+    };
+    const removeVarAction: ModelAction = {
+      type: 'model',
+      act: 'vars',
+      task: 'delete',
+      value: Object.keys(newItems.vars),
+    };
+    const addNotesAction: ModelAction = {
+      type: 'model',
+      act: 'notes',
+      task: 'replace',
+      from: [],
+      to: Object.values(newItems.notes),
+    };
+    const removeNotesAction: ModelAction = {
+      type: 'model',
+      act: 'notes',
+      task: 'replace',
+      from: Object.keys(newItems.notes),
+      to: []
+    };
+    const addRefsAction: ModelAction = {
+      type: 'model',
+      act: 'refs',
+      task: 'add',
+      value: Object.values(newItems.refs),
+    };
+    const removeRefsAction: ModelAction = {
+      type: 'model',
+      act: 'refs',
+      task: 'delete',
+      value: Object.keys(newItems.refs)
+    };
+    const addLinksAction: ModelAction = {
+      type: 'model',
+      act: 'link',
+      task: 'replace',
+      to: Object.values(newItems.links),
+      from: []
+    };
+    const removeLinksAction: ModelAction = {
+      type: 'model',
+      act: 'link',
+      task: 'replace',
+      from: Object.keys(newItems.links),
+      to: []
+    };
+    /*const newItems: NewImportItems = {                  
+      links: {},
+    };*/
+    action.actions = [
+      newCompo,
+      newElmsAction,
+      newPageAction,
+      addProAction,
+      addRoleAction,
+      addFigAction,
+      addTableAction,
+      addVarAction,
+      addNotesAction,
+      addRefsAction,
+      addLinksAction
+    ];
+    ract.actions = [
+      removeCompo,
+      removeRefsAction,
+      undoNewElmsAction,
+      undoNewPageAction,
+      removeProAction,
+      removeRoleAction,
+      removeFigAction,
+      removeTableAction,
+      removeVarAction,
+      removeNotesAction,      
+      removeLinksAction
+    ];
   }
   return ract;
 }
