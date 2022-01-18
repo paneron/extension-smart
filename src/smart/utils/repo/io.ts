@@ -41,6 +41,7 @@ export enum RepoFileType {
   MAP = 'map',
   WORKSPACE = 'workspace',
   RDF = 'rdf',
+  HISTORY = 'history',
 }
 
 export const JSONContext = 'https://bsi-ribose-smart.org';

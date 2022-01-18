@@ -33,6 +33,11 @@ import { NotesAction, useNotes } from './components/notes';
 import { MODELVERSION } from '../../utils/constants';
 import { LinkAction, useLinks } from './components/links';
 
+type InitModelAction = {
+  act: 'initModel';
+  value: EditorModel;
+}
+
 type ALLACTION =
   | ElmAction
   | MetaAction
@@ -50,7 +55,8 @@ type ALLACTION =
   | TableAction
   | FigAction
   | CommentAction
-  | HyEditAction;
+  | HyEditAction
+  | InitModelAction;
 
 type ValidateAction = {
   act: 'validate-page';
@@ -256,6 +262,10 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
         }
         case 'link': {
           actLinks(action);
+          return undefined;
+        }
+        case 'initModel': {
+          init(action.value);
           return undefined;
         }
         default:

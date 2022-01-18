@@ -6,6 +6,7 @@ import { jsx } from '@emotion/react';
 import { css } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useMemo, useState } from 'react';
+import { ChangeLog, createChangeLog } from '../../model/changelog';
 import { EditorModel } from '../../model/editormodel';
 import { RepoHistory } from '../../model/history';
 import { MMELJSON } from '../../model/json';
@@ -49,18 +50,21 @@ const RepoItemLoadingView: React.FC<{
 }) {
   const [model, setModel] = useState<EditorModel | undefined>(undefined);
   const [mapping, setMapping] = useState<MapProfile | undefined>(undefined);
+  const [history, setHistory] = useState<ChangeLog | undefined>(undefined);
   const [ws, setWS] = useState<SMARTWorkspace | undefined>(undefined);
   const { useObjectData } = useContext(DatasetContext);
 
   const repoPath = getPathByNS(repo.ns, RepoFileType.MODEL);
   const mapPath = getPathByNS(repo.ns, RepoFileType.MAP);
   const wsPath = getPathByNS(repo.ns, RepoFileType.WORKSPACE);
+  const hisPath = getPathByNS(repo.ns, RepoFileType.HISTORY);
   const repoModelFile = useObjectData({
-    objectPaths: [repoPath, mapPath, wsPath],
+    objectPaths: [repoPath, mapPath, wsPath, hisPath],
   });
   const repoData = repoModelFile.value.data[repoPath];
   const mapData = repoModelFile.value.data[mapPath];
   const wsData = repoModelFile.value.data[wsPath];
+  const hisData = repoModelFile.value.data[hisPath];
 
   useMemo(() => {
     setModel(undefined);
@@ -97,6 +101,8 @@ const RepoItemLoadingView: React.FC<{
         ? (wsData as SMARTWorkspace)
         : createNewSMARTWorkspace();
       setWS(workData);
+      const hisRepoData = hisData ? (hisData as ChangeLog) : createChangeLog(model);
+      setHistory(hisRepoData);
     }
   }, [repo.ns, repoModelFile.isUpdating]);
 
@@ -104,7 +110,7 @@ const RepoItemLoadingView: React.FC<{
 
   return (
     <>
-      {model && mapping && ws ? (
+      {model && mapping && ws && history ? (
         modules.map(moduleName => {
           const cfg = MODULE_CONFIGURATION[moduleName];
           if (cfg.type === 'model') {
@@ -124,6 +130,7 @@ const RepoItemLoadingView: React.FC<{
                 model={model}
                 mapping={mapping}
                 ws={ws}
+                changelog={history}
               />
             );
           } else if (cfg.type === 'doc') {

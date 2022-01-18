@@ -6,6 +6,7 @@ import {
 } from '@blueprintjs/core';
 import React from 'react';
 import { useState } from 'react';
+import { ChangeLog } from '../../model/changelog';
 import { useEditorState } from '../../model/editor/state';
 import { EditorModel, isEditorProcess } from '../../model/editormodel';
 import { createModelHistory } from '../../model/history';
@@ -21,6 +22,7 @@ const EditWrapper: React.FC<{
   repo: MMELRepo;
   index: RepoIndex;
   model: EditorModel;
+  changelog: ChangeLog;
 }> = function (props) {
   const { model } = props;
   const initObj: EditorState = {

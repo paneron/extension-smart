@@ -9,6 +9,7 @@ import ModelViewer from '../../ui/mainviewer';
 import ModelWorkspace from '../../ui/modelWorkspace';
 import NLPMain from '../../ui/nlp/NLPMain';
 import RepoViewer from '../../ui/repo/RepoViewer';
+import { ChangeLog } from '../changelog';
 import { EditorModel } from '../editormodel';
 import { RepoHistory } from '../history';
 import { MapProfile } from '../mapmodel';
@@ -29,6 +30,7 @@ export type ModelModuleConfig = BaseConfig & {
       model: EditorModel;
       mapping: MapProfile;
       ws: SMARTWorkspace;
+      changelog: ChangeLog;
     }
   >;
 };
