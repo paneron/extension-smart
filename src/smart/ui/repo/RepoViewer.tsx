@@ -29,6 +29,7 @@ import RepoGroup from './RepoGroup';
 import { ProvisionRDF, RDFVersion } from '../../model/SemanticTriple';
 import RepoRenameLoading, { RepoRenameAction } from './RepoRenameLoading';
 import AITranslateLoading from './AITranslateLoading';
+import { createChangeLog } from '../../model/changelog';
 
 function matchFilter(item: RepoItems, filter: string) {
   return (
@@ -46,7 +47,7 @@ const RepoViewer: React.FC<{
   setRepo: (x: MMELRepo | undefined) => void;
   index: RepoIndex;
 }> = function ({ isVisible, className, repo, setRepo, index }) {
-  const { updateObjects } = useContext(DatasetContext);
+  const { updateObjects, useRemoteUsername } = useContext(DatasetContext);
 
   const [filter, setFilter] = useState<string>('');
 
@@ -67,6 +68,13 @@ const RepoViewer: React.FC<{
     () => docs.filter(x => matchFilter(x, filter)),
     [docs, filter]
   );
+  const userData = useRemoteUsername();
+  const username =
+    userData === undefined ||
+    userData.value === undefined ||
+    userData.value.username === undefined
+      ? 'Anonymous'
+      : userData.value.username;
 
   async function saveIndexWithModel(
     updated: RepoIndex,
@@ -94,6 +102,9 @@ const RepoViewer: React.FC<{
             },
             [getPathByNS(ns, RepoFileType.RDF)]: {
               newValue: rdf,
+            },
+            [getPathByNS(ns, RepoFileType.HISTORY)]: {
+              newValue: [createChangeLog(model, username)],
             },
           },
         });
@@ -252,6 +263,9 @@ const RepoViewer: React.FC<{
             newValue: null,
           },
           [getPathByNS(ns, RepoFileType.RDF)]: {
+            newValue: null,
+          },
+          [getPathByNS(ns, RepoFileType.HISTORY)]: {
             newValue: null,
           },
         },

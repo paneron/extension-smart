@@ -212,6 +212,8 @@ const ModelEditor: React.FC<{
     y: 0,
   });
 
+  Logger.log('Logs', changelog);
+
   const userData = useRemoteUsername();
   const username =
     userData === undefined ||
@@ -272,6 +274,7 @@ const ModelEditor: React.FC<{
 
   async function saveRepo() {
     if (repo && updateObjects && isVisible) {
+      const repoChangePath = getPathByNS(repo.ns, RepoFileType.HISTORY);
       const meta = model.meta;
       const task = updateObjects({
         commitMessage: COMMITMSG,
@@ -288,6 +291,9 @@ const ModelEditor: React.FC<{
               date: new Date(),
               type: 'Imp',
             }),
+          },
+          [repoChangePath]: {
+            newValue: changelog,
           },
         },
       });

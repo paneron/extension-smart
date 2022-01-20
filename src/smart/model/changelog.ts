@@ -6,13 +6,9 @@ type CommandEvent = {
   command: ModelAction;
 };
 
-type NewModelEvent = {
-  type: 'new';
-};
-
-export type ChangeLogEvent = (CommandEvent | NewModelEvent) & {
+export type ChangeLogEvent = CommandEvent & {
   user: string;
-  time: Date;
+  time: string;
 };
 
 export type ChangeLog = ChangeLogEvent[];
@@ -30,7 +26,7 @@ export function createChangeLog(
     type: 'command',
     command,
     user,
-    time: new Date(),
+    time: new Date().toISOString(),
   };
 }
 
@@ -39,6 +35,6 @@ export function addToLog(log: ChangeLog, user: string, action: ModelAction) {
     type: 'command',
     command: action,
     user,
-    time: new Date(),
+    time: new Date().toISOString(),
   });
 }
