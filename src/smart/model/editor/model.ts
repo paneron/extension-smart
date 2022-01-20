@@ -36,7 +36,7 @@ import { LinkAction, useLinks } from './components/links';
 type InitModelAction = {
   act: 'initModel';
   value: EditorModel;
-}
+};
 
 type ALLACTION =
   | ElmAction

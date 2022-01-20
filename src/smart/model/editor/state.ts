@@ -1,5 +1,6 @@
 import { useReducer, useState } from 'react';
 import { Logger } from '../../utils/ModelFunctions';
+import { addToLog, ChangeLog } from '../changelog';
 import { EditorState } from '../States';
 import { HistoryAction, useHistory } from './history';
 import { UndoManagerInterface } from './interface';
@@ -93,22 +94,22 @@ export function useEditorState(
     }
   }
 
-  function undo() {
+  function undo(log: ChangeLog, user: string) {
     const len = undoHis.length;
     if (len > 0) {
       const action = undoHis[len - 1];
-      const reverse = hisAction(action);
+      const reverse = hisAction(action, log, user);
       actRedoHis({ act: 'push', value: reverse });
       actUndoHis({ act: 'pop' });
     }
   }
 
-  function redo() {
+  function redo(log: ChangeLog, user: string) {
     try {
       const len = redoHis.length;
       if (len > 0) {
         const action = redoHis[len - 1];
-        const reverse = hisAction(action);
+        const reverse = hisAction(action, log, user);
         actUndoHis({ act: 'push', value: reverse });
         actRedoHis({ act: 'pop' });
         if (action.type === 'model') {
@@ -134,9 +135,14 @@ export function useEditorState(
     actRedoHis({ act: 'new' });
   }
 
-  function hisAction(action: EditorAction): EditorAction | undefined {
+  function hisAction(
+    action: EditorAction,
+    log: ChangeLog,
+    user: string
+  ): EditorAction | undefined {
     switch (action.type) {
       case 'model': {
+        addToLog(log, user, action);
         const reverse = actModel(action, page);
         return reverse;
       }

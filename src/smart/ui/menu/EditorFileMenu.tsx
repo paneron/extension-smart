@@ -9,7 +9,8 @@ const EditorFileMenu: React.FC<{
   model: EditorModel;
   openSetting: () => void;
   onRepoSave: () => void;
-}> = function ({ model, openSetting, onRepoSave }) {
+  openChangeLog: () => void;
+}> = function ({ model, openSetting, onRepoSave, openChangeLog }) {
   const { getBlob, writeFileToFilesystem } = useContext(DatasetContext);
 
   const canSave = getBlob && writeFileToFilesystem;
@@ -39,6 +40,7 @@ const EditorFileMenu: React.FC<{
       </MenuItem>
       <MenuDivider />
       <MenuItem text="Model settings…" onClick={openSetting} icon="settings" />
+      <MenuItem text="Change logs" onClick={openChangeLog} icon="changes" />
     </Menu>
   );
 };

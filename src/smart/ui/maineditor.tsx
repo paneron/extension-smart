@@ -129,6 +129,8 @@ import { addRoleCommand } from '../model/editor/commands/role';
 import { addRegistryCommand } from '../model/editor/commands/data';
 import { RegistryCombined } from '../model/editor/components/element/registry';
 import { importElmCommand } from '../model/editor/commands/import';
+import { ChangeLog } from '../model/changelog';
+import ChangeLogDialog from './control/ChangeLogViewer';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
@@ -145,6 +147,7 @@ const ModelEditor: React.FC<{
   act: (x: EditorAction) => void;
   setUndoListener: (x: (() => void) | undefined) => void;
   clearRedo: () => void;
+  changelog: ChangeLog;
 }> = ({
   isVisible,
   className,
@@ -160,6 +163,7 @@ const ModelEditor: React.FC<{
   act,
   setUndoListener,
   clearRedo,
+  changelog,
 }) => {
   const { useObjectData, updateObjects, useRemoteUsername } =
     useContext(DatasetContext);
@@ -197,6 +201,7 @@ const ModelEditor: React.FC<{
   const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
   const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
   const [repoHis, setRepoHis] = useState<RepoHistory>([]);
+  const [isChangeOpen, setChangeOpen] = useState<boolean>(false);
   const [dragStart, setDragStart] = useState<{
     id: string;
     x: number;
@@ -508,6 +513,7 @@ const ModelEditor: React.FC<{
           <EditorFileMenu
             model={model}
             openSetting={() => openSetting(true)}
+            openChangeLog={() => setChangeOpen(true)}
             onRepoSave={saveRepo}
           />
         }
@@ -613,6 +619,12 @@ const ModelEditor: React.FC<{
     return (
       <HotkeysTarget2 hotkeys={hotkeys}>
         <div css={multi_model_container}>
+          {isChangeOpen && (
+            <ChangeLogDialog
+              log={changelog}
+              onClose={() => setChangeOpen(false)}
+            />
+          )}
           {settingOpen && (
             <Dialog
               isOpen={settingOpen}

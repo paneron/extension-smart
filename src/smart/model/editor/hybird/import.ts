@@ -173,7 +173,7 @@ export function compileProcessImport(
       act: 'notes',
       task: 'replace',
       from: Object.keys(newItems.notes),
-      to: []
+      to: [],
     };
     const addRefsAction: ModelAction = {
       type: 'model',
@@ -185,23 +185,23 @@ export function compileProcessImport(
       type: 'model',
       act: 'refs',
       task: 'delete',
-      value: Object.keys(newItems.refs)
+      value: Object.keys(newItems.refs),
     };
     const addLinksAction: ModelAction = {
       type: 'model',
       act: 'link',
       task: 'replace',
       to: Object.values(newItems.links),
-      from: []
+      from: [],
     };
     const removeLinksAction: ModelAction = {
       type: 'model',
       act: 'link',
       task: 'replace',
       from: Object.keys(newItems.links),
-      to: []
+      to: [],
     };
-    /*const newItems: NewImportItems = {                  
+    /*const newItems: NewImportItems = {
       links: {},
     };*/
     action.actions = [
@@ -215,7 +215,7 @@ export function compileProcessImport(
       addVarAction,
       addNotesAction,
       addRefsAction,
-      addLinksAction
+      addLinksAction,
     ];
     ract.actions = [
       removeCompo,
@@ -227,8 +227,8 @@ export function compileProcessImport(
       removeFigAction,
       removeTableAction,
       removeVarAction,
-      removeNotesAction,      
-      removeLinksAction
+      removeNotesAction,
+      removeLinksAction,
     ];
   }
   return ract;

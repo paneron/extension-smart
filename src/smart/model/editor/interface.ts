@@ -1,3 +1,4 @@
+import { ChangeLog } from '../changelog';
 import { EditorModel } from '../editormodel';
 import { ModelAction } from './model';
 
@@ -5,7 +6,7 @@ import { ModelAction } from './model';
 export type ACTION_INTERFACE<A> = (a: A) => A | undefined;
 type INIT_INTERFACE<S> = (s: S) => void;
 type NEW_ACTION<A> = (a: A) => void;
-type EDIT_ACTION = undefined | (() => void);
+type EDIT_ACTION = undefined | ((log: ChangeLog, user: string) => void);
 
 // type, action (the command), initialier
 export type UndoReducerInterface<S, A> = [

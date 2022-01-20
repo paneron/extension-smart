@@ -48,6 +48,8 @@ const RepoItemLoadingView: React.FC<{
   setRepoHis,
   setClickListener,
 }) {
+  const { useRemoteUsername } = useContext(DatasetContext);
+
   const [model, setModel] = useState<EditorModel | undefined>(undefined);
   const [mapping, setMapping] = useState<MapProfile | undefined>(undefined);
   const [history, setHistory] = useState<ChangeLog | undefined>(undefined);
@@ -65,6 +67,14 @@ const RepoItemLoadingView: React.FC<{
   const mapData = repoModelFile.value.data[mapPath];
   const wsData = repoModelFile.value.data[wsPath];
   const hisData = repoModelFile.value.data[hisPath];
+
+  const userData = useRemoteUsername();
+  const username =
+    userData === undefined ||
+    userData.value === undefined ||
+    userData.value.username === undefined
+      ? 'Anonymous'
+      : userData.value.username;
 
   useMemo(() => {
     setModel(undefined);
@@ -101,7 +111,9 @@ const RepoItemLoadingView: React.FC<{
         ? (wsData as SMARTWorkspace)
         : createNewSMARTWorkspace();
       setWS(workData);
-      const hisRepoData = hisData ? (hisData as ChangeLog) : createChangeLog(model);
+      const hisRepoData = hisData
+        ? (hisData as ChangeLog)
+        : [createChangeLog(model, username)];
       setHistory(hisRepoData);
     }
   }, [repo.ns, repoModelFile.isUpdating]);

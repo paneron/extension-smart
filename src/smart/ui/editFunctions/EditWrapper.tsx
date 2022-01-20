@@ -4,10 +4,11 @@ import {
   IToaster,
   Toaster,
 } from '@blueprintjs/core';
-import React from 'react';
+import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
+import React, { useContext } from 'react';
 import { useState } from 'react';
-import { ChangeLog } from '../../model/changelog';
-import { useEditorState } from '../../model/editor/state';
+import { addToLog, ChangeLog } from '../../model/changelog';
+import { EditorAction, useEditorState } from '../../model/editor/state';
 import { EditorModel, isEditorProcess } from '../../model/editormodel';
 import { createModelHistory } from '../../model/history';
 import { MMELRepo, RepoIndex } from '../../model/repo';
@@ -24,7 +25,8 @@ const EditWrapper: React.FC<{
   model: EditorModel;
   changelog: ChangeLog;
 }> = function (props) {
-  const { model } = props;
+  const { model, changelog } = props;
+  const { useRemoteUsername } = useContext(DatasetContext);
   const initObj: EditorState = {
     model,
     history: createModelHistory(model),
@@ -37,6 +39,14 @@ const EditWrapper: React.FC<{
   const [copied, setCopied] = useState<string | undefined>(undefined);
   const [toaster] = useState<IToaster>(Toaster.create());
   const [, setUndoListener] = useState<(() => void) | undefined>(undefined);
+
+  const userData = useRemoteUsername();
+  const username =
+    userData === undefined ||
+    userData.value === undefined ||
+    userData.value.username === undefined
+      ? 'Anonymous'
+      : userData.value.username;
 
   const hotkeys: HotkeyConfig[] = [
     {
@@ -75,13 +85,13 @@ const EditWrapper: React.FC<{
         }
         return u;
       });
-      undoState();
+      undoState(changelog, username);
     }
   }
 
   function redo() {
     if (redoState) {
-      redoState();
+      redoState(changelog, username);
     }
   }
 
@@ -93,6 +103,13 @@ const EditWrapper: React.FC<{
         intent: 'success',
       });
     }
+  }
+
+  function performAct(x: EditorAction) {
+    if (x.type === 'model') {
+      addToLog(changelog, username, x);
+    }
+    act(x);
   }
 
   function setSelectedId(id: string | undefined) {
@@ -137,7 +154,7 @@ const EditWrapper: React.FC<{
       <ModelEditor
         {...props}
         state={state}
-        act={act}
+        act={performAct}
         redo={redoState ? redo : undefined}
         undo={undoState ? undo : undefined}
         copy={selected !== undefined ? copy : undefined}
@@ -145,6 +162,7 @@ const EditWrapper: React.FC<{
         setSelectedId={setSelectedId}
         setUndoListener={x => setUndoListener(() => x)}
         clearRedo={clearRedo}
+        changelog={changelog}
       />
     </HotkeysTarget2>
   );
