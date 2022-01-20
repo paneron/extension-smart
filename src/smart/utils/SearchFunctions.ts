@@ -16,14 +16,7 @@ import {
   isEditorProcess,
   isEditorRegistry,
 } from '../model/editormodel';
-import {
-  addToHistory,
-  cloneHistory,
-  createModelHistory,
-  createPageHistory,
-  HistoryItem,
-  PageHistory,
-} from '../model/history';
+import { createModelHistory, HistoryItem } from '../model/history';
 import { LegendInterface } from '../model/States';
 import { DataType } from '../serialize/interface/baseinterface';
 import { isRegistry } from '../serialize/util/validation';
@@ -44,14 +37,6 @@ export const SearchResultStyles: Record<SearchHighlightType, LegendInterface> =
     [SearchHighlightType.MATCH]: { label: 'Match', color: 'lightblue' },
     [SearchHighlightType.NONE]: { label: 'Not match', color: '' },
   };
-
-export interface SearchComponentRecord_deprecated {
-  id: string;
-  text: string;
-  page: string;
-  type: SearchResultType;
-  history: PageHistory;
-}
 
 export interface SearchComponentRecord {
   id: string;
@@ -91,30 +76,6 @@ export function findPageContainingElement(
     }
   }
   return null;
-}
-
-export function findComponent_deprecated(
-  model: EditorModel,
-  search: string
-): SearchComponentRecord_deprecated[] {
-  const result: SearchComponentRecord_deprecated[] = [];
-  const page = model.pages[model.root];
-  const history = createPageHistory({
-    model: model,
-    page: model.root,
-    type: 'model',
-  });
-  if (page !== undefined && search !== '') {
-    searchPageForComponent_deprecated(
-      page,
-      model,
-      search.toLowerCase(),
-      result,
-      new Set<string>(),
-      history
-    );
-  }
-  return result;
 }
 
 export function findComponent(
@@ -209,88 +170,6 @@ function searchPageForComponent(
         result.push({
           id: node.id,
           text: getSearchDescription(node),
-          type: match,
-          history: history,
-        });
-      }
-    }
-  }
-}
-
-function searchPageForComponent_deprecated(
-  page: EditorSubprocess,
-  model: EditorModel,
-  search: string,
-  result: SearchComponentRecord_deprecated[],
-  visited: Set<string>,
-  history: PageHistory
-): void {
-  for (const x in page.childs) {
-    const id = page.childs[x].element;
-    const node = model.elements[id];
-    if (node !== undefined && !visited.has(node.id)) {
-      visited.add(node.id);
-      const match = nodeMatch(model, node, search);
-      if (match !== null) {
-        result.push({
-          id: node.id,
-          text: getSearchDescription(node),
-          page: page.id,
-          type: match,
-          history: history,
-        });
-      }
-      if (isEditorProcess(node) && node.page !== '') {
-        const nextpage = model.pages[node.page];
-        const nextHistory = cloneHistory(history);
-        addToHistory(nextHistory, node.page, id);
-        if (nextpage !== undefined) {
-          searchPageForComponent_deprecated(
-            nextpage,
-            model,
-            search,
-            result,
-            new Set<string>(),
-            nextHistory
-          );
-        }
-      }
-    }
-  }
-  for (const x in page.data) {
-    const id = page.data[x].element;
-    const node = model.elements[id];
-    if (isEditorRegistry(node)) {
-      const match = searchRegistry(node, search);
-      if (match !== null) {
-        result.push({
-          id: node.id,
-          text: getSearchDescription(node),
-          page: page.id,
-          type: match,
-          history: history,
-        });
-      }
-      const dc = model.elements[node.data];
-      if (match === null && isEditorDataClass(dc)) {
-        const matchdc = searchDC(dc, search);
-        if (matchdc !== null) {
-          result.push({
-            id: node.id,
-            text: getSearchDescription(node),
-            page: page.id,
-            type: 'Data',
-            history: history,
-          });
-        }
-      }
-    } else if (isEditorDataClass(node)) {
-      const match = searchDC(node, search);
-      if (match !== null) {
-        result.push({
-          id: node.id,
-          text: getSearchDescription(node),
-          page: page.id,
           type: match,
           history: history,
         });

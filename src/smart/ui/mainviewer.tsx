@@ -213,15 +213,12 @@ const ModelViewer: React.FC<{
     }
   }
 
-  function onSearchResultChange(
-    selected: string,
-    history: HistoryItem[]
-  ) {
+  function onSearchResultChange(selected: string, history: HistoryItem[]) {
     setSelected(selected);
-    const pageid = history[history.length-1].page;
+    const pageid = history[history.length - 1].page;
     if (funMS !== undefined) {
       setFunMS({
-        history: {items: history},
+        history: { items: history },
         mw: { ...funMS.mw, page: pageid },
       });
     } else {

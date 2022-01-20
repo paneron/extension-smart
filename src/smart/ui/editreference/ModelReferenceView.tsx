@@ -86,11 +86,8 @@ const ModelReferenceView: React.FC<{
     setModelWrapper({ ...modelWrapper, page: newPage });
   }
 
-  function onPageAndHistroyChange(
-    selected: string,
-    history: HistoryItem[]
-  ) {
-    const pageid = history[history.length-1].page;
+  function onPageAndHistroyChange(selected: string, history: HistoryItem[]) {
+    const pageid = history[history.length - 1].page;
     setSelected(selected);
     setModelWrapper({ ...modelWrapper, page: pageid });
     setHistory({ items: [...history] });

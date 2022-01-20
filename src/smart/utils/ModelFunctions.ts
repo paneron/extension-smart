@@ -45,25 +45,6 @@ export function getNamespace(model: EditorModel): string {
   return model.meta.namespace === '' ? 'defaultns' : model.meta.namespace;
 }
 
-/**
- * Deprecated, use setReplace instead
- * @param set
- * @param matchid
- * @param replaceid
- */
-export function replaceSet(
-  set: Set<string>,
-  matchid: string,
-  replaceid: string
-) {
-  if (set.has(matchid)) {
-    set.delete(matchid);
-    if (replaceid !== '') {
-      set.add(replaceid);
-    }
-  }
-}
-
 export function setReplace(
   set: Set<string>,
   matchid: string | undefined,

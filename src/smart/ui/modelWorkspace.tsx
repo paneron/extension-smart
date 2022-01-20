@@ -108,11 +108,8 @@ const ModelWorkspace: React.FC<{
     }
   }
 
-  function onPageAndHistroyChange(
-    selected: string,
-    history: HistoryItem[]
-  ) {
-    const pageid = history[history.length-1].page;
+  function onPageAndHistroyChange(selected: string, history: HistoryItem[]) {
+    const pageid = history[history.length - 1].page;
     setSelected(selected);
     const action: HistoryAction = {
       type: 'history',
