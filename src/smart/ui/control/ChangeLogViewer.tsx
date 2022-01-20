@@ -121,7 +121,10 @@ function descAction(com: ModelAction): string {
   return 'Unknown command';
 }
 
-function descPattern<T extends {task: 'add' | 'delete' | 'edit'}>(com: T, name: string): string {
+function descPattern<T extends { task: 'add' | 'delete' | 'edit' }>(
+  com: T,
+  name: string
+): string {
   if (com.task === 'add') {
     return `Add ${name}`;
   }
@@ -134,7 +137,7 @@ function descPattern<T extends {task: 'add' | 'delete' | 'edit'}>(com: T, name: 
   return `Unknown ${name} command`;
 }
 
-function descPage(com: PageAction):string {
+function descPage(com: PageAction): string {
   if (com.task === 'new-element') {
     return `Add element ${com.value.id}`;
   }
