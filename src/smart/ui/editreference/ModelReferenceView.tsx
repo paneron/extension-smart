@@ -18,6 +18,7 @@ import {
   addToHistory,
   createPageHistory,
   getBreadcrumbs,
+  HistoryItem,
   PageHistory,
   popPage,
   RepoHistory,
@@ -35,10 +36,10 @@ import {
 } from '../../utils/SearchFunctions';
 import LegendPane from '../common/description/LegendPane';
 import { DataVisibilityButton, IdVisibleButton } from '../control/buttons';
-import SearchComponentPane from '../sidebar/search_deprecated';
 import RepoBreadcrumb from '../common/description/RepoBreadcrumb';
 import { SelectedNodeDescription } from '../sidebar/selected';
 import { EditorModel } from '../../model/editormodel';
+import SearchComponentPane from '../sidebar/search';
 
 const ModelReferenceView: React.FC<{
   className?: string;
@@ -87,12 +88,12 @@ const ModelReferenceView: React.FC<{
 
   function onPageAndHistroyChange(
     selected: string,
-    pageid: string,
-    history: PageHistory
+    history: HistoryItem[]
   ) {
+    const pageid = history[history.length-1].page;
     setSelected(selected);
     setModelWrapper({ ...modelWrapper, page: pageid });
-    setHistory({ items: [...history.items] });
+    setHistory({ items: [...history] });
   }
 
   function resetSearchElements(set: Set<string>) {

@@ -22,6 +22,7 @@ import {
 import {
   addToHistory,
   createModelHistory,
+  HistoryItem,
   PageHistory,
   popPage,
   RepoHistory,
@@ -31,7 +32,7 @@ import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
 import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
 import { DataVisibilityButton, IdVisibleButton } from './control/buttons';
-import SearchComponentPane from './sidebar/search_deprecated';
+
 import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,
@@ -61,6 +62,7 @@ import { EditorModel } from '../model/editormodel';
 import { HistoryAction, useHistory } from '../model/editor/history';
 import { getBreadcrumbs } from './common/description/fields';
 import { SelectedNodeDescription } from './sidebar/selected';
+import SearchComponentPane from './sidebar/search';
 
 export enum FunctionPage {
   Simulation = 'simulation',
@@ -208,6 +210,28 @@ const ModelViewer: React.FC<{
       });
     } else {
       onNavigationUp();
+    }
+  }
+
+  function onSearchResultChange(
+    selected: string,
+    history: HistoryItem[]
+  ) {
+    setSelected(selected);
+    const pageid = history[history.length-1].page;
+    if (funMS !== undefined) {
+      setFunMS({
+        history: {items: history},
+        mw: { ...funMS.mw, page: pageid },
+      });
+    } else {
+      const action: HistoryAction = {
+        type: 'history',
+        act: 'replace',
+        value: history,
+      };
+      actHistory(action);
+      setPage(pageid);
     }
   }
 
@@ -486,7 +510,7 @@ const ModelViewer: React.FC<{
     content: (
       <SearchComponentPane
         model={funMS !== undefined ? funMS.mw.model : model}
-        onChange={onPageAndHistroyChange}
+        onChange={onSearchResultChange}
         resetSearchElements={resetSearchElements}
       />
     ),

@@ -16,11 +16,10 @@ import {
   getActionReactFlowElementsFrom,
   ModelWrapper,
 } from '../model/modelwrapper';
-import { createModelHistory, PageHistory } from '../model/history';
+import { createModelHistory, HistoryItem } from '../model/history';
 import { EdgeTypes, NodeTypes } from '../model/States';
 import { DataVisibilityButton, IdVisibleButton } from './control/buttons';
 import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
-import SearchComponentPane from './sidebar/search_deprecated';
 import LegendPane from './common/description/LegendPane';
 import {
   getHighlightedStyleById,
@@ -37,6 +36,7 @@ import { EditorModel } from '../model/editormodel';
 import { HistoryAction, useHistory } from '../model/editor/history';
 import { getBreadcrumbs } from './common/description/fields';
 import { SelectedNodeDescription } from './sidebar/selected';
+import SearchComponentPane from './sidebar/search';
 
 const ModelWorkspace: React.FC<{
   isVisible: boolean;
@@ -110,14 +110,14 @@ const ModelWorkspace: React.FC<{
 
   function onPageAndHistroyChange(
     selected: string,
-    pageid: string,
-    history: PageHistory
+    history: HistoryItem[]
   ) {
+    const pageid = history[history.length-1].page;
     setSelected(selected);
     const action: HistoryAction = {
       type: 'history',
       act: 'replace',
-      value: history.items,
+      value: history,
     };
     actHistory(action);
     setPage(pageid);
