@@ -9,7 +9,6 @@ import {
   isEditorProcess,
   isEditorRegistry,
 } from '../model/editormodel';
-import { ModelWrapper } from '../model/modelwrapper';
 import { DataType } from '../serialize/interface/baseinterface';
 import { MMELDataAttribute } from '../serialize/interface/datainterface';
 import {
@@ -17,11 +16,14 @@ import {
   MMELSubprocessComponent,
 } from '../serialize/interface/flowcontrolinterface';
 import {
+  MMELFigure,
   MMELLink,
   MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
+  MMELTable,
+  MMELVariable,
 } from '../serialize/interface/supportinterface';
 import {
   trydefaultID,
@@ -31,18 +33,30 @@ import {
   Logger,
 } from './ModelFunctions';
 
+export type NewImportItems = {
+  elements: Record<string, EditorNode>;
+  pages: Record<string, EditorSubprocess>;
+  provisions: Record<string, MMELProvision>;
+  roles: Record<string, MMELRole>;
+  figures: Record<string, MMELFigure>;
+  tables: Record<string, MMELTable>;
+  vars: Record<string, MMELVariable>;
+  refs: Record<string, MMELReference>;
+  notes: Record<string, MMELNote>;
+  links: Record<string, MMELLink>;
+};
+
 export function addProcessIfNotFound(
-  mw: ModelWrapper,
-  ref: ModelWrapper,
+  model: EditorModel,
+  rmodel: EditorModel,
   id: string,
   nameMap: Record<string, string>,
   refMap: Record<string, string>,
   roleMap: Record<string, string>,
+  newItems: NewImportItems,
   pageid: string
 ): EditorProcess {
   try {
-    const rmodel = ref.model;
-    const model = mw.model;
     if (nameMap[id] !== undefined) {
       return model.elements[nameMap[id]] as EditorProcess;
     }
@@ -52,42 +66,71 @@ export function addProcessIfNotFound(
     const process = rmodel.elements[id] as EditorProcess;
     const actor =
       process.actor !== ''
-        ? addRoleIfNotFound(mw, ref, process.actor, roleMap)
+        ? addRoleIfNotFound(model, rmodel, process.actor, roleMap, newItems)
         : undefined;
     const outputs: EditorRegistry[] = [];
     process.output.forEach(x => {
-      outputs.push(addRegistryIfNotFound(mw, ref, x, nameMap, refMap, pageid));
+      outputs.push(
+        addRegistryIfNotFound(
+          model,
+          rmodel,
+          x,
+          nameMap,
+          refMap,
+          newItems,
+          pageid
+        )
+      );
     });
     const inputs: EditorRegistry[] = [];
     process.input.forEach(x => {
-      inputs.push(addRegistryIfNotFound(mw, ref, x, nameMap, refMap, pageid));
+      inputs.push(
+        addRegistryIfNotFound(
+          model,
+          rmodel,
+          x,
+          nameMap,
+          refMap,
+          newItems,
+          pageid
+        )
+      );
     });
     const pros: string[] = [];
     process.provision.forEach(p =>
-      pros.push(addProvision(mw, ref, rmodel.provisions[p], refMap))
+      pros.push(
+        addProvision(model, rmodel, rmodel.provisions[p], refMap, newItems)
+      )
     );
     const ns: string[] = [];
     process.notes.forEach(n =>
-      ns.push(addNote(mw, ref, rmodel.notes[n], refMap))
+      ns.push(addNote(model, rmodel, rmodel.notes[n], refMap, newItems))
     );
     const newPage =
       process.page !== ''
-        ? addPageIfNotFound(mw, ref, process.page, nameMap, refMap, roleMap)
+        ? addPageIfNotFound(
+            model,
+            rmodel,
+            process.page,
+            nameMap,
+            refMap,
+            roleMap,
+            newItems
+          )
         : undefined;
     for (const x of process.measure) {
-      addMeasureIfNotFound(mw.model, ref.model, x);
+      addMeasureIfNotFound(model, rmodel, x, newItems);
     }
     for (const x of process.tables) {
-      addTableIfNotFound(mw.model, ref.model, x);
+      addTableIfNotFound(model, rmodel, x, newItems);
     }
     for (const x of process.figures) {
-      addFigIfNotFound(mw.model, ref.model, x);
-    }
-    for (const x of process.figures) {
-      addFigIfNotFound(mw.model, ref.model, x);
+      addFigIfNotFound(model, rmodel, x, newItems);
     }
     const links: string[] = [];
-    process.links.forEach(l => links.push(addLink(mw, rmodel.links[l])));
+    process.links.forEach(l =>
+      links.push(addLink(model, rmodel.links[l], newItems))
+    );
 
     const newProcess: EditorProcess = {
       id: newid,
@@ -104,73 +147,86 @@ export function addProcessIfNotFound(
       measure: [...process.measure],
       tables: new Set(process.tables),
       figures: new Set(process.figures),
-      added: false,
+      comments: new Set(process.comments),
       pages: new Set<string>([pageid]),
       objectVersion: 'Editor',
     };
-    model.elements[newid] = newProcess;
+    newItems.elements[newid] = newProcess;
     return newProcess;
   } catch (e: unknown) {
     if (typeof e === 'object') {
       const error = e as Error;
-      Logger.logger.log(error.message);
-      Logger.logger.log(error.stack);
+      Logger.log(error.message);
+      Logger.log(error.stack);
     }
     throw e;
   }
 }
 
-function addComponentIfNotFound(
-  mw: ModelWrapper,
-  ref: ModelWrapper,
+export function addComponentIfNotFound(
+  model: EditorModel,
+  rmodel: EditorModel,
   id: string,
   nameMap: Record<string, string>,
   refMap: Record<string, string>,
   roleMap: Record<string, string>,
+  newItems: NewImportItems,
   pageid: string
 ): EditorNode {
-  const rmodel = ref.model;
-  const model = mw.model;
-
   const elm = rmodel.elements[id];
   if (isEditorProcess(elm)) {
     return addProcessIfNotFound(
-      mw,
-      ref,
+      model,
+      rmodel,
       elm.id,
       nameMap,
       refMap,
       roleMap,
+      newItems,
       pageid
     );
   }
   if (isEditorDataClass(elm)) {
-    return addDCIfNotFound(mw, ref, id, nameMap, refMap, pageid);
+    return addDCIfNotFound(
+      model,
+      rmodel,
+      id,
+      nameMap,
+      refMap,
+      newItems,
+      pageid
+    );
   }
   if (isEditorRegistry(elm)) {
-    return addRegistryIfNotFound(mw, ref, id, nameMap, refMap, pageid);
+    return addRegistryIfNotFound(
+      model,
+      rmodel,
+      id,
+      nameMap,
+      refMap,
+      newItems,
+      pageid
+    );
   }
   const newid = trydefaultID(id, model.elements);
   nameMap[id] = newid;
   const newElm = { ...elm, id: newid, pages: new Set([pageid]) };
-  model.elements[newid] = newElm;
+  newItems.elements[newid] = newElm;
   return newElm;
 }
 
 function addPageIfNotFound(
-  mw: ModelWrapper,
-  ref: ModelWrapper,
+  model: EditorModel,
+  rmodel: EditorModel,
   id: string,
   nameMap: Record<string, string>,
   refMap: Record<string, string>,
-  roleMap: Record<string, string>
+  roleMap: Record<string, string>,
+  newItems: NewImportItems
 ): EditorSubprocess {
-  const rmodel = ref.model;
-  const model = mw.model;
-
   const page = rmodel.pages[id];
 
-  const newid = findUniqueID('Page', mw.model.pages);
+  const newid = findUniqueID('Page', model.pages);
   const newPage: EditorSubprocess = {
     id: newid,
     childs: {},
@@ -181,17 +237,18 @@ function addPageIfNotFound(
     neighbor: {},
     objectVersion: 'Editor',
   };
-  model.pages[newid] = newPage;
+  newItems.pages[newid] = newPage;
 
   const newChilds: Record<string, MMELSubprocessComponent> = {};
   Object.values(page.childs).forEach(c => {
     const newElm = addComponentIfNotFound(
-      mw,
-      ref,
+      model,
+      rmodel,
       c.element,
       nameMap,
       refMap,
       roleMap,
+      newItems,
       newid
     );
     newChilds[c.element] = {
@@ -204,12 +261,13 @@ function addPageIfNotFound(
   const newData: Record<string, MMELSubprocessComponent> = {};
   Object.values(page.data).forEach(c => {
     const newElm = addComponentIfNotFound(
-      mw,
-      ref,
+      model,
+      rmodel,
       c.element,
       nameMap,
       refMap,
       roleMap,
+      newItems,
       newid
     );
     newData[c.element] = {
@@ -221,7 +279,7 @@ function addPageIfNotFound(
 
   const newEdges: Record<string, MMELEdge> = {};
   Object.values(page.edges).forEach(e => {
-    addMeasureIfNotFound(model, rmodel, e.condition);
+    addMeasureIfNotFound(model, rmodel, e.condition, newItems);
     newEdges[e.id] = {
       ...e,
       from: nameMap[e.from],
@@ -242,64 +300,72 @@ function addPageIfNotFound(
   return newPage;
 }
 
-function addLink(mw: ModelWrapper, link: MMELLink): string {
-  const newid = findUniqueID('Link', mw.model.links);
+function addLink(
+  model: EditorModel,
+  link: MMELLink,
+  newItems: NewImportItems
+): string {
+  const newid = findUniqueID('Link', model.links);
   const newLink: MMELLink = {
     ...link,
     id: newid,
   };
-  mw.model.links[newid] = newLink;
+  newItems.links[newid] = newLink;
   return newid;
 }
 
 function addProvision(
-  mw: ModelWrapper,
-  ref: ModelWrapper,
+  model: EditorModel,
+  rmodel: EditorModel,
   provision: MMELProvision,
-  refMap: Record<string, string>
+  refMap: Record<string, string>,
+  newItems: NewImportItems
 ): string {
-  const newid = findUniqueID('Provision', mw.model.provisions);
+  const newid = findUniqueID('Provision', model.provisions);
   const refs: string[] = [];
   provision.ref.forEach(r =>
-    refs.push(addRefIfNotFound(mw, ref, r, refMap).id)
+    refs.push(addRefIfNotFound(model, rmodel, r, refMap, newItems).id)
   );
   const newProvision: MMELProvision = {
     ...provision,
     id: newid,
     ref: new Set(refs),
   };
-  mw.model.provisions[newid] = newProvision;
+  newItems.provisions[newid] = newProvision;
   return newid;
 }
 
 function addNote(
-  mw: ModelWrapper,
-  ref: ModelWrapper,
+  model: EditorModel,
+  rmodel: EditorModel,
   note: MMELNote,
-  refMap: Record<string, string>
+  refMap: Record<string, string>,
+  newItems: NewImportItems
 ): string {
-  const newid = findUniqueID('Note', mw.model.notes);
+  const newid = findUniqueID('Note', model.notes);
   const refs: string[] = [];
-  note.ref.forEach(r => refs.push(addRefIfNotFound(mw, ref, r, refMap).id));
+  note.ref.forEach(r =>
+    refs.push(addRefIfNotFound(model, rmodel, r, refMap, newItems).id)
+  );
   const newNote: MMELNote = {
     ...note,
     id: newid,
     ref: new Set(refs),
   };
-  mw.model.notes[newid] = newNote;
+  newItems.notes[newid] = newNote;
   return newid;
 }
 
 function addRoleIfNotFound(
-  mw: ModelWrapper,
-  ref: ModelWrapper,
+  model: EditorModel,
+  rmodel: EditorModel,
   id: string,
-  roleMap: Record<string, string>
+  roleMap: Record<string, string>,
+  newItems: NewImportItems
 ): MMELRole {
-  const rmodel = ref.model;
-  const model = mw.model;
   if (roleMap[id] !== undefined) {
-    return model.roles[roleMap[id]];
+    const newId = roleMap[id];
+    return model.roles[newId] ?? newItems.roles[newId];
   }
 
   const role = rmodel.roles[id];
@@ -319,22 +385,23 @@ function addRoleIfNotFound(
     name: role.name,
     datatype: DataType.ROLE,
   };
-  model.roles[newid] = newRole;
+  newItems.roles[newid] = newRole;
   return newRole;
 }
 
 function addRegistryIfNotFound(
-  mw: ModelWrapper,
-  ref: ModelWrapper,
+  model: EditorModel,
+  rmodel: EditorModel,
   id: string,
   nameMap: Record<string, string>,
   refMap: Record<string, string>,
+  newItems: NewImportItems,
   pageid: string
 ): EditorRegistry {
-  const rmodel = ref.model;
-  const model = mw.model;
   if (nameMap[id] !== undefined) {
-    return model.elements[nameMap[id]] as EditorRegistry;
+    const newId = nameMap[id];
+    return (model.elements[newId] ??
+      newItems.elements[newId]) as EditorRegistry;
   }
 
   const reg = rmodel.elements[id] as EditorRegistry;
@@ -354,32 +421,39 @@ function addRegistryIfNotFound(
   const newid = trydefaultID(id, model.elements);
   nameMap[id] = newid;
 
-  const dc = addDCIfNotFound(mw, ref, reg.data, nameMap, refMap, pageid);
+  const dc = addDCIfNotFound(
+    model,
+    rmodel,
+    reg.data,
+    nameMap,
+    refMap,
+    newItems,
+    pageid
+  );
   const newReg: EditorRegistry = {
     id: newid,
     title: reg.title,
     data: dc.id,
     datatype: DataType.REGISTRY,
-    added: false,
-    pages: new Set<string>([pageid]),
     objectVersion: 'Editor',
   };
-  model.elements[newid] = newReg;
+  newItems.elements[newid] = newReg;
   return newReg;
 }
 
 function addDCIfNotFound(
-  mw: ModelWrapper,
-  ref: ModelWrapper,
+  model: EditorModel,
+  rmodel: EditorModel,
   id: string,
   nameMap: Record<string, string>,
   refMap: Record<string, string>,
+  newItems: NewImportItems,
   pageid: string
 ): EditorDataClass {
-  const rmodel = ref.model;
-  const model = mw.model;
   if (nameMap[id] !== undefined) {
-    return model.elements[nameMap[id]] as EditorDataClass;
+    const newId = nameMap[id];
+    return (model.elements[newId] ??
+      newItems.elements[newId]) as EditorDataClass;
   }
 
   const dc = rmodel.elements[id] as EditorDataClass;
@@ -391,17 +465,35 @@ function addDCIfNotFound(
     const x: MMELDataAttribute = { ...refAtt };
     attributes[x.id] = x;
     const refs: string[] = [];
-    x.ref.forEach(r => refs.push(addRefIfNotFound(mw, ref, r, refMap).id));
+    x.ref.forEach(r =>
+      refs.push(addRefIfNotFound(model, rmodel, r, refMap, newItems).id)
+    );
     x.ref = new Set(refs);
 
     const trydc = rmodel.elements[x.type];
     if (trydc !== undefined && isEditorDataClass(trydc)) {
-      x.type = addDCIfNotFound(mw, ref, x.type, nameMap, refMap, pageid).id;
+      x.type = addDCIfNotFound(
+        model,
+        rmodel,
+        x.type,
+        nameMap,
+        refMap,
+        newItems,
+        pageid
+      ).id;
     } else {
       const reg = getRegistryReference(x.type, rmodel.elements);
       if (reg !== null) {
         x.type = getReferenceDCTypeName(
-          addRegistryIfNotFound(mw, ref, reg.id, nameMap, refMap, pageid).id
+          addRegistryIfNotFound(
+            model,
+            rmodel,
+            reg.id,
+            nameMap,
+            refMap,
+            newItems,
+            pageid
+          ).id
         );
       }
     }
@@ -412,7 +504,7 @@ function addDCIfNotFound(
     if (newName) {
       newrdcs.push(newName);
     } else {
-      Logger.logger.log('Error. Not on RDCS list', x);
+      Logger.log('Error. Not on RDCS list', x);
     }
   });
   const newDC: EditorDataClass = {
@@ -421,24 +513,22 @@ function addDCIfNotFound(
     datatype: DataType.DATACLASS,
     mother: dc.mother === '' ? '' : nameMap[dc.mother],
     rdcs: new Set(newrdcs),
-    added: false,
-    pages: new Set<string>([pageid]),
     objectVersion: 'Editor',
   };
-  model.elements[newid] = newDC;
+  newItems.elements[newid] = newDC;
   return newDC;
 }
 
 function addRefIfNotFound(
-  mw: ModelWrapper,
-  ref: ModelWrapper,
+  model: EditorModel,
+  rmodel: EditorModel,
   id: string,
-  refMap: Record<string, string>
+  refMap: Record<string, string>,
+  newItems: NewImportItems
 ): MMELReference {
-  const rmodel = ref.model;
-  const model = mw.model;
   if (refMap[id] !== undefined) {
-    return model.refs[refMap[id]];
+    const newId = refMap[id];
+    return model.refs[newId] ?? newItems.refs[newId];
   }
 
   const r = rmodel.refs[id];
@@ -458,7 +548,7 @@ function addRefIfNotFound(
     title: r.title,
     datatype: DataType.REFERENCE,
   };
-  model.refs[newid] = newRef;
+  newItems.refs[newid] = newRef;
   return newRef;
 }
 
@@ -490,30 +580,41 @@ function isSameSetAttributes(
 function addMeasureIfNotFound(
   model: EditorModel,
   ref: EditorModel,
-  expression: string
+  expression: string,
+  newItems: NewImportItems
 ) {
   const results = Array.from(expression.matchAll(/\[.*?\]/g));
   for (const r of results) {
     const name = r[0].substring(1, r[0].length - 1);
     if (model.vars[name] === undefined && ref.vars[name] !== undefined) {
-      model.vars[name] = { ...ref.vars[name] };
-      addMeasureIfNotFound(model, ref, model.vars[name].definition);
+      newItems.vars[name] = { ...ref.vars[name] };
+      addMeasureIfNotFound(model, ref, ref.vars[name].definition, newItems);
     }
   }
 }
 
-function addTableIfNotFound(model: EditorModel, ref: EditorModel, id: string) {
+function addTableIfNotFound(
+  model: EditorModel,
+  ref: EditorModel,
+  id: string,
+  newItems: NewImportItems
+) {
   const table = ref.tables[id];
   const newData = table.data.map(row => [...row]);
   if (table !== undefined && model.tables[id] === undefined) {
-    model.tables[id] = { ...table, data: newData };
+    newItems.tables[id] = { ...table, data: newData };
   }
 }
 
-function addFigIfNotFound(model: EditorModel, ref: EditorModel, id: string) {
+function addFigIfNotFound(
+  model: EditorModel,
+  ref: EditorModel,
+  id: string,
+  newItems: NewImportItems
+) {
   const fig = ref.figures[id];
   if (fig !== undefined && model.figures[id] === undefined) {
-    model.figures[id] = { ...fig };
+    newItems.figures[id] = { ...fig };
   }
 }
 

@@ -25,14 +25,13 @@ const NoteListQuickEdit: React.FC<{
   setNotes: (x: Record<string, MMELNote>) => void;
   model: EditorModel;
   selected?: RefTextSelection;
-  onAddReference: (refs: Record<string, MMELReference>) => void;
+  onAddReference: (refs: MMELReference[]) => void;
 }> = function ({ notes, setNotes, model, selected, onAddReference }) {
   const refs = useMemo(() => getModelAllRefs(model), [model]);
 
   function addNote() {
     const id = findUniqueID('Note', notes);
-    notes[id] = createNote(id);
-    setNotes({ ...notes });
+    setNotes({ ...notes, [id]: createNote(id) });
   }
 
   function onImport() {
@@ -45,7 +44,7 @@ const NoteListQuickEdit: React.FC<{
         datatype: DataType.REFERENCE,
       };
       const existing = findExistingRef(model, ref, false);
-      const refid =
+      ref.id =
         existing !== null
           ? existing.id
           : trydefaultID(
@@ -55,19 +54,18 @@ const NoteListQuickEdit: React.FC<{
               )}`,
               model.refs
             );
-      if (existing === null) {
-        onAddReference({ ...model.refs, [refid]: { ...ref, id: refid } });
-      }
-
       const id = findUniqueID('Note', notes);
-      notes[id] = {
+      const newNote: MMELNote = {
         id,
         type: detectType(selected.text),
         message: selected.text,
-        ref: new Set<string>([refid]),
+        ref: new Set<string>([ref.id]),
         datatype: DataType.NOTE,
       };
-      setNotes({ ...notes });
+      setNotes({ ...notes, [id]: newNote });
+      if (existing === null) {
+        onAddReference([ref]);
+      }
     }
   }
 
@@ -94,8 +92,9 @@ const NoteListQuickEdit: React.FC<{
           refs={refs}
           setNote={x => setNotes({ ...notes, [index]: x })}
           onDelete={() => {
-            delete notes[index];
-            setNotes({ ...notes });
+            const newNotes = { ...notes };
+            delete newNotes[index];
+            setNotes(newNotes);
           }}
         />
       ))}

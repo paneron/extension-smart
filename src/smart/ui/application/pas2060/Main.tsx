@@ -55,7 +55,7 @@ const Application2060: React.FC<{
 
   function updateLive() {
     setLiveCount(x => {
-      Logger.logger.log('Live', x);
+      Logger.log('Live', x);
       return x + 1;
     });
   }

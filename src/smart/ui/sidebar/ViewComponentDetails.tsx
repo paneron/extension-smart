@@ -2,6 +2,7 @@ import React from 'react';
 import {
   EditorDataClass,
   EditorModel,
+  EditorNode,
   EditorRegistry,
   EditorSubprocess,
   getEditorDataClassById,
@@ -9,6 +10,7 @@ import {
   getEditorProvisionById,
   getEditorRefById,
   getEditorRegistryById,
+  getEditorRoleById,
   isEditorApproval,
   isEditorDataClass,
   isEditorEgate,
@@ -17,7 +19,6 @@ import {
   isEditorSignalEvent,
   isEditorTimerEvent,
 } from '../../model/editormodel';
-import { EditorNodeWithInfoCallback } from '../../model/FlowContainer';
 import { DataType } from '../../serialize/interface/baseinterface';
 import { MMELDataAttribute } from '../../serialize/interface/datainterface';
 import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
@@ -25,6 +26,7 @@ import {
   MMELNote,
   MMELProvision,
   MMELReference,
+  MMELRole,
 } from '../../serialize/interface/supportinterface';
 import { SelectableNodeTypes } from '../../utils/constants';
 import { DescribeApproval } from '../common/description/approval';
@@ -41,13 +43,14 @@ import { DescribeProcess } from '../common/description/process';
 const NODE_DETAIL_VIEWS: Record<
   SelectableNodeTypes,
   React.FC<{
-    node: EditorNodeWithInfoCallback;
+    node: EditorNode;
     getRefById: (id: string) => MMELReference | null;
     getRegistryById: (id: string) => EditorRegistry | null;
     getDCById: (id: string) => EditorDataClass | null;
     getProvisionById: (id: string) => MMELProvision | null;
     getNoteById: (id: string) => MMELNote | null;
     getOutgoingEdgesById: (id: string) => MMELEdge[];
+    getRoleById: (id: string) => MMELRole | null;
     CustomAttribute?: React.FC<{
       att: MMELDataAttribute;
       getRefById?: (id: string) => MMELReference | null;
@@ -92,13 +95,13 @@ const NODE_DETAIL_VIEWS: Record<
     ) : (
       <></>
     ),
-  [DataType.APPROVAL]: ({ node, getRefById, getRegistryById }) =>
+  [DataType.APPROVAL]: ({ node, getRefById, getRegistryById, getRoleById }) =>
     isEditorApproval(node) ? (
       <DescribeApproval
         app={node}
         getRefById={getRefById}
         getRegistryById={getRegistryById}
-        getRoleById={node.getRoleById}
+        getRoleById={getRoleById}
       />
     ) : (
       <></>
@@ -108,6 +111,7 @@ const NODE_DETAIL_VIEWS: Record<
     getProvisionById,
     getRefById,
     getNoteById,
+    getRoleById,
     CustomProvision,
   }) =>
     isEditorProcess(node) ? (
@@ -117,6 +121,7 @@ const NODE_DETAIL_VIEWS: Record<
         getRefById={getRefById}
         getNoteById={getNoteById}
         CustomProvision={CustomProvision}
+        getRoleById={getRoleById}
         {...node}
       />
     ) : (
@@ -125,7 +130,7 @@ const NODE_DETAIL_VIEWS: Record<
 };
 
 export const Describe: React.FC<{
-  node: EditorNodeWithInfoCallback;
+  node: EditorNode;
   model: EditorModel;
   page: EditorSubprocess;
   CustomAttribute?: React.FC<{
@@ -162,6 +167,10 @@ export const Describe: React.FC<{
     return Object.values(page.edges).filter(e => e.from === id);
   }
 
+  function getRoleById(id: string): MMELRole | null {
+    return getEditorRoleById(model, id);
+  }
+
   const View = NODE_DETAIL_VIEWS[node.datatype as SelectableNodeTypes];
   return (
     <View
@@ -172,6 +181,7 @@ export const Describe: React.FC<{
       getProvisionById={getProvisionById}
       getOutgoingEdgesById={getOutgoingEdgesById}
       getNoteById={getNoteById}
+      getRoleById={getRoleById}
       CustomAttribute={CustomAttribute}
       CustomProvision={CustomProvision}
     />

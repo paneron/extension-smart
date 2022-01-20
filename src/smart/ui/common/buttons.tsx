@@ -15,6 +15,19 @@ export const RemoveButton: React.FC<{
   );
 };
 
+export const BringOutButton: React.FC<{
+  onClick: () => void;
+}> = function ({ onClick }) {
+  return (
+    <BaseButton
+      tooltip="Remove Component"
+      icon="cross"
+      intent="warning"
+      onClick={onClick}
+    />
+  );
+};
+
 export const EditButton: React.FC<{
   onClick: () => void;
 }> = function ({ onClick }) {
@@ -42,7 +55,17 @@ export const AddSubprocessButton: React.FC<{
 }> = function ({ callback }) {
   return (
     <Tooltip2 content="Add subprocess">
-      <Button icon="map-create" onClick={() => callback()} />;
+      <Button icon="map-create" onClick={callback} />;
+    </Tooltip2>
+  );
+};
+
+export const RemoveSubprocessButton: React.FC<{
+  callback: () => void;
+}> = function ({ callback }) {
+  return (
+    <Tooltip2 content="Remove subprocess">
+      <Button icon="map" intent="danger" onClick={callback} />;
     </Tooltip2>
   );
 };

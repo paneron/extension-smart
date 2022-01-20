@@ -23,10 +23,9 @@ import {
   Button,
   ControlGroup,
   Dialog,
-  HotkeysProvider,
+  HotkeyConfig,
   HotkeysTarget2,
   IToaster,
-  IToastProps,
   Toaster,
 } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
@@ -38,42 +37,22 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
   createEditorModelWrapper,
   getEditorReactFlowElementsFrom,
-  ModelWrapper,
 } from '../model/modelwrapper';
 import {
-  addToHistory,
-  createPageHistory,
-  getBreadcrumbs,
-  PageHistory,
-  popPage,
+  getBreadcrumbsActions,
+  HistoryItem,
   RepoHistory,
 } from '../model/history';
 import {
-  createRegistry,
-  createSubprocessComponent,
-} from '../utils/EditorFactory';
-import {
   EdgeTypes,
   EditorState,
+  EditorViewOption,
   isModelWrapper,
   NodeTypes,
   ReferenceContent,
 } from '../model/States';
-import {
-  EditorDataClass,
-  EditorModel,
-  isEditorData,
-  isEditorNode,
-} from '../model/editormodel';
+import { EditorDataClass } from '../model/editormodel';
 import EditorFileMenu from './menu/EditorFileMenu';
-import { SelectedNodeDescription } from './sidebar/selected';
-import {
-  DiagPackage,
-  DiagTypes,
-  IDiagAction,
-  MyDiag,
-  SetDiagAction,
-} from './dialog/dialogs';
 import {
   DataVisibilityButton,
   EdgeEditButton,
@@ -81,20 +60,13 @@ import {
 } from './control/buttons';
 import NewComponentPane from './control/newComponentPane';
 import {
-  DeletableNodeTypes,
   DOCVERSION,
   DragAndDropImportRefType,
   DragAndDropNewFormatType,
-  EditableNodeTypes,
-  EditAction,
   NewComponentTypes,
 } from '../utils/constants';
-import {
-  addComponentToModel,
-  addEdge,
-} from '../utils/ModelAddComponentHandler';
+import { getAddComponentAction } from '../utils/ModelAddComponentHandler';
 import { EdgePackage } from '../model/FlowContainer';
-import { deleteEdge } from '../utils/ModelRemoveComponentHandler';
 import MGDButton from '../MGDComponents/MGDButton';
 import { MGDButtonType } from '../../css/MGDButton';
 import {
@@ -104,25 +76,15 @@ import {
   react_flow_container_layout,
   sidebar_layout,
 } from '../../css/layout';
-import SearchComponentPane from './sidebar/search';
-import {
-  checkId,
-  genDCIdByRegId,
-  getRootName,
-  Logger,
-} from '../utils/ModelFunctions';
+import { checkId, genDCIdByRegId, Logger } from '../utils/ModelFunctions';
 import LegendPane from './common/description/LegendPane';
 import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,
   SearchResultStyles,
 } from '../utils/SearchFunctions';
-import {
-  MMELMetadata,
-  MMELRole,
-} from '../serialize/interface/supportinterface';
+import { MMELRole } from '../serialize/interface/supportinterface';
 import ModelReferenceView from './editreference/ModelReferenceView';
-import { addProcessIfNotFound } from '../utils/ModelImport';
 import DocumentReferenceView from './editreference/DocumentReferenceView';
 import { RefTextSelection } from '../model/selectionImport';
 import ImportFromSelectionButton from './popover/ImportFromSelectionButton';
@@ -142,41 +104,69 @@ import EditorReferenceMenuButton from './menu/EditorReferenceMenuButton';
 import { indexModel } from '../model/mapmodel';
 import { MMELDocument } from '../model/document';
 import { LoadingContainer } from './common/Loading';
+import { createNewComment } from '../utils/Comments';
+import EditorViewMenu from './menu/EditorViewMenu';
+import { EditorAction } from '../model/editor/state';
+import {
+  addCommentCommand,
+  deleteCommentCommand,
+  resolveCommentCommand,
+} from '../model/editor/commands/comment';
+import {
+  drillUpCommand,
+  pageChangeCommand,
+  replaceHisCommand,
+} from '../model/editor/commands/history';
+import {
+  dragCommand,
+  newEdgeCommand,
+  removeEdgeCommand,
+} from '../model/editor/commands/page';
+import SearchComponentPane from './sidebar/search';
+import { SelectedNodeDescription } from './sidebar/selected';
+import BasicSettingPane from './control/settings';
+import { addRoleCommand } from '../model/editor/commands/role';
+import { addRegistryCommand } from '../model/editor/commands/data';
+import { RegistryCombined } from '../model/editor/components/element/registry';
+import { importElmCommand } from '../model/editor/commands/import';
+import { ChangeLog } from '../model/changelog';
+import ChangeLogDialog from './control/ChangeLogViewer';
 
 const ModelEditor: React.FC<{
   isVisible: boolean;
   className?: string;
   setClickListener: (f: (() => void)[]) => void;
   state: EditorState;
-  setState: (x: EditorState, rh: boolean) => void;
   redo?: () => void;
   undo?: () => void;
   copy?: () => void;
   paste?: () => void;
   setSelectedId: (id: string | undefined) => void;
-  isBSIEnabled?: boolean;
   repo?: MMELRepo;
-  resetHistory: () => void;
   index: RepoIndex;
+  act: (x: EditorAction) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
+  changelog: ChangeLog;
 }> = ({
   isVisible,
   className,
   setClickListener,
   state,
-  setState,
   redo,
   undo,
   copy,
   paste,
   setSelectedId,
-  isBSIEnabled,
   repo,
-  resetHistory,
   index,
+  act,
+  setUndoListener,
+  clearRedo,
+  changelog,
 }) => {
-  const { logger, useObjectData, updateObjects } = useContext(DatasetContext);
-
-  Logger.logger = logger!;
+  const { useObjectData, updateObjects, useRemoteUsername } =
+    useContext(DatasetContext);
 
   const canvusRef: RefObject<HTMLDivElement> = React.createRef();
 
@@ -187,12 +177,8 @@ const ModelEditor: React.FC<{
     []
   );
 
-  const [rfInstance, setRfInstance] = useState<OnLoadParams | null>(null);
-  const [dialogPack, setDialogPack] = useState<DiagPackage>({
-    type: null,
-    callback: () => {},
-    msg: '',
-  });
+  const [reactFlow, setReactFlow] = useState<OnLoadParams | null>(null);
+  const [settingOpen, openSetting] = useState<boolean>(false);
   const [reference, setReference] = useState<ReferenceContent | undefined>(
     undefined
   );
@@ -206,17 +192,38 @@ const ModelEditor: React.FC<{
   const [toaster] = useState<IToaster>(Toaster.create());
   const [isImportRoleOpen, setIsImportRoleOpen] = useState<boolean>(false);
   const [isImportRegOpen, setIsImportRegOpen] = useState<boolean>(false);
-  const [idVisible, setIdVisible] = useState<boolean>(false);
+  const [view, setView] = useState<EditorViewOption>({
+    dvisible: true,
+    edgeDeleteVisible: false,
+    idVisible: false,
+    commentVisible: true,
+  });
   const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
   const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
   const [repoHis, setRepoHis] = useState<RepoHistory>([]);
+  const [isChangeOpen, setChangeOpen] = useState<boolean>(false);
+  const [dragStart, setDragStart] = useState<{
+    id: string;
+    x: number;
+    y: number;
+  }>({
+    id: '',
+    x: 0,
+    y: 0,
+  });
+
+  Logger.log('Logs', changelog);
+
+  const userData = useRemoteUsername();
+  const username =
+    userData === undefined ||
+    userData.value === undefined ||
+    userData.value.username === undefined
+      ? 'Anonymous'
+      : userData.value.username;
 
   const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
-  const repoModelFile = useObjectData({
-    objectPaths: repo !== undefined ? [repoPath] : [],
-  });
   const refPath = getPathByNS(refrepo ?? '', RepoFileType.MODEL);
-  const repoData = repo !== undefined ? repoModelFile.value.data[repoPath] : {};
 
   const repoRefFile = useObjectData({
     objectPaths: refrepo !== undefined ? [refPath] : [],
@@ -249,40 +256,32 @@ const ModelEditor: React.FC<{
     setMainRepo(undefined);
   }
 
-  useMemo(() => {
-    if (
-      repo !== undefined &&
-      repoData !== null &&
-      repoData !== undefined &&
-      !repoModelFile.isUpdating
-    ) {
-      if (repo.ns !== mainRepo) {
-        const json = repoData as MMELJSON;
-        const model = JSONToMMEL(json);
-        const mw = createEditorModelWrapper(model);
-        setState(
-          { ...state, history: createPageHistory(mw), modelWrapper: mw },
-          false
-        );
-        resetHistory();
-        setMainRepo(repo.ns);
-      }
-    }
-  }, [repoData, repoModelFile.isUpdating]);
+  const model = state.model;
 
-  const mw = state.modelWrapper;
-  const model = mw.model;
+  const elements = getEditorReactFlowElementsFrom(
+    state.page,
+    model,
+    index,
+    view,
+    onProcessClick,
+    removeEdge,
+    getStyleById,
+    getSVGColorById,
+    addCommentToModel,
+    toggleCommentResolved,
+    deleteComment
+  );
 
   async function saveRepo() {
     if (repo && updateObjects && isVisible) {
-      saveLayout();
+      const repoChangePath = getPathByNS(repo.ns, RepoFileType.HISTORY);
       const meta = model.meta;
       const task = updateObjects({
         commitMessage: COMMITMSG,
         _dangerouslySkipValidation: true,
         objectChangeset: {
           [repoPath]: {
-            newValue: MMELToSerializable(state.modelWrapper.model),
+            newValue: MMELToSerializable(state.model),
           },
           [repoIndexPath]: {
             newValue: setValueToIndex(index, repo.ns, {
@@ -292,6 +291,9 @@ const ModelEditor: React.FC<{
               date: new Date(),
               type: 'Imp',
             }),
+          },
+          [repoChangePath]: {
+            newValue: changelog,
           },
         },
       });
@@ -303,227 +305,97 @@ const ModelEditor: React.FC<{
           })
         )
         .catch(e => {
-          Logger.logger.log(e.message);
-          Logger.logger.log(e.stack);
+          Logger.log(e.message);
+          Logger.log(e.stack);
         });
     }
   }
 
-  function showMsg(msg: IToastProps) {
-    toaster.show(msg);
-  }
-
   function onLoad(params: OnLoadParams) {
-    logger?.log('flow loaded');
-    setRfInstance(params);
+    setReactFlow(params);
     params.fitView();
   }
 
-  function setDialogType(x: DiagTypes | null) {
-    setDialogPack({ ...dialogPack, type: x });
+  function addCommentToModel(msg: string, pid: string, parent?: string) {
+    const m = createNewComment(model.comments, username, msg);
+    act(addCommentCommand(m, pid, parent));
   }
 
-  function setModelAfterDelete(model: EditorModel) {
-    setState(
-      {
-        ...state,
-        modelWrapper: {
-          ...mw,
-          model: { ...model },
-        },
-      },
-      true
-    );
-    setDialogType(null);
+  function toggleCommentResolved(cid: string) {
+    const com = model.comments[cid];
+    act(resolveCommentCommand(com));
   }
 
-  function setDiag(
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) {
-    const props: IDiagAction = {
-      nodeType: nodeType,
-      model: model,
-      page: mw.page,
-      id: id,
-      setModelAfterDelete,
-    };
-    saveLayout();
-    setDialogPack(SetDiagAction[action](props));
-  }
-
-  function saveLayout() {
-    logger?.log('Save Layout');
-    if (rfInstance !== null) {
-      for (const x of rfInstance.getElements()) {
-        const data = x.data;
-        const page = model.pages[mw.page];
-        if (isNode(x) && isEditorNode(data)) {
-          const node = isEditorData(data)
-            ? page.data[data.id]
-            : page.childs[data.id];
-          if (node !== undefined) {
-            node.x = x.position.x;
-            node.y = x.position.y;
-          } else {
-            const nc = createSubprocessComponent(data.id);
-            if (isEditorData(data)) {
-              page.data[data.id] = nc;
-            } else {
-              page.childs[data.id] = nc;
-            }
-            nc.x = x.position.x;
-            nc.y = x.position.y;
-          }
-        }
-      }
-    }
-    return mw;
+  function deleteComment(cid: string, pid: string, parent?: string) {
+    act(deleteCommentCommand(cid, pid, parent));
   }
 
   function toggleDataVisibility() {
-    if (state.dvisible) {
-      saveLayout();
-    }
-    setState({ ...state, dvisible: !state.dvisible }, false);
+    setView({ ...view, dvisible: !view.dvisible });
   }
 
   function toggleEdgeDelete() {
-    setState({ ...state, edgeDeleteVisible: !state.edgeDeleteVisible }, false);
-  }
-
-  function setNewModelWrapper(mw: ModelWrapper) {
-    setState(
-      { ...state, history: createPageHistory(mw), modelWrapper: mw },
-      true
-    );
-  }
-
-  function setModelWrapper(mw: ModelWrapper) {
-    setState({ ...state, modelWrapper: mw }, true);
-  }
-
-  function onMetaChanged(meta: MMELMetadata) {
-    state.history.items[0].pathtext = getRootName(meta);
-    model.meta = meta;
-    setState({ ...state }, true);
-  }
-
-  function onPageChange(updated: PageHistory, newPage: string) {
-    saveLayout();
-    state.history = updated;
-    mw.page = newPage;
-    setState({ ...state }, true);
+    setView({ ...view, edgeDeleteVisible: !view.edgeDeleteVisible });
   }
 
   function onProcessClick(pageid: string, processid: string): void {
-    saveLayout();
-    mw.page = pageid;
-    logger?.log('Go to page', pageid);
-    addToHistory(state.history, mw.page, processid);
-    setState({ ...state }, true);
-  }
-
-  function removeEdge(id: string) {
-    deleteEdge(model, mw.page, id);
-    setState({ ...state }, true);
+    act(pageChangeCommand(pageid, processid));
   }
 
   function drillUp(): void {
-    if (state.history.items.length > 0) {
-      saveLayout();
-      mw.page = popPage(state.history);
-      setState({ ...state }, true);
-    }
+    act(drillUpCommand());
   }
 
   function onDrop(event: React.DragEvent<unknown>) {
     event.preventDefault();
-    if (canvusRef.current !== null && rfInstance !== null) {
+    if (canvusRef.current !== null && reactFlow !== null) {
       const reactFlowBounds = canvusRef.current.getBoundingClientRect();
       const type = event.dataTransfer.getData(DragAndDropNewFormatType);
       const refid = event.dataTransfer.getData(DragAndDropImportRefType);
 
-      const pos = rfInstance.project({
+      const pos = reactFlow.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
       if (type !== '') {
-        const model = addComponentToModel(
-          mw,
+        const action = getAddComponentAction(
+          state.page,
+          state.model.elements,
           type as NewComponentTypes,
           pos,
-          selectionImport !== undefined ? selectionImport.text : undefined
+          selectionImport ? selectionImport.text : undefined
         );
-        setState(
-          {
-            ...state,
-            modelWrapper: {
-              ...mw,
-              model: { ...model },
-            },
-          },
-          true
-        );
+        act(action);
       } else if (
         refid !== '' &&
         reference !== undefined &&
         isModelWrapper(reference)
       ) {
-        const page = model.pages[mw.page];
-
-        const process = addProcessIfNotFound(
-          mw,
-          reference,
-          refid,
-          {},
-          {},
-          {},
-          page.id
-        );
-
-        const nc = createSubprocessComponent(process.id);
-        nc.x = pos.x;
-        nc.y = pos.y;
-
-        page.childs[process.id] = nc;
-        setState(
-          {
-            ...state,
-            modelWrapper: {
-              ...mw,
-              model: { ...model },
-            },
-          },
-          true
-        );
+        const rmodel = reference.model;
+        act(importElmCommand(refid, rmodel, pos.x, pos.y, state.page));
       }
     }
   }
 
+  function removeEdge(id: string) {
+    act(removeEdgeCommand(state.page, id));
+  }
+
   function connectHandle(x: Edge<EdgePackage> | Connection) {
     if (x.source !== null && x.target !== null) {
-      const page = model.pages[mw.page];
-      model.pages[mw.page] = addEdge(page, model.elements, x.source, x.target);
-      setState({ ...state }, true);
+      const page = model.pages[state.page];
+      const s = page.childs[x.source];
+      const t = page.childs[x.target];
+      if (s && t) {
+        const action = newEdgeCommand(page, s.element, t.element);
+        act(action);
+      }
     }
   }
 
-  function onPageAndHistroyChange(
-    selected: string,
-    pageid: string,
-    history: PageHistory
-  ) {
+  function onPageAndHistroyChange(selected: string, history: HistoryItem[]) {
     setSelected(selected);
-    setState(
-      {
-        ...state,
-        history,
-        modelWrapper: { ...mw, page: pageid },
-      },
-      true
-    );
+    act(replaceHisCommand(history));
   }
 
   function getStyleById(id: string) {
@@ -545,34 +417,20 @@ const ModelEditor: React.FC<{
       name: data,
       datatype: DataType.ROLE,
     };
-    setModelWrapper({
-      ...mw,
-      model: { ...model, roles: { ...model.roles, [id]: role } },
-    });
+    act(addRoleCommand(role));
   }
 
   function importRegistry(id: string, data: string) {
-    const dcid = genDCIdByRegId(id);
-    const newreg = createRegistry(id);
     const newdc: EditorDataClass = {
       attributes: {},
-      id: dcid,
+      id,
       datatype: DataType.DATACLASS,
-      added: false,
-      pages: new Set<string>(),
       objectVersion: 'Editor',
       rdcs: new Set<string>(),
       mother: id,
     };
-    newreg.data = dcid;
-    newreg.title = data;
-    setModelWrapper({
-      ...mw,
-      model: {
-        ...model,
-        elements: { ...model.elements, [id]: newreg, [dcid]: newdc },
-      },
-    });
+    const combined: RegistryCombined = { ...newdc, title: data };
+    act(addRegistryCommand(combined));
   }
 
   function setHis(newHis: RepoHistory) {
@@ -599,11 +457,12 @@ const ModelEditor: React.FC<{
     setRepoHis([]);
   }
 
-  const hotkeys = [
+  const hotkeys: HotkeyConfig[] = [
     {
       combo: 'ctrl+s',
       global: true,
       label: 'Save',
+      allowInInput: true,
       onKeyDown: saveRepo,
     },
   ];
@@ -612,7 +471,6 @@ const ModelEditor: React.FC<{
     <>
       <EditorReferenceMenuButton
         setReference={selectReference}
-        isBSIEnabled={isBSIEnabled}
         reference={reference}
         isRepo={repo !== undefined}
         setRefRepo={selectRefRepo}
@@ -659,13 +517,10 @@ const ModelEditor: React.FC<{
         placement="bottom-start"
         content={
           <EditorFileMenu
-            {...{
-              setModelWrapper: setNewModelWrapper,
-              getLatestLayout: saveLayout,
-              setDialogType,
-              isRepoMode: repo !== undefined,
-              onRepoSave: saveRepo,
-            }}
+            model={model}
+            openSetting={() => openSetting(true)}
+            openChangeLog={() => setChangeOpen(true)}
+            onRepoSave={saveRepo}
           />
         }
       >
@@ -678,10 +533,17 @@ const ModelEditor: React.FC<{
       >
         <Button>Edit</Button>
       </Popover2>
+      <Popover2
+        minimal
+        placement="bottom-start"
+        content={<EditorViewMenu viewOption={view} setViewOption={setView} />}
+      >
+        <Button>View</Button>
+      </Popover2>
       {reference === undefined && referenceMenu}
       <MGDButton
         type={MGDButtonType.Primary}
-        disabled={state.history.items.length <= 1}
+        disabled={state.history.length <= 1}
         onClick={drillUp}
       >
         Drill up
@@ -689,7 +551,7 @@ const ModelEditor: React.FC<{
     </ControlGroup>
   );
 
-  const breadcrumbs = getBreadcrumbs(state.history, onPageChange);
+  const breadcrumbs = getBreadcrumbsActions(state.history, act);
 
   const sidebar = (
     <Sidebar
@@ -702,14 +564,13 @@ const ModelEditor: React.FC<{
           title: 'Selected node',
           content: (
             <SelectedNodeDescription
-              modelWrapper={state.modelWrapper}
-              setDialog={setDiag}
-              setModel={m =>
-                setModelWrapper({ ...state.modelWrapper, model: m })
-              }
+              model={model}
+              page={state.page}
+              act={act}
               provision={selectionImport}
-              getLatestLayoutMW={saveLayout}
               onSelect={setSelectedId}
+              setUndoListener={setUndoListener}
+              clearRedo={clearRedo}
             />
           ),
         },
@@ -723,7 +584,7 @@ const ModelEditor: React.FC<{
           title: 'Search components',
           content: (
             <SearchComponentPane
-              model={state.modelWrapper.model}
+              model={state.model}
               onChange={onPageAndHistroyChange}
               resetSearchElements={resetSearchElements}
             />
@@ -733,126 +594,125 @@ const ModelEditor: React.FC<{
     />
   );
 
-  useEffect(
-    () => () => {
-      saveLayout();
-    },
-    [isVisible]
-  );
-
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    return function () {
       setReference(undefined);
-    },
-    [repo]
-  );
+    };
+  }, [repo]);
+
+  function nodeDrag(id: string) {
+    if (reactFlow !== null) {
+      for (const flowNode of reactFlow.getElements()) {
+        if (flowNode.id === id && dragStart.id === id && isNode(flowNode)) {
+          const action = dragCommand(state.page, model, flowNode, dragStart);
+          act(action);
+        }
+      }
+    }
+  }
+
+  function startDrag(id: string) {
+    if (reactFlow !== null) {
+      for (const flowNode of reactFlow.getElements()) {
+        if (flowNode.id === id && isNode(flowNode)) {
+          setDragStart({ id, x: flowNode.position.x, y: flowNode.position.y });
+        }
+      }
+    }
+  }
 
   if (isVisible) {
-    const diagProps = dialogPack.type === null ? null : MyDiag[dialogPack.type];
     return (
-      <HotkeysProvider>
-        <HotkeysTarget2 hotkeys={hotkeys}>
-          <div css={multi_model_container}>
-            {diagProps !== null && (
-              <Dialog
-                isOpen={dialogPack !== null}
-                title={diagProps.title}
-                css={
-                  diagProps.fullscreen
-                    ? [dialog_layout, dialog_layout__full]
-                    : ''
-                }
-                onClose={() => setDialogType(null)}
-                canEscapeKeyClose={false}
-                canOutsideClickClose={false}
-              >
-                <diagProps.Panel
-                  {...{ setModelWrapper, onMetaChanged, showMsg }}
-                  modelwrapper={state.modelWrapper}
-                  callback={dialogPack.callback}
-                  cancel={() => setDialogType(null)}
-                  repo={repo}
-                  msg={dialogPack.msg}
-                />
-              </Dialog>
-            )}
-            <ReactFlowProvider>
-              <Workspace
-                {...{ className, toolbar, sidebar }}
-                navbarProps={{ breadcrumbs }}
-                style={{ flex: 3 }}
-              >
-                <div css={react_flow_container_layout}>
-                  <ReactFlow
-                    key="MMELModel"
-                    elements={getEditorReactFlowElementsFrom(
-                      state.modelWrapper,
-                      index,
-                      state.dvisible,
-                      state.edgeDeleteVisible,
-                      onProcessClick,
-                      removeEdge,
-                      getStyleById,
-                      getSVGColorById,
-                      idVisible
-                    )}
-                    {...{ onLoad, onDrop, onDragOver }}
-                    onConnect={connectHandle}
-                    nodesConnectable={true}
-                    snapToGrid={true}
-                    snapGrid={[10, 10]}
-                    nodeTypes={NodeTypes}
-                    edgeTypes={EdgeTypes}
-                    ref={canvusRef}
-                  >
-                    <Controls>
-                      <DataVisibilityButton
-                        isOn={state.dvisible}
-                        onClick={toggleDataVisibility}
-                      />
-                      <EdgeEditButton
-                        isOn={state.edgeDeleteVisible}
-                        onClick={toggleEdgeDelete}
-                      />
-                      <IdVisibleButton
-                        isOn={idVisible}
-                        onClick={() => setIdVisible(x => !x)}
-                      />
-                    </Controls>
-                  </ReactFlow>
-                  {searchResult.size > 0 && (
-                    <LegendPane list={SearchResultStyles} onLeft={false} />
-                  )}
-                </div>
-              </Workspace>
-            </ReactFlowProvider>
+      <HotkeysTarget2 hotkeys={hotkeys}>
+        <div css={multi_model_container}>
+          {isChangeOpen && (
+            <ChangeLogDialog
+              log={changelog}
+              onClose={() => setChangeOpen(false)}
+            />
+          )}
+          {settingOpen && (
+            <Dialog
+              isOpen={settingOpen}
+              title="Settings"
+              css={[dialog_layout, dialog_layout__full]}
+              onClose={() => openSetting(false)}
+              canEscapeKeyClose={false}
+              canOutsideClickClose={false}
+            >
+              <BasicSettingPane model={model} act={act} />
+            </Dialog>
+          )}
+          <ReactFlowProvider>
+            <Workspace
+              {...{ className, toolbar, sidebar }}
+              navbarProps={{ breadcrumbs }}
+              style={{ flex: 3 }}
+            >
+              <div css={react_flow_container_layout}>
+                <ReactFlow
+                  elements={elements}
+                  {...{ onLoad, onDrop, onDragOver }}
+                  onConnect={connectHandle}
+                  nodesConnectable={true}
+                  snapToGrid={true}
+                  snapGrid={[10, 10]}
+                  nodeTypes={NodeTypes}
+                  edgeTypes={EdgeTypes}
+                  ref={canvusRef}
+                  onNodeDragStop={(e, node) => nodeDrag(node.id)}
+                  onNodeDragStart={(e, node) => startDrag(node.id)}
+                >
+                  <Controls>
+                    <DataVisibilityButton
+                      isOn={view.dvisible}
+                      onClick={toggleDataVisibility}
+                    />
+                    <EdgeEditButton
+                      isOn={view.edgeDeleteVisible}
+                      onClick={toggleEdgeDelete}
+                    />
+                    <IdVisibleButton
+                      isOn={view.idVisible}
+                      onClick={() =>
+                        setView({ ...view, idVisible: !view.idVisible })
+                      }
+                    />
+                  </Controls>
+                </ReactFlow>
+                {searchResult.size > 0 && (
+                  <LegendPane list={SearchResultStyles} onLeft={false} />
+                )}
+              </div>
+            </Workspace>
+          </ReactFlowProvider>
 
-            {reference !== undefined &&
-              (refrepo !== undefined ? (
-                <LoadingContainer label="Loading..." size={3} />
-              ) : isModelWrapper(reference) ? (
-                <ModelReferenceView
-                  className={className}
-                  modelWrapper={reference}
-                  setModelWrapper={setReference}
-                  menuControl={referenceMenu}
-                  index={index}
-                  repoHis={repoHis}
-                  setRepoHis={setHis}
-                  goToNextModel={goToNextModel}
-                />
-              ) : (
-                <DocumentReferenceView
-                  className={className}
-                  document={reference}
-                  menuControl={referenceMenu}
-                  setClickListener={setClickListener}
-                  setPImport={setSImport}
-                />
-              ))}
-          </div>
-        </HotkeysTarget2>
-      </HotkeysProvider>
+          {reference !== undefined &&
+            (refrepo !== undefined ? (
+              <LoadingContainer label="Loading..." size={3} />
+            ) : isModelWrapper(reference) ? (
+              <ModelReferenceView
+                className={className}
+                model={reference.model}
+                page={reference.page}
+                setModelWrapper={setReference}
+                menuControl={referenceMenu}
+                index={index}
+                repoHis={repoHis}
+                setRepoHis={setHis}
+                goToNextModel={goToNextModel}
+              />
+            ) : (
+              <DocumentReferenceView
+                className={className}
+                document={reference}
+                menuControl={referenceMenu}
+                setClickListener={setClickListener}
+                setPImport={setSImport}
+              />
+            ))}
+        </div>
+      </HotkeysTarget2>
     );
   }
   return <div></div>;

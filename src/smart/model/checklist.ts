@@ -58,9 +58,9 @@ export interface ChecklistPackage {
 
 export function getCheckListId(x: ChecklistNodeType, pid?: string) {
   if (isMMELDataAttribute(x)) {
-    return `${x.datatype}#${x.id}`;
-  } else if (pid !== undefined) {
     return `${x.datatype}#${pid ?? ''}#${x.id}`;
+  } else if (pid !== undefined) {
+    return `${x.datatype}#${pid}#${x.id}`;
   } else {
     return x.id;
   }

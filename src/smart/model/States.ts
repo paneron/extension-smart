@@ -1,6 +1,6 @@
 import React from 'react';
 import { NodeProps } from 'react-flow-renderer';
-import { PageHistory } from './history';
+import { HistoryItem, PageHistory } from './history';
 import { ModelWrapper } from './modelwrapper';
 import { DataType } from '../serialize/interface/baseinterface';
 import { DataLinkEdge, NormalEdge, SelfLoopEdge } from '../ui/flowui/edgeUI';
@@ -14,8 +14,7 @@ import {
   StartComponent,
   TimerComponent,
 } from '../ui/flowui/nodeUI';
-import { ModelType } from './editormodel';
-import { SMARTWorkspace } from './workspace';
+import { EditorModel, ModelType } from './editormodel';
 import { MMELDocument } from './document';
 
 export interface FunModel {
@@ -24,15 +23,17 @@ export interface FunModel {
 }
 
 export interface EditorState {
-  dvisible: boolean; // visibility of data nodes
-  edgeDeleteVisible: boolean; // visibility of the remove edge buttons
-  history: PageHistory;
-  modelWrapper: ModelWrapper;
+  history: HistoryItem[];
+  page: string;
+  model: EditorModel;
+  type: 'model';
 }
 
-export interface ViewerState {
-  history: PageHistory;
-  modelWrapper: ModelWrapper;
+export interface EditorViewOption {
+  dvisible: boolean; // visibility of data nodes
+  edgeDeleteVisible: boolean; // visibility of the remove edge buttons
+  idVisible: boolean;
+  commentVisible: boolean;
 }
 
 export interface ViewerOption {
@@ -60,13 +61,6 @@ export interface MapperState {
   historyMap: Record<string, PageHistory>;
 }
 
-export interface ActionState {
-  dvisible: boolean; // visibility of data nodes
-  history: PageHistory;
-  modelWrapper: ModelWrapper;
-  workspace: SMARTWorkspace;
-}
-
 export interface MapperSelectedInterface {
   modelType: ModelType;
   selected: string;
@@ -83,7 +77,7 @@ export interface LegendInterface {
 }
 
 export function isModelWrapper(x: ReferenceContent): x is ModelWrapper {
-  return x.type === 'modelwrapper';
+  return x.type === 'model';
 }
 
 export const MMELtoFlowEntries: Record<string, MMELtoFlowEntry> = {

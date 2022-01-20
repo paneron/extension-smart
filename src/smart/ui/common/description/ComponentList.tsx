@@ -22,7 +22,7 @@ export const ApprovalRecordList: React.FC<{
     <>
       {regs.length > 0 ? (
         <>
-          <p>Appproval record(s):</p>
+          <p>Approval record(s):</p>
           <ul>
             {regs.map(reg => (
               <li>{reg.title}</li>

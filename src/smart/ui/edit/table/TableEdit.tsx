@@ -1,20 +1,17 @@
 import React from 'react';
-import {
-  EditorModel,
-  EditorProcess,
-  isEditorProcess,
-} from '../../../model/editormodel';
+import { EditorModel } from '../../../model/editormodel';
 import { MMELTable } from '../../../serialize/interface/supportinterface';
 import { checkId, defaultItemSorter } from '../../../utils/ModelFunctions';
 import { createTable } from '../../../utils/EditorFactory';
 import { IListItem, IManageHandler } from '../../common/fields';
 import ListManagePage from '../../common/listmanagement/listmanagement';
 import TableItemEditPage from './TableItemEdit';
+import { ModelAction } from '../../../model/editor/model';
 
 const TableEditPage: React.FC<{
   model: EditorModel;
-  setModel: (model: EditorModel) => void;
-}> = function ({ model, setModel }) {
+  act: (x: ModelAction) => void;
+}> = function ({ model, act }) {
   function matchFilter(x: MMELTable, filter: string) {
     return (
       filter === '' ||
@@ -30,52 +27,43 @@ const TableEditPage: React.FC<{
       .sort(defaultItemSorter);
   }
 
-  function replaceReferences(matchid: string, replaceid: string) {
-    for (const x in model.elements) {
-      const elm = model.elements[x];
-      if (isEditorProcess(elm)) {
-        const newSet = new Set([...elm.tables]);
-        if (newSet.has(matchid)) {
-          newSet.delete(matchid);
-          newSet.add(replaceid);
-          const newElm: EditorProcess = { ...elm, tables: newSet };
-          model.elements[x] = newElm;
-        }
-      }
-    }
-  }
-
   function removeTableListItem(ids: string[]) {
-    for (const id of ids) {
-      delete model.tables[id];
-    }
-    setModel(model);
+    const action: ModelAction = {
+      type: 'model',
+      act: 'table',
+      task: 'delete',
+      value: ids,
+    };
+    act(action);
   }
 
   function addTable(x: MMELTable): boolean {
     if (checkId(x.id, model.tables)) {
-      model.tables[x.id] = { ...x };
-      setModel(model);
+      const action: ModelAction = {
+        type: 'model',
+        act: 'table',
+        task: 'add',
+        value: [x],
+      };
+      act(action);
       return true;
     }
     return false;
   }
 
   function updateTable(oldid: string, x: MMELTable): boolean {
-    if (oldid !== x.id) {
-      if (checkId(x.id, model.tables)) {
-        delete model.tables[oldid];
-        model.tables[x.id] = { ...x };
-        replaceReferences(oldid, x.id);
-        setModel(model);
-        return true;
-      }
+    if (oldid !== x.id && !checkId(x.id, model.tables)) {
       return false;
-    } else {
-      model.tables[oldid] = { ...x };
-      setModel(model);
-      return true;
     }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'table',
+      task: 'edit',
+      id: oldid,
+      value: x,
+    };
+    act(action);
+    return true;
   }
 
   function getTableById(id: string): MMELTable {

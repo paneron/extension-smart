@@ -1,20 +1,22 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import {
-  EditorModel,
-  isEditorApproval,
-  isEditorProcess,
-} from '../../model/editormodel';
+import { EditorModel } from '../../model/editormodel';
 import { MMELRole } from '../../serialize/interface/supportinterface';
 import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
 import { createRole } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
+import { ModelAction } from '../../model/editor/model';
+import {
+  addRoleCommand,
+  deleteRoleCommand,
+  editRoleCommand,
+} from '../../model/editor/commands/role';
 
 const RoleEditPage: React.FC<{
   model: EditorModel;
-  setModel: (model: EditorModel) => void;
-}> = function ({ model, setModel }) {
+  act: (x: ModelAction) => void;
+}> = function ({ model, act }) {
   function matchFilter(role: MMELRole, filter: string) {
     return (
       filter === '' ||
@@ -30,56 +32,24 @@ const RoleEditPage: React.FC<{
       .sort(defaultItemSorter);
   }
 
-  function replaceReferences(matchid: string, replaceid: string) {
-    for (const x in model.elements) {
-      const elm = model.elements[x];
-      if (isEditorApproval(elm)) {
-        if (elm.actor === matchid) {
-          elm.actor = replaceid;
-        }
-        if (elm.approver === matchid) {
-          elm.approver = replaceid;
-        }
-      } else if (isEditorProcess(elm)) {
-        if (elm.actor === matchid) {
-          elm.actor = replaceid;
-        }
-      }
-    }
-  }
-
   function removeRoleListItem(ids: string[]) {
-    for (const id of ids) {
-      delete model.roles[id];
-      replaceReferences(id, '');
-    }
-    setModel(model);
+    act(deleteRoleCommand(ids));
   }
 
   function addRole(role: MMELRole): boolean {
-    if (checkId(role.id, model.roles)) {
-      model.roles[role.id] = role;
-      setModel(model);
-      return true;
+    if (!checkId(role.id, model.roles)) {
+      return false;
     }
-    return false;
+    act(addRoleCommand(role));
+    return true;
   }
 
   function updateRole(oldid: string, role: MMELRole): boolean {
-    if (oldid !== role.id) {
-      if (checkId(role.id, model.roles)) {
-        delete model.roles[oldid];
-        model.roles[role.id] = role;
-        replaceReferences(oldid, role.id);
-        setModel(model);
-        return true;
-      }
+    if (oldid !== role.id && !checkId(role.id, model.sections)) {
       return false;
-    } else {
-      model.roles[oldid] = role;
-      setModel(model);
-      return true;
     }
+    act(editRoleCommand(oldid, role));
+    return true;
   }
 
   function getRoleById(id: string): MMELRole {

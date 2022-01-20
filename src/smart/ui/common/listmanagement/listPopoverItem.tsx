@@ -159,6 +159,7 @@ const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
     cancelClicked: () => {
       setMode('None');
     },
+    oldid: oldId,
   };
 
   const updateHandler: IUpdateInterface<T> = {
@@ -178,6 +179,7 @@ const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
     cancelClicked: () => {
       setMode('None');
     },
+    oldid: oldId,
   };
 
   return (

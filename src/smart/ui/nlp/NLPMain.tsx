@@ -24,7 +24,7 @@ import RDFQueryPane from './RDFQueryPane';
 
 const NLPMain: React.FC<{
   isVisible: boolean;
-  repo?: MMELRepo;
+  repo: MMELRepo;
   className?: string;
 }> = function ({ isVisible, repo, className }) {
   const { useObjectData, usePersistentDatasetStateReducer } =

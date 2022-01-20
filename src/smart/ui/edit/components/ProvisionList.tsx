@@ -24,18 +24,17 @@ const ProvisionListQuickEdit: React.FC<{
   setProvisions: (x: Record<string, MMELProvision>) => void;
   model: EditorModel;
   selected?: RefTextSelection;
-  onAddReference: (refs: Record<string, MMELReference>) => void;
+  onAddReference: (refs: MMELReference[]) => void;
 }> = function ({ provisions, setProvisions, model, selected, onAddReference }) {
   const refs = useMemo(() => getModelAllRefs(model), [model]);
 
   function addProvision() {
     const id = findUniqueID('Provision', provisions);
-    provisions[id] = createProvision(id);
-    setProvisions({ ...provisions });
+    setProvisions({ ...provisions, [id]: createProvision(id) });
   }
 
   function onImport() {
-    if (selected !== undefined) {
+    if (selected) {
       const ref: MMELReference = {
         id: '',
         title: selected.clauseTitle,
@@ -44,30 +43,24 @@ const ProvisionListQuickEdit: React.FC<{
         datatype: DataType.REFERENCE,
       };
       const existing = findExistingRef(model, ref, false);
-      const refid =
-        existing !== null
-          ? existing.id
-          : trydefaultID(
-              `${selected.namespace}-ref${selected.clause.replaceAll(
-                '.',
-                '-'
-              )}`,
-              model.refs
-            );
-      if (existing === null) {
-        onAddReference({ ...model.refs, [refid]: { ...ref, id: refid } });
-      }
-
+      ref.id = existing
+        ? existing.id
+        : trydefaultID(
+            `${selected.namespace}-ref${selected.clause.replaceAll('.', '-')}`,
+            model.refs
+          );
       const id = findUniqueID('Provision', provisions);
-      provisions[id] = {
-        subject: {},
+      const newPro: MMELProvision = {
         id,
         modality: detectModality(selected.text),
         condition: selected.text,
-        ref: new Set<string>([refid]),
+        ref: new Set<string>([ref.id]),
         datatype: DataType.PROVISION,
       };
-      setProvisions({ ...provisions });
+      setProvisions({ ...provisions, [id]: newPro });
+      if (existing === null) {
+        onAddReference([ref]);
+      }
     }
   }
 
@@ -93,12 +86,12 @@ const ProvisionListQuickEdit: React.FC<{
           provision={p}
           refs={refs}
           setProvision={x => {
-            provisions[index] = x;
-            setProvisions({ ...provisions });
+            setProvisions({ ...provisions, [index]: x });
           }}
           onDelete={() => {
-            delete provisions[index];
-            setProvisions({ ...provisions });
+            const newProvisions = { ...provisions };
+            delete newProvisions[index];
+            setProvisions(newProvisions);
           }}
         />
       ))}
@@ -143,8 +136,10 @@ const ProvisionQuickEdit: React.FC<{
             })
           }
           onTagRemove={x => {
-            provision.ref = new Set([...provision.ref].filter(s => x !== s));
-            setProvision({ ...provision });
+            setProvision({
+              ...provision,
+              ref: new Set([...provision.ref].filter(s => x !== s)),
+            });
           }}
         />
         <div

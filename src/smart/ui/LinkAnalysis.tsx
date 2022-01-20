@@ -6,7 +6,7 @@ import React from 'react';
 const LinkAnalysis: React.FC<{
   isVisible: boolean;
   className?: string;
-  repo?: MMELRepo;
+  repo: MMELRepo;
   index: RepoIndex;
 }> = ({ isVisible, className, repo, index }) => {
   if (isVisible) {

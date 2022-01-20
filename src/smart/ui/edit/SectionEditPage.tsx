@@ -6,11 +6,13 @@ import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
 import { createTextSection } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
+import { EditorAction } from '../../model/editor/state';
+import { ModelAction } from '../../model/editor/model';
 
 const SectionEditPage: React.FC<{
   model: EditorModel;
-  setModel: (model: EditorModel) => void;
-}> = function ({ model, setModel }) {
+  act: (x: EditorAction) => void;
+}> = function ({ model, act }) {
   function matchFilter(sec: MMELTextSection, filter: string) {
     return filter === '' || sec.title.toLowerCase().includes(filter);
   }
@@ -23,35 +25,42 @@ const SectionEditPage: React.FC<{
   }
 
   function removeSecListItem(ids: string[]) {
-    for (const id of ids) {
-      delete model.sections[id];
-    }
-    setModel(model);
+    const action: ModelAction = {
+      type: 'model',
+      act: 'section',
+      task: 'delete',
+      value: ids,
+    };
+    act(action);
   }
 
   function addSec(sec: MMELTextSection): boolean {
     if (checkId(sec.id, model.sections)) {
-      model.sections[sec.id] = sec;
-      setModel(model);
+      const action: ModelAction = {
+        type: 'model',
+        act: 'section',
+        task: 'add',
+        value: [sec],
+      };
+      act(action);
       return true;
     }
     return false;
   }
 
-  function updateTerm(oldid: string, sec: MMELTextSection): boolean {
-    if (oldid !== sec.id) {
-      if (checkId(sec.id, model.sections)) {
-        delete model.sections[oldid];
-        model.sections[sec.id] = sec;
-        setModel(model);
-        return true;
-      }
+  function updateSec(oldid: string, sec: MMELTextSection): boolean {
+    if (oldid !== sec.id && !checkId(sec.id, model.sections)) {
       return false;
-    } else {
-      model.sections[sec.id] = sec;
-      setModel(model);
-      return true;
     }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'section',
+      task: 'edit',
+      id: oldid,
+      value: sec,
+    };
+    act(action);
+    return true;
   }
 
   function getSecById(id: string): MMELTextSection {
@@ -71,7 +80,7 @@ const SectionEditPage: React.FC<{
     getItems: getSecListItems,
     removeItems: removeSecListItem,
     addItem: obj => addSec(obj),
-    updateItem: (oldid, obj) => updateTerm(oldid, obj),
+    updateItem: (oldid, obj) => updateSec(oldid, obj),
     getObjById: getSecById,
   };
 

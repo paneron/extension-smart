@@ -1,38 +1,34 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import {
-  EditorDataClass,
   EditorModel,
   EditorRegistry,
-  isEditorApproval,
   isEditorDataClass,
-  isEditorProcess,
   isEditorRegistry,
 } from '../../model/editormodel';
 import {
   checkId,
   defaultItemSorter,
-  fillRDCS,
   genDCIdByRegId,
-  getReferenceDCTypeName,
-  replaceSet,
 } from '../../utils/ModelFunctions';
-import { createDataClass, createRegistry } from '../../utils/EditorFactory';
+import { createDataClass } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
 import AttributeEditPage from './attributeedit';
-import { DataType } from '../../serialize/interface/baseinterface';
-
-type RegistryCombined = EditorDataClass & {
-  title: string;
-};
+import { ModelAction } from '../../model/editor/model';
+import { RegistryCombined } from '../../model/editor/components/element/registry';
+import {
+  addRegistryCommand,
+  delRegistryCommand,
+  editRegistryCommand,
+} from '../../model/editor/commands/data';
 
 const initObj: RegistryCombined = { ...createDataClass(''), title: '' };
 
 const RegistryEditPage: React.FC<{
   model: EditorModel;
-  setModel: (model: EditorModel) => void;
-}> = function ({ model, setModel }) {
+  act: (x: ModelAction) => void;
+}> = function ({ model, act }) {
   function matchFilter(reg: EditorRegistry, filter: string) {
     return (
       filter === '' ||
@@ -48,63 +44,8 @@ const RegistryEditPage: React.FC<{
       .sort(defaultItemSorter);
   }
 
-  function replaceReferences(
-    matchregid: string,
-    matchdcid: string,
-    replaceid: string,
-    newdcid: string
-  ) {
-    const oldrefdcid = getReferenceDCTypeName(matchdcid);
-    const newrefdcid = getReferenceDCTypeName(newdcid);
-    for (const x in model.elements) {
-      const elm = model.elements[x];
-      if (isEditorProcess(elm)) {
-        replaceSet(elm.input, matchregid, replaceid);
-        replaceSet(elm.output, matchregid, replaceid);
-      } else if (isEditorApproval(elm)) {
-        replaceSet(elm.records, matchregid, replaceid);
-      } else if (isEditorDataClass(elm)) {
-        for (const dc of elm.rdcs) {
-          if (dc === matchdcid) {
-            elm.rdcs.delete(dc);
-            if (newdcid !== '') {
-              elm.rdcs.add(newdcid);
-            }
-          }
-        }
-        for (const a in elm.attributes) {
-          const att = elm.attributes[a];
-          if (att.type === matchdcid) {
-            att.type = newdcid;
-          } else if (att.type === oldrefdcid) {
-            att.type = newrefdcid;
-          }
-        }
-      }
-    }
-    for (const p in model.pages) {
-      const page = model.pages[p];
-      const data = page.data[matchregid];
-      if (data !== undefined) {
-        delete page.data[matchregid];
-        if (replaceid !== '') {
-          data.element = replaceid;
-          page.data[replaceid] = data;
-        }
-      }
-    }
-  }
-
   function removeRegListItem(ids: string[]) {
-    for (const id of ids) {
-      const reg = model.elements[id];
-      if (isEditorRegistry(reg)) {
-        delete model.elements[id];
-        delete model.elements[reg.data];
-        replaceReferences(id, reg.data, '', '');
-      }
-    }
-    setModel(model);
+    act(delRegistryCommand(ids));
   }
 
   function addRegistry(reg: RegistryCombined): boolean {
@@ -113,14 +54,7 @@ const RegistryEditPage: React.FC<{
       checkId(reg.id, model.elements) &&
       checkId(dcid, model.elements, true)
     ) {
-      const newreg = createRegistry(reg.id);
-      const newdc = getDCFromCombined(dcid, reg);
-      newreg.data = dcid;
-      newreg.title = reg.title;
-      model.elements[reg.id] = newreg;
-      model.elements[dcid] = newdc;
-      fillRDCS(newdc, model.elements);
-      setModel(model);
+      act(addRegistryCommand(reg));
       return true;
     }
     return false;
@@ -130,34 +64,15 @@ const RegistryEditPage: React.FC<{
     const dcid = genDCIdByRegId(reg.id);
     const old = model.elements[oldid];
     if (isEditorRegistry(old)) {
-      if (oldid !== reg.id) {
-        if (
-          checkId(reg.id, model.elements) &&
-          checkId(dcid, model.elements, true)
-        ) {
-          delete model.elements[oldid];
-          delete model.elements[old.data];
-          const newreg = createRegistry(reg.id);
-          const newdc = getDCFromCombined(dcid, reg);
-          newreg.data = dcid;
-          newreg.title = reg.title;
-          model.elements[reg.id] = newreg;
-          model.elements[dcid] = newdc;
-          fillRDCS(newdc, model.elements);
-          replaceReferences(oldid, old.data, reg.id, dcid);
-          setModel(model);
-          return true;
-        }
+      if (
+        oldid !== reg.id &&
+        (!checkId(reg.id, model.elements) ||
+          !checkId(dcid, model.elements, true))
+      ) {
         return false;
-      } else {
-        old.title = reg.title;
-        model.elements[oldid] = old;
-        const dc = getDCFromCombined(dcid, reg);
-        model.elements[old.data] = dc;
-        fillRDCS(dc, model.elements);
-        setModel(model);
-        return true;
       }
+      act(editRegistryCommand(oldid, reg));
+      return true;
     }
     return false;
   }
@@ -215,21 +130,5 @@ const RegistryEditItemPage: React.FC<{
     </FormGroup>
   );
 };
-
-function getDCFromCombined(
-  dcid: string,
-  reg: RegistryCombined
-): EditorDataClass {
-  return {
-    attributes: reg.attributes,
-    id: dcid,
-    datatype: DataType.DATACLASS,
-    added: reg.added,
-    pages: reg.pages,
-    objectVersion: reg.objectVersion,
-    rdcs: reg.rdcs,
-    mother: reg.id,
-  };
-}
 
 export default RegistryEditPage;

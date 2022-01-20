@@ -1,102 +1,52 @@
-import React, { useContext } from 'react';
-import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
-import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { ModelWrapper } from '../../model/modelwrapper';
-import { createNewSMARTWorkspace, SMARTWorkspace } from '../../model/workspace';
-import {
-  FILE_TYPE,
-  handleModelOpen,
-  handleWSOpen,
-  saveToFileSystem,
-} from '../../utils/IOFunctions';
+import React from 'react';
+import { Button, ControlGroup, Menu, MenuItem } from '@blueprintjs/core';
+import { Popover2 } from '@blueprintjs/popover2';
+import MGDButton from '../../MGDComponents/MGDButton';
+import { MGDButtonType } from '../../../css/MGDButton';
+import { WorkspaceDiagPackage } from '../dialog/WorkspaceDiag';
 
 const WorkspaceFileMenu: React.FC<{
-  workspace: SMARTWorkspace;
-  setModelWrapper: (m: ModelWrapper) => void;
-  setWorkspace: (ws: SMARTWorkspace) => void;
-  onClose: () => void;
-  isRepoMode: boolean;
   onRepoSave: () => void;
-}> = function ({
-  workspace,
-  setModelWrapper,
-  setWorkspace,
-  onClose,
-  isRepoMode,
-  onRepoSave,
-}) {
-  const { getBlob, writeFileToFilesystem, requestFileFromFilesystem } =
-    useContext(DatasetContext);
-
-  const canOpen = requestFileFromFilesystem;
-  const canSave = getBlob && writeFileToFilesystem;
-
-  function handleNewWorkspace() {
-    setWorkspace(createNewSMARTWorkspace());
-  }
-
-  async function handleWSSave() {
-    const fileData = JSON.stringify(workspace, undefined, 2);
-
-    await saveToFileSystem({
-      getBlob,
-      writeFileToFilesystem,
-      fileData,
-      type: FILE_TYPE.Workspace,
-    });
-  }
-
-  if (isRepoMode) {
-    return (
-      <Menu>
-        <MenuItem
-          text="Save"
-          onClick={onRepoSave}
-          label="Ctrl + S"
-          icon="floppy-disk"
-        />
-      </Menu>
-    );
-  } else {
-    return (
-      <Menu>
-        <MenuItem
-          text="New Workspace"
-          onClick={handleNewWorkspace}
-          icon="projects"
-        />
-        <MenuItem
-          text="Open Workspace"
-          disabled={!canOpen}
-          onClick={() =>
-            handleWSOpen({
-              setWorkspace,
-              requestFileFromFilesystem,
-            })
-          }
-          icon="folder-shared-open"
-        />
-        <MenuItem
-          text="Save Workspace"
-          onClick={handleWSSave}
-          disabled={!canSave}
-          icon="floppy-disk"
-        />
-        <MenuDivider />
-        <MenuItem
-          text="Open Model"
-          onClick={() =>
-            handleModelOpen({
-              setModelWrapper,
-              requestFileFromFilesystem,
-            })
-          }
-          icon="graph"
-        />
-        <MenuItem text="Close Model" onClick={onClose} icon="cross" />
-      </Menu>
-    );
-  }
+  setDiagProps: (x: WorkspaceDiagPackage | undefined) => void;
+  drillUp: () => void;
+}> = function ({ onRepoSave, setDiagProps, drillUp }) {
+  return (
+    <ControlGroup>
+      <Popover2
+        minimal
+        placement="bottom-start"
+        content={
+          <Menu>
+            <MenuItem
+              text="Save"
+              onClick={onRepoSave}
+              label="Ctrl + S"
+              icon="floppy-disk"
+            />
+          </Menu>
+        }
+      >
+        <Button>Workspace</Button>
+      </Popover2>
+      <Button
+        onClick={() =>
+          setDiagProps({
+            regid: '',
+            isFromReactNode: false,
+          })
+        }
+      >
+        Data Registry
+      </Button>
+      <MGDButton
+        type={MGDButtonType.Primary}
+        disabled={history.length <= 1}
+        onClick={drillUp}
+      >
+        Drill up
+      </MGDButton>
+    </ControlGroup>
+  );
 };
 
 export default WorkspaceFileMenu;

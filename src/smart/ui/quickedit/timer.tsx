@@ -1,25 +1,19 @@
 import React from 'react';
+import { ModelAction } from '../../model/editor/model';
 import { EditorModel, EditorTimerEvent } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
 import { DataType } from '../../serialize/interface/baseinterface';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-} from '../../utils/constants';
+import { EditAction } from '../../utils/constants';
+import { DialogSetterInterface } from '../dialog/EditorDialogs';
 import EditTimerPage from '../edit/timeredit';
 
 const QuickEditTimer: React.FC<{
   timer: EditorTimerEvent;
-  modelWrapper: ModelWrapper;
-  setModel: (m: EditorModel) => void;
-  setDialog: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
-  getLatestLayoutMW?: () => ModelWrapper;
+  model: EditorModel;
+  act: (x: ModelAction) => void;
+  setDialog: DialogSetterInterface;
   setSelectedNode: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = props => {
   const { timer, setDialog } = props;
 
@@ -36,7 +30,7 @@ const QuickEditTimer: React.FC<{
     onDeleteClick,
   };
 
-  return <EditTimerPage {...props} {...functionProps} id={timer.id} minimal />;
+  return <EditTimerPage {...props} {...functionProps} minimal />;
 };
 
 export default QuickEditTimer;

@@ -8,7 +8,6 @@ export interface MMELDataAttribute extends MMELObject {
   cardinality: string;
   definition: string;
   ref: Set<string>;
-  satisfy: Set<string>;
   datatype: DataType.DATAATTRIBUTE;
 }
 

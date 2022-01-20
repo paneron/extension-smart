@@ -81,6 +81,7 @@ export type IManageHandler<T> = {
     object: T;
     model?: EditorModel;
     setObject: (obj: T) => void;
+    oldid: string;
   }>;
   initObj: T;
   model?: EditorModel;
@@ -121,6 +122,7 @@ export interface IUpdateInterface<T> {
     model?: EditorModel;
     table?: MMELTable;
     setObject: (obj: T) => void;
+    oldid: string;
   }>;
   object: T;
   model?: EditorModel;
@@ -130,6 +132,7 @@ export interface IUpdateInterface<T> {
   updateButtonIcon: IconName;
   updateClicked: () => void;
   cancelClicked: () => void;
+  oldid: string;
 }
 
 export const NumberTextField: React.FC<INumField> = f => {

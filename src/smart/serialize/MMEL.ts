@@ -1,4 +1,5 @@
 import {
+  parseComment,
   parseFigure,
   parseLink,
   parseMetaData,
@@ -28,6 +29,7 @@ import {
 } from './handler/eventhandler';
 import { parseEGate, parseSubprocess } from './handler/flowcontrolhandler';
 import {
+  toCommentModel,
   toEnumModel,
   toFigModel,
   toLinkModel,
@@ -104,6 +106,9 @@ export function MMELToText(model: MMELModel): string {
   for (const t in model.links) {
     out += toLinkModel(model.links[t]) + '\n';
   }
+  for (const t in model.comments) {
+    out += toCommentModel(model.comments[t]) + '\n';
+  }
   return out;
 }
 
@@ -124,6 +129,7 @@ function parseModel(input: string): MMELModel {
     figures: {},
     sections: {},
     links: {},
+    comments: {},
     root: '',
     version: '',
   };
@@ -202,6 +208,9 @@ function parseModel(input: string): MMELModel {
     } else if (command === 'link') {
       const t = parseLink(token[i++], token[i++]);
       model.links[t.id] = t;
+    } else if (command === 'comment') {
+      const c = parseComment(token[i++], token[i++]);
+      model.comments[c.id] = c;
     } else if (command === 'version') {
       model.version = MMELremovePackage(token[i++]);
     } else {

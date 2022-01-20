@@ -45,6 +45,7 @@ import TableViewer from '../common/description/TableViewer';
 import FigureViewer from '../common/description/FigureViewer';
 import LinksList from '../popover/LinksList';
 import { handleCSS } from '../../../css/visual';
+import NodeComment from '../comment/NodeComment';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;
@@ -98,10 +99,23 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
       refs.push(fig);
     }
   }
+  const { addComment, toggleCommentResolved, deleteComment } = callback;
 
   return (
     <>
       {callback.idVisible && <NodeIDField nodeid={process.id} wide />}
+      {callback.commentVisible &&
+        addComment &&
+        toggleCommentResolved &&
+        deleteComment && (
+          <NodeComment
+            cids={process.comments}
+            getCommentById={callback.getCommentById}
+            addComment={(msg, parent) => addComment(msg, process.id, parent)}
+            toggleCommentResolved={toggleCommentResolved}
+            deleteComment={(x, parent) => deleteComment(x, process.id, parent)}
+          />
+        )}
       <Handle type="source" position={Position.Bottom} style={handleCSS} />
       <PopoverWrapper id={process.id} SD={SD}>
         <PB

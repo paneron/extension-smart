@@ -19,7 +19,7 @@
     "buildwin": "rmdir /q /s compiled dist & mkdir compiled dist & tsc --outDir compiled & xcopy /e /y compiled dist > nul & babel compiled --out-dir dist & copy package.json dist & md \"%appdata%\\Paneron\\plugins\\@riboseinc\\paneron-extension-hls\" & xcopy /e /y dist \"%appdata%\\Paneron\\plugins\\@riboseinc\\paneron-extension-hls\" > nul",
     "lint": "gts lint",
     "lint-clean": "gts clean",
-    "lint-fix": "gts fix"
+    "fix": "gts fix"
   },
   "files": [
     "README.adoc",

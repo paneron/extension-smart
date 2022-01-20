@@ -24,7 +24,7 @@ const TypeReferenceTail = ')';
 
 // temp class for debug, global console logger
 export class Logger {
-  static logger: { log: (...args: unknown[]) => void };
+  static log: (...args: unknown[]) => void;
 }
 
 export function isSpace(x: string): boolean {
@@ -45,6 +45,12 @@ export function getNamespace(model: EditorModel): string {
   return model.meta.namespace === '' ? 'defaultns' : model.meta.namespace;
 }
 
+/**
+ * Deprecated, use setReplace instead
+ * @param set
+ * @param matchid
+ * @param replaceid
+ */
 export function replaceSet(
   set: Set<string>,
   matchid: string,
@@ -56,6 +62,21 @@ export function replaceSet(
       set.add(replaceid);
     }
   }
+}
+
+export function setReplace(
+  set: Set<string>,
+  matchid: string | undefined,
+  replaceid: string | undefined
+) {
+  const newSet = new Set([...set]);
+  if (matchid && newSet.has(matchid)) {
+    newSet.delete(matchid);
+  }
+  if (replaceid) {
+    newSet.add(replaceid);
+  }
+  return newSet;
 }
 
 export function toRefSummary(r: MMELReference): string {
@@ -106,7 +127,14 @@ export function fillRDCS(
   data: EditorDataClass,
   elements: Record<string, EditorNode>
 ) {
-  data.rdcs.clear();
+  if (data.rdcs) {
+    data.rdcs.clear();
+  } else {
+    data.rdcs = new Set<string>();
+  }
+  if (data.mother === undefined) {
+    data.mother = '';
+  }
   for (const a in data.attributes) {
     const att = data.attributes[a];
     const dc = elements[att.type];
@@ -239,24 +267,21 @@ export function trydefaultID(name: string, ids: Record<string, MMELObject>) {
 export function updatePageElement(
   page: EditorSubprocess,
   oldId: string,
-  node: EditorNode
+  newId: string
 ) {
-  const newId = node.id;
-  const elm = page.childs[oldId];
-  if (elm !== undefined) {
-    delete page.childs[oldId];
-    page.childs[newId] = elm;
-    elm.element = node.id;
-    for (const e in page.edges) {
-      const edge = page.edges[e];
-      if (edge.from === oldId) {
-        edge.from = newId;
-      }
-      if (edge.to === oldId) {
-        edge.to = newId;
-      }
+  page.childs = { ...page.childs };
+  const elm = { ...page.childs[oldId], element: newId };
+  delete page.childs[oldId];
+  page.childs[newId] = elm;
+  page.edges = { ...page.edges };
+  for (const e in page.edges) {
+    const edge = page.edges[e];
+    if (edge.from === oldId) {
+      page.edges[e] = { ...edge, from: newId };
     }
-    node.pages.add(page.id);
+    if (edge.to === oldId) {
+      page.edges[e] = { ...page.edges[e], to: newId };
+    }
   }
 }
 

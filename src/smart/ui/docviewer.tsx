@@ -12,7 +12,7 @@ import { DOCVERSION } from '../utils/constants';
 const DocumentViewer: React.FC<{
   isVisible: boolean;
   className?: string;
-  repo?: MMELRepo;
+  repo: MMELRepo;
 }> = ({ isVisible, className, repo }) => {
   const { useObjectData } = useContext(DatasetContext);
 

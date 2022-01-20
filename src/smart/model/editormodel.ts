@@ -25,6 +25,7 @@ import {
   MMELProcess,
 } from '../serialize/interface/processinterface';
 import {
+  MMELComment,
   MMELFigure,
   MMELLink,
   MMELMetadata,
@@ -74,11 +75,13 @@ export type EditorSignalEvent = MMELSignalCatchEvent & EditorNode;
 export type EditorTimerEvent = MMELTimerEvent & EditorNode;
 export type EditorEGate = MMELEGate & EditorNode;
 export type EditorApproval = MMELApproval & EditorNode;
-export type EditorProcess = MMELProcess & EditorNode;
+export type EditorProcess = MMELProcess & EditorNode & MultiPageElm;
+
+type MultiPageElm = {
+  pages: Set<string>;
+};
 
 export interface EditorNodeChild extends EditorBaseObjectType {
-  added: boolean;
-  pages: Set<string>;
   uiref?: RefObject<HTMLDivElement>;
 }
 
@@ -108,6 +111,7 @@ export interface EditorModel {
   figures: Record<string, MMELFigure>;
   sections: Record<string, MMELTextSection>;
   links: Record<string, MMELLink>;
+  comments: Record<string, MMELComment>;
   root: string;
   version: string;
 }

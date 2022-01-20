@@ -1,16 +1,18 @@
-import { FocusStyleManager } from '@blueprintjs/core';
+import { FocusStyleManager, HotkeysProvider } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React from 'react';
 import { useContext, useMemo, useState } from 'react';
-import RepositoryView from './RepoView';
+import RepositoryView from './smart/ui/app/RepoView';
 import { RepoIndex, repoIndexPath } from './smart/model/repo';
 import { LoadingScreen } from './smart/ui/common/Loading';
+import { Logger } from './smart/utils/ModelFunctions';
 import { createEmptyIndex } from './smart/utils/repo/CommonFunctions';
 
 const MainExtension: React.FC<Record<never, never>> = function () {
-  const { useObjectData } = useContext(DatasetContext);
+  const { logger, useObjectData } = useContext(DatasetContext);
   const [index, setIndex] = useState<RepoIndex | undefined>(undefined);
 
+  Logger.log = logger.log;
   FocusStyleManager.onlyShowFocusOnTabs();
 
   const indexFile = useObjectData({ objectPaths: [repoIndexPath] });
@@ -26,10 +28,14 @@ const MainExtension: React.FC<Record<never, never>> = function () {
     }
   }, [indexFile.isUpdating, data]);
 
-  return index ? (
-    <RepositoryView index={index} />
-  ) : (
-    <LoadingScreen label="Loading index" />
+  return (
+    <HotkeysProvider>
+      {index ? (
+        <RepositoryView index={index} />
+      ) : (
+        <LoadingScreen label="Loading index" />
+      )}
+    </HotkeysProvider>
   );
 };
 

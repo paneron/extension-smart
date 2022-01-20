@@ -2,7 +2,6 @@ import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
 import { MMELTable } from '../../../serialize/interface/supportinterface';
-import { Logger } from '../../../utils/ModelFunctions';
 import {
   IListItem,
   IManageHandler,
@@ -142,7 +141,7 @@ const TableClassDefinitionEdit: React.FC<{
   }
 
   function moveUp(id: string) {
-    Logger.logger.log(id);
+    // Logger.log(id);
     const index = parseInt(id);
     if (index > 0) {
       return move(index, index - 1);

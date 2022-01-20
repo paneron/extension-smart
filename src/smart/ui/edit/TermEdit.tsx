@@ -8,11 +8,12 @@ import { createTerm } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
 import ListManagePage from '../common/listmanagement/listmanagement';
 import StringListQuickEdit from './components/StringListQuickEdit';
+import { ModelAction } from '../../model/editor/model';
 
 const TermsEditPage: React.FC<{
   model: EditorModel;
-  setModel: (model: EditorModel) => void;
-}> = function ({ model, setModel }) {
+  act: (x: ModelAction) => void;
+}> = function ({ model, act }) {
   function matchFilter(term: MMELTerm, filter: string) {
     return (
       filter === '' ||
@@ -37,35 +38,42 @@ const TermsEditPage: React.FC<{
   }
 
   function removeTermListItem(ids: string[]) {
-    for (const id of ids) {
-      delete model.terms[id];
-    }
-    setModel(model);
+    const action: ModelAction = {
+      type: 'model',
+      act: 'terms',
+      task: 'delete',
+      value: ids,
+    };
+    act(action);
   }
 
   function addTerm(term: MMELTerm): boolean {
     if (checkId(term.id, model.terms)) {
-      model.terms[term.id] = term;
-      setModel(model);
+      const action: ModelAction = {
+        type: 'model',
+        act: 'terms',
+        task: 'add',
+        value: [term],
+      };
+      act(action);
       return true;
     }
     return false;
   }
 
   function updateTerm(oldid: string, term: MMELTerm): boolean {
-    if (oldid !== term.id) {
-      if (checkId(term.id, model.terms)) {
-        delete model.terms[oldid];
-        model.terms[term.id] = term;
-        setModel(model);
-        return true;
-      }
+    if (oldid !== term.id && !checkId(term.id, model.terms)) {
       return false;
-    } else {
-      model.terms[term.id] = term;
-      setModel(model);
-      return true;
     }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'terms',
+      task: 'edit',
+      id: oldid,
+      value: term,
+    };
+    act(action);
+    return true;
   }
 
   function getTermById(id: string): MMELTerm {

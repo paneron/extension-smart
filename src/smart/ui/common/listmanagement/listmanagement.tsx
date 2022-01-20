@@ -51,6 +51,7 @@ const ListManagePage = <T extends Object>(props: IManageHandler<T>) => {
     cancelClicked: () => {
       setMode(ListManagePageType.VIEW);
     },
+    oldid,
   };
 
   const updateHandler: IUpdateInterface<T> = {
@@ -69,6 +70,7 @@ const ListManagePage = <T extends Object>(props: IManageHandler<T>) => {
     cancelClicked: () => {
       setMode(ListManagePageType.VIEW);
     },
+    oldid,
   };
 
   const viewHandler: IViewListInterface = {

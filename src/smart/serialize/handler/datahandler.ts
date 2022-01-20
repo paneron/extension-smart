@@ -24,7 +24,6 @@ export function parseDataAttribute(
     cardinality: '',
     definition: '',
     ref: new Set<string>(),
-    satisfy: new Set<string>(),
     datatype: DataType.DATAATTRIBUTE,
   };
 
@@ -51,8 +50,6 @@ export function parseDataAttribute(
           attribute.definition = MMELremovePackage(t[i++]);
         } else if (command === 'reference') {
           attribute.ref = MMELtokenizeSet(t[i++]);
-        } else if (command === 'satisfy') {
-          attribute.satisfy = MMELtokenizeSet(t[i++]);
         } else {
           throw new Error(
             'Parsing error: data class attribute. ID ' +

@@ -19,7 +19,9 @@ import {
 import {
   addToHistory,
   cloneHistory,
+  createModelHistory,
   createPageHistory,
+  HistoryItem,
   PageHistory,
 } from '../model/history';
 import { LegendInterface } from '../model/States';
@@ -43,12 +45,19 @@ export const SearchResultStyles: Record<SearchHighlightType, LegendInterface> =
     [SearchHighlightType.NONE]: { label: 'Not match', color: '' },
   };
 
-export interface SearchComponentRecord {
+export interface SearchComponentRecord_deprecated {
   id: string;
   text: string;
   page: string;
   type: SearchResultType;
   history: PageHistory;
+}
+
+export interface SearchComponentRecord {
+  id: string;
+  text: string;
+  type: SearchResultType;
+  history: HistoryItem[];
 }
 
 const matchFunctions: Record<
@@ -84,18 +93,38 @@ export function findPageContainingElement(
   return null;
 }
 
+export function findComponent_deprecated(
+  model: EditorModel,
+  search: string
+): SearchComponentRecord_deprecated[] {
+  const result: SearchComponentRecord_deprecated[] = [];
+  const page = model.pages[model.root];
+  const history = createPageHistory({
+    model: model,
+    page: model.root,
+    type: 'model',
+  });
+  if (page !== undefined && search !== '') {
+    searchPageForComponent_deprecated(
+      page,
+      model,
+      search.toLowerCase(),
+      result,
+      new Set<string>(),
+      history
+    );
+  }
+  return result;
+}
+
 export function findComponent(
   model: EditorModel,
   search: string
 ): SearchComponentRecord[] {
   const result: SearchComponentRecord[] = [];
   const page = model.pages[model.root];
-  const history = createPageHistory({
-    model: model,
-    page: model.root,
-    type: 'modelwrapper',
-  });
-  if (page !== undefined && search !== '') {
+  const history = createModelHistory(model);
+  if (page && search !== '') {
     searchPageForComponent(
       page,
       model,
@@ -113,6 +142,86 @@ function searchPageForComponent(
   model: EditorModel,
   search: string,
   result: SearchComponentRecord[],
+  visited: Set<string>,
+  history: HistoryItem[]
+): void {
+  for (const x in page.childs) {
+    const id = page.childs[x].element;
+    const node = model.elements[id];
+    if (node && !visited.has(node.id)) {
+      visited.add(node.id);
+      const match = nodeMatch(model, node, search);
+      if (match !== null) {
+        result.push({
+          id: node.id,
+          text: getSearchDescription(node),
+          type: match,
+          history: history,
+        });
+      }
+      if (isEditorProcess(node) && node.page !== '') {
+        const nextpage = model.pages[node.page];
+        const nextHistory: HistoryItem[] = [
+          ...history,
+          { page: node.page, pathtext: id },
+        ];
+        if (nextpage !== undefined) {
+          searchPageForComponent(
+            nextpage,
+            model,
+            search,
+            result,
+            new Set<string>(),
+            nextHistory
+          );
+        }
+      }
+    }
+  }
+  for (const x in page.data) {
+    const id = page.data[x].element;
+    const node = model.elements[id];
+    if (isEditorRegistry(node)) {
+      const match = searchRegistry(node, search);
+      if (match !== null) {
+        result.push({
+          id: node.id,
+          text: getSearchDescription(node),
+          type: match,
+          history: history,
+        });
+      }
+      const dc = model.elements[node.data];
+      if (match === null && isEditorDataClass(dc)) {
+        const matchdc = searchDC(dc, search);
+        if (matchdc !== null) {
+          result.push({
+            id: node.id,
+            text: getSearchDescription(node),
+            type: 'Data',
+            history: history,
+          });
+        }
+      }
+    } else if (isEditorDataClass(node)) {
+      const match = searchDC(node, search);
+      if (match !== null) {
+        result.push({
+          id: node.id,
+          text: getSearchDescription(node),
+          type: match,
+          history: history,
+        });
+      }
+    }
+  }
+}
+
+function searchPageForComponent_deprecated(
+  page: EditorSubprocess,
+  model: EditorModel,
+  search: string,
+  result: SearchComponentRecord_deprecated[],
   visited: Set<string>,
   history: PageHistory
 ): void {
@@ -136,7 +245,7 @@ function searchPageForComponent(
         const nextHistory = cloneHistory(history);
         addToHistory(nextHistory, node.page, id);
         if (nextpage !== undefined) {
-          searchPageForComponent(
+          searchPageForComponent_deprecated(
             nextpage,
             model,
             search,

@@ -16,6 +16,7 @@ const ItemUpdatePane = <T extends Object>(props: IUpdateInterface<T>) => {
     updateClicked,
     cancelClicked,
     isVisible,
+    oldid,
   } = props;
   if (isVisible) {
     return (
@@ -26,6 +27,7 @@ const ItemUpdatePane = <T extends Object>(props: IUpdateInterface<T>) => {
             setObject={setObject}
             model={model}
             table={table}
+            oldid={oldid}
           />
           <MGDButtonGroup>
             <Button icon={updateButtonIcon} onClick={() => updateClicked()}>

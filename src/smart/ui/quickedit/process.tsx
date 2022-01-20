@@ -1,35 +1,40 @@
 import React from 'react';
-import { EditorModel, EditorProcess } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
+import {
+  bringoutProcessCommand,
+  createSubprocessCommand,
+  deleteSubprocessCommand,
+} from '../../model/editor/commands/elements';
+import { ModelAction } from '../../model/editor/model';
+import {
+  EditorModel,
+  EditorProcess,
+  EditorSubprocess,
+} from '../../model/editormodel';
 import { RefTextSelection } from '../../model/selectionImport';
 import { DataType } from '../../serialize/interface/baseinterface';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-} from '../../utils/constants';
-import { createNewPage } from '../../utils/ModelAddComponentHandler';
+import { EditAction } from '../../utils/constants';
+import { DialogSetterInterface } from '../dialog/EditorDialogs';
 import EditProcessPage from '../edit/processedit';
 
 const QuickEditProcess: React.FC<{
   process: EditorProcess;
   model: EditorModel;
-  setModel: (m: EditorModel) => void;
-  setDialog: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
+  act: (x: ModelAction) => void;
+  setDialog: DialogSetterInterface;
   provision?: RefTextSelection;
-  getLatestLayoutMW?: () => ModelWrapper;
   setSelectedNode: (id: string) => void;
+  page: EditorSubprocess;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = props => {
-  const { process, model, setModel, setDialog } = props;
+  const { process, act, page, setDialog } = props;
 
   function onSubprocessClick(): void {
-    const p = model.elements[process.id] as EditorProcess;
-    p.page = createNewPage(model);
-    setModel({ ...model });
+    act(createSubprocessCommand(process.id));
+  }
+
+  function onSubprocessRemoveClick(): void {
+    act(deleteSubprocessCommand(process.id));
   }
 
   function onFullEditClick() {
@@ -40,15 +45,20 @@ const QuickEditProcess: React.FC<{
     setDialog(DataType.PROCESS, EditAction.DELETE, process.id);
   }
 
+  function onBringoutClick() {
+    act(bringoutProcessCommand(process.id, page.id));
+  }
+
   const functionProps = {
     onFullEditClick,
-    onDeleteClick,
+    onDeleteClick: process.pages.size > 1 ? undefined : onDeleteClick,
     onSubprocessClick: process.page === '' ? onSubprocessClick : undefined,
+    onSubprocessRemoveClick:
+      process.page !== '' ? onSubprocessRemoveClick : undefined,
+    onBringoutClick: process.pages.size > 1 ? onBringoutClick : undefined,
   };
 
-  return (
-    <EditProcessPage {...props} {...functionProps} id={process.id} minimal />
-  );
+  return <EditProcessPage {...props} {...functionProps} minimal />;
 };
 
 export default QuickEditProcess;

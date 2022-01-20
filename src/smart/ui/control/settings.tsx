@@ -2,9 +2,8 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
-import { IToastProps, Tab, Tabs } from '@blueprintjs/core';
-import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import React, { useContext, useState } from 'react';
+import { Tab, Tabs } from '@blueprintjs/core';
+import React, { useState } from 'react';
 import { mgd_label } from '../../../css/form';
 import {
   mgd_tabs__item,
@@ -13,8 +12,6 @@ import {
 } from '../../../css/MGDTabs';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel } from '../../model/editormodel';
-import { MMELRepo } from '../../model/repo';
-import { MMELMetadata } from '../../serialize/interface/supportinterface';
 import DataClassEditPage from '../edit/dataclassedit';
 import EnumEditPage from '../edit/enumedit';
 import FigureEditPage from '../edit/figure/FigureEdit';
@@ -27,6 +24,7 @@ import SectionEditPage from '../edit/SectionEditPage';
 import TableEditPage from '../edit/table/TableEdit';
 import TermsEditPage from '../edit/TermEdit';
 import ViewProfileEditPage from '../edit/ViewProfileEdit';
+import { EditorAction } from '../../model/editor/state';
 
 export enum SETTINGPAGE {
   METAPAGE = 'meta',
@@ -47,109 +45,71 @@ interface TabProps {
   title: string;
   Panel: React.FC<{
     model: EditorModel;
-    setModel: (m: EditorModel) => void;
-    onMetaChanged: (meta: MMELMetadata) => void;
-    showMsg: (msg: IToastProps) => void;
-    repo: MMELRepo | undefined;
+    act: (x: EditorAction) => void;
   }>;
 }
 
 const tabs: Record<SETTINGPAGE, TabProps> = {
   [SETTINGPAGE.METAPAGE]: {
     title: 'Metadata',
-    Panel: ({ model, onMetaChanged, showMsg, repo }) => (
-      <MetaEditPage
-        meta={model.meta}
-        setMetadata={(meta: MMELMetadata) => {
-          onMetaChanged(meta);
-        }}
-        showMsg={showMsg}
-        isRepoMode={repo !== undefined}
-      />
-    ),
+    Panel: ({ model, act }) => <MetaEditPage meta={model.meta} act={act} />,
   },
   [SETTINGPAGE.SECTION]: {
     title: 'Sections',
-    Panel: ({ model, setModel }) => (
-      <SectionEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <SectionEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.TERMPAGE]: {
     title: 'Terms',
-    Panel: ({ model, setModel }) => (
-      <TermsEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <TermsEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.ROLEPAGE]: {
     title: 'Roles',
-    Panel: ({ model, setModel }) => (
-      <RoleEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <RoleEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.REFPAGE]: {
     title: 'References',
-    Panel: ({ model, setModel }) => (
-      <ReferenceEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <ReferenceEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.REGISTRYPAGE]: {
     title: 'Data Registry',
-    Panel: ({ model, setModel }) => (
-      <RegistryEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <RegistryEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.DATAPAGE]: {
     title: 'Data structure',
-    Panel: ({ model, setModel }) => (
-      <DataClassEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <DataClassEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.ENUMPAGE]: {
     title: 'Enumeration',
-    Panel: ({ model, setModel }) => (
-      <EnumEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <EnumEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.MEASUREMENT]: {
     title: 'Measurement',
-    Panel: ({ model, setModel }) => (
-      <MeasurementEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <MeasurementEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.PROFILE]: {
     title: 'View profiles',
-    Panel: ({ model, setModel }) => (
-      <ViewProfileEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <ViewProfileEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.TABLEPAGE]: {
     title: 'Tables',
-    Panel: ({ model, setModel }) => (
-      <TableEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <TableEditPage model={model} act={act} />,
   },
   [SETTINGPAGE.FIGUREPAGE]: {
     title: 'Multimedia',
-    Panel: ({ model, setModel }) => (
-      <FigureEditPage model={model} setModel={setModel} />
-    ),
+    Panel: ({ model, act }) => <FigureEditPage model={model} act={act} />,
   },
 };
 
 const BasicSettingPane: React.FC<{
   model: EditorModel;
-  setModel: (m: EditorModel) => void;
-  onMetaChanged: (meta: MMELMetadata) => void;
-  showMsg: (msg: IToastProps) => void;
-  repo: MMELRepo | undefined;
-}> = ({ model, setModel, onMetaChanged, showMsg, repo }) => {
-  const { logger } = useContext(DatasetContext);
+  act: (x: EditorAction) => void;
+}> = ({ model, act }) => {
   const [page, setPage] = useState<SETTINGPAGE>(SETTINGPAGE.METAPAGE);
 
-  logger?.log('Enter setting page: ', page, jsx.length);
   return (
     <MGDDisplayPane>
       <Tabs
+        key={jsx.length}
         onChange={x => setPage(x as SETTINGPAGE)}
         selectedTabId={page}
         animate={false}
@@ -169,15 +129,7 @@ const BasicSettingPane: React.FC<{
                 <label css={mgd_label}> {props.title} </label>
               </span>
             }
-            panel={
-              <props.Panel
-                model={model}
-                setModel={setModel}
-                onMetaChanged={onMetaChanged}
-                showMsg={showMsg}
-                repo={repo}
-              />
-            }
+            panel={<props.Panel model={model} act={act} />}
           />
         ))}
       </Tabs>

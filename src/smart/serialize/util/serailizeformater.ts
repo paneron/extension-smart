@@ -20,6 +20,7 @@ import {
 } from '../interface/flowcontrolinterface';
 import { MMELApproval, MMELProcess } from '../interface/processinterface';
 import {
+  MMELComment,
   MMELFigure,
   MMELLink,
   MMELMetadata,
@@ -81,13 +82,6 @@ function toDataAttributeModel(a: MMELDataAttribute): string {
   out += '    definition "' + a.definition + '"\n';
   if (a.modality !== '') {
     out += '    modality ' + a.modality + '\n';
-  }
-  if (a.satisfy.size > 0) {
-    out += '    satisfy {\n';
-    for (const s of a.satisfy) {
-      out += '      ' + s + '\n';
-    }
-    out += '    }\n';
   }
   if (a.ref.size > 0) {
     out += '    reference {\n';
@@ -285,9 +279,6 @@ export function toMetaDataModel(meta: MMELMetadata): string {
 
 export function toProvisionModel(pro: MMELProvision): string {
   let out: string = 'provision ' + pro.id + ' {\n';
-  for (const x in pro.subject) {
-    out += '  ' + x + ' ' + pro.subject[x] + '\n';
-  }
   out += '  condition "' + pro.condition + '"\n';
   if (pro.modality !== '') {
     out += '  modality ' + pro.modality + '\n';
@@ -360,6 +351,25 @@ export function toLinkModel(l: MMELLink): string {
   out += '  description "' + l.description + '"\n';
   out += '  link "' + l.link + '"\n';
   out += '  type ' + l.type + '\n';
+  out += '}\n';
+  return out;
+}
+
+export function toCommentModel(c: MMELComment): string {
+  let out: string = 'comment ' + c.id + ' {\n';
+  out += '  username "' + c.username + '"\n';
+  out += '  message "' + c.message + '"\n';
+  out += '  timestamp "' + c.timestamp + '"\n';
+  if (c.feedback.size > 0) {
+    out += '  feedback {\n';
+    for (const r of c.feedback) {
+      out += '    ' + r + '\n';
+    }
+    out += '  }\n';
+  }
+  if (c.resolved) {
+    out += '  resolved\n';
+  }
   out += '}\n';
   return out;
 }
@@ -482,6 +492,13 @@ export function toProcessModel(process: MMELProcess): string {
     out += '  output {\n';
     for (const c of process.output) {
       out += '    ' + c + '\n';
+    }
+    out += '  }\n';
+  }
+  if (process.comments.size > 0) {
+    out += '  comment {\n';
+    for (const r of process.comments) {
+      out += '    ' + r + '\n';
     }
     out += '  }\n';
   }

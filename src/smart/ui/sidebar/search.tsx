@@ -5,7 +5,8 @@ import MGDContainer from '../../MGDComponents/MGDContainer';
 import MGDLabel from '../../MGDComponents/MGDLabel';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import { EditorModel } from '../../model/editormodel';
-import { PageHistory } from '../../model/history';
+import { HistoryItem } from '../../model/history';
+import { Logger } from '../../utils/ModelFunctions';
 import {
   findComponent,
   SearchComponentRecord,
@@ -16,18 +17,28 @@ const RECORD_PER_PAGE = 10;
 
 const SearchComponentPane: React.FC<{
   model: EditorModel;
-  onChange: (selected: string, pageid: string, history: PageHistory) => void;
+  onChange: (selected: string, history: HistoryItem[]) => void;
   resetSearchElements: (set: Set<string>) => void;
 }> = function ({ model, onChange, resetSearchElements }) {
   const [search, setSearch] = useState<string>('');
+
   const result = useMemo(() => {
-    const result = findComponent(model, search);
-    const set = new Set<string>();
-    for (const r of result) {
-      set.add(r.id);
+    try {
+      const result = findComponent(model, search);
+      const set = new Set<string>();
+      for (const r of result) {
+        set.add(r.id);
+      }
+      resetSearchElements(set);
+      return result;
+    } catch (e: unknown) {
+      if (typeof e === 'object') {
+        const error = e as Error;
+        Logger.log(error.message);
+        Logger.log(error.stack);
+      }
     }
-    resetSearchElements(set);
-    return result;
+    return [];
   }, [model, search]);
 
   return (
@@ -52,7 +63,7 @@ const SearchComponentPane: React.FC<{
 const SearchResultPane: React.FC<{
   key: string;
   result: SearchComponentRecord[];
-  onChange: (selected: string, pageid: string, history: PageHistory) => void;
+  onChange: (selected: string, history: HistoryItem[]) => void;
 }> = function ({ key, result, onChange }) {
   const [page, setPage] = useState<number>(0);
   if (result.length === 0) {
@@ -79,7 +90,7 @@ const SearchResultPane: React.FC<{
           key={`searchentry#${key}#page${page}#${index}`}
           pos={page * RECORD_PER_PAGE + index + 1}
           entry={r}
-          onClick={() => onChange(r.id, r.page, r.history)}
+          onClick={() => onChange(r.id, r.history)}
         />
       ))}
       <MGDContainer>
@@ -108,7 +119,7 @@ const SearchResultEntry: React.FC<{
   entry: SearchComponentRecord;
   onClick: () => void;
 }> = function ({ pos, entry, onClick }) {
-  const hisotry = entry.history.items;
+  const hisotry = entry.history;
   const parent =
     hisotry.length > 1 ? hisotry[hisotry.length - 1].pathtext : 'root';
   return (

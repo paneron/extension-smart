@@ -63,7 +63,7 @@ const AttributeListQuickEdit: React.FC<{
   setAttributes: (x: Record<string, MMELDataAttribute>) => void;
   model: EditorModel;
   selected?: RefTextSelection;
-  onAddReference: (refs: Record<string, MMELReference>) => void;
+  onAddReference: (refs: MMELReference[]) => void;
   types: AttributeType[];
   typesObj: Record<string, AttributeType>;
 }> = function ({
@@ -78,9 +78,8 @@ const AttributeListQuickEdit: React.FC<{
   const refs = useMemo(() => getModelAllRefs(model), [model]);
 
   function addAttribute() {
-    const id = findUniqueID('a', attributes);
-    attributes[id] = createDataAttribute('');
-    setAttributes({ ...attributes });
+    const id = findUniqueID('att', attributes);
+    setAttributes({ ...attributes, [id]: createDataAttribute(id) });
   }
 
   function onImport() {
@@ -93,32 +92,26 @@ const AttributeListQuickEdit: React.FC<{
         datatype: DataType.REFERENCE,
       };
       const existing = findExistingRef(model, ref, false);
-      const refid =
-        existing !== null
-          ? existing.id
-          : trydefaultID(
-              `${selected.namespace}-ref${selected.clause.replaceAll(
-                '.',
-                '-'
-              )}`,
-              model.refs
-            );
-      if (existing === null) {
-        onAddReference({ ...model.refs, [refid]: { ...ref, id: refid } });
-      }
-
+      ref.id = existing
+        ? existing.id
+        : trydefaultID(
+            `${selected.namespace}-ref${selected.clause.replaceAll('.', '-')}`,
+            model.refs
+          );
       const id = findUniqueID('attribute', attributes);
-      attributes[id] = {
+      const newAtt: MMELDataAttribute = {
         id,
         modality: '',
         type: '',
         cardinality: '',
         definition: selected.text,
-        satisfy: new Set<string>(),
-        ref: new Set<string>([refid]),
+        ref: new Set<string>([ref.id]),
         datatype: DataType.DATAATTRIBUTE,
       };
-      setAttributes({ ...attributes });
+      setAttributes({ ...attributes, [id]: newAtt });
+      if (existing === null) {
+        onAddReference([ref]);
+      }
     }
   }
 
@@ -144,12 +137,12 @@ const AttributeListQuickEdit: React.FC<{
           attribute={a}
           refs={refs}
           setAttribute={x => {
-            attributes[index] = x;
-            setAttributes({ ...attributes });
+            setAttributes({ ...attributes, [index]: x });
           }}
           onDelete={() => {
-            delete attributes[index];
-            setAttributes({ ...attributes });
+            const newAttributes = { ...attributes };
+            delete newAttributes[index];
+            setAttributes(newAttributes);
           }}
           types={types}
           typesObj={typesObj}
@@ -178,17 +171,12 @@ const AttributeQuickEdit: React.FC<{
     >
       <fieldset>
         <NormalTextField
-          text="Attribute ID"
-          value={attribute.id}
-          onChange={x => setAttribute({ ...attribute, id: x })}
-        />
-        <NormalTextField
           text="Definition"
           value={attribute.definition}
           onChange={x => setAttribute({ ...attribute, definition: x })}
         />
         <NormalComboBox
-          text="Provision Modality"
+          text="Attribute Modality"
           value={attribute.modality}
           options={MODAILITYOPTIONS}
           onChange={x => setAttribute({ ...attribute, modality: x })}

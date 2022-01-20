@@ -44,7 +44,6 @@ export interface MMELReference extends MMELObject {
 }
 
 export interface MMELProvision extends MMELObject {
-  subject: Record<string, string>;
   id: string;
   modality: string;
   condition: string;
@@ -128,4 +127,14 @@ export interface MMELLink extends MMELObject {
   link: string;
   type: LINK_TYPE;
   datatype: DataType.LINK;
+}
+
+export interface MMELComment extends MMELObject {
+  id: string;
+  username: string;
+  message: string;
+  feedback: Set<string>;
+  resolved: boolean;
+  timestamp: string;
+  datatype: DataType.COMMENT;
 }

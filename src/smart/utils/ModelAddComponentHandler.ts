@@ -7,17 +7,15 @@ import {
   EditorNode,
   EditorProcess,
   EditorSignalEvent,
+  EditorStartEvent,
   EditorSubprocess,
   EditorTimerEvent,
-  isEditorData,
 } from '../model/editormodel';
-import { ModelWrapper } from '../model/modelwrapper';
 import { DataType } from '../serialize/interface/baseinterface';
 import { capitalizeString, findUniqueID, trydefaultID } from './ModelFunctions';
 import { NewComponentTypes } from './constants';
 import {
   createApproval,
-  createEdge,
   createEGate,
   createEndEvent,
   createProcess,
@@ -27,12 +25,14 @@ import {
   createSubprocessComponent,
   createTimerEvent,
 } from './EditorFactory';
-import { PageHistory } from '../model/history';
-import { MMELSubprocessComponent } from '../serialize/interface/flowcontrolinterface';
+import { HistoryItem } from '../model/history';
+import { ModelAction } from '../model/editor/model';
+
+type Elements = Record<string, EditorNode>;
 
 const newComponent: Record<
   NewComponentTypes,
-  (model: EditorModel, title?: string) => EditorNode
+  (elms: Elements, page: string, title?: string) => EditorNode
 > = {
   [DataType.PROCESS]: newProcess,
   [DataType.APPROVAL]: newApproval,
@@ -42,124 +42,105 @@ const newComponent: Record<
   [DataType.EGATE]: newEGate,
 };
 
-export function addComponentToModel(
-  mw: ModelWrapper,
+export function getAddComponentAction(
+  page: string,
+  elms: Elements,
   type: NewComponentTypes,
   pos: XYPosition,
   title?: string
-): EditorModel {
-  const model = mw.model;
-  const elm = newComponent[type](model, title);
-  model.elements[elm.id] = elm;
-  const nc = createSubprocessComponent(elm.id);
-  nc.x = pos.x;
-  nc.y = pos.y;
-  const page = model.pages[mw.page];
-  page.childs[elm.id] = nc;
-  elm.pages.add(mw.page);
-  return model;
+): ModelAction {
+  const elm = newComponent[type](elms, page, title);
+  return {
+    type: 'model',
+    act: 'pages',
+    task: 'new-element',
+    value: elm,
+    x: pos.x,
+    y: pos.y,
+    page,
+  };
 }
 
-function newProcess(model: EditorModel, title?: string): EditorProcess {
+function newProcess(
+  elms: Elements,
+  page: string,
+  title?: string
+): EditorProcess {
   const id =
     title !== undefined
-      ? trydefaultID(capitalizeString(title), model.elements)
-      : findUniqueID('Process', model.elements);
+      ? trydefaultID(capitalizeString(title), elms)
+      : findUniqueID('Process', elms);
   const process = createProcess(id);
-  if (title !== undefined) {
+  process.pages.add(page);
+  if (title) {
     process.name = title;
   }
   return process;
 }
 
-function newApproval(model: EditorModel, title?: string): EditorApproval {
-  const approval = createApproval(findUniqueID('Approval', model.elements));
+function newApproval(
+  elms: Elements,
+  page: string,
+  title?: string
+): EditorApproval {
+  const approval = createApproval(findUniqueID('Approval', elms));
   if (title !== undefined) {
     approval.name = title;
   }
   return approval;
 }
 
-function newEndEvent(model: EditorModel): EditorEndEvent {
-  return createEndEvent(findUniqueID('EndEvent', model.elements));
+function newEndEvent(elms: Elements): EditorEndEvent {
+  return createEndEvent(findUniqueID('EndEvent', elms));
 }
 
-function newEvent(model: EditorModel): EditorTimerEvent {
-  return createTimerEvent(findUniqueID('TimerEvent', model.elements));
+function newEvent(elms: Elements): EditorTimerEvent {
+  return createTimerEvent(findUniqueID('TimerEvent', elms));
 }
 
-function newSignalCatch(model: EditorModel): EditorSignalEvent {
-  return createSignalCatchEvent(
-    findUniqueID('SignalCatchEvent', model.elements)
-  );
+function newSignalCatch(elms: Elements): EditorSignalEvent {
+  return createSignalCatchEvent(findUniqueID('SignalCatchEvent', elms));
 }
 
-function newEGate(model: EditorModel): EditorEGate {
-  return createEGate(findUniqueID('EGate', model.elements));
+function newEGate(elms: Elements): EditorEGate {
+  return createEGate(findUniqueID('EGate', elms));
 }
 
-export function addEdge(
-  page: EditorSubprocess,
-  elements: Record<string, EditorNode>,
-  source: string,
-  target: string
-): EditorSubprocess {
-  const newPage = { ...page };
-  const s = page.childs[source];
-  const t = page.childs[target];
-  if (s !== undefined && t !== undefined) {
-    const selm = elements[s.element];
-    const telm = elements[s.element];
-    if (isEditorData(selm) || isEditorData(telm)) {
-      return newPage;
-    }
-
-    const newEdge = createEdge(findUniqueID('Edge', page.edges));
-    newEdge.from = source;
-    newEdge.to = target;
-    newPage.edges = { ...page.edges, [newEdge.id]: newEdge };
-  }
-  return newPage;
-}
-
-export function createNewPage(model: EditorModel): string {
+export function createNewPage(
+  model: EditorModel
+): [EditorSubprocess, EditorStartEvent] {
   const start = createStartEvent(findUniqueID('Start', model.elements));
   const page = createSubprocess(findUniqueID('Page', model.pages), start.id);
-  start.pages.add(page.id);
   const com = createSubprocessComponent(start.id);
-  model.elements[start.id] = start;
   page.childs[start.id] = com;
-  model.pages[page.id] = page;
-  return page.id;
+  return [page, start];
 }
 
 export function addExisingProcessToPage(
   model: EditorModel,
-  history: PageHistory,
+  history: HistoryItem[],
   pageid: string,
-  process: string
-): EditorModel {
+  process: string,
+  act: (x: ModelAction) => void
+) {
   const page = model.pages[pageid];
-  if (page !== undefined) {
-    if (page.childs[process] !== undefined) {
+  if (page) {
+    if (page.childs[process]) {
       throw new Error(`Process already exists`);
     } else {
-      for (const h of history.items) {
+      for (const h of history) {
         if (h.pathtext === process) {
           throw new Error(`Cannot include self in subprocess`);
         }
       }
-      const newComponent: MMELSubprocessComponent = {
-        element: process,
-        x: 0,
-        y: 0,
-        datatype: DataType.SUBPROCESSCOMPONENT,
+      const action: ModelAction = {
+        type: 'model',
+        act: 'hybird',
+        task: 'process-bringin',
+        id: process,
+        page: pageid,
       };
-      const newPage = {
-        ...page,
-        childs: { ...page.childs, [process]: newComponent },
-      };
-      return { ...model, pages: { ...model.pages, [pageid]: newPage } };
+      act(action);
     }
   } else {
     throw new Error(`Current page not found: ${pageid}`);

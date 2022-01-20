@@ -19,14 +19,10 @@ import {
   getModelAllRegs,
   getModelAllRoles,
   removeSpace,
-  updatePageElement,
 } from '../../utils/ModelFunctions';
 import { createNote, createProvision } from '../../utils/EditorFactory';
-import { createNewPage } from '../../utils/ModelAddComponentHandler';
-import { deletePage } from '../../utils/ModelRemoveComponentHandler';
 import {
   MultiReferenceSelector,
-  NormalComboBox,
   NormalTextField,
   ReferenceSelector,
 } from '../common/fields';
@@ -44,28 +40,23 @@ import RegistrySelector from './components/RegistrySelector';
 import ProvisionListQuickEdit from './components/ProvisionList';
 import MeasureListQuickEdit from './components/MeasurementListEdit';
 import { RefTextSelection } from '../../model/selectionImport';
-import { ModelWrapper } from '../../model/modelwrapper';
 import { matchNoteFilter, NoteItem } from './NoteEdit';
 import NoteListQuickEdit from './components/NoteList';
 import { LinkItem, matchLinkFilter } from './LinkEdit';
-
-const NEEDSUBPROCESS = 'need sub';
-
-const SUBPROCESSYES = 'Yes';
-const SUBPROCESSNO = 'No';
-
-const SUBPROCESSOPTIONS = [SUBPROCESSYES, SUBPROCESSNO];
+import { ModelAction } from '../../model/editor/model';
+import PopoverChangeIDButton from '../popover/PopoverChangeIDButton';
+import { editProcessCommand } from '../../model/editor/commands/elements';
 
 function getInitProvisions(
   model: EditorModel,
   process: EditorProcess
 ): Record<string, MMELProvision> {
   const initProvision: Record<string, MMELProvision> = {};
-  Object.keys(model.provisions)
-    .filter(k => process.provision.has(k))
-    .forEach(k => {
-      initProvision[k] = model.provisions[k];
-    });
+  for (const p of process.provision) {
+    if (model.provisions[p]) {
+      initProvision[p] = model.provisions[p];
+    }
+  }
   return initProvision;
 }
 
@@ -74,11 +65,11 @@ function getInitNotes(
   process: EditorProcess
 ): Record<string, MMELNote> {
   const initNotes: Record<string, MMELNote> = {};
-  Object.keys(model.notes)
-    .filter(k => process.notes.has(k))
-    .forEach(k => {
-      initNotes[k] = model.notes[k];
-    });
+  for (const n of process.notes) {
+    if (model.notes[n]) {
+      initNotes[n] = model.notes[n];
+    }
+  }
   return initNotes;
 }
 
@@ -87,25 +78,12 @@ function getInitLinks(
   process: EditorProcess
 ): Record<string, MMELLink> {
   const initLinks: Record<string, MMELLink> = {};
-  Object.keys(model.links)
-    .filter(k => process.links.has(k))
-    .forEach(k => {
-      initLinks[k] = model.links[k];
-    });
+  for (const n of process.links) {
+    if (model.links[n]) {
+      initLinks[n] = model.links[n];
+    }
+  }
   return initLinks;
-}
-
-function getInitMeasurement(process: EditorProcess): Record<string, IMeasure> {
-  const initMeasurement: Record<string, IMeasure> = {};
-  process.measure.forEach((v, k) => {
-    const id = '' + k;
-    initMeasurement[id] = {
-      id: id,
-      datatype: DataType.VARIABLE,
-      measure: v,
-    };
-  });
-  return initMeasurement;
 }
 
 const emptyMeasurement: IMeasure = {
@@ -129,52 +107,52 @@ interface CommonProcessEditProps {
   setEditing: (x: EditorProcess) => void;
   provisions: Record<string, MMELProvision>;
   setProvisions: (x: Record<string, MMELProvision>) => void;
-  measurements: Record<string, IMeasure>;
-  setMeasurements: (x: Record<string, IMeasure>) => void;
   model: EditorModel;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
-  onSubprocessClick?: () => void;
   notes: Record<string, MMELNote>;
   setNotes: (x: Record<string, MMELNote>) => void;
+  setMeasurements: (x: string[]) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
 }
 
 const EditProcessPage: React.FC<{
   model: EditorModel;
-  setModel: (m: EditorModel) => void;
-  id: string;
+  act: (x: ModelAction) => void;
+  process: EditorProcess;
   closeDialog?: () => void;
   minimal?: boolean;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
+  onBringoutClick?: () => void;
   onSubprocessClick?: () => void;
+  onSubprocessRemoveClick?: () => void;
   provision?: RefTextSelection;
-  getLatestLayoutMW?: () => ModelWrapper;
   setSelectedNode?: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = function ({
   model,
-  setModel,
-  id,
+  act,
+  process,
   closeDialog,
   minimal = false,
   onFullEditClick,
   onDeleteClick,
   onSubprocessClick,
+  onSubprocessRemoveClick,
+  onBringoutClick,
   provision,
-  getLatestLayoutMW,
   setSelectedNode,
+  setUndoListener,
+  clearRedo,
 }) {
-  const process = model.elements[id] as EditorProcess;
-
   const [editing, setEditing] = useState<EditorProcess>({ ...process });
   const [provisions, setProvisions] = useState<Record<string, MMELProvision>>(
     getInitProvisions(model, process)
   );
   const [notes, setNotes] = useState<Record<string, MMELNote>>(
     getInitNotes(model, process)
-  );
-  const [measurements, setMeasurements] = useState<Record<string, IMeasure>>(
-    getInitMeasurement(process)
   );
   const [links, setLinks] = useState<Record<string, MMELLink>>(
     getInitLinks(model, process)
@@ -199,35 +177,27 @@ const EditProcessPage: React.FC<{
   const modelRef = useRef<EditorModel>();
   modelRef.current = model;
 
-  function setPStart(x: string) {
-    if (x === SUBPROCESSYES) {
-      setEditing({ ...editing, page: NEEDSUBPROCESS });
-    } else {
-      setEditing({ ...editing, page: '' });
-    }
-  }
-
   function onUpdateClick() {
-    const updated = save(
-      id,
+    const action = editProcessCommand(
+      process.id,
       editing,
-      provisions,
-      measurements,
-      notes,
-      links,
-      model
+      Object.values(provisions),
+      Object.values(notes),
+      Object.values(links),
+      []
     );
-    if (updated !== null) {
-      setModel({ ...updated });
-      if (closeDialog !== undefined) {
-        closeDialog();
-      }
+    act(action);
+    if (closeDialog) {
+      closeDialog();
     }
     setHasChange(false);
+    if (setSelectedNode !== undefined && process.id !== editing.id) {
+      setSelectedNode(editing.id);
+    }
   }
 
-  function onAddReference(refs: Record<string, MMELReference>) {
-    setModel({ ...model, refs });
+  function onAddReference(refs: MMELReference[]) {
+    saveOnExit(refs);
   }
 
   function setEdit(x: EditorProcess) {
@@ -240,9 +210,8 @@ const EditProcessPage: React.FC<{
     onChange();
   }
 
-  function setMeasure(x: Record<string, IMeasure>) {
-    setMeasurements(x);
-    onChange();
+  function setMeasurements(x: string[]) {
+    setEditing({ ...editing, measure: x });
   }
 
   function setN(x: Record<string, MMELNote>) {
@@ -252,37 +221,32 @@ const EditProcessPage: React.FC<{
 
   function onChange() {
     if (!hasChange) {
+      clearRedo();
       setHasChange(true);
     }
   }
 
-  function saveOnExit() {
+  function saveOnExit(refs?: MMELReference[]) {
     setHasChange(hc => {
       if (hc) {
         setEditing(edit => {
-          setMeasurements(mea => {
+          setLinks(ls => {
             setProvisions(pros => {
               setNotes(nos => {
-                const updated = save(
-                  id,
+                const action = editProcessCommand(
+                  process.id,
                   edit,
-                  pros,
-                  mea,
-                  nos,
-                  links,
-                  modelRef.current!
+                  Object.values(pros),
+                  Object.values(nos),
+                  Object.values(ls),
+                  refs ?? []
                 );
-                if (updated !== null) {
-                  setModel(updated);
-                  if (closeDialog !== undefined) {
-                    closeDialog();
-                  }
-                }
+                act(action);
                 return nos;
               });
               return pros;
             });
-            return mea;
+            return ls;
           });
           return edit;
         });
@@ -292,25 +256,18 @@ const EditProcessPage: React.FC<{
   }
 
   function onNewID(id: string) {
-    const oldid = process.id;
-    if (getLatestLayoutMW !== undefined) {
-      const mw = getLatestLayoutMW();
-      const updated = save(
-        oldid,
-        { ...editing, id },
-        provisions,
-        measurements,
-        notes,
-        links,
-        mw.model
-      );
-      if (updated !== null) {
-        setModel({ ...updated });
-      }
-      setHasChange(false);
-      if (setSelectedNode !== undefined) {
-        setSelectedNode(id);
-      }
+    const action = editProcessCommand(
+      process.id,
+      { ...editing, id },
+      Object.values(provisions),
+      Object.values(notes),
+      Object.values(links),
+      []
+    );
+    act(action);
+    setHasChange(false);
+    if (setSelectedNode !== undefined) {
+      setSelectedNode(id);
     }
   }
 
@@ -330,19 +287,17 @@ const EditProcessPage: React.FC<{
     setEditing: setEdit,
     provisions,
     setProvisions: setPros,
-    measurements,
-    setMeasurements: setMeasure,
     notes,
     setNotes: setN,
     model,
     onFullEditClick: fullEditClick,
     onDeleteClick,
-    onSubprocessClick,
+    setMeasurements,
+    setUndoListener,
   };
 
   const fullEditProps = {
     closeDialog,
-    setPStart,
     roles,
     regs,
     tables,
@@ -359,16 +314,20 @@ const EditProcessPage: React.FC<{
     provision,
     onAddReference,
     initID: process.id,
+    onSubprocessClick,
+    onSubprocessRemoveClick,
+    onBringoutClick,
     validTest: (id: string) => id === process.id || checkId(id, model.elements),
     onNewID,
+    setHasChange,
   };
 
   useEffect(() => {
     setEditing(process);
     setProvisions(getInitProvisions(model, process));
     setNotes(getInitNotes(model, process));
-    setMeasurements(getInitMeasurement(process));
-  }, [process]);
+    setLinks(getInitLinks(model, process));
+  }, [model, process]);
 
   return minimal ? (
     <QuickVersionEdit {...commonProps} {...quickEditProps} />
@@ -384,14 +343,18 @@ const QuickVersionEdit: React.FC<
     process: EditorProcess;
     saveOnExit: () => void;
     provision?: RefTextSelection;
-    onAddReference: (refs: Record<string, MMELReference>) => void;
+    onAddReference: (refs: MMELReference[]) => void;
+    onNewID: (id: string) => void;
+    onSubprocessClick?: () => void;
+    onSubprocessRemoveClick?: () => void;
+    onBringoutClick?: () => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
+    setHasChange: (x: boolean) => void;
   }
 > = function (props) {
   const {
     editing,
     setEditing,
-    measurements,
-    setMeasurements,
     provisions,
     setProvisions,
     model,
@@ -403,14 +366,40 @@ const QuickVersionEdit: React.FC<
     onAddReference,
     notes,
     setNotes,
+    onNewID,
+    setMeasurements,
+    setUndoListener,
+    setHasChange,
   } = props;
 
-  useEffect(() => saveOnExit, [process]);
+  function idTest(id: string) {
+    return id === process.id || checkId(id, model.elements);
+  }
+
+  const idButton = (
+    <PopoverChangeIDButton
+      initValue={editing.id}
+      validTest={idTest}
+      save={onNewID}
+    />
+  );
+
+  useEffect(() => {
+    setUndoListener(() => setHasChange(false));
+    return () => {
+      setUndoListener(undefined);
+      saveOnExit();
+    };
+  }, [model, process]);
 
   return (
     <FormGroup>
       <EditPageButtons {...props} />
-      <DescriptionItem label="Process ID" value={editing.id} />
+      <DescriptionItem
+        label="Process ID"
+        value={editing.id}
+        extend={idButton}
+      />
       <NormalTextField
         text="Process Name"
         value={editing.name}
@@ -432,8 +421,8 @@ const QuickVersionEdit: React.FC<
           setEditing({ ...editing, input: new Set([...editing.input, x.id]) })
         }
         onTagRemove={x => {
-          editing.input = new Set([...editing.input].filter(s => x !== s));
-          setEditing({ ...editing });
+          const newSet = new Set([...editing.input].filter(s => x !== s));
+          setEditing({ ...editing, input: newSet });
         }}
       />
       <RegistrySelector
@@ -444,8 +433,8 @@ const QuickVersionEdit: React.FC<
           setEditing({ ...editing, output: new Set([...editing.output, x.id]) })
         }
         onTagRemove={x => {
-          editing.output = new Set([...editing.output].filter(s => x !== s));
-          setEditing({ ...editing });
+          const newSet = new Set([...editing.output].filter(s => x !== s));
+          setEditing({ ...editing, output: newSet });
         }}
       />
       <ProvisionListQuickEdit
@@ -463,7 +452,7 @@ const QuickVersionEdit: React.FC<
         onAddReference={onAddReference}
       />
       <MeasureListQuickEdit
-        measurements={measurements}
+        measurements={editing.measure}
         setMeasurements={setMeasurements}
       />
     </FormGroup>
@@ -473,23 +462,20 @@ const QuickVersionEdit: React.FC<
 const FullVersionEdit: React.FC<
   CommonProcessEditProps & {
     closeDialog?: () => void;
-    setPStart: (x: string) => void;
     roles: string[];
     regs: string[];
     tables: string[];
     figures: string[];
     links: Record<string, MMELLink>;
     setLinks: (x: Record<string, MMELLink>) => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
   }
 > = function (props) {
   const {
     editing,
     setEditing,
-    measurements,
-    setMeasurements,
     provisions,
     setProvisions,
-    setPStart,
     model,
     roles,
     regs,
@@ -499,7 +485,25 @@ const FullVersionEdit: React.FC<
     setNotes,
     links,
     setLinks,
+    setMeasurements,
+    closeDialog,
+    setUndoListener,
   } = props;
+
+  useEffect(() => {
+    setUndoListener(() => closeDialog && closeDialog());
+    return () => {
+      setUndoListener(undefined);
+    };
+  }, []);
+
+  const measures: Record<string, IMeasure> = editing.measure.reduce(
+    (obj, x, index) => ({
+      ...obj,
+      [index]: { id: index.toString(), measure: x },
+    }),
+    {}
+  );
   return (
     <MGDDisplayPane>
       <FormGroup>
@@ -513,12 +517,6 @@ const FullVersionEdit: React.FC<
           text="Process Name"
           value={editing.name}
           onChange={x => setEditing({ ...editing, name: x })}
-        />
-        <NormalComboBox
-          text="Subprocess"
-          value={editing.page === '' ? SUBPROCESSNO : SUBPROCESSYES}
-          options={SUBPROCESSOPTIONS}
-          onChange={setPStart}
         />
         <ReferenceSelector
           text="Actor"
@@ -563,14 +561,14 @@ const FullVersionEdit: React.FC<
           values={editing.tables}
           filterName="Table filter"
           add={x => {
-            editing.tables = new Set([...editing.tables, ...x]);
-            setEditing({ ...editing });
+            const newTables = new Set([...editing.tables, ...x]);
+            setEditing({ ...editing, tables: newTables });
           }}
           remove={x => {
-            editing.tables = new Set(
+            const newTables = new Set(
               [...editing.tables].filter(s => !x.has(s))
             );
-            setEditing({ ...editing });
+            setEditing({ ...editing, tables: newTables });
           }}
         />
         <MultiReferenceSelector
@@ -578,15 +576,15 @@ const FullVersionEdit: React.FC<
           options={figures}
           values={editing.figures}
           filterName="Multimedia filter"
-          add={x => {
-            editing.figures = new Set([...editing.figures, ...x]);
-            setEditing({ ...editing });
-          }}
+          add={x =>
+            setEditing({
+              ...editing,
+              figures: new Set([...editing.figures, ...x]),
+            })
+          }
           remove={x => {
-            editing.figures = new Set(
-              [...editing.figures].filter(s => !x.has(s))
-            );
-            setEditing({ ...editing });
+            const newFig = new Set([...editing.figures].filter(s => !x.has(s)));
+            setEditing({ ...editing, figures: newFig });
           }}
         />
         <ListWithPopoverItem
@@ -628,8 +626,8 @@ const FullVersionEdit: React.FC<
           requireUniqueId={false}
         />
         <ListWithPopoverItem
-          items={{ ...measurements }}
-          setItems={x => setMeasurements(x as Record<string, IMeasure>)}
+          items={measures}
+          setItems={x => setMeasurements(Object.values(x).map(y => y.measure))}
           model={model}
           initObject={{ ...emptyMeasurement }}
           matchFilter={matchMeasurementFilter}
@@ -660,125 +658,5 @@ const FullVersionEdit: React.FC<
     </MGDDisplayPane>
   );
 };
-
-function save(
-  oldId: string,
-  process: EditorProcess,
-  provisions: Record<string, MMELProvision>,
-  measurements: Record<string, IMeasure>,
-  notes: Record<string, MMELNote>,
-  links: Record<string, MMELLink>,
-  model: EditorModel
-): EditorModel | null {
-  process.measure = Object.values(measurements).map(m => m.measure);
-  const oldProcess = model.elements[oldId] as EditorProcess;
-  if (oldId !== process.id) {
-    if (checkId(process.id, model.elements)) {
-      delete model.elements[oldId];
-      for (const p in model.pages) {
-        const page = model.pages[p];
-        updatePageElement(page, oldId, process);
-      }
-      model.elements[process.id] = process;
-      checkPage(model, oldProcess.page, process);
-    } else {
-      return null;
-    }
-  } else {
-    model.elements[oldId] = process;
-    checkPage(model, oldProcess.page, process);
-  }
-  model.provisions = updateProvisions(
-    model.provisions,
-    oldProcess.provision,
-    provisions
-  );
-  process.provision = new Set(Object.values(provisions).map(p => p.id));
-  model.notes = updateNotes(model.notes, oldProcess.notes, notes);
-  process.notes = new Set(Object.values(notes).map(n => n.id));
-  model.links = updateLinks(model.links, oldProcess.links, links);
-  process.links = new Set(Object.values(links).map(n => n.id));
-  return model;
-}
-
-function updateProvisions(
-  provisions: Record<string, MMELProvision>,
-  old: Set<string>,
-  update: Record<string, MMELProvision>
-): Record<string, MMELProvision> {
-  const newP = { ...provisions };
-  for (const x of old) {
-    delete newP[x];
-  }
-  let x = 1;
-  for (const p in update) {
-    const pro = update[p];
-    while (newP['Provision' + x] !== undefined) {
-      x++;
-    }
-    pro.id = 'Provision' + x;
-    newP[pro.id] = pro;
-    x++;
-  }
-  return newP;
-}
-
-function updateNotes(
-  notes: Record<string, MMELNote>,
-  old: Set<string>,
-  update: Record<string, MMELNote>
-): Record<string, MMELNote> {
-  const newNotes = { ...notes };
-  for (const x of old) {
-    delete newNotes[x];
-  }
-  let x = 1;
-  for (const p in update) {
-    const pro = update[p];
-    while (newNotes['Note' + x] !== undefined) {
-      x++;
-    }
-    pro.id = 'Note' + x;
-    newNotes[pro.id] = pro;
-    x++;
-  }
-  return newNotes;
-}
-
-function updateLinks(
-  links: Record<string, MMELLink>,
-  old: Set<string>,
-  update: Record<string, MMELLink>
-): Record<string, MMELLink> {
-  const newLinks = { ...links };
-  for (const x of old) {
-    delete newLinks[x];
-  }
-  let x = 1;
-  for (const p in update) {
-    const link = update[p];
-    while (newLinks['Link' + x] !== undefined) {
-      x++;
-    }
-    link.id = 'Link' + x;
-    newLinks[link.id] = link;
-    x++;
-  }
-  return newLinks;
-}
-
-function checkPage(
-  model: EditorModel,
-  oldPage: string,
-  process: EditorProcess
-) {
-  const oldHasPage = oldPage !== '';
-  const newHasPage = process.page !== '';
-  if (!oldHasPage && newHasPage) {
-    process.page = createNewPage(model);
-  } else if (oldHasPage && !newHasPage) {
-    deletePage(model, oldPage);
-  }
-}
 
 export default EditProcessPage;

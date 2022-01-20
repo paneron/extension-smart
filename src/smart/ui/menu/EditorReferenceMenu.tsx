@@ -12,17 +12,10 @@ import { RepoItemType } from '../../model/repo';
 
 const EditorReferenceMenu: React.FC<{
   setReference: (x: ReferenceContent | undefined) => void;
-  isBSIEnabled?: boolean;
   isCloseEnabled: boolean;
   isRepo: boolean;
   setType: (x: RepoItemType) => void;
-}> = function ({
-  setReference,
-  isBSIEnabled = false,
-  isCloseEnabled,
-  isRepo,
-  setType,
-}) {
+}> = function ({ setReference, isCloseEnabled, isRepo, setType }) {
   const { requestFileFromFilesystem } = useContext(DatasetContext);
 
   const canOpen = requestFileFromFilesystem;
@@ -70,20 +63,6 @@ const EditorReferenceMenu: React.FC<{
     />
   );
 
-  const FileBSIButton = () => (
-    <MenuItem
-      text="Open XML Document"
-      onClick={() =>
-        handleDocumentOpen({
-          setDocument: setReference,
-          requestFileFromFilesystem,
-          fileType: FILE_TYPE.BSI,
-        })
-      }
-      icon="document-open"
-    />
-  );
-
   const CloseButton = () => (
     <MenuItem
       text="Close Reference"
@@ -116,7 +95,6 @@ const EditorReferenceMenu: React.FC<{
       <FileModelButton />
       <FileDocButton />
       <FileXMLButton />
-      {isBSIEnabled && <FileBSIButton />}
     </>
   );
 

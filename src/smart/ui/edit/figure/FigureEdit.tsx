@@ -1,20 +1,17 @@
 import React from 'react';
-import {
-  EditorModel,
-  EditorProcess,
-  isEditorProcess,
-} from '../../../model/editormodel';
+import { EditorModel } from '../../../model/editormodel';
 import { MMELFigure } from '../../../serialize/interface/supportinterface';
 import { checkId, defaultItemSorter } from '../../../utils/ModelFunctions';
 import { createFig } from '../../../utils/EditorFactory';
 import { IListItem, IManageHandler } from '../../common/fields';
 import ListManagePage from '../../common/listmanagement/listmanagement';
 import FigItemEditPage from './FigureItemEdit';
+import { ModelAction } from '../../../model/editor/model';
 
 const FigureEditPage: React.FC<{
   model: EditorModel;
-  setModel: (model: EditorModel) => void;
-}> = function ({ model, setModel }) {
+  act: (x: ModelAction) => void;
+}> = function ({ model, act }) {
   function matchFilter(x: MMELFigure, filter: string) {
     return (
       filter === '' ||
@@ -30,52 +27,43 @@ const FigureEditPage: React.FC<{
       .sort(defaultItemSorter);
   }
 
-  function replaceReferences(matchid: string, replaceid: string) {
-    for (const x in model.elements) {
-      const elm = model.elements[x];
-      if (isEditorProcess(elm)) {
-        const newSet = new Set([...elm.figures]);
-        if (newSet.has(matchid)) {
-          newSet.delete(matchid);
-          newSet.add(replaceid);
-          const newElm: EditorProcess = { ...elm, figures: newSet };
-          model.elements[x] = newElm;
-        }
-      }
-    }
-  }
-
   function removeFigListItem(ids: string[]) {
-    for (const id of ids) {
-      delete model.figures[id];
-    }
-    setModel(model);
+    const action: ModelAction = {
+      type: 'model',
+      act: 'figure',
+      task: 'delete',
+      value: ids,
+    };
+    act(action);
   }
 
   function addFig(x: MMELFigure): boolean {
     if (checkId(x.id, model.figures)) {
-      model.figures[x.id] = { ...x };
-      setModel(model);
+      const action: ModelAction = {
+        type: 'model',
+        act: 'figure',
+        task: 'add',
+        value: [x],
+      };
+      act(action);
       return true;
     }
     return false;
   }
 
   function updateFig(oldid: string, x: MMELFigure): boolean {
-    if (oldid !== x.id) {
-      if (checkId(x.id, model.figures)) {
-        delete model.figures[oldid];
-        model.figures[x.id] = { ...x };
-        replaceReferences(oldid, x.id);
-        setModel(model);
-        return true;
-      }
+    if (oldid !== x.id && !checkId(x.id, model.figures)) {
       return false;
-    } else {
-      model.figures[oldid] = { ...x };
-      setModel(model);
-      return true;
     }
+    const action: ModelAction = {
+      type: 'model',
+      act: 'figure',
+      task: 'edit',
+      id: oldid,
+      value: x,
+    };
+    act(action);
+    return true;
   }
 
   function getFigById(id: string): MMELFigure {

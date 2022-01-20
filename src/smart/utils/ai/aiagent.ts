@@ -115,8 +115,8 @@ export async function aiTranslate(doc: MMELDocument): Promise<ModelWrapper> {
   } catch (e: unknown) {
     if (typeof e === 'object') {
       const error = e as Error;
-      Logger.logger.log(error.message);
-      Logger.logger.log(error.stack);
+      Logger.log(error.message);
+      Logger.log(error.stack);
     }
     throw e;
   }
@@ -309,9 +309,10 @@ function readDetails(sec: Section, model: EditorModel, page: EditorSubprocess) {
 
   const subsecs = Object.values(sec.secs);
   if (subsecs.length > 0) {
-    const pageid = createNewPage(model);
-    const page = model.pages[pageid];
-    process.page = pageid;
+    const [page, start] = createNewPage(model);
+    model.pages[page.id] = page;
+    model.elements[start.id] = start;
+    process.page = page.id;
     for (const ss of subsecs) {
       readDetails(ss, model, page);
     }

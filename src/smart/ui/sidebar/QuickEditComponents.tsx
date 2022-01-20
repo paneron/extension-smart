@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStoreActions } from 'react-flow-renderer';
+import { EditorAction } from '../../model/editor/state';
 import {
   EditorApproval,
   EditorDataClass,
@@ -13,15 +13,10 @@ import {
   EditorSubprocess,
   EditorTimerEvent,
 } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
 import { RefTextSelection } from '../../model/selectionImport';
 import { DataType } from '../../serialize/interface/baseinterface';
-import {
-  DeletableNodeTypes,
-  EditableNodeTypes,
-  EditAction,
-  QuickEditableNodeTypes,
-} from '../../utils/constants';
+import { QuickEditableNodeTypes } from '../../utils/constants';
+import { DialogSetterInterface } from '../dialog/EditorDialogs';
 import QuickEditApproval from '../quickedit/approval';
 import QuickEditDataClass from '../quickedit/dataclass';
 import QuickEditEGate from '../quickedit/egate';
@@ -35,17 +30,14 @@ const NODE_EDIT_VIEWS: Record<
   QuickEditableNodeTypes,
   React.FC<{
     node: EditorNode;
-    modelWrapper: ModelWrapper;
-    setModel: (m: EditorModel) => void;
-    setDialog: (
-      nodeType: EditableNodeTypes | DeletableNodeTypes,
-      action: EditAction,
-      id: string
-    ) => void;
+    model: EditorModel;
+    act: (x: EditorAction) => void;
+    setDialog: DialogSetterInterface;
     page: EditorSubprocess;
     provision?: RefTextSelection;
-    getLatestLayoutMW?: () => ModelWrapper;
     setSelectedNode: (id: string) => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
+    clearRedo: () => void;
   }>
 > = {
   [DataType.ENDEVENT]: props => (
@@ -64,53 +56,31 @@ const NODE_EDIT_VIEWS: Record<
     <QuickEditApproval {...props} approval={props.node as EditorApproval} />
   ),
   [DataType.PROCESS]: props => (
-    <QuickEditProcess
-      {...props}
-      process={props.node as EditorProcess}
-      model={props.modelWrapper.model}
-    />
+    <QuickEditProcess {...props} process={props.node as EditorProcess} />
   ),
   [DataType.REGISTRY]: props => (
-    <QuickEditRegistry
-      setModel={props.setModel}
-      provision={props.provision}
-      registry={props.node as EditorRegistry}
-      model={props.modelWrapper.model}
-    />
+    <QuickEditRegistry {...props} registry={props.node as EditorRegistry} />
   ),
   [DataType.DATACLASS]: props => (
-    <QuickEditDataClass
-      setModel={props.setModel}
-      provision={props.provision}
-      dataclass={props.node as EditorDataClass}
-      model={props.modelWrapper.model}
-    />
+    <QuickEditDataClass {...props} dataclass={props.node as EditorDataClass} />
   ),
 };
 
 const QuickEdit: React.FC<{
   node: EditorNode;
-  modelWrapper: ModelWrapper;
-  setModel: (m: EditorModel) => void;
-  setDialog: (
-    nodeType: EditableNodeTypes | DeletableNodeTypes,
-    action: EditAction,
-    id: string
-  ) => void;
+  model: EditorModel;
+  act: (x: EditorAction) => void;
+  setDialog: DialogSetterInterface;
   page: EditorSubprocess;
   provision?: RefTextSelection;
-  getLatestLayoutMW?: () => ModelWrapper;
+  setSelectedNode: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = function (props) {
   const { node } = props;
   const Edit = NODE_EDIT_VIEWS[node.datatype as QuickEditableNodeTypes];
 
-  const setSelectedElements = useStoreActions(a => a.setSelectedElements);
-
-  function setSelectedNodeId(id: string) {
-    setSelectedElements([{ id, position: { x: 0, y: 0 } }]);
-  }
-
-  return <Edit {...props} setSelectedNode={setSelectedNodeId} />;
+  return <Edit {...props} />;
 };
 
 export default QuickEdit;

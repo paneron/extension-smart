@@ -2,16 +2,14 @@ import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel, EditorTimerEvent } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
-import {
-  checkId,
-  removeSpace,
-  updatePageElement,
-} from '../../utils/ModelFunctions';
+import { checkId, removeSpace } from '../../utils/ModelFunctions';
 import { TimerType } from '../../utils/constants';
 import { NormalComboBox, NormalTextField } from '../common/fields';
 import { EditPageButtons } from './commons';
 import { DescriptionItem } from '../common/description/fields';
+import { ModelAction } from '../../model/editor/model';
+import PopoverChangeIDButton from '../popover/PopoverChangeIDButton';
+import { editElmCommand } from '../../model/editor/commands/elements';
 
 interface CommonTimerEditProps {
   onUpdateClick: () => void;
@@ -19,44 +17,45 @@ interface CommonTimerEditProps {
   setEditing: (x: EditorTimerEvent) => void;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
+  model: EditorModel;
+  setUndoListener: (x: (() => void) | undefined) => void;
 }
 
 const EditTimerPage: React.FC<{
-  modelWrapper: ModelWrapper;
-  setModel: (m: EditorModel) => void;
-  id: string;
+  model: EditorModel;
+  act: (x: ModelAction) => void;
+  timer: EditorTimerEvent;
   closeDialog?: () => void;
   minimal?: boolean;
   onFullEditClick?: () => void;
   onDeleteClick?: () => void;
-  getLatestLayoutMW?: () => ModelWrapper;
   setSelectedNode?: (id: string) => void;
+  setUndoListener: (x: (() => void) | undefined) => void;
+  clearRedo: () => void;
 }> = function ({
-  modelWrapper,
-  setModel,
-  id,
+  model,
+  act,
+  timer,
   minimal,
   closeDialog,
   onDeleteClick,
   onFullEditClick,
-  getLatestLayoutMW,
   setSelectedNode,
+  setUndoListener,
+  clearRedo,
 }) {
-  const model = modelWrapper.model;
-  const timer = model.elements[id] as EditorTimerEvent;
-
   const [editing, setEditing] = useState<EditorTimerEvent>({ ...timer });
   const [hasChange, setHasChange] = useState<boolean>(false);
 
   function onUpdateClick() {
-    const updated = save(id, editing, modelWrapper.page, model);
-    if (updated !== null) {
-      setModel({ ...updated });
-      if (closeDialog !== undefined) {
-        closeDialog();
-      }
+    act(editElmCommand(timer.id, editing));
+    if (closeDialog) {
+      closeDialog();
     }
     setHasChange(false);
+    if (setSelectedNode !== undefined && timer.id !== editing.id) {
+      setSelectedNode(editing.id);
+    }
   }
 
   function setEdit(x: EditorTimerEvent) {
@@ -66,6 +65,7 @@ const EditTimerPage: React.FC<{
 
   function onChange() {
     if (!hasChange) {
+      clearRedo();
       setHasChange(true);
     }
   }
@@ -74,10 +74,7 @@ const EditTimerPage: React.FC<{
     setHasChange(hc => {
       if (hc) {
         setEditing(edit => {
-          const updated = save(id, edit, modelWrapper.page, model);
-          if (updated !== null) {
-            setModel({ ...updated });
-          }
+          act(editElmCommand(timer.id, edit));
           return edit;
         });
       }
@@ -86,22 +83,10 @@ const EditTimerPage: React.FC<{
   }
 
   function onNewID(id: string) {
-    const oldid = timer.id;
-    if (getLatestLayoutMW !== undefined) {
-      const mw = getLatestLayoutMW();
-      const updated = save(
-        oldid,
-        { ...editing, id },
-        modelWrapper.page,
-        mw.model
-      );
-      if (updated !== null) {
-        setModel({ ...updated });
-      }
-      setHasChange(false);
-      if (setSelectedNode !== undefined) {
-        setSelectedNode(id);
-      }
+    act(editElmCommand(timer.id, { ...editing, id }));
+    setHasChange(false);
+    if (setSelectedNode !== undefined) {
+      setSelectedNode(id);
     }
   }
 
@@ -121,6 +106,8 @@ const EditTimerPage: React.FC<{
     setEditing,
     onDeleteClick,
     onFullEditClick: fullEditClick,
+    model,
+    setUndoListener,
   };
 
   const fullEditProps = { closeDialog };
@@ -130,8 +117,8 @@ const EditTimerPage: React.FC<{
     timer,
     setEditing: setEdit,
     initID: timer.id,
-    validTest: (id: string) => id === timer.id || checkId(id, model.elements),
     onNewID,
+    setHasChange,
   };
 
   useEffect(() => setEditing(timer), [timer]);
@@ -147,16 +134,46 @@ const QuickVersionEdit: React.FC<
   CommonTimerEditProps & {
     timer: EditorTimerEvent;
     saveOnExit: () => void;
+    onNewID: (id: string) => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
+    setHasChange: (x: boolean) => void;
   }
 > = function (props) {
-  const { editing, setEditing, timer, saveOnExit } = props;
+  const {
+    editing,
+    setEditing,
+    model,
+    timer,
+    saveOnExit,
+    onNewID,
+    setUndoListener,
+    setHasChange,
+  } = props;
 
-  useEffect(() => saveOnExit, [timer]);
+  function idTest(id: string) {
+    return id === timer.id || checkId(id, model.elements);
+  }
+
+  const idButton = (
+    <PopoverChangeIDButton
+      initValue={editing.id}
+      validTest={idTest}
+      save={onNewID}
+    />
+  );
+
+  useEffect(() => {
+    setUndoListener(() => setHasChange(false));
+    return () => {
+      setUndoListener(undefined);
+      saveOnExit();
+    };
+  }, [timer]);
 
   return (
     <FormGroup>
       <EditPageButtons {...props} />
-      <DescriptionItem label="Timer ID" value={editing.id} />
+      <DescriptionItem label="Timer ID" value={editing.id} extend={idButton} />
       <NormalComboBox
         text="Timer Type"
         value={editing.type}
@@ -175,9 +192,18 @@ const QuickVersionEdit: React.FC<
 const FullVersionEdit: React.FC<
   CommonTimerEditProps & {
     closeDialog?: () => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
   }
 > = function (props) {
-  const { editing, setEditing } = props;
+  const { editing, setEditing, setUndoListener, closeDialog } = props;
+
+  useEffect(() => {
+    setUndoListener(() => closeDialog && closeDialog());
+    return () => {
+      setUndoListener(undefined);
+    };
+  }, []);
+
   return (
     <MGDDisplayPane>
       <FormGroup>
@@ -202,26 +228,5 @@ const FullVersionEdit: React.FC<
     </MGDDisplayPane>
   );
 };
-
-function save(
-  oldId: string,
-  timer: EditorTimerEvent,
-  pageid: string,
-  model: EditorModel
-): EditorModel | null {
-  const page = model.pages[pageid];
-  if (oldId !== timer.id) {
-    if (checkId(timer.id, model.elements)) {
-      delete model.elements[oldId];
-      updatePageElement(page, oldId, timer);
-      model.elements[timer.id] = timer;
-    } else {
-      return null;
-    }
-  } else {
-    model.elements[oldId] = timer;
-  }
-  return model;
-}
 
 export default EditTimerPage;
