@@ -1,3 +1,12 @@
+/**
+ * This is the CSS from Ed, a former designer for the app (web version)
+ * They are migrated to TS codes (either CSSProperties or Styled)
+ */
+
+/**
+ * Ed made this file. It contains the items that their designs are not done yet
+ */
+
 import { css } from '@emotion/react';
 import { CSSProperties } from 'react';
 import { CSSROOTVARIABLES } from './root.css';

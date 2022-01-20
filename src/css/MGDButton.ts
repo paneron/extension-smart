@@ -1,4 +1,7 @@
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+/**
+ * This is the CSS from Ed, a former designer for the app (web version)
+ * They are migrated to TS codes (either CSSProperties or Styled)
+ */
 
 import { css, SerializedStyles } from '@emotion/react';
 import { CSSProperties } from 'react';

@@ -1,3 +1,7 @@
+/**
+ * The SVG data of BSI logo
+ */
+
 export const BSI_WHITE_TEXT = `<svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"

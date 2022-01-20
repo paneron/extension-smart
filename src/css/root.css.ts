@@ -1,3 +1,8 @@
+/**
+ * This is the CSS from Ed, a former designer for the app (web version)
+ * They are migrated to TS codes (either CSSProperties or Styled)
+ */
+
 export const CSSROOTVARIABLES = {
   '--colour--bsi-red': '#ff2b1f',
   '--colour--black': '#000',

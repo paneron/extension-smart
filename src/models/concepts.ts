@@ -1,3 +1,9 @@
+/**
+ * Codes in this folder are initial codes for the extension.
+ * I (Wai Kit) am not sure what the effect is.
+ * Ignored so far.
+ */
+
 import { StandardRef, StandardClause } from './standards';
 import { WithRevisions } from './revisions';
 import {
