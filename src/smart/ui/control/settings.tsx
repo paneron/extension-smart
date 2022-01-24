@@ -1,6 +1,10 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+/**
+ * It is the UI in the editor, for accessing the model settings
+ */
+
 import { jsx } from '@emotion/react';
 import { Tab, Tabs } from '@blueprintjs/core';
 import React, { useState } from 'react';

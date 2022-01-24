@@ -1,3 +1,7 @@
+/**
+ * Perform basic validation on the parsed model
+ */
+
 import { DataType, MMELNode, MMELObject } from '../interface/baseinterface';
 import {
   MMELDataAttribute,

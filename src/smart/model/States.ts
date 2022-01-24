@@ -22,6 +22,9 @@ export interface FunModel {
   history: PageHistory;
 }
 
+/**
+ * This one should be deprecated, but is still used somewhere
+ */
 export interface EditorState {
   history: HistoryItem[];
   page: string;
@@ -29,11 +32,14 @@ export interface EditorState {
   type: 'model';
 }
 
+/**
+ * The view options in editor
+ */
 export interface EditorViewOption {
   dvisible: boolean; // visibility of data nodes
   edgeDeleteVisible: boolean; // visibility of the remove edge buttons
-  idVisible: boolean;
-  commentVisible: boolean;
+  idVisible: boolean; // visibility of element ID
+  commentVisible: boolean; // visibility of comment functions
 }
 
 export interface ViewerOption {
@@ -47,8 +53,8 @@ export interface MapperViewOption {
   legVisible: boolean; // visibility of legends
   docVisible: boolean; // visibility of document templates
   mapAIVisible: boolean; // visibility of mapping import calculation pane
-  repoMapVisible: boolean;
-  repoLegendVisible: boolean;
+  repoMapVisible: boolean; // visibility of the small repo map
+  repoLegendVisible: boolean; // visibility of the legend in the small repo map
   idVisible: boolean;
 }
 

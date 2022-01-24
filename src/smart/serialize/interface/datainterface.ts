@@ -35,6 +35,6 @@ export interface MMELEnum extends MMELObject {
 // data structure for Registry
 export interface MMELRegistry extends MMELNode {
   title: string;
-  data: string;
+  data: string; // ID of the underlying data class
   datatype: DataType.REGISTRY;
 }

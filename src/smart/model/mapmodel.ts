@@ -1,3 +1,7 @@
+/**
+ * This is the data structure for mapping
+ */
+
 import React from 'react';
 import { MAPVERSION } from '../utils/constants';
 import { buildModelLinks } from '../utils/ModelFunctions';
@@ -32,7 +36,7 @@ export interface MapProfile {
   '@type': 'MMEL_MAP';
   id: string; // namespace of the implementation model
   mapSet: Record<string, MapSet>;
-  docs: Record<string, MappingDoc>;
+  docs: Record<string, MappingDoc>; // report templates
   version: string;
 }
 

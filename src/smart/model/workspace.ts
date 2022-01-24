@@ -1,3 +1,7 @@
+/**
+ * It is the data model of how data instances are stored and associated to the model
+ */
+
 import { WSVERSION } from '../utils/constants';
 import { JSONContext, JSONContextType } from '../utils/repo/io';
 

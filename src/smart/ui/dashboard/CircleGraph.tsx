@@ -3,6 +3,11 @@ import React from 'react';
 const path =
   'M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831';
 
+/**
+ * Copied from the plugin codes, as plugins are supposed to be external.
+ * The circle dashboard component is used in the checklist to show the overall progress
+ */
+
 const CircleGraph: React.FC<{
   color?: string;
   percentage: number;

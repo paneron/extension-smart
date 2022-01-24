@@ -2,13 +2,17 @@ import { ChangeLog } from '../changelog';
 import { EditorModel } from '../editormodel';
 import { ModelAction } from './model';
 
-// undo / redo returns the opposite action
+/**
+ * For undo / redo, that return the opposite action
+ */
 export type ACTION_INTERFACE<A> = (a: A) => A | undefined;
 type INIT_INTERFACE<S> = (s: S) => void;
 type NEW_ACTION<A> = (a: A) => void;
 type EDIT_ACTION = undefined | ((log: ChangeLog, user: string) => void);
 
-// type, action (the command), initialier
+/**
+ * Contains 3 items: data object, action (the command), initialier
+ */
 export type UndoReducerInterface<S, A> = [
   S,
   ACTION_INTERFACE<A>,

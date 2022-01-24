@@ -1,3 +1,7 @@
+/**
+ * Data structure for measurement and variables
+ */
+
 import {
   MMELVariable,
   MMELView,

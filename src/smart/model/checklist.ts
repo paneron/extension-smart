@@ -1,3 +1,7 @@
+/**
+ * The data model for checklist
+ */
+
 import { MMELProvision } from '../serialize/interface/supportinterface';
 import { MMELDataAttribute } from '../serialize/interface/datainterface';
 import { ModalityType } from '../utils/constants';

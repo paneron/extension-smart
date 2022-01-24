@@ -2,6 +2,9 @@ import React from 'react';
 
 export type VersionStatus = 'same' | 'add' | 'delete' | 'change';
 
+/**
+ * The difference between two versions of the model
+ */
 export interface VersionState {
   orielements: Record<string, Record<string, VersionStatus>>;
   refelements: Record<string, Record<string, VersionStatus>>;

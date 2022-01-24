@@ -49,14 +49,18 @@ import {
 import { validateModel } from './util/validation';
 import { MODELVERSION } from '../utils/constants';
 
-// the function to convert text to MMEL
+/**
+ * the function to convert text to MMEL
+ */
 export function textToMMEL(x: string): MMELModel {
   const pm = parseModel(x);
   validateModel(pm);
   return pm;
 }
 
-// the function to convert MMEL to text
+/**
+ * the function to convert MMEL to text
+ */
 export function MMELToText(model: MMELModel): string {
   let out = '';
   if (model.root !== '') {

@@ -2,6 +2,10 @@ import { Button } from '@blueprintjs/core';
 import React from 'react';
 import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
 
+/**
+ * A confirmation dialog.
+ * Used in deleting an element. Ask the user to confirm deleting the element
+ */
 export const ConfirmDialog: React.FC<{
   callback: () => void;
   done: () => void;

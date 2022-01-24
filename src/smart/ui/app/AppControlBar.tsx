@@ -1,3 +1,7 @@
+/**
+ * It is the UI on the leftmost. The buttons bar
+ */
+
 import { Classes, Colors, ControlGroup } from '@blueprintjs/core';
 import React from 'react';
 import { BSI_WHITE_TEXT } from '../../../resources/BSI_logo';

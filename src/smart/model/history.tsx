@@ -1,3 +1,9 @@
+/**
+ * Legacy data model for page history.
+ * The new method is to use the useHistory in the editor.
+ * This legacy data model is still used by other function modules like viewer / mapper.
+ */
+
 import React from 'react';
 import { getRootName } from '../utils/ModelFunctions';
 import { HistoryAction } from './editor/history';

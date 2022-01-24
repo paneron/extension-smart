@@ -29,6 +29,11 @@ import {
 } from '../../utils/repo/io';
 import { LoadingScreen } from '../common/Loading';
 
+/**
+ * When an item (model / document) is open, its contents are loaded first here.
+ * The loading screen is displayed.
+ * When everything is loaded, the contents are passed to the corresponding components
+ */
 const RepoItemLoadingView: React.FC<{
   repo: MMELRepo;
   selectedModule: ModuleName;

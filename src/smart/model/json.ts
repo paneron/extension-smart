@@ -1,3 +1,11 @@
+/**
+ * To save the model, the model object is serialized.
+ * However, not all contents are serializable, such as Set objects.
+ * A JSON-series data structures are defined to keep a serializable version of the model.
+ *
+ * So, there is a need to convert the JSON model to MMEL model (and vice versa)
+ */
+
 import { DataType, MMELNode } from '../serialize/interface/baseinterface';
 import { MMELEnum } from '../serialize/interface/datainterface';
 import { MMELSubprocess } from '../serialize/interface/flowcontrolinterface';

@@ -1,3 +1,7 @@
+/**
+ * Contains some buttons that are reused on multiple UIs
+ */
+
 import { Icon, IconName } from '@blueprintjs/core';
 import React from 'react';
 import { ControlButton } from 'react-flow-renderer';

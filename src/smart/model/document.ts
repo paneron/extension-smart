@@ -1,3 +1,7 @@
+/**
+ * The model for text document. Can be a document translated from XML or a regulation document
+ */
+
 import { RefObject } from 'react';
 
 export interface DocStatement {

@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * A wrapper of the app to add the mouse listener
+ */
+
 const AppUILayout: React.FC<{
   children: React.ReactNode;
   clickListener: (() => void)[];

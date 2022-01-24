@@ -1,22 +1,38 @@
+/**
+ * This file contains the commands and handling of history related tasks
+ */
+
 import { useReducer } from 'react';
 import { HistoryItem } from '../history';
 import { UndoReducerInterface } from './interface';
 
+/**
+ * Drill down more levels
+ */
 type PushAction = {
   act: 'push';
   value: HistoryItem[];
 };
 
+/**
+ * Drill up some levels. Number of levels is defined by the 'value' propery
+ */
 type PopAction = {
   act: 'pop';
   value: number;
 };
 
+/**
+ * Replace the current page history by the given one
+ */
 type ReplaceAction = {
   act: 'replace';
   value: HistoryItem[];
 };
 
+/**
+ * Initialize the page history
+ */
 type InitAction = {
   act: 'init';
   value: HistoryItem[];
@@ -43,6 +59,12 @@ function reducer(list: HistoryItem[], action: OwnAction) {
   }
 }
 
+/**
+ * Find the corresponding undo action of the current action
+ * @param his The current history
+ * @param action The given action
+ * @returns The undo action
+ */
 function findReverse(
   his: HistoryItem[],
   action: HistoryAction

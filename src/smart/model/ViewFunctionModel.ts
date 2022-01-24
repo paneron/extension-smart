@@ -8,6 +8,10 @@ import {
 import { EditorNode } from './editormodel';
 import { LegendInterface } from './States';
 
+/**
+ * For model viewer. The common interface for different functions.
+ * Functions like checklist, version tracking etc.
+ */
 export interface ViewFunctionInterface {
   getStyleById: (id: string, pageid: string, data: unknown) => SerializedStyles;
   getSVGColorById: (id: string, pageid: string, data: unknown) => string;

@@ -1,3 +1,7 @@
+/**
+ * Data model for the NLP graph
+ */
+
 import { Node } from 'react-flow-renderer';
 
 export type STNode = {

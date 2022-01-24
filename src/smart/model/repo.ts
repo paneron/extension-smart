@@ -1,3 +1,6 @@
+/**
+ * Data structure for repo items
+ */
 export type RepoItemType = RepoItems['type'];
 export type RepoItems = RepoImpItem | RepoRefItem | RepoDocItem;
 
@@ -8,9 +11,9 @@ export type MMELRepo = {
 
 export type RepoIndex = Record<string, RepoItems>;
 
-export type RepoImpItem = RepoBase & { type: 'Imp' };
-export type RepoRefItem = RepoBase & { type: 'Ref' };
-export type RepoDocItem = RepoBase & { type: 'Doc' };
+export type RepoImpItem = RepoBase & { type: 'Imp' }; // implementation model
+export type RepoRefItem = RepoBase & { type: 'Ref' }; // reference model
+export type RepoDocItem = RepoBase & { type: 'Doc' }; // documents
 
 type RepoBase = {
   namespace: string;
@@ -19,4 +22,7 @@ type RepoBase = {
   date: Date;
 };
 
+/**
+ * It is like an index of the file system, to identify and keep track of objects in Paneron
+ */
 export const repoIndexPath = '/index.json';

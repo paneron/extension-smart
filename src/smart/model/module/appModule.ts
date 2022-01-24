@@ -1,3 +1,7 @@
+/**
+ * Modules are the high-level functions provided by the app.
+ */
+
 import { IconName } from '@blueprintjs/core';
 import React from 'react';
 import DocumentViewer from '../../ui/docviewer';
@@ -60,6 +64,9 @@ type BaseViewProps = {
   repo?: MMELRepo;
 };
 
+/**
+ * The common configuration of Module functions of the app
+ */
 type BaseConfig = {
   title: string;
   description: string;
@@ -71,24 +78,31 @@ export type ModuleConfiguration =
   | DocModuleConfig
   | NeutralModuleConfig;
 
+/**
+ * It is the list of modules avaiable in the app
+ */
 const MODULES = [
-  'repo',
-  'modelViewer',
-  'modelEditor',
-  'modelMapper',
-  'modelImplement',
-  'docViewer',
-  'linkAnalysis',
-  'nlp',
-  'docEdit',
+  'repo', // The repo management utility, providing add / delete items in the repo
+  'modelViewer', // Model viewer, include functions like checklist
+  'modelEditor', // Model editor
+  'modelMapper', // Model mapper, for adapting and auditing
+  'modelImplement', // Model workspace, managing data
+  'docViewer', // View a text document
+  'linkAnalysis', // Visualize the links
+  'nlp', // Knowledge graph and asking a question
+  'docEdit', // For editing the text of document
 ] as const;
 
 export type ModuleName = typeof MODULES[number];
 
+/**
+ * Controls which modules are visible in different modes
+ */
 export const ModuleList: Record<RepoItemType | '', ModuleName[]> = {
-  '': ['repo', 'docEdit'],
-  Doc: ['repo', 'docViewer'],
+  '': ['repo', 'docEdit'], // when nothing is open
+  Doc: ['repo', 'docViewer'], // when a document is open
   Ref: [
+    // when a reference model is open
     'repo',
     'modelViewer',
     'modelMapper',
@@ -97,6 +111,7 @@ export const ModuleList: Record<RepoItemType | '', ModuleName[]> = {
     'nlp',
   ],
   Imp: [
+    // when an implementation model is open
     'repo',
     'modelViewer',
     'modelEditor',

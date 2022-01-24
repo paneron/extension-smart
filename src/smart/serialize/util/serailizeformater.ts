@@ -47,6 +47,9 @@ import {
   isTimerEvent,
 } from './validation';
 
+/**
+ * Convert the model to text
+ */
 export function toNodeModel(x: MMELNode): string {
   if (isDataClass(x)) {
     return toDataClassModel(x);

@@ -1,3 +1,7 @@
+/**
+ * The internal data strcuture for the model
+ */
+
 import { RefObject } from 'react';
 import {
   DataType,
@@ -86,8 +90,8 @@ export interface EditorNodeChild extends EditorBaseObjectType {
 }
 
 export interface EditorDataClassReference extends EditorBaseObjectType {
-  rdcs: Set<string>;
-  mother: string;
+  rdcs: Set<string>; // data dependency list
+  mother: string; // empty ('') if there is no assoicated registry
 }
 
 export interface EditorPage extends EditorBaseObjectType {

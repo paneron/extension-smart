@@ -15,6 +15,10 @@ import {
   TimerShape,
 } from '../flowui/shapes';
 
+/**
+ * It is the UI shown on the sidebar for adding new elements to the diagram
+ */
+
 const NewComponentPane: React.FC = function () {
   return (
     <MGDComponentBar>

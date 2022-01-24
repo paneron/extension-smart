@@ -1,3 +1,8 @@
+/**
+ * No XML parser is used
+ * We use our own method to parse XML using brute-force
+ */
+
 export type XMLNodeContent = XMLElement | string;
 
 export interface XMLElement {

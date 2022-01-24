@@ -3,6 +3,10 @@ import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { ModuleName, MODULE_CONFIGURATION } from '../../model/module/appModule';
 
+/**
+ * The buttons on the leftmost button bar
+ */
+
 const ModuleButton: React.FC<{
   moduleName: ModuleName;
   selected: boolean;

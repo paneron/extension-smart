@@ -1,6 +1,12 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
+/**
+ * It is a legacy design for wrapping the model
+ * The new design is to use the useModel / useState hook.
+ * This legacy design is still used in many places of the codes
+ */
+
 import { Elements } from 'react-flow-renderer';
 import { MMELNode } from '../serialize/interface/baseinterface';
 import { MMELModel } from '../serialize/interface/model';
@@ -47,12 +53,20 @@ import { SerializedStyles } from '@emotion/react';
 import { MMELRepo, RepoIndex } from './repo';
 import { EditorViewOption } from './States';
 
+/**
+ * The wrapper contains the model and which page it is viewing
+ */
 export interface ModelWrapper {
   model: EditorModel;
   page: string;
   type: 'model';
 }
 
+/**
+ * Convert the elements from MMELnodes to Editornodes.
+ * MMELNode: The objects read from MMEL files.
+ * EditorNode: The runtime objects of the model
+ */
 function convertElms(
   elms: Record<string, MMELNode>
 ): Record<string, EditorNode> {
@@ -85,6 +99,9 @@ function convertElms(
   return output;
 }
 
+/**
+ * Convert the elements from MMELSubprocess to EditorSubprocess
+ */
 function convertPages(
   elms: Record<string, MMELSubprocess>,
   nodes: Record<string, EditorNode>
@@ -101,6 +118,11 @@ function convertPages(
   return output;
 }
 
+/**
+ * Find the start event node of the page
+ * @param coms The list of components of the page
+ * @param nodes The elements in the model
+ */
 function findStart(
   coms: Record<string, MMELSubprocessComponent>,
   nodes: Record<string, EditorNode>
@@ -166,6 +188,9 @@ function buildStructure(mw: ModelWrapper): ModelWrapper {
   return mw;
 }
 
+/**
+ * Convert the model to the list of nodes for React Flow. For editor.
+ */
 export function getEditorReactFlowElementsFrom(
   page: string,
   model: EditorModel,
@@ -207,6 +232,9 @@ export function getEditorReactFlowElementsFrom(
   return [];
 }
 
+/**
+ * Convert the model wrapper to the list of nodes for React Flow. For the reference model in the editor
+ */
 export function getEditorReferenceFlowElementsFrom(
   mw: ModelWrapper,
   index: RepoIndex,
@@ -236,6 +264,9 @@ export function getEditorReferenceFlowElementsFrom(
   );
 }
 
+/**
+ * Convert the model wrapper to the list of nodes for React Flow. For model viewer
+ */
 export function getViewerReactFlowElementsFrom(
   mw: ModelWrapper,
   index: RepoIndex,
@@ -273,6 +304,9 @@ export function getViewerReactFlowElementsFrom(
   );
 }
 
+/**
+ * Convert the model wrapper to the list of nodes for React Flow. For the model workspace
+ */
 export function getActionReactFlowElementsFrom(
   mw: ModelWrapper,
   index: RepoIndex,
@@ -302,6 +336,9 @@ export function getActionReactFlowElementsFrom(
   );
 }
 
+/**
+ * Convert the model wrapper to the list of nodes for React Flow. For the model mapper
+ */
 export function getMapperReactFlowElementsFrom(
   mw: ModelWrapper,
   index: RepoIndex,

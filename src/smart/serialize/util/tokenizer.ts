@@ -1,7 +1,15 @@
+/**
+ * Parsing is done by tokenizing the text files, and then converting the tokens to the model.
+ * Not much error handling is implemented as the MMEL file structure is assumed to be correct.
+ */
+
 import { isSpace } from '../../utils/ModelFunctions';
 
-export function MMELtokenize(x: string): Array<string> {
-  const set: Array<string> = [];
+/**
+ *  Convert text to an array of tokens
+ */
+export function MMELtokenize(x: string): string[] {
+  const set: string[] = [];
   let t = '';
   let i = 0;
   while (i < x.length) {
@@ -45,16 +53,25 @@ export function MMELtokenize(x: string): Array<string> {
   return set;
 }
 
+/**
+ * The next item is enclosed by something, say "". Remove the enclosing stuffs and perform tokenization
+ */
 export function MMELtokenizePackage(x: string): string[] {
   return MMELtokenize(MMELremovePackage(x));
 }
 
+/**
+ *  The data is a set of IDs enclosed in {}. Remove the {} and put each ID into a set
+ */
 export function MMELtokenizeSet(x: string): Set<string> {
   const set = new Set<string>();
   MMELtokenizePackage(x).forEach(y => set.add(y));
   return set;
 }
 
+/**
+ * Remove the enclosing stuffs
+ */
 export function MMELremovePackage(x: string): string {
   if (x.length >= 2) {
     return x.substring(1, x.length - 1);
@@ -63,6 +80,9 @@ export function MMELremovePackage(x: string): string {
   }
 }
 
+/**
+ * It is specifically used for parsing attribute definitions
+ */
 export function MMELtokenizeAttributes(x: string): Array<string> {
   x = MMELremovePackage(x);
   const set: Array<string> = [];

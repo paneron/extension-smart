@@ -1,4 +1,8 @@
+/**
+ * Data model for simulation
+ */
+
 export interface SimulationState {
-  spageid: string;
-  sid: string;
+  spageid: string; // Current page of the simulation
+  sid: string; // Current element ID of the simulation
 }

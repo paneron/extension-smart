@@ -12,6 +12,10 @@ import {
 } from '../../model/module/appModule';
 import { MMELRepo, RepoIndex } from '../../model/repo';
 
+/**
+ * The displayed UI when nothing is open.
+ * When a model / document is open, another UI will replace this one.
+ */
 const NeutralView: React.FC<{
   selectedModule: ModuleName;
   setRepo: (x?: MMELRepo) => void;

@@ -1,3 +1,9 @@
+/**
+ * React Flow is used to render the graph structure of the model
+ * Nodes / Edges in React Flow can carry a payload.
+ * This file defines the data structure of this payload
+ */
+
 import { XYPosition } from 'react-flow-renderer';
 import { MMELEdge } from '../serialize/interface/flowcontrolinterface';
 import {
