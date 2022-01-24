@@ -201,9 +201,6 @@ export function compileProcessImport(
       from: Object.keys(newItems.links),
       to: [],
     };
-    /*const newItems: NewImportItems = {
-      links: {},
-    };*/
     action.actions = [
       newCompo,
       newElmsAction,

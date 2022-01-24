@@ -23,6 +23,12 @@ export type RegistryCombined = EditorDataClass & {
   title: string;
 };
 
+/**
+ * Handle the command to delete registry
+ * @param elms The elements in the model
+ * @param ids The IDs of registries to be deleted
+ * @returns The updated elements in the model
+ */
 export function delRegistry(
   elms: Record<string, EditorNode>,
   ids: string[]
@@ -37,6 +43,12 @@ export function delRegistry(
   return elms;
 }
 
+/**
+ * Handle the command to add registries
+ * @param elms The elements in the model
+ * @param regs The new regsitry objects to be added
+ * @returns The updtaed elements in the model
+ */
 export function addRegistry(
   elms: Record<string, EditorNode>,
   regs: EditorNode[]
@@ -55,6 +67,13 @@ export function addRegistry(
   return elms;
 }
 
+/**
+ * Handle the command to edit a registry
+ * @param elms The elements in the model
+ * @param id The ID of the registry to be edited
+ * @param item The updated content of the registry
+ * @returns The updated elements in the model
+ */
 export function editRegistry(
   elms: Record<string, EditorNode>,
   id: string,
@@ -76,6 +95,13 @@ export function editRegistry(
   return elms;
 }
 
+/**
+ * Examine the registry action and add cascade actions
+ * @param elms The elements in the model
+ * @param pages The pages in the model
+ * @param action The action
+ * @returns The cascade actions for undo
+ */
 export function cascadeCheckRegs(
   elms: Record<string, EditorNode>,
   pages: Record<string, MMELSubprocess>,
@@ -199,6 +225,9 @@ export function cascadeCheckRegs(
   return [];
 }
 
+/**
+ * Internal function to find the affected components to be handled in the cascade actions
+ */
 function findAffectedElements(
   elms: Record<string, EditorNode>,
   pages: Record<string, MMELSubprocess>,

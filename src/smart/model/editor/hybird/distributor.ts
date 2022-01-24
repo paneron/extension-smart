@@ -1,3 +1,12 @@
+/**
+ * This file contains the handling of the more complex hybird commands
+ *
+ * The flow is as follows:
+ * 1. From the hybird command, generate the set of actions and the set of undo actions. This is done by the 'compile'-series functions
+ * 2. Execute the actions
+ * A3. If an undo is needed, execute the 'compiled' actions appended to the undo action
+ */
+
 import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
 import {
   MMELLink,

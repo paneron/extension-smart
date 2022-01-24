@@ -1,9 +1,18 @@
+/**
+ * This file centralizes the commands related to page (subprocess)
+ */
+
 import { Node } from 'react-flow-renderer';
 import { createEdge } from '../../../utils/EditorFactory';
 import { findUniqueID } from '../../../utils/ModelFunctions';
 import { EditorModel, EditorSubprocess, isEditorData } from '../../editormodel';
 import { ModelAction } from '../model';
 
+/**
+ * Remove an edge of a subprocess (page)
+ * @param page The page ID
+ * @param id The edge ID
+ */
 export function removeEdgeCommand(page: string, id: string) {
   const action: ModelAction = {
     type: 'model',
@@ -15,6 +24,12 @@ export function removeEdgeCommand(page: string, id: string) {
   return action;
 }
 
+/**
+ * Add an edge to the subprocess (page)
+ * @param page The page ID
+ * @param source The element ID of the egde source
+ * @param target The element ID of the edge target
+ */
 export function newEdgeCommand(
   page: EditorSubprocess,
   source: string,
@@ -38,6 +53,13 @@ type DragStartRecord = {
   y: number;
 };
 
+/**
+ * The element is moved on the page
+ * @param page The page ID
+ * @param model The current model
+ * @param flowNode The node (React flow Node type) that is moved
+ * @param ds The start location of the move
+ */
 export function dragCommand(
   page: string,
   model: EditorModel,

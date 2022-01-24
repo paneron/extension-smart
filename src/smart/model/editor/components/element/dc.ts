@@ -8,6 +8,12 @@ import {
 import { ModelAction } from '../../model';
 import { ElmAction, DataCascadeDCID } from '../elements';
 
+/**
+ * Add a new data class
+ * @param elms The elements in the model
+ * @param dcs The new data classes
+ * @returns The updated elements in the model
+ */
 export function addDC(
   elms: Record<string, EditorNode>,
   dcs: EditorNode[]
@@ -20,6 +26,13 @@ export function addDC(
   return elms;
 }
 
+/**
+ * Edit a data class
+ * @param elms The elements in the model
+ * @param id The ID of the data class to be edited
+ * @param item The updated content of the data class
+ * @returns The updated elements in the model
+ */
 export function editDC(
   elms: Record<string, EditorNode>,
   id: string,
@@ -32,6 +45,13 @@ export function editDC(
   return elms;
 }
 
+/**
+ * Examine the action about data and add cascade actions if necessary
+ * @param elms The elements in the model
+ * @param pages The pages in the model
+ * @param action The action
+ * @returns The cascade actions for undo
+ */
 export function cascadeCheckDCs(
   elms: Record<string, EditorNode>,
   pages: Record<string, MMELSubprocess>,
@@ -137,6 +157,9 @@ export function cascadeCheckDCs(
   return [];
 }
 
+/**
+ * Internal function to find affected elements due to the change on data
+ */
 function findAffectedElements(
   elms: Record<string, EditorNode>,
   pages: Record<string, MMELSubprocess>,
@@ -177,6 +200,9 @@ function findAffectedElements(
   return [ids, pids];
 }
 
+/**
+ * Generate the undo action
+ */
 function reverseAttribute(
   item: DataCascadeDCID,
   elms: Record<string, EditorNode>

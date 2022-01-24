@@ -129,7 +129,7 @@ export function editDCCommand(id: string, value: EditorDataClass) {
  * @param id The ID of the data class
  * @param value The updated content of the data class
  * @param refs The new reference to be added to the model
- * @returns 
+ * @returns
  */
 export function editImportDCCommand(
   id: string,

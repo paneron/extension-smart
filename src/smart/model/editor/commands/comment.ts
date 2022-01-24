@@ -8,7 +8,7 @@ import { ModelAction } from '../model';
 /**
  * Add a new comment to the model
  * @param m the comment object
- * @param pid the process ID where the comment is given on 
+ * @param pid the process ID where the comment is given on
  * @param parent the comment that this comment replys to. Undefined if this comment is not replying to others
  */
 export function addCommentCommand(
@@ -30,7 +30,7 @@ export function addCommentCommand(
 }
 
 /**
- * Mark the comment as resolved or unresolved 
+ * Mark the comment as resolved or unresolved
  * @param com the comment to toggle the resolved flag
  */
 export function resolveCommentCommand(com: MMELComment) {
@@ -43,7 +43,6 @@ export function resolveCommentCommand(com: MMELComment) {
   };
   return action;
 }
-
 
 /**
  * Delete the comment

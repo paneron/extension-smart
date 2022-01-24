@@ -340,7 +340,7 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
         return convertAction(reverse);
       }
       case 'flowunit': {
-        const reverseCascade = cascadeCheckElm(elements, page, action);
+        const reverseCascade = cascadeCheckElm(page, action);
         actCascade(action.cascade);
         const reverse = actElements(action);
         if (reverse) {

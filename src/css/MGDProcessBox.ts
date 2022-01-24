@@ -3,7 +3,6 @@
  * They are migrated to TS codes (either CSSProperties or Styled)
  */
 
-
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 
