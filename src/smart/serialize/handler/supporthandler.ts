@@ -277,7 +277,9 @@ export function parseComment(id: string, data: string): MMELComment {
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
-      if (i < t.length) {
+      if (command === 'resolved') {
+        c.resolved = true;
+      } else if (i < t.length) {
         if (command === 'username') {
           c.username = MMELremovePackage(t[i++]);
         } else if (command === 'message') {
@@ -286,8 +288,6 @@ export function parseComment(id: string, data: string): MMELComment {
           c.feedback = MMELtokenizeSet(t[i++]);
         } else if (command === 'timestamp') {
           c.timestamp = MMELremovePackage(t[i++]);
-        } else if (command === 'resolved') {
-          c.resolved = true;
         } else {
           throw new Error(
             `Parsing error: Comment. ID ${id}: Unknown keyword ${command}`
