@@ -37,8 +37,7 @@ function validateAttribute(
   for (const x in attribute.ref) {
     if (x === '' || refs[x] === undefined) {
       throw new Error(
-        'Error in resolving IDs in reference for data attributes ' +
-          attribute.id
+        `Error in resolving IDs in 'reference' for data attributes '${attribute.id}'`
       );
     }
   }
@@ -59,7 +58,7 @@ function validateRegistry(
 ): void {
   if (reg.data === '' || !isDataClass(nodes[reg.data])) {
     throw new Error(
-      'Error in resolving IDs in data class for registry ' + reg.id
+      `Error in resolving IDs in 'data class' for registry '${reg.id}'`
     );
   }
 }
@@ -69,10 +68,10 @@ function validateEdge(
   elements: Record<string, MMELSubprocessComponent>
 ): void {
   if (edge.from === '' || elements[edge.from] === undefined) {
-    throw new Error(`Error in resolving IDs in from for edge '${edge.id}'`);
+    throw new Error(`Error in resolving IDs in 'from' for edge '${edge.id}'`);
   }
   if (edge.to === '' || elements[edge.to] === undefined) {
-    throw new Error(`Error in resolving IDs in to for edge '${edge.id}'`);
+    throw new Error(`Error in resolving IDs in 'to' for edge '${edge.id}'`);
   }
 }
 
@@ -97,7 +96,7 @@ function validateSubprocessComponent(
 ): void {
   if (com.element === '' || nodes[com.element] === undefined) {
     throw new Error(
-      'Error in resolving IDs in from for graph node ' + com.element
+      `Error in resolving IDs in 'from' for graph node ${com.element}`
     );
   }
 }
@@ -109,21 +108,27 @@ function validateApproval(
   nodes: Record<string, MMELNode>
 ): void {
   if (app.actor !== '' && roles[app.actor] === undefined) {
-    throw new Error('Error in resolving IDs in actor for process ' + app.id);
+    throw new Error(
+      `Error in resolving IDs in 'actor' for process '${app.id}'`
+    );
   }
   if (app.approver !== '' && roles[app.approver] === undefined) {
-    throw new Error('Error in resolving IDs in approver for process ' + app.id);
+    throw new Error(
+      `Error in resolving IDs in 'approver' for process '${app.id}'`
+    );
   }
   for (const x in app.records) {
     if (nodes[x] === undefined || !isRegistry(nodes[x])) {
       throw new Error(
-        'Error in resolving IDs in approval record for process ' + app.id
+        `Error in resolving IDs in 'approval record' for process '${app.id}'`
       );
     }
   }
   for (const x in app.ref) {
     if (refs[x] === undefined) {
-      throw new Error('Error in resolving IDs in input for process ' + app.id);
+      throw new Error(
+        `Error in resolving IDs in 'input' for process '${app.id}'`
+      );
     }
   }
 }
@@ -137,28 +142,34 @@ function validateProcess(
 ): void {
   for (const x in p.output) {
     if (nodes[x] === undefined || !isRegistry(nodes[x])) {
-      throw new Error('Error in resolving IDs in output for process ' + p.id);
+      throw new Error(
+        `Error in resolving IDs in 'output' for process '${p.id}'`
+      );
     }
   }
   for (const x in p.input) {
     if (nodes[x] === undefined || !isRegistry(nodes[x])) {
-      throw new Error('Error in resolving IDs in input for process ' + p.id);
+      throw new Error(
+        `Error in resolving IDs in 'input' for process '${p.id}'`
+      );
     }
   }
   for (const x in p.provision) {
     if (provisions[x] === undefined) {
       throw new Error(
-        'Error in resolving IDs in provision for process ' + p.id
+        `Error in resolving IDs in 'provision' for process '${p.id}'`
       );
     }
   }
   if (p.actor !== '' && roles[p.actor] === undefined) {
     throw new Error(
-      `Error in resolving IDs in actor ${p.actor} for process ${p.id}`
+      `Error in resolving IDs in 'actor' ${p.actor} for process ${p.id}`
     );
   }
   if (p.page !== '' && pages[p.page] === undefined) {
-    throw new Error('Error in resolving IDs in subprocess for process ' + p.id);
+    throw new Error(
+      `Error in resolving IDs in 'subprocess' for process '${p.id}'`
+    );
   }
 }
 
@@ -169,7 +180,7 @@ function validateProvision(
   for (const x in pro.ref) {
     if (refs[x] === undefined) {
       throw new Error(
-        `Error in resolving IDs in reference for provision ${pro.id}`
+        `Error in resolving IDs in 'reference' for provision ${pro.id}`
       );
     }
   }
