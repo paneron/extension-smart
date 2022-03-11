@@ -27,7 +27,7 @@ export function removeEdgeCommand(page: string, id: string) {
 /**
  * Add an edge to the subprocess (page)
  * @param page The page ID
- * @param source The element ID of the egde source
+ * @param source The element ID of the edge source
  * @param target The element ID of the edge target
  */
 export function newEdgeCommand(

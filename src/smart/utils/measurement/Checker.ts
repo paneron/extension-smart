@@ -234,7 +234,7 @@ function computeNode(
               c.condition,
               values,
               reports[node.id],
-              `Egde to: ${c.to}`
+              `Edge to: ${c.to}`
             )
           ) {
             const next = model.elements[c.to];

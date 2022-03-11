@@ -69,10 +69,10 @@ function validateEdge(
   elements: Record<string, MMELSubprocessComponent>
 ): void {
   if (edge.from === '' || elements[edge.from] === undefined) {
-    throw new Error('Error in resolving IDs in from for egde ' + edge.id);
+    throw new Error(`Error in resolving IDs in from for edge '${edge.id}'`);
   }
   if (edge.to === '' || elements[edge.to] === undefined) {
-    throw new Error('Error in resolving IDs in to for egde ' + edge.id);
+    throw new Error(`Error in resolving IDs in to for edge '${edge.id}'`);
   }
 }
 
