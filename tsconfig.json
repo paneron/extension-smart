@@ -19,7 +19,8 @@
       "newLine": "lf",
 
       "declaration": true,
-      "jsx": "react",      
+      "jsx": "react",
+      "outDir": "compiled"
     },
-    "exclude": ["dist", "compiled", "backup"],  
+    "exclude": ["dist", "compiled", "backup"],
 }
