@@ -14,11 +14,12 @@
     "featured": true,
     "requiredHostAppVersion": "^1.0.0-beta18"
   },
+  "dist_dir": "dist",
   "scripts": {
-    "build": "rm -rf compiled dist/*; mkdir -p compiled dist && tsc && babel compiled --out-dir dist && cp package.json dist/ && rsync -a --include '*/' --include '*.d.ts' --include '*.js.map' --exclude '*' compiled/ dist/",
-    "buildwin": "rmdir /q /s compiled dist & mkdir compiled dist & tsc & xcopy /e /y compiled dist > nul & babel compiled --out-dir dist & copy package.json dist & md \"%appdata%\\Paneron\\plugins\\@riboseinc\\paneron-extension-hls\" & xcopy /e /y dist \"%appdata%\\Paneron\\plugins\\@riboseinc\\paneron-extension-hls\" > nul",
+    "build": "yarn run clean; mkdirp compiled ${npm_package_dist_dir} && tsc && babel compiled --out-dir ${npm_package_dist_dir} && cp package.json ${npm_package_dist_dir}/ && rsync -a --include '*/' --include '*.d.ts' --include '*.js.map' --exclude '*' compiled/ ${npm_package_dist_dir}/",
+    "buildwin": "yarn run clean & mkdirp compiled %npm_package_dist_dir% & tsc & xcopy /e /y compiled %npm_package_dist_dir% > nul & babel compiled --out-dir %npm_package_dist_dir% & copy package.json %npm_package_dist_dir% & md \"%appdata%\\Paneron\\plugins\\@riboseinc\\paneron-extension-hls\" & xcopy /e /y dist \"%appdata%\\Paneron\\plugins\\@riboseinc\\paneron-extension-hls\" > nul",
     "lint": "gts lint",
-    "clean": "gts clean",
+    "clean": "gts clean ; rimraf dist/*",
     "fix": "gts fix"
   },
   "files": [
@@ -55,9 +56,11 @@
     "@types/webpack-env": "^1.16.0",
     "gts": "^3.1.0",
     "liquidjs": "^9.25.0",
+    "mkdirp": "^1.0.4",
     "react": "16.14.0",
     "react-flow-renderer": "^9.6.0",
     "react-mathjax2": "^0.0.2",
+    "rimraf": "^3.0.2",
     "three": "^0.134.0",
     "three-stdlib": "^2.5.9",
     "typescript": "^4.6.4"

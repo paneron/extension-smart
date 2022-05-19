@@ -60,7 +60,7 @@ NPM := yarn
 
 .PHONY: all
 ## Install build dependencies and build assets using Dev environment
-all: prep clean build
+all: prep build
 
 .PHONY: prep
 ## Install build dependencies
