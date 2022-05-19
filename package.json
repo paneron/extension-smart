@@ -15,10 +15,10 @@
     "requiredHostAppVersion": "^1.0.0-beta18"
   },
   "scripts": {
-    "build": "rm -rf compiled dist/*; mkdir -p compiled dist; tsc; babel compiled --out-dir dist; cp package.json dist/; rsync -a --include '*/' --include '*.d.ts' --include '*.js.map' --exclude '*' compiled/ dist/",
+    "build": "rm -rf compiled dist/*; mkdir -p compiled dist && tsc && babel compiled --out-dir dist && cp package.json dist/ && rsync -a --include '*/' --include '*.d.ts' --include '*.js.map' --exclude '*' compiled/ dist/",
     "buildwin": "rmdir /q /s compiled dist & mkdir compiled dist & tsc & xcopy /e /y compiled dist > nul & babel compiled --out-dir dist & copy package.json dist & md \"%appdata%\\Paneron\\plugins\\@riboseinc\\paneron-extension-hls\" & xcopy /e /y dist \"%appdata%\\Paneron\\plugins\\@riboseinc\\paneron-extension-hls\" > nul",
     "lint": "gts lint",
-    "lint-clean": "gts clean",
+    "clean": "gts clean",
     "fix": "gts fix"
   },
   "files": [
