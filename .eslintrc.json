@@ -1,5 +1,9 @@
 {
   "extends": "./node_modules/gts/",
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "rules": {
     "curly": "error",
     "quotes": "off"
