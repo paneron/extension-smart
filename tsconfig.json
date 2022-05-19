@@ -1,26 +1,26 @@
 {
-    "compilerOptions": {
-      "target": "es2017",
-      "module": "esnext",
-      "moduleResolution": "node",
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "esnext",
+    "moduleResolution": "node",
 
-      "strict": true,
-      "noUnusedLocals": true,
-      "noFallthroughCasesInSwitch": true,
-      "noImplicitReturns": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
 
-      "sourceMap": true,
-      "inlineSources": true,
+    "sourceMap": true,
+    "inlineSources": true,
 
-      "allowSyntheticDefaultImports": true,
-      "experimentalDecorators": true,
-      "lib": ["ES2021", "DOM"],
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "lib": ["ES2021", "DOM"],
 
-      "newLine": "lf",
+    "newLine": "lf",
 
-      "declaration": true,
-      "jsx": "react",
-      "outDir": "compiled"
-    },
-    "exclude": ["dist", "compiled", "backup"],
+    "declaration": true,
+    "jsx": "react",
+    "outDir": "compiled"
+  },
+  "exclude": ["dist", "compiled", "backup"]
 }
