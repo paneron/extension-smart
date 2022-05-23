@@ -26,6 +26,129 @@
   ],
   "rules": {
     "curly": "error",
-    "quotes": "off"
+    "quotes": "off",
+    "require-jsdoc": [
+      "off"
+    ],
+    "valid-jsdoc": [
+      "off"
+    ],
+    "indent": [
+      "warn",
+      2,
+      {
+        "SwitchCase": 1,
+        "VariableDeclarator": {
+          "var": 2,
+          "let": 2,
+          "const": 3
+        },
+        "ignoredNodes": [
+          "ConditionalExpression"
+        ]
+      }
+    ],
+    "key-spacing": [
+      "error",
+      {
+        "singleLine": {
+          "beforeColon": false,
+          "afterColon": true
+        },
+        "multiLine": {
+          "beforeColon": true,
+          "afterColon": true,
+          "align": "colon"
+        }
+      }
+    ],
+    "keyword-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
+    ],
+    "spaced-comment": [
+      "error",
+      "always",
+      {
+        "exceptions": [
+          "-",
+          "+",
+          "=",
+          "*"
+        ],
+        "markers": [
+          "=",
+          "*/",
+          "/*",
+          "X",
+          "//"
+        ]
+      }
+    ],
+    "no-multi-spaces": [
+      1,
+      {
+        "exceptions": {
+          "VariableDeclarator": true
+        }
+      }
+    ],
+    "no-cond-assign": [
+      2,
+      "except-parens"
+    ],
+    "no-redeclare": [
+      "error",
+      {
+        "builtinGlobals": true
+      }
+    ],
+    "dot-notation": [
+      2,
+      {
+        "allowKeywords": true
+      }
+    ],
+    "eqeqeq": [
+      2,
+      "smart"
+    ],
+    "no-plusplus": [
+      "warn",
+      {
+        "allowForLoopAfterthoughts": true
+      }
+    ],
+    "one-var": [
+      "off",
+      "consecutive"
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always",
+      {
+        "objectsInObjects": false,
+        "arraysInObjects": false
+      }
+    ],
+    "quote-props": [
+      "error",
+      "consistent-as-needed",
+      {
+        "keywords": true
+      }
+    ],
+    "camelcase": [
+      "warn"
+    ],
+    "max-len": [
+      "warn"
+    ],
+    "new-cap": [
+      "warn"
+    ]
   }
 }
