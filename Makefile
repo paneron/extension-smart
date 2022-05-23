@@ -86,3 +86,8 @@ lint-fix:
 ## Remove output files
 clean:
 	$(NPM) run clean
+
+.PHONY: test
+## Run tests
+test:
+	$(NPM) run test
