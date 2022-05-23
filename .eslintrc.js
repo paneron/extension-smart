@@ -1,4 +1,4 @@
-{
+module.exports = {
   "env": {
     "jest/globals": true
   },
@@ -26,7 +26,7 @@
   ],
   "rules": {
     "curly": "error",
-    "quotes": "off",
+    "quotes": "off", // handled by prettier
     "require-jsdoc": [
       "off"
     ],
@@ -34,7 +34,7 @@
       "off"
     ],
     "indent": [
-      "warn",
+      "off", // handled by prettier
       2,
       {
         "SwitchCase": 1,
@@ -123,7 +123,7 @@
       }
     ],
     "one-var": [
-      "off",
+      "off", // Enable once tests are set up
       "consecutive"
     ],
     "object-curly-spacing": [
