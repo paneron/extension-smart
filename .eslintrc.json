@@ -1,9 +1,29 @@
 {
+  "env": {
+    "jest/globals": true
+  },
   "extends": "./node_modules/gts/",
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json"
   },
+  "overrides": [
+    {
+      "files": [
+        "spec/**"
+      ],
+      "plugins": [
+        "jest"
+      ],
+      "extends": [
+        "plugin:jest/recommended",
+        "plugin:jest/style"
+      ],
+      "rules": {
+        "jest/prefer-expect-assertions": "off"
+      }
+    }
+  ],
   "rules": {
     "curly": "error",
     "quotes": "off"
