@@ -124,7 +124,6 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     // "plugin:prettier/recommended",
-    // "./node_modules/gts/"
   ],
   "parser"        : "@typescript-eslint/parser",
   "parserOptions" : {
