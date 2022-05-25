@@ -91,3 +91,13 @@ clean:
 ## Run tests
 test:
 	$(NPM) run test
+
+.PHONY: audit
+## Run security audit for npm packages
+audit:
+	$(NPM) audit
+
+.PHONY: audit-json
+## Run security audit for npm packages, and output results as json
+audit-json:
+	$(NPM) audit --json
