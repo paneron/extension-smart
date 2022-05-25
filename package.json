@@ -18,10 +18,10 @@
   "scripts": {
     "build": "yarn run clean; mkdirp compiled ${npm_package_dist_dir} && tsc && babel compiled --out-dir ${npm_package_dist_dir} && cp package.json ${npm_package_dist_dir}/ && rsync -a --include '*/' --include '*.d.ts' --include '*.js.map' --exclude '*' compiled/ ${npm_package_dist_dir}/",
     "buildwin": "yarn run clean & mkdirp compiled %npm_package_dist_dir% & tsc & xcopy /e /y compiled %npm_package_dist_dir% > nul & babel compiled --out-dir %npm_package_dist_dir% & copy package.json %npm_package_dist_dir% & md \"%appdata%\\Paneron\\plugins\\@riboseinc\\paneron-extension-hls\" & xcopy /e /y dist \"%appdata%\\Paneron\\plugins\\@riboseinc\\paneron-extension-hls\" > nul",
-    "lint": "gts lint",
+    "lint": "eslint src/ --ext .ts,.tsx",
     "clean": "gts clean ; rimraf dist/*",
     "test": "jest",
-    "fix": "gts fix"
+    "fix": "yarn run lint -- --fix"
   },
   "files": [
     "README.adoc",
@@ -63,7 +63,6 @@
     "eslint": "^8.16.0",
     "eslint-plugin-jest": "^26.2.2",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^4.0.0",
     "fast-check": "^2.25.0",
     "gts": "^3.1.0",
     "jest": "^28.1.0",

@@ -3,24 +3,31 @@
     "target": "es2017",
     "module": "esnext",
     "moduleResolution": "node",
-
     "strict": true,
     "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
-
     "sourceMap": true,
     "inlineSources": true,
-
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "lib": ["ES2021", "DOM"],
-
+    "lib": [
+      "ES2021",
+      "DOM"
+    ],
     "newLine": "lf",
-
     "declaration": true,
     "jsx": "react",
     "outDir": "compiled"
   },
-  "exclude": ["dist", "compiled", "backup"]
+  "include": [
+    "src",
+    "spec"
+  ],
+  "exclude": [
+    "dist",
+    "compiled",
+    "backup",
+    "*.js"
+  ]
 }
