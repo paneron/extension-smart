@@ -1,8 +1,8 @@
 import { DatasetMigrationFunction } from '@riboseinc/paneron-extension-kit/types/migrations';
 
 /**
- * Probably the setting of the extension. I (Wai Kit) am not sure what the effect is.
- * Ignored so far.
+ * Initialize data for the plugin.
+ * Used by Paneron plugin.
  */
 
 const initializeDataset: DatasetMigrationFunction = async () => {
