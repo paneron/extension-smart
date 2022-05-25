@@ -40,6 +40,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
 
       - uses: actions/setup-node@v2
         id: setup-node
