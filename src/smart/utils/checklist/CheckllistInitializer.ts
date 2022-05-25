@@ -121,8 +121,8 @@ function addEGateCLItem(
     }
   }
   egates[eid] = {
-    id: eid,
-    progress: 0,
+    id       : eid,
+    progress : 0,
     paths,
   };
 }
@@ -269,10 +269,10 @@ export function initResult(
   }
   calInitEGates(task, egates, done, inverted);
   return {
-    checklist: task,
-    inverted: inverted,
-    egatelist: egates,
-    itemsDone: done,
-    reached: calculateReach(task, egates, model),
+    checklist : task,
+    inverted  : inverted,
+    egatelist : egates,
+    itemsDone : done,
+    reached   : calculateReach(task, egates, model),
   };
 }

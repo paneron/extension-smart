@@ -29,12 +29,12 @@ const RepoModelFile: React.FC<{
       <Tooltip2 content={getFullDesc(file)}>
         <Card
           style={{
-            width: 160,
-            height: 200,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
+            width          : 160,
+            height         : 200,
+            display        : 'flex',
+            alignItems     : 'center',
+            justifyContent : 'center',
+            flexDirection  : 'column',
           }}
           onDoubleClick={onOpen}
           interactive={true}
@@ -45,11 +45,11 @@ const RepoModelFile: React.FC<{
           />
           <div
             style={{
-              width: 160,
-              marginTop: 10,
-              fontSize: 18,
-              fontWeight: 'bold',
-              textAlign: 'center',
+              width      : 160,
+              marginTop  : 10,
+              fontSize   : 18,
+              fontWeight : 'bold',
+              textAlign  : 'center',
             }}
           >
             <Text ellipsize>

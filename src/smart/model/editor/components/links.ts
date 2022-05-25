@@ -73,7 +73,7 @@ export function useLinks(
   }
 
   function init(x: Record<string, MMELLink>) {
-    dispatchElms({ act: 'init', value: x });
+    dispatchElms({ act : 'init', value : x });
   }
 
   return [links, act, init];

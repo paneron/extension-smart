@@ -7,11 +7,11 @@ import TableComboBox from './fields/TableComboBox';
 import TextMeasureEdit from './fields/text';
 
 const VarInputs: Record<InputableVarType, React.FC<VarInputInterface>> = {
-  [VarType.BOOLEAN]: BooleanMeasureEdit,
-  [VarType.DATA]: TextMeasureEdit,
-  [VarType.LISTDATA]: TextMeasureEdit,
-  [VarType.TEXT]: TextMeasureEdit,
-  [VarType.TABLEITEM]: TableComboBox,
+  [VarType.BOOLEAN]   : BooleanMeasureEdit,
+  [VarType.DATA]      : TextMeasureEdit,
+  [VarType.LISTDATA]  : TextMeasureEdit,
+  [VarType.TEXT]      : TextMeasureEdit,
+  [VarType.TABLEITEM] : TableComboBox,
 };
 
 const VariableSettingItem: React.FC<VarInputInterface> = function (props) {
@@ -35,12 +35,12 @@ function FixedLabel() {
   return (
     <div
       style={{
-        position: 'absolute',
-        right: 0,
-        top: -8,
-        zIndex: 10,
-        backgroundColor: CSSROOTVARIABLES['--colour--bsi-pale-teal'],
-        color: 'red',
+        position        : 'absolute',
+        right           : 0,
+        top             : -8,
+        zIndex          : 10,
+        backgroundColor : CSSROOTVARIABLES['--colour--bsi-pale-teal'],
+        color           : 'red',
       }}
     >
       fixed
@@ -56,7 +56,7 @@ function VarItemContainer({
   required: boolean;
 }) {
   return (
-    <div style={required ? { position: 'relative', borderStyle: 'solid' } : {}}>
+    <div style={required ? { position : 'relative', borderStyle : 'solid' } : {}}>
       {children}
     </div>
   );

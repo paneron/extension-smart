@@ -31,7 +31,7 @@ export function roleReplace(
     const elm = elms[id];
     if (elm) {
       if (isEditorProcess(elm)) {
-        const newProcess: EditorProcess = { ...elm, actor: role };
+        const newProcess: EditorProcess = { ...elm, actor : role };
         elms[elm.id] = newProcess;
       } else if (isApproval(elm)) {
         const newApproval: EditorApproval = { ...elm };
@@ -248,8 +248,8 @@ export function dataPageReplace(
     }
     if (to) {
       newData[to] = {
-        element: to,
-        datatype: DataType.SUBPROCESSCOMPONENT,
+        element  : to,
+        datatype : DataType.SUBPROCESSCOMPONENT,
         x,
         y,
       };
@@ -274,8 +274,8 @@ export function elmPageReplace(
     }
     if (to) {
       newElm[to] = {
-        element: to,
-        datatype: DataType.SUBPROCESSCOMPONENT,
+        element  : to,
+        datatype : DataType.SUBPROCESSCOMPONENT,
         x,
         y,
       };

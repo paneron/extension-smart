@@ -40,11 +40,11 @@ const MyMapBackground: React.FC<{
     <canvas
       ref={ref}
       style={{
-        position: 'absolute',
-        width: '200px',
-        height: '200px',
-        zIndex: 15,
-        padding: 0,
+        position : 'absolute',
+        width    : '200px',
+        height   : '200px',
+        zIndex   : 15,
+        padding  : 0,
       }}
     >
       <img

@@ -31,32 +31,32 @@ const RepoGroup: React.FC<{
         {Object.values(list).length === 0 && <EmptyMsg />}
         <div
           style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 10,
-            margin: 10,
+            display  : 'flex',
+            flexWrap : 'wrap',
+            gap      : 10,
+            margin   : 10,
           }}
         >
           {list.map(x => (
-            <div style={{ position: 'relative' }}>
+            <div style={{ position : 'relative' }}>
               <RepoModelFile
                 key={x.namespace}
                 file={x}
                 onDelete={() => deleteItem(x.namespace, x.type)}
-                onOpen={() => setRepo({ ns: x.namespace, type: x.type })}
+                onOpen={() => setRepo({ ns : x.namespace, type : x.type })}
               />
               {renameRepo && index && sendMsg && repo?.ns !== x.namespace && (
                 <div
                   style={{
-                    position: 'absolute',
-                    right: 10,
-                    top: 10,
+                    position : 'absolute',
+                    right    : 10,
+                    top      : 10,
                   }}
                 >
                   <RepoChangeNSButton
                     initValue={x.namespace}
                     save={name =>
-                      renameRepo({ ns: x.namespace, type: x.type }, name)
+                      renameRepo({ ns : x.namespace, type : x.type }, name)
                     }
                     index={index}
                     sendMsg={sendMsg}
@@ -71,6 +71,6 @@ const RepoGroup: React.FC<{
   );
 };
 
-const EmptyMsg = () => <p style={{ margin: 10 }}>No item in the repository.</p>;
+const EmptyMsg = () => <p style={{ margin : 10 }}>No item in the repository.</p>;
 
 export default RepoGroup;

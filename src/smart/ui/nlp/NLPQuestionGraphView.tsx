@@ -24,17 +24,17 @@ const Container: React.FC<{ children: React.ReactNode }> = function ({
   return (
     <div
       style={{
-        position: 'fixed',
-        bottom: 30,
-        right: 20,
-        width: '35vw',
-        height: '30vh',
-        borderStyle: 'solid',
-        zIndex: 20,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
+        position        : 'fixed',
+        bottom          : 30,
+        right           : 20,
+        width           : '35vw',
+        height          : '30vh',
+        borderStyle     : 'solid',
+        zIndex          : 20,
+        display         : 'flex',
+        justifyContent  : 'center',
+        alignItems      : 'center',
+        backgroundColor : 'white',
       }}
     >
       {children}
@@ -46,10 +46,10 @@ function CloseButton({ onClose }: { onClose: () => void }) {
   return (
     <Button
       style={{
-        position: 'absolute',
-        top: 2,
-        right: 2,
-        zIndex: 21,
+        position : 'absolute',
+        top      : 2,
+        right    : 2,
+        zIndex   : 21,
       }}
       icon="cross"
       minimal

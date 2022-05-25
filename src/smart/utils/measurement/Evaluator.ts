@@ -68,7 +68,7 @@ export function resolveMTNode(
       }
       throw `Unknown variable ${a.action}`;
     }
-    return { ...a, action: '', value: v };
+    return { ...a, action : '', value : v };
   }
   if (isListOperator(a.action)) {
     const op = MLOperators[a.action];
@@ -98,10 +98,10 @@ export function evaluateCondition(
   const result = MComparison[op](a, b);
   report.push({
     cond,
-    left: a,
-    right: b,
+    left        : a,
+    right       : b,
     result,
-    description: reportTitle,
+    description : reportTitle,
   });
   return result;
 }

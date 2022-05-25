@@ -26,10 +26,10 @@ import { ModelAction } from '../model';
  */
 export function editElmCommand(id: string, value: EditorNode) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'elements',
-    task: 'edit',
-    subtask: 'flowunit',
+    type    : 'model',
+    act     : 'elements',
+    task    : 'edit',
+    subtask : 'flowunit',
     id,
     value,
   };
@@ -50,9 +50,9 @@ export function editEGateCommand(
   edges: MMELEdge[]
 ) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'hybird',
-    task: 'egate-edit',
+    type : 'model',
+    act  : 'hybird',
+    task : 'egate-edit',
     id,
     page,
     update,
@@ -67,9 +67,9 @@ export function editEGateCommand(
  */
 export function createSubprocessCommand(id: string) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'hybird',
-    task: 'process-add-page',
+    type : 'model',
+    act  : 'hybird',
+    task : 'process-add-page',
     id,
   };
   return action;
@@ -81,9 +81,9 @@ export function createSubprocessCommand(id: string) {
  */
 export function deleteSubprocessCommand(id: string) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'hybird',
-    task: 'process-remove-page',
+    type : 'model',
+    act  : 'hybird',
+    task : 'process-remove-page',
     id,
   };
   return action;
@@ -96,9 +96,9 @@ export function deleteSubprocessCommand(id: string) {
  */
 export function bringoutProcessCommand(id: string, page: string) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'hybird',
-    task: 'process-bringout',
+    type : 'model',
+    act  : 'hybird',
+    task : 'process-bringout',
     id,
     page,
   };
@@ -124,21 +124,21 @@ export function editProcessCommand(
 ) {
   const newProcess: EditorProcess = {
     ...process,
-    provision: new Set(provisions.map(x => x.id)),
-    links: new Set(links.map(x => x.id)),
-    notes: new Set(notes.map(x => x.id)),
+    provision : new Set(provisions.map(x => x.id)),
+    links     : new Set(links.map(x => x.id)),
+    notes     : new Set(notes.map(x => x.id)),
   };
   const action: ModelAction = {
-    type: 'model',
-    act: 'hybird',
-    task: 'process-edit',
+    type    : 'model',
+    act     : 'hybird',
+    task    : 'process-edit',
     id,
-    process: newProcess,
+    process : newProcess,
     provisions,
     notes,
     links,
-    newRefs: refs,
-    delRefs: [],
+    newRefs : refs,
+    delRefs : [],
   };
   return action;
 }
@@ -158,20 +158,20 @@ export function deleteNodeAction(
   const elm = model.elements[id];
   if (isEditorProcess(elm)) {
     const action: ModelAction = {
-      type: 'model',
-      act: 'hybird',
-      task: 'process-delete',
-      id: elm.id,
-      page: pageid,
+      type : 'model',
+      act  : 'hybird',
+      task : 'process-delete',
+      id   : elm.id,
+      page : pageid,
     };
     return action;
   }
   const action: ModelAction = {
-    type: 'model',
-    act: 'pages',
-    task: 'delete-element',
-    value: elm,
-    page: pageid,
+    type  : 'model',
+    act   : 'pages',
+    task  : 'delete-element',
+    value : elm,
+    page  : pageid,
   };
   return action;
 }

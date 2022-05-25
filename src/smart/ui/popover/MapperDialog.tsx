@@ -66,13 +66,13 @@ const MapperDialog: React.FC<{
 
   function clearMappingProps() {
     setEditMProps({
-      from: '',
-      to: '',
+      from : '',
+      to   : '',
     });
   }
 
   function closeDialog() {
-    setViewOption({ ...viewOption, docVisible: false, mapAIVisible: false });
+    setViewOption({ ...viewOption, docVisible : false, mapAIVisible : false });
   }
 
   function onMappingDelete() {
@@ -86,38 +86,38 @@ const MapperDialog: React.FC<{
     mapSet.mappings = { ...mapSet.mappings };
     setMapProfile({ ...mapProfile });
     setEditMProps({
-      from: '',
-      to: '',
+      from : '',
+      to   : '',
     });
   }
 
   const mapEditPage = editMappingProps.from !== '' &&
     editMappingProps.to !== '' && (
-      <MappingEditPage
-        from={
+    <MappingEditPage
+      from={
           impmodel.elements[editMappingProps.from] as
             | EditorProcess
             | EditorApproval
-        }
-        to={
+      }
+      to={
           isModelWrapper(refMW)
             ? (refMW.model.elements[editMappingProps.to] as
                 | EditorProcess
                 | EditorApproval)
             : {
-                id: editMappingProps.to,
-                name: getDocumentMetaById(refMW, editMappingProps.to),
-              }
-        }
-        data={
-          mapProfile.mapSet[refns].mappings[editMappingProps.from][
-            editMappingProps.to
-          ]
-        }
-        onDelete={onMappingDelete}
-        onChange={onMappingChange}
-      />
-    );
+              id   : editMappingProps.to,
+              name : getDocumentMetaById(refMW, editMappingProps.to),
+            }
+      }
+      data={
+        mapProfile.mapSet[refns].mappings[editMappingProps.from][
+          editMappingProps.to
+        ]
+      }
+      onDelete={onMappingDelete}
+      onChange={onMappingChange}
+    />
+  );
 
   const docEditPage = isModelWrapper(refMW) && (
     <DocTemplatePane
@@ -152,25 +152,25 @@ const MapperDialog: React.FC<{
   );
 
   const MapperConfig: Record<MapperDialogMode, MapperDiagConfig> = {
-    mapping: {
-      title: 'Edit Mapping',
-      content: mapEditPage,
-      onClose: clearMappingProps,
+    mapping : {
+      title   : 'Edit Mapping',
+      content : mapEditPage,
+      onClose : clearMappingProps,
     },
-    report: {
-      title: 'Report template',
-      content: docEditPage,
-      onClose: closeDialog,
+    report : {
+      title   : 'Report template',
+      content : docEditPage,
+      onClose : closeDialog,
     },
-    automap: {
-      title: 'Auto mapper (transitive mapping)',
-      content: autoMapPage,
-      onClose: closeDialog,
+    automap : {
+      title   : 'Auto mapper (transitive mapping)',
+      content : autoMapPage,
+      onClose : closeDialog,
     },
-    repomap: {
-      title: 'Transitive mapping discovery',
-      content: repoMapPage,
-      onClose: closeDialog,
+    repomap : {
+      title   : 'Transitive mapping discovery',
+      content : repoMapPage,
+      onClose : closeDialog,
     },
   };
 

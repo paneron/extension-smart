@@ -29,7 +29,7 @@ const TableItemEditPage: React.FC<{
       getBlob,
       writeFileToFilesystem,
       fileData,
-      type: FILE_TYPE.CSV,
+      type : FILE_TYPE.CSV,
     });
   }
 
@@ -42,14 +42,14 @@ const TableItemEditPage: React.FC<{
         line.push('');
       }
     }
-    setTable({ ...table, columns: maxLength, data: cells });
+    setTable({ ...table, columns : maxLength, data : cells });
   }
 
   function loadCSV() {
     handleFileOpen({
       requestFileFromFilesystem,
-      type: FILE_TYPE.CSV,
-      postProcessing: x => parseTable(x),
+      type           : FILE_TYPE.CSV,
+      postProcessing : x => parseTable(x),
     });
   }
 
@@ -60,12 +60,12 @@ const TableItemEditPage: React.FC<{
       <NormalTextField
         text="Table ID"
         value={table.id}
-        onChange={x => setTable({ ...table, id: x.replaceAll(/\s+/g, '') })}
+        onChange={x => setTable({ ...table, id : x.replaceAll(/\s+/g, '') })}
       />
       <NormalTextField
         text="Table title"
         value={table.title}
-        onChange={x => setTable({ ...table, title: x })}
+        onChange={x => setTable({ ...table, title : x })}
       />
       <Tabs
         id="TableEditOption"

@@ -15,9 +15,9 @@ const SectionView: React.FC<{
   return (
     <div
       style={{
-        marginLeft: '20px',
-        marginRight: '20px',
-        marginTop: '20px',
+        marginLeft  : '20px',
+        marginRight : '20px',
+        marginTop   : '20px',
       }}
     >
       {sec.contents.map((para, index) => (

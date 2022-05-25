@@ -43,7 +43,7 @@ const VersionTrackerSettingPane: React.FC<{
       if (viewCompare) {
         setViewCompare(false);
         const updated = getHistroyFromRefModel(mw, history);
-        setFunctionalState({ mw, history: updated });
+        setFunctionalState({ mw, history : updated });
       } else {
         setFunctionalState({ mw, history });
       }
@@ -58,7 +58,7 @@ const VersionTrackerSettingPane: React.FC<{
       setModelWrapper,
       requestFileFromFilesystem,
       logger,
-      indexModel: buildModelLinks,
+      indexModel : buildModelLinks,
     });
   }
 
@@ -69,7 +69,7 @@ const VersionTrackerSettingPane: React.FC<{
       const updatedHis = view
         ? getHistroyFromRefModel(change, history)
         : getHistroyFromRefModel(mw, history);
-      setFunctionalState({ mw: modelWrapper, history: updatedHis });
+      setFunctionalState({ mw : modelWrapper, history : updatedHis });
       setViewCompare(view);
     }
   }

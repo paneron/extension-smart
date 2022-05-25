@@ -11,16 +11,16 @@ const SMARTDocumentEdit: React.FC<{
   return (
     <div
       style={{
-        height: 'calc(100vh - 50px)',
-        overflowY: 'auto',
+        height    : 'calc(100vh - 50px)',
+        overflowY : 'auto',
       }}
     >
       <h2
         style={{
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          width: '70%',
-          textAlign: 'center',
+          marginLeft  : 'auto',
+          marginRight : 'auto',
+          width       : '70%',
+          textAlign   : 'center',
         }}
       >
         {doc.title}

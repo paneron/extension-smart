@@ -134,24 +134,24 @@ export type MBinOperatorTypes = typeof MBinaryOperators[number];
 export type MComparatorTypes = typeof MComparators[number];
 
 export const MLOperators: Record<MListOperatorTypes, ListOperator> = {
-  sum: SumListOp,
-  max: MaxListOp,
-  min: MinListOp,
-  count: CountListOp,
-  average: AverageListOp,
+  sum     : SumListOp,
+  max     : MaxListOp,
+  min     : MinListOp,
+  count   : CountListOp,
+  average : AverageListOp,
 };
 
 export const MBOperators: Record<MBinOperatorTypes, BinaryOperator> = {
-  '+': PlusOp,
-  '-': MinusOp,
-  '*': MulOp,
-  '/': DivideOp,
+  '+' : PlusOp,
+  '-' : MinusOp,
+  '*' : MulOp,
+  '/' : DivideOp,
 };
 
 export const MComparison: Record<MComparatorTypes, Comparator> = {
-  '>=': (a, b) => a >= b,
-  '<=': (a, b) => a <= b,
-  '=': (a, b) => a === b,
-  '>': (a, b) => a > b,
-  '<': (a, b) => a < b,
+  '>=' : (a, b) => a >= b,
+  '<=' : (a, b) => a <= b,
+  '='  : (a, b) => a === b,
+  '>'  : (a, b) => a > b,
+  '<'  : (a, b) => a < b,
 };

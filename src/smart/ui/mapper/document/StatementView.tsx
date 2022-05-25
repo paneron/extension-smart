@@ -56,15 +56,15 @@ const StatementView: React.FC<{
     (showSection !== undefined ? `${showSection}. ` : '') + statement.text;
 
   return isHeader ? (
-    <div style={{ textAlign: 'center' }}>
+    <div style={{ textAlign : 'center' }}>
       <h4>{statement.text}</h4>
     </div>
   ) : (
     <>
       <span
         style={{
-          marginLeft: first ? '0' : '3px',
-          backgroundColor: getStyle(hasMap, hover, oldHasMap),
+          marginLeft      : first ? '0' : '3px',
+          backgroundColor : getStyle(hasMap, hover, oldHasMap),
         }}
         ref={statement.uiref}
         onDrop={setMapping !== undefined ? onDrop : undefined}

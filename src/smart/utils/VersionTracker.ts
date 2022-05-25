@@ -27,10 +27,10 @@ import VersionDiffLogView from '../ui/version/VersionDiffLogView';
 import { getRootName } from './ModelFunctions';
 
 const ComparisonResultStyles: Record<VersionStatus, LegendInterface> = {
-  same: { label: 'Identical', color: 'lightblue' },
-  add: { label: 'Added', color: 'lightgreen' },
-  delete: { label: 'Removed', color: 'red' },
-  change: { label: 'Modified', color: 'lightyellow' },
+  'same'   : { label : 'Identical', color : 'lightblue' },
+  'add'    : { label : 'Added', color : 'lightgreen' },
+  'delete' : { label : 'Removed', color : 'red' },
+  'change' : { label : 'Modified', color : 'lightyellow' },
 };
 
 export function getHistroyFromRefModel(
@@ -42,8 +42,8 @@ export function getHistroyFromRefModel(
   let page = model.pages[model.root];
   const newItems: HistoryItem[] = [
     {
-      page: page.id,
-      pathtext: getRootName(model.meta),
+      page     : page.id,
+      pathtext : getRootName(model.meta),
     },
   ];
   for (let i = 1; i < items.length; i++) {
@@ -56,8 +56,8 @@ export function getHistroyFromRefModel(
       elm.page !== ''
     ) {
       newItems.push({
-        page: elm.page,
-        pathtext: elm.id,
+        page     : elm.page,
+        pathtext : elm.id,
       });
       page = model.pages[elm.page];
     } else {
@@ -65,7 +65,7 @@ export function getHistroyFromRefModel(
     }
   }
   mw.page = newItems[newItems.length - 1].page;
-  return { items: newItems };
+  return { items : newItems };
 }
 
 export function getDiffViewProps(data: VersionState): ViewFunctionInterface {
@@ -73,9 +73,9 @@ export function getDiffViewProps(data: VersionState): ViewFunctionInterface {
     getStyleById,
     getSVGColorById,
     getEdgeColor,
-    legendList: ComparisonResultStyles,
-    ComponentToolTip: VersionDiffLogView,
-    StartEndToolTip: VersionDiffLogView,
+    legendList       : ComparisonResultStyles,
+    ComponentToolTip : VersionDiffLogView,
+    StartEndToolTip  : VersionDiffLogView,
     data,
   };
 }
@@ -86,23 +86,23 @@ export function computeDiff(
   option: React.MutableRefObject<boolean>
 ): VersionState {
   const state: VersionState = {
-    orielements: {},
-    oriedges: {},
-    oripages: {},
-    oricomments: {},
-    refelements: {},
-    refedges: {},
-    refpages: {},
-    refcomments: {},
-    viewOptionRef: option,
+    orielements   : {},
+    oriedges      : {},
+    oripages      : {},
+    oricomments   : {},
+    refelements   : {},
+    refedges      : {},
+    refpages      : {},
+    refcomments   : {},
+    viewOptionRef : option,
   };
   const model = mw.model;
   const ref = refMW.model;
   const root = model.pages[model.root];
   const refroot = ref.pages[ref.root];
   matchPage({
-    page: root,
-    refpage: refroot,
+    page    : root,
+    refpage : refroot,
     model,
     ref,
     state,

@@ -63,10 +63,10 @@ const RepositoryView: React.FC<{
     selectedModule,
     index,
     setClickListener,
-    setRepo: onRepoChange,
+    setRepo    : onRepoChange,
     linktoAnotherRepo,
     repoHis,
-    setRepoHis: setHis,
+    setRepoHis : setHis,
   };
 
   return (

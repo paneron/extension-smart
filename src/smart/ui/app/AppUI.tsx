@@ -11,10 +11,10 @@ const AppUILayout: React.FC<{
   return (
     <div
       style={{
-        flex: 1,
-        overflow: 'hidden',
-        display: 'flex',
-        flexFlow: 'row nowrap',
+        flex     : 1,
+        overflow : 'hidden',
+        display  : 'flex',
+        flexFlow : 'row nowrap',
       }}
       onMouseUp={() => clickListener.forEach(x => x())}
     >

@@ -15,9 +15,9 @@ function matchFilter(item: RepoItems, filter: string) {
 }
 
 const buttonCSS: CSSProperties = {
-  width: 80,
-  marginRight: 10,
-  marginTop: 8,
+  width       : 80,
+  marginRight : 10,
+  marginTop   : 8,
 };
 
 const RepoItemSelector: React.FC<{
@@ -41,10 +41,10 @@ const RepoItemSelector: React.FC<{
     return (
       <div
         style={{
-          flex: 1,
-          position: 'relative',
-          overflow: 'auto',
-          textAlign: 'center',
+          flex      : 1,
+          position  : 'relative',
+          overflow  : 'auto',
+          textAlign : 'center',
         }}
       >
         <InputGroup
@@ -54,17 +54,17 @@ const RepoItemSelector: React.FC<{
           value={filter}
         />
         <fieldset
-          style={{ width: 'calc(100% - 5px)', height: 'calc(100% - 70px)' }}
+          style={{ width : 'calc(100% - 5px)', height : 'calc(100% - 70px)' }}
         >
           {Object.values(list).length === 0 && <EmptyMsg />}
           <div
             style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 10,
-              margin: 10,
-              height: 'calc(100% - 5px)',
-              overflowY: 'auto',
+              display   : 'flex',
+              flexWrap  : 'wrap',
+              gap       : 10,
+              margin    : 10,
+              height    : 'calc(100% - 5px)',
+              overflowY : 'auto',
             }}
           >
             {list.map(x => (
@@ -79,7 +79,7 @@ const RepoItemSelector: React.FC<{
             ))}
           </div>
         </fieldset>
-        <div style={{ textAlign: 'right' }}>
+        <div style={{ textAlign : 'right' }}>
           <Button style={buttonCSS} onClick={onClose}>
             Cancel
           </Button>
@@ -98,7 +98,7 @@ const RepoItemSelector: React.FC<{
   }
 };
 
-const EmptyMsg = () => <p style={{ margin: 10 }}>No item in the repository.</p>;
+const EmptyMsg = () => <p style={{ margin : 10 }}>No item in the repository.</p>;
 
 const RepoSelectItem: React.FC<{
   file: RepoItems;
@@ -112,13 +112,13 @@ const RepoSelectItem: React.FC<{
       <Tooltip2 content={file.title}>
         <Card
           style={{
-            width: '12vw',
-            height: 100,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            backgroundColor: highlight ? 'lightblue' : undefined,
+            width           : '12vw',
+            height          : 100,
+            display         : 'flex',
+            alignItems      : 'center',
+            justifyContent  : 'center',
+            flexDirection   : 'column',
+            backgroundColor : highlight ? 'lightblue' : undefined,
           }}
           onDoubleClick={onSelect}
           onClick={onClick}
@@ -130,11 +130,11 @@ const RepoSelectItem: React.FC<{
           />
           <div
             style={{
-              width: '12vw',
-              marginTop: 10,
-              fontSize: 14,
-              fontWeight: 'bold',
-              textAlign: 'center',
+              width      : '12vw',
+              marginTop  : 10,
+              fontSize   : 14,
+              fontWeight : 'bold',
+              textAlign  : 'center',
             }}
           >
             <Text ellipsize>

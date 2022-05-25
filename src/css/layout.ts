@@ -14,25 +14,25 @@ export const flownode_top_left_button_layout = css`
 `;
 
 export const flownodeTopLeftButtonLayout: CSSProperties = {
-  position: 'fixed',
-  right: -10,
-  top: -10,
+  position : 'fixed',
+  right    : -10,
+  top      : -10,
 };
 
 export const flownodeTopRightButtonLayout: CSSProperties = {
-  position: 'fixed',
-  left: -10,
-  top: -10,
+  position : 'fixed',
+  left     : -10,
+  top      : -10,
 };
 
 export const mgdCanvas: CSSProperties = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  bottom: 0,
-  right: 0,
-  zIndex: 100,
-  pointerEvents: 'none',
+  position      : 'fixed',
+  top           : 0,
+  left          : 0,
+  bottom        : 0,
+  right         : 0,
+  zIndex        : 100,
+  pointerEvents : 'none',
 };
 
 export const multi_model_container = css`
@@ -52,8 +52,8 @@ export const react_flow_container_layout = css`
 `;
 
 export const reactFlowContainerLayout: CSSProperties = {
-  flex: 1,
-  position: 'relative',
+  flex     : 1,
+  position : 'relative',
 };
 
 export const dialog_layout = css`
@@ -66,9 +66,9 @@ export const dialog_layout = css`
 `;
 
 export const dialogLayout: CSSProperties = {
-  width: 'calc(100vw - 60px)',
-  paddingBottom: 0,
-  overflowY: 'auto',
+  width         : 'calc(100vw - 60px)',
+  paddingBottom : 0,
+  overflowY     : 'auto',
 };
 
 export const application_dialog_layout = css`
@@ -76,7 +76,7 @@ export const application_dialog_layout = css`
 `;
 
 export const applicationDialogLayout: CSSProperties = {
-  width: '70vw',
+  width : '70vw',
 };
 
 export const dialog_layout__full = css`
@@ -84,7 +84,7 @@ export const dialog_layout__full = css`
 `;
 
 export const dialogLayoutFull: CSSProperties = {
-  minHeight: 'calc(100vh - 60px)',
+  minHeight : 'calc(100vh - 60px)',
 };
 
 export const wrapper_container = css`
@@ -92,16 +92,16 @@ export const wrapper_container = css`
 `;
 
 export const wrapperContainer: CSSProperties = {
-  position: 'relative',
+  position : 'relative',
 };
 
 export const popoverPanelContainer: CSSProperties = {
-  fontWeight: CSSROOTVARIABLES.fontWeightRegular,
-  fontSize: CSSROOTVARIABLES['--font-size--regular'],
-  color: CSSROOTVARIABLES['--colour--black'],
-  backgroundColor: CSSROOTVARIABLES['--colour--bsi-pale-teal'],
-  padding: '1rem',
-  maxWidth: '30vw',
-  maxHeight: '45vh',
-  overflowY: 'auto',
+  fontWeight      : CSSROOTVARIABLES.fontWeightRegular,
+  fontSize        : CSSROOTVARIABLES['--font-size--regular'],
+  color           : CSSROOTVARIABLES['--colour--black'],
+  backgroundColor : CSSROOTVARIABLES['--colour--bsi-pale-teal'],
+  padding         : '1rem',
+  maxWidth        : '30vw',
+  maxHeight       : '45vh',
+  overflowY       : 'auto',
 };

@@ -11,9 +11,9 @@ const TableViewer: React.FC<{
       <DescriptionItem label="Title" value={table.title} />
       <HTMLTable
         style={{
-          border: '2px solid black',
-          borderCollapse: 'collapse',
-          margin: '5px 5px 5px 5px',
+          border         : '2px solid black',
+          borderCollapse : 'collapse',
+          margin         : '5px 5px 5px 5px',
         }}
       >
         {table.data.map((row, index) => (
@@ -35,7 +35,7 @@ const RowViewer: React.FC<{
   const filteredRows: CellInfo[] = [];
   for (const x of row) {
     if (x !== '' || filteredRows.length === 0) {
-      filteredRows.push({ data: x, span: 1 });
+      filteredRows.push({ data : x, span : 1 });
     } else {
       filteredRows[filteredRows.length - 1].span++;
     }
@@ -48,8 +48,8 @@ const RowViewer: React.FC<{
           colSpan={x.span}
           key={index}
           style={{
-            border: '1px solid black',
-            borderCollapse: 'collapse',
+            border         : '1px solid black',
+            borderCollapse : 'collapse',
           }}
         >
           <Text>{x.data}</Text>

@@ -31,40 +31,40 @@ export function cascadeCheckEnum(
       x,
     ]);
     action.cascade = affected.map(([ids]) => ({
-      type: 'model',
-      act: 'elements',
-      task: 'cascade',
-      subtask: 'process-enum',
-      datatype: '',
+      type     : 'model',
+      act      : 'elements',
+      task     : 'cascade',
+      subtask  : 'process-enum',
+      datatype : '',
       ids,
     }));
     return affected.map(([ids, id]) => ({
-      type: 'model',
-      act: 'elements',
-      task: 'cascade',
-      subtask: 'process-enum',
-      datatype: id,
+      type     : 'model',
+      act      : 'elements',
+      task     : 'cascade',
+      subtask  : 'process-enum',
+      datatype : id,
       ids,
     }));
   } else if (action.task === 'edit') {
     const ids = findAffectedElements(elms, action.id);
     action.cascade = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-enum',
-        datatype: action.value.id,
+        type     : 'model',
+        act      : 'elements',
+        task     : 'cascade',
+        subtask  : 'process-enum',
+        datatype : action.value.id,
         ids,
       },
     ];
     return [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-enum',
-        datatype: action.id,
+        type     : 'model',
+        act      : 'elements',
+        task     : 'cascade',
+        subtask  : 'process-enum',
+        datatype : action.id,
         ids,
       },
     ];

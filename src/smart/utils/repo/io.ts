@@ -54,26 +54,26 @@ export function getPathByNS(ns: string, type: RepoFileType) {
 
 export function MMELToSerializable(m: MMELModel): MMELJSON {
   return {
-    '@context': JSONContext,
-    '@type': 'MMEL_SMART',
-    meta: m.meta,
-    roles: m.roles,
-    refs: m.refs,
-    enums: m.enums,
-    vars: m.vars,
-    pages: m.pages,
-    views: m.views,
-    terms: m.terms,
-    tables: m.tables,
-    figures: m.figures,
-    sections: m.sections,
-    links: m.links,
-    root: m.root,
-    version: m.version,
-    provisions: convertProvisions(m.provisions),
-    notes: convertNotes(m.notes),
-    comments: convertComments(m.comments),
-    elements: convertElements(m.elements),
+    '@context'   : JSONContext,
+    '@type'      : 'MMEL_SMART',
+    'meta'       : m.meta,
+    'roles'      : m.roles,
+    'refs'       : m.refs,
+    'enums'      : m.enums,
+    'vars'       : m.vars,
+    'pages'      : m.pages,
+    'views'      : m.views,
+    'terms'      : m.terms,
+    'tables'     : m.tables,
+    'figures'    : m.figures,
+    'sections'   : m.sections,
+    'links'      : m.links,
+    'root'       : m.root,
+    'version'    : m.version,
+    'provisions' : convertProvisions(m.provisions),
+    'notes'      : convertNotes(m.notes),
+    'comments'   : convertComments(m.comments),
+    'elements'   : convertElements(m.elements),
   };
 }
 
@@ -85,25 +85,25 @@ export function JSONToMMEL(m: MMELJSON): MMELModel {
     m.version = MODELVERSION;
   }
   return {
-    meta: createMetaData(),
-    roles: {},
-    refs: {},
-    enums: {},
-    vars: {},
-    pages: {},
-    views: {},
-    terms: {},
-    tables: {},
-    figures: {},
-    sections: {},
-    links: {},
-    root: '',
-    version: '',
+    meta       : createMetaData(),
+    roles      : {},
+    refs       : {},
+    enums      : {},
+    vars       : {},
+    pages      : {},
+    views      : {},
+    terms      : {},
+    tables     : {},
+    figures    : {},
+    sections   : {},
+    links      : {},
+    root       : '',
+    version    : '',
     ...m,
-    comments: m.comments ? recoverComments(m.comments) : {},
-    provisions: m.provisions ? recoverProvisions(m.provisions) : {},
-    notes: m.notes ? recoverNotes(m.notes) : {},
-    elements: m.elements ? recoverElements(m.elements) : {},
+    comments   : m.comments ? recoverComments(m.comments) : {},
+    provisions : m.provisions ? recoverProvisions(m.provisions) : {},
+    notes      : m.notes ? recoverNotes(m.notes) : {},
+    elements   : m.elements ? recoverElements(m.elements) : {},
   };
 }
 
@@ -120,48 +120,48 @@ function convertElements(
 function convertElement(p: MMELNode): MMELNode {
   if (isMMELProcess(p)) {
     const x: JSONProcess = {
-      id: p.id,
-      name: p.name,
-      modality: p.modality,
-      actor: p.actor,
-      page: p.page,
-      measure: p.measure,
-      datatype: p.datatype,
-      links: [...p.links],
-      input: [...p.input],
-      output: [...p.output],
-      provision: [...p.provision],
-      notes: [...p.notes],
-      comments: [...p.comments],
-      tables: [...p.tables],
-      figures: [...p.figures],
+      id        : p.id,
+      name      : p.name,
+      modality  : p.modality,
+      actor     : p.actor,
+      page      : p.page,
+      measure   : p.measure,
+      datatype  : p.datatype,
+      links     : [...p.links],
+      input     : [...p.input],
+      output    : [...p.output],
+      provision : [...p.provision],
+      notes     : [...p.notes],
+      comments  : [...p.comments],
+      tables    : [...p.tables],
+      figures   : [...p.figures],
     };
     return x;
   } else if (isMMELApproval(p)) {
     const x: JSONApproval = {
-      id: p.id,
-      name: p.name,
-      modality: p.modality,
-      actor: p.actor,
-      approver: p.approver,
-      datatype: p.datatype,
-      records: [...p.records],
-      ref: [...p.ref],
+      id       : p.id,
+      name     : p.name,
+      modality : p.modality,
+      actor    : p.actor,
+      approver : p.approver,
+      datatype : p.datatype,
+      records  : [...p.records],
+      ref      : [...p.ref],
     };
     return x;
   } else if (isMMELDataClass(p)) {
     const x: JSONDataclass = {
-      id: p.id,
-      datatype: p.datatype,
-      attributes: convertAttributes(p.attributes),
+      id         : p.id,
+      datatype   : p.datatype,
+      attributes : convertAttributes(p.attributes),
     };
     return x;
   } else if (isMMELRegistry(p)) {
     const x: JSONRegistry = {
-      id: p.id,
-      datatype: p.datatype,
-      data: p.data,
-      title: p.title,
+      id       : p.id,
+      datatype : p.datatype,
+      data     : p.data,
+      title    : p.title,
     };
     return x;
   } else {
@@ -175,13 +175,13 @@ function convertAttributes(
   const newAtt: Record<string, JSONDataAttribute> = {};
   for (const [k, x] of Object.entries(att)) {
     newAtt[k] = {
-      id: x.id,
-      type: x.type,
-      modality: x.modality,
-      cardinality: x.cardinality,
-      definition: x.definition,
-      ref: [...x.ref],
-      datatype: x.datatype,
+      id          : x.id,
+      type        : x.type,
+      modality    : x.modality,
+      cardinality : x.cardinality,
+      definition  : x.definition,
+      ref         : [...x.ref],
+      datatype    : x.datatype,
     };
   }
   return newAtt;
@@ -193,11 +193,11 @@ function convertNotes(
   const newNote: Record<string, JSONNote> = {};
   for (const [k, p] of Object.entries(notes)) {
     newNote[k] = {
-      id: p.id,
-      type: p.type,
-      message: p.message,
-      datatype: p.datatype,
-      ref: [...p.ref],
+      id       : p.id,
+      type     : p.type,
+      message  : p.message,
+      datatype : p.datatype,
+      ref      : [...p.ref],
     };
   }
   return newNote;
@@ -209,13 +209,13 @@ function convertComments(
   const newComments: Record<string, JSONComment> = {};
   for (const [k, p] of Object.entries(comments)) {
     newComments[k] = {
-      id: p.id,
-      username: p.username,
-      message: p.message,
-      feedback: [...p.feedback],
-      resolved: p.resolved,
-      timestamp: p.timestamp,
-      datatype: DataType.COMMENT,
+      id        : p.id,
+      username  : p.username,
+      message   : p.message,
+      feedback  : [...p.feedback],
+      resolved  : p.resolved,
+      timestamp : p.timestamp,
+      datatype  : DataType.COMMENT,
     };
   }
   return newComments;
@@ -227,11 +227,11 @@ function convertProvisions(
   const newPro: Record<string, JSONProvision> = {};
   for (const [k, p] of Object.entries(pro)) {
     newPro[k] = {
-      id: p.id,
-      modality: p.modality,
-      condition: p.condition,
-      datatype: p.datatype,
-      ref: [...p.ref],
+      id        : p.id,
+      modality  : p.modality,
+      condition : p.condition,
+      datatype  : p.datatype,
+      ref       : [...p.ref],
     };
   }
   return newPro;
@@ -251,27 +251,27 @@ function recoverElement(p: MMELNode): MMELNode {
   if (isJSONProcess(p)) {
     const x: MMELProcess = {
       ...p,
-      input: new Set(p.input),
-      output: new Set(p.output),
-      provision: new Set(p.provision),
-      links: new Set(p.links),
-      notes: new Set(p.notes),
-      tables: new Set(p.tables),
-      figures: new Set(p.figures),
-      comments: new Set(p.comments),
+      input     : new Set(p.input),
+      output    : new Set(p.output),
+      provision : new Set(p.provision),
+      links     : new Set(p.links),
+      notes     : new Set(p.notes),
+      tables    : new Set(p.tables),
+      figures   : new Set(p.figures),
+      comments  : new Set(p.comments),
     };
     return x;
   } else if (isJSONApproval(p)) {
     const x: MMELApproval = {
       ...p,
-      records: new Set(p.records),
-      ref: new Set(p.ref),
+      records : new Set(p.records),
+      ref     : new Set(p.ref),
     };
     return x;
   } else if (isJSONDataClass(p)) {
     const x: MMELDataClass = {
       ...p,
-      attributes: recoverAttributes(p.attributes),
+      attributes : recoverAttributes(p.attributes),
     };
     return x;
   } else {
@@ -286,7 +286,7 @@ function recoverAttributes(
   for (const [k, x] of Object.entries(att)) {
     newAtt[k] = {
       ...x,
-      ref: new Set(x.ref),
+      ref : new Set(x.ref),
     };
   }
   return newAtt;
@@ -299,7 +299,7 @@ function recoverNotes(
   for (const [k, p] of Object.entries(notes)) {
     newNote[k] = {
       ...p,
-      ref: new Set(p.ref),
+      ref : new Set(p.ref),
     };
   }
   return newNote;
@@ -312,7 +312,7 @@ function recoverComments(
   for (const [k, p] of Object.entries(comments)) {
     newComment[k] = {
       ...p,
-      feedback: new Set(p.feedback),
+      feedback : new Set(p.feedback),
     };
   }
   return newComment;
@@ -325,7 +325,7 @@ function recoverProvisions(
   for (const [k, p] of Object.entries(pro)) {
     newPro[k] = {
       ...p,
-      ref: new Set(p.ref),
+      ref : new Set(p.ref),
     };
   }
   return newPro;

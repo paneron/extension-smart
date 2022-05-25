@@ -20,7 +20,7 @@ const TableClassItemEdit: React.FC<{
   function setRowValue(index: number, x: string) {
     const newData = [...row.data];
     newData[index] = x;
-    setRow({ ...row, data: newData });
+    setRow({ ...row, data : newData });
   }
 
   return (

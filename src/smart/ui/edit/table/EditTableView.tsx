@@ -17,17 +17,17 @@ const EditTableView: React.FC<{
   function setRow(index: number, row: string[]) {
     const newTable = [...table.data];
     newTable[index] = row;
-    setTable({ ...table, data: newTable });
+    setTable({ ...table, data : newTable });
   }
 
   function onDeleteRow(index: number) {
     const newTable = [...table.data];
     newTable.splice(index, 1);
-    setTable({ ...table, data: newTable });
+    setTable({ ...table, data : newTable });
   }
 
   function newRow(row: string[]) {
-    setTable({ ...table, data: [...table.data, row] });
+    setTable({ ...table, data : [...table.data, row]});
   }
 
   function onDelete(index: number) {
@@ -42,9 +42,9 @@ const EditTableView: React.FC<{
     }
     setTable({
       ...table,
-      domain: newDomain,
-      columns: table.columns - 1,
-      data: newTable,
+      domain  : newDomain,
+      columns : table.columns - 1,
+      data    : newTable,
     });
   }
 
@@ -53,9 +53,9 @@ const EditTableView: React.FC<{
     const newDomain = [...table.domain, ''];
     setTable({
       ...table,
-      domain: newDomain,
-      columns: table.columns + 1,
-      data: newTable,
+      domain  : newDomain,
+      columns : table.columns + 1,
+      data    : newTable,
     });
   }
 
@@ -68,7 +68,7 @@ const EditTableView: React.FC<{
         {emptyRow.map(
           (_, index) =>
             table.columns > 1 && (
-              <td style={{ textAlign: 'center' }}>
+              <td style={{ textAlign : 'center' }}>
                 <Tooltip2 content="Remove column">
                   <Button
                     intent="danger"

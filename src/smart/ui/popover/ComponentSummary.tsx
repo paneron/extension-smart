@@ -41,22 +41,22 @@ const Describe_Node_Details: Record<
     model: EditorModel;
   }>
 > = {
-  [DataType.PROCESS]: function ({ node, model }) {
+  [DataType.PROCESS] : function ({ node, model }) {
     return <ProcessSummary process={node as EditorProcess} model={model} />;
   },
-  [DataType.APPROVAL]: function ({ node }) {
+  [DataType.APPROVAL] : function ({ node }) {
     return <ApprovalSummary approval={node as EditorApproval} />;
   },
-  [DataType.TIMEREVENT]: function ({ node }) {
+  [DataType.TIMEREVENT] : function ({ node }) {
     return <TimerSummary timer={node as EditorTimerEvent} />;
   },
-  [DataType.SIGNALCATCHEVENT]: function ({ node }) {
+  [DataType.SIGNALCATCHEVENT] : function ({ node }) {
     return <SignalSummary signal={node as EditorSignalEvent} />;
   },
-  [DataType.DATACLASS]: function ({ node }) {
+  [DataType.DATACLASS] : function ({ node }) {
     return <DescribeDC dc={node as EditorDataClass} />;
   },
-  [DataType.REGISTRY]: function ({ node, model }) {
+  [DataType.REGISTRY] : function ({ node, model }) {
     return (
       <DescribeRegistry
         reg={node as EditorRegistry}
@@ -64,7 +64,7 @@ const Describe_Node_Details: Record<
       />
     );
   },
-  [DataType.EGATE]: function ({ node }) {
+  [DataType.EGATE] : function ({ node }) {
     return <EGateSummary egate={node as EditorEGate} />;
   },
 };

@@ -21,53 +21,53 @@ export function compileProcessAddPage(
   const elm = model.elements[action.id];
   if (elm && isEditorProcess(elm) && action.actions === undefined) {
     const [page, start] = createNewPage(model);
-    const newProcess: EditorProcess = { ...elm, page: page.id };
+    const newProcess: EditorProcess = { ...elm, page : page.id };
     const actions: ModelAction[] = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'edit',
-        subtask: 'flowunit',
-        id: action.id,
-        value: newProcess,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'edit',
+        subtask : 'flowunit',
+        id      : action.id,
+        value   : newProcess,
       },
       {
-        type: 'model',
-        act: 'elements',
-        task: 'add',
-        subtask: 'flowunit',
-        value: [start],
+        type    : 'model',
+        act     : 'elements',
+        task    : 'add',
+        subtask : 'flowunit',
+        value   : [start],
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'new-page',
-        value: [page],
+        type  : 'model',
+        act   : 'pages',
+        task  : 'new-page',
+        value : [page],
       },
     ];
     action.actions = actions;
     if (ract && ract.act === 'hybird') {
       ract.actions = [
         {
-          type: 'model',
-          act: 'elements',
-          task: 'edit',
-          subtask: 'flowunit',
-          id: action.id,
-          value: elm,
+          type    : 'model',
+          act     : 'elements',
+          task    : 'edit',
+          subtask : 'flowunit',
+          id      : action.id,
+          value   : elm,
         },
         {
-          type: 'model',
-          act: 'elements',
-          task: 'delete',
-          subtask: 'flowunit',
-          value: [start.id],
+          type    : 'model',
+          act     : 'elements',
+          task    : 'delete',
+          subtask : 'flowunit',
+          value   : [start.id],
         },
         {
-          type: 'model',
-          act: 'pages',
-          task: 'delete-page',
-          value: [page.id],
+          type  : 'model',
+          act   : 'pages',
+          task  : 'delete-page',
+          value : [page.id],
         },
       ];
     }
@@ -77,10 +77,10 @@ export function compileProcessAddPage(
 
 function reverseAddPageAction(action: ProcessAddPageHybird): ModelAction {
   return {
-    type: 'model',
-    act: 'hybird',
-    task: 'process-remove-page',
-    id: action.id,
+    type : 'model',
+    act  : 'hybird',
+    task : 'process-remove-page',
+    id   : action.id,
   };
 }
 
@@ -97,7 +97,7 @@ export function compileProcessRemovePage(
     const delProvs: string[] = [];
     const delNotes: string[] = [];
     const delLinks: string[] = [];
-    const newProcess: EditorProcess = { ...elm, page: '' };
+    const newProcess: EditorProcess = { ...elm, page : '' };
     checkRemovePage(
       model,
       elm.page,
@@ -110,56 +110,56 @@ export function compileProcessRemovePage(
     );
     const actions: ModelAction[] = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'edit',
-        subtask: 'flowunit',
-        id: action.id,
-        value: newProcess,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'edit',
+        subtask : 'flowunit',
+        id      : action.id,
+        value   : newProcess,
       },
       {
-        type: 'model',
-        act: 'elements',
-        task: 'delete',
-        subtask: 'flowunit',
-        value: delElm,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'delete',
+        subtask : 'flowunit',
+        value   : delElm,
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'delete-page',
-        value: delPage,
+        type  : 'model',
+        act   : 'pages',
+        task  : 'delete-page',
+        value : delPage,
       },
       {
-        type: 'model',
-        act: 'provision',
-        task: 'replace',
-        from: delProvs,
-        to: [],
+        type : 'model',
+        act  : 'provision',
+        task : 'replace',
+        from : delProvs,
+        to   : [],
       },
       {
-        type: 'model',
-        act: 'notes',
-        task: 'replace',
-        from: delNotes,
-        to: [],
+        type : 'model',
+        act  : 'notes',
+        task : 'replace',
+        from : delNotes,
+        to   : [],
       },
       {
-        type: 'model',
-        act: 'link',
-        task: 'replace',
-        from: delLinks,
-        to: [],
+        type : 'model',
+        act  : 'link',
+        task : 'replace',
+        from : delLinks,
+        to   : [],
       },
     ];
     for (const w of Object.values(waiting)) {
       const newAct: ModelAction = {
-        type: 'model',
-        act: 'elements',
-        task: 'edit',
-        subtask: 'flowunit',
-        id: w.id,
-        value: w,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'edit',
+        subtask : 'flowunit',
+        id      : w.id,
+        value   : w,
       };
       actions.push(newAct);
     }
@@ -167,56 +167,56 @@ export function compileProcessRemovePage(
     if (ract && ract.act === 'hybird') {
       ract.actions = [
         {
-          type: 'model',
-          act: 'elements',
-          task: 'edit',
-          subtask: 'flowunit',
-          id: action.id,
-          value: model.elements[action.id],
+          type    : 'model',
+          act     : 'elements',
+          task    : 'edit',
+          subtask : 'flowunit',
+          id      : action.id,
+          value   : model.elements[action.id],
         },
         {
-          type: 'model',
-          act: 'elements',
-          task: 'add',
-          subtask: 'flowunit',
-          value: delElm.map(x => model.elements[x]),
+          type    : 'model',
+          act     : 'elements',
+          task    : 'add',
+          subtask : 'flowunit',
+          value   : delElm.map(x => model.elements[x]),
         },
         {
-          type: 'model',
-          act: 'pages',
-          task: 'new-page',
-          value: delPage.map(x => model.pages[x]),
+          type  : 'model',
+          act   : 'pages',
+          task  : 'new-page',
+          value : delPage.map(x => model.pages[x]),
         },
         {
-          type: 'model',
-          act: 'provision',
-          task: 'replace',
-          from: [],
-          to: delProvs.map(x => model.provisions[x]),
+          type : 'model',
+          act  : 'provision',
+          task : 'replace',
+          from : [],
+          to   : delProvs.map(x => model.provisions[x]),
         },
         {
-          type: 'model',
-          act: 'notes',
-          task: 'replace',
-          from: [],
-          to: delNotes.map(x => model.notes[x]),
+          type : 'model',
+          act  : 'notes',
+          task : 'replace',
+          from : [],
+          to   : delNotes.map(x => model.notes[x]),
         },
         {
-          type: 'model',
-          act: 'link',
-          task: 'replace',
-          from: [],
-          to: delLinks.map(x => model.links[x]),
+          type : 'model',
+          act  : 'link',
+          task : 'replace',
+          from : [],
+          to   : delLinks.map(x => model.links[x]),
         },
       ];
       for (const w of Object.values(waiting)) {
         const newAct: ModelAction = {
-          type: 'model',
-          act: 'elements',
-          task: 'edit',
-          subtask: 'flowunit',
-          id: w.id,
-          value: model.elements[w.id],
+          type    : 'model',
+          act     : 'elements',
+          task    : 'edit',
+          subtask : 'flowunit',
+          id      : w.id,
+          value   : model.elements[w.id],
         };
         ract.actions.push(newAct);
       }
@@ -227,10 +227,10 @@ export function compileProcessRemovePage(
 
 function reverseRemovePageAction(action: ProcessRemovePageHybird): ModelAction {
   return {
-    type: 'model',
-    act: 'hybird',
-    task: 'process-add-page',
-    id: action.id,
+    type : 'model',
+    act  : 'hybird',
+    task : 'process-add-page',
+    id   : action.id,
   };
 }
 
@@ -243,80 +243,80 @@ export function compileProcessEdit(
   if (elm && isEditorProcess(elm) && action.actions === undefined) {
     const actions: ModelAction[] = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'edit',
-        subtask: 'flowunit',
-        id: action.id,
-        value: action.process,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'edit',
+        subtask : 'flowunit',
+        id      : action.id,
+        value   : action.process,
       },
       {
-        type: 'model',
-        act: 'provision',
-        task: 'replace',
-        from: [...elm.provision],
-        to: action.provisions,
+        type : 'model',
+        act  : 'provision',
+        task : 'replace',
+        from : [...elm.provision],
+        to   : action.provisions,
       },
       {
-        type: 'model',
-        act: 'notes',
-        task: 'replace',
-        from: [...elm.notes],
-        to: action.notes,
+        type : 'model',
+        act  : 'notes',
+        task : 'replace',
+        from : [...elm.notes],
+        to   : action.notes,
       },
       {
-        type: 'model',
-        act: 'link',
-        task: 'replace',
-        from: [...elm.links],
-        to: action.links,
+        type : 'model',
+        act  : 'link',
+        task : 'replace',
+        from : [...elm.links],
+        to   : action.links,
       },
       {
-        type: 'model',
-        act: 'refs',
-        task: 'add',
-        value: action.newRefs,
-        cascade: [],
+        type    : 'model',
+        act     : 'refs',
+        task    : 'add',
+        value   : action.newRefs,
+        cascade : [],
       },
     ];
     action.actions = actions;
     if (reverse && reverse.act === 'hybird') {
       reverse.actions = [
         {
-          type: 'model',
-          act: 'elements',
-          task: 'edit',
-          subtask: 'flowunit',
-          id: action.process.id,
-          value: elm,
+          type    : 'model',
+          act     : 'elements',
+          task    : 'edit',
+          subtask : 'flowunit',
+          id      : action.process.id,
+          value   : elm,
         },
         {
-          type: 'model',
-          act: 'provision',
-          task: 'replace',
-          from: action.provisions.map(x => x.id),
-          to: [...elm.provision].map(x => model.provisions[x]),
+          type : 'model',
+          act  : 'provision',
+          task : 'replace',
+          from : action.provisions.map(x => x.id),
+          to   : [...elm.provision].map(x => model.provisions[x]),
         },
         {
-          type: 'model',
-          act: 'notes',
-          task: 'replace',
-          from: action.notes.map(x => x.id),
-          to: [...elm.notes].map(x => model.notes[x]),
+          type : 'model',
+          act  : 'notes',
+          task : 'replace',
+          from : action.notes.map(x => x.id),
+          to   : [...elm.notes].map(x => model.notes[x]),
         },
         {
-          type: 'model',
-          act: 'link',
-          task: 'replace',
-          from: action.links.map(x => x.id),
-          to: [...elm.links].map(x => model.links[x]),
+          type : 'model',
+          act  : 'link',
+          task : 'replace',
+          from : action.links.map(x => x.id),
+          to   : [...elm.links].map(x => model.links[x]),
         },
         {
-          type: 'model',
-          act: 'refs',
-          task: 'delete',
-          value: action.newRefs.map(x => x.id),
-          cascade: [],
+          type    : 'model',
+          act     : 'refs',
+          task    : 'delete',
+          value   : action.newRefs.map(x => x.id),
+          cascade : [],
         },
       ];
     }
@@ -336,19 +336,19 @@ export function compileProcessBringout(
     updated.pages.delete(action.page);
     const actions: ModelAction[] = [
       {
-        type: 'model',
-        act: 'pages',
-        task: 'remove-child',
-        ids: [action.id],
-        page: action.page,
+        type : 'model',
+        act  : 'pages',
+        task : 'remove-child',
+        ids  : [action.id],
+        page : action.page,
       },
       {
-        type: 'model',
-        act: 'elements',
-        task: 'edit',
-        subtask: 'flowunit',
-        id: action.id,
-        value: updated,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'edit',
+        subtask : 'flowunit',
+        id      : action.id,
+        value   : updated,
       },
     ];
     action.actions = actions;
@@ -357,19 +357,19 @@ export function compileProcessBringout(
       const compo = page.childs[action.id];
       const actions: ModelAction[] = [
         {
-          type: 'model',
-          act: 'pages',
-          task: 'add-child',
-          ids: [[action.id, compo.x, compo.y]],
-          page: action.page,
+          type : 'model',
+          act  : 'pages',
+          task : 'add-child',
+          ids  : [[action.id, compo.x, compo.y]],
+          page : action.page,
         },
         {
-          type: 'model',
-          act: 'elements',
-          task: 'edit',
-          subtask: 'flowunit',
-          id: action.id,
-          value: elm,
+          type    : 'model',
+          act     : 'elements',
+          task    : 'edit',
+          subtask : 'flowunit',
+          id      : action.id,
+          value   : elm,
         },
       ];
       reverse.actions = actions;
@@ -390,19 +390,19 @@ export function compileProcessBringin(
     updated.pages = new Set([...elm.pages, action.page]);
     const actions: ModelAction[] = [
       {
-        type: 'model',
-        act: 'pages',
-        task: 'add-child',
-        ids: [[action.id, 0, 0]],
-        page: action.page,
+        type : 'model',
+        act  : 'pages',
+        task : 'add-child',
+        ids  : [[action.id, 0, 0]],
+        page : action.page,
       },
       {
-        type: 'model',
-        act: 'elements',
-        task: 'edit',
-        subtask: 'flowunit',
-        id: action.id,
-        value: updated,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'edit',
+        subtask : 'flowunit',
+        id      : action.id,
+        value   : updated,
       },
     ];
     action.actions = actions;
@@ -410,19 +410,19 @@ export function compileProcessBringin(
     if (reverse && reverse.act === 'hybird') {
       const actions: ModelAction[] = [
         {
-          type: 'model',
-          act: 'pages',
-          task: 'remove-child',
-          ids: [action.id],
-          page: action.page,
+          type : 'model',
+          act  : 'pages',
+          task : 'remove-child',
+          ids  : [action.id],
+          page : action.page,
         },
         {
-          type: 'model',
-          act: 'elements',
-          task: 'edit',
-          subtask: 'flowunit',
-          id: action.id,
-          value: elm,
+          type    : 'model',
+          act     : 'elements',
+          task    : 'edit',
+          subtask : 'flowunit',
+          id      : action.id,
+          value   : elm,
         },
       ];
       reverse.actions = actions;
@@ -438,11 +438,11 @@ function reverseProcessBringInAction(
   const elm = model.elements[action.id];
   if (elm && isEditorProcess(elm)) {
     return {
-      type: 'model',
-      act: 'hybird',
-      task: 'process-bringout',
-      id: action.id,
-      page: action.page,
+      type : 'model',
+      act  : 'hybird',
+      task : 'process-bringout',
+      id   : action.id,
+      page : action.page,
     };
   }
   throw new Error(`Process with ${action.id} not found`);
@@ -455,11 +455,11 @@ function reverseProcessBringOutAction(
   const elm = model.elements[action.id];
   if (elm && isEditorProcess(elm)) {
     return {
-      type: 'model',
-      act: 'hybird',
-      task: 'process-bringin',
-      id: action.id,
-      page: action.page,
+      type : 'model',
+      act  : 'hybird',
+      task : 'process-bringin',
+      id   : action.id,
+      page : action.page,
     };
   }
   throw new Error(`Process with ${action.id} not found`);
@@ -472,16 +472,16 @@ function reverseProcessEditAction(
   const elm = model.elements[action.id];
   if (elm && isEditorProcess(elm)) {
     return {
-      type: 'model',
-      act: 'hybird',
-      task: 'process-edit',
-      id: action.process.id,
-      process: elm,
-      provisions: [...elm.provision].map(x => model.provisions[x]),
-      notes: [...elm.notes].map(x => model.notes[x]),
-      links: [...elm.links].map(x => model.links[x]),
-      newRefs: action.delRefs.map(x => model.refs[x]),
-      delRefs: action.newRefs.map(x => x.id),
+      type       : 'model',
+      act        : 'hybird',
+      task       : 'process-edit',
+      id         : action.process.id,
+      process    : elm,
+      provisions : [...elm.provision].map(x => model.provisions[x]),
+      notes      : [...elm.notes].map(x => model.notes[x]),
+      links      : [...elm.links].map(x => model.links[x]),
+      newRefs    : action.delRefs.map(x => model.refs[x]),
+      delRefs    : action.newRefs.map(x => x.id),
     };
   }
   throw new Error(`Process with ${action.id} not found`);
@@ -503,7 +503,7 @@ function checkRemovePage(
     const elm = model.elements[c.element];
     if (isEditorProcess(elm)) {
       const original = waiting[elm.id] ?? elm;
-      const process = { ...original, pages: new Set([...original.pages]) };
+      const process = { ...original, pages : new Set([...original.pages]) };
       process.pages.delete(pageid);
       if (process.pages.size === 0) {
         delElm.push(process.id);
@@ -549,24 +549,24 @@ export function compileProcessDelete(
     if (elm.page === '') {
       action.actions = [
         {
-          type: 'model',
-          act: 'pages',
-          task: 'delete-element',
-          value: elm,
-          page: pageid,
+          type  : 'model',
+          act   : 'pages',
+          task  : 'delete-element',
+          value : elm,
+          page  : pageid,
         },
       ];
       if (ract && ract.act === 'hybird') {
         const compo = model.pages[pageid].childs[elm.id];
         ract.actions = [
           {
-            type: 'model',
-            act: 'pages',
-            task: 'new-element',
-            value: elm,
-            page: pageid,
-            x: compo.x,
-            y: compo.y,
+            type  : 'model',
+            act   : 'pages',
+            task  : 'new-element',
+            value : elm,
+            page  : pageid,
+            x     : compo.x,
+            y     : compo.y,
           },
         ];
       }
@@ -590,55 +590,55 @@ export function compileProcessDelete(
 
       const actions: ModelAction[] = [
         {
-          type: 'model',
-          act: 'pages',
-          task: 'delete-element',
-          value: elm,
-          page: pageid,
+          type  : 'model',
+          act   : 'pages',
+          task  : 'delete-element',
+          value : elm,
+          page  : pageid,
         },
         {
-          type: 'model',
-          act: 'elements',
-          task: 'delete',
-          subtask: 'flowunit',
-          value: delElm,
+          type    : 'model',
+          act     : 'elements',
+          task    : 'delete',
+          subtask : 'flowunit',
+          value   : delElm,
         },
         {
-          type: 'model',
-          act: 'pages',
-          task: 'delete-page',
-          value: delPage,
+          type  : 'model',
+          act   : 'pages',
+          task  : 'delete-page',
+          value : delPage,
         },
         {
-          type: 'model',
-          act: 'provision',
-          task: 'replace',
-          from: delProvs,
-          to: [],
+          type : 'model',
+          act  : 'provision',
+          task : 'replace',
+          from : delProvs,
+          to   : [],
         },
         {
-          type: 'model',
-          act: 'notes',
-          task: 'replace',
-          from: delNotes,
-          to: [],
+          type : 'model',
+          act  : 'notes',
+          task : 'replace',
+          from : delNotes,
+          to   : [],
         },
         {
-          type: 'model',
-          act: 'link',
-          task: 'replace',
-          from: delLinks,
-          to: [],
+          type : 'model',
+          act  : 'link',
+          task : 'replace',
+          from : delLinks,
+          to   : [],
         },
       ];
       for (const w of Object.values(waiting)) {
         const newAct: ModelAction = {
-          type: 'model',
-          act: 'elements',
-          task: 'edit',
-          subtask: 'flowunit',
-          id: w.id,
-          value: w,
+          type    : 'model',
+          act     : 'elements',
+          task    : 'edit',
+          subtask : 'flowunit',
+          id      : w.id,
+          value   : w,
         };
         actions.push(newAct);
       }
@@ -647,57 +647,57 @@ export function compileProcessDelete(
         const compo = model.pages[pageid].childs[elm.id];
         ract.actions = [
           {
-            type: 'model',
-            act: 'pages',
-            task: 'new-element',
-            value: elm,
-            page: pageid,
-            x: compo.x,
-            y: compo.y,
+            type  : 'model',
+            act   : 'pages',
+            task  : 'new-element',
+            value : elm,
+            page  : pageid,
+            x     : compo.x,
+            y     : compo.y,
           },
           {
-            type: 'model',
-            act: 'elements',
-            task: 'add',
-            subtask: 'flowunit',
-            value: delElm.map(x => model.elements[x]),
+            type    : 'model',
+            act     : 'elements',
+            task    : 'add',
+            subtask : 'flowunit',
+            value   : delElm.map(x => model.elements[x]),
           },
           {
-            type: 'model',
-            act: 'pages',
-            task: 'new-page',
-            value: delPage.map(x => model.pages[x]),
+            type  : 'model',
+            act   : 'pages',
+            task  : 'new-page',
+            value : delPage.map(x => model.pages[x]),
           },
           {
-            type: 'model',
-            act: 'provision',
-            task: 'replace',
-            from: [],
-            to: delProvs.map(x => model.provisions[x]),
+            type : 'model',
+            act  : 'provision',
+            task : 'replace',
+            from : [],
+            to   : delProvs.map(x => model.provisions[x]),
           },
           {
-            type: 'model',
-            act: 'notes',
-            task: 'replace',
-            from: [],
-            to: delNotes.map(x => model.notes[x]),
+            type : 'model',
+            act  : 'notes',
+            task : 'replace',
+            from : [],
+            to   : delNotes.map(x => model.notes[x]),
           },
           {
-            type: 'model',
-            act: 'link',
-            task: 'replace',
-            from: [],
-            to: delLinks.map(x => model.links[x]),
+            type : 'model',
+            act  : 'link',
+            task : 'replace',
+            from : [],
+            to   : delLinks.map(x => model.links[x]),
           },
         ];
         for (const w of Object.values(waiting)) {
           const newAct: ModelAction = {
-            type: 'model',
-            act: 'elements',
-            task: 'edit',
-            subtask: 'flowunit',
-            id: w.id,
-            value: model.elements[w.id],
+            type    : 'model',
+            act     : 'elements',
+            task    : 'edit',
+            subtask : 'flowunit',
+            id      : w.id,
+            value   : model.elements[w.id],
           };
           ract.actions.push(newAct);
         }
@@ -709,11 +709,11 @@ export function compileProcessDelete(
 
 function reverseProcessDeleteAction(action: ProcessDeleteHybird): ModelAction {
   return {
-    type: 'model',
-    act: 'hybird',
-    task: 'process-delete-reverse',
-    page: action.page,
-    id: action.id,
+    type : 'model',
+    act  : 'hybird',
+    task : 'process-delete-reverse',
+    page : action.page,
+    id   : action.id,
   };
 }
 
@@ -721,10 +721,10 @@ export function compileProcessDeleteReverse(
   action: ProcessDeleteReverseHybird
 ): ModelAction {
   return {
-    type: 'model',
-    act: 'hybird',
-    task: 'process-delete',
-    page: action.page,
-    id: action.id,
+    type : 'model',
+    act  : 'hybird',
+    task : 'process-delete',
+    page : action.page,
+    id   : action.id,
   };
 }

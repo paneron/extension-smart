@@ -36,16 +36,16 @@ const ViewProfileEditPage: React.FC<{
   function getViewListItems(filter: string): IListItem[] {
     return Object.values(model.views)
       .filter(x => matchFilter(x, filter))
-      .map(x => ({ id: x.id, text: x.name }))
+      .map(x => ({ id : x.id, text : x.name }))
       .sort(defaultItemSorter);
   }
 
   function removeViewListItem(ids: string[]) {
     const action: ModelAction = {
-      type: 'model',
-      act: 'view',
-      task: 'delete',
-      value: ids,
+      type  : 'model',
+      act   : 'view',
+      task  : 'delete',
+      value : ids,
     };
     act(action);
   }
@@ -53,10 +53,10 @@ const ViewProfileEditPage: React.FC<{
   function addView(x: MMELView): boolean {
     if (checkId(x.id, model.views)) {
       const action: ModelAction = {
-        type: 'model',
-        act: 'view',
-        task: 'add',
-        value: [x],
+        type  : 'model',
+        act   : 'view',
+        task  : 'add',
+        value : [x],
       };
       act(action);
       return true;
@@ -69,11 +69,11 @@ const ViewProfileEditPage: React.FC<{
       return false;
     }
     const action: ModelAction = {
-      type: 'model',
-      act: 'view',
-      task: 'edit',
-      id: oldid,
-      value: x,
+      type  : 'model',
+      act   : 'view',
+      task  : 'edit',
+      id    : oldid,
+      value : x,
     };
     act(action);
     return true;
@@ -88,16 +88,16 @@ const ViewProfileEditPage: React.FC<{
   }
 
   const viewhandler: IManageHandler<MMELView> = {
-    filterName: 'View Profile filter',
-    itemName: 'View profiles',
-    Content: ViewEditItemPage,
-    initObj: createView(''),
-    model: model,
-    getItems: getViewListItems,
-    removeItems: removeViewListItem,
-    addItem: obj => addView(obj),
-    updateItem: (oldid, obj) => updateView(oldid, obj),
-    getObjById: getViewById,
+    filterName  : 'View Profile filter',
+    itemName    : 'View profiles',
+    Content     : ViewEditItemPage,
+    initObj     : createView(''),
+    model       : model,
+    getItems    : getViewListItems,
+    removeItems : removeViewListItem,
+    addItem     : obj => addView(obj),
+    updateItem  : (oldid, obj) => updateView(oldid, obj),
+    getObjById  : getViewById,
   };
 
   return <ListManagePage {...viewhandler} />;
@@ -116,19 +116,19 @@ const ViewEditItemPage: React.FC<{
     if (on) {
       newProfile[id] = {
         id,
-        isConst: false,
+        isConst : false,
         value,
       };
     } else {
       delete newProfile[id];
     }
-    setView({ ...view, profile: newProfile });
+    setView({ ...view, profile : newProfile });
   }
 
   function onEditableChange(x: boolean, id: string) {
     setView({
       ...view,
-      profile: { ...profile, [id]: { ...profile[id], isConst: x } },
+      profile : { ...profile, [id] : { ...profile[id], isConst : x }},
     });
   }
 
@@ -137,12 +137,12 @@ const ViewEditItemPage: React.FC<{
       <NormalTextField
         text="Profile ID"
         value={view.id}
-        onChange={x => setView({ ...view, id: x.replaceAll(/\s+/g, '') })}
+        onChange={x => setView({ ...view, id : x.replaceAll(/\s+/g, '') })}
       />
       <NormalTextField
         text="Profile name"
         value={view.name}
-        onChange={x => setView({ ...view, name: x })}
+        onChange={x => setView({ ...view, name : x })}
       />
       <Text>
         Select the settings you want to include in the profile and provide the
@@ -171,8 +171,8 @@ const ViewEditItemPage: React.FC<{
                     value={profile[v.id].value}
                     onChange={x => {
                       const newProfile = { ...profile };
-                      newProfile[v.id] = { ...profile[v.id], value: x };
-                      setView({ ...view, profile: newProfile });
+                      newProfile[v.id] = { ...profile[v.id], value : x };
+                      setView({ ...view, profile : newProfile });
                     }}
                   />
                   <Switch
@@ -195,18 +195,18 @@ const ViewEditItemPage: React.FC<{
 };
 
 const DefaultValues: Record<InputableVarType, string> = {
-  [VarType.BOOLEAN]: 'true',
-  [VarType.DATA]: '0',
-  [VarType.LISTDATA]: '0',
-  [VarType.TEXT]: '',
-  [VarType.TABLEITEM]: '',
+  [VarType.BOOLEAN]   : 'true',
+  [VarType.DATA]      : '0',
+  [VarType.LISTDATA]  : '0',
+  [VarType.TEXT]      : '',
+  [VarType.TABLEITEM] : '',
 };
 
 const Inputs: Record<
   InputableVarType,
   React.FC<{ value: string; onChange: (x: string) => void }>
 > = {
-  [VarType.BOOLEAN]: ({ value, onChange }) => (
+  [VarType.BOOLEAN] : ({ value, onChange }) => (
     <NormalComboBox
       text="Default value"
       options={['true', 'false']}
@@ -216,7 +216,7 @@ const Inputs: Record<
       fill
     />
   ),
-  [VarType.DATA]: ({ value, onChange }) => (
+  [VarType.DATA] : ({ value, onChange }) => (
     <InputGroup
       placeholder="Default value"
       value={value}
@@ -224,7 +224,7 @@ const Inputs: Record<
       fill
     />
   ),
-  [VarType.LISTDATA]: ({ value, onChange }) => (
+  [VarType.LISTDATA] : ({ value, onChange }) => (
     <InputGroup
       placeholder="Default values (seperate by ,)"
       value={value}
@@ -232,7 +232,7 @@ const Inputs: Record<
       fill
     />
   ),
-  [VarType.TEXT]: ({ value, onChange }) => (
+  [VarType.TEXT] : ({ value, onChange }) => (
     <InputGroup
       placeholder="Default value"
       value={value}
@@ -240,7 +240,7 @@ const Inputs: Record<
       fill
     />
   ),
-  [VarType.TABLEITEM]: ({ value, onChange }) => (
+  [VarType.TABLEITEM] : ({ value, onChange }) => (
     <InputGroup
       placeholder="Default value"
       value={value}

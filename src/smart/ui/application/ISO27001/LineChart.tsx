@@ -10,8 +10,8 @@ const LineChart27001: React.FC<{
   return (
     <div
       style={{
-        width: '40%',
-        textAlign: 'center',
+        width     : '40%',
+        textAlign : 'center',
       }}
     >
       <MGDLabel> # connections (per IP) </MGDLabel>
@@ -37,9 +37,9 @@ const LineChart: React.FC<{
       <svg viewBox="0 0 36 36">
         <text
           style={{
-            fill: color,
-            fontSize: '0.5em',
-            textAnchor: 'middle',
+            fill       : color,
+            fontSize   : '0.5em',
+            textAnchor : 'middle',
           }}
           x="18"
           y="20.35"
@@ -57,10 +57,10 @@ const LineChart: React.FC<{
     const pv = mapped[i - 1];
     const v = mapped[i];
     lines.push({
-      fx: i * 10,
-      fy: pv,
-      tx: (i + 1) * 10,
-      ty: v,
+      fx : i * 10,
+      fy : pv,
+      tx : (i + 1) * 10,
+      ty : v,
     });
   }
   let sep = 10 ** (Math.ceil(Math.log10(chartMax)) - 1);
@@ -129,9 +129,9 @@ const LineChart: React.FC<{
       />
       <text
         style={{
-          fill: 'black',
-          fontSize: '0.7em',
-          textAnchor: 'end',
+          fill       : 'black',
+          fontSize   : '0.7em',
+          textAnchor : 'end',
         }}
         x="110"
         y={refy - 5}
@@ -140,9 +140,9 @@ const LineChart: React.FC<{
       </text>
       <text
         style={{
-          fill: 'black',
-          fontSize: '0.5em',
-          textAnchor: 'end',
+          fill       : 'black',
+          fontSize   : '0.5em',
+          textAnchor : 'end',
         }}
         x="9"
         y="109"
@@ -165,9 +165,9 @@ const LineChart: React.FC<{
           <>
             <text
               style={{
-                fill: 'black',
-                fontSize: '0.5em',
-                textAnchor: 'end',
+                fill       : 'black',
+                fontSize   : '0.5em',
+                textAnchor : 'end',
               }}
               x="9"
               y={mapped + 9}

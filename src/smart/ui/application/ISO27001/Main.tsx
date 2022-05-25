@@ -38,15 +38,15 @@ const Application27001: React.FC<{
   setView: (view: ViewFunctionInterface) => void;
 }> = function ({ model, showMsg, setView }) {
   const [setting, setSetting] = useState<Application27001Setting>({
-    source: '',
-    failMonitor: { min: 10, max: 50 },
-    connectionRefLine: 100,
+    source            : '',
+    failMonitor       : { min : 10, max : 50 },
+    connectionRefLine : 100,
   });
   const [diagProps, setDiagProps] = useState<Dialog27001Interface | undefined>(
     undefined
   );
   const [liveCount, setLiveCount] = useState<number>(0);
-  const [logs, setLogs] = useState<Log27001>({ hasFail: false, records: [] });
+  const [logs, setLogs] = useState<Log27001>({ hasFail : false, records : []});
   const [lineValues, setLineValues] = useState<number[]>([]);
 
   function updateLineValues(v: number) {
@@ -63,22 +63,22 @@ const Application27001: React.FC<{
 
   function onError(msg: string) {
     showMsg({
-      message: msg,
-      intent: 'danger',
+      message : msg,
+      intent  : 'danger',
     });
   }
 
   function onMessage(msg: string) {
     showMsg({
-      message: msg,
-      intent: 'primary',
+      message : msg,
+      intent  : 'primary',
     });
   }
 
   const configDiagProps: Dialog27001Interface = {
-    title: 'Configuration',
-    content: Application27001ConfigurePage,
-    fullscreen: false,
+    title      : 'Configuration',
+    content    : Application27001ConfigurePage,
+    fullscreen : false,
   };
 
   const result = useMemo(() => {
@@ -89,7 +89,7 @@ const Application27001: React.FC<{
     if (readings !== undefined) {
       const log = testMeasurement27001(model, readings);
       logs.records.push(log);
-      setLogs({ ...logs, hasFail: logs.hasFail || !log.result.overall });
+      setLogs({ ...logs, hasFail : logs.hasFail || !log.result.overall });
       updateLineValues(
         log.data.connections.reduce((max, x) => Math.max(max, x))
       );
@@ -146,7 +146,7 @@ const Application27001: React.FC<{
                 logs={logs}
                 clearAlert={
                   logs.hasFail
-                    ? () => setLogs({ ...logs, hasFail: false })
+                    ? () => setLogs({ ...logs, hasFail : false })
                     : undefined
                 }
               />
@@ -165,10 +165,10 @@ const Application27001: React.FC<{
       </MGDContainer>
       <div
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-around',
-          alignItems: 'center',
+          display        : 'flex',
+          flexWrap       : 'wrap',
+          justifyContent : 'space-around',
+          alignItems     : 'center',
         }}
       >
         <Chart27001 result={result} range={setting.failMonitor} />

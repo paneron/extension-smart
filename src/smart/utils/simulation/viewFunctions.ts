@@ -12,9 +12,9 @@ export function getSimulationView(
   return {
     getStyleById,
     getSVGColorById,
-    data: result,
-    navigationEnabled: false,
-    navigationErrorMsg: 'Please turn off simulation for free navigation',
+    data               : result,
+    navigationEnabled  : false,
+    navigationErrorMsg : 'Please turn off simulation for free navigation',
   };
 }
 

@@ -26,7 +26,7 @@ const EditorReferenceMenu: React.FC<{
       disabled={!canOpen}
       onClick={() =>
         handleModelOpen({
-          setModelWrapper: setReference,
+          setModelWrapper : setReference,
           requestFileFromFilesystem,
           indexModel,
         })
@@ -40,9 +40,9 @@ const EditorReferenceMenu: React.FC<{
       text="Open SMART Document"
       onClick={() =>
         handleDocumentOpen({
-          setDocument: setReference,
+          setDocument : setReference,
           requestFileFromFilesystem,
-          fileType: FILE_TYPE.Document,
+          fileType    : FILE_TYPE.Document,
         })
       }
       icon="document-open"
@@ -54,9 +54,9 @@ const EditorReferenceMenu: React.FC<{
       text="Open XML Document"
       onClick={() =>
         handleDocumentOpen({
-          setDocument: setReference,
+          setDocument : setReference,
           requestFileFromFilesystem,
-          fileType: FILE_TYPE.XML,
+          fileType    : FILE_TYPE.XML,
         })
       }
       icon="document-open"

@@ -93,11 +93,11 @@ const EditTimerPage: React.FC<{
   const fullEditClick =
     onFullEditClick !== undefined
       ? function () {
-          if (hasChange) {
-            onUpdateClick();
-          }
-          onFullEditClick();
+        if (hasChange) {
+          onUpdateClick();
         }
+        onFullEditClick();
+      }
       : undefined;
 
   const commonProps: CommonTimerEditProps = {
@@ -105,7 +105,7 @@ const EditTimerPage: React.FC<{
     editing,
     setEditing,
     onDeleteClick,
-    onFullEditClick: fullEditClick,
+    onFullEditClick : fullEditClick,
     model,
     setUndoListener,
   };
@@ -115,8 +115,8 @@ const EditTimerPage: React.FC<{
   const quickEditProps = {
     saveOnExit,
     timer,
-    setEditing: setEdit,
-    initID: timer.id,
+    setEditing : setEdit,
+    initID     : timer.id,
     onNewID,
     setHasChange,
   };
@@ -178,12 +178,12 @@ const QuickVersionEdit: React.FC<
         text="Timer Type"
         value={editing.type}
         options={TimerType}
-        onChange={x => setEditing({ ...editing, type: x })}
+        onChange={x => setEditing({ ...editing, type : x })}
       />
       <NormalTextField
         text="Timer parameter"
         value={editing.para}
-        onChange={x => setEditing({ ...editing, para: x })}
+        onChange={x => setEditing({ ...editing, para : x })}
       />
     </FormGroup>
   );
@@ -211,18 +211,18 @@ const FullVersionEdit: React.FC<
         <NormalTextField
           text="Timer ID"
           value={editing.id}
-          onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
+          onChange={x => setEditing({ ...editing, id : removeSpace(x) })}
         />
         <NormalComboBox
           text="Timer Type"
           value={editing.type}
           options={TimerType}
-          onChange={x => setEditing({ ...editing, type: x })}
+          onChange={x => setEditing({ ...editing, type : x })}
         />
         <NormalTextField
           text="Timer parameter"
           value={editing.para}
-          onChange={x => setEditing({ ...editing, para: x })}
+          onChange={x => setEditing({ ...editing, para : x })}
         />
       </FormGroup>
     </MGDDisplayPane>

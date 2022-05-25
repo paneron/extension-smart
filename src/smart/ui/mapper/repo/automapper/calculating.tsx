@@ -10,11 +10,11 @@ const AutoMapLoading: React.FC<{
   ) : (
     <div
       style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
+        flex           : 1,
+        display        : 'flex',
+        flexDirection  : 'column',
+        justifyContent : 'center',
+        alignItems     : 'center',
       }}
     >
       <h3> Caulcation completed. </h3>

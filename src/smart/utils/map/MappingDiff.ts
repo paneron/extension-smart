@@ -37,22 +37,22 @@ export const MappingDiffSourceStyles: Record<
   MapDiffSourceType,
   LegendInterface
 > = {
-  new: { label: 'New source', color: 'lightgreen' },
-  delete: { label: 'Deleted source', color: 'lightpink' },
-  same: { label: 'Same mapping', color: 'lightblue' },
-  change: { label: 'Changed', color: 'lightyellow' },
-  no: { label: 'Not a source', color: 'lightgray' },
+  'new'    : { label : 'New source', color : 'lightgreen' },
+  'delete' : { label : 'Deleted source', color : 'lightpink' },
+  'same'   : { label : 'Same mapping', color : 'lightblue' },
+  'change' : { label : 'Changed', color : 'lightyellow' },
+  'no'     : { label : 'Not a source', color : 'lightgray' },
 };
 
 export const MappingDiffResultStyles: Record<
   MapDiffCoverType,
   LegendInterface
 > = {
-  new: { label: 'New coverage', color: 'lightgreen' },
-  delete: { label: 'Deleted coverage', color: 'lightpink' },
-  cover: { label: 'Covered in both', color: 'lightblue' },
-  partial: { label: 'Some mappings inside', color: 'lightyellow' },
-  no: { label: 'Not covered in both', color: 'lightgray' },
+  'new'     : { label : 'New coverage', color : 'lightgreen' },
+  'delete'  : { label : 'Deleted coverage', color : 'lightpink' },
+  'cover'   : { label : 'Covered in both', color : 'lightblue' },
+  'partial' : { label : 'Some mappings inside', color : 'lightyellow' },
+  'no'      : { label : 'Not covered in both', color : 'lightgray' },
 };
 
 type Maps = Record<string, MapProfile>;
@@ -78,20 +78,20 @@ export function calEdgeDiff(
   }
   for (const x of old) {
     if (visited[x.toid] === undefined) {
-      result.push({ ...x, type: 'delete' });
+      result.push({ ...x, type : 'delete' });
     } else {
       const set = visited[x.toid];
       if (set.has(x.fromid)) {
-        result.push({ ...records[x.toid][x.fromid], type: 'same' });
+        result.push({ ...records[x.toid][x.fromid], type : 'same' });
         set.delete(x.fromid);
       } else {
-        result.push({ ...x, type: 'delete' });
+        result.push({ ...x, type : 'delete' });
       }
     }
   }
   for (const x in visited) {
     for (const y of visited[x]) {
-      result.push({ ...records[x][y], type: 'new' });
+      result.push({ ...records[x][y], type : 'new' });
     }
   }
   return result;
@@ -108,7 +108,7 @@ export function repoMapDiffNode(
   const { ns } = repo;
   const item = index[ns];
   const elms: Record<string, Node> = {
-    [ns]: createNode(
+    [ns] : createNode(
       ns,
       0,
       0,
@@ -243,14 +243,14 @@ function createNode(
 ): Node {
   return {
     id,
-    position: { x, y },
-    data: {
+    position : { x, y },
+    data     : {
       label,
     },
-    sourcePosition: Position.Right,
-    targetPosition: Position.Left,
-    style: {
-      background: type ? RepoDiffLegend[type].color : 'lightgray',
+    sourcePosition : Position.Right,
+    targetPosition : Position.Left,
+    style          : {
+      background : type ? RepoDiffLegend[type].color : 'lightgray',
     },
   };
 }

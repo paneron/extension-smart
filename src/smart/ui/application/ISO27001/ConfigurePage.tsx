@@ -22,11 +22,11 @@ const Application27001ConfigurePage: React.FC<{
   onMessage: (msg: string) => void;
 }> = function ({ onClose, setting, setSetting, onError, onMessage }) {
   function onFailRangeChange(value: NumberRange) {
-    setSetting({ ...setting, failMonitor: { min: value[0], max: value[1] } });
+    setSetting({ ...setting, failMonitor : { min : value[0], max : value[1] }});
   }
 
   function onRefConnectionChange(x: number) {
-    setSetting({ ...setting, connectionRefLine: x });
+    setSetting({ ...setting, connectionRefLine : x });
   }
 
   function testConnection() {
@@ -48,7 +48,7 @@ const Application27001ConfigurePage: React.FC<{
           <InputGroup
             value={setting.source}
             placeholder="URL of the data stream source"
-            onChange={x => setSetting({ ...setting, source: x.target.value })}
+            onChange={x => setSetting({ ...setting, source : x.target.value })}
           />
           <Button intent="primary" onClick={testConnection}>
             Test

@@ -34,28 +34,28 @@ export const availableLanguageIDs = [
 export const languageTitles: {
   [langID in typeof availableLanguageIDs[number]]: string;
 } = {
-  eng: 'English',
-  ara: 'Arabic',
-  zho: 'Chinese',
-  dan: 'Danish',
-  nld: 'Dutch',
-  fin: 'Finnish',
-  fra: 'French',
-  deu: 'German',
-  jpn: 'Japanese',
-  kor: 'Korean',
-  msa: 'Malay',
-  pol: 'Polish',
-  rus: 'Russian',
-  spa: 'Spanish',
-  swe: 'Swedish',
-  ces: 'Czech',
-  ita: 'Italian',
-  nno: 'Norwegian Nynorsk',
-  nob: 'Norwegian Bokmål',
-  por: 'Portuguese',
-  slv: 'Slovenian',
-  srp: 'Serbian',
+  eng : 'English',
+  ara : 'Arabic',
+  zho : 'Chinese',
+  dan : 'Danish',
+  nld : 'Dutch',
+  fin : 'Finnish',
+  fra : 'French',
+  deu : 'German',
+  jpn : 'Japanese',
+  kor : 'Korean',
+  msa : 'Malay',
+  pol : 'Polish',
+  rus : 'Russian',
+  spa : 'Spanish',
+  swe : 'Swedish',
+  ces : 'Czech',
+  ita : 'Italian',
+  nno : 'Norwegian Nynorsk',
+  nob : 'Norwegian Bokmål',
+  por : 'Portuguese',
+  slv : 'Slovenian',
+  srp : 'Serbian',
 } as const;
 
 export type WritingDirectionality = 'LTR' | 'RTL' | 'TBRL';
@@ -71,7 +71,7 @@ export function getHTMLDir(wd: WritingDirectionality): 'rtl' | 'ltr' {
 export const writingDirectionalityOverrides: Partial<
   { [langID in typeof availableLanguageIDs[number]]: WritingDirectionality }
 > = {
-  ara: 'RTL',
+  ara : 'RTL',
 };
 
 export const priorityLanguages: typeof availableLanguageIDs[number][] = [

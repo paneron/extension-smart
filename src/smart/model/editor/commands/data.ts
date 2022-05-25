@@ -13,11 +13,11 @@ import { ModelAction } from '../model';
  */
 export function delRegistryCommand(ids: string[]) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'elements',
-    task: 'delete',
-    subtask: 'registry',
-    value: ids,
+    type    : 'model',
+    act     : 'elements',
+    task    : 'delete',
+    subtask : 'registry',
+    value   : ids,
   };
   return action;
 }
@@ -28,11 +28,11 @@ export function delRegistryCommand(ids: string[]) {
  */
 export function addRegistryCommand(reg: RegistryCombined) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'elements',
-    task: 'add',
-    subtask: 'registry',
-    value: [reg],
+    type    : 'model',
+    act     : 'elements',
+    task    : 'add',
+    subtask : 'registry',
+    value   : [reg],
   };
   return action;
 }
@@ -44,10 +44,10 @@ export function addRegistryCommand(reg: RegistryCombined) {
  */
 export function editRegistryCommand(id: string, value: RegistryCombined) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'elements',
-    task: 'edit',
-    subtask: 'registry',
+    type    : 'model',
+    act     : 'elements',
+    task    : 'edit',
+    subtask : 'registry',
     id,
     value,
   };
@@ -66,13 +66,13 @@ export function editImportRegistryCommand(
   refs: MMELReference[]
 ) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'hybird',
-    task: 'registry-import-ref',
+    type    : 'model',
+    act     : 'hybird',
+    task    : 'registry-import-ref',
     id,
     value,
-    newRefs: refs,
-    delRefs: [],
+    newRefs : refs,
+    delRefs : [],
   };
   return action;
 }
@@ -83,11 +83,11 @@ export function editImportRegistryCommand(
  */
 export function delDCCommand(ids: string[]) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'elements',
-    task: 'delete',
-    subtask: 'dc',
-    value: ids,
+    type    : 'model',
+    act     : 'elements',
+    task    : 'delete',
+    subtask : 'dc',
+    value   : ids,
   };
   return action;
 }
@@ -98,11 +98,11 @@ export function delDCCommand(ids: string[]) {
  */
 export function addDCCommand(dc: EditorDataClass) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'elements',
-    task: 'add',
-    subtask: 'dc',
-    value: [dc],
+    type    : 'model',
+    act     : 'elements',
+    task    : 'add',
+    subtask : 'dc',
+    value   : [dc],
   };
   return action;
 }
@@ -114,10 +114,10 @@ export function addDCCommand(dc: EditorDataClass) {
  */
 export function editDCCommand(id: string, value: EditorDataClass) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'elements',
-    task: 'edit',
-    subtask: 'dc',
+    type    : 'model',
+    act     : 'elements',
+    task    : 'edit',
+    subtask : 'dc',
     id,
     value,
   };
@@ -137,13 +137,13 @@ export function editImportDCCommand(
   refs: MMELReference[]
 ) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'hybird',
-    task: 'dc-import-ref',
+    type    : 'model',
+    act     : 'hybird',
+    task    : 'dc-import-ref',
     id,
     value,
-    newRefs: refs,
-    delRefs: [],
+    newRefs : refs,
+    delRefs : [],
   };
   return action;
 }

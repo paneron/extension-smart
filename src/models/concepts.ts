@@ -66,7 +66,7 @@ export interface Concept<
   domain?: string;
   // Legacy.
 
-  //subject_field: SubjectFieldLabel
+  // subject_field: SubjectFieldLabel
 
   usageInfo?: string;
 
@@ -75,7 +75,7 @@ export interface Concept<
   // which would hence be the preferred one.
   // When designations are decoupled from concept,
   // there may be preferred and non-preferred designations.
-  //is_preferred: boolean
+  // is_preferred: boolean
 
   definition: string;
   notes: Note[];
@@ -86,7 +86,7 @@ export interface Concept<
   authoritative_source: AuthoritativeSource;
   // Can be set
 
-  //lineage_source: LineageSource
+  // lineage_source: LineageSource
 
   // Date concept was first introduced?
   date_accepted?: Date;
@@ -96,7 +96,7 @@ export interface Concept<
 
   // Deprecated:
 
-  //classification?: 'preferred'
+  // classification?: 'preferred'
 
   review_date?: Date;
   review_status?: string;
@@ -164,7 +164,7 @@ export const NORMATIVE_STATUS_CHOICES = [
 ] as const;
 export type NormativeStatus = typeof NORMATIVE_STATUS_CHOICES[number];
 
-export type TypedDesignation = Symbol | Expression | Prefix;
+export type TypedDesignation = symbol | Expression | Prefix;
 export const DESIGNATION_TYPES = [
   'expression',
   'symbol',

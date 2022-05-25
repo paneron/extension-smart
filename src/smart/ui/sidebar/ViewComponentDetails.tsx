@@ -62,7 +62,7 @@ const NODE_DETAIL_VIEWS: Record<
     }>;
   }>
 > = {
-  [DataType.DATACLASS]: ({ node, getRefById, CustomAttribute }) =>
+  [DataType.DATACLASS] : ({ node, getRefById, CustomAttribute }) =>
     isEditorDataClass(node) ? (
       <DescribeDC
         dc={node as EditorDataClass}
@@ -72,7 +72,7 @@ const NODE_DETAIL_VIEWS: Record<
     ) : (
       <></>
     ),
-  [DataType.REGISTRY]: ({ node, getRefById, getDCById, CustomAttribute }) =>
+  [DataType.REGISTRY] : ({ node, getRefById, getDCById, CustomAttribute }) =>
     isEditorRegistry(node) ? (
       <DescribeRegistry
         reg={node}
@@ -83,19 +83,19 @@ const NODE_DETAIL_VIEWS: Record<
     ) : (
       <></>
     ),
-  [DataType.STARTEVENT]: () => <DescribeStart />,
-  [DataType.ENDEVENT]: () => <DescribeEnd />,
-  [DataType.TIMEREVENT]: ({ node }) =>
+  [DataType.STARTEVENT] : () => <DescribeStart />,
+  [DataType.ENDEVENT]   : () => <DescribeEnd />,
+  [DataType.TIMEREVENT] : ({ node }) =>
     isEditorTimerEvent(node) ? <DescribeTimer timer={node} /> : <></>,
-  [DataType.SIGNALCATCHEVENT]: ({ node }) =>
+  [DataType.SIGNALCATCHEVENT] : ({ node }) =>
     isEditorSignalEvent(node) ? <DescribeSignalCatch scEvent={node} /> : <></>,
-  [DataType.EGATE]: ({ node, getOutgoingEdgesById }) =>
+  [DataType.EGATE] : ({ node, getOutgoingEdgesById }) =>
     isEditorEgate(node) ? (
       <DescribeEGate egate={node} getOutgoingEdgesById={getOutgoingEdgesById} />
     ) : (
       <></>
     ),
-  [DataType.APPROVAL]: ({ node, getRefById, getRegistryById, getRoleById }) =>
+  [DataType.APPROVAL] : ({ node, getRefById, getRegistryById, getRoleById }) =>
     isEditorApproval(node) ? (
       <DescribeApproval
         app={node}
@@ -106,7 +106,7 @@ const NODE_DETAIL_VIEWS: Record<
     ) : (
       <></>
     ),
-  [DataType.PROCESS]: ({
+  [DataType.PROCESS] : ({
     node,
     getProvisionById,
     getRefById,

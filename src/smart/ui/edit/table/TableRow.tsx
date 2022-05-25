@@ -17,7 +17,7 @@ const MMELTableRow: React.FC<{
 
   return (
     <tr>
-      <td style={{ textAlign: 'right' }}>
+      <td style={{ textAlign : 'right' }}>
         <Text>
           {line === undefined ? 'New' : line === 0 ? 'Header' : `${line}`}
         </Text>

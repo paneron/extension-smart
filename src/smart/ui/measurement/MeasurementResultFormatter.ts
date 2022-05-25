@@ -11,9 +11,9 @@ export default function updateMeasurementView(
   setView({
     getStyleById,
     getSVGColorById,
-    legendList: MeasureResultStyles,
-    data: result,
-    ComponentToolTip: MeasurementTooltip,
+    legendList       : MeasureResultStyles,
+    data             : result,
+    ComponentToolTip : MeasurementTooltip,
   });
 }
 

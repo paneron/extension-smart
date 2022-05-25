@@ -9,8 +9,8 @@ import {
 
 export function parseEndEvent(id: string, data: string): MMELEndEvent {
   const end: MMELEndEvent = {
-    id: id,
-    datatype: DataType.ENDEVENT,
+    id       : id,
+    datatype : DataType.ENDEVENT,
   };
   if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
@@ -28,9 +28,9 @@ export function parseSignalCatchEvent(
   data: string
 ): MMELSignalCatchEvent {
   const sc: MMELSignalCatchEvent = {
-    id: id,
-    datatype: DataType.SIGNALCATCHEVENT,
-    signal: '',
+    id       : id,
+    datatype : DataType.SIGNALCATCHEVENT,
+    signal   : '',
   };
 
   if (data !== '') {
@@ -64,8 +64,8 @@ export function parseSignalCatchEvent(
 
 export function parseStartEvent(id: string, data: string): MMELStartEvent {
   const start: MMELStartEvent = {
-    id: id,
-    datatype: DataType.STARTEVENT,
+    id       : id,
+    datatype : DataType.STARTEVENT,
   };
 
   if (data !== '') {
@@ -81,10 +81,10 @@ export function parseStartEvent(id: string, data: string): MMELStartEvent {
 
 export function parseTimerEvent(id: string, data: string): MMELTimerEvent {
   const te: MMELTimerEvent = {
-    id: id,
-    datatype: DataType.TIMEREVENT,
-    type: '',
-    para: '',
+    id       : id,
+    datatype : DataType.TIMEREVENT,
+    type     : '',
+    para     : '',
   };
 
   if (data !== '') {

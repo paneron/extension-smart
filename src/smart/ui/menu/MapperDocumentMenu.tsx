@@ -17,7 +17,7 @@ const MapperDocumentMenu: React.FC<{
           handleDocumentOpen({
             setDocument,
             requestFileFromFilesystem,
-            fileType: FILE_TYPE.Document,
+            fileType : FILE_TYPE.Document,
           })
         }
         icon="document-open"
@@ -28,7 +28,7 @@ const MapperDocumentMenu: React.FC<{
           handleDocumentOpen({
             setDocument,
             requestFileFromFilesystem,
-            fileType: FILE_TYPE.XML,
+            fileType : FILE_TYPE.XML,
           })
         }
         icon="document-open"

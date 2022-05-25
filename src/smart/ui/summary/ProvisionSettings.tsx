@@ -29,12 +29,12 @@ export interface ProvisionRecord {
 }
 
 const ModalityText: Record<ModalityType, string> = {
-  '': 'Not specified (empty)',
-  CAN: 'CAN',
-  MAY: 'MAY',
-  MUST: 'MUST',
-  SHALL: 'SHALL',
-  SHOULD: 'SHOULD',
+  ''       : 'Not specified (empty)',
+  'CAN'    : 'CAN',
+  'MAY'    : 'MAY',
+  'MUST'   : 'MUST',
+  'SHALL'  : 'SHALL',
+  'SHOULD' : 'SHOULD',
 };
 
 const ProvisionSettings: React.FC<{
@@ -49,12 +49,12 @@ const ProvisionSettings: React.FC<{
   const [modalityOption, setModalityOption] = useState<
     Record<ModalityType, boolean>
   >({
-    '': true,
-    CAN: true,
-    MAY: true,
-    MUST: true,
-    SHALL: true,
-    SHOULD: true,
+    ''       : true,
+    'CAN'    : true,
+    'MAY'    : true,
+    'MUST'   : true,
+    'SHALL'  : true,
+    'SHOULD' : true,
   });
   const docs = useMemo(() => {
     const docs: Record<string, Record<string, ClauseSummary>> = {};
@@ -89,7 +89,7 @@ const ProvisionSettings: React.FC<{
       : [];
 
   function flip(opt: ModalityType) {
-    setModalityOption({ ...modalityOption, [opt]: !modalityOption[opt] });
+    setModalityOption({ ...modalityOption, [opt] : !modalityOption[opt] });
   }
 
   function calculateResult() {
@@ -116,7 +116,7 @@ const ProvisionSettings: React.FC<{
               }
             }
             if (filterSummary.length > 0) {
-              filterRecord[clause] = { ...summary, provisions: filterSummary };
+              filterRecord[clause] = { ...summary, provisions : filterSummary };
             }
           }
         });
@@ -132,12 +132,12 @@ const ProvisionSettings: React.FC<{
     setClauseOption('');
     setActorOption('');
     setModalityOption({
-      '': true,
-      CAN: true,
-      MAY: true,
-      MUST: true,
-      SHALL: true,
-      SHOULD: true,
+      ''       : true,
+      'CAN'    : true,
+      'MAY'    : true,
+      'MUST'   : true,
+      'SHALL'  : true,
+      'SHOULD' : true,
     });
   }
 
@@ -219,7 +219,7 @@ function addToDoc(
   }
   let c = doc[clause];
   if (c === undefined) {
-    c = { title, provisions: [] };
+    c = { title, provisions : []};
     doc[clause] = c;
   }
 }
@@ -231,7 +231,7 @@ function addProvisionToDoc(
   actor: MMELRole | undefined
 ) {
   const record = docs[ref.document][ref.clause];
-  record.provisions.push({ actor, statement: provision });
+  record.provisions.push({ actor, statement : provision });
 }
 
 export default ProvisionSettings;

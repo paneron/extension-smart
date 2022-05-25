@@ -20,9 +20,9 @@ const EditClassView: React.FC<{
   const [open, setOpen] = useState<DialogType | undefined>(undefined);
   const emptyRow: TableRowClass = useMemo(
     () => ({
-      id: '',
-      datatype: DataType.TABLE,
-      data: new Array(table.columns).fill(''),
+      id       : '',
+      datatype : DataType.TABLE,
+      data     : new Array(table.columns).fill(''),
     }),
     [table.columns]
   );
@@ -32,10 +32,10 @@ const EditClassView: React.FC<{
     .reduce<Record<string, TableRowClass>>(
       (obj, x, index) => ({
         ...obj,
-        [index]: {
-          id: `${index}`,
-          datatype: 'table',
-          data: x,
+        [index] : {
+          id       : `${index}`,
+          datatype : 'table',
+          data     : x,
         },
       }),
       {}
@@ -56,14 +56,14 @@ const EditClassView: React.FC<{
 
   function onUpdate(data: string[][]) {
     const header = table.data.length > 0 ? table.data[0] : [];
-    setTable({ ...table, data: [header, ...data] });
+    setTable({ ...table, data : [header, ...data]});
   }
 
   function getListItem(x: TableRowClass): IListItem {
     const name = display[x.id];
     return {
-      id: x.id,
-      text: name ?? x.id,
+      id   : x.id,
+      text : name ?? x.id,
     };
   }
 

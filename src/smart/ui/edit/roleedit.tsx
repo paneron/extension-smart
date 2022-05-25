@@ -28,7 +28,7 @@ const RoleEditPage: React.FC<{
   function getRoleListItems(filter: string): IListItem[] {
     return Object.values(model.roles)
       .filter(x => matchFilter(x, filter))
-      .map(x => ({ id: x.id, text: x.name }))
+      .map(x => ({ id : x.id, text : x.name }))
       .sort(defaultItemSorter);
   }
 
@@ -61,16 +61,16 @@ const RoleEditPage: React.FC<{
   }
 
   const rolehandler: IManageHandler<MMELRole> = {
-    filterName: 'Role filter',
-    itemName: 'Roles',
-    Content: RoleEditItemPage,
-    initObj: createRole(''),
-    model: model,
-    getItems: getRoleListItems,
-    removeItems: removeRoleListItem,
-    addItem: obj => addRole(obj),
-    updateItem: (oldid, obj) => updateRole(oldid, obj),
-    getObjById: getRoleById,
+    filterName  : 'Role filter',
+    itemName    : 'Roles',
+    Content     : RoleEditItemPage,
+    initObj     : createRole(''),
+    model       : model,
+    getItems    : getRoleListItems,
+    removeItems : removeRoleListItem,
+    addItem     : obj => addRole(obj),
+    updateItem  : (oldid, obj) => updateRole(oldid, obj),
+    getObjById  : getRoleById,
   };
 
   return <ListManagePage {...rolehandler} />;
@@ -85,12 +85,12 @@ const RoleEditItemPage: React.FC<{
       <NormalTextField
         text="Role ID"
         value={role.id}
-        onChange={x => setRole({ ...role, id: x.replaceAll(/\s+/g, '') })}
+        onChange={x => setRole({ ...role, id : x.replaceAll(/\s+/g, '') })}
       />
       <NormalTextField
         text="Role Name"
         value={role.name}
-        onChange={x => setRole({ ...role, name: x })}
+        onChange={x => setRole({ ...role, name : x })}
       />
     </FormGroup>
   );

@@ -58,7 +58,7 @@ const ViewMenuItem: React.FC<{
   return (
     <MenuItem
       text={label}
-      onClick={() => setOptions({ ...viewOption, [pname]: !value })}
+      onClick={() => setOptions({ ...viewOption, [pname] : !value })}
       icon={getVisibilityIconName(value)}
     />
   );

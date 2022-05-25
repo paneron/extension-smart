@@ -251,17 +251,17 @@ export function updatePageElement(
   newId: string
 ) {
   page.childs = { ...page.childs };
-  const elm = { ...page.childs[oldId], element: newId };
+  const elm = { ...page.childs[oldId], element : newId };
   delete page.childs[oldId];
   page.childs[newId] = elm;
   page.edges = { ...page.edges };
   for (const e in page.edges) {
     const edge = page.edges[e];
     if (edge.from === oldId) {
-      page.edges[e] = { ...edge, from: newId };
+      page.edges[e] = { ...edge, from : newId };
     }
     if (edge.to === oldId) {
-      page.edges[e] = { ...page.edges[e], to: newId };
+      page.edges[e] = { ...page.edges[e], to : newId };
     }
   }
 }

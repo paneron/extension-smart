@@ -30,8 +30,8 @@ export const WorkspaceDialog: React.FC<{
   const regid = diagProps.regid;
   const title = regid === '' ? 'Data management' : `Registry: ${regid}`;
   const store: SMARTDocumentStore = modelStore.store[regid] ?? {
-    id: regid,
-    docs: {},
+    id   : regid,
+    docs : {},
   };
 
   const child =

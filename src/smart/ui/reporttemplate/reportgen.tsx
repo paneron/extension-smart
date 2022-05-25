@@ -18,8 +18,8 @@ const ReportGen: React.FC<{
     await saveToFileSystem({
       getBlob,
       writeFileToFilesystem,
-      fileData: report,
-      type: FILE_TYPE.Report,
+      fileData : report,
+      type     : FILE_TYPE.Report,
     });
   }
 

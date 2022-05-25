@@ -125,11 +125,11 @@ const EditApprovalPage: React.FC<{
   const fullEditClick =
     onFullEditClick !== undefined
       ? function () {
-          if (hasChange) {
-            onUpdateClick();
-          }
-          onFullEditClick();
+        if (hasChange) {
+          onUpdateClick();
         }
+        onFullEditClick();
+      }
       : undefined;
 
   const commonProps = {
@@ -137,7 +137,7 @@ const EditApprovalPage: React.FC<{
     editing,
     setEditing,
     model,
-    onFullEditClick: fullEditClick,
+    onFullEditClick : fullEditClick,
     onDeleteClick,
     setUndoListener,
   };
@@ -155,9 +155,9 @@ const EditApprovalPage: React.FC<{
     refObjects,
     saveOnExit,
     approval,
-    setEditing: setEdit,
-    initID: approval.id,
-    validTest: (id: string) =>
+    setEditing : setEdit,
+    initID     : approval.id,
+    validTest  : (id: string) =>
       id === approval.id || checkId(id, model.elements),
     onNewID,
     setHasChange,
@@ -229,20 +229,20 @@ const QuickVersionEdit: React.FC<
       <NormalTextField
         text="Approval Process Name"
         value={editing.name}
-        onChange={x => setEditing({ ...editing, name: x })}
+        onChange={x => setEditing({ ...editing, name : x })}
       />
       <NormalComboBox
         text="Modality"
         value={editing.modality}
         options={MODAILITYOPTIONS}
-        onChange={x => setEditing({ ...editing, modality: x })}
+        onChange={x => setEditing({ ...editing, modality : x })}
       />
       <RoleSelector
         label="Actor"
         activeItem={editing.actor !== '' ? model.roles[editing.actor] : null}
         items={roleObjects}
         onItemSelect={x =>
-          setEditing({ ...editing, actor: x !== null ? x.id : '' })
+          setEditing({ ...editing, actor : x !== null ? x.id : '' })
         }
       />
       <RoleSelector
@@ -252,7 +252,7 @@ const QuickVersionEdit: React.FC<
         }
         items={roleObjects}
         onItemSelect={x =>
-          setEditing({ ...editing, approver: x !== null ? x.id : '' })
+          setEditing({ ...editing, approver : x !== null ? x.id : '' })
         }
       />
       <RegistrySelector
@@ -262,19 +262,19 @@ const QuickVersionEdit: React.FC<
         onItemSelect={x =>
           setEditing({
             ...editing,
-            records: new Set([...editing.records, x.id]),
+            records : new Set([...editing.records, x.id]),
           })
         }
         onTagRemove={x => {
           const newSet = new Set([...editing.records].filter(s => x !== s));
-          setEditing({ ...editing, records: newSet });
+          setEditing({ ...editing, records : newSet });
         }}
       />
       <SimpleReferenceSelector
         selected={editing.ref}
         items={refObjects}
         onItemSelect={x =>
-          setEditing({ ...editing, ref: new Set([...editing.ref, x.id]) })
+          setEditing({ ...editing, ref : new Set([...editing.ref, x.id]) })
         }
         onTagRemove={x => {
           editing.ref = new Set([...editing.ref].filter(s => x !== s));
@@ -318,32 +318,32 @@ const FullVersionEdit: React.FC<
         <NormalTextField
           text="Approval ID"
           value={editing.id}
-          onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
+          onChange={x => setEditing({ ...editing, id : removeSpace(x) })}
         />
         <NormalTextField
           text="Approval Process Name"
           value={editing.name}
-          onChange={x => setEditing({ ...editing, name: x })}
+          onChange={x => setEditing({ ...editing, name : x })}
         />
         <NormalComboBox
           text="Modality"
           value={editing.modality}
           options={MODAILITYOPTIONS}
-          onChange={x => setEditing({ ...editing, modality: x })}
+          onChange={x => setEditing({ ...editing, modality : x })}
         />
         <ReferenceSelector
           text="Actor"
           filterName="Actor filter"
           value={editing.actor}
           options={roles}
-          update={x => setEditing({ ...editing, actor: roles[x] })}
+          update={x => setEditing({ ...editing, actor : roles[x] })}
         />
         <ReferenceSelector
           text="Approver"
           filterName="Approver filter"
           value={editing.approver}
           options={roles}
-          update={x => setEditing({ ...editing, approver: roles[x] })}
+          update={x => setEditing({ ...editing, approver : roles[x] })}
         />
         <MultiReferenceSelector
           text="Approval record registry"

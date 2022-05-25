@@ -33,16 +33,16 @@ const TermsEditPage: React.FC<{
   function getTermListItems(filter: string): IListItem[] {
     return Object.values(model.terms)
       .filter(x => matchFilter(x, filter))
-      .map(x => ({ id: x.id, text: [x.term, ...x.admitted].join(' / ') }))
+      .map(x => ({ id : x.id, text : [x.term, ...x.admitted].join(' / ') }))
       .sort(defaultItemSorter);
   }
 
   function removeTermListItem(ids: string[]) {
     const action: ModelAction = {
-      type: 'model',
-      act: 'terms',
-      task: 'delete',
-      value: ids,
+      type  : 'model',
+      act   : 'terms',
+      task  : 'delete',
+      value : ids,
     };
     act(action);
   }
@@ -50,10 +50,10 @@ const TermsEditPage: React.FC<{
   function addTerm(term: MMELTerm): boolean {
     if (checkId(term.id, model.terms)) {
       const action: ModelAction = {
-        type: 'model',
-        act: 'terms',
-        task: 'add',
-        value: [term],
+        type  : 'model',
+        act   : 'terms',
+        task  : 'add',
+        value : [term],
       };
       act(action);
       return true;
@@ -66,11 +66,11 @@ const TermsEditPage: React.FC<{
       return false;
     }
     const action: ModelAction = {
-      type: 'model',
-      act: 'terms',
-      task: 'edit',
-      id: oldid,
-      value: term,
+      type  : 'model',
+      act   : 'terms',
+      task  : 'edit',
+      id    : oldid,
+      value : term,
     };
     act(action);
     return true;
@@ -85,16 +85,16 @@ const TermsEditPage: React.FC<{
   }
 
   const termhandler: IManageHandler<MMELTerm> = {
-    filterName: 'Term filter',
-    itemName: 'Terms',
-    Content: TermEditItemPage,
-    initObj: createTerm(''),
+    filterName  : 'Term filter',
+    itemName    : 'Terms',
+    Content     : TermEditItemPage,
+    initObj     : createTerm(''),
     model,
-    getItems: getTermListItems,
-    removeItems: removeTermListItem,
-    addItem: obj => addTerm(obj),
-    updateItem: (oldid, obj) => updateTerm(oldid, obj),
-    getObjById: getTermById,
+    getItems    : getTermListItems,
+    removeItems : removeTermListItem,
+    addItem     : obj => addTerm(obj),
+    updateItem  : (oldid, obj) => updateTerm(oldid, obj),
+    getObjById  : getTermById,
   };
 
   return <ListManagePage {...termhandler} />;
@@ -119,27 +119,27 @@ const TermEditItemPage: React.FC<{
       <NormalTextField
         text="Term ID"
         value={term.id}
-        onChange={x => setTerm({ ...term, id: x.replaceAll(/\s+/g, '') })}
+        onChange={x => setTerm({ ...term, id : x.replaceAll(/\s+/g, '') })}
       />
       <NormalTextField
         text="Term"
         value={term.term}
-        onChange={x => setTerm({ ...term, term: x })}
+        onChange={x => setTerm({ ...term, term : x })}
       />
       <StringListQuickEdit
         data={term.admitted}
-        setData={x => setTerm({ ...term, admitted: x })}
+        setData={x => setTerm({ ...term, admitted : x })}
         label="Admitted term"
         addButtonLabel="Add admitted term"
       />
       <NormalTextField
         text="Definition"
         value={term.definition}
-        onChange={x => setTerm({ ...term, definition: x })}
+        onChange={x => setTerm({ ...term, definition : x })}
       />
       <StringListQuickEdit
         data={term.notes}
-        setData={x => setTerm({ ...term, notes: x })}
+        setData={x => setTerm({ ...term, notes : x })}
         label="Note"
         addButtonLabel="Add note"
       />

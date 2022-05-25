@@ -92,7 +92,7 @@ const SimulationDetails: React.FC<{
         <legend>Next step</legend>
         {goDownButton}
         {edges.length > 1 ? (
-          <ul style={{ paddingLeft: 10 }}>
+          <ul style={{ paddingLeft : 10 }}>
             {edges.map(edge => (
               <PathOption
                 key={edge.id}
@@ -158,21 +158,21 @@ const NODE_SIMULATION_SUMMARY: Record<
     getNoteById: (id: string) => MMELNote | null;
   }>
 > = {
-  [DataType.STARTEVENT]: () => <DescribeStart />,
-  [DataType.ENDEVENT]: () => <DescribeEnd />,
-  [DataType.TIMEREVENT]: ({ node }) =>
+  [DataType.STARTEVENT] : () => <DescribeStart />,
+  [DataType.ENDEVENT]   : () => <DescribeEnd />,
+  [DataType.TIMEREVENT] : ({ node }) =>
     isEditorTimerEvent(node) ? <DescribeTimer timer={node} /> : <></>,
-  [DataType.SIGNALCATCHEVENT]: ({ node }) =>
+  [DataType.SIGNALCATCHEVENT] : ({ node }) =>
     isEditorSignalEvent(node) ? <DescribeSignalCatch scEvent={node} /> : <></>,
-  [DataType.EGATE]: ({ node }) =>
+  [DataType.EGATE] : ({ node }) =>
     isEditorEgate(node) ? <DescribeEGate egate={node} /> : <></>,
-  [DataType.APPROVAL]: ({ node, getRoleById }) =>
+  [DataType.APPROVAL] : ({ node, getRoleById }) =>
     isEditorApproval(node) ? (
       <DescribeApproval app={node} getRoleById={getRoleById} />
     ) : (
       <></>
     ),
-  [DataType.PROCESS]: ({ node, getProvisionById, getRoleById, getNoteById }) =>
+  [DataType.PROCESS] : ({ node, getProvisionById, getRoleById, getNoteById }) =>
     isEditorProcess(node) ? (
       <DescribeProcess
         process={node}

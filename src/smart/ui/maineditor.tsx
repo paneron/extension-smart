@@ -193,10 +193,10 @@ const ModelEditor: React.FC<{
   const [isImportRoleOpen, setIsImportRoleOpen] = useState<boolean>(false);
   const [isImportRegOpen, setIsImportRegOpen] = useState<boolean>(false);
   const [view, setView] = useState<EditorViewOption>({
-    dvisible: true,
-    edgeDeleteVisible: false,
-    idVisible: false,
-    commentVisible: true,
+    dvisible          : true,
+    edgeDeleteVisible : false,
+    idVisible         : false,
+    commentVisible    : true,
   });
   const [mainRepo, setMainRepo] = useState<string | undefined>(undefined);
   const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
@@ -207,9 +207,9 @@ const ModelEditor: React.FC<{
     x: number;
     y: number;
   }>({
-    id: '',
-    x: 0,
-    y: 0,
+    id : '',
+    x  : 0,
+    y  : 0,
   });
 
   Logger.log('Logs', changelog);
@@ -226,7 +226,7 @@ const ModelEditor: React.FC<{
   const refPath = getPathByNS(refrepo ?? '', RepoFileType.MODEL);
 
   const repoRefFile = useObjectData({
-    objectPaths: refrepo !== undefined ? [refPath] : [],
+    objectPaths : refrepo !== undefined ? [refPath] : [],
   });
   if (refrepo !== undefined && !repoRefFile.isUpdating) {
     const data = repoRefFile.value.data[refPath];
@@ -277,31 +277,31 @@ const ModelEditor: React.FC<{
       const repoChangePath = getPathByNS(repo.ns, RepoFileType.HISTORY);
       const meta = model.meta;
       const task = updateObjects({
-        commitMessage: COMMITMSG,
-        _dangerouslySkipValidation: true,
-        objectChangeset: {
-          [repoPath]: {
-            newValue: MMELToSerializable(state.model),
+        commitMessage              : COMMITMSG,
+        _dangerouslySkipValidation : true,
+        objectChangeset            : {
+          [repoPath] : {
+            newValue : MMELToSerializable(state.model),
           },
-          [repoIndexPath]: {
-            newValue: setValueToIndex(index, repo.ns, {
-              namespace: repo.ns,
-              shortname: meta.shortname,
-              title: meta.title,
-              date: new Date(),
-              type: 'Imp',
+          [repoIndexPath] : {
+            newValue : setValueToIndex(index, repo.ns, {
+              namespace : repo.ns,
+              shortname : meta.shortname,
+              title     : meta.title,
+              date      : new Date(),
+              type      : 'Imp',
             }),
           },
-          [repoChangePath]: {
-            newValue: changelog,
+          [repoChangePath] : {
+            newValue : changelog,
           },
         },
       });
       task
         .then(() =>
           toaster.show({
-            message: 'Model saved',
-            intent: 'success',
+            message : 'Model saved',
+            intent  : 'success',
           })
         )
         .catch(e => {
@@ -331,11 +331,11 @@ const ModelEditor: React.FC<{
   }
 
   function toggleDataVisibility() {
-    setView({ ...view, dvisible: !view.dvisible });
+    setView({ ...view, dvisible : !view.dvisible });
   }
 
   function toggleEdgeDelete() {
-    setView({ ...view, edgeDeleteVisible: !view.edgeDeleteVisible });
+    setView({ ...view, edgeDeleteVisible : !view.edgeDeleteVisible });
   }
 
   function onProcessClick(pageid: string, processid: string): void {
@@ -354,8 +354,8 @@ const ModelEditor: React.FC<{
       const refid = event.dataTransfer.getData(DragAndDropImportRefType);
 
       const pos = reactFlow.project({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
+        x : event.clientX - reactFlowBounds.left,
+        y : event.clientY - reactFlowBounds.top,
       });
       if (type !== '') {
         const action = getAddComponentAction(
@@ -414,22 +414,22 @@ const ModelEditor: React.FC<{
   function importRole(id: string, data: string) {
     const role: MMELRole = {
       id,
-      name: data,
-      datatype: DataType.ROLE,
+      name     : data,
+      datatype : DataType.ROLE,
     };
     act(addRoleCommand(role));
   }
 
   function importRegistry(id: string, data: string) {
     const newdc: EditorDataClass = {
-      attributes: {},
+      attributes    : {},
       id,
-      datatype: DataType.DATACLASS,
-      objectVersion: 'Editor',
-      rdcs: new Set<string>(),
-      mother: id,
+      datatype      : DataType.DATACLASS,
+      objectVersion : 'Editor',
+      rdcs          : new Set<string>(),
+      mother        : id,
     };
-    const combined: RegistryCombined = { ...newdc, title: data };
+    const combined: RegistryCombined = { ...newdc, title : data };
     act(addRegistryCommand(combined));
   }
 
@@ -459,11 +459,11 @@ const ModelEditor: React.FC<{
 
   const hotkeys: HotkeyConfig[] = [
     {
-      combo: 'ctrl+s',
-      global: true,
-      label: 'Save',
-      allowInInput: true,
-      onKeyDown: saveRepo,
+      combo        : 'ctrl+s',
+      global       : true,
+      label        : 'Save',
+      allowInInput : true,
+      onKeyDown    : saveRepo,
     },
   ];
 
@@ -560,9 +560,9 @@ const ModelEditor: React.FC<{
       title="Item metadata"
       blocks={[
         {
-          key: 'selected-node',
-          title: 'Selected node',
-          content: (
+          key     : 'selected-node',
+          title   : 'Selected node',
+          content : (
             <SelectedNodeDescription
               model={model}
               page={state.page}
@@ -575,14 +575,14 @@ const ModelEditor: React.FC<{
           ),
         },
         {
-          key: 'create-node',
-          title: 'Add components',
-          content: <NewComponentPane />,
+          key     : 'create-node',
+          title   : 'Add components',
+          content : <NewComponentPane />,
         },
         {
-          key: 'search-node',
-          title: 'Search components',
-          content: (
+          key     : 'search-node',
+          title   : 'Search components',
+          content : (
             <SearchComponentPane
               model={state.model}
               onChange={onPageAndHistroyChange}
@@ -615,7 +615,7 @@ const ModelEditor: React.FC<{
     if (reactFlow !== null) {
       for (const flowNode of reactFlow.getElements()) {
         if (flowNode.id === id && isNode(flowNode)) {
-          setDragStart({ id, x: flowNode.position.x, y: flowNode.position.y });
+          setDragStart({ id, x : flowNode.position.x, y : flowNode.position.y });
         }
       }
     }
@@ -647,7 +647,7 @@ const ModelEditor: React.FC<{
             <Workspace
               {...{ className, toolbar, sidebar }}
               navbarProps={{ breadcrumbs }}
-              style={{ flex: 3 }}
+              style={{ flex : 3 }}
             >
               <div css={react_flow_container_layout}>
                 <ReactFlow
@@ -675,7 +675,7 @@ const ModelEditor: React.FC<{
                     <IdVisibleButton
                       isOn={view.idVisible}
                       onClick={() =>
-                        setView({ ...view, idVisible: !view.idVisible })
+                        setView({ ...view, idVisible : !view.idVisible })
                       }
                     />
                   </Controls>

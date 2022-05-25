@@ -238,97 +238,97 @@ function findReverse(
       return undefined;
     case 'new-element':
       return {
-        act: 'pages',
-        task: 'delete-element',
-        page: action.page,
-        value: action.value,
+        act   : 'pages',
+        task  : 'delete-element',
+        page  : action.page,
+        value : action.value,
       };
     case 'delete-element': {
       const compo = pages[action.page].childs[action.value.id];
       return {
-        act: 'pages',
-        task: 'new-element',
-        page: action.page,
-        value: action.value,
-        x: compo.x,
-        y: compo.y,
+        act   : 'pages',
+        task  : 'new-element',
+        page  : action.page,
+        value : action.value,
+        x     : compo.x,
+        y     : compo.y,
       };
     }
     case 'new-edge':
       return {
-        act: 'pages',
-        task: 'delete-edge',
-        page: action.page,
-        value: action.value.map(x => x.id),
+        act   : 'pages',
+        task  : 'delete-edge',
+        page  : action.page,
+        value : action.value.map(x => x.id),
       };
     case 'delete-edge': {
       const edge = action.value.map(x => pages[action.page].edges[x]);
       return {
-        act: 'pages',
-        task: 'new-edge',
-        page: action.page,
-        value: edge,
+        act   : 'pages',
+        task  : 'new-edge',
+        page  : action.page,
+        value : edge,
       };
     }
     case 'edit-edge': {
       const edge = action.value.map(x => pages[action.page].edges[x.id]);
       return {
-        act: 'pages',
-        task: 'edit-edge',
-        page: action.page,
-        value: edge,
+        act   : 'pages',
+        task  : 'edit-edge',
+        page  : action.page,
+        value : edge,
       };
     }
     case 'move': {
       return {
-        act: 'pages',
-        task: 'move',
-        page: action.page,
-        node: action.node,
-        nodetype: action.nodetype,
-        x: action.fromx,
-        y: action.fromy,
-        fromx: action.x,
-        fromy: action.y,
+        act      : 'pages',
+        task     : 'move',
+        page     : action.page,
+        node     : action.node,
+        nodetype : action.nodetype,
+        x        : action.fromx,
+        y        : action.fromy,
+        fromx    : action.x,
+        fromy    : action.y,
       };
     }
     case 'replace-id': {
       return {
-        act: 'pages',
-        task: 'replace-id',
-        page: action.page,
-        id: action.value,
-        value: action.id,
+        act   : 'pages',
+        task  : 'replace-id',
+        page  : action.page,
+        id    : action.value,
+        value : action.id,
       };
     }
     case 'new-page': {
       return {
-        act: 'pages',
-        task: 'delete-page',
-        value: action.value.map(v => v.id),
+        act   : 'pages',
+        task  : 'delete-page',
+        value : action.value.map(v => v.id),
       };
     }
     case 'delete-page': {
       return {
-        act: 'pages',
-        task: 'new-page',
-        value: action.value.map(v => pages[v]),
+        act   : 'pages',
+        task  : 'new-page',
+        value : action.value.map(v => pages[v]),
       };
     }
     case 'add-child': {
       return {
-        act: 'pages',
-        task: 'remove-child',
-        page: action.page,
-        ids: action.ids.map(x => x[0]),
+        act  : 'pages',
+        task : 'remove-child',
+        page : action.page,
+        ids  : action.ids.map(x => x[0]),
       };
     }
     case 'remove-child': {
       return {
-        act: 'pages',
-        task: 'add-child',
-        page: action.page,
-        ids: action.ids.map(x => {
+        act  : 'pages',
+        task : 'add-child',
+        page : action.page,
+        ids  : action.ids.map(x => {
           const p = pages[action.page];
           const compo = p.childs[x];
           return [x, compo ? compo.x : 0, compo ? compo.y : 0];
@@ -349,7 +349,7 @@ export function usePages(
   }
 
   function init(x: Record<string, EditorSubprocess>) {
-    dispatchElms({ act: 'init', value: x });
+    dispatchElms({ act : 'init', value : x });
   }
 
   return [elms, act, init];
@@ -365,20 +365,20 @@ export function cascadeCheckPages(
   if (action.task === 'new-element') {
     action.cascade = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'add',
-        subtask: 'flowunit',
-        value: [action.value],
+        type    : 'model',
+        act     : 'elements',
+        task    : 'add',
+        subtask : 'flowunit',
+        value   : [action.value],
       },
     ];
     return [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'delete',
-        subtask: 'flowunit',
-        value: [action.value.id],
+        type    : 'model',
+        act     : 'elements',
+        task    : 'delete',
+        subtask : 'flowunit',
+        value   : [action.value.id],
       },
     ];
   } else if (action.task === 'delete-element') {
@@ -386,34 +386,34 @@ export function cascadeCheckPages(
     const eids = findRelatedEdges(edges, action.value.id);
     action.cascade = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'delete',
-        subtask: 'flowunit',
-        value: [action.value.id],
+        type    : 'model',
+        act     : 'elements',
+        task    : 'delete',
+        subtask : 'flowunit',
+        value   : [action.value.id],
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'delete-edge',
-        page: action.page,
-        value: eids,
+        type  : 'model',
+        act   : 'pages',
+        task  : 'delete-edge',
+        page  : action.page,
+        value : eids,
       },
     ];
     return [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'add',
-        subtask: 'flowunit',
-        value: [action.value],
+        type    : 'model',
+        act     : 'elements',
+        task    : 'add',
+        subtask : 'flowunit',
+        value   : [action.value],
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'new-edge',
-        page: action.page,
-        value: eids.map(x => edges[x]),
+        type  : 'model',
+        act   : 'pages',
+        task  : 'new-edge',
+        page  : action.page,
+        value : eids.map(x => edges[x]),
       },
     ];
   }
@@ -434,12 +434,12 @@ function moveElm(
   if (nodetype === 'node') {
     p.childs = {
       ...p.childs,
-      [id]: { ...p.childs[id], x: Math.round(x), y: Math.round(y) },
+      [id] : { ...p.childs[id], x : Math.round(x), y : Math.round(y) },
     };
   } else {
     p.data = {
       ...p.data,
-      [id]: { ...p.data[id], x: Math.round(x), y: Math.round(y) },
+      [id] : { ...p.data[id], x : Math.round(x), y : Math.round(y) },
     };
   }
   pages[page] = p;
@@ -472,39 +472,39 @@ export function explorePageDataNodes(
       set.delete(x.element);
     } else {
       actions.push({
-        act: 'pages',
-        task: 'cascade',
-        subtask: 'data',
-        from: x.element,
-        to: undefined,
-        ids: [[page.id, 0, 0]],
+        act     : 'pages',
+        task    : 'cascade',
+        subtask : 'data',
+        from    : x.element,
+        to      : undefined,
+        ids     : [[page.id, 0, 0]],
       });
       reverse.push({
-        act: 'pages',
-        task: 'cascade',
-        subtask: 'data',
-        to: x.element,
-        from: undefined,
-        ids: [[page.id, x.x, x.y]],
+        act     : 'pages',
+        task    : 'cascade',
+        subtask : 'data',
+        to      : x.element,
+        from    : undefined,
+        ids     : [[page.id, x.x, x.y]],
       });
     }
   }
   for (const x of set) {
     actions.push({
-      act: 'pages',
-      task: 'cascade',
-      subtask: 'data',
-      from: undefined,
-      to: x,
-      ids: [[page.id, 0, 0]],
+      act     : 'pages',
+      task    : 'cascade',
+      subtask : 'data',
+      from    : undefined,
+      to      : x,
+      ids     : [[page.id, 0, 0]],
     });
     reverse.push({
-      act: 'pages',
-      task: 'cascade',
-      subtask: 'data',
-      to: undefined,
-      from: x,
-      ids: [[page.id, 0, 0]],
+      act     : 'pages',
+      task    : 'cascade',
+      subtask : 'data',
+      to      : undefined,
+      from    : x,
+      ids     : [[page.id, 0, 0]],
     });
   }
   // Logger.log('Actions', actions, reverse);
@@ -545,7 +545,7 @@ function newEdge(
 ): Record<string, EditorSubprocess> {
   const newPage = { ...pages[page] };
   for (const edge of edges) {
-    newPage.edges = { ...newPage.edges, [edge.id]: edge };
+    newPage.edges = { ...newPage.edges, [edge.id] : edge };
   }
   pages[page] = newPage;
   return pages;
@@ -637,7 +637,7 @@ function editEdge(
 ): Record<string, EditorSubprocess> {
   const newPage = { ...pages[page] };
   for (const edge of edges) {
-    newPage.edges = { ...newPage.edges, [edge.id]: { ...edge } };
+    newPage.edges = { ...newPage.edges, [edge.id] : { ...edge }};
   }
   pages[page] = newPage;
   return pages;

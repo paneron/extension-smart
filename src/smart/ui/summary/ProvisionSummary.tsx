@@ -18,7 +18,7 @@ const ProvisionSummary: React.FC<{
       getBlob,
       writeFileToFilesystem,
       fileData,
-      type: fileType,
+      type : fileType,
     });
   }
 

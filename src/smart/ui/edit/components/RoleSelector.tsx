@@ -49,8 +49,8 @@ const RoleSelector: React.FC<{
         ulRef={itemsParentRef}
         className="bp3-popover-content-sizing"
         style={{
-          maxHeight: '35vh',
-          overflowY: 'auto',
+          maxHeight : '35vh',
+          overflowY : 'auto',
         }}
       >
         {filteredItems.length > 0 ? (

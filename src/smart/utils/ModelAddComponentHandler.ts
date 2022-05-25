@@ -34,12 +34,12 @@ const newComponent: Record<
   NewComponentTypes,
   (elms: Elements, page: string, title?: string) => EditorNode
 > = {
-  [DataType.PROCESS]: newProcess,
-  [DataType.APPROVAL]: newApproval,
-  [DataType.ENDEVENT]: newEndEvent,
-  [DataType.TIMEREVENT]: newEvent,
-  [DataType.SIGNALCATCHEVENT]: newSignalCatch,
-  [DataType.EGATE]: newEGate,
+  [DataType.PROCESS]          : newProcess,
+  [DataType.APPROVAL]         : newApproval,
+  [DataType.ENDEVENT]         : newEndEvent,
+  [DataType.TIMEREVENT]       : newEvent,
+  [DataType.SIGNALCATCHEVENT] : newSignalCatch,
+  [DataType.EGATE]            : newEGate,
 };
 
 export function getAddComponentAction(
@@ -51,12 +51,12 @@ export function getAddComponentAction(
 ): ModelAction {
   const elm = newComponent[type](elms, page, title);
   return {
-    type: 'model',
-    act: 'pages',
-    task: 'new-element',
-    value: elm,
-    x: pos.x,
-    y: pos.y,
+    type  : 'model',
+    act   : 'pages',
+    task  : 'new-element',
+    value : elm,
+    x     : pos.x,
+    y     : pos.y,
     page,
   };
 }
@@ -126,19 +126,19 @@ export function addExisingProcessToPage(
   const page = model.pages[pageid];
   if (page) {
     if (page.childs[process]) {
-      throw new Error(`Process already exists`);
+      throw new Error('Process already exists');
     } else {
       for (const h of history) {
         if (h.pathtext === process) {
-          throw new Error(`Cannot include self in subprocess`);
+          throw new Error('Cannot include self in subprocess');
         }
       }
       const action: ModelAction = {
-        type: 'model',
-        act: 'hybird',
-        task: 'process-bringin',
-        id: process,
-        page: pageid,
+        type : 'model',
+        act  : 'hybird',
+        task : 'process-bringin',
+        id   : process,
+        page : pageid,
       };
       act(action);
     }

@@ -8,9 +8,9 @@ import {
 import { isMMELTable } from '../../model/editormodel';
 
 const titles: Record<BINARY_TYPE, string> = {
-  fig: 'Figure',
-  video: 'Video',
-  '3d': '3D Model',
+  'fig'   : 'Figure',
+  'video' : 'Video',
+  '3d'    : '3D Model',
 };
 
 const NonTextReferenceList: React.FC<{
@@ -24,8 +24,8 @@ const NonTextReferenceList: React.FC<{
   return (
     <Menu
       style={{
-        maxWidth: '30vw',
-        maxHeight: '45vh',
+        maxWidth  : '30vw',
+        maxHeight : '45vh',
       }}
     >
       {refs.map(ref => (

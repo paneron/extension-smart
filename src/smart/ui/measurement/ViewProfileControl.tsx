@@ -58,7 +58,7 @@ const ProfileControl: React.FC<{
       >
         <Icon
           style={{
-            marginLeft: '2px',
+            marginLeft : '2px',
           }}
           icon="help"
         />

@@ -44,14 +44,14 @@ const Application2060: React.FC<{
   setView: (view: ViewFunctionInterface) => void;
 }> = function ({ model, showMsg, setView }) {
   const [setting, setSetting] = useState<Application2060Setting>({
-    source: '',
-    emissions: [],
+    source    : '',
+    emissions : [],
   });
   const [diagProps, setDiagProps] = useState<Dialog2060Interface | undefined>(
     undefined
   );
   const [liveCount, setLiveCount] = useState<number>(0);
-  const [logs, setLogs] = useState<Log2060>({ hasFail: false, records: [] });
+  const [logs, setLogs] = useState<Log2060>({ hasFail : false, records : []});
 
   function updateLive() {
     setLiveCount(x => {
@@ -66,22 +66,22 @@ const Application2060: React.FC<{
 
   function onError(msg: string) {
     showMsg({
-      message: msg,
-      intent: 'danger',
+      message : msg,
+      intent  : 'danger',
     });
   }
 
   function onMessage(msg: string) {
     showMsg({
-      message: msg,
-      intent: 'primary',
+      message : msg,
+      intent  : 'primary',
     });
   }
 
   const configDiagProps: Dialog2060Interface = {
-    title: 'Configuration',
-    content: ApplicationConfigurePage,
-    fullscreen: false,
+    title      : 'Configuration',
+    content    : ApplicationConfigurePage,
+    fullscreen : false,
   };
 
   const result = useMemo(() => {
@@ -96,8 +96,8 @@ const Application2060: React.FC<{
           logs.hasFail = true;
         }
         logs.records.push({
-          time: now,
-          data: r,
+          time : now,
+          data : r,
         });
       }
     }
@@ -164,7 +164,7 @@ const Application2060: React.FC<{
                 logs={logs}
                 clearAlert={
                   logs.hasFail
-                    ? () => setLogs({ ...logs, hasFail: false })
+                    ? () => setLogs({ ...logs, hasFail : false })
                     : undefined
                 }
               />
@@ -183,10 +183,10 @@ const Application2060: React.FC<{
       </MGDContainer>
       <div
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-around',
-          alignItems: 'center',
+          display        : 'flex',
+          flexWrap       : 'wrap',
+          justifyContent : 'space-around',
+          alignItems     : 'center',
         }}
       >
         {resultCombined.map((r, index) => (

@@ -99,9 +99,9 @@ export type ModuleName = typeof MODULES[number];
  * Controls which modules are visible in different modes
  */
 export const ModuleList: Record<RepoItemType | '', ModuleName[]> = {
-  '': ['repo', 'docEdit'], // when nothing is open
-  Doc: ['repo', 'docViewer'], // when a document is open
-  Ref: [
+  ''    : ['repo', 'docEdit'], // when nothing is open
+  'Doc' : ['repo', 'docViewer'], // when a document is open
+  'Ref' : [
     // when a reference model is open
     'repo',
     'modelViewer',
@@ -110,7 +110,7 @@ export const ModuleList: Record<RepoItemType | '', ModuleName[]> = {
     'linkAnalysis',
     'nlp',
   ],
-  Imp: [
+  'Imp' : [
     // when an implementation model is open
     'repo',
     'modelViewer',
@@ -123,67 +123,67 @@ export const ModuleList: Record<RepoItemType | '', ModuleName[]> = {
 };
 
 export const MODULE_CONFIGURATION: Record<ModuleName, ModuleConfiguration> = {
-  repo: {
-    title: 'Repository',
-    description: 'Model repository',
-    icon: 'projects',
-    type: 'neutral',
-    view: RepoViewer,
+  repo : {
+    title       : 'Repository',
+    description : 'Model repository',
+    icon        : 'projects',
+    type        : 'neutral',
+    view        : RepoViewer,
   },
-  modelViewer: {
-    title: 'View',
-    description: 'Model viewer',
-    icon: 'eye-open',
-    type: 'model',
-    view: ModelViewer,
+  modelViewer : {
+    title       : 'View',
+    description : 'Model viewer',
+    icon        : 'eye-open',
+    type        : 'model',
+    view        : ModelViewer,
   },
-  modelEditor: {
-    title: 'Edit',
-    description: 'Model editor',
-    icon: 'edit',
-    type: 'model',
-    view: EditWrapper,
+  modelEditor : {
+    title       : 'Edit',
+    description : 'Model editor',
+    icon        : 'edit',
+    type        : 'model',
+    view        : EditWrapper,
   },
-  modelMapper: {
-    title: 'Map',
-    description: 'Model mapper',
-    icon: 'data-lineage',
-    type: 'model',
-    view: ModelMapper,
+  modelMapper : {
+    title       : 'Map',
+    description : 'Model mapper',
+    icon        : 'data-lineage',
+    type        : 'model',
+    view        : ModelMapper,
   },
-  modelImplement: {
-    title: 'Implementation',
-    description: 'Model implementation',
-    icon: 'unarchive',
-    type: 'model',
-    view: ModelWorkspace,
+  modelImplement : {
+    title       : 'Implementation',
+    description : 'Model implementation',
+    icon        : 'unarchive',
+    type        : 'model',
+    view        : ModelWorkspace,
   },
-  docViewer: {
-    title: 'Document viewer',
-    description: 'Document viewer',
-    icon: 'document-open',
-    type: 'doc',
-    view: DocumentViewer,
+  docViewer : {
+    title       : 'Document viewer',
+    description : 'Document viewer',
+    icon        : 'document-open',
+    type        : 'doc',
+    view        : DocumentViewer,
   },
-  linkAnalysis: {
-    title: 'Link Analyser',
-    description: 'Analyse links between models',
-    icon: 'predictive-analysis',
-    type: 'model',
-    view: LinkAnalysis,
+  linkAnalysis : {
+    title       : 'Link Analyser',
+    description : 'Analyse links between models',
+    icon        : 'predictive-analysis',
+    type        : 'model',
+    view        : LinkAnalysis,
   },
-  nlp: {
-    title: 'Knowledge graph',
-    description: 'Knowledge graph',
-    icon: 'chat',
-    type: 'model',
-    view: NLPMain,
+  nlp : {
+    title       : 'Knowledge graph',
+    description : 'Knowledge graph',
+    icon        : 'chat',
+    type        : 'model',
+    view        : NLPMain,
   },
-  docEdit: {
-    title: 'Create SMART Document',
-    description: 'Document import',
-    icon: 'document',
-    type: 'neutral',
-    view: DocumentEdit,
+  docEdit : {
+    title       : 'Create SMART Document',
+    description : 'Document import',
+    icon        : 'document',
+    type        : 'neutral',
+    view        : DocumentEdit,
   },
 };

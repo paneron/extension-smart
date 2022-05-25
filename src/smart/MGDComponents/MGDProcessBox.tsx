@@ -42,11 +42,11 @@ function MGDProcessBox(props: OwnProps) {
     >
       <div
         style={{
-          flex: 1,
-          display: '-webkit-box',
-          WebkitLineClamp: 3,
-          overflow: 'hidden',
-          WebkitBoxOrient: 'vertical',
+          flex            : 1,
+          display         : '-webkit-box',
+          WebkitLineClamp : 3,
+          overflow        : 'hidden',
+          WebkitBoxOrient : 'vertical',
         }}
       >
         {children}

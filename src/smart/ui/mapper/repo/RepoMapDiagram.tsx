@@ -39,7 +39,7 @@ const RepoMapDiagram: React.FC<{
         snapToGrid={true}
         snapGrid={[10, 10]}
         nodesDraggable={true}
-        edgeTypes={{ repo: RepoEdge }}
+        edgeTypes={{ repo : RepoEdge }}
       />
       {option && option.repoLegendVisible && (
         <LegendPane

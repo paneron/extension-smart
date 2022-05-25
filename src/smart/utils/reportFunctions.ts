@@ -23,11 +23,11 @@ export function genReport(
   const records: RefRecord[] = Object.values(ref.refs)
     .sort(referenceSorter)
     .map(x => ({
-      id: x.id,
-      clause: x.clause,
-      title: x.title,
-      description: '',
-      justification: new Set<string>(),
+      id            : x.id,
+      clause        : x.clause,
+      title         : x.title,
+      description   : '',
+      justification : new Set<string>(),
     }));
   const refMap: Record<string, RefRecord> = {};
   for (const r of records) {
@@ -83,14 +83,14 @@ function parseCode(
   const refjson = MMELToSerializable(ref);
   const rec: SectionRecord[] = records.map(x => ({
     ...x,
-    justification: [...x.justification],
+    justification : [...x.justification],
   }));
   Logger.log(rec, rec.length);
   const params = {
-    map: rec,
-    raw: rawMapping,
-    imodel: impjson,
-    rmodel: refjson,
+    map    : rec,
+    raw    : rawMapping,
+    imodel : impjson,
+    rmodel : refjson,
   };
   try {
     const out = engine.parseAndRenderSync(code, params);

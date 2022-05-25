@@ -22,9 +22,9 @@ export type IObject = MMELObject & {
 export type ListSorter = 'number' | 'id' | 'text';
 
 const Sorter: Record<ListSorter, (a: IListItem, b: IListItem) => number> = {
-  number: defaultItemSorterAsNum,
-  id: defaultItemSorter,
-  text: itemSorterByText,
+  number : defaultItemSorterAsNum,
+  id     : defaultItemSorter,
+  text   : itemSorterByText,
 };
 
 export interface PopListInterface<T> {
@@ -50,8 +50,8 @@ export interface PopListInterface<T> {
 
 function defaultGetListItem(x: IObject): IListItem {
   return {
-    id: x.id,
-    text: x.id,
+    id   : x.id,
+    text : x.id,
   };
 }
 
@@ -101,14 +101,14 @@ const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
   }
 
   const viewHandler: IViewListInterface = {
-    isVisible: true,
-    filterName: filterName,
-    itemName: '',
-    getItems: getItems,
-    removeItems: removeItem,
-    addClicked: addClicked,
-    updateClicked: updateClicked,
-    size: size,
+    isVisible     : true,
+    filterName    : filterName,
+    itemName      : '',
+    getItems      : getItems,
+    removeItems   : removeItem,
+    addClicked    : addClicked,
+    updateClicked : updateClicked,
+    size          : size,
   };
 
   function addItem(x: T): boolean {
@@ -143,43 +143,43 @@ const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
   }
 
   const addHandler: IUpdateInterface<T> = {
-    isVisible: mode === 'Add',
-    Content: Content,
-    object: editing,
+    isVisible         : mode === 'Add',
+    Content           : Content,
+    object            : editing,
     model,
     table,
-    setObject: x => setEditing(x),
-    updateButtonLabel: 'Add',
-    updateButtonIcon: 'plus',
-    updateClicked: () => {
+    setObject         : x => setEditing(x),
+    updateButtonLabel : 'Add',
+    updateButtonIcon  : 'plus',
+    updateClicked     : () => {
       if (addItem(editing)) {
         setMode('None');
       }
     },
-    cancelClicked: () => {
+    cancelClicked : () => {
       setMode('None');
     },
-    oldid: oldId,
+    oldid : oldId,
   };
 
   const updateHandler: IUpdateInterface<T> = {
-    isVisible: mode === 'Update',
-    Content: Content,
-    object: editing,
+    isVisible         : mode === 'Update',
+    Content           : Content,
+    object            : editing,
     model,
     table,
-    setObject: x => setEditing(x),
-    updateButtonLabel: 'Update',
-    updateButtonIcon: 'edit',
-    updateClicked: () => {
+    setObject         : x => setEditing(x),
+    updateButtonLabel : 'Update',
+    updateButtonIcon  : 'edit',
+    updateClicked     : () => {
       if (updateItem(oldId, editing)) {
         setMode('None');
       }
     },
-    cancelClicked: () => {
+    cancelClicked : () => {
       setMode('None');
     },
-    oldid: oldId,
+    oldid : oldId,
   };
 
   return (

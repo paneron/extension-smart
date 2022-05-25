@@ -31,19 +31,19 @@ function getElementValueByPath(xml: XMLElement, path: string[]): string {
 
 // remove unused reference materials that affect text contents
 function cleanXML(xml: XMLElement, ids: Record<string, string>) {
-  if (xml.xmlChild['concept'] !== undefined) {
-    for (const concept of xml.xmlChild['concept']) {
-      if (concept.xmlChild['renderterm'] !== undefined) {
-        concept.childs = [elementToString(concept.xmlChild['renderterm'][0])];
+  if (xml.xmlChild.concept !== undefined) {
+    for (const concept of xml.xmlChild.concept) {
+      if (concept.xmlChild.renderterm !== undefined) {
+        concept.childs = [elementToString(concept.xmlChild.renderterm[0])];
         concept.xmlChild = {};
-      } else if (concept.xmlChild['strong'] !== undefined) {
+      } else if (concept.xmlChild.strong !== undefined) {
         concept.childs = [getElementValueByPath(concept, ['strong', 'tt'])];
         concept.xmlChild = {};
       }
     }
   }
   if (xml.tag === 'xref') {
-    const target = xml.attributes['target'];
+    const target = xml.attributes.target;
     if (target !== undefined) {
       const resolved = ids[target];
       if (resolved !== undefined) {
@@ -66,7 +66,7 @@ function replaceHTMLCodes(data: string): string {
 function buildIdMap(xml: XMLElement): Record<string, string> {
   const map: Record<string, string> = {};
   let index = 1;
-  const body = xml.xmlChild['sections'];
+  const body = xml.xmlChild.sections;
   if (body !== undefined && body.length > 0) {
     for (const sec of body[0].childs) {
       if (isXMLElement(sec)) {
@@ -78,16 +78,16 @@ function buildIdMap(xml: XMLElement): Record<string, string> {
       }
     }
   }
-  const annex = xml.xmlChild['annex'];
+  const annex = xml.xmlChild.annex;
   if (annex !== undefined) {
     annex.forEach((a, index) => {
-      const id = a.attributes['id'];
+      const id = a.attributes.id;
       if (id !== undefined) {
         map[id] = 'Annex ' + String.fromCharCode(65 + index);
       }
     });
   }
-  countFigTable(xml, { fig: 0, table: 0 }, map);
+  countFigTable(xml, { fig : 0, table : 0 }, map);
   return map;
 }
 
@@ -97,13 +97,13 @@ function countFigTable(
   map: Record<string, string>
 ) {
   if (xml.tag === 'table') {
-    const id = xml.attributes['id'];
+    const id = xml.attributes.id;
     if (id !== undefined) {
       count.table++;
       map[id] = `Table ${count.table}`;
     }
   } else if (xml.tag === 'figure') {
-    const id = xml.attributes['id'];
+    const id = xml.attributes.id;
     if (id !== undefined) {
       count.fig++;
       map[id] = `Figure ${count.fig}`;
@@ -123,7 +123,7 @@ function mockAddSection(
   map: Record<string, string>
 ) {
   const clause = `${prefix}${index}`;
-  const id = xml.attributes['id'];
+  const id = xml.attributes.id;
   if (id !== undefined) {
     map[id] = clause;
   }
@@ -141,21 +141,21 @@ function mockAddSection(
 
 export function xmlToDocument(data: string): MMELDocument {
   const doc: MMELDocument = {
-    states: {},
-    id: '',
-    title: '',
-    sections: [],
-    type: 'document',
-    version: DOCVERSION,
+    states   : {},
+    id       : '',
+    title    : '',
+    sections : [],
+    type     : 'document',
+    version  : DOCVERSION,
   };
   const xml = parseXML(replaceHTMLCodes(data));
   const ids = buildIdMap(xml);
   cleanXML(xml, ids);
-  const front = xml.xmlChild['bibdata'];
+  const front = xml.xmlChild.bibdata;
   if (front !== undefined && front.length > 0) {
     setMeta(doc, front[0]);
   }
-  const body = xml.xmlChild['sections'];
+  const body = xml.xmlChild.sections;
   if (body !== undefined && body.length > 0) {
     setMainDoc(doc, body[0]);
   }
@@ -170,10 +170,10 @@ function setMeta(doc: MMELDocument, xml: XMLElement) {
       'name',
     ]);
     doc.edition = getElementValueByPath(xml, ['version', 'revision-date']);
-    const identified = xml.xmlChild['docidentifier'];
+    const identified = xml.xmlChild.docidentifier;
     if (identified !== undefined && identified.length > 0) {
       doc.id =
-        identified[0].attributes['type'] + elementToString(identified[0]);
+        identified[0].attributes.type + elementToString(identified[0]);
     }
     doc.title = doc.id + ' ' + getElementValueByPath(xml, ['title']);
   }
@@ -285,13 +285,13 @@ function addTermsSection(
   doc.sections.push(section);
   addStatement(doc, section, title, clause);
 
-  const admitted = xml.xmlChild['admitted'];
+  const admitted = xml.xmlChild.admitted;
   if (admitted !== undefined && admitted.length > 0) {
     for (const ad of admitted) {
       addStatement(doc, section, elementToString(ad), clause);
     }
   }
-  const definitions = xml.xmlChild['definition'];
+  const definitions = xml.xmlChild.definition;
 
   if (definitions !== undefined) {
     const definition = definitions[0];
@@ -316,7 +316,7 @@ function addTermsSection(
     }
   }
 
-  const notes = xml.xmlChild['termnote'];
+  const notes = xml.xmlChild.termnote;
   if (notes !== undefined) {
     notes.forEach((note, index) => {
       note.childs.forEach((c, pIndex) => {
@@ -354,9 +354,9 @@ function addTermsSection(
 
 function createDocSection(clause: string, title: string): DocSection {
   return {
-    id: clause,
+    id       : clause,
     title,
-    contents: [],
+    contents : [],
   };
 }
 
@@ -367,12 +367,12 @@ function addStatement(
   clause: string
 ) {
   const st: DocStatement = {
-    id: Object.values(doc.states).length.toString(),
-    text: statement,
+    id        : Object.values(doc.states).length.toString(),
+    text      : statement,
     clause,
-    uiref: React.createRef(),
-    paragraph: section.contents.length + 1,
-    index: 1,
+    uiref     : React.createRef(),
+    paragraph : section.contents.length + 1,
+    index     : 1,
   };
   doc.states[st.id] = st;
   section.contents.push([st.id]);

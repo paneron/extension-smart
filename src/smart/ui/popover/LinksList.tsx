@@ -29,7 +29,7 @@ const LinksList: React.FC<{
           const w = window.open('https://shop.bsigroup.com');
           w?.focus();
         } else {
-          goToNextModel({ ns: repo, type: record.type });
+          goToNextModel({ ns : repo, type : record.type });
         }
       }
     }
@@ -38,8 +38,8 @@ const LinksList: React.FC<{
   return (
     <Menu
       style={{
-        maxWidth: '30vw',
-        maxHeight: '45vh',
+        maxWidth  : '30vw',
+        maxHeight : '45vh',
       }}
     >
       {resolved.map(

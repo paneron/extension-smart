@@ -16,7 +16,7 @@ const RepoEdge: React.FC<EdgeProps> = function ({
 }) {
   const color = '#000';
   const style: CSSProperties = {
-    stroke: color,
+    stroke : color,
   };
   if (targetX > sourceX) {
     const edgePath1 = getSmoothStepPath({
@@ -56,32 +56,32 @@ const RepoEdge: React.FC<EdgeProps> = function ({
     sourceX,
     sourceY,
     sourcePosition,
-    targetX: p1x,
-    targetY: p1y,
-    targetPosition: Position.Top,
+    targetX        : p1x,
+    targetY        : p1y,
+    targetPosition : Position.Top,
   });
   const edgePath2 = getSmoothStepPath({
-    sourceX: p1x,
-    sourceY: p1y,
-    sourcePosition: Position.Bottom,
-    targetX: p2x,
-    targetY: p2y,
-    targetPosition: Position.Right,
+    sourceX        : p1x,
+    sourceY        : p1y,
+    sourcePosition : Position.Bottom,
+    targetX        : p2x,
+    targetY        : p2y,
+    targetPosition : Position.Right,
   });
   const edgePath3 = getSmoothStepPath({
-    sourceX: p2x,
-    sourceY: p2y,
-    sourcePosition: Position.Left,
-    targetX: p3x,
-    targetY: p3y,
-    targetPosition: Position.Bottom,
+    sourceX        : p2x,
+    sourceY        : p2y,
+    sourcePosition : Position.Left,
+    targetX        : p3x,
+    targetY        : p3y,
+    targetPosition : Position.Bottom,
   });
   const edgePath4 = getSmoothStepPath({
-    sourceX: p3x,
-    sourceY: p3y,
-    sourcePosition: Position.Top,
-    targetX: p4x,
-    targetY: p4y,
+    sourceX        : p3x,
+    sourceY        : p3y,
+    sourcePosition : Position.Top,
+    targetX        : p4x,
+    targetY        : p4y,
     targetPosition,
   });
   return (
@@ -127,7 +127,7 @@ const Marker: React.FC<{
       ${x - MARKERWIDTH},${y + MARKERHALFHEIGHT}
       ${x},${y}
     `}
-      style={{ fill: color }}
+      style={{ fill : color }}
     />
   );
 };

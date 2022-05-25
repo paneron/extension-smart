@@ -18,13 +18,13 @@ export function parseDataAttribute(
   details: string
 ): MMELDataAttribute {
   const attribute: MMELDataAttribute = {
-    id: '',
-    type: '',
-    modality: '',
-    cardinality: '',
-    definition: '',
-    ref: new Set<string>(),
-    datatype: DataType.DATAATTRIBUTE,
+    id          : '',
+    type        : '',
+    modality    : '',
+    cardinality : '',
+    definition  : '',
+    ref         : new Set<string>(),
+    datatype    : DataType.DATAATTRIBUTE,
   };
 
   let index = basic.indexOf('[');
@@ -73,9 +73,9 @@ export function parseDataAttribute(
 
 export function parseDataClass(id: string, data: string): MMELDataClass {
   const dc: MMELDataClass = {
-    id: id,
-    attributes: {},
-    datatype: DataType.DATACLASS,
+    id         : id,
+    attributes : {},
+    datatype   : DataType.DATACLASS,
   };
 
   if (data !== '') {
@@ -99,9 +99,9 @@ export function parseDataClass(id: string, data: string): MMELDataClass {
 
 export function parseEnumValue(id: string, data: string): MMELEnumValue {
   const ev: MMELEnumValue = {
-    id: id,
-    value: '',
-    datatype: DataType.ENUMVALUE,
+    id       : id,
+    value    : '',
+    datatype : DataType.ENUMVALUE,
   };
   if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
@@ -134,9 +134,9 @@ export function parseEnumValue(id: string, data: string): MMELEnumValue {
 
 export function parseEnum(id: string, data: string): MMELEnum {
   const e: MMELEnum = {
-    id: id,
-    values: {},
-    datatype: DataType.ENUM,
+    id       : id,
+    values   : {},
+    datatype : DataType.ENUM,
   };
   if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);
@@ -162,10 +162,10 @@ export function parseEnum(id: string, data: string): MMELEnum {
 
 export function parseRegistry(id: string, data: string): MMELRegistry {
   const reg: MMELRegistry = {
-    id: id,
-    title: '',
-    data: '',
-    datatype: DataType.REGISTRY,
+    id       : id,
+    title    : '',
+    data     : '',
+    datatype : DataType.REGISTRY,
   };
 
   if (data !== '') {

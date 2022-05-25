@@ -35,16 +35,16 @@ const MeasurementEditPage: React.FC<{
   function getMeasureListItems(filter: string): IListItem[] {
     return Object.values(model.vars)
       .filter(x => matchFilter(x, filter))
-      .map(x => ({ id: x.id, text: x.id }))
+      .map(x => ({ id : x.id, text : x.id }))
       .sort(defaultItemSorter);
   }
 
   function removeMeasureListItem(ids: string[]) {
     const action: ModelAction = {
-      type: 'model',
-      act: 'vars',
-      task: 'delete',
-      value: ids,
+      type  : 'model',
+      act   : 'vars',
+      task  : 'delete',
+      value : ids,
     };
     act(action);
   }
@@ -52,10 +52,10 @@ const MeasurementEditPage: React.FC<{
   function addMeasure(x: MMELVariable): boolean {
     if (checkId(x.id, model.vars)) {
       const action: ModelAction = {
-        type: 'model',
-        act: 'vars',
-        task: 'add',
-        value: [x],
+        type  : 'model',
+        act   : 'vars',
+        task  : 'add',
+        value : [x],
       };
       act(action);
       return true;
@@ -68,11 +68,11 @@ const MeasurementEditPage: React.FC<{
       return false;
     }
     const action: ModelAction = {
-      type: 'model',
-      act: 'vars',
-      task: 'edit',
-      id: oldid,
-      value: x,
+      type  : 'model',
+      act   : 'vars',
+      task  : 'edit',
+      id    : oldid,
+      value : x,
     };
     act(action);
     return true;
@@ -87,16 +87,16 @@ const MeasurementEditPage: React.FC<{
   }
 
   const measureHandler: IManageHandler<MMELVariable> = {
-    filterName: 'Measurement filter',
-    itemName: 'Measurements',
-    Content: MeasureEditItemPage,
-    initObj: createVariable(''),
-    model: model,
-    getItems: getMeasureListItems,
-    removeItems: removeMeasureListItem,
-    addItem: obj => addMeasure(obj),
-    updateItem: (oldid, obj) => updateMeasure(oldid, obj),
-    getObjById: getMeasureById,
+    filterName  : 'Measurement filter',
+    itemName    : 'Measurements',
+    Content     : MeasureEditItemPage,
+    initObj     : createVariable(''),
+    model       : model,
+    getItems    : getMeasureListItems,
+    removeItems : removeMeasureListItem,
+    addItem     : obj => addMeasure(obj),
+    updateItem  : (oldid, obj) => updateMeasure(oldid, obj),
+    getObjById  : getMeasureById,
   };
 
   return <ListManagePage {...measureHandler} />;
@@ -159,19 +159,19 @@ const MeasureEditItemPage: React.FC<{
         text="Measurement ID"
         value={mea.id}
         onChange={(x: string) =>
-          setMeasure({ ...mea, id: x.replaceAll(/\s+/g, '') })
+          setMeasure({ ...mea, id : x.replaceAll(/\s+/g, '') })
         }
       />
       <NormalTextField
         text="Measurement description"
         value={mea.description}
-        onChange={(x: string) => setMeasure({ ...mea, description: x })}
+        onChange={(x: string) => setMeasure({ ...mea, description : x })}
       />
       <NormalComboBox
         text="Measurement Type"
         value={mea.type}
         options={MEASUREMENTTYPES}
-        onChange={x => setMeasure({ ...mea, type: x as VarType })}
+        onChange={x => setMeasure({ ...mea, type : x as VarType })}
       />
       {mea.type === VarType.DERIVED && (
         <Button
@@ -193,10 +193,10 @@ const MeasureEditItemPage: React.FC<{
           update={x =>
             setMeasure({
               ...mea,
-              definition: mea.definition + '[' + types[x] + ']',
+              definition : mea.definition + '[' + types[x] + ']',
             })
           }
-          onChange={x => setMeasure({ ...mea, definition: x })}
+          onChange={x => setMeasure({ ...mea, definition : x })}
         />
       ) : (
         <></>

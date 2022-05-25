@@ -43,9 +43,9 @@ const QuickEditRegistry: React.FC<{
   const dc = model.elements[registry.data] as EditorDataClass;
   const regCombined: RegistryCombined = {
     ...dc,
-    id: registry.id,
-    title: registry.title,
-    rdcs: new Set(dc.rdcs),
+    id    : registry.id,
+    title : registry.title,
+    rdcs  : new Set(dc.rdcs),
   };
 
   const [editing, setEditing] = useState<RegistryCombined>(regCombined);
@@ -53,10 +53,10 @@ const QuickEditRegistry: React.FC<{
 
   const types = useMemo(() => findAllAttributeTypes(model), [model]);
   const typesObj = useMemo(
-    () => types.reduce((obj, x) => ({ ...obj, [x.id]: x }), {}),
+    () => types.reduce((obj, x) => ({ ...obj, [x.id] : x }), {}),
     [types]
   );
-  const exitRef = useRef<{ exit: () => void }>({ exit: saveOnExit });
+  const exitRef = useRef<{ exit: () => void }>({ exit : saveOnExit });
   exitRef.current.exit = saveOnExit;
 
   function onAddReference(refs: MMELReference[]) {
@@ -88,7 +88,7 @@ const QuickEditRegistry: React.FC<{
   }
 
   function setAtt(x: Record<string, MMELDataAttribute>) {
-    setEditing({ ...editing, attributes: { ...x } });
+    setEditing({ ...editing, attributes : { ...x }});
     onChange();
   }
 
@@ -115,7 +115,7 @@ const QuickEditRegistry: React.FC<{
       <NormalTextField
         text="Registry title"
         value={editing.title}
-        onChange={x => setEdit({ ...editing, title: x })}
+        onChange={x => setEdit({ ...editing, title : x })}
       />
       <AttributeListQuickEdit
         attributes={editing.attributes}

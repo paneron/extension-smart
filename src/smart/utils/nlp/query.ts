@@ -99,9 +99,9 @@ export async function askRDF(
     return;
   }
   const prdf: ProvisionRDF = {
-    roots: { Question: [root] },
+    roots   : { Question : [root]},
     nodes,
-    version: RDFVersion,
+    version : RDFVersion,
   };
   let score = 0;
   let answer = 'No idea';

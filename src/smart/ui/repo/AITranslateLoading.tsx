@@ -19,7 +19,7 @@ const AITranslateLoading: React.FC<{
   const path = getPathByNS(source.ns, RepoFileType.MODEL);
 
   const docFile = useObjectData({
-    objectPaths: [path],
+    objectPaths : [path],
   });
 
   useMemo(() => {
@@ -28,8 +28,8 @@ const AITranslateLoading: React.FC<{
       const task = aiTranslate(doc);
       task.then(x => {
         sendMsg({
-          message: `Done: model translated`,
-          intent: 'success',
+          message : 'Done: model translated',
+          intent  : 'success',
         });
         done(x);
       });
@@ -39,9 +39,9 @@ const AITranslateLoading: React.FC<{
   return (
     <div
       style={{
-        position: 'fixed',
-        right: 30,
-        bottom: 20,
+        position : 'fixed',
+        right    : 30,
+        bottom   : 20,
       }}
     >
       <LoadingIcon small />

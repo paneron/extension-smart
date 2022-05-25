@@ -26,12 +26,12 @@ import CircleGraph from '../dashboard/CircleGraph';
 import { CustomCLAttribute, CustomCLProvision } from './CustomFields';
 
 const ModalityText: Record<ModalityType, string> = {
-  '': 'Not specified (empty)',
-  CAN: 'CAN',
-  MAY: 'MAY',
-  MUST: 'MUST',
-  SHALL: 'SHALL',
-  SHOULD: 'SHOULD',
+  ''       : 'Not specified (empty)',
+  'CAN'    : 'CAN',
+  'MAY'    : 'MAY',
+  'MUST'   : 'MUST',
+  'SHALL'  : 'SHALL',
+  'SHOULD' : 'SHOULD',
 };
 
 const ChecklistConfigPane: React.FC<{
@@ -39,12 +39,12 @@ const ChecklistConfigPane: React.FC<{
   setView: (view: ViewFunctionInterface | undefined) => void;
 }> = function ({ model, setView }) {
   const [modality, setChecklistSetting] = useState<ChecklistSetting>({
-    '': false,
-    CAN: false,
-    MAY: false,
-    MUST: true,
-    SHALL: true,
-    SHOULD: false,
+    ''       : false,
+    'CAN'    : false,
+    'MAY'    : false,
+    'MUST'   : true,
+    'SHALL'  : true,
+    'SHOULD' : false,
   });
 
   const [result, setResult] = useState<ChecklistResult | undefined>(undefined);
@@ -101,7 +101,7 @@ const ChecklistConfigPane: React.FC<{
 
   function flip(opt: ModalityType) {
     if (result === undefined) {
-      setChecklistSetting({ ...modality, [opt]: !modality[opt] });
+      setChecklistSetting({ ...modality, [opt] : !modality[opt] });
     }
   }
 
@@ -117,13 +117,13 @@ const ChecklistConfigPane: React.FC<{
       {result !== undefined && (
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display       : 'flex',
+            flexDirection : 'column',
+            alignItems    : 'center',
           }}
         >
           <MGDLabel>Overall Progress</MGDLabel>
-          <div style={{ width: '50%' }}>
+          <div style={{ width : '50%' }}>
             <CircleGraph percentage={result.checklist['#root'].progress} />
           </div>
         </div>

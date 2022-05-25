@@ -5,7 +5,7 @@ const RepoCloseButton: React.FC<{
   onClose: () => void;
 }> = function ({ onClose }) {
   return (
-    <Button style={{ marginLeft: 10 }} onClick={onClose}>
+    <Button style={{ marginLeft : 10 }} onClick={onClose}>
       Close model
     </Button>
   );

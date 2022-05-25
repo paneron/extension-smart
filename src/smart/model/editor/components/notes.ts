@@ -74,7 +74,7 @@ export function useNotes(
   }
 
   function init(x: Record<string, MMELNote>) {
-    dispatchElms({ act: 'init', value: x });
+    dispatchElms({ act : 'init', value : x });
   }
 
   return [notes, act, init];

@@ -19,10 +19,10 @@ const RegistryDocManagement: React.FC<{
   workspace: Record<string, SMARTDocumentStore>;
 }> = function ({ model, store, regid, setStore, onBack, workspace }) {
   const initObj: DocumentEditInterface = {
-    id: 0,
-    name: 'New item',
-    attributes: {},
-    regid: regid,
+    id         : 0,
+    name       : 'New item',
+    attributes : {},
+    regid      : regid,
   };
 
   function matchFilter(doc: SMARTDocument, filter: string) {
@@ -32,7 +32,7 @@ const RegistryDocManagement: React.FC<{
   function getDocListItems(filter: string): IListItem[] {
     return Object.values(store.docs)
       .filter(x => matchFilter(x, filter))
-      .map(x => ({ id: `${x.id}`, text: x.name }))
+      .map(x => ({ id : `${x.id}`, text : x.name }))
       .sort(itemSorterByText);
   }
 
@@ -68,11 +68,11 @@ const RegistryDocManagement: React.FC<{
     onBack === undefined
       ? undefined
       : {
-          text: 'Back',
-          icon: 'arrow-left',
-          requireSelected: false,
-          onClick: onBack,
-        };
+        text            : 'Back',
+        icon            : 'arrow-left',
+        requireSelected : false,
+        onClick         : onBack,
+      };
 
   const CallbackDocumentEdit: React.FC<{
     object: DocumentEditInterface;
@@ -89,17 +89,17 @@ const RegistryDocManagement: React.FC<{
   };
 
   const reghandler: IManageHandler<DocumentEditInterface> = {
-    filterName: 'Date item filter',
-    itemName: 'Data items',
-    Content: CallbackDocumentEdit,
-    initObj: { ...initObj },
-    model: model,
-    getItems: getDocListItems,
-    removeItems: removeDocListItem,
-    addItem: obj => addDoc(cleanDocument(obj)),
-    updateItem: (oldid, obj) => updateDoc(oldid, cleanDocument(obj)),
-    getObjById: getDocById,
-    buttons: backButton === undefined ? undefined : [backButton],
+    filterName  : 'Date item filter',
+    itemName    : 'Data items',
+    Content     : CallbackDocumentEdit,
+    initObj     : { ...initObj },
+    model       : model,
+    getItems    : getDocListItems,
+    removeItems : removeDocListItem,
+    addItem     : obj => addDoc(cleanDocument(obj)),
+    updateItem  : (oldid, obj) => updateDoc(oldid, cleanDocument(obj)),
+    getObjById  : getDocById,
+    buttons     : backButton === undefined ? undefined : [backButton],
   };
 
   return <ListManagePage {...reghandler} />;
@@ -115,9 +115,9 @@ function genNewID(record: Record<number, SMARTDocument>): number {
 
 function cleanDocument(xdoc: DocumentEditInterface): SMARTDocument {
   return {
-    id: xdoc.id,
-    name: xdoc.name,
-    attributes: xdoc.attributes,
+    id         : xdoc.id,
+    name       : xdoc.name,
+    attributes : xdoc.attributes,
   };
 }
 

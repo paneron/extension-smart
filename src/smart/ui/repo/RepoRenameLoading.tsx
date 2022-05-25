@@ -25,14 +25,14 @@ const RepoRenameLoading: React.FC<{
   const paths = getAllObjectPaths(action.old);
 
   const modelFiles = useObjectData({
-    objectPaths: paths,
+    objectPaths : paths,
   });
 
   useMemo(() => {
     if (!modelFiles.isUpdating) {
       if (updateObjects) {
         const changes = paths.map(x => ({
-          newValue: modelFiles.value.data[x],
+          newValue : modelFiles.value.data[x],
         }));
         const model = modelFiles.value.data[
           getPathByNS(action.old, RepoFileType.MODEL)
@@ -50,27 +50,27 @@ const RepoRenameLoading: React.FC<{
         updated[action.update] = item;
 
         const changeset: ObjectChangeset = {
-          [repoIndexPath]: { newValue: updated },
+          [repoIndexPath] : { newValue : updated },
         };
         newPaths.forEach((p, index) => (changeset[p] = changes[index]));
-        paths.forEach(p => (changeset[p] = { newValue: null }));
+        paths.forEach(p => (changeset[p] = { newValue : null }));
 
         const task = updateObjects({
-          commitMessage: COMMITMSG,
-          _dangerouslySkipValidation: true,
-          objectChangeset: changeset,
+          commitMessage              : COMMITMSG,
+          _dangerouslySkipValidation : true,
+          objectChangeset            : changeset,
         });
         task.then(() => {
           sendMsg({
-            message: `Done: model renamed to namespace ${action.update}`,
-            intent: 'success',
+            message : `Done: model renamed to namespace ${action.update}`,
+            intent  : 'success',
           });
           done();
         });
       } else {
         sendMsg({
-          message: 'No write access to the repository',
-          intent: 'danger',
+          message : 'No write access to the repository',
+          intent  : 'danger',
         });
         done();
       }
@@ -80,9 +80,9 @@ const RepoRenameLoading: React.FC<{
   return (
     <div
       style={{
-        position: 'fixed',
-        right: 30,
-        bottom: 20,
+        position : 'fixed',
+        right    : 30,
+        bottom   : 20,
       }}
     >
       <LoadingIcon small />

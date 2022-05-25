@@ -22,16 +22,16 @@ const EnumEditPage: React.FC<{
   function getEnumListItems(filter: string): IListItem[] {
     return Object.values(model.enums)
       .filter(x => matchFilter(x, filter))
-      .map(x => ({ id: x.id, text: x.id }))
+      .map(x => ({ id : x.id, text : x.id }))
       .sort(defaultItemSorter);
   }
 
   function removeEnumListItem(ids: string[]) {
     const action: ModelAction = {
-      type: 'model',
-      act: 'enums',
-      task: 'delete',
-      value: ids,
+      type  : 'model',
+      act   : 'enums',
+      task  : 'delete',
+      value : ids,
     };
     act(action);
   }
@@ -39,10 +39,10 @@ const EnumEditPage: React.FC<{
   function addEnum(en: MMELEnum): boolean {
     if (checkId(en.id, model.enums)) {
       const action: ModelAction = {
-        type: 'model',
-        act: 'enums',
-        task: 'add',
-        value: [en],
+        type  : 'model',
+        act   : 'enums',
+        task  : 'add',
+        value : [en],
       };
       act(action);
       return true;
@@ -55,11 +55,11 @@ const EnumEditPage: React.FC<{
       return false;
     }
     const action: ModelAction = {
-      type: 'model',
-      act: 'enums',
-      task: 'edit',
-      id: oldid,
-      value: en,
+      type  : 'model',
+      act   : 'enums',
+      task  : 'edit',
+      id    : oldid,
+      value : en,
     };
     act(action);
     return true;
@@ -74,16 +74,16 @@ const EnumEditPage: React.FC<{
   }
 
   const refhandler: IManageHandler<MMELEnum> = {
-    filterName: 'Enumeration filter',
-    itemName: 'Enumerations',
-    Content: EnumEditItemPage,
-    initObj: initObj,
-    model: model,
-    getItems: getEnumListItems,
-    removeItems: removeEnumListItem,
-    addItem: obj => addEnum(obj),
-    updateItem: (oldid, obj) => updateEnum(oldid, obj),
-    getObjById: getEnumById,
+    filterName  : 'Enumeration filter',
+    itemName    : 'Enumerations',
+    Content     : EnumEditItemPage,
+    initObj     : initObj,
+    model       : model,
+    getItems    : getEnumListItems,
+    removeItems : removeEnumListItem,
+    addItem     : obj => addEnum(obj),
+    updateItem  : (oldid, obj) => updateEnum(oldid, obj),
+    getObjById  : getEnumById,
   };
 
   return <ListManagePage {...refhandler} />;
@@ -99,12 +99,12 @@ const EnumEditItemPage: React.FC<{
       <NormalTextField
         text="Enumeration ID"
         value={en.id}
-        onChange={x => setEN({ ...en, id: x.replaceAll(/\s+/g, '') })}
+        onChange={x => setEN({ ...en, id : x.replaceAll(/\s+/g, '') })}
       />
       <EnumValueEditPage
         values={{ ...en.values }}
         model={model!}
-        setValues={x => setEN({ ...en, values: x })}
+        setValues={x => setEN({ ...en, values : x })}
       />
     </FormGroup>
   );

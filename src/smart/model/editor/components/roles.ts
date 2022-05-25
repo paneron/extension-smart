@@ -34,22 +34,22 @@ export function cascadeCheckRole(
     const affected = findAffectedElements(elms, action.id);
     action.cascade = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-role',
-        ids: affected,
-        role: action.value.id,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-role',
+        ids     : affected,
+        role    : action.value.id,
       },
     ];
     return [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-role',
-        ids: affected,
-        role: action.id,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-role',
+        ids     : affected,
+        role    : action.id,
       },
     ];
   } else if (action.task === 'delete') {
@@ -59,19 +59,19 @@ export function cascadeCheckRole(
     const ids = affected.flatMap(x => x[0]);
     action.cascade = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-role',
-        ids: ids,
-        role: '',
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-role',
+        ids     : ids,
+        role    : '',
       },
     ];
     return affected.map(([ids, role]) => ({
-      type: 'model',
-      act: 'elements',
-      task: 'cascade',
-      subtask: 'process-role',
+      type    : 'model',
+      act     : 'elements',
+      task    : 'cascade',
+      subtask : 'process-role',
       ids,
       role,
     }));

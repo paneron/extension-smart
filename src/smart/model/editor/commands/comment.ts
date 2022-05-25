@@ -17,12 +17,12 @@ export function addCommentCommand(
   parent?: string
 ) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'comment',
-    task: 'add',
-    value: [m],
-    attach: {
-      id: pid,
+    type   : 'model',
+    act    : 'comment',
+    task   : 'add',
+    value  : [m],
+    attach : {
+      id : pid,
       parent,
     },
   };
@@ -35,11 +35,11 @@ export function addCommentCommand(
  */
 export function resolveCommentCommand(com: MMELComment) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'comment',
-    task: 'edit',
-    id: com.id,
-    value: { ...com, resolved: !com.resolved },
+    type  : 'model',
+    act   : 'comment',
+    task  : 'edit',
+    id    : com.id,
+    value : { ...com, resolved : !com.resolved },
   };
   return action;
 }
@@ -56,12 +56,12 @@ export function deleteCommentCommand(
   parent?: string
 ) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'comment',
-    task: 'delete',
-    value: [cid],
-    attach: {
-      id: pid,
+    type   : 'model',
+    act    : 'comment',
+    task   : 'delete',
+    value  : [cid],
+    attach : {
+      id : pid,
       parent,
     },
   };

@@ -31,8 +31,8 @@ const WorkspaceFileMenu: React.FC<{
       <Button
         onClick={() =>
           setDiagProps({
-            regid: '',
-            isFromReactNode: false,
+            regid           : '',
+            isFromReactNode : false,
           })
         }
       >

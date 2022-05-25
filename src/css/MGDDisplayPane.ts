@@ -14,13 +14,13 @@ export const mgd_display_pane = css`
 `;
 
 export const mgdDisplayPane: CSSProperties = {
-  backgroundColor: CSSROOTVARIABLES['--colour--bsi-pale-red'],
-  overflowY: 'auto',
-  padding: '1em 2em 1em 1em',
+  backgroundColor : CSSROOTVARIABLES['--colour--bsi-pale-red'],
+  overflowY       : 'auto',
+  padding         : '1em 2em 1em 1em',
 };
 
 export const application2060DisplayPane: CSSProperties = {
-  backgroundColor: '#fcd49f',
-  overflowY: 'auto',
-  padding: '1em 2em 1em 1em',
+  backgroundColor : '#fcd49f',
+  overflowY       : 'auto',
+  padding         : '1em 2em 1em 1em',
 };

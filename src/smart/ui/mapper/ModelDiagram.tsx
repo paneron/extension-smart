@@ -106,8 +106,8 @@ const ModelDiagram: React.FC<{
 
   function setSelectedId(id: string) {
     setSelected({
-      modelType: modelProps.modelType,
-      selected: id,
+      modelType : modelProps.modelType,
+      selected  : id,
     });
   }
 
@@ -118,9 +118,9 @@ const ModelDiagram: React.FC<{
   function setModelWrapper(mw: ModelWrapper) {
     setProps({
       ...modelProps,
-      history: createPageHistory(mw),
-      modelWrapper: mw,
-      historyMap: buildHistoryMap(mw),
+      history      : createPageHistory(mw),
+      modelWrapper : mw,
+      historyMap   : buildHistoryMap(mw),
     });
     if (onModelChanged !== undefined) {
       onModelChanged(mw.model);
@@ -130,9 +130,9 @@ const ModelDiagram: React.FC<{
 
   function onDocumentLoaded(doc: MMELDocument) {
     setProps({
-      history: { items: [] },
-      historyMap: {},
-      modelWrapper: doc,
+      history      : { items : []},
+      historyMap   : {},
+      modelWrapper : doc,
       modelType,
     });
     setSelectedId('');
@@ -178,8 +178,8 @@ const ModelDiagram: React.FC<{
     mapSet.mappings = { ...mapSet.mappings };
     if (mapSet.mappings[fromid][toid] === undefined) {
       mapSet.mappings[fromid][toid] = {
-        description: '',
-        justification: '',
+        description   : '',
+        justification : '',
       };
       onMapSetChanged({ ...mapSet });
     }
@@ -259,7 +259,7 @@ const ModelDiagram: React.FC<{
 
   const breadcrumbs = isModelWrapper(mw)
     ? getBreadcrumbs(modelProps.history, onPageChange)
-    : [{ label: <>{mw.id}</> }];
+    : [{ label : <>{mw.id}</> }];
 
   return (
     <ReactFlowProvider>

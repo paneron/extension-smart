@@ -28,7 +28,7 @@ export const FieldWithErrors: React.FC<
     <FormGroup
       helperText={effectiveHelperText}
       style={{
-        margin: 0,
+        margin : 0,
       }}
       intent={intent}
       {...formGroupProps}
@@ -51,8 +51,8 @@ const FieldErrors: React.FC<{ errors: ValidationError[]; className?: string }> =
     return (
       <ul
         style={{
-          margin: 0,
-          paddingLeft: '1.25em',
+          margin      : 0,
+          paddingLeft : '1.25em',
         }}
         className={className}
       >

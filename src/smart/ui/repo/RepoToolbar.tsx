@@ -98,8 +98,8 @@ const RepoToolbar: React.FC<{
         canEscapeKeyClose={false}
         canOutsideClickClose={false}
         style={{
-          width: '75vw',
-          height: '50vh',
+          width  : '75vw',
+          height : '50vh',
         }}
       >
         {isAI && (

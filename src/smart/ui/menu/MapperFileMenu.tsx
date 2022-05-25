@@ -43,7 +43,7 @@ const MapperFileMenu: React.FC<{
       getBlob,
       writeFileToFilesystem,
       fileData,
-      type: FILE_TYPE.Map,
+      type : FILE_TYPE.Map,
     });
   }
 
@@ -54,21 +54,21 @@ const MapperFileMenu: React.FC<{
       getBlob,
       writeFileToFilesystem,
       fileData,
-      type: FILE_TYPE.JSON,
+      type : FILE_TYPE.JSON,
     });
   }
 
   async function handleImport() {
     handleMappingOpen({
-      onMapProfileChanged: onMapProfileImported,
+      onMapProfileChanged : onMapProfileImported,
       requestFileFromFilesystem,
-      fileType: FILE_TYPE.JSON,
+      fileType            : FILE_TYPE.JSON,
     });
   }
 
   async function handleImportMapping() {
     handleMappingOpen({
-      onMapProfileChanged: onMapProfileImported,
+      onMapProfileChanged : onMapProfileImported,
       requestFileFromFilesystem,
     });
   }

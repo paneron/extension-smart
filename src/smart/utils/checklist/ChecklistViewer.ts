@@ -33,8 +33,8 @@ export function getCheckListView(
   return {
     getStyleById,
     getSVGColorById,
-    data: result,
-    NodeAddon: CheckListAddon,
+    data      : result,
+    NodeAddon : CheckListAddon,
     CustomAttribute,
     CustomProvision,
     getEdgeColor,

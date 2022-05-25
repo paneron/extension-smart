@@ -84,41 +84,41 @@ const RepoViewer: React.FC<{
     if (updateObjects) {
       if (ns !== undefined && model !== undefined) {
         const mp = createMapProfile();
-        const rdf: ProvisionRDF = { roots: {}, nodes: {}, version: RDFVersion };
+        const rdf: ProvisionRDF = { roots : {}, nodes : {}, version : RDFVersion };
         mp.id = getNamespace(model);
         const task = updateObjects({
-          commitMessage: COMMITMSG,
-          _dangerouslySkipValidation: true,
-          objectChangeset: {
-            [repoIndexPath]: { newValue: updated },
-            [getPathByNS(ns, RepoFileType.MODEL)]: {
-              newValue: MMELToSerializable(model),
+          commitMessage              : COMMITMSG,
+          _dangerouslySkipValidation : true,
+          objectChangeset            : {
+            [repoIndexPath]                       : { newValue : updated },
+            [getPathByNS(ns, RepoFileType.MODEL)] : {
+              newValue : MMELToSerializable(model),
             },
-            [getPathByNS(ns, RepoFileType.MAP)]: {
-              newValue: mp,
+            [getPathByNS(ns, RepoFileType.MAP)] : {
+              newValue : mp,
             },
-            [getPathByNS(ns, RepoFileType.WORKSPACE)]: {
-              newValue: createNewSMARTWorkspace(),
+            [getPathByNS(ns, RepoFileType.WORKSPACE)] : {
+              newValue : createNewSMARTWorkspace(),
             },
-            [getPathByNS(ns, RepoFileType.RDF)]: {
-              newValue: rdf,
+            [getPathByNS(ns, RepoFileType.RDF)] : {
+              newValue : rdf,
             },
-            [getPathByNS(ns, RepoFileType.HISTORY)]: {
-              newValue: [createChangeLog(model, username)],
+            [getPathByNS(ns, RepoFileType.HISTORY)] : {
+              newValue : [createChangeLog(model, username)],
             },
           },
         });
         task.then(() => {
           toaster.show({
-            message: `Done: model with namespace ${ns} added to the repository`,
-            intent: 'success',
+            message : `Done: model with namespace ${ns} added to the repository`,
+            intent  : 'success',
           });
         });
       }
     } else {
       toaster.show({
-        message: 'No write access to the repository',
-        intent: 'danger',
+        message : 'No write access to the repository',
+        intent  : 'danger',
       });
     }
   }
@@ -126,25 +126,25 @@ const RepoViewer: React.FC<{
   async function saveIndexWithDoc(updated: RepoIndex, doc: MMELDocument) {
     if (updateObjects) {
       const task = updateObjects({
-        commitMessage: COMMITMSG,
-        _dangerouslySkipValidation: true,
-        objectChangeset: {
-          [repoIndexPath]: { newValue: updated },
-          [getPathByNS(doc.id, RepoFileType.MODEL)]: {
-            newValue: doc,
+        commitMessage              : COMMITMSG,
+        _dangerouslySkipValidation : true,
+        objectChangeset            : {
+          [repoIndexPath]                           : { newValue : updated },
+          [getPathByNS(doc.id, RepoFileType.MODEL)] : {
+            newValue : doc,
           },
         },
       });
       task.then(() => {
         toaster.show({
-          message: `Done: document with id ${doc.id} added to the repository`,
-          intent: 'success',
+          message : `Done: document with id ${doc.id} added to the repository`,
+          intent  : 'success',
         });
       });
     } else {
       toaster.show({
-        message: 'No write access to the repository',
-        intent: 'danger',
+        message : 'No write access to the repository',
+        intent  : 'danger',
       });
     }
   }
@@ -152,15 +152,15 @@ const RepoViewer: React.FC<{
   function addItem(x: RepoItems): RepoIndex | undefined {
     if (x.namespace === '') {
       toaster.show({
-        message: 'Invalid item: namespace is empty',
-        intent: 'danger',
+        message : 'Invalid item: namespace is empty',
+        intent  : 'danger',
       });
       return undefined;
     }
     if (x.type !== 'Imp' && index[x.namespace] !== undefined) {
       toaster.show({
-        message: 'Error: item with the same namespace already exists',
-        intent: 'danger',
+        message : 'Error: item with the same namespace already exists',
+        intent  : 'danger',
       });
       return undefined;
     }
@@ -172,8 +172,8 @@ const RepoViewer: React.FC<{
     }
     if (count !== 0) {
       toaster.show({
-        message: `Warning: item with the same namespace already exists, renamed namespace to ${name}`,
-        intent: 'warning',
+        message : `Warning: item with the same namespace already exists, renamed namespace to ${name}`,
+        intent  : 'warning',
       });
       x.namespace = name;
       x.shortname = x.shortname !== '' ? x.shortname + `-${count}` : '';
@@ -185,11 +185,11 @@ const RepoViewer: React.FC<{
 
   function addDoc(x: MMELDocument) {
     const item: RepoItems = {
-      namespace: `${x.id}-doc`,
-      shortname: x.id,
-      title: x.title,
-      date: new Date(),
-      type: 'Doc',
+      namespace : `${x.id}-doc`,
+      shortname : x.id,
+      title     : x.title,
+      date      : new Date(),
+      type      : 'Doc',
     };
     x.id = item.namespace;
     const updated = addItem(item);
@@ -202,10 +202,10 @@ const RepoViewer: React.FC<{
     const model = m.model;
     const meta = model.meta;
     const newItem: RepoItems = {
-      namespace: meta.namespace,
-      shortname: meta.shortname,
-      title: meta.title,
-      date: new Date(),
+      namespace : meta.namespace,
+      shortname : meta.shortname,
+      title     : meta.title,
+      date      : new Date(),
       type,
     };
     const updated = addItem(newItem);
@@ -223,25 +223,25 @@ const RepoViewer: React.FC<{
   function deleteIndexWithDoc(updated: RepoIndex, ns: string) {
     if (updateObjects) {
       const task = updateObjects({
-        commitMessage: COMMITMSG,
-        _dangerouslySkipValidation: true,
-        objectChangeset: {
-          [repoIndexPath]: { newValue: updated },
-          [getPathByNS(ns, RepoFileType.MODEL)]: {
-            newValue: null,
+        commitMessage              : COMMITMSG,
+        _dangerouslySkipValidation : true,
+        objectChangeset            : {
+          [repoIndexPath]                       : { newValue : updated },
+          [getPathByNS(ns, RepoFileType.MODEL)] : {
+            newValue : null,
           },
         },
       });
       task.then(() => {
         toaster.show({
-          message: `Done: document with id ${ns} removed from the repository`,
-          intent: 'success',
+          message : `Done: document with id ${ns} removed from the repository`,
+          intent  : 'success',
         });
       });
     } else {
       toaster.show({
-        message: 'No write access to the repository',
-        intent: 'danger',
+        message : 'No write access to the repository',
+        intent  : 'danger',
       });
     }
   }
@@ -249,37 +249,37 @@ const RepoViewer: React.FC<{
   function deleteIndexWithModel(updated: RepoIndex, ns: string) {
     if (updateObjects) {
       const task = updateObjects({
-        commitMessage: COMMITMSG,
-        _dangerouslySkipValidation: true,
-        objectChangeset: {
-          [repoIndexPath]: { newValue: updated },
-          [getPathByNS(ns, RepoFileType.MODEL)]: {
-            newValue: null,
+        commitMessage              : COMMITMSG,
+        _dangerouslySkipValidation : true,
+        objectChangeset            : {
+          [repoIndexPath]                       : { newValue : updated },
+          [getPathByNS(ns, RepoFileType.MODEL)] : {
+            newValue : null,
           },
-          [getPathByNS(ns, RepoFileType.MAP)]: {
-            newValue: null,
+          [getPathByNS(ns, RepoFileType.MAP)] : {
+            newValue : null,
           },
-          [getPathByNS(ns, RepoFileType.WORKSPACE)]: {
-            newValue: null,
+          [getPathByNS(ns, RepoFileType.WORKSPACE)] : {
+            newValue : null,
           },
-          [getPathByNS(ns, RepoFileType.RDF)]: {
-            newValue: null,
+          [getPathByNS(ns, RepoFileType.RDF)] : {
+            newValue : null,
           },
-          [getPathByNS(ns, RepoFileType.HISTORY)]: {
-            newValue: null,
+          [getPathByNS(ns, RepoFileType.HISTORY)] : {
+            newValue : null,
           },
         },
       });
       task.then(() => {
         toaster.show({
-          message: `Done: model with namespace ${ns} removed from the repository`,
-          intent: 'success',
+          message : `Done: model with namespace ${ns} removed from the repository`,
+          intent  : 'success',
         });
       });
     } else {
       toaster.show({
-        message: 'No write access to the repository',
-        intent: 'danger',
+        message : 'No write access to the repository',
+        intent  : 'danger',
       });
     }
   }
@@ -306,12 +306,12 @@ const RepoViewer: React.FC<{
       if (x.ns === repo?.ns) {
         setRepo(undefined);
       }
-      setRename({ old: x.ns, update: name });
+      setRename({ old : x.ns, update : name });
     } else {
       toaster.show({
-        message:
+        message :
           'Cannot change namespace for models other than implementation models',
-        intent: 'danger',
+        intent : 'danger',
       });
     }
   }
@@ -331,7 +331,7 @@ const RepoViewer: React.FC<{
     setAiRepo(undefined);
   }
 
-  const toolbarProps = { addMW, addDoc, isBSI: true, index, setAiRepo };
+  const toolbarProps = { addMW, addDoc, isBSI : true, index, setAiRepo };
 
   return isVisible ? (
     <Workspace
@@ -353,7 +353,7 @@ const RepoViewer: React.FC<{
           sendMsg={sendMsg}
         />
       )}
-      <div style={{ height: 'calc(100vh - 50px)', overflowY: 'auto' }}>
+      <div style={{ height : 'calc(100vh - 50px)', overflowY : 'auto' }}>
         <RepoInfoPane
           repo={repo}
           index={index}

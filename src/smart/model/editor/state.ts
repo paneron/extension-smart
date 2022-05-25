@@ -69,7 +69,7 @@ export function useEditorState(
   const [post, setPost] = useState<ModelAction | undefined>(undefined);
 
   const page = history[history.length - 1].page;
-  const state: EditorState = { history, page, model, type: 'model' };
+  const state: EditorState = { history, page, model, type : 'model' };
 
   // Logger.log('Page', Object.values(model.pages[page].childs).map(x => x.element));
   // Logger.log('Edges', Object.values(model.pages[page].edges).map(x => `${x.from}-${x.to}`));
@@ -79,7 +79,7 @@ export function useEditorState(
     // Logger.log('Post processing');
     const reverse = actModel(post, page);
     // Logger.log('Reverse:', reverse);
-    actUndoHis({ act: 'post', value: reverse });
+    actUndoHis({ act : 'post', value : reverse });
     setPost(undefined);
   }
 
@@ -99,8 +99,8 @@ export function useEditorState(
     if (len > 0) {
       const action = undoHis[len - 1];
       const reverse = hisAction(action, log, user);
-      actRedoHis({ act: 'push', value: reverse });
-      actUndoHis({ act: 'pop' });
+      actRedoHis({ act : 'push', value : reverse });
+      actUndoHis({ act : 'pop' });
     }
   }
 
@@ -110,14 +110,14 @@ export function useEditorState(
       if (len > 0) {
         const action = redoHis[len - 1];
         const reverse = hisAction(action, log, user);
-        actUndoHis({ act: 'push', value: reverse });
-        actRedoHis({ act: 'pop' });
+        actUndoHis({ act : 'push', value : reverse });
+        actRedoHis({ act : 'pop' });
         if (action.type === 'model') {
           const post: ModelAction = {
-            type: 'model',
-            act: 'validate-page',
+            type      : 'model',
+            act       : 'validate-page',
             page,
-            refAction: action,
+            refAction : action,
           };
           setPost(post);
         }
@@ -132,7 +132,7 @@ export function useEditorState(
   }
 
   function clearRedo() {
-    actRedoHis({ act: 'new' });
+    actRedoHis({ act : 'new' });
   }
 
   function hisAction(
@@ -158,10 +158,10 @@ export function useEditorState(
     const his = undoHis[len - 1];
     if (needCheck(action)) {
       const post: ModelAction = {
-        type: 'model',
-        act: 'validate-page',
+        type      : 'model',
+        act       : 'validate-page',
         page,
-        refAction: action,
+        refAction : action,
       };
       setPost(post);
     }
@@ -170,16 +170,16 @@ export function useEditorState(
       reverse &&
       (len === 0 || redo.length > 0 || !actionCombinable(his, action))
     ) {
-      actUndoHis({ act: 'push', value: reverse });
-      actRedoHis({ act: 'new' });
+      actUndoHis({ act : 'push', value : reverse });
+      actRedoHis({ act : 'new' });
     }
   }
 
   function historyAction(action: HistoryAction) {
     const reverse = actHistory(action);
     if (reverse) {
-      actUndoHis({ act: 'push', value: reverse });
-      actRedoHis({ act: 'new' });
+      actUndoHis({ act : 'push', value : reverse });
+      actRedoHis({ act : 'new' });
     }
   }
 

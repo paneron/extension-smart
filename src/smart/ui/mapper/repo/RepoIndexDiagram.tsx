@@ -27,7 +27,7 @@ const RepoIndexDiagram: React.FC<{
         snapToGrid={true}
         snapGrid={[10, 10]}
         nodesDraggable={true}
-        edgeTypes={{ repo: RepoEdge }}
+        edgeTypes={{ repo : RepoEdge }}
       />
       <LegendPane list={RepoLegend} onLeft={false} />
     </>

@@ -36,8 +36,8 @@ function isUnwantedElement(x: XMLElement): boolean {
 
 // remove unwanted elements, e.g., footnote fn
 function cleanXML(xml: XMLElement) {
-  if (xml.xmlChild['fn'] !== undefined) {
-    delete xml.xmlChild['fn'];
+  if (xml.xmlChild.fn !== undefined) {
+    delete xml.xmlChild.fn;
     xml.childs = xml.childs.filter(
       x => !isXMLElement(x) || !isUnwantedElement(x)
     );
@@ -52,19 +52,19 @@ function cleanXML(xml: XMLElement) {
 export function bsiToDocument(data: string): MMELDocument {
   const xml = parseXML(data);
   cleanXML(xml);
-  const front = xml.xmlChild['front'];
+  const front = xml.xmlChild.front;
   const doc: MMELDocument = {
-    states: {},
-    id: '',
-    title: '',
-    sections: [],
-    type: 'document',
-    version: DOCVERSION,
+    states   : {},
+    id       : '',
+    title    : '',
+    sections : [],
+    type     : 'document',
+    version  : DOCVERSION,
   };
   if (front !== undefined && front.length > 0) {
     setMeta(doc, front[0]);
   }
-  const body = xml.xmlChild['body'];
+  const body = xml.xmlChild.body;
   if (body !== undefined && body.length > 0) {
     setMainDoc(doc, body[0]);
   }
@@ -109,7 +109,7 @@ function setMeta(doc: MMELDocument, xml: XMLElement) {
 }
 
 function setMainDoc(doc: MMELDocument, xml: XMLElement) {
-  const secs = xml.xmlChild['sec'];
+  const secs = xml.xmlChild.sec;
   if (secs !== undefined && secs.length > 0) {
     for (const sec of secs) {
       addSection(doc, sec);
@@ -224,9 +224,9 @@ function addTermsSection(doc: MMELDocument, xml: XMLElement) {
 
 function createDocSection(clause: string, title: string): DocSection {
   return {
-    id: clause,
+    id       : clause,
     title,
-    contents: [],
+    contents : [],
   };
 }
 
@@ -237,12 +237,12 @@ function addStatement(
   clause: string
 ) {
   const st: DocStatement = {
-    id: Object.values(doc.states).length.toString(),
-    text: statement,
+    id        : Object.values(doc.states).length.toString(),
+    text      : statement,
     clause,
-    uiref: React.createRef(),
-    paragraph: section.contents.length + 1,
-    index: 1,
+    uiref     : React.createRef(),
+    paragraph : section.contents.length + 1,
+    index     : 1,
   };
   doc.states[st.id] = st;
   section.contents.push([st.id]);
@@ -258,7 +258,7 @@ function processList(
     if (isXMLElement(c)) {
       if (c.tag === 'list-item') {
         const prefix = getElementValue(c, 'label');
-        const paras = c.xmlChild['p'];
+        const paras = c.xmlChild.p;
         if (paras !== undefined && paras.length > 0) {
           paras.forEach((p, index) => {
             if (index === 0) {
@@ -302,7 +302,7 @@ function processRefList(
   xml: XMLElement,
   clause: string
 ) {
-  const refs = xml.xmlChild['ref'];
+  const refs = xml.xmlChild.ref;
   if (refs !== undefined && refs.length > 0) {
     for (const ref of refs) {
       addStatement(doc, section, elementToString(ref), clause);

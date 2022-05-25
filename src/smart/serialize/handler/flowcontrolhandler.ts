@@ -9,12 +9,12 @@ import { MMELremovePackage, MMELtokenizePackage } from '../util/tokenizer';
 
 export function parseEdge(id: string, data: string): MMELEdge {
   const edge: MMELEdge = {
-    datatype: DataType.EDGE,
-    id: id,
-    from: '',
-    to: '',
-    description: '',
-    condition: '',
+    datatype    : DataType.EDGE,
+    id          : id,
+    from        : '',
+    to          : '',
+    description : '',
+    condition   : '',
   };
 
   const t: Array<string> = MMELtokenizePackage(data);
@@ -52,11 +52,11 @@ export function parseEdge(id: string, data: string): MMELEdge {
 
 export function parseSubprocess(id: string, data: string): MMELSubprocess {
   const sub: MMELSubprocess = {
-    id: id,
-    childs: {},
-    edges: {},
-    data: {},
-    datatype: DataType.SUBPROCESS,
+    id       : id,
+    childs   : {},
+    edges    : {},
+    data     : {},
+    datatype : DataType.SUBPROCESS,
   };
 
   if (data !== '') {
@@ -147,10 +147,10 @@ export function parseSubprocessComponent(
   data: string
 ): MMELSubprocessComponent {
   const com: MMELSubprocessComponent = {
-    element: elm,
-    x: 0,
-    y: 0,
-    datatype: DataType.SUBPROCESSCOMPONENT,
+    element  : elm,
+    x        : 0,
+    y        : 0,
+    datatype : DataType.SUBPROCESSCOMPONENT,
   };
 
   const t: Array<string> = MMELtokenizePackage(data);
@@ -181,9 +181,9 @@ export function parseSubprocessComponent(
 
 export function parseEGate(id: string, data: string): MMELEGate {
   const egate: MMELEGate = {
-    id: id,
-    datatype: DataType.EGATE,
-    label: '',
+    id       : id,
+    datatype : DataType.EGATE,
+    label    : '',
   };
   if (data !== '') {
     const t: Array<string> = MMELtokenizePackage(data);

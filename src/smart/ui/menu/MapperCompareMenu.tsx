@@ -12,9 +12,9 @@ const MapperCompareMenu: React.FC<{
 
   function onClick() {
     handleMappingOpen({
-      onMapProfileChanged: setDiffMap,
+      onMapProfileChanged : setDiffMap,
       requestFileFromFilesystem,
-      fileType: FILE_TYPE.JSON,
+      fileType            : FILE_TYPE.JSON,
     });
   }
 

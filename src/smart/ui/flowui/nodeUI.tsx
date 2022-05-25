@@ -108,14 +108,14 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
         addComment &&
         toggleCommentResolved &&
         deleteComment && (
-          <NodeComment
-            cids={process.comments}
-            getCommentById={callback.getCommentById}
-            addComment={(msg, parent) => addComment(msg, process.id, parent)}
-            toggleCommentResolved={toggleCommentResolved}
-            deleteComment={(x, parent) => deleteComment(x, process.id, parent)}
-          />
-        )}
+        <NodeComment
+          cids={process.comments}
+          getCommentById={callback.getCommentById}
+          addComment={(msg, parent) => addComment(msg, process.id, parent)}
+          toggleCommentResolved={toggleCommentResolved}
+          deleteComment={(x, parent) => deleteComment(x, process.id, parent)}
+        />
+      )}
       <Handle type="source" position={Position.Bottom} style={handleCSS} />
       <PopoverWrapper id={process.id} SD={SD}>
         <PB
@@ -134,9 +134,9 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
       {refs.length > 0 && (
         <div
           style={{
-            position: 'fixed',
-            right: -10,
-            bottom: -10,
+            position : 'fixed',
+            right    : -10,
+            bottom   : -10,
           }}
         >
           <Popover2
@@ -151,9 +151,9 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
       {process.links.size > 0 && (
         <div
           style={{
-            position: 'fixed',
-            left: -10,
-            bottom: -10,
+            position : 'fixed',
+            left     : -10,
+            bottom   : -10,
           }}
         >
           <Popover2
@@ -186,13 +186,13 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
       {callback.hasMapping !== undefined &&
         callback.hasMapping(process.id) &&
         callback.MappingList !== undefined && (
-          <ViewMappingbutton
-            modelType={callback.modelType}
-            id={process.id}
-            setSelectedId={callback.setSelectedId!}
-            MappingList={callback.MappingList}
-          />
-        )}
+        <ViewMappingbutton
+          modelType={callback.modelType}
+          id={process.id}
+          setSelectedId={callback.setSelectedId!}
+          MappingList={callback.MappingList}
+        />
+      )}
       {actor !== null && (
         <div style={{ ...shameLabel, ...shameLabelNoAction }}>
           {actorIcon}
@@ -202,8 +202,8 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
       {Addon !== undefined && <Addon id={process.id} />}
       <Dialog
         style={{
-          width: '95vw',
-          maxHeight: '90vh',
+          width     : '95vw',
+          maxHeight : '90vh',
         }}
         isOpen={show !== undefined}
         onClose={() => setShow(undefined)}
@@ -214,11 +214,11 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
         <div
           className={Classes.DIALOG_BODY}
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            overflowX: 'visible',
-            overflowY: 'auto',
+            display       : 'flex',
+            flexDirection : 'column',
+            alignItems    : 'center',
+            overflowX     : 'visible',
+            overflowY     : 'auto',
           }}
         >
           {show !== undefined ? (
@@ -266,13 +266,13 @@ export const ApprovalComponent: FC<NodeProps> = function ({ data }) {
       {callback.hasMapping !== undefined &&
         callback.hasMapping(approval.id) &&
         callback.MappingList !== undefined && (
-          <ViewMappingbutton
-            modelType={callback.modelType}
-            id={approval.id}
-            setSelectedId={callback.setSelectedId!}
-            MappingList={callback.MappingList}
-          />
-        )}
+        <ViewMappingbutton
+          modelType={callback.modelType}
+          id={approval.id}
+          setSelectedId={callback.setSelectedId!}
+          MappingList={callback.MappingList}
+        />
+      )}
       {actor !== null ? (
         approver !== null ? (
           <>
@@ -383,7 +383,7 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
       <PopoverWrapper id={egate.id} SD={SD}>
         <EgateShape color={color} />
       </PopoverWrapper>
-      <div style={{ width: 0, height: 0 }}>
+      <div style={{ width : 0, height : 0 }}>
         <Tooltip2
           content={<div style={tooltipLabel}>{egate.label}</div>}
           position="top"
@@ -392,11 +392,11 @@ export const EgateComponent: FC<NodeProps> = function ({ data }) {
             style={{
               ...shameLabel,
               ...shameLabelLong,
-              flex: 1,
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              overflow: 'hidden',
-              WebkitBoxOrient: 'vertical',
+              flex            : 1,
+              display         : '-webkit-box',
+              WebkitLineClamp : 2,
+              overflow        : 'hidden',
+              WebkitBoxOrient : 'vertical',
             }}
           >
             {egate.label}
@@ -430,12 +430,12 @@ export const SignalCatchComponent: FC<NodeProps> = function ({ data }) {
 };
 
 const actorIcon = (
-  <Icon style={{ width: 15, height: 15, marginRight: 5 }} icon="person" />
+  <Icon style={{ width : 15, height : 15, marginRight : 5 }} icon="person" />
 );
 
 const approverIcon = (
   <Icon
-    style={{ width: 15, height: 15, marginRight: 5 }}
+    style={{ width : 15, height : 15, marginRight : 5 }}
     intent="success"
     icon="endorsed"
   />

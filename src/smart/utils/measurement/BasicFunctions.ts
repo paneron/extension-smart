@@ -45,9 +45,9 @@ export function isBinaryOperator(c: string): c is MBinOperatorTypes {
 
 export function createMTreeNodeWithValue(value: number[] | string): MTreeNode {
   return {
-    action: '',
-    isData: true,
-    childs: [],
+    action : '',
+    isData : true,
+    childs : [],
     value,
   };
 }
@@ -58,17 +58,17 @@ export function createMTreeNodeWithOperator(
 ): MTreeNode {
   return {
     action,
-    isData: false,
+    isData : false,
     childs,
-    value: [],
+    value  : [],
   };
 }
 
 export function createMTreeNodeWithVariable(action: string): MTreeNode {
   return {
     action,
-    isData: true,
-    childs: [],
-    value: [],
+    isData : true,
+    childs : [],
+    value  : [],
   };
 }

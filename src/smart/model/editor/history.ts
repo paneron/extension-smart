@@ -71,19 +71,19 @@ function findReverse(
 ): HistoryAction | undefined {
   switch (action.act) {
     case 'push':
-      return { act: 'pop', type: 'history', value: action.value.length };
+      return { act : 'pop', type : 'history', value : action.value.length };
     case 'pop': {
       if (his.length > action.value) {
         return {
-          act: 'push',
-          value: his.slice(his.length - action.value),
-          type: 'history',
+          act   : 'push',
+          value : his.slice(his.length - action.value),
+          type  : 'history',
         };
       }
       break;
     }
     case 'replace': {
-      return { act: 'replace', value: his, type: 'history' };
+      return { act : 'replace', value : his, type : 'history' };
     }
   }
   return undefined;
@@ -100,7 +100,7 @@ export function useHistory(
   }
 
   function init(x: HistoryItem[]) {
-    dispatchHis({ act: 'init', value: x });
+    dispatchHis({ act : 'init', value : x });
   }
 
   return [his, act, init];

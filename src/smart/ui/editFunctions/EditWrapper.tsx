@@ -29,9 +29,9 @@ const EditWrapper: React.FC<{
   const { useRemoteUsername } = useContext(DatasetContext);
   const initObj: EditorState = {
     model,
-    history: createModelHistory(model),
-    page: model.root,
-    type: 'model',
+    history : createModelHistory(model),
+    page    : model.root,
+    type    : 'model',
   };
   const [state, act, undoState, redoState, clearRedo] = useEditorState(initObj);
 
@@ -50,30 +50,30 @@ const EditWrapper: React.FC<{
 
   const hotkeys: HotkeyConfig[] = [
     {
-      combo: 'ctrl+z',
-      global: true,
-      label: 'Undo',
-      onKeyDown: undo,
-      allowInInput: true,
+      combo        : 'ctrl+z',
+      global       : true,
+      label        : 'Undo',
+      onKeyDown    : undo,
+      allowInInput : true,
     },
     {
-      combo: 'ctrl+y',
-      global: true,
-      label: 'Redo',
-      onKeyDown: redo,
-      allowInInput: true,
+      combo        : 'ctrl+y',
+      global       : true,
+      label        : 'Redo',
+      onKeyDown    : redo,
+      allowInInput : true,
     },
     {
-      combo: 'ctrl+c',
-      global: true,
-      label: 'Copy',
-      onKeyDown: copy,
+      combo     : 'ctrl+c',
+      global    : true,
+      label     : 'Copy',
+      onKeyDown : copy,
     },
     {
-      combo: 'ctrl+v',
-      global: true,
-      label: 'Paste',
-      onKeyDown: paste,
+      combo     : 'ctrl+v',
+      global    : true,
+      label     : 'Paste',
+      onKeyDown : paste,
     },
   ];
 
@@ -99,8 +99,8 @@ const EditWrapper: React.FC<{
     if (selected !== undefined) {
       setCopied(selected);
       toaster.show({
-        message: `Process ${selected} marked`,
-        intent: 'success',
+        message : `Process ${selected} marked`,
+        intent  : 'success',
       });
     }
   }
@@ -141,8 +141,8 @@ const EditWrapper: React.FC<{
         } catch (e: unknown) {
           const error = e as Error;
           toaster.show({
-            message: `Error: ${error.message}`,
-            intent: 'danger',
+            message : `Error: ${error.message}`,
+            intent  : 'danger',
           });
         }
       }

@@ -34,7 +34,7 @@ const CommentEntry: React.FC<{
         <></>
       )}
       <p>{comment.message}</p>
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <div style={{ display : 'flex', justifyContent : 'flex-end' }}>
         <ButtonGroup>
           <CommentField title="Reply" onComment={onComment} />
           <Button
@@ -62,7 +62,7 @@ const Toggle: React.FC<{
   onClick: () => void;
 }> = function ({ value, onClick }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+    <div style={{ display : 'flex', justifyContent : 'flex-end' }}>
       <Switch checked={value} onChange={onClick}>
         Resolved
       </Switch>

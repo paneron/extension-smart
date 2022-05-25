@@ -28,7 +28,7 @@ const SimulationPane: React.FC<{
 
   function onMove(id: string, pageid: string = page) {
     setLocation(id);
-    setView(getSimulationView({ spageid: pageid, sid: id }));
+    setView(getSimulationView({ spageid : pageid, sid : id }));
   }
 
   function clean() {
@@ -52,7 +52,7 @@ const SimulationPane: React.FC<{
             goToPage={goToPage}
           />
           <Button
-            style={{ paddingTop: '10px' }}
+            style={{ paddingTop : '10px' }}
             onClick={clean}
             fill
             intent="primary"

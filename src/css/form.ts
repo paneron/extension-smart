@@ -13,8 +13,8 @@ const normal_font_style = css`
 `;
 
 const normalFontStyle: CSSProperties = {
-  fontWeight: CSSROOTVARIABLES.fontWeightRegular,
-  fontSize: CSSROOTVARIABLES['--font-size--regular'],
+  fontWeight : CSSROOTVARIABLES.fontWeightRegular,
+  fontSize   : CSSROOTVARIABLES['--font-size--regular'],
 };
 
 const heading_font_style = css`
@@ -23,8 +23,8 @@ const heading_font_style = css`
 `;
 
 const headingFontStyle: CSSProperties = {
-  fontWeight: CSSROOTVARIABLES.fontWeightRegular,
-  fontSize: CSSROOTVARIABLES['--font-size--large'],
+  fontWeight : CSSROOTVARIABLES.fontWeightRegular,
+  fontSize   : CSSROOTVARIABLES['--font-size--large'],
 };
 
 const background_style = css`
@@ -34,9 +34,9 @@ const background_style = css`
 `;
 
 const backgroundStyle: CSSProperties = {
-  backgroundColor: CSSROOTVARIABLES['--colour--white'],
-  border: `1px solid ${CSSROOTVARIABLES['--colour--50-percent-black']}`,
-  padding: '0.146em',
+  backgroundColor : CSSROOTVARIABLES['--colour--white'],
+  border          : `1px solid ${CSSROOTVARIABLES['--colour--50-percent-black']}`,
+  padding         : '0.146em',
 };
 
 export const mgd_input = css`
@@ -47,8 +47,8 @@ export const mgd_input = css`
 export const mgdTextarea: CSSProperties = {
   ...normalFontStyle,
   ...backgroundStyle,
-  resize: 'both',
-  verticalAlign: 'middle',
+  resize        : 'both',
+  verticalAlign : 'middle',
 };
 
 export const mgd_label = css`
@@ -57,7 +57,7 @@ export const mgd_label = css`
 
 export const mgdLabel: CSSProperties = {
   ...normalFontStyle,
-  marginRight: 3,
+  marginRight : 3,
 };
 
 export const mgd_heading = css`

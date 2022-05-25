@@ -36,12 +36,12 @@ export function propagateReadings(
 
 export function makeRecord(s: EmissionSource): ReadingRecord {
   return {
-    source: s,
-    include: [],
-    exclude: [],
-    count: 0,
-    totalinclude: 0,
-    total: 0,
+    source       : s,
+    include      : [],
+    exclude      : [],
+    count        : 0,
+    totalinclude : 0,
+    total        : 0,
   };
 }
 
@@ -52,13 +52,13 @@ export function testMeasurement2060(
   records.forEach((r, index) => {
     records[index] = {
       ...r,
-      result:
+      result :
         r.include.length > 0
           ? checkModelMeasurement(model, getPAS2060Values(r))
           : undefined,
-      source: {
+      source : {
         ...r.source,
-        name: r.source.name === '' ? `Source ${index + 1}` : r.source.name,
+        name : r.source.name === '' ? `Source ${index + 1}` : r.source.name,
       },
     };
   });
@@ -66,8 +66,8 @@ export function testMeasurement2060(
 
 function getPAS2060Values(record: ReadingRecord): EnviromentValues {
   return {
-    Included_Emission: record.include,
-    Excluded_Emission: record.exclude,
+    Included_Emission : record.include,
+    Excluded_Emission : record.exclude,
   };
 }
 

@@ -54,53 +54,53 @@ interface TabProps {
 }
 
 const tabs: Record<SETTINGPAGE, TabProps> = {
-  [SETTINGPAGE.METAPAGE]: {
-    title: 'Metadata',
-    Panel: ({ model, act }) => <MetaEditPage meta={model.meta} act={act} />,
+  [SETTINGPAGE.METAPAGE] : {
+    title : 'Metadata',
+    Panel : ({ model, act }) => <MetaEditPage meta={model.meta} act={act} />,
   },
-  [SETTINGPAGE.SECTION]: {
-    title: 'Sections',
-    Panel: ({ model, act }) => <SectionEditPage model={model} act={act} />,
+  [SETTINGPAGE.SECTION] : {
+    title : 'Sections',
+    Panel : ({ model, act }) => <SectionEditPage model={model} act={act} />,
   },
-  [SETTINGPAGE.TERMPAGE]: {
-    title: 'Terms',
-    Panel: ({ model, act }) => <TermsEditPage model={model} act={act} />,
+  [SETTINGPAGE.TERMPAGE] : {
+    title : 'Terms',
+    Panel : ({ model, act }) => <TermsEditPage model={model} act={act} />,
   },
-  [SETTINGPAGE.ROLEPAGE]: {
-    title: 'Roles',
-    Panel: ({ model, act }) => <RoleEditPage model={model} act={act} />,
+  [SETTINGPAGE.ROLEPAGE] : {
+    title : 'Roles',
+    Panel : ({ model, act }) => <RoleEditPage model={model} act={act} />,
   },
-  [SETTINGPAGE.REFPAGE]: {
-    title: 'References',
-    Panel: ({ model, act }) => <ReferenceEditPage model={model} act={act} />,
+  [SETTINGPAGE.REFPAGE] : {
+    title : 'References',
+    Panel : ({ model, act }) => <ReferenceEditPage model={model} act={act} />,
   },
-  [SETTINGPAGE.REGISTRYPAGE]: {
-    title: 'Data Registry',
-    Panel: ({ model, act }) => <RegistryEditPage model={model} act={act} />,
+  [SETTINGPAGE.REGISTRYPAGE] : {
+    title : 'Data Registry',
+    Panel : ({ model, act }) => <RegistryEditPage model={model} act={act} />,
   },
-  [SETTINGPAGE.DATAPAGE]: {
-    title: 'Data structure',
-    Panel: ({ model, act }) => <DataClassEditPage model={model} act={act} />,
+  [SETTINGPAGE.DATAPAGE] : {
+    title : 'Data structure',
+    Panel : ({ model, act }) => <DataClassEditPage model={model} act={act} />,
   },
-  [SETTINGPAGE.ENUMPAGE]: {
-    title: 'Enumeration',
-    Panel: ({ model, act }) => <EnumEditPage model={model} act={act} />,
+  [SETTINGPAGE.ENUMPAGE] : {
+    title : 'Enumeration',
+    Panel : ({ model, act }) => <EnumEditPage model={model} act={act} />,
   },
-  [SETTINGPAGE.MEASUREMENT]: {
-    title: 'Measurement',
-    Panel: ({ model, act }) => <MeasurementEditPage model={model} act={act} />,
+  [SETTINGPAGE.MEASUREMENT] : {
+    title : 'Measurement',
+    Panel : ({ model, act }) => <MeasurementEditPage model={model} act={act} />,
   },
-  [SETTINGPAGE.PROFILE]: {
-    title: 'View profiles',
-    Panel: ({ model, act }) => <ViewProfileEditPage model={model} act={act} />,
+  [SETTINGPAGE.PROFILE] : {
+    title : 'View profiles',
+    Panel : ({ model, act }) => <ViewProfileEditPage model={model} act={act} />,
   },
-  [SETTINGPAGE.TABLEPAGE]: {
-    title: 'Tables',
-    Panel: ({ model, act }) => <TableEditPage model={model} act={act} />,
+  [SETTINGPAGE.TABLEPAGE] : {
+    title : 'Tables',
+    Panel : ({ model, act }) => <TableEditPage model={model} act={act} />,
   },
-  [SETTINGPAGE.FIGUREPAGE]: {
-    title: 'Multimedia',
-    Panel: ({ model, act }) => <FigureEditPage model={model} act={act} />,
+  [SETTINGPAGE.FIGUREPAGE] : {
+    title : 'Multimedia',
+    Panel : ({ model, act }) => <FigureEditPage model={model} act={act} />,
   },
 };
 

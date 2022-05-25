@@ -10,18 +10,18 @@ const RepoLoading: React.FC<{
   ) : (
     <div
       style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
+        flex           : 1,
+        display        : 'flex',
+        flexDirection  : 'column',
+        justifyContent : 'center',
+        alignItems     : 'center',
       }}
     >
       <h3> Loading completed. </h3>
       {isDoable ? (
         <h3>Click Next to continue</h3>
       ) : (
-        <h3 style={{ color: 'red' }}>But no mapping can be explored</h3>
+        <h3 style={{ color : 'red' }}>But no mapping can be explored</h3>
       )}
     </div>
   );

@@ -74,9 +74,9 @@ const SimpleReferenceSelector: React.FC<{
         ulRef={itemsParentRef}
         className="bp3-popover-content-sizing"
         style={{
-          maxHeight: '35vh',
-          maxWidth: '30vw',
-          overflowY: 'auto',
+          maxHeight : '35vh',
+          maxWidth  : '30vw',
+          overflowY : 'auto',
         }}
       >
         {filteredItems.length > 0 ? (
@@ -100,7 +100,7 @@ const SimpleReferenceSelector: React.FC<{
         tagRenderer={ReferenceTagRender}
         selectedItems={selectedItems}
         tagInputProps={{
-          onRemove: (_, index) => onTagRemove(selectedItems[index].id),
+          onRemove : (_, index) => onTagRemove(selectedItems[index].id),
         }}
         placeholder="Search Reference..."
         itemListRenderer={ReferenceListRender}

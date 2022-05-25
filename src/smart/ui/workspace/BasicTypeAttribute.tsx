@@ -72,11 +72,11 @@ const AttributeEditors: Record<
     roles: string[];
   }>
 > = {
-  [EMPTYTYPE]: StringFieldEdit,
-  [STRINGTYPE]: StringFieldEdit,
-  [BOOLEANTYPE]: BooleanFieldEdit,
-  [DATETIMETYPE]: DateTimeFieldEdit,
-  [ROLETYPE]: RoleFieldEdit,
+  [EMPTYTYPE]    : StringFieldEdit,
+  [STRINGTYPE]   : StringFieldEdit,
+  [BOOLEANTYPE]  : BooleanFieldEdit,
+  [DATETIMETYPE] : DateTimeFieldEdit,
+  [ROLETYPE]     : RoleFieldEdit,
 };
 
 const BasicTypeAttribute: React.FC<{

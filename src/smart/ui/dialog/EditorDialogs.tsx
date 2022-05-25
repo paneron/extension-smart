@@ -61,20 +61,20 @@ export type EditorDiagProps = {
 };
 
 export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
-  [EditorDiagTypes.DELETECONFIRM]: {
-    title: 'Confirmation',
-    fullscreen: false,
-    Panel: ({ onDelete, done, msg }) =>
+  [EditorDiagTypes.DELETECONFIRM] : {
+    title      : 'Confirmation',
+    fullscreen : false,
+    Panel      : ({ onDelete, done, msg }) =>
       onDelete ? (
         <ConfirmDialog callback={onDelete} done={done} msg={msg} />
       ) : (
         <></>
       ),
   },
-  [EditorDiagTypes.EDITPROCESS]: {
-    title: 'Edit Process',
-    fullscreen: true,
-    Panel: props => (
+  [EditorDiagTypes.EDITPROCESS] : {
+    title      : 'Edit Process',
+    fullscreen : true,
+    Panel      : props => (
       <EditProcessPage
         {...props}
         closeDialog={props.done}
@@ -82,10 +82,10 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
       />
     ),
   },
-  [EditorDiagTypes.EDITAPPROVAL]: {
-    title: 'Edit Approval',
-    fullscreen: true,
-    Panel: props => (
+  [EditorDiagTypes.EDITAPPROVAL] : {
+    title      : 'Edit Approval',
+    fullscreen : true,
+    Panel      : props => (
       <EditApprovalPage
         {...props}
         closeDialog={props.done}
@@ -93,10 +93,10 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
       />
     ),
   },
-  [EditorDiagTypes.EDITEGATE]: {
-    title: 'Edit Gateway',
-    fullscreen: true,
-    Panel: props => (
+  [EditorDiagTypes.EDITEGATE] : {
+    title      : 'Edit Gateway',
+    fullscreen : true,
+    Panel      : props => (
       <EditEGatePage
         {...props}
         closeDialog={props.done}
@@ -105,10 +105,10 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
       />
     ),
   },
-  [EditorDiagTypes.EDITTIMER]: {
-    title: 'Edit Timer',
-    fullscreen: true,
-    Panel: props => (
+  [EditorDiagTypes.EDITTIMER] : {
+    title      : 'Edit Timer',
+    fullscreen : true,
+    Panel      : props => (
       <EditTimerPage
         {...props}
         timer={props.model.elements[props.msg] as EditorTimerEvent}
@@ -116,10 +116,10 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
       />
     ),
   },
-  [EditorDiagTypes.EDITSIGNAL]: {
-    title: 'Edit Signal Catch Event',
-    fullscreen: true,
-    Panel: props => (
+  [EditorDiagTypes.EDITSIGNAL] : {
+    title      : 'Edit Signal Catch Event',
+    fullscreen : true,
+    Panel      : props => (
       <EditSignalEventPage
         {...props}
         event={props.model.elements[props.msg] as EditorSignalEvent}
@@ -130,9 +130,9 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
 };
 
 export const EditNodeType: Record<EditableNodeTypes, EditorDiagTypes> = {
-  [DataType.PROCESS]: EditorDiagTypes.EDITPROCESS,
-  [DataType.APPROVAL]: EditorDiagTypes.EDITAPPROVAL,
-  [DataType.TIMEREVENT]: EditorDiagTypes.EDITTIMER,
-  [DataType.SIGNALCATCHEVENT]: EditorDiagTypes.EDITSIGNAL,
-  [DataType.EGATE]: EditorDiagTypes.EDITEGATE,
+  [DataType.PROCESS]          : EditorDiagTypes.EDITPROCESS,
+  [DataType.APPROVAL]         : EditorDiagTypes.EDITAPPROVAL,
+  [DataType.TIMEREVENT]       : EditorDiagTypes.EDITTIMER,
+  [DataType.SIGNALCATCHEVENT] : EditorDiagTypes.EDITSIGNAL,
+  [DataType.EGATE]            : EditorDiagTypes.EDITEGATE,
 };

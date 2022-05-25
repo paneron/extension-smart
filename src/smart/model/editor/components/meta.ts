@@ -22,13 +22,13 @@ function reducer(m: MMELMetadata, action: OwnAction): MMELMetadata {
     const newMeta = { ...action.value };
     return newMeta;
   } else {
-    const newMeta = { ...m, [action.property]: action.value };
+    const newMeta = { ...m, [action.property] : action.value };
     return newMeta;
   }
 }
 
 function findReverse(meta: MMELMetadata, action: MetaAction): MetaAction {
-  return { ...action, value: meta[action.property] ?? '' };
+  return { ...action, value : meta[action.property] ?? '' };
 }
 
 export function useMeta(
@@ -42,7 +42,7 @@ export function useMeta(
   }
 
   function init(x: MMELMetadata) {
-    dispatchMeta({ act: 'init', value: x });
+    dispatchMeta({ act : 'init', value : x });
   }
 
   return [meta, act, init];

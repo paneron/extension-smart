@@ -60,7 +60,7 @@ const ApplicationConfigurePage: React.FC<{
 
   function onAddClick() {
     setting.emissions.push({
-      name: '',
+      name : '',
     });
     setSetting({ ...setting });
   }
@@ -87,7 +87,7 @@ const ApplicationConfigurePage: React.FC<{
           <InputGroup
             value={setting.source}
             placeholder="URL of the aggregator"
-            onChange={x => setSetting({ ...setting, source: x.target.value })}
+            onChange={x => setSetting({ ...setting, source : x.target.value })}
           />
           <Button intent="primary" onClick={testConnection}>
             Test
@@ -135,13 +135,13 @@ const EmissionItem: React.FC<{
     if (requestFileFromFilesystem) {
       requestFileFromFilesystem(
         {
-          prompt: 'Choose a file to open',
-          allowMultiple: false,
-          filters: [
-            { name: 'IFC JSON', extensions: ['json'] },
-            { name: 'GML', extensions: ['gml'] },
-            { name: 'IFC XML', extensions: ['ifcxml'] },
-            { name: 'ifcOWL', extensions: ['ttl'] },
+          prompt        : 'Choose a file to open',
+          allowMultiple : false,
+          filters       : [
+            { name : 'IFC JSON', extensions : ['json']},
+            { name : 'GML', extensions : ['gml']},
+            { name : 'IFC XML', extensions : ['ifcxml']},
+            { name : 'ifcOWL', extensions : ['ttl']},
           ],
         },
         selectedFiles => {
@@ -170,7 +170,7 @@ const EmissionItem: React.FC<{
       <InputGroup
         value={item.name}
         placeholder="Name of the emission source"
-        onChange={x => onChange({ ...item, name: x.target.value })}
+        onChange={x => onChange({ ...item, name : x.target.value })}
         leftElement={<Text>#{index + 1}:</Text>}
         rightElement={
           <Tooltip2 content="Delete source">

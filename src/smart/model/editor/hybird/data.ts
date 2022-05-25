@@ -21,19 +21,19 @@ export function compileRegistryRefImport(
   if (elm && isEditorRegistry(elm) && action.actions === undefined) {
     const actions: ModelAction[] = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'edit',
-        subtask: 'registry',
-        id: action.id,
-        value: action.value,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'edit',
+        subtask : 'registry',
+        id      : action.id,
+        value   : action.value,
       },
       {
-        type: 'model',
-        act: 'refs',
-        task: 'add',
-        value: action.newRefs,
-        cascade: [],
+        type    : 'model',
+        act     : 'refs',
+        task    : 'add',
+        value   : action.newRefs,
+        cascade : [],
       },
     ];
     action.actions = actions;
@@ -42,24 +42,24 @@ export function compileRegistryRefImport(
       const dc = model.elements[reg.data] as EditorDataClass;
       const combined: RegistryCombined = {
         ...dc,
-        title: reg.title,
-        id: reg.id,
+        title : reg.title,
+        id    : reg.id,
       };
       const actions: ModelAction[] = [
         {
-          type: 'model',
-          act: 'elements',
-          task: 'edit',
-          subtask: 'registry',
-          id: action.id,
-          value: combined,
+          type    : 'model',
+          act     : 'elements',
+          task    : 'edit',
+          subtask : 'registry',
+          id      : action.id,
+          value   : combined,
         },
         {
-          type: 'model',
-          act: 'refs',
-          task: 'delete',
-          value: action.newRefs.map(x => x.id),
-          cascade: [],
+          type    : 'model',
+          act     : 'refs',
+          task    : 'delete',
+          value   : action.newRefs.map(x => x.id),
+          cascade : [],
         },
       ];
       ract.actions = actions;
@@ -75,13 +75,13 @@ function reverseRegImportRefAction(
   const reg = model.elements[action.id] as EditorRegistry;
   const dc = model.elements[reg.data] as EditorDataClass;
   return {
-    type: 'model',
-    act: 'hybird',
-    task: 'registry-import-ref',
-    id: action.id,
-    value: { ...dc, title: reg.title, id: reg.id },
-    newRefs: action.delRefs.map(x => model.refs[x]),
-    delRefs: action.newRefs.map(x => x.id),
+    type    : 'model',
+    act     : 'hybird',
+    task    : 'registry-import-ref',
+    id      : action.id,
+    value   : { ...dc, title : reg.title, id : reg.id },
+    newRefs : action.delRefs.map(x => model.refs[x]),
+    delRefs : action.newRefs.map(x => x.id),
   };
 }
 
@@ -94,38 +94,38 @@ export function compileDCRefImport(
   if (elm && isEditorDataClass(elm) && action.actions === undefined) {
     const actions: ModelAction[] = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'edit',
-        subtask: 'dc',
-        id: action.id,
-        value: action.value,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'edit',
+        subtask : 'dc',
+        id      : action.id,
+        value   : action.value,
       },
       {
-        type: 'model',
-        act: 'refs',
-        task: 'add',
-        value: action.newRefs,
-        cascade: [],
+        type    : 'model',
+        act     : 'refs',
+        task    : 'add',
+        value   : action.newRefs,
+        cascade : [],
       },
     ];
     action.actions = actions;
     if (ract && ract.act === 'hybird') {
       const actions: ModelAction[] = [
         {
-          type: 'model',
-          act: 'elements',
-          task: 'edit',
-          subtask: 'dc',
-          id: action.id,
-          value: model.elements[action.id],
+          type    : 'model',
+          act     : 'elements',
+          task    : 'edit',
+          subtask : 'dc',
+          id      : action.id,
+          value   : model.elements[action.id],
         },
         {
-          type: 'model',
-          act: 'refs',
-          task: 'delete',
-          value: action.newRefs.map(x => x.id),
-          cascade: [],
+          type    : 'model',
+          act     : 'refs',
+          task    : 'delete',
+          value   : action.newRefs.map(x => x.id),
+          cascade : [],
         },
       ];
       ract.actions = actions;
@@ -139,12 +139,12 @@ function reverseDCImportRefAction(
   model: EditorModel
 ): ModelAction {
   return {
-    type: 'model',
-    act: 'hybird',
-    task: 'dc-import-ref',
-    id: action.id,
-    value: model.elements[action.id] as EditorDataClass,
-    newRefs: action.delRefs.map(x => model.refs[x]),
-    delRefs: action.newRefs.map(x => x.id),
+    type    : 'model',
+    act     : 'hybird',
+    task    : 'dc-import-ref',
+    id      : action.id,
+    value   : model.elements[action.id] as EditorDataClass,
+    newRefs : action.delRefs.map(x => model.refs[x]),
+    delRefs : action.newRefs.map(x => x.id),
   };
 }

@@ -127,7 +127,7 @@ export const ProcessBox: Record<
     uiref?: RefObject<HTMLDivElement>;
   }>
 > = {
-  [ModelType.EDITREF]: ({ content, pid, styleClass }) => (
+  [ModelType.EDITREF] : ({ content, pid, styleClass }) => (
     <MGDProcessBox
       styleClass={styleClass}
       draggable
@@ -136,10 +136,10 @@ export const ProcessBox: Record<
       {content}
     </MGDProcessBox>
   ),
-  [ModelType.EDIT]: ({ content, styleClass }) => (
+  [ModelType.EDIT] : ({ content, styleClass }) => (
     <MGDProcessBox styleClass={styleClass}>{content}</MGDProcessBox>
   ),
-  [ModelType.IMP]: ({ content, pid, styleClass, uiref }) => {
+  [ModelType.IMP] : ({ content, pid, styleClass, uiref }) => {
     return (
       <MGDProcessBox
         uiref={uiref}
@@ -151,7 +151,7 @@ export const ProcessBox: Record<
       </MGDProcessBox>
     );
   },
-  [ModelType.REF]: ({
+  [ModelType.REF] : ({
     content,
     pid,
     styleClass,

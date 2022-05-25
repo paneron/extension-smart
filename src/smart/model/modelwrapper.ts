@@ -76,23 +76,23 @@ function convertElms(
     if (isDataClass(item)) {
       const newdc: EditorDataClass = {
         ...item,
-        objectVersion: 'Editor',
-        rdcs: new Set<string>(),
-        mother: '',
+        objectVersion : 'Editor',
+        rdcs          : new Set<string>(),
+        mother        : '',
       };
       output[x] = newdc;
     }
     if (isProcess(item)) {
       const newProcess: EditorProcess = {
         ...item,
-        pages: new Set<string>(),
-        objectVersion: 'Editor',
+        pages         : new Set<string>(),
+        objectVersion : 'Editor',
       };
       output[x] = newProcess;
     } else {
       output[x] = {
         ...item,
-        objectVersion: 'Editor',
+        objectVersion : 'Editor',
       };
     }
   }
@@ -110,9 +110,9 @@ function convertPages(
   for (const x in elms) {
     output[x] = {
       ...elms[x],
-      start: findStart(elms[x].childs, nodes),
-      objectVersion: 'Editor',
-      neighbor: {},
+      start         : findStart(elms[x].childs, nodes),
+      objectVersion : 'Editor',
+      neighbor      : {},
     };
   }
   return output;
@@ -139,11 +139,11 @@ function findStart(
 export function createEditorModelWrapper(m: MMELModel): ModelWrapper {
   const convertedElms = convertElms(m.elements);
   const converedPages = convertPages(m.pages, convertedElms);
-  const model = { ...m, elements: convertedElms, pages: converedPages };
+  const model = { ...m, elements : convertedElms, pages : converedPages };
   return buildStructure({
     model,
-    page: m.root,
-    type: 'model',
+    page : m.root,
+    type : 'model',
   });
 }
 
@@ -152,8 +152,8 @@ export function MMELToEditorModel(m: MMELModel): EditorModel {
   const converedPages = convertPages(m.pages, convertedElms);
   const model: EditorModel = {
     ...m,
-    elements: convertedElms,
-    pages: converedPages,
+    elements : convertedElms,
+    pages    : converedPages,
   };
   indexStructure(model);
   return model;
@@ -206,10 +206,10 @@ export function getEditorReactFlowElementsFrom(
 ): Elements {
   const callback = getEditorNodeCallBack({
     ...view,
-    type: ModelType.EDIT,
-    model: model,
+    type              : ModelType.EDIT,
+    model             : model,
     onProcessClick,
-    getStyleClassById: getStyleById,
+    getStyleClassById : getStyleById,
     getSVGColorById,
     index,
     addComment,
@@ -246,10 +246,10 @@ export function getEditorReferenceFlowElementsFrom(
   goToNextModel: (x: MMELRepo) => void
 ): Elements {
   const callback = getEditorNodeCallBack({
-    type: ModelType.EDITREF,
-    model: mw.model,
+    type              : ModelType.EDITREF,
+    model             : mw.model,
     onProcessClick,
-    getStyleClassById: getStyleById,
+    getStyleClassById : getStyleById,
     getSVGColorById,
     idVisible,
     index,
@@ -283,12 +283,12 @@ export function getViewerReactFlowElementsFrom(
   ViewStartEndComponentDesc?: React.FC<{ id: string }>
 ): Elements {
   const callback = getEditorNodeCallBack({
-    type: ModelType.EDIT,
-    model: mw.model,
+    type                      : ModelType.EDIT,
+    model                     : mw.model,
     onProcessClick,
-    getStyleClassById: getStyleById,
+    getStyleClassById         : getStyleById,
     getSVGColorById,
-    ComponentShortDescription: ComponentDesc,
+    ComponentShortDescription : ComponentDesc,
     NodeAddon,
     idVisible,
     ViewStartEndComponentDesc,
@@ -318,10 +318,10 @@ export function getActionReactFlowElementsFrom(
   idVisible: boolean
 ): Elements {
   const callback = getEditorNodeCallBack({
-    type: ModelType.EDIT,
-    model: mw.model,
+    type              : ModelType.EDIT,
+    model             : mw.model,
     onProcessClick,
-    getStyleClassById: getStyleById,
+    getStyleClassById : getStyleById,
     getSVGColorById,
     onDataWorkspaceActive,
     idVisible,
@@ -361,20 +361,20 @@ export function getMapperReactFlowElementsFrom(
   const destinationList = getMappedList(mapSet);
   const callback = getEditorNodeCallBack({
     type,
-    model: mw.model,
+    model             : mw.model,
     onProcessClick,
     setMapping,
-    getStyleClassById:
+    getStyleClassById :
       type === ModelType.REF
         ? getRefNodeStyle(
-            isParentFull,
-            isDiffParentFull,
-            mapResult,
-            diffMapResult
-          )
+          isParentFull,
+          isDiffParentFull,
+          mapResult,
+          diffMapResult
+        )
         : id => getSourceStyleById(mapSet, diffMapSet, id),
     setSelectedId,
-    hasMapping:
+    hasMapping :
       type === ModelType.REF
         ? id => destinationList.has(id)
         : id => mapSet.mappings[id] !== undefined,
@@ -402,15 +402,15 @@ function pageToFlowElements(
 ): Elements {
   const nodes: Elements = Object.values(page.childs).flatMap(x =>
     elms[x.element]
-      ? [createNodeContainer(elms[x.element], { x: x.x, y: x.y }, callback)]
+      ? [createNodeContainer(elms[x.element], { x : x.x, y : x.y }, callback)]
       : []
   );
   const data: Elements = dvisible
     ? Object.values(page.data).flatMap(x =>
         elms[x.element]
-          ? [createNodeContainer(elms[x.element], { x: x.x, y: x.y }, callback)]
+          ? [createNodeContainer(elms[x.element], { x : x.x, y : x.y }, callback)]
           : []
-      )
+    )
     : [];
   const edges: Elements = Object.values(page.edges).map(x => createEdge(x));
   if (dvisible) {

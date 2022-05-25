@@ -32,7 +32,7 @@ const DataClassEditPage: React.FC<{
       .filter(
         x => isEditorDataClass(x) && x.mother === '' && matchFilter(x, filter)
       )
-      .map(x => ({ id: x.id, text: x.id }))
+      .map(x => ({ id : x.id, text : x.id }))
       .sort(defaultItemSorter);
   }
 
@@ -65,16 +65,16 @@ const DataClassEditPage: React.FC<{
   }
 
   const dchandler: IManageHandler<EditorDataClass> = {
-    filterName: 'Data structure filter',
-    itemName: 'Data Structures',
-    Content: DataClassItemPage,
-    initObj: { ...initObj },
-    model: model,
-    getItems: getDCListItems,
-    removeItems: removeDCListItem,
-    addItem: obj => addDC(obj),
-    updateItem: (oldid, obj) => updateDC(oldid, obj),
-    getObjById: getDCById,
+    filterName  : 'Data structure filter',
+    itemName    : 'Data Structures',
+    Content     : DataClassItemPage,
+    initObj     : { ...initObj },
+    model       : model,
+    getItems    : getDCListItems,
+    removeItems : removeDCListItem,
+    addItem     : obj => addDC(obj),
+    updateItem  : (oldid, obj) => updateDC(oldid, obj),
+    getObjById  : getDCById,
   };
 
   return <ListManagePage {...dchandler} />;
@@ -91,12 +91,12 @@ const DataClassItemPage: React.FC<{
       <NormalTextField
         text="Dataclass ID"
         value={dc.id}
-        onChange={x => setDC({ ...dc, id: x.replaceAll(/\s+/g, '') })}
+        onChange={x => setDC({ ...dc, id : x.replaceAll(/\s+/g, '') })}
       />
       <AttributeEditPage
         attributes={{ ...dc.attributes }}
         model={model!}
-        setAtts={x => setDC({ ...dc, attributes: x })}
+        setAtts={x => setDC({ ...dc, attributes : x })}
         oldid={oldid}
       />
     </FormGroup>

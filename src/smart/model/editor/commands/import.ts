@@ -21,9 +21,9 @@ export function importElmCommand(
   page: string
 ) {
   const action: ModelAction = {
-    type: 'model',
-    act: 'hybird',
-    task: 'elm-import',
+    type : 'model',
+    act  : 'hybird',
+    task : 'elm-import',
     id,
     ref,
     x,

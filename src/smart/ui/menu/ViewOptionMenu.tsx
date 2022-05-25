@@ -9,9 +9,9 @@ const items: (keyof ViewerOption)[] = [
 ];
 
 const ItemNames: Record<keyof ViewerOption, string> = {
-  dvisible: 'Show Data',
-  idVisible: 'Show ID',
-  repoBCVisible: 'Show Repo breadcrumb',
+  dvisible      : 'Show Data',
+  idVisible     : 'Show ID',
+  repoBCVisible : 'Show Repo breadcrumb',
 };
 
 const ViewOptionMenu: React.FC<{
@@ -19,7 +19,7 @@ const ViewOptionMenu: React.FC<{
   setViewOption: (x: ViewerOption) => void;
 }> = function ({ viewOption, setViewOption }) {
   function toggleVisibility(x: keyof ViewerOption) {
-    setViewOption({ ...viewOption, [x]: !viewOption[x] });
+    setViewOption({ ...viewOption, [x] : !viewOption[x] });
   }
 
   return (

@@ -21,12 +21,12 @@ import { evaluateCondition, resolveMTNode } from './Evaluator';
 import { parseMeasurement } from './Parser';
 
 export const MeasureResultStyles: Record<MeasureRType, LegendInterface> = {
-  [MeasureRType.OK]: { label: 'OK: Test passed', color: 'lightgreen' },
-  [MeasureRType.NOTEST]: { label: 'OK: No test', color: 'lightblue' },
-  [MeasureRType.ERRORSOURCE]: { label: 'Test failed', color: '#E9967A' },
-  [MeasureRType.CONTAINERROR]: {
-    label: 'Component failed',
-    color: 'lightyellow',
+  [MeasureRType.OK]           : { label : 'OK: Test passed', color : 'lightgreen' },
+  [MeasureRType.NOTEST]       : { label : 'OK: No test', color : 'lightblue' },
+  [MeasureRType.ERRORSOURCE]  : { label : 'Test failed', color : '#E9967A' },
+  [MeasureRType.CONTAINERROR] : {
+    label : 'Component failed',
+    color : 'lightyellow',
   },
 };
 
@@ -88,13 +88,13 @@ export function measureTest(
     if (!branchOnly) {
       if (result.overall) {
         showMsg({
-          message: 'Test passed',
-          intent: 'success',
+          message : 'Test passed',
+          intent  : 'success',
         });
       } else {
         showMsg({
-          message: 'Test failed',
-          intent: 'danger',
+          message : 'Test failed',
+          intent  : 'danger',
         });
       }
     }
@@ -102,9 +102,9 @@ export function measureTest(
   } catch (e: unknown) {
     alert(e);
     return {
-      overall: false,
-      items: {},
-      reports: {},
+      overall : false,
+      items   : {},
+      reports : {},
     };
   }
 }
@@ -158,9 +158,9 @@ function computeResult(
       reports,
       branchOnly
     )[0];
-    return { overall: ret, items, reports };
+    return { overall : ret, items, reports };
   }
-  return { overall: true, items: {}, reports: {} };
+  return { overall : true, items : {}, reports : {}};
 }
 
 function computeNode(
@@ -398,5 +398,5 @@ function lookupTable(
       }
     }
   }
-  throw `No data is found on the table`;
+  throw 'No data is found on the table';
 }

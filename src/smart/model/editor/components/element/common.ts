@@ -71,22 +71,22 @@ export function cascadeCheckElm(
     } else {
       action.cascade = [
         {
-          type: 'model',
-          act: 'pages',
-          task: 'replace-id',
-          id: action.id,
+          type  : 'model',
+          act   : 'pages',
+          task  : 'replace-id',
+          id    : action.id,
           page,
-          value: action.value.id,
+          value : action.value.id,
         },
       ];
       return [
         {
-          type: 'model',
-          act: 'pages',
-          task: 'replace-id',
-          id: action.value.id,
+          type  : 'model',
+          act   : 'pages',
+          task  : 'replace-id',
+          id    : action.value.id,
           page,
-          value: action.id,
+          value : action.id,
         },
       ];
     }

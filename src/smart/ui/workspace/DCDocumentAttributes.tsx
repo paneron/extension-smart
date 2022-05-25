@@ -29,7 +29,7 @@ const DCDocumentAttributes: React.FC<{
         <NormalTextField
           text="Document name"
           value={doc.name}
-          onChange={x => setDoc({ ...doc, name: x })}
+          onChange={x => setDoc({ ...doc, name : x })}
         />
       )}
       {Object.values(dc.attributes).map(a => (
@@ -104,8 +104,8 @@ const DocumentAttribute: React.FC<{
   const reg = getRegistryReference(type, model.elements);
   if (reg !== null) {
     const regstore: SMARTDocumentStore = workspace[reg.id] ?? {
-      id: reg.id,
-      docs: {},
+      id   : reg.id,
+      docs : {},
     };
     return (
       <ReferenceAttributes

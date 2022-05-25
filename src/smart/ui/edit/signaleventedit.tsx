@@ -97,11 +97,11 @@ const EditSignalEventPage: React.FC<{
   const fullEditClick =
     onFullEditClick !== undefined
       ? function () {
-          if (hasChange) {
-            onUpdateClick();
-          }
-          onFullEditClick();
+        if (hasChange) {
+          onUpdateClick();
         }
+        onFullEditClick();
+      }
       : undefined;
 
   const commonProps: CommonSignalEditProps = {
@@ -109,7 +109,7 @@ const EditSignalEventPage: React.FC<{
     editing,
     setEditing,
     onDeleteClick,
-    onFullEditClick: fullEditClick,
+    onFullEditClick : fullEditClick,
     setUndoListener,
   };
 
@@ -117,10 +117,10 @@ const EditSignalEventPage: React.FC<{
 
   const quickEditProps = {
     saveOnExit,
-    scEvent: event,
-    setEditing: setEdit,
-    initID: event.id,
-    validTest: (id: string) => id === event.id || checkId(id, model.elements),
+    scEvent    : event,
+    setEditing : setEdit,
+    initID     : event.id,
+    validTest  : (id: string) => id === event.id || checkId(id, model.elements),
     onNewID,
     model,
     setHasChange,
@@ -187,7 +187,7 @@ const QuickVersionEdit: React.FC<
       <NormalTextField
         text="Signal"
         value={editing.signal}
-        onChange={x => setEditing({ ...editing, signal: x })}
+        onChange={x => setEditing({ ...editing, signal : x })}
       />
     </FormGroup>
   );
@@ -216,16 +216,16 @@ const FullVersionEdit: React.FC<
         <NormalTextField
           text="Signal Catch Event ID"
           value={editing.id}
-          onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
+          onChange={x => setEditing({ ...editing, id : removeSpace(x) })}
         />
         <ReferenceSelector
           text="Signal"
           filterName="Signal filter"
           value={editing.signal}
           options={signals}
-          update={x => setEditing({ ...editing, signal: signals[x] })}
+          update={x => setEditing({ ...editing, signal : signals[x] })}
           editable={true}
-          onChange={x => setEditing({ ...editing, signal: x })}
+          onChange={x => setEditing({ ...editing, signal : x })}
         />
       </FormGroup>
     </MGDDisplayPane>

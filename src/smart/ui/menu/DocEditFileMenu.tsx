@@ -34,9 +34,9 @@ const DocMenu: React.FC<{
 
   function handleOpen() {
     handleDocumentOpen({
-      setDocument: setDoc,
+      setDocument : setDoc,
       requestFileFromFilesystem,
-      fileType: FILE_TYPE.Document,
+      fileType    : FILE_TYPE.Document,
     });
   }
 
@@ -44,8 +44,8 @@ const DocMenu: React.FC<{
     saveToFileSystem({
       getBlob,
       writeFileToFilesystem,
-      fileData: docToText(doc),
-      type: FILE_TYPE.Document,
+      fileData : docToText(doc),
+      type     : FILE_TYPE.Document,
     });
   }
 

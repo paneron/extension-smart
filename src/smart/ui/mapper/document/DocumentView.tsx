@@ -35,22 +35,22 @@ const SMARTDocumentView: React.FC<{
   return (
     <div
       style={{
-        height: isRepo
+        height : isRepo
           ? 'calc(100vh - 25px)'
           : mapSet !== undefined
           ? 'calc(100vh - 100px)'
           : 'calc(100vh - 50px)',
-        overflowY: 'auto',
+        overflowY : 'auto',
       }}
       onDragOver={onDragOver}
       onScroll={setSelected !== undefined ? () => setSelected('') : undefined}
     >
       <h2
         style={{
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          width: '70%',
-          textAlign: 'center',
+          marginLeft  : 'auto',
+          marginRight : 'auto',
+          width       : '70%',
+          textAlign   : 'center',
         }}
       >
         {mmelDoc.title}

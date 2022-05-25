@@ -15,11 +15,11 @@ const DocEditToolbar: React.FC<{
 }> = function (props) {
   const [diagMode, setOpen] = useState<DiagMode | undefined>(undefined);
 
-  const fileMenuProps = { ...props, open: () => setOpen('setting') };
+  const fileMenuProps = { ...props, open : () => setOpen('setting') };
   const diagProps = {
     ...fileMenuProps,
     diagMode,
-    done: () => setOpen(undefined),
+    done : () => setOpen(undefined),
   };
 
   return (

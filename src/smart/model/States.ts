@@ -87,26 +87,26 @@ export function isModelWrapper(x: ReferenceContent): x is ModelWrapper {
 }
 
 export const MMELtoFlowEntries: Record<string, MMELtoFlowEntry> = {
-  [DataType.STARTEVENT]: { flowName: 'start', component: StartComponent },
-  [DataType.ENDEVENT]: { flowName: 'end', component: EndComponent },
-  [DataType.TIMEREVENT]: { flowName: 'timer', component: TimerComponent },
-  [DataType.EGATE]: { flowName: 'egate', component: EgateComponent },
-  [DataType.SIGNALCATCHEVENT]: {
-    flowName: 'signal',
-    component: SignalCatchComponent,
+  [DataType.STARTEVENT]       : { flowName : 'start', component : StartComponent },
+  [DataType.ENDEVENT]         : { flowName : 'end', component : EndComponent },
+  [DataType.TIMEREVENT]       : { flowName : 'timer', component : TimerComponent },
+  [DataType.EGATE]            : { flowName : 'egate', component : EgateComponent },
+  [DataType.SIGNALCATCHEVENT] : {
+    flowName  : 'signal',
+    component : SignalCatchComponent,
   },
-  [DataType.PROCESS]: { flowName: 'process', component: ProcessComponent },
-  [DataType.APPROVAL]: { flowName: 'approval', component: ApprovalComponent },
-  [DataType.DATACLASS]: { flowName: 'data', component: Datacube },
-  [DataType.REGISTRY]: { flowName: 'data', component: Datacube },
+  [DataType.PROCESS]   : { flowName : 'process', component : ProcessComponent },
+  [DataType.APPROVAL]  : { flowName : 'approval', component : ApprovalComponent },
+  [DataType.DATACLASS] : { flowName : 'data', component : Datacube },
+  [DataType.REGISTRY]  : { flowName : 'data', component : Datacube },
 };
 
 export const NodeTypes = gatherNodeTypes(MMELtoFlowEntries);
 
 export const EdgeTypes = {
-  self: SelfLoopEdge,
-  normal: NormalEdge,
-  datalink: DataLinkEdge,
+  self     : SelfLoopEdge,
+  normal   : NormalEdge,
+  datalink : DataLinkEdge,
 };
 
 function gatherNodeTypes(

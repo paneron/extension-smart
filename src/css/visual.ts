@@ -23,47 +23,47 @@ import {
 } from '../smart/utils/SearchFunctions';
 
 export const handleCSS: CSSProperties = {
-  borderRadius: '5px!important',
-  width: '19px!important',
-  height: '19px!important',
-  background: 'whitesmoke!important',
-  border: '1px solid black!important',
+  borderRadius : '5px!important',
+  width        : '19px!important',
+  height       : '19px!important',
+  background   : 'whitesmoke!important',
+  border       : '1px solid black!important',
 };
 
 export const flowCheckbox: CSSProperties = {
-  position: 'absolute',
-  left: 0,
-  top: 0,
-  width: 30,
-  textAlign: 'left',
-  fontSize: 12,
+  position  : 'absolute',
+  left      : 0,
+  top       : 0,
+  width     : 30,
+  textAlign : 'left',
+  fontSize  : 12,
 };
 
 export const flowProgressLabelWithButton: CSSProperties = {
-  position: 'absolute',
-  left: 0,
-  top: -25,
-  width: 140,
-  textAlign: 'right',
-  fontSize: 12,
+  position  : 'absolute',
+  left      : 0,
+  top       : -25,
+  width     : 140,
+  textAlign : 'right',
+  fontSize  : 12,
 };
 
 export const flowProgressLabel: CSSProperties = {
-  position: 'absolute',
-  left: 0,
-  top: -20,
-  width: 140,
-  textAlign: 'right',
-  fontSize: 12,
+  position  : 'absolute',
+  left      : 0,
+  top       : -20,
+  width     : 140,
+  textAlign : 'right',
+  fontSize  : 12,
 };
 
 export const flowPercentageLabel: CSSProperties = {
-  position: 'absolute',
-  left: 0,
-  top: -20,
-  width: 140,
-  textAlign: 'left',
-  fontSize: 12,
+  position  : 'absolute',
+  left      : 0,
+  top       : -20,
+  width     : 140,
+  textAlign : 'left',
+  fontSize  : 12,
 };
 
 export const no_highlight = css``;

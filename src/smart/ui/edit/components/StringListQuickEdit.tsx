@@ -45,17 +45,17 @@ const ItemQuickEdit: React.FC<{
   return (
     <div
       style={{
-        position: 'relative',
+        position : 'relative',
       }}
     >
       <fieldset>
         <NormalTextField value={item} onChange={x => setItem(x)} />
         <div
           style={{
-            position: 'absolute',
-            right: 0,
-            top: -8,
-            zIndex: 10,
+            position : 'absolute',
+            right    : 0,
+            top      : -8,
+            zIndex   : 10,
           }}
         >
           <Button intent="danger" onClick={onDelete}>

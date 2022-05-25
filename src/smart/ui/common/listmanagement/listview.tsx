@@ -61,8 +61,8 @@ const ListViewPane: React.FC<IViewListInterface> = ({
       </p>
 
       <p> {itemName} </p>
-      <div style={{ display: 'flex' }}>
-        <div style={{ flexGrow: 1 }}>
+      <div style={{ display : 'flex' }}>
+        <div style={{ flexGrow : 1 }}>
           <select
             css={[mgd_select, mgd_select__restrained]}
             size={size}
@@ -79,10 +79,10 @@ const ListViewPane: React.FC<IViewListInterface> = ({
         {moveUp && moveDown && (
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              gap: 20,
+              display        : 'flex',
+              flexDirection  : 'column',
+              justifyContent : 'center',
+              gap            : 20,
             }}
           >
             <Button

@@ -9,9 +9,9 @@ type NumberedEmissionSource = EmissionSource & {
 };
 
 const cssStyle: CSSProperties = {
-  width: '200px',
-  zIndex: 16,
-  padding: 0,
+  width   : '200px',
+  zIndex  : 16,
+  padding : 0,
 };
 
 const BuildingMap: React.FC<{
@@ -21,7 +21,7 @@ const BuildingMap: React.FC<{
     .map(
       (e, index): NumberedEmissionSource => ({
         ...e,
-        pos: index + 1,
+        pos : index + 1,
       })
     )
     .filter(e => e.box !== undefined);
@@ -84,9 +84,9 @@ const BuildingItem: React.FC<{
       />
       <text
         style={{
-          fill: 'black',
-          fontSize: 10,
-          textAnchor: 'middle',
+          fill       : 'black',
+          fontSize   : 10,
+          textAnchor : 'middle',
         }}
         x={(minx + maxx) / 2}
         y={(miny + maxy) / 2 + 4}

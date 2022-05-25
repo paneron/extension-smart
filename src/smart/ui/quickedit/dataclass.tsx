@@ -36,12 +36,12 @@ const QuickEditDataClass: React.FC<{
 
   const [editing, setEditing] = useState<EditorDataClass>(dataclass);
   const [hasChange, setHasChange] = useState<boolean>(false);
-  const exitRef = useRef<{ exit: () => void }>({ exit: saveOnExit });
+  const exitRef = useRef<{ exit: () => void }>({ exit : saveOnExit });
   exitRef.current.exit = saveOnExit;
 
   const types = useMemo(() => findAllAttributeTypes(model), [model]);
   const typesObj = useMemo(
-    () => types.reduce((obj, x) => ({ ...obj, [x.id]: x }), {}),
+    () => types.reduce((obj, x) => ({ ...obj, [x.id] : x }), {}),
     [types]
   );
 
@@ -69,7 +69,7 @@ const QuickEditDataClass: React.FC<{
   }
 
   function setAtt(x: Record<string, MMELDataAttribute>) {
-    setEditing({ ...editing, attributes: x });
+    setEditing({ ...editing, attributes : x });
     onChange();
   }
 

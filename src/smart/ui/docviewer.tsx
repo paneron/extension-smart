@@ -18,7 +18,7 @@ const DocumentViewer: React.FC<{
 
   const repoPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
   const repoModelFile = useObjectData({
-    objectPaths: [repoPath],
+    objectPaths : [repoPath],
   });
   const doc = repoModelFile.value.data[repoPath] as MMELDocument;
   if (doc && doc.version !== DOCVERSION) {

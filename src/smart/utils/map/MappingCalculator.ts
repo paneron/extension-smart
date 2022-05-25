@@ -55,22 +55,22 @@ export type MapDiffEdgeResult = MapEdgeResult & { type: MapDiffType };
 export type MapperModels = ModelType.IMP | ModelType.REF;
 
 export const MapViewButtonToolTip: Record<MapperModels, string> = {
-  [ModelType.IMP]: 'View outgoing mappings',
-  [ModelType.REF]: 'View incoming mappings',
+  [ModelType.IMP] : 'View outgoing mappings',
+  [ModelType.REF] : 'View incoming mappings',
 };
 
 export const MappingResultStyles: Record<MapCoverType, LegendInterface> = {
-  [MapCoverType.FULL]: { label: 'Fully covered', color: 'lightgreen' },
-  [MapCoverType.PASS]: { label: 'Minimal covered', color: 'lightblue' },
-  [MapCoverType.PARTIAL]: { label: 'Partially covered', color: 'lightyellow' },
-  [MapCoverType.NONE]: { label: 'Not covered', color: '#E9967A' },
+  [MapCoverType.FULL]    : { label : 'Fully covered', color : 'lightgreen' },
+  [MapCoverType.PASS]    : { label : 'Minimal covered', color : 'lightblue' },
+  [MapCoverType.PARTIAL] : { label : 'Partially covered', color : 'lightyellow' },
+  [MapCoverType.NONE]    : { label : 'Not covered', color : '#E9967A' },
 };
 
 export const MappingSourceStyles: Record<MapSourceType, LegendInterface> = {
-  [MapSourceType.HASMAP]: { label: 'Has mapping', color: 'lightblue' },
-  [MapSourceType.NOMAP]: {
-    label: 'No mapping',
-    color: CSSROOTVARIABLES['--plain-node-color'],
+  [MapSourceType.HASMAP] : { label : 'Has mapping', color : 'lightblue' },
+  [MapSourceType.NOMAP]  : {
+    label : 'No mapping',
+    color : CSSROOTVARIABLES['--plain-node-color'],
   },
 };
 
@@ -350,10 +350,10 @@ function getFilterMapRecord(
   const impNode = impElms[impId];
   const refNode = refElms[refId];
   return {
-    fromref: impNode.uiref!,
-    toref: refNode.uiref!,
-    fromid: impNode.id,
-    toid: refNode.id,
+    fromref : impNode.uiref!,
+    toref   : refNode.uiref!,
+    fromid  : impNode.id,
+    toid    : refNode.id,
   };
 }
 
@@ -364,10 +364,10 @@ function getFilterMapRecordForDocument(
 ): MapEdgeResult {
   const impNode = impElms[impId];
   return {
-    fromref: impNode.uiref!,
-    toref: statement.uiref!,
-    fromid: impNode.id,
-    toid: statement.id,
+    fromref : impNode.uiref!,
+    toref   : statement.uiref!,
+    fromid  : impNode.id,
+    toid    : statement.id,
   };
 }
 
@@ -427,7 +427,7 @@ export function mapAI(
     const smap = smapping.mappings;
     const tmap = tmapping.mappings;
     if (mp.mapSet[targetns] === undefined) {
-      mp.mapSet[targetns] = { id: targetns, mappings: {} };
+      mp.mapSet[targetns] = { id : targetns, mappings : {}};
     }
     const map = mp.mapSet[targetns].mappings;
     // sf: source from
@@ -447,8 +447,8 @@ export function mapAI(
                 map[sf] = {};
               }
               map[sf][dt] = {
-                description: `[Auto-generated: transitive mapping]\nMapping 1: ${sourcemap.description}\nMapping 2: ${destmap.description}`,
-                justification: `[Auto-generated: transitive mapping]\nMapping 1: ${sourcemap.justification}\nMapping 2: ${destmap.justification}`,
+                description   : `[Auto-generated: transitive mapping]\nMapping 1: ${sourcemap.description}\nMapping 2: ${destmap.description}`,
+                justification : `[Auto-generated: transitive mapping]\nMapping 1: ${sourcemap.justification}\nMapping 2: ${destmap.justification}`,
               };
               count++;
             }
@@ -497,7 +497,7 @@ function mergeMapping(
 }
 
 function mergeMapSet(s1: MapSet, s2: MapSet): MapSet {
-  const newMapSet: MapSet = { ...s1, mappings: { ...s1.mappings } };
+  const newMapSet: MapSet = { ...s1, mappings : { ...s1.mappings }};
   const { mappings } = newMapSet;
   for (const x in s2.mappings) {
     if (mappings[x] !== undefined) {
@@ -539,7 +539,7 @@ function mergeMapDocs(
         suffix++;
       }
       const newId = x + suffix;
-      newDoc[newId] = { ...doc, id: newId };
+      newDoc[newId] = { ...doc, id : newId };
     }
   }
   return newDoc;

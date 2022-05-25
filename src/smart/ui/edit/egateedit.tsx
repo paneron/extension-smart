@@ -119,11 +119,11 @@ const EditEGatePage: React.FC<{
   const fullEditClick =
     onFullEditClick !== undefined
       ? function () {
-          if (hasChange) {
-            onUpdateClick();
-          }
-          onFullEditClick();
+        if (hasChange) {
+          onUpdateClick();
         }
+        onFullEditClick();
+      }
       : undefined;
 
   const commonProps: CommonEGateEditProps = {
@@ -133,7 +133,7 @@ const EditEGatePage: React.FC<{
     edges,
     setEdges,
     onDeleteClick,
-    onFullEditClick: fullEditClick,
+    onFullEditClick : fullEditClick,
     setUndoListener,
   };
 
@@ -145,10 +145,10 @@ const EditEGatePage: React.FC<{
   const quickEditProps = {
     saveOnExit,
     egate,
-    setEditing: setEdit,
-    setEdges: setEds,
-    initID: egate.id,
-    validTest: (id: string) => id === egate.id || checkId(id, model.elements),
+    setEditing : setEdit,
+    setEdges   : setEds,
+    initID     : egate.id,
+    validTest  : (id: string) => id === egate.id || checkId(id, model.elements),
     onNewID,
     model,
     setHasChange,
@@ -224,7 +224,7 @@ const QuickVersionEdit: React.FC<
       <NormalTextField
         text="Label"
         value={editing.label}
-        onChange={x => setEditing({ ...editing, label: x })}
+        onChange={x => setEditing({ ...editing, label : x })}
       />
       {edges.map((edge, index) => (
         <EdgeQuickEdit
@@ -271,12 +271,12 @@ const FullVersionEdit: React.FC<
         <NormalTextField
           text="Exclusive Gateway ID"
           value={editing.id}
-          onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
+          onChange={x => setEditing({ ...editing, id : removeSpace(x) })}
         />
         <NormalTextField
           text="Label"
           value={editing.label}
-          onChange={x => setEditing({ ...editing, label: x })}
+          onChange={x => setEditing({ ...editing, label : x })}
         />
         {edges.map((edge, index) => (
           <EditEdgePage
@@ -308,7 +308,7 @@ const EditEdgePage: React.FC<{
         <NormalTextField
           text="Description"
           value={edge.description}
-          onChange={x => setEdge(index, { ...edge, description: x })}
+          onChange={x => setEdge(index, { ...edge, description : x })}
         />
         <ReferenceSelector
           text="Condition"
@@ -319,17 +319,17 @@ const EditEdgePage: React.FC<{
           update={x =>
             setEdge(index, {
               ...edge,
-              condition: edge.condition + '[' + types[x] + ']',
+              condition : edge.condition + '[' + types[x] + ']',
             })
           }
-          onChange={x => setEdge(index, { ...edge, condition: x })}
+          onChange={x => setEdge(index, { ...edge, condition : x })}
         />
         <Button
           onClick={() =>
             setEdge(index, {
               ...edge,
-              description: 'default',
-              condition: 'default',
+              description : 'default',
+              condition   : 'default',
             })
           }
         >
@@ -337,7 +337,7 @@ const EditEdgePage: React.FC<{
         </Button>
         <Button
           onClick={() =>
-            setEdge(index, { ...edge, description: '', condition: '' })
+            setEdge(index, { ...edge, description : '', condition : '' })
           }
         >
           Set empty

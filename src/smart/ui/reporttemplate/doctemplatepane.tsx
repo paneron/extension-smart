@@ -30,7 +30,7 @@ const DocTemplatePane: React.FC<{
   function getDocListItems(filter: string): IListItem[] {
     return Object.values(mapProfile.docs)
       .filter(x => matchFilter(x, filter))
-      .map(x => ({ id: x.id, text: x.title }))
+      .map(x => ({ id : x.id, text : x.title }))
       .sort(defaultItemSorter);
   }
 
@@ -70,9 +70,9 @@ const DocTemplatePane: React.FC<{
     const doc = mapProfile.docs[id];
     if (doc === undefined) {
       return {
-        id: '',
-        title: '',
-        content: '',
+        id      : '',
+        title   : '',
+        content : '',
       };
     }
     return doc;
@@ -85,26 +85,26 @@ const DocTemplatePane: React.FC<{
   }
 
   const genButtonProps: IAdditionalListButton = {
-    text: 'Generate',
-    icon: 'build',
-    onClick: onGenReportClick,
+    text    : 'Generate',
+    icon    : 'build',
+    onClick : onGenReportClick,
   };
 
   const dochandler: IManageHandler<MappingDoc> = {
-    filterName: 'Template filter',
-    itemName: `Templates for ${refModel.meta.shortname}`,
-    Content: DocEditItemPage,
-    initObj: {
-      id: '',
-      title: '',
-      content: '',
+    filterName : 'Template filter',
+    itemName   : `Templates for ${refModel.meta.shortname}`,
+    Content    : DocEditItemPage,
+    initObj    : {
+      id      : '',
+      title   : '',
+      content : '',
     },
-    getItems: getDocListItems,
-    removeItems: removeDocListItem,
-    addItem: obj => addDoc(obj),
-    updateItem: (oldid, obj) => updateDoc(oldid, obj),
-    getObjById: getDocById,
-    buttons: [genButtonProps],
+    getItems    : getDocListItems,
+    removeItems : removeDocListItem,
+    addItem     : obj => addDoc(obj),
+    updateItem  : (oldid, obj) => updateDoc(oldid, obj),
+    getObjById  : getDocById,
+    buttons     : [genButtonProps],
   };
 
   return (
@@ -136,18 +136,18 @@ const DocEditItemPage: React.FC<{
         <NormalTextField
           text="Document ID"
           value={doc.id}
-          onChange={x => setDoc({ ...doc, id: x.replaceAll(/\s+/g, '') })}
+          onChange={x => setDoc({ ...doc, id : x.replaceAll(/\s+/g, '') })}
         />
         <NormalTextField
           text="Document title"
           value={doc.title}
-          onChange={x => setDoc({ ...doc, title: x })}
+          onChange={x => setDoc({ ...doc, title : x })}
         />
         <NormalTextField
           text="Document Content"
           rows={30}
           value={doc.content}
-          onChange={x => setDoc({ ...doc, content: x })}
+          onChange={x => setDoc({ ...doc, content : x })}
         />
       </FormGroup>
     </MGDDisplayPane>

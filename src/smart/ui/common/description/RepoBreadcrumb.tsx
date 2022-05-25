@@ -7,8 +7,8 @@ const RepoBreadcrumb: React.FC<{
   setRepoHis: (x: RepoHistory) => void;
 }> = function ({ repoHis, setRepoHis }) {
   const items: BreadcrumbProps[] = repoHis.map((x, index) => ({
-    text: x.ns,
-    onClick: () => setRepoHis(repoHis.slice(0, index + 1)),
+    text    : x.ns,
+    onClick : () => setRepoHis(repoHis.slice(0, index + 1)),
   }));
   return (
     <Container>
@@ -23,11 +23,11 @@ const Container: React.FC<{ children: React.ReactNode }> = function ({
   return (
     <aside
       style={{
-        position: 'absolute',
-        left: 5,
-        right: 5,
-        top: 0,
-        zIndex: 90,
+        position : 'absolute',
+        left     : 5,
+        right    : 5,
+        top      : 0,
+        zIndex   : 90,
       }}
     >
       {children}

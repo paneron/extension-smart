@@ -9,15 +9,15 @@ export default function updateParaView(
 ) {
   setView({
     getStyleById,
-    getSVGColorById: () => 'none',
-    legendList: ViewStyles,
-    data: result,
+    getSVGColorById : () => 'none',
+    legendList      : ViewStyles,
+    data            : result,
   });
 }
 
 const ViewStyles: Record<string, LegendInterface> = {
-  present: { label: 'Required', color: 'lightgreen' },
-  abs: { label: 'Not required', color: 'lightgray' },
+  present : { label : 'Required', color : 'lightgreen' },
+  abs     : { label : 'Not required', color : 'lightgray' },
 };
 
 function getStyleById(id: string, pageid: string, data: unknown) {
@@ -25,7 +25,7 @@ function getStyleById(id: string, pageid: string, data: unknown) {
   const pageresult = result.items[pageid] ?? {};
   const componentresult = pageresult[id];
   if (componentresult === undefined) {
-    return flow_node__highlighed(ViewStyles['abs'].color);
+    return flow_node__highlighed(ViewStyles.abs.color);
   }
-  return flow_node__highlighed(ViewStyles['present'].color);
+  return flow_node__highlighed(ViewStyles.present.color);
 }

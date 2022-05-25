@@ -18,7 +18,7 @@ const RepoIndexMainView: React.FC<{
   const { useObjectData } = useContext(DatasetContext);
 
   const modelFiles = useObjectData({
-    objectPaths: getAllRepoModels(index),
+    objectPaths : getAllRepoModels(index),
   });
 
   const models: Record<string, ModelWrapper> | undefined = useMemo(() => {
@@ -29,9 +29,9 @@ const RepoIndexMainView: React.FC<{
         (obj, [ns, x]) =>
           x !== null
             ? {
-                ...obj,
-                [ns]: createEditorModelWrapper(JSONToMMEL(x as MMELJSON)),
-              }
+              ...obj,
+              [ns] : createEditorModelWrapper(JSONToMMEL(x as MMELJSON)),
+            }
             : obj,
         {}
       );
@@ -50,6 +50,6 @@ const RepoIndexMainView: React.FC<{
   );
 };
 
-const LoadingAnalysis = LoadingScreen({ label: 'Loading model information' });
+const LoadingAnalysis = LoadingScreen({ label : 'Loading model information' });
 
 export default RepoIndexMainView;

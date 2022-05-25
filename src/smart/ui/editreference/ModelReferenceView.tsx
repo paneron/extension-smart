@@ -64,7 +64,7 @@ const ModelReferenceView: React.FC<{
 }) => {
   const { usePersistentDatasetStateReducer } = useContext(DatasetContext);
 
-  const modelWrapper: ModelWrapper = { model, page, type: 'model' };
+  const modelWrapper: ModelWrapper = { model, page, type : 'model' };
 
   const Sidebar = useMemo(
     () => makeSidebar(usePersistentDatasetStateReducer!),
@@ -83,14 +83,14 @@ const ModelReferenceView: React.FC<{
 
   function onPageChange(updated: PageHistory, newPage: string) {
     setHistory({ ...updated });
-    setModelWrapper({ ...modelWrapper, page: newPage });
+    setModelWrapper({ ...modelWrapper, page : newPage });
   }
 
   function onPageAndHistroyChange(selected: string, history: HistoryItem[]) {
     const pageid = history[history.length - 1].page;
     setSelected(selected);
-    setModelWrapper({ ...modelWrapper, page: pageid });
-    setHistory({ items: [...history] });
+    setModelWrapper({ ...modelWrapper, page : pageid });
+    setHistory({ items : [...history]});
   }
 
   function resetSearchElements(set: Set<string>) {
@@ -99,14 +99,14 @@ const ModelReferenceView: React.FC<{
   }
 
   function onProcessClick(pageid: string, processid: string): void {
-    setModelWrapper({ ...modelWrapper, page: pageid });
+    setModelWrapper({ ...modelWrapper, page : pageid });
     addToHistory(history, pageid, processid);
     setHistory({ ...history });
   }
 
   function drillUp(): void {
     if (history.items.length > 0) {
-      setModelWrapper({ ...modelWrapper, page: popPage(history) });
+      setModelWrapper({ ...modelWrapper, page : popPage(history) });
       setHistory({ ...history });
     }
   }
@@ -139,14 +139,14 @@ const ModelReferenceView: React.FC<{
       title="Item metadata"
       blocks={[
         {
-          key: 'selected-node',
-          title: 'Selected node',
-          content: <SelectedNodeDescription model={model} page={page} />,
+          key     : 'selected-node',
+          title   : 'Selected node',
+          content : <SelectedNodeDescription model={model} page={page} />,
         },
         {
-          key: 'search-node',
-          title: 'Search components',
-          content: (
+          key     : 'search-node',
+          title   : 'Search components',
+          content : (
             <SearchComponentPane
               model={modelWrapper.model}
               onChange={onPageAndHistroyChange}
@@ -167,7 +167,7 @@ const ModelReferenceView: React.FC<{
         toolbar={toolbar}
         sidebar={sidebar}
         navbarProps={{ breadcrumbs }}
-        style={{ flex: 3 }}
+        style={{ flex : 3 }}
       >
         <div css={react_flow_container_layout}>
           <ReactFlow

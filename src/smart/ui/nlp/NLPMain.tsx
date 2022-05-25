@@ -41,7 +41,7 @@ const NLPMain: React.FC<{
   const modelPath = getPathByNS(repo ? repo.ns : '', RepoFileType.MODEL);
   const rdfPath = getPathByNS(repo ? repo.ns : '', RepoFileType.RDF);
   const repoFile = useObjectData({
-    objectPaths: repo !== undefined ? [modelPath, rdfPath] : [],
+    objectPaths : repo !== undefined ? [modelPath, rdfPath] : [],
   });
   const modelData = repoFile.value.data[modelPath];
   const rdfData = repoFile.value.data[rdfPath];
@@ -75,9 +75,9 @@ const NLPMain: React.FC<{
       title="Item metadata"
       blocks={[
         {
-          key: 'NLP-control',
-          title: 'Control panel',
-          content:
+          key     : 'NLP-control',
+          title   : 'Control panel',
+          content :
             repo && mw ? (
               <RDFControlPane repo={repo} mw={mw} rdf={rdf} />
             ) : (
@@ -85,9 +85,9 @@ const NLPMain: React.FC<{
             ),
         },
         {
-          key: 'NLP-query',
-          title: 'Ask a question',
-          content: <RDFQueryPane rdf={rdf} />,
+          key     : 'NLP-query',
+          title   : 'Ask a question',
+          content : <RDFQueryPane rdf={rdf} />,
         },
       ]}
     />

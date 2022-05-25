@@ -12,17 +12,17 @@ import { CSSProperties } from 'react';
 import { CSSROOTVARIABLES } from './root.css';
 
 export const shameLabel: CSSProperties = {
-  fontWeight: CSSROOTVARIABLES.fontWeightRegular,
-  fontSize: CSSROOTVARIABLES['--font-size--small'],
-  textAlign: 'center',
-  position: 'absolute',
-  top: 45,
-  left: 0,
-  width: 140,
+  fontWeight : CSSROOTVARIABLES.fontWeightRegular,
+  fontSize   : CSSROOTVARIABLES['--font-size--small'],
+  textAlign  : 'center',
+  position   : 'absolute',
+  top        : 45,
+  left       : 0,
+  width      : 140,
 };
 
 export const shameLabelNoAction: CSSProperties = {
-  pointerEvents: 'none',
+  pointerEvents : 'none',
 };
 
 export const tooltip__label = css`
@@ -30,19 +30,19 @@ export const tooltip__label = css`
 `;
 
 export const tooltipLabel: CSSProperties = {
-  width: 300,
+  width : 300,
 };
 
 export const shameLabelShort: CSSProperties = {
-  width: 40,
+  width : 40,
 };
 
 export const shameLabelLong: CSSProperties = {
-  left: -50,
+  left : -50,
 };
 
 export const shameLabelNudge: CSSProperties = {
-  top: 65,
+  top : 65,
 };
 
 export const shame__approver_deco = css`
@@ -68,6 +68,6 @@ export const search_result_entry_row = css`
 `;
 
 export const searchResultEntryRow: CSSProperties = {
-  display: 'block',
-  textAlign: 'left',
+  display   : 'block',
+  textAlign : 'left',
 };

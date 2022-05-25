@@ -28,9 +28,9 @@ export interface RegSummarySearchRecord {
 }
 
 export const DataSummaryStyles: Record<SearchHighlightType, LegendInterface> = {
-  [SearchHighlightType.SELECTED]: { label: 'Selected', color: 'lightyellow' },
-  [SearchHighlightType.MATCH]: { label: 'Match', color: 'lightblue' },
-  [SearchHighlightType.NONE]: { label: 'Not match', color: '' },
+  [SearchHighlightType.SELECTED] : { label : 'Selected', color : 'lightyellow' },
+  [SearchHighlightType.MATCH]    : { label : 'Match', color : 'lightblue' },
+  [SearchHighlightType.NONE]     : { label : 'Not match', color : '' },
 };
 
 export function computeRegistrySummary(
@@ -40,9 +40,9 @@ export function computeRegistrySummary(
   const result: RegSummarySearchRecord[] = [];
   const page = model.pages[model.root];
   const history = createPageHistory({
-    model: model,
-    page: model.root,
-    type: 'model',
+    model : model,
+    page  : model.root,
+    type  : 'model',
   });
   if (page !== undefined && id !== '') {
     searchPageForComponent(page, model, id, result, new Set<string>(), history);
@@ -67,22 +67,22 @@ function searchPageForComponent(
         for (const reg of node.input) {
           if (reg === targetid) {
             result.push({
-              id: node.id,
-              text: getSearchDescription(node),
-              page: page.id,
-              type: 'Input to Process',
-              history: history,
+              id      : node.id,
+              text    : getSearchDescription(node),
+              page    : page.id,
+              type    : 'Input to Process',
+              history : history,
             });
           }
         }
         for (const reg of node.output) {
           if (reg === targetid) {
             result.push({
-              id: node.id,
-              text: getSearchDescription(node),
-              page: page.id,
-              type: 'Output of Process',
-              history: history,
+              id      : node.id,
+              text    : getSearchDescription(node),
+              page    : page.id,
+              type    : 'Output of Process',
+              history : history,
             });
           }
         }
@@ -105,11 +105,11 @@ function searchPageForComponent(
         for (const reg of node.records) {
           if (reg === targetid) {
             result.push({
-              id: node.id,
-              text: getSearchDescription(node),
-              page: page.id,
-              type: 'Approval records',
-              history: history,
+              id      : node.id,
+              text    : getSearchDescription(node),
+              page    : page.id,
+              type    : 'Approval records',
+              history : history,
             });
           }
         }

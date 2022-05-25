@@ -21,13 +21,13 @@ const MetanormaPrint: React.FC<{
     const filename = await saveToFileSystem({
       getBlob,
       writeFileToFilesystem,
-      fileData: report,
-      type: FILE_TYPE.Report,
+      fileData : report,
+      type     : FILE_TYPE.Report,
     });
     Logger.log('Filename', filename);
     try {
       invokeMetanorma!({
-        cliArgs: [
+        cliArgs : [
           '-t',
           'ribose',
           filename,
@@ -55,7 +55,7 @@ const MetanormaPrint: React.FC<{
         <>
           <div>PID: {mnStatus.pid ?? 'not running'}</div>
           <textarea value={mnStatus.stdout ?? ''} />
-          <textarea style={{ color: 'red' }} value={mnStatus.stderr ?? ''} />
+          <textarea style={{ color : 'red' }} value={mnStatus.stderr ?? ''} />
           Exit code: {mnStatus.termination?.code ?? 'N/A'}
         </>
       )}

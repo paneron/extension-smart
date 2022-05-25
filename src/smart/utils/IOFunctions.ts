@@ -41,59 +41,59 @@ export const FileTypeDescription: Record<
   FILE_TYPE,
   FileTypeDescriptionInterface
 > = {
-  [FILE_TYPE.Model]: {
-    filtername: 'MMEL files',
-    extension: ['mmel'],
-    openPrompt: 'Choose a model file to open',
+  [FILE_TYPE.Model] : {
+    filtername : 'MMEL files',
+    extension  : ['mmel'],
+    openPrompt : 'Choose a model file to open',
   },
-  [FILE_TYPE.Report]: {
-    filtername: 'Ascii Doc files',
-    extension: ['adoc'],
+  [FILE_TYPE.Report] : {
+    filtername : 'Ascii Doc files',
+    extension  : ['adoc'],
   },
-  [FILE_TYPE.Map]: {
-    filtername: 'MAP files',
-    extension: ['map'],
-    openPrompt: 'Choose a mapping file to open',
+  [FILE_TYPE.Map] : {
+    filtername : 'MAP files',
+    extension  : ['map'],
+    openPrompt : 'Choose a mapping file to open',
   },
-  [FILE_TYPE.Workspace]: {
-    filtername: 'Workspace files',
-    extension: ['sws'],
-    openPrompt: 'Choose a SMART workspace file to open',
+  [FILE_TYPE.Workspace] : {
+    filtername : 'Workspace files',
+    extension  : ['sws'],
+    openPrompt : 'Choose a SMART workspace file to open',
   },
-  [FILE_TYPE.JSON]: {
-    filtername: 'JSON files',
-    extension: ['json'],
-    openPrompt: 'Choose a JSON file to open',
+  [FILE_TYPE.JSON] : {
+    filtername : 'JSON files',
+    extension  : ['json'],
+    openPrompt : 'Choose a JSON file to open',
   },
-  [FILE_TYPE.Document]: {
-    filtername: 'SMART document files',
-    extension: ['sdc'],
-    openPrompt: 'Choose a SMART document file to open',
+  [FILE_TYPE.Document] : {
+    filtername : 'SMART document files',
+    extension  : ['sdc'],
+    openPrompt : 'Choose a SMART document file to open',
   },
-  [FILE_TYPE.XML]: {
-    filtername: 'XML files',
-    extension: ['xml'],
-    openPrompt: 'Choose an XML file to open',
+  [FILE_TYPE.XML] : {
+    filtername : 'XML files',
+    extension  : ['xml'],
+    openPrompt : 'Choose an XML file to open',
   },
-  [FILE_TYPE.CSV]: {
-    filtername: 'CSV files',
-    extension: ['csv'],
-    openPrompt: 'Choose a CSV file to open',
+  [FILE_TYPE.CSV] : {
+    filtername : 'CSV files',
+    extension  : ['csv'],
+    openPrompt : 'Choose a CSV file to open',
   },
-  [FILE_TYPE.BSI]: {
-    filtername: 'BSI XML files',
-    extension: ['xml'],
-    openPrompt: 'Choose a BSI XML file to open',
+  [FILE_TYPE.BSI] : {
+    filtername : 'BSI XML files',
+    extension  : ['xml'],
+    openPrompt : 'Choose a BSI XML file to open',
   },
-  [FILE_TYPE.IMG]: {
-    filtername: 'Image files',
-    extension: ['jpg', 'png'],
-    openPrompt: 'Choose an image file to open',
+  [FILE_TYPE.IMG] : {
+    filtername : 'Image files',
+    extension  : ['jpg', 'png'],
+    openPrompt : 'Choose an image file to open',
   },
-  [FILE_TYPE.VIDEO]: {
-    filtername: 'Video files',
-    extension: ['mov'],
-    openPrompt: 'Choose a video file to open',
+  [FILE_TYPE.VIDEO] : {
+    filtername : 'Video files',
+    extension  : ['mov'],
+    openPrompt : 'Choose a video file to open',
   },
 };
 
@@ -138,8 +138,8 @@ export function handleModelOpen(props: {
   const { setModelWrapper, logger, indexModel } = props;
   handleFileOpen({
     ...props,
-    type: FILE_TYPE.Model,
-    postProcessing: data =>
+    type           : FILE_TYPE.Model,
+    postProcessing : data =>
       parseModel({
         data,
         setModelWrapper,
@@ -158,8 +158,8 @@ export function handleDocumentOpen(props: {
     const { setDocument, fileType } = props;
     handleFileOpen({
       ...props,
-      type: fileType,
-      postProcessing: data =>
+      type           : fileType,
+      postProcessing : data =>
         setDocument(
           fileType === FILE_TYPE.Document
             ? textToDoc(data)
@@ -182,8 +182,8 @@ export function handleWSOpen(props: {
     const { setWorkspace } = props;
     handleFileOpen({
       ...props,
-      type: FILE_TYPE.Workspace,
-      postProcessing: data => {
+      type           : FILE_TYPE.Workspace,
+      postProcessing : data => {
         const ws = JSON.parse(data) as SMARTWorkspace;
         if (ws.version !== WSVERSION) {
           alert(
@@ -209,8 +209,8 @@ export function handleMappingOpen(props: {
     const { onMapProfileChanged, fileType } = props;
     handleFileOpen({
       ...props,
-      type: fileType ?? FILE_TYPE.Map,
-      postProcessing: data => {
+      type           : fileType ?? FILE_TYPE.Map,
+      postProcessing : data => {
         const mp = JSON.parse(data) as MapProfile;
         if (mp.version !== MAPVERSION) {
           alert(
@@ -242,9 +242,9 @@ export async function handleFileOpen(props: {
       logger?.log('Requesting file');
       requestFileFromFilesystem(
         {
-          prompt: desc.openPrompt ?? '',
-          allowMultiple: false,
-          filters: [{ name: desc.filtername, extensions: desc.extension }],
+          prompt        : desc.openPrompt ?? '',
+          allowMultiple : false,
+          filters       : [{ name : desc.filtername, extensions : desc.extension }],
         },
         selectedFiles => {
           try {
@@ -255,16 +255,16 @@ export async function handleFileOpen(props: {
               if (type === FILE_TYPE.JSON) {
                 postProcessing(JSON.stringify(fileData, undefined, 2));
               } else if (base64) {
-                if (fileData['asBase64'] !== undefined) {
-                  postProcessing(fileData['asBase64']);
+                if (fileData.asBase64 !== undefined) {
+                  postProcessing(fileData.asBase64);
                 } else {
                   alert('No base64 data is found.');
                   Logger.log(Object.keys(fileData).join(','));
                   Logger.log(Object.values(fileData).join(','));
                 }
               } else {
-                if (fileData['asText'] !== undefined) {
-                  postProcessing(fileData['asText']);
+                if (fileData.asText !== undefined) {
+                  postProcessing(fileData.asText);
                 } else {
                   alert('No text data is found.');
                   Logger.log(Object.keys(fileData).join(','));
@@ -307,11 +307,11 @@ export async function saveToFileSystem(props: {
     const desc = FileTypeDescription[type];
     const blob = await getBlob(fileData);
     const { savedToFileAtPath } = await writeFileToFilesystem({
-      dialogOpts: {
-        prompt: 'Choose location to save',
-        filters: [{ name: desc.filtername, extensions: desc.extension }],
+      dialogOpts : {
+        prompt  : 'Choose location to save',
+        filters : [{ name : desc.filtername, extensions : desc.extension }],
       },
-      bufferData: blob,
+      bufferData : blob,
     });
     return savedToFileAtPath;
   } else {

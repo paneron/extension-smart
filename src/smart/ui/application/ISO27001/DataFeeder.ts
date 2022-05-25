@@ -15,15 +15,15 @@ interface Bias {
   bias: SettingRange;
 }
 
-const numUserSetting: SettingRange = { min: 20, max: 100 };
-const failRateSetting: SettingRange = { min: 0.1, max: 0.2 };
-const connectionSetting: SettingRange = { min: 1, max: 20 };
+const numUserSetting: SettingRange = { min : 20, max : 100 };
+const failRateSetting: SettingRange = { min : 0.1, max : 0.2 };
+const connectionSetting: SettingRange = { min : 1, max : 20 };
 const connectionBias: Bias[] = [
-  { time: 4, duration: 3, cycle: 11, bias: { min: 1, max: 3 } },
-  { time: 10, duration: 2, cycle: 10, bias: { min: 95, max: 120 } },
+  { time : 4, duration : 3, cycle : 11, bias : { min : 1, max : 3 }},
+  { time : 10, duration : 2, cycle : 10, bias : { min : 95, max : 120 }},
 ];
 const loginBias: Bias[] = [
-  { time: 5, duration: 1, cycle: 10, bias: { min: 0.8, max: 0.9 } },
+  { time : 5, duration : 1, cycle : 10, bias : { min : 0.8, max : 0.9 }},
 ];
 
 function getStreamReadings(time: number): StreamReading {
@@ -48,9 +48,9 @@ function getStreamReadings(time: number): StreamReading {
     Math.round(genReading(cs)),
   ];
   return {
-    failed: numFailed,
-    login: numUsers,
-    connections: connections,
+    failed      : numFailed,
+    login       : numUsers,
+    connections : connections,
   };
 }
 

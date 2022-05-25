@@ -16,9 +16,9 @@ type TableClassAttribute = {
 };
 
 const initObj: TableClassAttribute = {
-  id: '',
-  title: '',
-  domain: '',
+  id     : '',
+  title  : '',
+  domain : '',
 };
 
 const TableClassDefinitionEdit: React.FC<{
@@ -34,9 +34,9 @@ const TableClassDefinitionEdit: React.FC<{
     domain.push('');
   }
   const data: TableClassAttribute[] = header.map((x, index) => ({
-    id: `${index}`,
-    title: x,
-    domain: domain[index],
+    id     : `${index}`,
+    title  : x,
+    domain : domain[index],
   }));
 
   function matchFilter(x: TableClassAttribute, filter: string) {
@@ -46,7 +46,7 @@ const TableClassDefinitionEdit: React.FC<{
   function getAttListItems(filter: string): IListItem[] {
     return data
       .filter(x => matchFilter(x, filter))
-      .map((x, index) => ({ id: `${index}`, text: x.title }));
+      .map((x, index) => ({ id : `${index}`, text : x.title }));
   }
 
   function removeAttListItem(ids: string[]) {
@@ -66,9 +66,9 @@ const TableClassDefinitionEdit: React.FC<{
     const newRow = data.map(x => x.title);
     setTable({
       ...table,
-      domain: newDomain,
-      data: [newRow, ...newData],
-      columns: newDomain.length,
+      domain  : newDomain,
+      data    : [newRow, ...newData],
+      columns : newDomain.length,
     });
   }
 
@@ -79,9 +79,9 @@ const TableClassDefinitionEdit: React.FC<{
     const newRow = [...data.map(x => x.title), x.title];
     setTable({
       ...table,
-      domain: newDomain,
-      data: [newRow, ...newData],
-      columns: newDomain.length,
+      domain  : newDomain,
+      data    : [newRow, ...newData],
+      columns : newDomain.length,
     });
     return true;
   }
@@ -95,9 +95,9 @@ const TableClassDefinitionEdit: React.FC<{
         const newData = [...table.data.slice(1)];
         setTable({
           ...table,
-          domain: newDomain,
-          data: [newHeader, ...newData],
-          columns: newDomain.length,
+          domain  : newDomain,
+          data    : [newHeader, ...newData],
+          columns : newDomain.length,
         });
         return true;
       }
@@ -134,9 +134,9 @@ const TableClassDefinitionEdit: React.FC<{
 
     setTable({
       ...table,
-      domain: newDomain,
-      data: [newHeader, ...newData],
-      columns: newDomain.length,
+      domain  : newDomain,
+      data    : [newHeader, ...newData],
+      columns : newDomain.length,
     });
   }
 
@@ -156,15 +156,15 @@ const TableClassDefinitionEdit: React.FC<{
   }
 
   const dchandler: IManageHandler<TableClassAttribute> = {
-    filterName: 'Attribute filter',
-    itemName: 'Class attributes',
-    Content: TableClassItemPage,
-    initObj: { ...initObj },
-    getItems: getAttListItems,
-    removeItems: removeAttListItem,
-    addItem: obj => addAtt(obj),
-    updateItem: (oldid, obj) => updateAtt(oldid, obj),
-    getObjById: getAttById,
+    filterName  : 'Attribute filter',
+    itemName    : 'Class attributes',
+    Content     : TableClassItemPage,
+    initObj     : { ...initObj },
+    getItems    : getAttListItems,
+    removeItems : removeAttListItem,
+    addItem     : obj => addAtt(obj),
+    updateItem  : (oldid, obj) => updateAtt(oldid, obj),
+    getObjById  : getAttById,
     moveUp,
     moveDown,
   };
@@ -185,12 +185,12 @@ const TableClassItemPage: React.FC<{
       <NormalTextField
         text="Title"
         value={att.title}
-        onChange={x => setAtt({ ...att, title: x })}
+        onChange={x => setAtt({ ...att, title : x })}
       />
       <NormalTextField
         text="Possible values (separated by ,)"
         value={att.domain}
-        onChange={x => setAtt({ ...att, domain: x })}
+        onChange={x => setAtt({ ...att, domain : x })}
       />
     </FormGroup>
   );

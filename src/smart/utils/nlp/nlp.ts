@@ -20,8 +20,8 @@ const height = 70;
 export async function parseText(text: string): Promise<string> {
   if (text !== '') {
     const requestOptions = {
-      method: 'POST',
-      body: text,
+      method : 'POST',
+      body   : text,
     };
     const reponse = await fetch(nlpServer, requestOptions);
     return reponse.text();
@@ -32,7 +32,7 @@ export async function parseText(text: string): Promise<string> {
 function createSTNode(data: string): STNode {
   return {
     data,
-    relationship: [],
+    relationship : [],
   };
 }
 
@@ -44,7 +44,7 @@ function createSTRelationship(r: string, connect: string): STRelation {
   } else if (r === 'obj') {
     r = 'object';
   }
-  return { relationship: r, connect };
+  return { relationship : r, connect };
 }
 
 function getSTNode(
@@ -196,9 +196,9 @@ function convertRDFs(
 
 export async function computeRDF(mw: ModelWrapper): Promise<ProvisionRDF> {
   const rdf: ProvisionRDF = {
-    roots: {},
-    nodes: {},
-    version: RDFVersion,
+    roots   : {},
+    nodes   : {},
+    version : RDFVersion,
   };
   const model = mw.model;
   for (const p of Object.values(model.elements)) {
@@ -250,7 +250,7 @@ function assignLoc(elms: NLPTreeNode[]) {
 
 function assignNode(node: NLPTreeNode, x: number, y: number): number {
   node.checked = true;
-  node.data.position = { x: x * width, y: y * height };
+  node.data.position = { x : x * width, y : y * height };
   const ret = 1;
   let level = 0;
   for (const u of node.childs) {
@@ -272,12 +272,12 @@ function exploreNode(
     // the node cannot be added for some. Need to investigate
     Logger.log('undefined', id);
     const nnode = createNode(id, 0, 0, id);
-    return { data: nnode, childs: [] };
+    return { data : nnode, childs : []};
   }
   if (elms[x.data] === undefined) {
     const n: NLPTreeNode = {
-      data: createNode(x.data, 0, 0, x.data),
-      childs: [],
+      data   : createNode(x.data, 0, 0, x.data),
+      childs : [],
     };
     elms[x.data] = n;
     const elm = elms[x.data];
@@ -303,8 +303,8 @@ function exploreNode(
 function createNode(id: string, x: number, y: number, label: string): Node {
   return {
     id,
-    position: { x, y },
-    data: {
+    position : { x, y },
+    data     : {
       label,
     },
   };
@@ -320,8 +320,8 @@ function createEdge(
     id,
     source,
     target,
-    type: 'straight',
-    arrowHeadType: ArrowHeadType.Arrow,
+    type          : 'straight',
+    arrowHeadType : ArrowHeadType.Arrow,
     label,
   };
 }

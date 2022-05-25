@@ -53,13 +53,13 @@ export function getBreadcrumbs(
   onPageChange: (updated: HistoryAction, newPage: string) => void
 ): Breadcrumb[] {
   const breadcrumbs: Breadcrumb[] = ph.map((item, index) => ({
-    label: <>{item.pathtext}</>,
-    onNavigate: () => {
+    label      : <>{item.pathtext}</>,
+    onNavigate : () => {
       const page = ph[index].page;
       const action: HistoryAction = {
-        type: 'history',
-        act: 'pop',
-        value: ph.length - index - 1,
+        type  : 'history',
+        act   : 'pop',
+        value : ph.length - index - 1,
       };
       onPageChange(action, page);
     },

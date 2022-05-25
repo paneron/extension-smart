@@ -45,7 +45,7 @@ export function useItems<T extends CoreComponent, L extends string>(
   }
 
   function init(x: Record<string, T>) {
-    dispatchSec({ task: 'init', value: x });
+    dispatchSec({ task : 'init', value : x });
   }
 
   return [items, act, init];
@@ -79,24 +79,24 @@ function findReverse<T extends CoreComponent, L extends string>(
   switch (action.task) {
     case 'add': {
       return {
-        act: type,
-        task: 'delete',
-        value: action.value.map(x => x.id),
+        act   : type,
+        task  : 'delete',
+        value : action.value.map(x => x.id),
       };
     }
     case 'delete': {
       return {
-        act: type,
-        task: 'add',
-        value: action.value.map(x => items[x]),
+        act   : type,
+        task  : 'add',
+        value : action.value.map(x => items[x]),
       };
     }
     case 'edit': {
       return {
-        act: type,
-        task: 'edit',
-        id: action.value.id,
-        value: items[action.id],
+        act   : type,
+        task  : 'edit',
+        id    : action.value.id,
+        value : items[action.id],
       };
     }
   }

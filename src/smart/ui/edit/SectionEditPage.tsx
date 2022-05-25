@@ -20,16 +20,16 @@ const SectionEditPage: React.FC<{
   function getSecListItems(filter: string): IListItem[] {
     return Object.values(model.sections)
       .filter(x => matchFilter(x, filter))
-      .map(x => ({ id: x.id, text: x.title }))
+      .map(x => ({ id : x.id, text : x.title }))
       .sort(defaultItemSorter);
   }
 
   function removeSecListItem(ids: string[]) {
     const action: ModelAction = {
-      type: 'model',
-      act: 'section',
-      task: 'delete',
-      value: ids,
+      type  : 'model',
+      act   : 'section',
+      task  : 'delete',
+      value : ids,
     };
     act(action);
   }
@@ -37,10 +37,10 @@ const SectionEditPage: React.FC<{
   function addSec(sec: MMELTextSection): boolean {
     if (checkId(sec.id, model.sections)) {
       const action: ModelAction = {
-        type: 'model',
-        act: 'section',
-        task: 'add',
-        value: [sec],
+        type  : 'model',
+        act   : 'section',
+        task  : 'add',
+        value : [sec],
       };
       act(action);
       return true;
@@ -53,11 +53,11 @@ const SectionEditPage: React.FC<{
       return false;
     }
     const action: ModelAction = {
-      type: 'model',
-      act: 'section',
-      task: 'edit',
-      id: oldid,
-      value: sec,
+      type  : 'model',
+      act   : 'section',
+      task  : 'edit',
+      id    : oldid,
+      value : sec,
     };
     act(action);
     return true;
@@ -72,16 +72,16 @@ const SectionEditPage: React.FC<{
   }
 
   const termhandler: IManageHandler<MMELTextSection> = {
-    filterName: 'Section filter',
-    itemName: 'Sections',
-    Content: SecEditItemPage,
-    initObj: createTextSection(''),
+    filterName  : 'Section filter',
+    itemName    : 'Sections',
+    Content     : SecEditItemPage,
+    initObj     : createTextSection(''),
     model,
-    getItems: getSecListItems,
-    removeItems: removeSecListItem,
-    addItem: obj => addSec(obj),
-    updateItem: (oldid, obj) => updateSec(oldid, obj),
-    getObjById: getSecById,
+    getItems    : getSecListItems,
+    removeItems : removeSecListItem,
+    addItem     : obj => addSec(obj),
+    updateItem  : (oldid, obj) => updateSec(oldid, obj),
+    getObjById  : getSecById,
   };
 
   return <ListManagePage {...termhandler} />;
@@ -96,17 +96,17 @@ const SecEditItemPage: React.FC<{
       <NormalTextField
         text="Section ID"
         value={sec.id}
-        onChange={x => setSec({ ...sec, id: x.replaceAll(/\s+/g, '') })}
+        onChange={x => setSec({ ...sec, id : x.replaceAll(/\s+/g, '') })}
       />
       <NormalTextField
         text="Section title"
         value={sec.title}
-        onChange={x => setSec({ ...sec, title: x })}
+        onChange={x => setSec({ ...sec, title : x })}
       />
       <NormalTextField
         text="Contents"
         value={sec.content}
-        onChange={x => setSec({ ...sec, content: x })}
+        onChange={x => setSec({ ...sec, content : x })}
       />
     </FormGroup>
   );

@@ -22,7 +22,7 @@ const ParagraphView: React.FC<{
   return (
     <div
       style={{
-        marginTop: '10px',
+        marginTop : '10px',
       }}
     >
       {para.map((s, index) => (

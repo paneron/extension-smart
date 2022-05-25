@@ -26,9 +26,9 @@ const NodeComment: React.FC<{
   return (
     <div
       style={{
-        position: 'fixed',
-        left: -10,
-        top: -10,
+        position : 'fixed',
+        left     : -10,
+        top      : -10,
       }}
     >
       <Popover2

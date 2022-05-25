@@ -28,14 +28,14 @@ function tokenize(x: string) {
     const index = x.indexOf(tags[0]);
     const front = x.substring(0, index);
     if (!isSpace(front)) {
-      out.push({ data: front, type: XMLTokenType.TEXT });
+      out.push({ data : front, type : XMLTokenType.TEXT });
     }
     if (selftagreg.test(tags[0])) {
-      out.push({ data: tags[0], type: XMLTokenType.SELFCLOSETAG });
+      out.push({ data : tags[0], type : XMLTokenType.SELFCLOSETAG });
     } else if (endtagreg.test(tags[0])) {
-      out.push({ data: tags[0], type: XMLTokenType.ENDTAG });
+      out.push({ data : tags[0], type : XMLTokenType.ENDTAG });
     } else {
-      out.push({ data: tags[0], type: XMLTokenType.STARTTAG });
+      out.push({ data : tags[0], type : XMLTokenType.STARTTAG });
     }
     x = x.substring(index + tags[0].length);
     tags = x.match(tagreg);
@@ -130,9 +130,9 @@ function isSpace(x: string): boolean {
 function createXMLElement(tag: string): XMLElement {
   return {
     tag,
-    attributes: {},
-    childs: [],
-    xmlChild: {},
+    attributes : {},
+    childs     : [],
+    xmlChild   : {},
   };
 }
 

@@ -23,16 +23,16 @@ const TableEditPage: React.FC<{
   function getTableListItems(filter: string): IListItem[] {
     return Object.values(model.tables)
       .filter(x => matchFilter(x, filter))
-      .map(x => ({ id: x.id, text: x.title }))
+      .map(x => ({ id : x.id, text : x.title }))
       .sort(defaultItemSorter);
   }
 
   function removeTableListItem(ids: string[]) {
     const action: ModelAction = {
-      type: 'model',
-      act: 'table',
-      task: 'delete',
-      value: ids,
+      type  : 'model',
+      act   : 'table',
+      task  : 'delete',
+      value : ids,
     };
     act(action);
   }
@@ -40,10 +40,10 @@ const TableEditPage: React.FC<{
   function addTable(x: MMELTable): boolean {
     if (checkId(x.id, model.tables)) {
       const action: ModelAction = {
-        type: 'model',
-        act: 'table',
-        task: 'add',
-        value: [x],
+        type  : 'model',
+        act   : 'table',
+        task  : 'add',
+        value : [x],
       };
       act(action);
       return true;
@@ -56,11 +56,11 @@ const TableEditPage: React.FC<{
       return false;
     }
     const action: ModelAction = {
-      type: 'model',
-      act: 'table',
-      task: 'edit',
-      id: oldid,
-      value: x,
+      type  : 'model',
+      act   : 'table',
+      task  : 'edit',
+      id    : oldid,
+      value : x,
     };
     act(action);
     return true;
@@ -75,16 +75,16 @@ const TableEditPage: React.FC<{
   }
 
   const tablehandler: IManageHandler<MMELTable> = {
-    filterName: 'Table filter',
-    itemName: 'View tables',
-    Content: TableItemEditPage,
-    initObj: createTable(''),
-    model: model,
-    getItems: getTableListItems,
-    removeItems: removeTableListItem,
-    addItem: obj => addTable(obj),
-    updateItem: (oldid, obj) => updateTable(oldid, obj),
-    getObjById: getTableById,
+    filterName  : 'Table filter',
+    itemName    : 'View tables',
+    Content     : TableItemEditPage,
+    initObj     : createTable(''),
+    model       : model,
+    getItems    : getTableListItems,
+    removeItems : removeTableListItem,
+    addItem     : obj => addTable(obj),
+    updateItem  : (oldid, obj) => updateTable(oldid, obj),
+    getObjById  : getTableById,
   };
 
   return <ListManagePage {...tablehandler} />;

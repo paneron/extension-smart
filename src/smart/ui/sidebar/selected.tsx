@@ -71,7 +71,7 @@ export const SelectedNodeDescription: React.FC<{
   const setSelectedElements = useStoreActions(a => a.setSelectedElements);
 
   function setSelectedNodeId(id: string) {
-    setSelectedElements([{ id, position: { x: 0, y: 0 } }]);
+    setSelectedElements([{ id, position : { x : 0, y : 0 }}]);
   }
 
   const current = model.pages[page];
@@ -91,17 +91,17 @@ export const SelectedNodeDescription: React.FC<{
     if (act) {
       if (action === EditAction.EDIT) {
         setDialogPack({
-          type: EditNodeType[nodeType as EditableNodeTypes],
-          msg: id,
+          type : EditNodeType[nodeType as EditableNodeTypes],
+          msg  : id,
         });
       } else if (action === EditAction.DELETE) {
         setDialogPack({
-          type: EditorDiagTypes.DELETECONFIRM,
-          onDelete: () => {
+          type     : EditorDiagTypes.DELETECONFIRM,
+          onDelete : () => {
             const action = deleteNodeAction(model, page, id);
             act(action);
           },
-          msg: DeleteConfirmMessgae[nodeType],
+          msg : DeleteConfirmMessgae[nodeType],
         });
       }
     }

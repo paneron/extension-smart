@@ -13,7 +13,7 @@ const EdgeQuickEdit: React.FC<{
       <NormalTextField
         text="Description"
         value={edge.description}
-        onChange={x => setEdge(index, { ...edge, description: x })}
+        onChange={x => setEdge(index, { ...edge, description : x })}
       />
     </fieldset>
   );

@@ -34,14 +34,14 @@ const MappingEditPage: React.FC<{
           text="Information"
           value={editing.description}
           onChange={x => {
-            setEditing({ ...editing, description: x });
+            setEditing({ ...editing, description : x });
           }}
         />
         <NormalTextField
           text="Justification"
           value={editing.justification}
           onChange={x => {
-            setEditing({ ...editing, justification: x });
+            setEditing({ ...editing, justification : x });
           }}
         />
         <Button icon="delete" intent="danger" onClick={() => onDelete()}>

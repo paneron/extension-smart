@@ -22,30 +22,30 @@ const FigItemEditPage: React.FC<{
     if (fig.type === 'fig') {
       handleFileOpen({
         requestFileFromFilesystem,
-        type: FILE_TYPE.IMG,
-        postProcessing: x => setFig({ ...fig, data: x }),
-        base64: true,
+        type           : FILE_TYPE.IMG,
+        postProcessing : x => setFig({ ...fig, data : x }),
+        base64         : true,
       });
     } else if (fig.type === 'video') {
       handleFileOpen({
         requestFileFromFilesystem,
-        type: FILE_TYPE.VIDEO,
-        postProcessing: async function (x) {
+        type           : FILE_TYPE.VIDEO,
+        postProcessing : async function (x) {
           if (getBlob && useDecodedBlob) {
             const blob = await getBlob(x);
             const base64 = Buffer.from(blob).toString('base64');
-            setFig({ ...fig, data: base64 });
+            setFig({ ...fig, data : base64 });
           }
         },
       });
     } else if (fig.type === '3d') {
-      setFig({ ...fig, data: 'aa' });
+      setFig({ ...fig, data : 'aa' });
     }
   }
 
   function typeChanged(x: BINARY_TYPE) {
     if (x !== fig.type) {
-      setFig({ ...fig, type: x, data: '' });
+      setFig({ ...fig, type : x, data : '' });
     }
   }
 
@@ -54,12 +54,12 @@ const FigItemEditPage: React.FC<{
       <NormalTextField
         text="Content ID"
         value={fig.id}
-        onChange={x => setFig({ ...fig, id: x.replaceAll(/\s+/g, '') })}
+        onChange={x => setFig({ ...fig, id : x.replaceAll(/\s+/g, '') })}
       />
       <NormalTextField
         text="Content title"
         value={fig.title}
-        onChange={x => setFig({ ...fig, title: x })}
+        onChange={x => setFig({ ...fig, title : x })}
       />
       <NormalComboBox
         text="Content type"
@@ -73,7 +73,7 @@ const FigItemEditPage: React.FC<{
           <MultimediaView
             type={fig.type}
             base64={fig.data}
-            style={{ maxWidth: '100%' }}
+            style={{ maxWidth : '100%' }}
           />
         ) : (
           <Text>No content</Text>

@@ -12,7 +12,7 @@ const FigureViewer: React.FC<{
       <MultimediaView
         type={fig.type}
         base64={fig.data}
-        style={{ maxWidth: '90vw' }}
+        style={{ maxWidth : '90vw' }}
       />
     </>
   );

@@ -95,34 +95,34 @@ const ModelMapper: React.FC<{
 
   const [mapProfile, setMapProfile] = useState<MapProfile>(mapping);
   const [viewOption, setViewOption] = useState<MapperViewOption>({
-    dataVisible: true,
-    legVisible: true,
-    docVisible: false,
-    mapAIVisible: false,
-    idVisible: false,
-    repoMapVisible: false,
-    repoLegendVisible: true,
+    dataVisible       : true,
+    legVisible        : true,
+    docVisible        : false,
+    mapAIVisible      : false,
+    idVisible         : false,
+    repoMapVisible    : false,
+    repoLegendVisible : true,
   });
   const [implementProps, setImplProps] = useState<MapperState>({
-    modelWrapper: { page: model.root, model, type: 'model' },
-    history: createPageHistory({ page: model.root, model, type: 'model' }),
-    modelType: ModelType.IMP,
-    historyMap: {},
+    modelWrapper : { page : model.root, model, type : 'model' },
+    history      : createPageHistory({ page : model.root, model, type : 'model' }),
+    modelType    : ModelType.IMP,
+    historyMap   : {},
   });
   const [referenceProps, setRefProps] = useState<MapperState>({
-    modelWrapper: { ...initModelWrapper },
-    history: createPageHistory(initModelWrapper),
-    modelType: ModelType.REF,
-    historyMap: {},
+    modelWrapper : { ...initModelWrapper },
+    history      : createPageHistory(initModelWrapper),
+    modelType    : ModelType.REF,
+    historyMap   : {},
   });
   const [selected, setSelected] = useState<MapperSelectedInterface>({
-    modelType: ModelType.IMP,
-    selected: '',
+    modelType : ModelType.IMP,
+    selected  : '',
   });
 
   const [editMappingProps, setEditMProps] = useState<EditMPropsInterface>({
-    from: '',
-    to: '',
+    from : '',
+    to   : '',
   });
   const [toaster] = useState<IToaster>(Toaster.create());
   const [refrepo, setRefRepo] = useState<string | undefined>(undefined);
@@ -132,7 +132,7 @@ const ModelMapper: React.FC<{
   const mapPath = getPathByNS(repo.ns, RepoFileType.MAP);
   const refPath = getPathByNS(refrepo ?? '', RepoFileType.MODEL);
   const repoRefFile = useObjectData({
-    objectPaths: refrepo !== undefined ? [refPath] : [],
+    objectPaths : refrepo !== undefined ? [refPath] : [],
   });
   if (refrepo !== undefined && !repoRefFile.isUpdating) {
     const data = repoRefFile.value.data[refPath];
@@ -145,9 +145,9 @@ const ModelMapper: React.FC<{
         indexModel(mw.model);
         onRefPropsChange({
           ...referenceProps,
-          history: createPageHistory(mw),
-          modelWrapper: mw,
-          historyMap: buildHistoryMap(mw),
+          history      : createPageHistory(mw),
+          modelWrapper : mw,
+          historyMap   : buildHistoryMap(mw),
         });
       } else {
         const doc = data as MMELDocument;
@@ -158,15 +158,15 @@ const ModelMapper: React.FC<{
           doc.version = DOCVERSION;
         }
         onRefPropsChange({
-          history: { items: [] },
-          historyMap: {},
-          modelWrapper: doc,
-          modelType: referenceProps.modelType,
+          history      : { items : []},
+          historyMap   : {},
+          modelWrapper : doc,
+          modelType    : referenceProps.modelType,
         });
       }
       setSelected({
-        modelType: referenceProps.modelType,
-        selected: '',
+        modelType : referenceProps.modelType,
+        selected  : '',
       });
       setRefRepo(undefined);
     }
@@ -191,20 +191,20 @@ const ModelMapper: React.FC<{
     () =>
       isModelWrapper(refMW)
         ? filterMappings(
-            mapSet,
-            impPage,
-            refMW.model.pages[refMW.page],
-            selected,
-            impmodel.elements,
-            refMW.model.elements
-          )
+          mapSet,
+          impPage,
+          refMW.model.pages[refMW.page],
+          selected,
+          impmodel.elements,
+          refMW.model.elements
+        )
         : filterMappingsForDocument(
-            mapSet,
-            impPage,
-            refMW,
-            selected,
-            impmodel.elements
-          ),
+          mapSet,
+          impPage,
+          refMW,
+          selected,
+          impmodel.elements
+        ),
     [
       mapSet,
       impPage,
@@ -217,20 +217,20 @@ const ModelMapper: React.FC<{
     if (diffMapSet) {
       return isModelWrapper(refMW)
         ? filterMappings(
-            diffMapSet,
-            impPage,
-            refMW.model.pages[refMW.page],
-            selected,
-            impmodel.elements,
-            refMW.model.elements
-          )
+          diffMapSet,
+          impPage,
+          refMW.model.pages[refMW.page],
+          selected,
+          impmodel.elements,
+          refMW.model.elements
+        )
         : filterMappingsForDocument(
-            diffMapSet,
-            impPage,
-            refMW,
-            selected,
-            impmodel.elements
-          );
+          diffMapSet,
+          impPage,
+          refMW,
+          selected,
+          impmodel.elements
+        );
     } else {
       return undefined;
     }
@@ -245,7 +245,7 @@ const ModelMapper: React.FC<{
     () =>
       compareEdges
         ? calEdgeDiff(mapEdges, compareEdges)
-        : mapEdges.map(x => ({ ...x, type: 'new' })),
+        : mapEdges.map(x => ({ ...x, type : 'new' })),
     [mapEdges, compareEdges]
   );
 
@@ -272,7 +272,7 @@ const ModelMapper: React.FC<{
   function onMapSetChanged(ms: MapSet) {
     const newProfile: MapProfile = {
       ...mapProfile,
-      mapSet: { ...mapProfile.mapSet, [ms.id]: ms },
+      mapSet : { ...mapProfile.mapSet, [ms.id] : ms },
     };
     setMapProfile(newProfile);
   }
@@ -288,31 +288,31 @@ const ModelMapper: React.FC<{
 
   function onImpModelChanged(model: EditorModel) {
     onMapProfileChanged({
-      '@context': JSONContext,
-      '@type': 'MMEL_MAP',
-      id: getNamespace(model),
-      mapSet: {},
-      docs: {},
-      version: MAPVERSION,
+      '@context' : JSONContext,
+      '@type'    : 'MMEL_MAP',
+      'id'       : getNamespace(model),
+      'mapSet'   : {},
+      'docs'     : {},
+      'version'  : MAPVERSION,
     });
     impMW.model = model;
   }
 
   function onImpClose() {
     setImplProps({
-      modelWrapper: { ...initModelWrapper },
-      history: createPageHistory(initModelWrapper),
-      modelType: ModelType.IMP,
-      historyMap: {},
+      modelWrapper : { ...initModelWrapper },
+      history      : createPageHistory(initModelWrapper),
+      modelType    : ModelType.IMP,
+      historyMap   : {},
     });
   }
 
   function onRefClose() {
     setRefProps({
-      modelWrapper: { ...initModelWrapper },
-      history: createPageHistory(initModelWrapper),
-      modelType: ModelType.REF,
-      historyMap: {},
+      modelWrapper : { ...initModelWrapper },
+      history      : createPageHistory(initModelWrapper),
+      modelType    : ModelType.REF,
+      historyMap   : {},
     });
   }
 
@@ -332,9 +332,9 @@ const ModelMapper: React.FC<{
     const mapset = mapProfile.mapSet;
     const newMS: Record<string, MapSet> = {
       ...mapset,
-      [refns]: { id: refns, mappings: {} },
+      [refns] : { id : refns, mappings : {}},
     };
-    const newProfile: MapProfile = { ...mapProfile, mapSet: newMS };
+    const newProfile: MapProfile = { ...mapProfile, mapSet : newMS };
     setMapProfile(newProfile);
   }
 
@@ -366,8 +366,8 @@ const ModelMapper: React.FC<{
     ) {
       setProps({
         ...props,
-        modelWrapper: { ...props.modelWrapper, page: page.id },
-        history: { items: [...hm[page.id].items] },
+        modelWrapper : { ...props.modelWrapper, page : page.id },
+        history      : { items : [...hm[page.id].items]},
       });
     } else {
       alert('Target not found');
@@ -375,13 +375,13 @@ const ModelMapper: React.FC<{
   }
 
   function onMapImport() {
-    setViewOption({ ...viewOption, mapAIVisible: true });
+    setViewOption({ ...viewOption, mapAIVisible : true });
   }
 
   if (!isVisible && selected.selected !== '') {
     setSelected({
-      modelType: ModelType.IMP,
-      selected: '',
+      modelType : ModelType.IMP,
+      selected  : '',
     });
   }
 
@@ -416,7 +416,7 @@ const ModelMapper: React.FC<{
       <MenuButton content={compareMenu} text="Compare" />
       {isModelWrapper(refMW) && (
         <Button
-          onClick={() => setViewOption({ ...viewOption, docVisible: true })}
+          onClick={() => setViewOption({ ...viewOption, docVisible : true })}
         >
           Report
         </Button>
@@ -426,26 +426,26 @@ const ModelMapper: React.FC<{
 
   const hotkeys = [
     {
-      combo: 'ctrl+s',
-      global: true,
-      label: `Save Mapping ${jsx.length}`,
-      onKeyDown: saveMapping,
+      combo     : 'ctrl+s',
+      global    : true,
+      label     : `Save Mapping ${jsx.length}`,
+      onKeyDown : saveMapping,
     },
   ];
 
   async function saveMapping() {
     if (repo && updateObjects && isVisible) {
       const task = updateObjects({
-        commitMessage: COMMITMSG,
-        _dangerouslySkipValidation: true,
-        objectChangeset: {
-          [mapPath]: { newValue: mapProfile },
+        commitMessage              : COMMITMSG,
+        _dangerouslySkipValidation : true,
+        objectChangeset            : {
+          [mapPath] : { newValue : mapProfile },
         },
       });
       task.then(() =>
         toaster.show({
-          message: 'Mapping saved',
-          intent: 'success',
+          message : 'Mapping saved',
+          intent  : 'success',
         })
       );
     }
@@ -537,7 +537,7 @@ const ModelMapper: React.FC<{
             map={mapProfile}
             diffMap={diffMap}
             onClose={() =>
-              setViewOption({ ...viewOption, repoMapVisible: false })
+              setViewOption({ ...viewOption, repoMapVisible : false })
             }
             index={index}
           />

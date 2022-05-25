@@ -24,7 +24,7 @@ const ProgressSetter: React.FC<{
       <ControlGroup>
         <NumericInput
           style={{
-            width: 60,
+            width : 60,
           }}
           min={0}
           max={100}

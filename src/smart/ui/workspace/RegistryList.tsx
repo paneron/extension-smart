@@ -27,23 +27,23 @@ const WorkspaceRegistryList: React.FC<{
   function getRegListItems(filter: string): IListItem[] {
     return Object.values(model.elements)
       .filter(x => isEditorRegistry(x) && matchFilter(x, filter))
-      .map(x => ({ id: x.id, text: (x as EditorRegistry).title }))
+      .map(x => ({ id : x.id, text : (x as EditorRegistry).title }))
       .sort(defaultItemSorter);
   }
 
   const actionButton: IAdditionalListButton = {
-    text: 'Manage data registry',
-    icon: 'manually-entered-data',
-    onClick: setRegistry,
+    text    : 'Manage data registry',
+    icon    : 'manually-entered-data',
+    onClick : setRegistry,
   };
 
   const reghandler: IViewListInterface = {
-    filterName: 'Registry filter',
-    itemName: 'Data Registries',
-    getItems: getRegListItems,
-    size: 15,
-    isVisible: true,
-    buttons: [actionButton],
+    filterName : 'Registry filter',
+    itemName   : 'Data Registries',
+    getItems   : getRegListItems,
+    size       : 15,
+    isVisible  : true,
+    buttons    : [actionButton],
   };
 
   return <ListViewPane {...reghandler} />;

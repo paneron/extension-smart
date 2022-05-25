@@ -31,38 +31,38 @@ const NoteListQuickEdit: React.FC<{
 
   function addNote() {
     const id = findUniqueID('Note', notes);
-    setNotes({ ...notes, [id]: createNote(id) });
+    setNotes({ ...notes, [id] : createNote(id) });
   }
 
   function onImport() {
     if (selected !== undefined) {
       const ref: MMELReference = {
-        id: '',
-        title: selected.clauseTitle,
-        clause: selected.clause,
-        document: selected.doc,
-        datatype: DataType.REFERENCE,
+        id       : '',
+        title    : selected.clauseTitle,
+        clause   : selected.clause,
+        document : selected.doc,
+        datatype : DataType.REFERENCE,
       };
       const existing = findExistingRef(model, ref, false);
       ref.id =
         existing !== null
           ? existing.id
           : trydefaultID(
-              `${selected.namespace}-ref${selected.clause.replaceAll(
-                '.',
-                '-'
-              )}`,
-              model.refs
-            );
+            `${selected.namespace}-ref${selected.clause.replaceAll(
+              '.',
+              '-'
+            )}`,
+            model.refs
+          );
       const id = findUniqueID('Note', notes);
       const newNote: MMELNote = {
         id,
-        type: detectType(selected.text),
-        message: selected.text,
-        ref: new Set<string>([ref.id]),
-        datatype: DataType.NOTE,
+        type     : detectType(selected.text),
+        message  : selected.text,
+        ref      : new Set<string>([ref.id]),
+        datatype : DataType.NOTE,
       };
-      setNotes({ ...notes, [id]: newNote });
+      setNotes({ ...notes, [id] : newNote });
       if (existing === null) {
         onAddReference([ref]);
       }
@@ -74,9 +74,9 @@ const NoteListQuickEdit: React.FC<{
       {selected !== undefined && (
         <div
           style={{
-            width: '100%',
-            marginBottom: '15px',
-            textAlign: 'center',
+            width        : '100%',
+            marginBottom : '15px',
+            textAlign    : 'center',
           }}
         >
           <Button intent="primary" onClick={onImport}>
@@ -90,7 +90,7 @@ const NoteListQuickEdit: React.FC<{
           key={index}
           note={n}
           refs={refs}
-          setNote={x => setNotes({ ...notes, [index]: x })}
+          setNote={x => setNotes({ ...notes, [index] : x })}
           onDelete={() => {
             const newNotes = { ...notes };
             delete newNotes[index];
@@ -114,7 +114,7 @@ const NoteQuickEdit: React.FC<{
   return (
     <div
       style={{
-        position: 'relative',
+        position : 'relative',
       }}
     >
       <fieldset>
@@ -122,12 +122,12 @@ const NoteQuickEdit: React.FC<{
           text="Note type"
           value={note.type}
           options={NOTE_TYPES}
-          onChange={x => setNote({ ...note, type: x as NOTE_TYPE })}
+          onChange={x => setNote({ ...note, type : x as NOTE_TYPE })}
         />
         <NormalTextField
           text="Message"
           value={note.message}
-          onChange={x => setNote({ ...note, message: x })}
+          onChange={x => setNote({ ...note, message : x })}
         />
         <SimpleReferenceSelector
           selected={note.ref}
@@ -135,7 +135,7 @@ const NoteQuickEdit: React.FC<{
           onItemSelect={x =>
             setNote({
               ...note,
-              ref: new Set([...note.ref, x.id]),
+              ref : new Set([...note.ref, x.id]),
             })
           }
           onTagRemove={x => {
@@ -145,10 +145,10 @@ const NoteQuickEdit: React.FC<{
         />
         <div
           style={{
-            position: 'absolute',
-            right: 0,
-            top: -8,
-            zIndex: 10,
+            position : 'absolute',
+            right    : 0,
+            top      : -8,
+            zIndex   : 10,
           }}
         >
           <Button intent="danger" onClick={onDelete}>
@@ -167,8 +167,8 @@ interface TypeOption {
 
 function detectType(text: string): NOTE_TYPE {
   const options: TypeOption[] = NOTE_TYPES.map(x => ({
-    lowerCaseText: x.toLowerCase(),
-    type: x,
+    lowerCaseText : x.toLowerCase(),
+    type          : x,
   }));
   const t = text.toLowerCase().trim();
   for (const m of options) {

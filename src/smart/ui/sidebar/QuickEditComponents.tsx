@@ -40,28 +40,28 @@ const NODE_EDIT_VIEWS: Record<
     clearRedo: () => void;
   }>
 > = {
-  [DataType.ENDEVENT]: props => (
+  [DataType.ENDEVENT] : props => (
     <QuickEditEnd {...props} end={props.node as EditorEndEvent} />
   ),
-  [DataType.TIMEREVENT]: props => (
+  [DataType.TIMEREVENT] : props => (
     <QuickEditTimer {...props} timer={props.node as EditorTimerEvent} />
   ),
-  [DataType.SIGNALCATCHEVENT]: props => (
+  [DataType.SIGNALCATCHEVENT] : props => (
     <QuickEditSignalEvent {...props} event={props.node as EditorSignalEvent} />
   ),
-  [DataType.EGATE]: props => (
+  [DataType.EGATE] : props => (
     <QuickEditEGate {...props} egate={props.node as EditorEGate} />
   ),
-  [DataType.APPROVAL]: props => (
+  [DataType.APPROVAL] : props => (
     <QuickEditApproval {...props} approval={props.node as EditorApproval} />
   ),
-  [DataType.PROCESS]: props => (
+  [DataType.PROCESS] : props => (
     <QuickEditProcess {...props} process={props.node as EditorProcess} />
   ),
-  [DataType.REGISTRY]: props => (
+  [DataType.REGISTRY] : props => (
     <QuickEditRegistry {...props} registry={props.node as EditorRegistry} />
   ),
-  [DataType.DATACLASS]: props => (
+  [DataType.DATACLASS] : props => (
     <QuickEditDataClass {...props} dataclass={props.node as EditorDataClass} />
   ),
 };

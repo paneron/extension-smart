@@ -28,16 +28,16 @@ function addStatement(
     doc.sections[doc.sections.length - 1].id !== clause
   ) {
     doc.sections.push({
-      id: clause,
-      contents: [[id]],
+      id       : clause,
+      contents : [[id]],
     });
     doc.states[id] = {
       id,
-      text: statement,
+      text      : statement,
       clause,
-      paragraph: 1,
-      index: 1,
-      uiref: React.createRef(),
+      paragraph : 1,
+      index     : 1,
+      uiref     : React.createRef(),
     };
   } else {
     const lastSec = doc.sections[doc.sections.length - 1];
@@ -49,11 +49,11 @@ function addStatement(
     }
     doc.states[id] = {
       id,
-      text: statement,
+      text      : statement,
       clause,
-      paragraph: lastSec.contents.length,
-      index: lastSec.contents[lastSec.contents.length - 1].length,
-      uiref: React.createRef(),
+      paragraph : lastSec.contents.length,
+      index     : lastSec.contents[lastSec.contents.length - 1].length,
+      uiref     : React.createRef(),
     };
   }
 }
@@ -68,7 +68,7 @@ export function docToText(x: MMELDocument): string {
       for (const line of p) {
         out += `${sec.id}#${x.states[line].text}\n`;
       }
-      out += `\n`;
+      out += '\n';
     }
   }
   return out;
@@ -130,12 +130,12 @@ export function plainToDoc(data: string): MMELDocument {
 
 export function textToDoc(data: string): MMELDocument {
   const doc: MMELDocument = {
-    states: {},
-    id: '',
-    title: '',
-    sections: [],
-    type: 'document',
-    version: '',
+    states   : {},
+    id       : '',
+    title    : '',
+    sections : [],
+    type     : 'document',
+    version  : '',
   };
   const lines = data.split('\n');
   let metaMode = true;

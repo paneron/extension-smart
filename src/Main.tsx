@@ -15,7 +15,7 @@ const MainExtension: React.FC<Record<never, never>> = function () {
   Logger.log = logger.log;
   FocusStyleManager.onlyShowFocusOnTabs();
 
-  const indexFile = useObjectData({ objectPaths: [repoIndexPath] });
+  const indexFile = useObjectData({ objectPaths : [repoIndexPath]});
   const data = indexFile.value.data[repoIndexPath];
 
   useMemo(() => {

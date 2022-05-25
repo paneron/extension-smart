@@ -123,42 +123,42 @@ export function cascadeCheckRegs(
       });
     action.cascade = affected.flatMap(([ids, pids, id]) => [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-reg',
-        to: undefined,
-        from: id,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-reg',
+        to      : undefined,
+        from    : id,
         ids,
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'cascade',
-        subtask: 'data',
-        to: undefined,
-        from: id,
-        ids: pids,
+        type    : 'model',
+        act     : 'pages',
+        task    : 'cascade',
+        subtask : 'data',
+        to      : undefined,
+        from    : id,
+        ids     : pids,
       },
     ]);
     return affected.flatMap(([ids, pids, id]) => [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-reg',
-        from: undefined,
-        to: id,
-        ids: ids.map(x => reverseAttribute(x, elms)),
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-reg',
+        from    : undefined,
+        to      : id,
+        ids     : ids.map(x => reverseAttribute(x, elms)),
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'cascade',
-        subtask: 'data',
-        from: undefined,
-        to: id,
-        ids: pids,
+        type    : 'model',
+        act     : 'pages',
+        task    : 'cascade',
+        subtask : 'data',
+        from    : undefined,
+        to      : id,
+        ids     : pids,
       },
     ]);
   } else if (action.task === 'edit') {
@@ -181,44 +181,44 @@ export function cascadeCheckRegs(
     );
     action.cascade = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-reg',
-        from: action.id,
-        to: action.value.id,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-reg',
+        from    : action.id,
+        to      : action.value.id,
         ids,
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'cascade',
-        subtask: 'data',
-        from: action.id,
-        to: action.value.id,
-        ids: pids,
+        type    : 'model',
+        act     : 'pages',
+        task    : 'cascade',
+        subtask : 'data',
+        from    : action.id,
+        to      : action.value.id,
+        ids     : pids,
       },
     ];
     return [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-reg',
-        to: action.id,
-        from: action.value.id,
-        ids: ids.map(x =>
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-reg',
+        to      : action.id,
+        from    : action.value.id,
+        ids     : ids.map(x =>
           reverseAttribute(x, elms, genDCIdByRegId(action.id), dcid)
         ),
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'cascade',
-        subtask: 'data',
-        to: action.id,
-        from: action.value.id,
-        ids: pids,
+        type    : 'model',
+        act     : 'pages',
+        task    : 'cascade',
+        subtask : 'data',
+        to      : action.id,
+        from    : action.value.id,
+        ids     : pids,
       },
     ];
   }
@@ -254,16 +254,16 @@ function findAffectedElements(
         }
         if (match.length > 0) {
           ids.push({
-            id: x,
-            type: 'process',
-            attributes: match,
+            id         : x,
+            type       : 'process',
+            attributes : match,
           });
         }
       } else if (isEditorApproval(elm)) {
         if (elm.records.has(id)) {
           ids.push({
-            id: x,
-            type: 'other',
+            id   : x,
+            type : 'other',
           });
         }
       } else if (isEditorDataClass(elm) && x !== dcid) {
@@ -279,8 +279,8 @@ function findAffectedElements(
             }
           }
           ids.push({
-            id: x,
-            type: 'dc',
+            id   : x,
+            type : 'dc',
             attributes,
             rdcs,
           });
@@ -303,12 +303,12 @@ function getDCFromCombined(
   reg: RegistryCombined
 ): EditorDataClass {
   return {
-    attributes: { ...reg.attributes },
-    id: dcid,
-    datatype: DataType.DATACLASS,
-    objectVersion: reg.objectVersion,
-    rdcs: new Set([...reg.rdcs]),
-    mother: reg.id,
+    attributes    : { ...reg.attributes },
+    id            : dcid,
+    datatype      : DataType.DATACLASS,
+    objectVersion : reg.objectVersion,
+    rdcs          : new Set([...reg.rdcs]),
+    mother        : reg.id,
   };
 }
 
@@ -323,13 +323,13 @@ function reverseAttribute(
       const dc = elms[item.id];
       if (isEditorDataClass(dc)) {
         return {
-          id: dcid !== undefined && item.id === dcid ? newdcid ?? '' : item.id,
-          type: 'dc',
-          attributes: item.attributes.map(([aid]) => [
+          id         : dcid !== undefined && item.id === dcid ? newdcid ?? '' : item.id,
+          type       : 'dc',
+          attributes : item.attributes.map(([aid]) => [
             aid,
             dc.attributes[aid].type,
           ]),
-          rdcs: item.rdcs.map(([a, b]) => [b, a]),
+          rdcs : item.rdcs.map(([a, b]) => [b, a]),
         };
       }
       break;
@@ -353,7 +353,7 @@ function replaceSelf(
     for (const x in attributes) {
       const a = attributes[x];
       if (a.type === oldrefid) {
-        attributes[x] = { ...a, type: newrefid };
+        attributes[x] = { ...a, type : newrefid };
         found = true;
       }
     }

@@ -26,7 +26,7 @@ export function useComment(
     if (reverse) {
       const commentReverse: CommentAction = {
         ...reverse,
-        attach: action.attach,
+        attach : action.attach,
       };
       return commentReverse;
     }
@@ -56,20 +56,20 @@ export function cascadeCheckComment(
         }
         action.cascade = [
           {
-            type: 'model',
-            act: 'comment',
-            task: 'edit',
-            id: parent,
-            value: newComment,
+            type  : 'model',
+            act   : 'comment',
+            task  : 'edit',
+            id    : parent,
+            value : newComment,
           },
         ];
         return [
           {
-            type: 'model',
-            act: 'comment',
-            task: 'edit',
-            id: parent,
-            value: com,
+            type  : 'model',
+            act   : 'comment',
+            task  : 'edit',
+            id    : parent,
+            value : com,
           },
         ];
       } else {
@@ -81,22 +81,22 @@ export function cascadeCheckComment(
         }
         action.cascade = [
           {
-            type: 'model',
-            act: 'elements',
-            task: 'edit',
-            subtask: 'flowunit',
+            type    : 'model',
+            act     : 'elements',
+            task    : 'edit',
+            subtask : 'flowunit',
             id,
-            value: newProcess,
+            value   : newProcess,
           },
         ];
         return [
           {
-            type: 'model',
-            act: 'elements',
-            task: 'edit',
-            subtask: 'flowunit',
+            type    : 'model',
+            act     : 'elements',
+            task    : 'edit',
+            subtask : 'flowunit',
             id,
-            value: process,
+            value   : process,
           },
         ];
       }
@@ -107,16 +107,16 @@ export function cascadeCheckComment(
     );
     const all = fbs.map(x => comments[x]);
     const deleteAction: ModelAction = {
-      type: 'model',
-      act: 'comment',
-      task: 'delete',
-      value: fbs,
+      type  : 'model',
+      act   : 'comment',
+      task  : 'delete',
+      value : fbs,
     };
     const undoAction: ModelAction = {
-      type: 'model',
-      act: 'comment',
-      task: 'add',
-      value: all,
+      type  : 'model',
+      act   : 'comment',
+      task  : 'add',
+      value : all,
     };
     if (action.attach) {
       const { id, parent } = action.attach;
@@ -129,21 +129,21 @@ export function cascadeCheckComment(
         }
         action.cascade = [
           {
-            type: 'model',
-            act: 'comment',
-            task: 'edit',
-            id: parent,
-            value: newComment,
+            type  : 'model',
+            act   : 'comment',
+            task  : 'edit',
+            id    : parent,
+            value : newComment,
           },
           deleteAction,
         ];
         return [
           {
-            type: 'model',
-            act: 'comment',
-            task: 'edit',
-            id: parent,
-            value: com,
+            type  : 'model',
+            act   : 'comment',
+            task  : 'edit',
+            id    : parent,
+            value : com,
           },
           undoAction,
         ];
@@ -156,23 +156,23 @@ export function cascadeCheckComment(
         }
         action.cascade = [
           {
-            type: 'model',
-            act: 'elements',
-            task: 'edit',
-            subtask: 'flowunit',
+            type    : 'model',
+            act     : 'elements',
+            task    : 'edit',
+            subtask : 'flowunit',
             id,
-            value: newProcess,
+            value   : newProcess,
           },
           deleteAction,
         ];
         return [
           {
-            type: 'model',
-            act: 'elements',
-            task: 'edit',
-            subtask: 'flowunit',
+            type    : 'model',
+            act     : 'elements',
+            task    : 'edit',
+            subtask : 'flowunit',
             id,
-            value: process,
+            value   : process,
           },
           undoAction,
         ];

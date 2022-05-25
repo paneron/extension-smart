@@ -75,13 +75,13 @@ export enum FunctionPage {
 }
 
 export const FuntionNames: Record<FunctionPage, string> = {
-  [FunctionPage.Simulation]: 'Simulation',
-  [FunctionPage.Measurement]: 'Measurement validation',
-  [FunctionPage.Parameterized]: 'Parameterized view',
-  [FunctionPage.Checklist]: 'Self-assessment checklist',
-  [FunctionPage.DataSummary]: 'Registry summary',
-  [FunctionPage.ProvisionSummary]: 'Provision summary',
-  [FunctionPage.VersionViewer]: 'Edition comparison',
+  [FunctionPage.Simulation]       : 'Simulation',
+  [FunctionPage.Measurement]      : 'Measurement validation',
+  [FunctionPage.Parameterized]    : 'Parameterized view',
+  [FunctionPage.Checklist]        : 'Self-assessment checklist',
+  [FunctionPage.DataSummary]      : 'Registry summary',
+  [FunctionPage.ProvisionSummary] : 'Provision summary',
+  [FunctionPage.VersionViewer]    : 'Edition comparison',
 };
 
 const ModelViewer: React.FC<{
@@ -112,9 +112,9 @@ const ModelViewer: React.FC<{
   const [history, actHistory] = useHistory(createModelHistory(model));
 
   const [viewOption, setViewOption] = useState<ViewerOption>({
-    dvisible: true,
-    idVisible: false,
-    repoBCVisible: true,
+    dvisible      : true,
+    idVisible     : false,
+    repoBCVisible : true,
   });
   const [selected, setSelected] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<Set<string>>(
@@ -135,13 +135,13 @@ const ModelViewer: React.FC<{
   }
 
   function toggleDataVisibility() {
-    setViewOption({ ...viewOption, dvisible: !viewOption.dvisible });
+    setViewOption({ ...viewOption, dvisible : !viewOption.dvisible });
   }
 
   function onPageChange(action: HistoryAction, newPage: string) {
     if (funMS !== undefined) {
       if (action.act === 'pop' && action.value > 0) {
-        funMS.history = { items: history.slice(0, -action.value) };
+        funMS.history = { items : history.slice(0, -action.value) };
         funMS.mw.page = newPage;
         setFunMS({ ...funMS });
       }
@@ -158,8 +158,8 @@ const ModelViewer: React.FC<{
       !view.navigationEnabled
     ) {
       toaster.show({
-        message: view.navigationErrorMsg ?? 'Error',
-        intent: 'danger',
+        message : view.navigationErrorMsg ?? 'Error',
+        intent  : 'danger',
       });
     } else {
       onNavigationDown(pageid, processid);
@@ -171,12 +171,12 @@ const ModelViewer: React.FC<{
     if (funMS !== undefined) {
       const mw = funMS.mw;
       addToHistory(funMS.history, mw.page, processid);
-      setFunMS({ mw: { ...mw, page: pageid }, history: funMS.history });
+      setFunMS({ mw : { ...mw, page : pageid }, history : funMS.history });
     } else {
       const action: HistoryAction = {
-        type: 'history',
-        act: 'push',
-        value: [{ page: pageid, pathtext: processid }],
+        type  : 'history',
+        act   : 'push',
+        value : [{ page : pageid, pathtext : processid }],
       };
       actHistory(action);
       setPage(pageid);
@@ -191,7 +191,7 @@ const ModelViewer: React.FC<{
       }
     } else {
       if (history.length > 1) {
-        const action: HistoryAction = { type: 'history', act: 'pop', value: 1 };
+        const action: HistoryAction = { type : 'history', act : 'pop', value : 1 };
         actHistory(action);
         setPage(history[history.length - 2].page);
       }
@@ -205,8 +205,8 @@ const ModelViewer: React.FC<{
       !view.navigationEnabled
     ) {
       toaster.show({
-        message: view.navigationErrorMsg ?? 'Error',
-        intent: 'danger',
+        message : view.navigationErrorMsg ?? 'Error',
+        intent  : 'danger',
       });
     } else {
       onNavigationUp();
@@ -218,14 +218,14 @@ const ModelViewer: React.FC<{
     const pageid = history[history.length - 1].page;
     if (funMS !== undefined) {
       setFunMS({
-        history: { items: history },
-        mw: { ...funMS.mw, page: pageid },
+        history : { items : history },
+        mw      : { ...funMS.mw, page : pageid },
       });
     } else {
       const action: HistoryAction = {
-        type: 'history',
-        act: 'replace',
-        value: history,
+        type  : 'history',
+        act   : 'replace',
+        value : history,
       };
       actHistory(action);
       setPage(pageid);
@@ -241,13 +241,13 @@ const ModelViewer: React.FC<{
     if (funMS !== undefined) {
       setFunMS({
         history,
-        mw: { ...funMS.mw, page: pageid },
+        mw : { ...funMS.mw, page : pageid },
       });
     } else {
       const action: HistoryAction = {
-        type: 'history',
-        act: 'replace',
-        value: history.items,
+        type  : 'history',
+        act   : 'replace',
+        value : history.items,
       };
       actHistory(action);
       setPage(pageid);
@@ -305,38 +305,38 @@ const ModelViewer: React.FC<{
     }
   }
 
-  const mw: ModelWrapper = { page, model, type: 'model' };
+  const mw: ModelWrapper = { page, model, type : 'model' };
   const namespace = getNamespace(model);
 
   const FunPages: Record<FunctionPage, SidebarBlockConfig> = {
-    [FunctionPage.Simulation]: {
-      key: FunctionPage.Simulation,
-      title: FuntionNames[FunctionPage.Simulation],
-      collapsedByDefault: false,
-      content: (
+    [FunctionPage.Simulation] : {
+      key                : FunctionPage.Simulation,
+      title              : FuntionNames[FunctionPage.Simulation],
+      collapsedByDefault : false,
+      content            : (
         <SimulationPane
           model={model}
           setView={setView}
           page={page}
-          history={{ items: history }}
+          history={{ items : history }}
           drillUp={onNavigationUp}
           goToPage={onNavigationDown}
         />
       ),
     },
-    [FunctionPage.Measurement]: {
-      key: FunctionPage.Measurement,
-      title: FuntionNames[FunctionPage.Measurement],
-      collapsedByDefault: false,
-      content: (
+    [FunctionPage.Measurement] : {
+      key                : FunctionPage.Measurement,
+      title              : FuntionNames[FunctionPage.Measurement],
+      collapsedByDefault : false,
+      content            : (
         <MeasureCheckPane model={model} setView={setView} showMsg={showMsg} />
       ),
     },
-    [FunctionPage.Parameterized]: {
-      key: FunctionPage.Parameterized,
-      title: FuntionNames[FunctionPage.Parameterized],
-      collapsedByDefault: false,
-      content: (
+    [FunctionPage.Parameterized] : {
+      key                : FunctionPage.Parameterized,
+      title              : FuntionNames[FunctionPage.Parameterized],
+      collapsedByDefault : false,
+      content            : (
         <MeasureCheckPane
           model={model}
           setView={setView}
@@ -345,17 +345,17 @@ const ModelViewer: React.FC<{
         />
       ),
     },
-    [FunctionPage.Checklist]: {
-      key: FunctionPage.Checklist,
-      title: FuntionNames[FunctionPage.Checklist],
-      collapsedByDefault: false,
-      content: <ChecklistConfigPane setView={setView} model={model} />,
+    [FunctionPage.Checklist] : {
+      key                : FunctionPage.Checklist,
+      title              : FuntionNames[FunctionPage.Checklist],
+      collapsedByDefault : false,
+      content            : <ChecklistConfigPane setView={setView} model={model} />,
     },
-    [FunctionPage.DataSummary]: {
-      key: FunctionPage.DataSummary,
-      title: FuntionNames[FunctionPage.DataSummary],
-      collapsedByDefault: false,
-      content: (
+    [FunctionPage.DataSummary] : {
+      key                : FunctionPage.DataSummary,
+      title              : FuntionNames[FunctionPage.DataSummary],
+      collapsedByDefault : false,
+      content            : (
         <RegistrySummary
           model={model}
           onChange={onPageAndHistroyChange}
@@ -363,20 +363,20 @@ const ModelViewer: React.FC<{
         />
       ),
     },
-    [FunctionPage.ProvisionSummary]: {
-      key: FunctionPage.ProvisionSummary,
-      title: FuntionNames[FunctionPage.ProvisionSummary],
-      collapsedByDefault: false,
-      content: <ProvisionSettings model={model} />,
+    [FunctionPage.ProvisionSummary] : {
+      key                : FunctionPage.ProvisionSummary,
+      title              : FuntionNames[FunctionPage.ProvisionSummary],
+      collapsedByDefault : false,
+      content            : <ProvisionSettings model={model} />,
     },
-    [FunctionPage.VersionViewer]: {
-      key: FunctionPage.VersionViewer,
-      title: FuntionNames[FunctionPage.VersionViewer],
-      collapsedByDefault: false,
-      content: (
+    [FunctionPage.VersionViewer] : {
+      key                : FunctionPage.VersionViewer,
+      title              : FuntionNames[FunctionPage.VersionViewer],
+      collapsedByDefault : false,
+      content            : (
         <VersionTrackerSettingPane
           mw={{ ...mw }}
-          history={funMS !== undefined ? funMS.history : { items: history }}
+          history={funMS !== undefined ? funMS.history : { items : history }}
           setView={setView}
           setFunctionalState={setFunMS}
         />
@@ -387,43 +387,43 @@ const ModelViewer: React.FC<{
   const ViewStyleComponentDesc: React.FC<{ id: string }> | undefined =
     view !== undefined && view.ComponentToolTip !== undefined
       ? function ({ id }) {
-          const SD = view.ComponentToolTip!;
-          return (
-            <SD
-              id={id}
-              pageid={funMS !== undefined ? funMS.mw.page : mw.page}
-              data={view.data}
-            />
-          );
-        }
+        const SD = view.ComponentToolTip!;
+        return (
+          <SD
+            id={id}
+            pageid={funMS !== undefined ? funMS.mw.page : mw.page}
+            data={view.data}
+          />
+        );
+      }
       : undefined;
 
   const ViewStartEndComponentDesc: React.FC<{ id: string }> | undefined =
     view !== undefined && view.StartEndToolTip !== undefined
       ? function ({ id }) {
-          const SD = view.StartEndToolTip!;
-          return (
-            <SD
-              id={id}
-              pageid={funMS !== undefined ? funMS.mw.page : mw.page}
-              data={view.data}
-            />
-          );
-        }
+        const SD = view.StartEndToolTip!;
+        return (
+          <SD
+            id={id}
+            pageid={funMS !== undefined ? funMS.mw.page : mw.page}
+            data={view.data}
+          />
+        );
+      }
       : undefined;
 
   const NodeAddon: React.FC<{ id: string }> | undefined =
     view !== undefined && view.NodeAddon !== undefined
       ? function ({ id }) {
-          const Addon = view.NodeAddon!;
-          return (
-            <Addon
-              element={model.elements[id]}
-              pageid={mw.page}
-              data={view.data}
-            />
-          );
-        }
+        const Addon = view.NodeAddon!;
+        return (
+          <Addon
+            element={model.elements[id]}
+            pageid={mw.page}
+            data={view.data}
+          />
+        );
+      }
       : undefined;
 
   const CustomAttribute:
@@ -435,9 +435,9 @@ const ModelViewer: React.FC<{
     | undefined =
     view !== undefined && view.CustomAttribute !== undefined
       ? function (props) {
-          const Custom = view.CustomAttribute!;
-          return <Custom {...props} data={view.data} />;
-        }
+        const Custom = view.CustomAttribute!;
+        return <Custom {...props} data={view.data} />;
+      }
       : undefined;
 
   const CustomProvision:
@@ -448,9 +448,9 @@ const ModelViewer: React.FC<{
     | undefined =
     view !== undefined && view.CustomProvision !== undefined
       ? function (props) {
-          const Custom = view.CustomProvision!;
-          return <Custom {...props} data={view.data} />;
-        }
+        const Custom = view.CustomProvision!;
+        return <Custom {...props} data={view.data} />;
+      }
       : undefined;
 
   const viewMenu = (
@@ -489,9 +489,9 @@ const ModelViewer: React.FC<{
   );
 
   const selectedSideBlockConfig: SidebarBlockConfig = {
-    key: 'selected-node',
-    title: 'Selected node',
-    content: (
+    key     : 'selected-node',
+    title   : 'Selected node',
+    content : (
       <SelectedNodeDescription
         model={funMS !== undefined ? funMS.mw.model : model}
         page={page}
@@ -502,9 +502,9 @@ const ModelViewer: React.FC<{
   };
 
   const searchSideBlockConfig: SidebarBlockConfig = {
-    key: 'search-node',
-    title: 'Search components',
-    content: (
+    key     : 'search-node',
+    title   : 'Search components',
+    content : (
       <SearchComponentPane
         model={funMS !== undefined ? funMS.mw.model : model}
         onChange={onSearchResultChange}
@@ -523,16 +523,16 @@ const ModelViewer: React.FC<{
   const plugin =
     psetting !== undefined
       ? {
-          key: psetting.key,
-          title: psetting.title,
-          content: (
-            <psetting.Content
-              model={model}
-              showMsg={showMsg}
-              setView={setView}
-            />
-          ),
-        }
+        key     : psetting.key,
+        title   : psetting.title,
+        content : (
+          <psetting.Content
+            model={model}
+            showMsg={showMsg}
+            setView={setView}
+          />
+        ),
+      }
       : undefined;
   const addonblocks =
     plugin !== undefined ? [plugin, ...normalblocks] : normalblocks;
@@ -558,7 +558,7 @@ const ModelViewer: React.FC<{
           <div css={react_flow_container_layout}>
             <ReactFlow
               elements={getViewerReactFlowElementsFrom(
-                funMS !== undefined ? funMS.mw : { page, model, type: 'model' },
+                funMS !== undefined ? funMS.mw : { page, model, type : 'model' },
                 index,
                 viewOption.dvisible,
                 onProcessClick,
@@ -596,7 +596,7 @@ const ModelViewer: React.FC<{
                   onClick={() =>
                     setViewOption({
                       ...viewOption,
-                      idVisible: !viewOption.idVisible,
+                      idVisible : !viewOption.idVisible,
                     })
                   }
                 />

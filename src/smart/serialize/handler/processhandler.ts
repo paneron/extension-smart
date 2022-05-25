@@ -8,14 +8,14 @@ import {
 
 export function parseApproval(id: string, data: string): MMELApproval {
   const app: MMELApproval = {
-    id: id,
-    datatype: DataType.APPROVAL,
-    name: '',
-    modality: '',
-    actor: '',
-    approver: '',
-    records: new Set<string>(),
-    ref: new Set<string>(),
+    id       : id,
+    datatype : DataType.APPROVAL,
+    name     : '',
+    modality : '',
+    actor    : '',
+    approver : '',
+    records  : new Set<string>(),
+    ref      : new Set<string>(),
   };
 
   if (data !== '') {
@@ -56,21 +56,21 @@ export function parseApproval(id: string, data: string): MMELApproval {
 
 export function parseProcess(id: string, data: string): MMELProcess {
   const p: MMELProcess = {
-    id: id,
-    datatype: DataType.PROCESS,
-    name: '',
-    modality: '',
-    actor: '',
-    output: new Set<string>(),
-    input: new Set<string>(),
-    notes: new Set<string>(),
-    provision: new Set<string>(),
-    links: new Set<string>(),
-    tables: new Set<string>(),
-    figures: new Set<string>(),
-    comments: new Set<string>(),
-    page: '',
-    measure: [],
+    id        : id,
+    datatype  : DataType.PROCESS,
+    name      : '',
+    modality  : '',
+    actor     : '',
+    output    : new Set<string>(),
+    input     : new Set<string>(),
+    notes     : new Set<string>(),
+    provision : new Set<string>(),
+    links     : new Set<string>(),
+    tables    : new Set<string>(),
+    figures   : new Set<string>(),
+    comments  : new Set<string>(),
+    page      : '',
+    measure   : [],
   };
 
   if (data !== '') {

@@ -28,13 +28,13 @@ export const ProvisonItem: React.FC<{
       <NormalTextField
         text="Provision Text"
         value={provision.condition}
-        onChange={x => setProvision({ ...provision, condition: x })}
+        onChange={x => setProvision({ ...provision, condition : x })}
       />
       <NormalComboBox
         text="Provision Modality"
         value={provision.modality}
         options={MODAILITYOPTIONS}
-        onChange={x => setProvision({ ...provision, modality: x })}
+        onChange={x => setProvision({ ...provision, modality : x })}
       />
       <MultiReferenceSelector
         text="Reference"

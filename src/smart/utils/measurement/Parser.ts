@@ -29,7 +29,7 @@ function mTokenize(x: string): MToken[] {
         data += x[i];
         i++;
       }
-      out.push({ text: '', isData: true, value: data });
+      out.push({ text : '', isData : true, value : data });
     } else if (c === '[') {
       // a measurement reference
       i++;
@@ -38,7 +38,7 @@ function mTokenize(x: string): MToken[] {
         name += x[i];
         i++;
       }
-      out.push({ text: name, isData: true, value: 0 });
+      out.push({ text : name, isData : true, value : 0 });
     } else if (c === '.') {
       // a list operator
       i++;
@@ -47,10 +47,10 @@ function mTokenize(x: string): MToken[] {
         name += x[i];
         i++;
       }
-      out.push({ text: name, isData: false, value: 0 });
+      out.push({ text : name, isData : false, value : 0 });
     } else if (isBinaryOperator(c)) {
       // a binary operator
-      out.push({ text: c, isData: false, value: 0 });
+      out.push({ text : c, isData : false, value : 0 });
     } else {
       // a constant
       i++;
@@ -59,7 +59,7 @@ function mTokenize(x: string): MToken[] {
         value += x[i];
         i++;
       }
-      out.push({ text: '', isData: true, value: parseFloat(value) });
+      out.push({ text : '', isData : true, value : parseFloat(value) });
     }
   }
   return out;

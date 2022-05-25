@@ -98,17 +98,17 @@ export function createEdgeContainer(
   isAnimated?: (id: string) => boolean
 ): EdgeContainer {
   return {
-    id: e.id,
-    source: e.from,
-    target: e.to,
-    type: e.from === e.to ? 'self' : 'normal',
-    data: {
-      id: isDelete ? e.id : '',
-      condition: e.description,
-      removeEdge: removeEdge,
-      getColor: getEdgeColor,
+    id     : e.id,
+    source : e.from,
+    target : e.to,
+    type   : e.from === e.to ? 'self' : 'normal',
+    data   : {
+      id         : isDelete ? e.id : '',
+      condition  : e.description,
+      removeEdge : removeEdge,
+      getColor   : getEdgeColor,
     },
-    animated: isAnimated !== undefined ? isAnimated(e.id) : false,
+    animated : isAnimated !== undefined ? isAnimated(e.id) : false,
   };
 }
 
@@ -117,13 +117,13 @@ export function createDataLinkContainer(
   t: EditorNode
 ): DataLinkContainer {
   return {
-    id: s.id + '#datato#' + t.id,
-    source: s.id,
-    target: t.id,
-    type: 'datalink',
-    animated: true,
-    data: {
-      isLinkBetweenData: isEditorData(s) && isEditorData(t),
+    id       : s.id + '#datato#' + t.id,
+    source   : s.id,
+    target   : t.id,
+    type     : 'datalink',
+    animated : true,
+    data     : {
+      isLinkBetweenData : isEditorData(s) && isEditorData(t),
     },
   };
 }
@@ -134,13 +134,13 @@ export function createNodeContainer(
   callback: NodeCallBack
 ): NodeContainer {
   return {
-    id: x.id,
-    data: {
+    id   : x.id,
+    data : {
       ...x,
       ...callback,
     },
-    type: MMELtoFlowEntries[x.datatype].flowName,
-    position: pos,
+    type     : MMELtoFlowEntries[x.datatype].flowName,
+    position : pos,
   };
 }
 
@@ -211,7 +211,7 @@ export function getEditorNodeCallBack(props: {
   }
 
   return {
-    modelType: type,
+    modelType                : type,
     getRoleById,
     getTableById,
     getFigById,
@@ -224,7 +224,7 @@ export function getEditorNodeCallBack(props: {
     getCommentById,
     hasMapping,
     ComponentShortDescription,
-    StartEndShortDescription: ViewStartEndComponentDesc,
+    StartEndShortDescription : ViewStartEndComponentDesc,
     MappingList,
     onDataWorkspaceActive,
     NodeAddon,

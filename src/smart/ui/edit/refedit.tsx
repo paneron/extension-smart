@@ -34,7 +34,7 @@ const ReferenceEditPage: React.FC<{
     return Object.values(model.refs)
       .filter(x => matchFilter(x, filter))
       .sort(referenceSorter)
-      .map(x => ({ id: x.id, text: toRefSummary(x) }));
+      .map(x => ({ id : x.id, text : toRefSummary(x) }));
   }
 
   function removeRefListItem(ids: string[]) {
@@ -94,16 +94,16 @@ const ReferenceEditPage: React.FC<{
   }
 
   const refhandler: IManageHandler<MMELReference> = {
-    filterName: 'Reference filter',
-    itemName: 'References',
-    Content: ReferenceEditItemPage,
-    initObj: createReference(''),
-    model: model,
-    getItems: getRefListItems,
-    removeItems: removeRefListItem,
-    addItem: obj => addRef(obj),
-    updateItem: (oldid, obj) => updateRef(oldid, obj),
-    getObjById: getRefById,
+    filterName  : 'Reference filter',
+    itemName    : 'References',
+    Content     : ReferenceEditItemPage,
+    initObj     : createReference(''),
+    model       : model,
+    getItems    : getRefListItems,
+    removeItems : removeRefListItem,
+    addItem     : obj => addRef(obj),
+    updateItem  : (oldid, obj) => updateRef(oldid, obj),
+    getObjById  : getRefById,
   };
 
   return <ListManagePage {...refhandler} />;
@@ -124,22 +124,22 @@ const ReferenceEditItemPage: React.FC<{
       <NormalTextField
         text="Reference ID"
         value={ref.id}
-        onChange={x => setRef({ ...ref, id: x.replaceAll(/\s+/g, '') })}
+        onChange={x => setRef({ ...ref, id : x.replaceAll(/\s+/g, '') })}
       />
       <NormalTextField
         text="Document"
         value={ref.document}
-        onChange={x => setRef({ ...ref, document: x })}
+        onChange={x => setRef({ ...ref, document : x })}
       />
       <NormalTextField
         text="Clause"
         value={ref.clause}
-        onChange={x => setRef({ ...ref, clause: x })}
+        onChange={x => setRef({ ...ref, clause : x })}
       />
       <NormalTextField
         text="Title"
         value={ref.title}
-        onChange={x => setRef({ ...ref, title: x })}
+        onChange={x => setRef({ ...ref, title : x })}
       />
     </FormGroup>
   );

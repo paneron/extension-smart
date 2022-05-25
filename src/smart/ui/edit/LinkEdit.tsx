@@ -23,22 +23,22 @@ export const LinkItem: React.FC<{
         text="Note type"
         value={link.type}
         options={LINK_TYPES}
-        onChange={x => setLink({ ...link, type: x as LINK_TYPE })}
+        onChange={x => setLink({ ...link, type : x as LINK_TYPE })}
       />
       <NormalTextField
         text="Title"
         value={link.title}
-        onChange={x => setLink({ ...link, title: x })}
+        onChange={x => setLink({ ...link, title : x })}
       />
       <NormalTextField
         text="Description"
         value={link.description}
-        onChange={x => setLink({ ...link, description: x })}
+        onChange={x => setLink({ ...link, description : x })}
       />
       <NormalTextField
         text="Link"
         value={link.link}
-        onChange={x => setLink({ ...link, link: x })}
+        onChange={x => setLink({ ...link, link : x })}
       />
     </FormGroup>
   );

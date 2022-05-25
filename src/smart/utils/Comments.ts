@@ -17,13 +17,13 @@ export function createNewComment(
   message: string
 ): MMELComment {
   return {
-    id: findUniqueID('comment', comments),
+    id        : findUniqueID('comment', comments),
     username,
     message,
-    feedback: new Set<string>(),
-    resolved: false,
-    timestamp: new Date().toLocaleDateString(),
-    datatype: DataType.COMMENT,
+    feedback  : new Set<string>(),
+    resolved  : false,
+    timestamp : new Date().toLocaleDateString(),
+    datatype  : DataType.COMMENT,
   };
 }
 
@@ -34,12 +34,12 @@ export function materialComments(
   const com = getCommentById(id);
   if (com) {
     const ci: CommentInstance = {
-      id: com.id,
-      username: com.username,
-      message: com.message,
-      resolved: com.resolved,
-      timestamp: com.timestamp,
-      feedback: [...com.feedback]
+      id        : com.id,
+      username  : com.username,
+      message   : com.message,
+      resolved  : com.resolved,
+      timestamp : com.timestamp,
+      feedback  : [...com.feedback]
         .map(x => materialComments(x, getCommentById))
         .filter(x => x)
         .map(x => x as CommentInstance),

@@ -48,10 +48,10 @@ type Section = {
 function processDoc(doc: MMELDocument): Sections {
   const result: Sections = {};
   const initSec: Section = {
-    cnumber: NaN,
-    clause: '',
-    secs: result,
-    data: [],
+    cnumber : NaN,
+    clause  : '',
+    secs    : result,
+    data    : [],
   };
   for (const s of Object.values(doc.states)) {
     const parts = s.clause.split('.');
@@ -68,10 +68,10 @@ function processDoc(doc: MMELDocument): Sections {
       }
       if (sec.secs[x] === undefined) {
         sec.secs[x] = {
-          cnumber: parseInt(x),
+          cnumber : parseInt(x),
           clause,
-          secs: {},
-          data: [],
+          secs    : {},
+          data    : [],
         };
       }
       sec = sec.secs[x];
@@ -125,10 +125,10 @@ export async function aiTranslate(doc: MMELDocument): Promise<ModelWrapper> {
 function readSections(sec: Section, model: EditorModel) {
   const text = sec.data.slice(1).join('\n');
   const section: MMELTextSection = {
-    id: `section${sec.clause}`,
-    title: sec.data.length > 0 ? sec.data[0] : sec.clause,
-    content: text,
-    datatype: DataType.SECTION,
+    id       : `section${sec.clause}`,
+    title    : sec.data.length > 0 ? sec.data[0] : sec.clause,
+    content  : text,
+    datatype : DataType.SECTION,
   };
   model.sections[section.id] = section;
   for (const s of Object.values(sec.secs)) {
@@ -271,9 +271,9 @@ function readDetails(sec: Section, model: EditorModel, page: EditorSubprocess) {
                 roles[roleid].count++;
               } else {
                 roles[roleid] = {
-                  id: roleid,
-                  title: roleName,
-                  count: 1,
+                  id    : roleid,
+                  title : roleName,
+                  count : 1,
                 };
               }
               if (role) {
@@ -327,9 +327,9 @@ function readDetails(sec: Section, model: EditorModel, page: EditorSubprocess) {
           roles[actor.id].count++;
         } else {
           roles[actor.id] = {
-            id: actor.id,
-            title: actor.name,
-            count: 1,
+            id    : actor.id,
+            title : actor.name,
+            count : 1,
           };
         }
         if (role) {
@@ -375,40 +375,40 @@ function createLink(id: string, text: string, model: EditorModel) {
   if (model.links[id] === undefined) {
     const newLink: MMELLink = {
       id,
-      title: text,
-      description: text,
-      link: id,
-      type: 'REPO',
-      datatype: DataType.LINK,
+      title       : text,
+      description : text,
+      link        : id,
+      type        : 'REPO',
+      datatype    : DataType.LINK,
     };
     model.links[id] = newLink;
   }
 }
 
 const dictionary: Record<string, string> = {
-  competencies: 'competency',
-  issues: 'issue',
-  partners: 'partner',
-  organizations: 'organization',
-  teams: 'team',
-  sers: 'ser',
-  relationships: 'relationship',
-  evalutations: 'evalutation',
-  objectives: 'objective',
-  interdependencies: 'interdependency',
-  skills: 'skill',
-  opportunities: 'opportunity',
-  processes: 'process',
-  arrangements: 'arrangement',
-  agreements: 'agreement',
-  records: 'record',
-  evaluations: 'evaluation',
-  results: 'result',
-  conclusions: 'conclusion',
-  actions: 'action',
-  risks: 'risk',
-  measures: 'measure',
-  tasks: 'task',
-  activities: 'activity',
-  initiatives: 'initiative',
+  competencies      : 'competency',
+  issues            : 'issue',
+  partners          : 'partner',
+  organizations     : 'organization',
+  teams             : 'team',
+  sers              : 'ser',
+  relationships     : 'relationship',
+  evalutations      : 'evalutation',
+  objectives        : 'objective',
+  interdependencies : 'interdependency',
+  skills            : 'skill',
+  opportunities     : 'opportunity',
+  processes         : 'process',
+  arrangements      : 'arrangement',
+  agreements        : 'agreement',
+  records           : 'record',
+  evaluations       : 'evaluation',
+  results           : 'result',
+  conclusions       : 'conclusion',
+  actions           : 'action',
+  risks             : 'risk',
+  measures          : 'measure',
+  tasks             : 'task',
+  activities        : 'activity',
+  initiatives       : 'initiative',
 };

@@ -14,16 +14,16 @@ export type RepoNodeType = 'own' | 'repo' | 'outside';
 export type RepoNodeDiffType = 'new' | 'delete' | 'same' | 'different';
 
 export const RepoLegend: Record<RepoNodeType, LegendInterface> = {
-  own: { label: 'Current model', color: 'lightgreen' },
-  repo: { label: 'In repository', color: 'lightblue' },
-  outside: { label: 'Not in repository', color: 'lightgray' },
+  own     : { label : 'Current model', color : 'lightgreen' },
+  repo    : { label : 'In repository', color : 'lightblue' },
+  outside : { label : 'Not in repository', color : 'lightgray' },
 };
 
 export const RepoDiffLegend: Record<RepoNodeDiffType, LegendInterface> = {
-  new: { label: 'New coverage', color: 'lightgreen' },
-  different: { label: 'Changed coverage', color: 'lightyellow' },
-  same: { label: 'Same coverage', color: 'lightblue' },
-  delete: { label: 'Deleted coverage', color: 'lightpink' },
+  'new'       : { label : 'New coverage', color : 'lightgreen' },
+  'different' : { label : 'Changed coverage', color : 'lightyellow' },
+  'same'      : { label : 'Same coverage', color : 'lightblue' },
+  'delete'    : { label : 'Deleted coverage', color : 'lightpink' },
 };
 
 export function setValueToIndex(
@@ -31,7 +31,7 @@ export function setValueToIndex(
   ns: string,
   newItem: RepoItems
 ): RepoIndex {
-  return { ...index, [ns]: newItem };
+  return { ...index, [ns] : newItem };
 }
 
 export function createEmptyIndex(): RepoIndex {
@@ -75,7 +75,7 @@ export function createEdge(id: string, source: string, target: string): Edge {
     id,
     source,
     target,
-    type: 'repo',
+    type : 'repo',
   };
 }
 

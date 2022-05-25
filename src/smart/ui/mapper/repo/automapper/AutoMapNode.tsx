@@ -14,14 +14,14 @@ export function createAutoMapNode(
       <Tooltip2 content={item ? item.title : ''}>
         <div
           style={{
-            position: 'fixed',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+            position       : 'fixed',
+            top            : 0,
+            bottom         : 0,
+            left           : 0,
+            right          : 0,
+            display        : 'flex',
+            justifyContent : 'center',
+            alignItems     : 'center',
           }}
         >
           <Text ellipsize>{label}</Text>
@@ -30,14 +30,14 @@ export function createAutoMapNode(
       {checked !== undefined && setChecked && (
         <div
           style={{
-            position: 'fixed',
-            left: -10,
-            top: -10,
+            position : 'fixed',
+            left     : -10,
+            top      : -10,
           }}
         >
           <Checkbox
             style={{
-              display: 'absolute',
+              display : 'absolute',
             }}
             large
             checked={checked}

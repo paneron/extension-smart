@@ -34,7 +34,7 @@ const IconControlButton: React.FC<{
 }> = function ({ isOn, onClick, icon }) {
   return (
     <ControlButton
-      style={{ backgroundColor: isOn ? 'lightgreen' : undefined }}
+      style={{ backgroundColor : isOn ? 'lightgreen' : undefined }}
       onClick={onClick}
     >
       <Icon icon={icon} />

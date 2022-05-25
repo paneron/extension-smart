@@ -68,42 +68,42 @@ export function cascadeCheckDCs(
       action.value.map(x => [...findAffectedElements(elms, pages, x, ''), x]);
     action.cascade = affected.flatMap(([ids, pids, id]) => [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-dc',
-        to: undefined,
-        from: id,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-dc',
+        to      : undefined,
+        from    : id,
         ids,
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'cascade',
-        subtask: 'data',
-        to: undefined,
-        from: id,
-        ids: pids,
+        type    : 'model',
+        act     : 'pages',
+        task    : 'cascade',
+        subtask : 'data',
+        to      : undefined,
+        from    : id,
+        ids     : pids,
       },
     ]);
     return affected.flatMap(([ids, pids, id]) => [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-dc',
-        from: undefined,
-        to: id,
-        ids: ids.map(x => reverseAttribute(x, elms)),
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-dc',
+        from    : undefined,
+        to      : id,
+        ids     : ids.map(x => reverseAttribute(x, elms)),
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'cascade',
-        subtask: 'data',
-        from: undefined,
-        to: id,
-        ids: pids,
+        type    : 'model',
+        act     : 'pages',
+        task    : 'cascade',
+        subtask : 'data',
+        from    : undefined,
+        to      : id,
+        ids     : pids,
       },
     ]);
   } else if (action.task === 'edit') {
@@ -115,42 +115,42 @@ export function cascadeCheckDCs(
     );
     action.cascade = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-dc',
-        from: action.id,
-        to: action.value.id,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-dc',
+        from    : action.id,
+        to      : action.value.id,
         ids,
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'cascade',
-        subtask: 'data',
-        from: action.id,
-        to: action.value.id,
-        ids: pids,
+        type    : 'model',
+        act     : 'pages',
+        task    : 'cascade',
+        subtask : 'data',
+        from    : action.id,
+        to      : action.value.id,
+        ids     : pids,
       },
     ];
     return [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-dc',
-        to: action.id,
-        from: action.value.id,
-        ids: ids.map(x => reverseAttribute(x, elms)),
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-dc',
+        to      : action.id,
+        from    : action.value.id,
+        ids     : ids.map(x => reverseAttribute(x, elms)),
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'cascade',
-        subtask: 'data',
-        to: action.id,
-        from: action.value.id,
-        ids: pids,
+        type    : 'model',
+        act     : 'pages',
+        task    : 'cascade',
+        subtask : 'data',
+        to      : action.id,
+        from    : action.value.id,
+        ids     : pids,
       },
     ];
   }
@@ -182,8 +182,8 @@ function findAffectedElements(
           }
         }
         ids.push({
-          id: x,
-          type: 'dc',
+          id   : x,
+          type : 'dc',
           attributes,
           rdcs,
         });
@@ -210,13 +210,13 @@ function reverseAttribute(
   const dc = elms[item.id];
   if (isEditorDataClass(dc)) {
     return {
-      id: item.id,
-      type: 'dc',
-      attributes: item.attributes.map(([aid]) => [
+      id         : item.id,
+      type       : 'dc',
+      attributes : item.attributes.map(([aid]) => [
         aid,
         dc.attributes[aid].type,
       ]),
-      rdcs: item.rdcs.map(([a, b]) => [b, a]),
+      rdcs : item.rdcs.map(([a, b]) => [b, a]),
     };
   }
   return item;

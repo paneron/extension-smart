@@ -23,7 +23,7 @@ import {
   editRegistryCommand,
 } from '../../model/editor/commands/data';
 
-const initObj: RegistryCombined = { ...createDataClass(''), title: '' };
+const initObj: RegistryCombined = { ...createDataClass(''), title : '' };
 
 const RegistryEditPage: React.FC<{
   model: EditorModel;
@@ -40,7 +40,7 @@ const RegistryEditPage: React.FC<{
   function getRegListItems(filter: string): IListItem[] {
     return Object.values(model.elements)
       .filter(x => isEditorRegistry(x) && matchFilter(x, filter))
-      .map(x => ({ id: x.id, text: (x as EditorRegistry).title }))
+      .map(x => ({ id : x.id, text : (x as EditorRegistry).title }))
       .sort(defaultItemSorter);
   }
 
@@ -86,20 +86,20 @@ const RegistryEditPage: React.FC<{
     if (!isEditorDataClass(dc)) {
       return { ...initObj };
     }
-    return { ...dc, id: id, title: reg.title };
+    return { ...dc, id : id, title : reg.title };
   }
 
   const reghandler: IManageHandler<RegistryCombined> = {
-    filterName: 'Registry filter',
-    itemName: 'Data Registries',
-    Content: RegistryEditItemPage,
-    initObj: { ...initObj },
-    model: model,
-    getItems: getRegListItems,
-    removeItems: removeRegListItem,
-    addItem: obj => addRegistry(obj),
-    updateItem: (oldid, obj) => updateRegistry(oldid, obj),
-    getObjById: getRegById,
+    filterName  : 'Registry filter',
+    itemName    : 'Data Registries',
+    Content     : RegistryEditItemPage,
+    initObj     : { ...initObj },
+    model       : model,
+    getItems    : getRegListItems,
+    removeItems : removeRegListItem,
+    addItem     : obj => addRegistry(obj),
+    updateItem  : (oldid, obj) => updateRegistry(oldid, obj),
+    getObjById  : getRegById,
   };
 
   return <ListManagePage {...reghandler} />;
@@ -115,17 +115,17 @@ const RegistryEditItemPage: React.FC<{
       <NormalTextField
         text="Registry ID"
         value={reg.id}
-        onChange={x => setReg({ ...reg, id: x.replaceAll(/\s+/g, '') })}
+        onChange={x => setReg({ ...reg, id : x.replaceAll(/\s+/g, '') })}
       />
       <NormalTextField
         text="Registry title"
         value={reg.title}
-        onChange={x => setReg({ ...reg, title: x })}
+        onChange={x => setReg({ ...reg, title : x })}
       />
       <AttributeEditPage
         attributes={{ ...reg.attributes }}
         model={model!}
-        setAtts={x => setReg({ ...reg, attributes: x })}
+        setAtts={x => setReg({ ...reg, attributes : x })}
       />
     </FormGroup>
   );

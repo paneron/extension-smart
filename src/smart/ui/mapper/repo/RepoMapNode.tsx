@@ -13,14 +13,14 @@ export function createNodeContent(
       <Tooltip2 content={item ? item.title : ''}>
         <div
           style={{
-            position: 'fixed',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+            position       : 'fixed',
+            top            : 0,
+            bottom         : 0,
+            left           : 0,
+            right          : 0,
+            display        : 'flex',
+            justifyContent : 'center',
+            alignItems     : 'center',
           }}
         >
           <Text ellipsize>{label}</Text>
@@ -29,15 +29,15 @@ export function createNodeContent(
       {item && loadModel && (
         <div
           style={{
-            position: 'fixed',
-            right: -10,
-            top: -15,
+            position : 'fixed',
+            right    : -10,
+            top      : -15,
           }}
         >
           <Tooltip2 content="View item" position="top">
             <Button
               style={{
-                display: 'absolute',
+                display : 'absolute',
               }}
               icon="eye-open"
               onClick={() => loadModel(item.namespace)}

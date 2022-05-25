@@ -87,18 +87,18 @@ function getInitLinks(
 }
 
 const emptyMeasurement: IMeasure = {
-  id: '',
-  datatype: DataType.VARIABLE,
-  measure: '',
+  id       : '',
+  datatype : DataType.VARIABLE,
+  measure  : '',
 };
 
 const emptyLink: MMELLink = {
-  id: '',
-  title: '',
-  description: '',
-  link: '',
-  type: 'REPO',
-  datatype: DataType.LINK,
+  id          : '',
+  title       : '',
+  description : '',
+  link        : '',
+  type        : 'REPO',
+  datatype    : DataType.LINK,
 };
 
 interface CommonProcessEditProps {
@@ -211,7 +211,7 @@ const EditProcessPage: React.FC<{
   }
 
   function setMeasurements(x: string[]) {
-    setEditing({ ...editing, measure: x });
+    setEditing({ ...editing, measure : x });
   }
 
   function setN(x: Record<string, MMELNote>) {
@@ -274,23 +274,23 @@ const EditProcessPage: React.FC<{
   const fullEditClick =
     onFullEditClick !== undefined
       ? function () {
-          if (hasChange) {
-            onUpdateClick();
-          }
-          onFullEditClick();
+        if (hasChange) {
+          onUpdateClick();
         }
+        onFullEditClick();
+      }
       : undefined;
 
   const commonProps = {
     onUpdateClick,
     editing,
-    setEditing: setEdit,
+    setEditing      : setEdit,
     provisions,
-    setProvisions: setPros,
+    setProvisions   : setPros,
     notes,
-    setNotes: setN,
+    setNotes        : setN,
     model,
-    onFullEditClick: fullEditClick,
+    onFullEditClick : fullEditClick,
     onDeleteClick,
     setMeasurements,
     setUndoListener,
@@ -313,11 +313,11 @@ const EditProcessPage: React.FC<{
     saveOnExit,
     provision,
     onAddReference,
-    initID: process.id,
+    initID    : process.id,
     onSubprocessClick,
     onSubprocessRemoveClick,
     onBringoutClick,
-    validTest: (id: string) => id === process.id || checkId(id, model.elements),
+    validTest : (id: string) => id === process.id || checkId(id, model.elements),
     onNewID,
     setHasChange,
   };
@@ -403,14 +403,14 @@ const QuickVersionEdit: React.FC<
       <NormalTextField
         text="Process Name"
         value={editing.name}
-        onChange={x => setEditing({ ...editing, name: x })}
+        onChange={x => setEditing({ ...editing, name : x })}
       />
       <RoleSelector
         label="Actor"
         activeItem={editing.actor !== '' ? model.roles[editing.actor] : null}
         items={roleObjects}
         onItemSelect={x =>
-          setEditing({ ...editing, actor: x !== null ? x.id : '' })
+          setEditing({ ...editing, actor : x !== null ? x.id : '' })
         }
       />
       <RegistrySelector
@@ -418,11 +418,11 @@ const QuickVersionEdit: React.FC<
         selected={editing.input}
         items={registryObjects}
         onItemSelect={x =>
-          setEditing({ ...editing, input: new Set([...editing.input, x.id]) })
+          setEditing({ ...editing, input : new Set([...editing.input, x.id]) })
         }
         onTagRemove={x => {
           const newSet = new Set([...editing.input].filter(s => x !== s));
-          setEditing({ ...editing, input: newSet });
+          setEditing({ ...editing, input : newSet });
         }}
       />
       <RegistrySelector
@@ -430,11 +430,11 @@ const QuickVersionEdit: React.FC<
         selected={editing.output}
         items={registryObjects}
         onItemSelect={x =>
-          setEditing({ ...editing, output: new Set([...editing.output, x.id]) })
+          setEditing({ ...editing, output : new Set([...editing.output, x.id]) })
         }
         onTagRemove={x => {
           const newSet = new Set([...editing.output].filter(s => x !== s));
-          setEditing({ ...editing, output: newSet });
+          setEditing({ ...editing, output : newSet });
         }}
       />
       <ProvisionListQuickEdit
@@ -500,7 +500,7 @@ const FullVersionEdit: React.FC<
   const measures: Record<string, IMeasure> = editing.measure.reduce(
     (obj, x, index) => ({
       ...obj,
-      [index]: { id: index.toString(), measure: x },
+      [index] : { id : index.toString(), measure : x },
     }),
     {}
   );
@@ -511,19 +511,19 @@ const FullVersionEdit: React.FC<
         <NormalTextField
           text="Process ID"
           value={editing.id}
-          onChange={x => setEditing({ ...editing, id: removeSpace(x) })}
+          onChange={x => setEditing({ ...editing, id : removeSpace(x) })}
         />
         <NormalTextField
           text="Process Name"
           value={editing.name}
-          onChange={x => setEditing({ ...editing, name: x })}
+          onChange={x => setEditing({ ...editing, name : x })}
         />
         <ReferenceSelector
           text="Actor"
           filterName="Actor filter"
           value={editing.actor}
           options={roles}
-          update={x => setEditing({ ...editing, actor: roles[x] })}
+          update={x => setEditing({ ...editing, actor : roles[x] })}
         />
         <MultiReferenceSelector
           text="Input data registry"
@@ -562,13 +562,13 @@ const FullVersionEdit: React.FC<
           filterName="Table filter"
           add={x => {
             const newTables = new Set([...editing.tables, ...x]);
-            setEditing({ ...editing, tables: newTables });
+            setEditing({ ...editing, tables : newTables });
           }}
           remove={x => {
             const newTables = new Set(
               [...editing.tables].filter(s => !x.has(s))
             );
-            setEditing({ ...editing, tables: newTables });
+            setEditing({ ...editing, tables : newTables });
           }}
         />
         <MultiReferenceSelector
@@ -579,12 +579,12 @@ const FullVersionEdit: React.FC<
           add={x =>
             setEditing({
               ...editing,
-              figures: new Set([...editing.figures, ...x]),
+              figures : new Set([...editing.figures, ...x]),
             })
           }
           remove={x => {
             const newFig = new Set([...editing.figures].filter(s => !x.has(s)));
-            setEditing({ ...editing, figures: newFig });
+            setEditing({ ...editing, figures : newFig });
           }}
         />
         <ListWithPopoverItem
@@ -596,8 +596,8 @@ const FullVersionEdit: React.FC<
           getListItem={x => {
             const pro = x as MMELProvision;
             return {
-              id: x.id,
-              text: `${pro.modality}: ${pro.condition}`,
+              id   : x.id,
+              text : `${pro.modality}: ${pro.condition}`,
             };
           }}
           filterName="Provision filter"
@@ -615,8 +615,8 @@ const FullVersionEdit: React.FC<
           getListItem={x => {
             const note = x as MMELNote;
             return {
-              id: note.id,
-              text: note.message,
+              id   : note.id,
+              text : note.message,
             };
           }}
           filterName="Note filter"
@@ -632,8 +632,8 @@ const FullVersionEdit: React.FC<
           initObject={{ ...emptyMeasurement }}
           matchFilter={matchMeasurementFilter}
           getListItem={x => ({
-            id: x.id,
-            text: x.measure,
+            id   : x.id,
+            text : x.measure,
           })}
           filterName="Measurement filter"
           Content={MeasurementItem}
@@ -647,7 +647,7 @@ const FullVersionEdit: React.FC<
           model={model}
           initObject={{ ...emptyLink }}
           matchFilter={matchLinkFilter}
-          getListItem={x => ({ id: x.id, text: x.title })}
+          getListItem={x => ({ id : x.id, text : x.title })}
           filterName="Link filter"
           Content={LinkItem}
           label="External links"

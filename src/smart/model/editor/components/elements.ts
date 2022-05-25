@@ -197,27 +197,27 @@ function findReverse(
       return undefined;
     case 'add': {
       return {
-        act: 'elements',
-        task: 'delete',
-        subtask: action.subtask,
-        value: action.value.map(x => x.id),
+        act     : 'elements',
+        task    : 'delete',
+        subtask : action.subtask,
+        value   : action.value.map(x => x.id),
       };
     }
     case 'delete': {
       return {
-        act: 'elements',
-        task: 'add',
-        subtask: action.subtask,
-        value: action.value.map(x => findActionElement(elms, x)),
+        act     : 'elements',
+        task    : 'add',
+        subtask : action.subtask,
+        value   : action.value.map(x => findActionElement(elms, x)),
       };
     }
     case 'edit': {
       return {
-        act: 'elements',
-        task: 'edit',
-        subtask: action.subtask,
-        id: action.value.id,
-        value: findActionElement(elms, action.id),
+        act     : 'elements',
+        task    : 'edit',
+        subtask : action.subtask,
+        id      : action.value.id,
+        value   : findActionElement(elms, action.id),
       };
     }
   }
@@ -234,7 +234,7 @@ export function useElements(
   }
 
   function init(x: Record<string, EditorNode>) {
-    dispatchElms({ act: 'init', value: x });
+    dispatchElms({ act : 'init', value : x });
   }
 
   return [elms, act, init];
@@ -289,7 +289,7 @@ export function findActionElement(
     if (isEditorRegistry(elm)) {
       const dc = elms[elm.data];
       if (isEditorDataClass(dc)) {
-        const combined: RegistryCombined = { ...dc, id, title: elm.title };
+        const combined: RegistryCombined = { ...dc, id, title : elm.title };
         return combined;
       }
     }

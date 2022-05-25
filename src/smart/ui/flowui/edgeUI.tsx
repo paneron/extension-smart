@@ -40,7 +40,7 @@ export const DataLinkEdge: React.FC<EdgeProps> = function ({
   return (
     <>
       <path
-        style={{ stroke: color }}
+        style={{ stroke : color }}
         id={id}
         className="react-flow__edge-path"
         d={edgePath}
@@ -65,7 +65,7 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
   const getColor = pack.getColor;
   const color = getColor !== undefined ? getColor(id) : Black;
   const style: CSSProperties = {
-    stroke: color,
+    stroke : color,
   };
   const p1x: number = sourceX + 40;
   const p1y: number = sourceY + 30;
@@ -79,39 +79,39 @@ export const SelfLoopEdge: React.FC<EdgeProps> = function ({
     sourceX,
     sourceY,
     sourcePosition,
-    targetX: p1x,
-    targetY: p1y,
-    targetPosition: Position.Left,
+    targetX        : p1x,
+    targetY        : p1y,
+    targetPosition : Position.Left,
   });
   const edgePath2 = getSmoothStepPath({
-    sourceX: p1x,
-    sourceY: p1y,
-    sourcePosition: Position.Right,
-    targetX: p2x,
-    targetY: p2y,
-    targetPosition: Position.Bottom,
+    sourceX        : p1x,
+    sourceY        : p1y,
+    sourcePosition : Position.Right,
+    targetX        : p2x,
+    targetY        : p2y,
+    targetPosition : Position.Bottom,
   });
   const edgePath3 = getSmoothStepPath({
-    sourceX: p2x,
-    sourceY: p2y,
-    sourcePosition: Position.Top,
-    targetX: p3x,
-    targetY: p3y,
-    targetPosition: Position.Right,
+    sourceX        : p2x,
+    sourceY        : p2y,
+    sourcePosition : Position.Top,
+    targetX        : p3x,
+    targetY        : p3y,
+    targetPosition : Position.Right,
   });
   const edgePath4 = getSmoothStepPath({
-    sourceX: p3x,
-    sourceY: p3y,
-    sourcePosition: Position.Left,
-    targetX: p4x,
-    targetY: p4y,
+    sourceX        : p3x,
+    sourceY        : p3y,
+    sourcePosition : Position.Left,
+    targetX        : p4x,
+    targetY        : p4y,
     targetPosition,
   });
   const [centerX, centerY] = getEdgeCenter({
     sourceX,
-    sourceY: p1y,
-    targetX: (p1x + p2x) / 2,
-    targetY: p1y,
+    sourceY : p1y,
+    targetX : (p1x + p2x) / 2,
+    targetY : p1y,
   });
   return (
     <>
@@ -166,7 +166,7 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
   const getColor = pack.getColor;
   const color = getColor !== undefined ? getColor(id) : Black;
   const style: CSSProperties = {
-    stroke: color,
+    stroke : color,
   };
   if (targetY > sourceY) {
     const edgePath1 = getSmoothStepPath({
@@ -225,39 +225,39 @@ export const NormalEdge: React.FC<EdgeProps> = function ({
     sourceX,
     sourceY,
     sourcePosition,
-    targetX: p1x,
-    targetY: p1y,
-    targetPosition: Position.Left,
+    targetX        : p1x,
+    targetY        : p1y,
+    targetPosition : Position.Left,
   });
   const edgePath2 = getSmoothStepPath({
-    sourceX: p1x,
-    sourceY: p1y,
-    sourcePosition: Position.Right,
-    targetX: p2x,
-    targetY: p2y,
-    targetPosition: Position.Bottom,
+    sourceX        : p1x,
+    sourceY        : p1y,
+    sourcePosition : Position.Right,
+    targetX        : p2x,
+    targetY        : p2y,
+    targetPosition : Position.Bottom,
   });
   const edgePath3 = getSmoothStepPath({
-    sourceX: p2x,
-    sourceY: p2y,
-    sourcePosition: Position.Top,
-    targetX: p3x,
-    targetY: p3y,
-    targetPosition: Position.Right,
+    sourceX        : p2x,
+    sourceY        : p2y,
+    sourcePosition : Position.Top,
+    targetX        : p3x,
+    targetY        : p3y,
+    targetPosition : Position.Right,
   });
   const edgePath4 = getSmoothStepPath({
-    sourceX: p3x,
-    sourceY: p3y,
-    sourcePosition: Position.Left,
-    targetX: p4x,
-    targetY: p4y,
+    sourceX        : p3x,
+    sourceY        : p3y,
+    sourcePosition : Position.Left,
+    targetX        : p4x,
+    targetY        : p4y,
     targetPosition,
   });
   const [centerX, centerY] = getEdgeCenter({
     sourceX,
-    sourceY: p1y,
-    targetX: (p1x + p2x) / 2,
-    targetY: p1y,
+    sourceY : p1y,
+    targetX : (p1x + p2x) / 2,
+    targetY : p1y,
   });
   return (
     <>
@@ -319,13 +319,13 @@ const EdgeLabel: React.FC<{
           y={y}
           label="X"
           labelStyle={{
-            width: '20px',
-            height: '20px',
-            stroke: 'black',
+            width  : '20px',
+            height : '20px',
+            stroke : 'black',
           }}
           labelBgStyle={{
-            display: 'block',
-            margin: 'auto',
+            display : 'block',
+            margin  : 'auto',
           }}
           labelBgBorderRadius={10}
           labelBgPadding={[7, 5]}
@@ -348,7 +348,7 @@ const Marker: React.FC<{
       ${x + MARKERHALFWIDTH},${y - MARKERHEIGHT}
       ${x},${y}
     `}
-      style={{ fill: color }}
+      style={{ fill : color }}
     />
   );
 };

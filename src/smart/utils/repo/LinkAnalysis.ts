@@ -24,7 +24,7 @@ export function repoLinkExploreNode(
     const ns = repo.ns;
     const item = index[ns];
     const elms: Record<string, Node> = {
-      [ns]: createNode(
+      [ns] : createNode(
         ns,
         0,
         0,
@@ -88,14 +88,14 @@ function createNode(
 ): Node {
   return {
     id,
-    position: { x, y },
-    data: {
+    position : { x, y },
+    data     : {
       label,
     },
-    sourcePosition: Position.Right,
-    targetPosition: Position.Left,
-    style: {
-      background: RepoLegend[type].color,
+    sourcePosition : Position.Right,
+    targetPosition : Position.Left,
+    style          : {
+      background : RepoLegend[type].color,
     },
   };
 }
@@ -105,6 +105,6 @@ function createEdge(id: string, source: string, target: string): Edge {
     id,
     source,
     target,
-    type: 'repo',
+    type : 'repo',
   };
 }

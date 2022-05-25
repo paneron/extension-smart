@@ -10,7 +10,7 @@ const MetaEditPage: React.FC<{
   act: (x: EditorAction) => void;
 }> = ({ meta, act }) => {
   function action(property: keyof MMELMetadata, value: string) {
-    act({ type: 'model', act: 'meta', property, value });
+    act({ type : 'model', act : 'meta', property, value });
   }
 
   return (

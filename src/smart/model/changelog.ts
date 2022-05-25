@@ -22,23 +22,23 @@ export function createChangeLog(
   user: string
 ): ChangeLogEvent {
   const command: ModelAction = {
-    type: 'model',
-    act: 'initModel',
-    value: model,
+    type  : 'model',
+    act   : 'initModel',
+    value : model,
   };
   return {
-    type: 'command',
+    type : 'command',
     command,
     user,
-    time: new Date().toISOString(),
+    time : new Date().toISOString(),
   };
 }
 
 export function addToLog(log: ChangeLog, user: string, action: ModelAction) {
   log.push({
-    type: 'command',
-    command: action,
+    type    : 'command',
+    command : action,
     user,
-    time: new Date().toISOString(),
+    time    : new Date().toISOString(),
   });
 }

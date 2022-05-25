@@ -23,7 +23,7 @@ const EditorFileMenu: React.FC<{
       getBlob,
       writeFileToFilesystem,
       fileData,
-      type: FILE_TYPE.Model,
+      type : FILE_TYPE.Model,
     });
   }
 

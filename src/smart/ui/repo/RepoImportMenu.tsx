@@ -20,7 +20,7 @@ const RepoImportMenu: React.FC<{
 
   function onImportModel(postProcess: (x: ModelWrapper) => void) {
     handleModelOpen({
-      setModelWrapper: postProcess,
+      setModelWrapper : postProcess,
       requestFileFromFilesystem,
     });
   }
@@ -39,9 +39,9 @@ const RepoImportMenu: React.FC<{
         text="SMART Document"
         onClick={() =>
           handleDocumentOpen({
-            setDocument: addDoc,
+            setDocument : addDoc,
             requestFileFromFilesystem,
-            fileType: FILE_TYPE.Document,
+            fileType    : FILE_TYPE.Document,
           })
         }
       />
@@ -49,9 +49,9 @@ const RepoImportMenu: React.FC<{
         text="XML Document"
         onClick={() =>
           handleDocumentOpen({
-            setDocument: addDoc,
+            setDocument : addDoc,
             requestFileFromFilesystem,
-            fileType: FILE_TYPE.XML,
+            fileType    : FILE_TYPE.XML,
           })
         }
       />
@@ -60,9 +60,9 @@ const RepoImportMenu: React.FC<{
           text="NISO STS Document"
           onClick={() =>
             handleDocumentOpen({
-              setDocument: addDoc,
+              setDocument : addDoc,
               requestFileFromFilesystem,
-              fileType: FILE_TYPE.BSI,
+              fileType    : FILE_TYPE.BSI,
             })
           }
         />

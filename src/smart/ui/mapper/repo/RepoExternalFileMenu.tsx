@@ -35,7 +35,7 @@ const RepoExternalFileMenu: React.FC<{
           handleDocumentOpen({
             setDocument,
             requestFileFromFilesystem,
-            fileType: FILE_TYPE.Document,
+            fileType : FILE_TYPE.Document,
           })
         }
       />
@@ -45,7 +45,7 @@ const RepoExternalFileMenu: React.FC<{
           handleDocumentOpen({
             setDocument,
             requestFileFromFilesystem,
-            fileType: FILE_TYPE.XML,
+            fileType : FILE_TYPE.XML,
           })
         }
       />

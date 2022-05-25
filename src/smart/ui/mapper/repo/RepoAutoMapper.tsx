@@ -57,11 +57,11 @@ const RepoAutoMapper: React.FC<{
   const [result, setResult] = useState<string>('');
 
   const mapFiles = useObjectData({
-    objectPaths: getAllRepoMaps(index),
+    objectPaths : getAllRepoMaps(index),
   });
 
   const modelFiles = useObjectData({
-    objectPaths: getAllRepoModels(index),
+    objectPaths : getAllRepoModels(index),
   });
 
   const maps: Record<string, MapProfile> = useMemo(() => {
@@ -70,7 +70,7 @@ const RepoAutoMapper: React.FC<{
         Record<string, MapProfile>
       >(
         (obj, [ns, x]) =>
-          x !== null ? { ...obj, [ns]: x as MapProfile } : obj,
+          x !== null ? { ...obj, [ns] : x as MapProfile } : obj,
         {}
       );
     }
@@ -85,9 +85,9 @@ const RepoAutoMapper: React.FC<{
         (obj, [ns, x]) =>
           x !== null
             ? {
-                ...obj,
-                [ns]: createEditorModelWrapper(JSONToMMEL(x as MMELJSON)),
-              }
+              ...obj,
+              [ns] : createEditorModelWrapper(JSONToMMEL(x as MMELJSON)),
+            }
             : obj,
         {}
       );
@@ -120,9 +120,9 @@ const RepoAutoMapper: React.FC<{
   );
 
   const props = {
-    isLoading: buttonDisabled,
+    isLoading : buttonDisabled,
     isDoable,
-    nextStep: () => setStep(step + 1),
+    nextStep  : () => setStep(step + 1),
     step,
     fnodes,
     result,
@@ -185,7 +185,7 @@ const RepoAutoMapper: React.FC<{
       )}
       <fieldset>
         <legend>Step {step + 1}</legend>
-        <div style={{ position: 'relative' }}>
+        <div style={{ position : 'relative' }}>
           <Container>
             <Compo {...props} />
           </Container>
@@ -207,11 +207,11 @@ const Container: React.FC<{ children: React.ReactNode }> = function ({
   return (
     <div
       style={{
-        display: 'flex',
-        width: '100%',
-        height: 300,
-        background: 'white',
-        overflowY: 'auto',
+        display    : 'flex',
+        width      : '100%',
+        height     : 300,
+        background : 'white',
+        overflowY  : 'auto',
       }}
     >
       {children}
@@ -226,7 +226,7 @@ const ButtonPane: React.FC<{
   fin: boolean;
 }> = function ({ step, setStep, disabled, fin }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 60 }}>
+    <div style={{ display : 'flex', justifyContent : 'flex-end', gap : 60 }}>
       {step > 0 && step < 3 && (
         <Button large onClick={() => setStep(step - 1)}>
           Back
@@ -242,7 +242,7 @@ const ButtonPane: React.FC<{
 const SelectButtonPane: React.FC<{ onSelectAll: (b: boolean) => void }> =
   function ({ onSelectAll }) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <div style={{ display : 'flex', justifyContent : 'flex-end' }}>
         <ButtonGroup>
           <Button onClick={() => onSelectAll(true)}>Select all</Button>
           <Button onClick={() => onSelectAll(false)}>Deselect all</Button>
@@ -281,12 +281,12 @@ function fillContents(
   const c = config[k];
   return {
     ...v,
-    data: {
-      label: createAutoMapNode(
+    data : {
+      label : createAutoMapNode(
         item ? getRepoItemDesc(item) : k,
         item,
         c,
-        c !== undefined ? x => setConfig({ ...config, [k]: x }) : undefined
+        c !== undefined ? x => setConfig({ ...config, [k] : x }) : undefined
       ),
     },
   };

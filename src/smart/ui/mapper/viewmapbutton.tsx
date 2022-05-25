@@ -17,8 +17,8 @@ const ViewMappingbutton: React.FC<{
   MappingList: React.FC<{ id: string }>;
 }> = function ({ modelType, id, setSelectedId, MappingList }) {
   const [state, setState] = useState<MouseState>({
-    isHover: false,
-    isClicked: false,
+    isHover   : false,
+    isClicked : false,
   });
 
   function action(s: MouseState) {
@@ -35,15 +35,15 @@ const ViewMappingbutton: React.FC<{
       <div style={flownodeTopRightButtonLayout}>
         <Popover2
           content={<MappingList id={id} />}
-          onOpening={() => action({ ...state, isClicked: true })}
-          onClosed={() => action({ ...state, isClicked: false })}
+          onOpening={() => action({ ...state, isClicked : true })}
+          onClosed={() => action({ ...state, isClicked : false })}
           hasBackdrop={true}
           position="top"
         >
           <Tooltip2 content={MapViewButtonToolTip[modelType]} position="top">
             <Button
-              onMouseEnter={() => action({ ...state, isHover: true })}
-              onMouseLeave={() => action({ ...state, isHover: false })}
+              onMouseEnter={() => action({ ...state, isHover : true })}
+              onMouseLeave={() => action({ ...state, isHover : false })}
               icon="exchange"
             />
           </Tooltip2>

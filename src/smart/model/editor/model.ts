@@ -105,8 +105,8 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
       figures,
       comments,
       notes,
-      version: MODELVERSION,
-      root: x.root,
+      version : MODELVERSION,
+      root    : x.root,
     }),
     [
       meta,
@@ -245,7 +245,7 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
         case 'validate-page': {
           action.cascade = validatePage(action.page).map(x => ({
             ...x,
-            type: 'model',
+            type : 'model',
           }));
           return action;
         }
@@ -401,5 +401,5 @@ export function useModel(x: EditorModel): UndoReducerModelInterface {
 }
 
 function convertAction(x: ALLACTION | undefined): ModelAction | undefined {
-  return x ? { ...x, type: 'model' } : undefined;
+  return x ? { ...x, type : 'model' } : undefined;
 }

@@ -49,9 +49,9 @@ const DataTypeSelector: React.FC<{
         ulRef={itemsParentRef}
         className="bp3-popover-content-sizing"
         style={{
-          maxHeight: '35vh',
-          maxWidth: '30vw',
-          overflowY: 'auto',
+          maxHeight : '35vh',
+          maxWidth  : '30vw',
+          overflowY : 'auto',
         }}
       >
         {filteredItems.length > 0 ? (

@@ -66,7 +66,7 @@ const RepoItemLoadingView: React.FC<{
   const wsPath = getPathByNS(repo.ns, RepoFileType.WORKSPACE);
   const hisPath = getPathByNS(repo.ns, RepoFileType.HISTORY);
   const repoModelFile = useObjectData({
-    objectPaths: [repoPath, mapPath, wsPath, hisPath],
+    objectPaths : [repoPath, mapPath, wsPath, hisPath],
   });
   const repoData = repoModelFile.value.data[repoPath];
   const mapData = repoModelFile.value.data[mapPath];
@@ -104,12 +104,12 @@ const RepoItemLoadingView: React.FC<{
         setMapping(mapPro);
       } else {
         setMapping({
-          '@context': JSONContext,
-          '@type': 'MMEL_MAP',
-          id: getNamespace(model),
-          mapSet: {},
-          docs: {},
-          version: MAPVERSION,
+          '@context' : JSONContext,
+          '@type'    : 'MMEL_MAP',
+          'id'       : getNamespace(model),
+          'mapSet'   : {},
+          'docs'     : {},
+          'version'  : MAPVERSION,
         });
       }
       const workData = wsData

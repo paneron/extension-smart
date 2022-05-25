@@ -58,7 +58,7 @@ const ModelWorkspace: React.FC<{
   const [page, setPage] = useState<string>(model.root);
   const [history, actHistory] = useHistory(createModelHistory(model));
 
-  const mw: ModelWrapper = { page, model, type: 'model' };
+  const mw: ModelWrapper = { page, model, type : 'model' };
 
   const [selected, setSelected] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<Set<string>>(
@@ -77,8 +77,8 @@ const ModelWorkspace: React.FC<{
 
   const namespace = getNamespace(model);
   const modelStore: SMARTModelStore = workspace.docs[namespace] ?? {
-    id: namespace,
-    store: {},
+    id    : namespace,
+    store : {},
   };
 
   function toggleDataVisibility() {
@@ -92,9 +92,9 @@ const ModelWorkspace: React.FC<{
 
   function onProcessClick(pageid: string, processid: string): void {
     const action: HistoryAction = {
-      type: 'history',
-      act: 'push',
-      value: [{ page: pageid, pathtext: processid }],
+      type  : 'history',
+      act   : 'push',
+      value : [{ page : pageid, pathtext : processid }],
     };
     setPage(pageid);
     actHistory(action);
@@ -102,7 +102,7 @@ const ModelWorkspace: React.FC<{
 
   function drillUp(): void {
     if (history.length > 1) {
-      const action: HistoryAction = { type: 'history', act: 'pop', value: 1 };
+      const action: HistoryAction = { type : 'history', act : 'pop', value : 1 };
       setPage(history[history.length - 2].page);
       actHistory(action);
     }
@@ -112,9 +112,9 @@ const ModelWorkspace: React.FC<{
     const pageid = history[history.length - 1].page;
     setSelected(selected);
     const action: HistoryAction = {
-      type: 'history',
-      act: 'replace',
-      value: history,
+      type  : 'history',
+      act   : 'replace',
+      value : history,
     };
     actHistory(action);
     setPage(pageid);
@@ -135,8 +135,8 @@ const ModelWorkspace: React.FC<{
 
   function onDataWorkspaceActive(id: string) {
     setDiagProps({
-      regid: id,
-      isFromReactNode: true,
+      regid           : id,
+      isFromReactNode : true,
     });
   }
 
@@ -163,14 +163,14 @@ const ModelWorkspace: React.FC<{
       title="Item metadata"
       blocks={[
         {
-          key: 'selected-node',
-          title: 'Selected node',
-          content: <SelectedNodeDescription model={model} page={page} />,
+          key     : 'selected-node',
+          title   : 'Selected node',
+          content : <SelectedNodeDescription model={model} page={page} />,
         },
         {
-          key: 'search-node',
-          title: 'Search components',
-          content: (
+          key     : 'search-node',
+          title   : 'Search components',
+          content : (
             <SearchComponentPane
               model={model}
               onChange={onPageAndHistroyChange}
@@ -184,26 +184,26 @@ const ModelWorkspace: React.FC<{
 
   const hotkeys = [
     {
-      combo: 'ctrl+s',
-      global: true,
-      label: 'Save Workspace',
-      onKeyDown: saveWork,
+      combo     : 'ctrl+s',
+      global    : true,
+      label     : 'Save Workspace',
+      onKeyDown : saveWork,
     },
   ];
 
   async function saveWork() {
     if (repo && updateObjects && isVisible) {
       const task = updateObjects({
-        commitMessage: COMMITMSG,
-        _dangerouslySkipValidation: true,
-        objectChangeset: {
-          [workPath]: { newValue: workspace },
+        commitMessage              : COMMITMSG,
+        _dangerouslySkipValidation : true,
+        objectChangeset            : {
+          [workPath] : { newValue : workspace },
         },
       });
       task.then(() =>
         toaster.show({
-          message: 'Workspace saved',
-          intent: 'success',
+          message : 'Workspace saved',
+          intent  : 'success',
         })
       );
     }
@@ -222,8 +222,8 @@ const ModelWorkspace: React.FC<{
               model={model}
               setRegistry={id =>
                 setDiagProps({
-                  regid: id,
-                  isFromReactNode: false,
+                  regid           : id,
+                  isFromReactNode : false,
                 })
               }
             />

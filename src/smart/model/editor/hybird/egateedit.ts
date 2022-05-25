@@ -32,38 +32,38 @@ export function compileEGateEdit(
     }
     const actions: ModelAction[] = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'edit',
-        subtask: 'flowunit',
-        id: action.id,
-        value: action.update,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'edit',
+        subtask : 'flowunit',
+        id      : action.id,
+        value   : action.update,
       },
       {
-        type: 'model',
-        act: 'pages',
-        task: 'edit-edge',
+        type  : 'model',
+        act   : 'pages',
+        task  : 'edit-edge',
         page,
-        value: Object.values(edges),
+        value : Object.values(edges),
       },
     ];
     action.actions = actions;
     if (ract && ract.act === 'hybird') {
       ract.actions = [
         {
-          type: 'model',
-          act: 'elements',
-          task: 'edit',
-          subtask: 'flowunit',
-          id: action.update.id,
-          value: model.elements[action.id],
+          type    : 'model',
+          act     : 'elements',
+          task    : 'edit',
+          subtask : 'flowunit',
+          id      : action.update.id,
+          value   : model.elements[action.id],
         },
         {
-          type: 'model',
-          act: 'pages',
-          task: 'edit-edge',
+          type  : 'model',
+          act   : 'pages',
+          task  : 'edit-edge',
           page,
-          value: Object.values(edges).map(x => p.edges[x.id]),
+          value : Object.values(edges).map(x => p.edges[x.id]),
         },
       ];
     }
@@ -79,13 +79,13 @@ function reverseEGateEdit(
   const elm = model.elements[action.id];
   if (isEditorEgate(elm)) {
     return {
-      task: 'egate-edit',
-      id: action.update.id,
-      page: action.page,
-      update: elm,
-      edges: action.edges.map(x => page.edges[x.id]),
-      act: 'hybird',
-      type: 'model',
+      task   : 'egate-edit',
+      id     : action.update.id,
+      page   : action.page,
+      update : elm,
+      edges  : action.edges.map(x => page.edges[x.id]),
+      act    : 'hybird',
+      type   : 'model',
     };
   }
   return undefined;

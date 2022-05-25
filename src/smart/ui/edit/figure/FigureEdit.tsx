@@ -23,16 +23,16 @@ const FigureEditPage: React.FC<{
   function getFigListItems(filter: string): IListItem[] {
     return Object.values(model.figures)
       .filter(x => matchFilter(x, filter))
-      .map(x => ({ id: x.id, text: x.title }))
+      .map(x => ({ id : x.id, text : x.title }))
       .sort(defaultItemSorter);
   }
 
   function removeFigListItem(ids: string[]) {
     const action: ModelAction = {
-      type: 'model',
-      act: 'figure',
-      task: 'delete',
-      value: ids,
+      type  : 'model',
+      act   : 'figure',
+      task  : 'delete',
+      value : ids,
     };
     act(action);
   }
@@ -40,10 +40,10 @@ const FigureEditPage: React.FC<{
   function addFig(x: MMELFigure): boolean {
     if (checkId(x.id, model.figures)) {
       const action: ModelAction = {
-        type: 'model',
-        act: 'figure',
-        task: 'add',
-        value: [x],
+        type  : 'model',
+        act   : 'figure',
+        task  : 'add',
+        value : [x],
       };
       act(action);
       return true;
@@ -56,11 +56,11 @@ const FigureEditPage: React.FC<{
       return false;
     }
     const action: ModelAction = {
-      type: 'model',
-      act: 'figure',
-      task: 'edit',
-      id: oldid,
-      value: x,
+      type  : 'model',
+      act   : 'figure',
+      task  : 'edit',
+      id    : oldid,
+      value : x,
     };
     act(action);
     return true;
@@ -75,16 +75,16 @@ const FigureEditPage: React.FC<{
   }
 
   const fighandler: IManageHandler<MMELFigure> = {
-    filterName: 'Content filter',
-    itemName: 'View contents',
-    Content: FigItemEditPage,
-    initObj: createFig(''),
-    model: model,
-    getItems: getFigListItems,
-    removeItems: removeFigListItem,
-    addItem: obj => addFig(obj),
-    updateItem: (oldid, obj) => updateFig(oldid, obj),
-    getObjById: getFigById,
+    filterName  : 'Content filter',
+    itemName    : 'View contents',
+    Content     : FigItemEditPage,
+    initObj     : createFig(''),
+    model       : model,
+    getItems    : getFigListItems,
+    removeItems : removeFigListItem,
+    addItem     : obj => addFig(obj),
+    updateItem  : (oldid, obj) => updateFig(oldid, obj),
+    getObjById  : getFigById,
   };
 
   return <ListManagePage {...fighandler} />;

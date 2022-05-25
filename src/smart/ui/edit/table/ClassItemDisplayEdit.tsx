@@ -22,7 +22,7 @@ const ClassItemDisplayEdit: React.FC<{
   const types = [...set];
 
   function update() {
-    setTable({ ...table, classDisplay: data });
+    setTable({ ...table, classDisplay : data });
     done();
   }
 

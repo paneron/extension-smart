@@ -109,14 +109,14 @@ export function addProcessIfNotFound(
     const newPage =
       process.page !== ''
         ? addPageIfNotFound(
-            model,
-            rmodel,
-            process.page,
-            nameMap,
-            refMap,
-            roleMap,
-            newItems
-          )
+          model,
+          rmodel,
+          process.page,
+          nameMap,
+          refMap,
+          roleMap,
+          newItems
+        )
         : undefined;
     for (const x of process.measure) {
       addMeasureIfNotFound(model, rmodel, x, newItems);
@@ -133,23 +133,23 @@ export function addProcessIfNotFound(
     );
 
     const newProcess: EditorProcess = {
-      id: newid,
-      name: process.name,
-      modality: process.modality,
-      actor: actor !== undefined ? actor.id : '',
-      output: new Set(outputs.map(o => o.id)),
-      input: new Set(inputs.map(o => o.id)),
-      provision: new Set(pros),
-      links: new Set(links),
-      notes: new Set(ns),
-      page: newPage !== undefined ? newPage.id : '',
-      datatype: DataType.PROCESS,
-      measure: [...process.measure],
-      tables: new Set(process.tables),
-      figures: new Set(process.figures),
-      comments: new Set(process.comments),
-      pages: new Set<string>([pageid]),
-      objectVersion: 'Editor',
+      id            : newid,
+      name          : process.name,
+      modality      : process.modality,
+      actor         : actor !== undefined ? actor.id : '',
+      output        : new Set(outputs.map(o => o.id)),
+      input         : new Set(inputs.map(o => o.id)),
+      provision     : new Set(pros),
+      links         : new Set(links),
+      notes         : new Set(ns),
+      page          : newPage !== undefined ? newPage.id : '',
+      datatype      : DataType.PROCESS,
+      measure       : [...process.measure],
+      tables        : new Set(process.tables),
+      figures       : new Set(process.figures),
+      comments      : new Set(process.comments),
+      pages         : new Set<string>([pageid]),
+      objectVersion : 'Editor',
     };
     newItems.elements[newid] = newProcess;
     return newProcess;
@@ -210,7 +210,7 @@ export function addComponentIfNotFound(
   }
   const newid = trydefaultID(id, model.elements);
   nameMap[id] = newid;
-  const newElm = { ...elm, id: newid, pages: new Set([pageid]) };
+  const newElm = { ...elm, id : newid, pages : new Set([pageid]) };
   newItems.elements[newid] = newElm;
   return newElm;
 }
@@ -228,14 +228,14 @@ function addPageIfNotFound(
 
   const newid = findUniqueID('Page', model.pages);
   const newPage: EditorSubprocess = {
-    id: newid,
-    childs: {},
-    data: {},
-    edges: {},
-    datatype: DataType.SUBPROCESS,
-    start: nameMap[page.start],
-    neighbor: {},
-    objectVersion: 'Editor',
+    id            : newid,
+    childs        : {},
+    data          : {},
+    edges         : {},
+    datatype      : DataType.SUBPROCESS,
+    start         : nameMap[page.start],
+    neighbor      : {},
+    objectVersion : 'Editor',
   };
   newItems.pages[newid] = newPage;
 
@@ -253,7 +253,7 @@ function addPageIfNotFound(
     );
     newChilds[c.element] = {
       ...c,
-      element: newElm.id,
+      element : newElm.id,
     };
   });
   newPage.childs = newChilds;
@@ -272,7 +272,7 @@ function addPageIfNotFound(
     );
     newData[c.element] = {
       ...c,
-      element: newElm.id,
+      element : newElm.id,
     };
   });
   newPage.data = newData;
@@ -282,8 +282,8 @@ function addPageIfNotFound(
     addMeasureIfNotFound(model, rmodel, e.condition, newItems);
     newEdges[e.id] = {
       ...e,
-      from: nameMap[e.from],
-      to: nameMap[e.to],
+      from : nameMap[e.from],
+      to   : nameMap[e.to],
     };
   });
   newPage.edges = newEdges;
@@ -308,7 +308,7 @@ function addLink(
   const newid = findUniqueID('Link', model.links);
   const newLink: MMELLink = {
     ...link,
-    id: newid,
+    id : newid,
   };
   newItems.links[newid] = newLink;
   return newid;
@@ -328,8 +328,8 @@ function addProvision(
   );
   const newProvision: MMELProvision = {
     ...provision,
-    id: newid,
-    ref: new Set(refs),
+    id  : newid,
+    ref : new Set(refs),
   };
   newItems.provisions[newid] = newProvision;
   return newid;
@@ -349,8 +349,8 @@ function addNote(
   );
   const newNote: MMELNote = {
     ...note,
-    id: newid,
-    ref: new Set(refs),
+    id  : newid,
+    ref : new Set(refs),
   };
   newItems.notes[newid] = newNote;
   return newid;
@@ -381,9 +381,9 @@ function addRoleIfNotFound(
   roleMap[id] = newid;
 
   const newRole: MMELRole = {
-    id: newid,
-    name: role.name,
-    datatype: DataType.ROLE,
+    id       : newid,
+    name     : role.name,
+    datatype : DataType.ROLE,
   };
   newItems.roles[newid] = newRole;
   return newRole;
@@ -431,11 +431,11 @@ function addRegistryIfNotFound(
     pageid
   );
   const newReg: EditorRegistry = {
-    id: newid,
-    title: reg.title,
-    data: dc.id,
-    datatype: DataType.REGISTRY,
-    objectVersion: 'Editor',
+    id            : newid,
+    title         : reg.title,
+    data          : dc.id,
+    datatype      : DataType.REGISTRY,
+    objectVersion : 'Editor',
   };
   newItems.elements[newid] = newReg;
   return newReg;
@@ -508,12 +508,12 @@ function addDCIfNotFound(
     }
   });
   const newDC: EditorDataClass = {
-    id: newid,
+    id            : newid,
     attributes,
-    datatype: DataType.DATACLASS,
-    mother: dc.mother === '' ? '' : nameMap[dc.mother],
-    rdcs: new Set(newrdcs),
-    objectVersion: 'Editor',
+    datatype      : DataType.DATACLASS,
+    mother        : dc.mother === '' ? '' : nameMap[dc.mother],
+    rdcs          : new Set(newrdcs),
+    objectVersion : 'Editor',
   };
   newItems.elements[newid] = newDC;
   return newDC;
@@ -542,11 +542,11 @@ function addRefIfNotFound(
   refMap[id] = newid;
 
   const newRef: MMELReference = {
-    id: newid,
-    document: r.document,
-    clause: r.clause,
-    title: r.title,
-    datatype: DataType.REFERENCE,
+    id       : newid,
+    document : r.document,
+    clause   : r.clause,
+    title    : r.title,
+    datatype : DataType.REFERENCE,
   };
   newItems.refs[newid] = newRef;
   return newRef;
@@ -602,7 +602,7 @@ function addTableIfNotFound(
   const table = ref.tables[id];
   const newData = table.data.map(row => [...row]);
   if (table !== undefined && model.tables[id] === undefined) {
-    newItems.tables[id] = { ...table, data: newData };
+    newItems.tables[id] = { ...table, data : newData };
   }
 }
 

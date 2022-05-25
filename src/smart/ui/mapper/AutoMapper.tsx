@@ -11,13 +11,13 @@ import { mapAI } from '../../utils/map/MappingCalculator';
 import { getNamespace } from '../../utils/ModelFunctions';
 
 const centeredLayout: CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
+  display    : 'flex',
+  alignItems : 'center',
 };
 
 const rightAlignedLayout: CSSProperties = {
-  display: 'flex',
-  justifyContent: 'flex-end',
+  display        : 'flex',
+  justifyContent : 'flex-end',
 };
 
 const AutoMapper: React.FC<{
@@ -44,7 +44,7 @@ const AutoMapper: React.FC<{
 
   async function handleOpenModel() {
     handleModelOpen({
-      setModelWrapper: setMW,
+      setModelWrapper : setMW,
       requestFileFromFilesystem,
       logger,
     });
@@ -52,7 +52,7 @@ const AutoMapper: React.FC<{
 
   async function handleOpenMapping() {
     handleMappingOpen({
-      onMapProfileChanged: setMapping,
+      onMapProfileChanged : setMapping,
       requestFileFromFilesystem,
     });
   }
@@ -66,8 +66,8 @@ const AutoMapper: React.FC<{
         refNamespace
       );
       showMessage({
-        message: summary,
-        intent: 'success',
+        message : summary,
+        intent  : 'success',
       });
       setMapProfile(newMP);
       onClose();

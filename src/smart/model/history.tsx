@@ -39,16 +39,16 @@ export type RepoHistory = MMELRepo[];
 
 export function cloneHistory(history: PageHistory): PageHistory {
   return {
-    items: history.items.map(item => ({
-      page: item.page,
-      pathtext: item.pathtext,
+    items : history.items.map(item => ({
+      page     : item.page,
+      pathtext : item.pathtext,
     })),
   };
 }
 
 export function createPageHistory(mw: ModelWrapper): PageHistory {
   return {
-    items: createModelHistory(mw.model),
+    items : createModelHistory(mw.model),
   };
 }
 
@@ -56,8 +56,8 @@ export function createModelHistory(model: EditorModel): HistoryItem[] {
   const meta = model.meta;
   return [
     {
-      page: model.root,
-      pathtext: getRootName(meta),
+      page     : model.root,
+      pathtext : getRootName(meta),
     },
   ];
 }
@@ -69,8 +69,8 @@ export function getBreadcrumbs(
   const breadcrumbs: Breadcrumb[] = [];
   ph.items.forEach((item, index) => {
     breadcrumbs.push({
-      label: <>{item.pathtext}</>,
-      onNavigate: () => {
+      label      : <>{item.pathtext}</>,
+      onNavigate : () => {
         const page = popUntil(ph, index);
         onPageChange(ph, page);
       },
@@ -84,12 +84,12 @@ export function getBreadcrumbsActions(
   onPageChange: (x: HistoryAction) => void
 ): Breadcrumb[] {
   return history.map((his, index) => ({
-    label: <>{his.pathtext}</>,
-    onNavigate: () =>
+    label      : <>{his.pathtext}</>,
+    onNavigate : () =>
       onPageChange({
-        type: 'history',
-        act: 'pop',
-        value: history.length - index - 1,
+        type  : 'history',
+        act   : 'pop',
+        value : history.length - index - 1,
       }),
   }));
 }
@@ -100,8 +100,8 @@ export function addToHistory(
   label: string
 ): void {
   ph.items.push({
-    page: pageid,
-    pathtext: label,
+    page     : pageid,
+    pathtext : label,
   });
 }
 

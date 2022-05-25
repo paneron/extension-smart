@@ -33,9 +33,9 @@ export enum SearchHighlightType {
 
 export const SearchResultStyles: Record<SearchHighlightType, LegendInterface> =
   {
-    [SearchHighlightType.SELECTED]: { label: 'Selected', color: 'lightyellow' },
-    [SearchHighlightType.MATCH]: { label: 'Match', color: 'lightblue' },
-    [SearchHighlightType.NONE]: { label: 'Not match', color: '' },
+    [SearchHighlightType.SELECTED] : { label : 'Selected', color : 'lightyellow' },
+    [SearchHighlightType.MATCH]    : { label : 'Match', color : 'lightblue' },
+    [SearchHighlightType.NONE]     : { label : 'Not match', color : '' },
   };
 
 export interface SearchComponentRecord {
@@ -53,15 +53,15 @@ const matchFunctions: Record<
     search: string;
   }) => SearchResultType | null
 > = {
-  [DataType.PROCESS]: ({ model, node, search }) =>
+  [DataType.PROCESS] : ({ model, node, search }) =>
     searchProcess(model, node as EditorProcess, search),
-  [DataType.APPROVAL]: ({ node, search }) =>
+  [DataType.APPROVAL] : ({ node, search }) =>
     searchApproval(node as EditorApproval, search),
-  [DataType.TIMEREVENT]: ({ node, search }) =>
+  [DataType.TIMEREVENT] : ({ node, search }) =>
     searchTimer(node as EditorTimerEvent, search),
-  [DataType.SIGNALCATCHEVENT]: ({ node, search }) =>
+  [DataType.SIGNALCATCHEVENT] : ({ node, search }) =>
     searchSignalCatch(node as EditorSignalEvent, search),
-  [DataType.EGATE]: ({ node, search }) =>
+  [DataType.EGATE] : ({ node, search }) =>
     searchEGate(node as EditorEGate, search),
 };
 
@@ -114,17 +114,17 @@ function searchPageForComponent(
       const match = nodeMatch(model, node, search);
       if (match !== null) {
         result.push({
-          id: node.id,
-          text: getSearchDescription(node),
-          type: match,
-          history: history,
+          id      : node.id,
+          text    : getSearchDescription(node),
+          type    : match,
+          history : history,
         });
       }
       if (isEditorProcess(node) && node.page !== '') {
         const nextpage = model.pages[node.page];
         const nextHistory: HistoryItem[] = [
           ...history,
-          { page: node.page, pathtext: id },
+          { page : node.page, pathtext : id },
         ];
         if (nextpage !== undefined) {
           searchPageForComponent(
@@ -146,10 +146,10 @@ function searchPageForComponent(
       const match = searchRegistry(node, search);
       if (match !== null) {
         result.push({
-          id: node.id,
-          text: getSearchDescription(node),
-          type: match,
-          history: history,
+          id      : node.id,
+          text    : getSearchDescription(node),
+          type    : match,
+          history : history,
         });
       }
       const dc = model.elements[node.data];
@@ -157,10 +157,10 @@ function searchPageForComponent(
         const matchdc = searchDC(dc, search);
         if (matchdc !== null) {
           result.push({
-            id: node.id,
-            text: getSearchDescription(node),
-            type: 'Data',
-            history: history,
+            id      : node.id,
+            text    : getSearchDescription(node),
+            type    : 'Data',
+            history : history,
           });
         }
       }
@@ -168,10 +168,10 @@ function searchPageForComponent(
       const match = searchDC(node, search);
       if (match !== null) {
         result.push({
-          id: node.id,
-          text: getSearchDescription(node),
-          type: match,
-          history: history,
+          id      : node.id,
+          text    : getSearchDescription(node),
+          type    : match,
+          history : history,
         });
       }
     }

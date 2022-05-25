@@ -15,8 +15,8 @@ const options = ['No filter', 'Pass', 'Fail'] as const;
 type ResultType = typeof options[number];
 
 const centerAlign: CSSProperties = {
-  textAlign: 'center',
-  verticalAlign: 'middle',
+  textAlign     : 'center',
+  verticalAlign : 'middle',
 };
 
 const ApplicationLogPage: React.FC<{
@@ -50,7 +50,7 @@ const ApplicationLogPage: React.FC<{
       getBlob,
       writeFileToFilesystem,
       fileData,
-      type: FILE_TYPE.JSON,
+      type : FILE_TYPE.JSON,
     });
   }
 
@@ -63,7 +63,7 @@ const ApplicationLogPage: React.FC<{
           striped
           condensed
           style={{
-            fontSize: 14,
+            fontSize : 14,
           }}
         >
           <thead>

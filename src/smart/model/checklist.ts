@@ -73,8 +73,8 @@ export function getCheckListId(x: ChecklistNodeType, pid?: string) {
 export function createCLItem(id: string, tasks?: string[]): ChecklistItem {
   return {
     id,
-    progress: 0,
-    tasks: tasks ?? [],
+    progress : 0,
+    tasks    : tasks ?? [],
   };
 }
 

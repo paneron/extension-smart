@@ -17,11 +17,11 @@ export const LoadingIcon = ({
 export const LoadingContainer = (props: { label?: string; size?: number }) => (
   <div
     style={{
-      flex: props.size ?? 1,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
+      flex           : props.size ?? 1,
+      display        : 'flex',
+      flexDirection  : 'column',
+      justifyContent : 'center',
+      alignItems     : 'center',
     }}
   >
     <LoadingIcon {...props} />
@@ -31,9 +31,9 @@ export const LoadingContainer = (props: { label?: string; size?: number }) => (
 export const LoadingScreen = (props: { label?: string; size?: number }) => (
   <div
     style={{
-      width: '100%',
-      height: '100%',
-      display: 'flex',
+      width   : '100%',
+      height  : '100%',
+      display : 'flex',
     }}
   >
     <LoadingContainer {...props} />

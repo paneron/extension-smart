@@ -50,15 +50,15 @@ function test(
   }
   if (name === '') {
     sendMsg({
-      message: 'Invalid item: namespace is empty',
-      intent: 'danger',
+      message : 'Invalid item: namespace is empty',
+      intent  : 'danger',
     });
     return false;
   }
   if (index[name] !== undefined) {
     sendMsg({
-      message: 'Error: item with the same namespace already exists',
-      intent: 'danger',
+      message : 'Error: item with the same namespace already exists',
+      intent  : 'danger',
     });
     return false;
   }

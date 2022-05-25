@@ -32,23 +32,23 @@ export const NoteItem: React.FC<{
         text="Note type"
         value={note.type}
         options={NOTE_TYPES}
-        onChange={x => setNote({ ...note, type: x as NOTE_TYPE })}
+        onChange={x => setNote({ ...note, type : x as NOTE_TYPE })}
       />
       <NormalTextField
         text="Message"
         value={note.message}
-        onChange={x => setNote({ ...note, message: x })}
+        onChange={x => setNote({ ...note, message : x })}
       />
       <MultiReferenceSelector
         text="Reference"
         options={refs}
         values={note.ref}
         filterName="Reference filter"
-        add={x => setNote({ ...note, ref: new Set([...note.ref, ...x]) })}
+        add={x => setNote({ ...note, ref : new Set([...note.ref, ...x]) })}
         remove={x =>
           setNote({
             ...note,
-            ref: new Set([...note.ref].filter(s => !x.has(s))),
+            ref : new Set([...note.ref].filter(s => !x.has(s))),
           })
         }
       />

@@ -27,13 +27,13 @@ import {
 
 export function parseMetaData(x: string): MMELMetadata {
   const meta: MMELMetadata = {
-    schema: '',
-    author: '',
-    title: '',
-    edition: '',
-    namespace: '',
-    shortname: '',
-    datatype: DataType.METADATA,
+    schema    : '',
+    author    : '',
+    title     : '',
+    edition   : '',
+    namespace : '',
+    shortname : '',
+    datatype  : DataType.METADATA,
   };
   if (x !== '') {
     const t: Array<string> = MMELtokenizePackage(x);
@@ -70,11 +70,11 @@ export function parseMetaData(x: string): MMELMetadata {
 
 export function parseProvision(id: string, data: string): MMELProvision {
   const pro: MMELProvision = {
-    id: id,
-    modality: '',
-    condition: '',
-    ref: new Set<string>(),
-    datatype: DataType.PROVISION,
+    id        : id,
+    modality  : '',
+    condition : '',
+    ref       : new Set<string>(),
+    datatype  : DataType.PROVISION,
   };
 
   if (data !== '') {
@@ -105,11 +105,11 @@ export function parseProvision(id: string, data: string): MMELProvision {
 
 export function parseReference(id: string, data: string): MMELReference {
   const ref: MMELReference = {
-    id: id,
-    document: '',
-    clause: '',
-    title: '',
-    datatype: DataType.REFERENCE,
+    id       : id,
+    document : '',
+    clause   : '',
+    title    : '',
+    datatype : DataType.REFERENCE,
   };
 
   if (data !== '') {
@@ -147,9 +147,9 @@ export function parseReference(id: string, data: string): MMELReference {
 
 export function parseRole(id: string, data: string): MMELRole {
   const role: MMELRole = {
-    id: id,
-    name: '',
-    datatype: DataType.ROLE,
+    id       : id,
+    name     : '',
+    datatype : DataType.ROLE,
   };
   const t: Array<string> = MMELtokenizePackage(data);
   let i = 0;
@@ -174,11 +174,11 @@ export function parseRole(id: string, data: string): MMELRole {
 
 export function parseVariable(id: string, data: string): MMELVariable {
   const v: MMELVariable = {
-    id: id,
-    type: VarType.DATA,
-    definition: '',
-    description: '',
-    datatype: DataType.VARIABLE,
+    id          : id,
+    type        : VarType.DATA,
+    definition  : '',
+    description : '',
+    datatype    : DataType.VARIABLE,
   };
 
   if (data !== '') {
@@ -213,10 +213,10 @@ export function parseVariable(id: string, data: string): MMELVariable {
 
 export function parseView(id: string, data: string): MMELView {
   const v: MMELView = {
-    id: id,
-    name: '',
-    profile: {},
-    datatype: DataType.VIEW,
+    id       : id,
+    name     : '',
+    profile  : {},
+    datatype : DataType.VIEW,
   };
 
   if (data !== '') {
@@ -265,12 +265,12 @@ function to2DArray(data: string[], column: number): string[][] {
 export function parseComment(id: string, data: string): MMELComment {
   const c: MMELComment = {
     id,
-    username: '',
-    message: '',
-    feedback: new Set<string>(),
-    resolved: false,
-    timestamp: '',
-    datatype: DataType.COMMENT,
+    username  : '',
+    message   : '',
+    feedback  : new Set<string>(),
+    resolved  : false,
+    timestamp : '',
+    datatype  : DataType.COMMENT,
   };
   if (data !== '') {
     const t = MMELtokenizePackage(data);
@@ -309,11 +309,11 @@ export function parseComment(id: string, data: string): MMELComment {
 export function parseLink(id: string, data: string): MMELLink {
   const s: MMELLink = {
     id,
-    title: '',
-    description: '',
-    link: '',
-    type: 'REPO',
-    datatype: DataType.LINK,
+    title       : '',
+    description : '',
+    link        : '',
+    type        : 'REPO',
+    datatype    : DataType.LINK,
   };
   if (data !== '') {
     const t = MMELtokenizePackage(data);
@@ -347,9 +347,9 @@ export function parseLink(id: string, data: string): MMELLink {
 export function parseSection(id: string, data: string): MMELTextSection {
   const s: MMELTextSection = {
     id,
-    title: '',
-    content: '',
-    datatype: DataType.SECTION,
+    title    : '',
+    content  : '',
+    datatype : DataType.SECTION,
   };
   if (data !== '') {
     const t = MMELtokenizePackage(data);
@@ -382,10 +382,10 @@ export function parseSection(id: string, data: string): MMELTextSection {
 export function parseFigure(id: string, data: string): MMELFigure {
   const fig: MMELFigure = {
     id,
-    title: '',
-    data: '',
-    type: 'fig',
-    datatype: DataType.FIGURE,
+    title    : '',
+    data     : '',
+    type     : 'fig',
+    datatype : DataType.FIGURE,
   };
 
   if (data !== '') {
@@ -418,12 +418,12 @@ export function parseFigure(id: string, data: string): MMELFigure {
 export function parseTable(id: string, data: string): MMELTable {
   const table: MMELTable = {
     id,
-    title: '',
-    columns: 1,
-    data: [],
-    domain: [],
-    classDisplay: '',
-    datatype: DataType.TABLE,
+    title        : '',
+    columns      : 1,
+    data         : [],
+    domain       : [],
+    classDisplay : '',
+    datatype     : DataType.TABLE,
   };
 
   let cells: string[] = [];
@@ -464,11 +464,11 @@ export function parseTable(id: string, data: string): MMELTable {
 export function parseTerm(id: string, data: string): MMELTerm {
   const v: MMELTerm = {
     id,
-    term: '',
-    admitted: [],
-    definition: '',
-    notes: [],
-    datatype: DataType.TERMS,
+    term       : '',
+    admitted   : [],
+    definition : '',
+    notes      : [],
+    datatype   : DataType.TERMS,
   };
 
   if (data !== '') {
@@ -502,11 +502,11 @@ export function parseTerm(id: string, data: string): MMELTerm {
 
 export function parseNote(id: string, data: string): MMELNote {
   const v: MMELNote = {
-    id: id,
-    type: 'NOTE',
-    message: '',
-    ref: new Set<string>(),
-    datatype: DataType.NOTE,
+    id       : id,
+    type     : 'NOTE',
+    message  : '',
+    ref      : new Set<string>(),
+    datatype : DataType.NOTE,
   };
 
   if (data !== '') {
@@ -562,8 +562,8 @@ function parseSettings(data: string): Record<string, MMELVarSetting> {
 function parseVarSetting(id: string, data: string): MMELVarSetting {
   const setting: MMELVarSetting = {
     id,
-    isConst: true,
-    value: '',
+    isConst : true,
+    value   : '',
   };
   if (data !== '') {
     const t: string[] = MMELtokenizePackage(data);

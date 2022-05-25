@@ -34,8 +34,8 @@ const DocumentReferenceView: React.FC<{
               text,
               clause,
               clauseTitle,
-              namespace: document.id,
-              doc: document.title,
+              namespace : document.id,
+              doc       : document.title,
             });
             return;
           }
@@ -56,7 +56,7 @@ const DocumentReferenceView: React.FC<{
   }, [document]);
 
   return (
-    <Workspace className={className} toolbar={toolbar} style={{ flex: 2 }}>
+    <Workspace className={className} toolbar={toolbar} style={{ flex : 2 }}>
       <SMARTDocumentView mmelDoc={document} />
     </Workspace>
   );

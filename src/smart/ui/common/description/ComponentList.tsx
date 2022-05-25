@@ -81,7 +81,7 @@ export const AttributeList: React.FC<{
           <ul
             style={
               CustomAttribute !== undefined
-                ? { listStyleType: 'none', paddingLeft: 5 }
+                ? { listStyleType : 'none', paddingLeft : 5 }
                 : {}
             }
           >
@@ -131,7 +131,7 @@ export const ProvisionList: React.FC<{
           <ul
             style={
               CustomProvision !== undefined
-                ? { listStyleType: 'none', paddingLeft: 5 }
+                ? { listStyleType : 'none', paddingLeft : 5 }
                 : {}
             }
           >

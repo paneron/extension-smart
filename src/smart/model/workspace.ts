@@ -33,9 +33,9 @@ export interface SMARTWorkspace {
 
 export function createNewSMARTWorkspace(): SMARTWorkspace {
   return {
-    '@context': JSONContext,
-    '@type': 'MMEL_WORKSPACE',
-    docs: {},
-    version: WSVERSION,
+    '@context' : JSONContext,
+    '@type'    : 'MMEL_WORKSPACE',
+    'docs'     : {},
+    'version'  : WSVERSION,
   };
 }

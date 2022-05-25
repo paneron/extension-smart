@@ -31,44 +31,44 @@ export function cascadeCheckTable(
       x,
     ]);
     action.cascade = affected.map(([ids, id]) => ({
-      type: 'model',
-      act: 'elements',
-      task: 'cascade',
-      subtask: 'process-table',
-      from: id,
-      to: undefined,
+      type    : 'model',
+      act     : 'elements',
+      task    : 'cascade',
+      subtask : 'process-table',
+      from    : id,
+      to      : undefined,
       ids,
     }));
     return affected.map(([ids, id]) => ({
-      type: 'model',
-      act: 'elements',
-      task: 'cascade',
-      subtask: 'process-table',
-      from: undefined,
-      to: id,
+      type    : 'model',
+      act     : 'elements',
+      task    : 'cascade',
+      subtask : 'process-table',
+      from    : undefined,
+      to      : id,
       ids,
     }));
   } else if (action.task === 'edit') {
     const ids = findAffectedElements(elms, action.id);
     action.cascade = [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-table',
-        from: action.id,
-        to: action.value.id,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-table',
+        from    : action.id,
+        to      : action.value.id,
         ids,
       },
     ];
     return [
       {
-        type: 'model',
-        act: 'elements',
-        task: 'cascade',
-        subtask: 'process-table',
-        to: action.id,
-        from: action.value.id,
+        type    : 'model',
+        act     : 'elements',
+        task    : 'cascade',
+        subtask : 'process-table',
+        to      : action.id,
+        from    : action.value.id,
         ids,
       },
     ];

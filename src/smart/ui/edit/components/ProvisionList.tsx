@@ -30,34 +30,34 @@ const ProvisionListQuickEdit: React.FC<{
 
   function addProvision() {
     const id = findUniqueID('Provision', provisions);
-    setProvisions({ ...provisions, [id]: createProvision(id) });
+    setProvisions({ ...provisions, [id] : createProvision(id) });
   }
 
   function onImport() {
     if (selected) {
       const ref: MMELReference = {
-        id: '',
-        title: selected.clauseTitle,
-        clause: selected.clause,
-        document: selected.doc,
-        datatype: DataType.REFERENCE,
+        id       : '',
+        title    : selected.clauseTitle,
+        clause   : selected.clause,
+        document : selected.doc,
+        datatype : DataType.REFERENCE,
       };
       const existing = findExistingRef(model, ref, false);
       ref.id = existing
         ? existing.id
         : trydefaultID(
-            `${selected.namespace}-ref${selected.clause.replaceAll('.', '-')}`,
-            model.refs
-          );
+          `${selected.namespace}-ref${selected.clause.replaceAll('.', '-')}`,
+          model.refs
+        );
       const id = findUniqueID('Provision', provisions);
       const newPro: MMELProvision = {
         id,
-        modality: detectModality(selected.text),
-        condition: selected.text,
-        ref: new Set<string>([ref.id]),
-        datatype: DataType.PROVISION,
+        modality  : detectModality(selected.text),
+        condition : selected.text,
+        ref       : new Set<string>([ref.id]),
+        datatype  : DataType.PROVISION,
       };
-      setProvisions({ ...provisions, [id]: newPro });
+      setProvisions({ ...provisions, [id] : newPro });
       if (existing === null) {
         onAddReference([ref]);
       }
@@ -69,9 +69,9 @@ const ProvisionListQuickEdit: React.FC<{
       {selected !== undefined && (
         <div
           style={{
-            width: '100%',
-            marginBottom: '15px',
-            textAlign: 'center',
+            width        : '100%',
+            marginBottom : '15px',
+            textAlign    : 'center',
           }}
         >
           <Button intent="primary" onClick={onImport}>
@@ -86,7 +86,7 @@ const ProvisionListQuickEdit: React.FC<{
           provision={p}
           refs={refs}
           setProvision={x => {
-            setProvisions({ ...provisions, [index]: x });
+            setProvisions({ ...provisions, [index] : x });
           }}
           onDelete={() => {
             const newProvisions = { ...provisions };
@@ -111,20 +111,20 @@ const ProvisionQuickEdit: React.FC<{
   return (
     <div
       style={{
-        position: 'relative',
+        position : 'relative',
       }}
     >
       <fieldset>
         <NormalTextField
           text="Provision Text"
           value={provision.condition}
-          onChange={x => setProvision({ ...provision, condition: x })}
+          onChange={x => setProvision({ ...provision, condition : x })}
         />
         <NormalComboBox
           text="Provision Modality"
           value={provision.modality}
           options={MODAILITYOPTIONS}
-          onChange={x => setProvision({ ...provision, modality: x })}
+          onChange={x => setProvision({ ...provision, modality : x })}
         />
         <SimpleReferenceSelector
           selected={provision.ref}
@@ -132,22 +132,22 @@ const ProvisionQuickEdit: React.FC<{
           onItemSelect={x =>
             setProvision({
               ...provision,
-              ref: new Set([...provision.ref, x.id]),
+              ref : new Set([...provision.ref, x.id]),
             })
           }
           onTagRemove={x => {
             setProvision({
               ...provision,
-              ref: new Set([...provision.ref].filter(s => x !== s)),
+              ref : new Set([...provision.ref].filter(s => x !== s)),
             });
           }}
         />
         <div
           style={{
-            position: 'absolute',
-            right: 0,
-            top: -8,
-            zIndex: 10,
+            position : 'absolute',
+            right    : 0,
+            top      : -8,
+            zIndex   : 10,
           }}
         >
           <Button intent="danger" onClick={onDelete}>
@@ -165,8 +165,8 @@ export interface ModOption {
 }
 
 const options: ModOption[] = MODAILITYOPTIONS.map(x => ({
-  lowerCaseText: x.toLowerCase(),
-  modality: x,
+  lowerCaseText : x.toLowerCase(),
+  modality      : x,
 })).sort((a, b) => b.modality.length - a.modality.length);
 
 export function detectModality(text: string): ModalityType {

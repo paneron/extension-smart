@@ -36,8 +36,8 @@ const MappingPartyList: React.FC<{
     type === ModelType.IMP ? findRefMapPartners : findImpMapPartners;
   const partnersIds = method(id, mapping);
   const partners = partnersIds.map(id => ({
-    id: id,
-    name: getNodeInfoById(id),
+    id   : id,
+    name : getNodeInfoById(id),
   }));
 
   return (

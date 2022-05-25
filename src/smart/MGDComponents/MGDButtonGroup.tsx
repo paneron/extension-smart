@@ -15,7 +15,7 @@ interface OwnProps {
 
 function MGDButtonGroup(props: OwnProps) {
   const { children } = props;
-  const base = `mgd-button-group__item`;
+  const base = 'mgd-button-group__item';
   const items = children
     .filter(x => x !== null)
     .map((child: JSX.Element | null, index: number) => (

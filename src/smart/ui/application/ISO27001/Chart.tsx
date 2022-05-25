@@ -16,8 +16,8 @@ const ChartItem: React.FC<{
   return (
     <div
       style={{
-        width: '40%',
-        textAlign: 'center',
+        width     : '40%',
+        textAlign : 'center',
       }}
     >
       <MGDLabel>Percentage of failed login</MGDLabel>
@@ -39,27 +39,27 @@ const Chart: React.FC<{
     <svg viewBox="0 0 36 36">
       <path
         style={{
-          fill: 'none',
-          stroke: 'lightgray',
-          strokeWidth: 3.8,
+          fill        : 'none',
+          stroke      : 'lightgray',
+          strokeWidth : 3.8,
         }}
         d={path}
       />
       <path
         style={{
-          fill: 'none',
-          stroke: color,
-          strokeWidth: 2.8,
-          strokeLinecap: 'round',
+          fill          : 'none',
+          stroke        : color,
+          strokeWidth   : 2.8,
+          strokeLinecap : 'round',
         }}
         stroke-dasharray={`${reading}, 100`}
         d={path}
       />
       <text
         style={{
-          fill: color,
-          fontSize: '0.5em',
-          textAnchor: 'middle',
+          fill       : color,
+          fontSize   : '0.5em',
+          textAnchor : 'middle',
         }}
         x="18"
         y="20.35"

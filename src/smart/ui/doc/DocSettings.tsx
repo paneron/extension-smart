@@ -15,12 +15,12 @@ const DocSettings: React.FC<{
         <NormalTextField
           text="Namespace"
           value={doc.id}
-          onChange={x => setDoc({ ...doc, id: x })}
+          onChange={x => setDoc({ ...doc, id : x })}
         />
         <NormalTextField
           text="Title"
           value={doc.title}
-          onChange={x => setDoc({ ...doc, title: x })}
+          onChange={x => setDoc({ ...doc, title : x })}
         />
         <Button onClick={done}>Done</Button>
       </FormGroup>

@@ -12,7 +12,7 @@ export const ConfirmDialog: React.FC<{
   msg: string;
 }> = function ({ callback, done, msg }) {
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div style={{ textAlign : 'center' }}>
       <p> {msg} </p>
       <MGDButtonGroup>
         <Button

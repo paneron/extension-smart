@@ -24,10 +24,10 @@ const RDFControlPane: React.FC<{
     if (updateObjects) {
       const path = getPathByNS(repo.ns, RepoFileType.RDF);
       const task = updateObjects({
-        commitMessage: COMMITMSG,
-        _dangerouslySkipValidation: true,
-        objectChangeset: {
-          [path]: { newValue: rdf },
+        commitMessage              : COMMITMSG,
+        _dangerouslySkipValidation : true,
+        objectChangeset            : {
+          [path] : { newValue : rdf },
         },
       });
       task.then(() => {

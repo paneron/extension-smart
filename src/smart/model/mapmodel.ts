@@ -52,27 +52,27 @@ export interface MappingMeta {
 
 export function createMapProfile(): MapProfile {
   return {
-    '@context': JSONContext,
-    '@type': 'MMEL_MAP',
-    id: '',
-    mapSet: {},
-    docs: {},
-    version: MAPVERSION,
+    '@context' : JSONContext,
+    '@type'    : 'MMEL_MAP',
+    'id'       : '',
+    'mapSet'   : {},
+    'docs'     : {},
+    'version'  : MAPVERSION,
   };
 }
 
 export function createNewMapSet(id: string) {
   return {
-    id: id,
-    mappings: {},
+    id       : id,
+    mappings : {},
   };
 }
 
 export type MapperModelType = ModelType.IMP | ModelType.REF;
 
 export const MapperModelLabel: Record<MapperModelType, string> = {
-  [ModelType.IMP]: 'Implementation Model',
-  [ModelType.REF]: 'Reference Model',
+  [ModelType.IMP] : 'Implementation Model',
+  [ModelType.REF] : 'Reference Model',
 };
 
 export function getMappings(mp: MapProfile, refns: string): MappingType {
@@ -93,7 +93,7 @@ export function buildHistoryMap(mw: ModelWrapper): Record<string, PageHistory> {
   const model = mw.model;
   const history = createPageHistory(mw);
   const page = model.pages[model.root];
-  const hm = { [mw.page]: history };
+  const hm = { [mw.page] : history };
   fillPageHistory(page, history, hm, model.elements, model.pages);
   return hm;
 }

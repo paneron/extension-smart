@@ -14,33 +14,33 @@ const AppControlBar: React.FC<{
       vertical
       className={Classes.ELEVATION_3}
       style={{
-        zIndex: 14,
-        background: Colors.BLUE3,
-        width: 32,
-        alignItems: 'center',
-        overflow: 'hidden',
+        zIndex     : 14,
+        background : Colors.BLUE3,
+        width      : 32,
+        alignItems : 'center',
+        overflow   : 'hidden',
       }}
     >
       <div
         className={Classes.ELEVATION_2}
         style={{
-          zIndex: 14,
-          marginBottom: '-2px !important',
-          padding: 7,
-          height: 24,
-          display: 'flex',
-          flexFlow: 'column nowrap',
-          alignItems: 'center',
-          alignSelf: 'stretch',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          background: 'black',
-          color: 'white',
-          fontWeight: 'bold',
-          borderRadius: '0 !important',
-          letterSpacing: '-0.05em',
+          zIndex         : 14,
+          marginBottom   : '-2px !important',
+          padding        : 7,
+          height         : 24,
+          display        : 'flex',
+          flexFlow       : 'column nowrap',
+          alignItems     : 'center',
+          alignSelf      : 'stretch',
+          justifyContent : 'center',
+          overflow       : 'hidden',
+          background     : 'black',
+          color          : 'white',
+          fontWeight     : 'bold',
+          borderRadius   : '0 !important',
+          letterSpacing  : '-0.05em',
         }}
-        dangerouslySetInnerHTML={{ __html: BSI_WHITE_TEXT }}
+        dangerouslySetInnerHTML={{ __html : BSI_WHITE_TEXT }}
       />
       {children}
     </ControlGroup>

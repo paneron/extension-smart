@@ -10,10 +10,10 @@ const items: (keyof EditorViewOption)[] = [
 ];
 
 const ItemNames: Record<keyof EditorViewOption, string> = {
-  dvisible: 'Show Data',
-  idVisible: 'Show ID',
-  edgeDeleteVisible: 'Show Edge Remove',
-  commentVisible: 'Show Comment',
+  dvisible          : 'Show Data',
+  idVisible         : 'Show ID',
+  edgeDeleteVisible : 'Show Edge Remove',
+  commentVisible    : 'Show Comment',
 };
 
 const EditorViewMenu: React.FC<{
@@ -21,7 +21,7 @@ const EditorViewMenu: React.FC<{
   setViewOption: (x: EditorViewOption) => void;
 }> = function ({ viewOption, setViewOption }) {
   function toggleVisibility(x: keyof EditorViewOption) {
-    setViewOption({ ...viewOption, [x]: !viewOption[x] });
+    setViewOption({ ...viewOption, [x] : !viewOption[x] });
   }
 
   return (

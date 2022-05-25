@@ -78,7 +78,7 @@ export function useProvisions(
   }
 
   function init(x: Record<string, MMELProvision>) {
-    dispatchElms({ act: 'init', value: x });
+    dispatchElms({ act : 'init', value : x });
   }
 
   return [pros, act, init];

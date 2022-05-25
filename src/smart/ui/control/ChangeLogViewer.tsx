@@ -145,7 +145,7 @@ function descPage(com: PageAction): string {
     return `Delete element ${com.value.id}`;
   }
   if (com.task === 'new-edge') {
-    return `New edges`;
+    return 'New edges';
   }
   if (com.task === 'delete-edge') {
     return 'Delete edges';

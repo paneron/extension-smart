@@ -8,14 +8,14 @@ import { mgdCanvas } from '../../../css/layout';
 import { LegendInterface } from '../../model/States';
 
 export const MapDiffStyles: Record<MapDiffType, LegendInterface> = {
-  new: { label: 'New mapping', color: 'green' },
-  delete: {
-    label: 'Deleted mapping',
-    color: 'red',
+  'new'    : { label : 'New mapping', color : 'green' },
+  'delete' : {
+    label : 'Deleted mapping',
+    color : 'red',
   },
-  same: {
-    label: 'Same mapping',
-    color: 'blue',
+  'same' : {
+    label : 'Same mapping',
+    color : 'blue',
   },
 };
 
@@ -41,11 +41,11 @@ function computePos(edgeResult: MapDiffEdgeResult): IMappingEdge {
   const { fromref, toref, fromid, toid, type } = edgeResult;
   if (fromref.current === null || toref.current === null) {
     return {
-      fx: 0,
-      fy: 0,
+      fx : 0,
+      fy : 0,
       fromid,
-      tx: 0,
-      ty: 0,
+      tx : 0,
+      ty : 0,
       toid,
       type,
     };
@@ -108,7 +108,7 @@ const Marker: React.FC<{
     markerWidth="5"
     markerHeight="5"
     orient="auto"
-    style={{ stroke: colors(type) }}
+    style={{ stroke : colors(type) }}
   >
     <path d="M 0 0 L 10 5 L 0 10 z" fill={colors(type)} />
   </marker>
