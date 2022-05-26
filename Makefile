@@ -75,12 +75,12 @@ build:
 .PHONY: lint
 ## Lint source files
 lint:
-	$(NPM) run lint
+	$(NPM) run lint $${QUIET:+--quiet}
 
 .PHONY: lint-fix
 ## Lint source files and auto-fix when possible
 lint-fix:
-	$(NPM) run fix
+	$(NPM) run fix $${QUIET:+--quiet}
 
 .PHONY: clean
 ## Remove output files
