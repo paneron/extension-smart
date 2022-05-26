@@ -1,8 +1,14 @@
-export default function translateObjectToXML(obj: Object): string {
+interface Obj<T> {
+  [key: string | number | symbol]: T;
+}
+
+type Ob = Obj<unknown | string> | object;
+
+export default function translateObjectToXML(obj: Ob): string {
   return `<document>${objectToXML(obj)}</document>`;
 }
 
-function objectToXML(obj: Object): string {
+function objectToXML(obj: Ob): string {
   const entries = Object.entries(obj);
   let out = '';
   for (const [k, o] of entries) {
@@ -13,7 +19,7 @@ function objectToXML(obj: Object): string {
     if (Array.isArray(o)) {
       out += getXMLElementFromArray(tag, o);
     } else {
-      let content: string;
+      let content: string | unknown;
       if (o === null) {
         content = 'null';
       } else if (typeof o === 'object') {
@@ -27,7 +33,7 @@ function objectToXML(obj: Object): string {
   return out;
 }
 
-function getXMLElementFromArray(tag: string, array: Array<Object>): string {
+function getXMLElementFromArray(tag: string, array: Array<Ob>): string {
   let out = '';
   for (const y of array) {
     let content: string;

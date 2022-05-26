@@ -5,7 +5,7 @@ import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { FILE_TYPE, saveToFileSystem } from '../../utils/IOFunctions';
 import { clauseSorter } from '../../utils/ModelFunctions';
 import translateObjectToXML from '../../utils/xml/XMLWriter';
-import { ClauseSummary } from './ProvisionSettings';
+import type { ClauseSummary } from './ProvisionSettings';
 
 const ProvisionSummary: React.FC<{
   result: Record<string, Record<string, ClauseSummary>>;
@@ -56,26 +56,7 @@ const ProvisionSummary: React.FC<{
   );
 };
 
-const DocumentSummary: React.FC<{
-  doc: string;
-  record: Record<string, ClauseSummary>;
-}> = function ({ doc, record }) {
-  return (
-    <>
-      <h1>{doc}</h1>
-      <fieldset>
-        <legend>Clauses</legend>
-        {Object.entries(record)
-          .sort(([c1], [c2]) => clauseSorter(c1, c2))
-          .map(([clause, summary]) => (
-            <ClauseSummary key={clause} clause={clause} summary={summary} />
-          ))}
-      </fieldset>
-    </>
-  );
-};
-
-const ClauseSummary: React.FC<{
+const KlauseSummary: React.FC<{
   clause: string;
   summary: ClauseSummary;
 }> = function ({ clause, summary }) {
@@ -98,6 +79,25 @@ const ClauseSummary: React.FC<{
           ))}
         </ul>
       )}
+    </>
+  );
+};
+
+const DocumentSummary: React.FC<{
+  doc: string;
+  record: Record<string, ClauseSummary>;
+}> = function ({ doc, record }) {
+  return (
+    <>
+      <h1>{doc}</h1>
+      <fieldset>
+        <legend>Clauses</legend>
+        {Object.entries(record)
+          .sort(([c1], [c2]) => clauseSorter(c1, c2))
+          .map(([clause, summary]) => (
+            <KlauseSummary key={clause} clause={clause} summary={summary} />
+          ))}
+      </fieldset>
     </>
   );
 };

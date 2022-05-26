@@ -228,6 +228,7 @@ const QuickVersionEdit: React.FC<
       />
       {edges.map((edge, index) => (
         <EdgeQuickEdit
+          key={edge.id}
           edge={edge}
           index={index}
           setEdge={(x, edge) => {

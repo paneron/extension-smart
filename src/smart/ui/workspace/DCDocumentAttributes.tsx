@@ -13,7 +13,7 @@ import { DocumentEditInterface } from './DocumentEditor';
 import EnumAttribute from './EnumAttribute';
 import ReferenceAttributes from './ReferenceAttributes';
 
-const DCDocumentAttributes: React.FC<{
+interface DCDocumentAttributesProps {
   dc: EditorDataClass;
   model: EditorModel;
   doc: DocumentEditInterface;
@@ -21,7 +21,10 @@ const DCDocumentAttributes: React.FC<{
   isRoot?: boolean;
   workspace: Record<string, SMARTDocumentStore>;
   prefix: string;
-}> = function ({ isRoot = true, dc, model, doc, setDoc, workspace, prefix }) {
+}
+
+const DCDocumentAttributes: React.FC<DCDocumentAttributesProps> =
+function ({ isRoot = true, dc, model, doc, setDoc, workspace, prefix }: DCDocumentAttributesProps) {
   const roles = getModelAllRolesWithEmpty(model);
   return (
     <>
@@ -34,6 +37,7 @@ const DCDocumentAttributes: React.FC<{
       )}
       {Object.values(dc.attributes).map(a => (
         <DocumentAttribute
+          key={a.id}
           attribute={a}
           model={model}
           doc={doc}

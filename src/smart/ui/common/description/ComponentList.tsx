@@ -25,7 +25,7 @@ export const ApprovalRecordList: React.FC<{
           <p>Approval record(s):</p>
           <ul>
             {regs.map(reg => (
-              <li>{reg.title}</li>
+              <li key={reg.id}>{reg.title}</li>
             ))}
           </ul>
         </>
@@ -216,7 +216,7 @@ export const EdgeList: React.FC<{
           <p>Outgoing paths</p>
           <ul>
             {edges.map((edge, index) => (
-              <li>
+              <li key={edge.id}>
                 <DescribeEdge key={`edge#${index}`} edge={edge} />
               </li>
             ))}

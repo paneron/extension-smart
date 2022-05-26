@@ -35,9 +35,9 @@ const instructions: [JSX.Element, JSX.Element, JSX.Element, JSX.Element] = [
       <li>Calculate transitive mapping</li>
     </ol>
   </>,
-  <h3>Select relevant model as a bridge to discover new mappings</h3>,
-  <h3>Select destination model to be covered</h3>,
-  <h3>Calculate transitive mapping</h3>,
+  <h3 key="h3-1">Select relevant model as a bridge to discover new mappings</h3>,
+  <h3 key="h3-2">Select destination model to be covered</h3>,
+  <h3 key="h3-3">Calculate transitive mapping</h3>,
 ];
 
 const RepoAutoMapper: React.FC<{

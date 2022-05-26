@@ -29,6 +29,7 @@ const ProfileControl: React.FC<{
             <MGDSidebar>
               {profiles.map(p => (
                 <Button
+                  key={p.id}
                   fill
                   className={Classes.POPOVER2_DISMISS}
                   onClick={() => onProfileLoad(p)}

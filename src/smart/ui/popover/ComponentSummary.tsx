@@ -34,29 +34,31 @@ const ComponentSummary: React.FC<{
   );
 };
 
-const Describe_Node_Details: Record<
-  DescribableNodeTypes,
-  React.FC<{
+interface Props {
     node: EditorNode;
     model: EditorModel;
-  }>
+  }
+
+const Describe_Node_Details: Record<
+  DescribableNodeTypes,
+  React.FC<Props>
 > = {
-  [DataType.PROCESS] : function ({ node, model }) {
+  [DataType.PROCESS] : function ({ node, model }: Props) {
     return <ProcessSummary process={node as EditorProcess} model={model} />;
   },
-  [DataType.APPROVAL] : function ({ node }) {
+  [DataType.APPROVAL] : function ({ node }: Props) {
     return <ApprovalSummary approval={node as EditorApproval} />;
   },
-  [DataType.TIMEREVENT] : function ({ node }) {
+  [DataType.TIMEREVENT] : function ({ node }: Props) {
     return <TimerSummary timer={node as EditorTimerEvent} />;
   },
-  [DataType.SIGNALCATCHEVENT] : function ({ node }) {
+  [DataType.SIGNALCATCHEVENT] : function ({ node }: Props) {
     return <SignalSummary signal={node as EditorSignalEvent} />;
   },
-  [DataType.DATACLASS] : function ({ node }) {
+  [DataType.DATACLASS] : function ({ node }: Props) {
     return <DescribeDC dc={node as EditorDataClass} />;
   },
-  [DataType.REGISTRY] : function ({ node, model }) {
+  [DataType.REGISTRY] : function ({ node, model }: Props) {
     return (
       <DescribeRegistry
         reg={node as EditorRegistry}
@@ -64,7 +66,7 @@ const Describe_Node_Details: Record<
       />
     );
   },
-  [DataType.EGATE] : function ({ node }) {
+  [DataType.EGATE] : function ({ node }: Props) {
     return <EGateSummary egate={node as EditorEGate} />;
   },
 };

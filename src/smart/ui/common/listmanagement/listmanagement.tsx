@@ -13,7 +13,7 @@ export enum ListManagePageType {
   UPDATE = 'update',
 }
 
-const ListManagePage = <T extends Object>(props: IManageHandler<T>) => {
+const ListManagePage = <T extends Record<string, unknown>>(props: IManageHandler<T>) => {
   const {
     filterName,
     itemName,
@@ -85,7 +85,7 @@ const ListManagePage = <T extends Object>(props: IManageHandler<T>) => {
       setSelected({ ...initObj });
       setMode(ListManagePageType.ADD);
     },
-    updateClicked : selected => {
+    updateClicked : (selected: string) => {
       setOldId(selected);
       setSelected({ ...getObjById(selected) });
       setMode(ListManagePageType.UPDATE);

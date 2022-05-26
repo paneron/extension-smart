@@ -47,6 +47,7 @@ const CommentEntry: React.FC<{
       </div>
       {comment.feedback.map(x => (
         <CommentEntry
+          key={`${comment.id}-${x.id}`}
           comment={x}
           addComment={addComment}
           deleteComment={deleteComment}

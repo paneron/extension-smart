@@ -81,7 +81,7 @@ const ApplicationConfigurePage: React.FC<{
     <MGDDisplayPane isBSI={false}>
       <FormGroup label="Sensor readings source">
         <Text>
-          To generate artificial data for testing, use "{fixedlocalhost}"
+          To generate artificial data for testing, use &quot;{fixedlocalhost}&quot;
         </Text>
         <ControlGroup fill>
           <InputGroup

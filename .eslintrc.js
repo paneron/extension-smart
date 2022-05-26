@@ -57,12 +57,14 @@ var rules = {
     },
   ],
   "no-cond-assign" : [2, "except-parens"],
-  "no-redeclare"   : [
-    "error",
-    {
-      builtinGlobals : true,
-    },
-  ],
+  // "no-redeclare"   : [
+  //   "error",
+  //   {
+  //     builtinGlobals : true,
+  //   },
+  // ],
+  "no-redeclare": "off",
+  "@typescript-eslint/no-redeclare": ["error"],
   "dot-notation" : [
     2,
     {
@@ -113,6 +115,8 @@ var rules = {
       },
     },
   ],
+  'no-empty-function' : 'off',
+  '@typescript-eslint/no-empty-function' : 'off',
 };
 
 module.exports = {
@@ -122,6 +126,7 @@ module.exports = {
   },
   "extends" : [
     'eslint:recommended',
+    'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     // "plugin:prettier/recommended",
   ],

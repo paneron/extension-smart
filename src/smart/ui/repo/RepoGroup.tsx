@@ -37,8 +37,11 @@ const RepoGroup: React.FC<{
             margin   : 10,
           }}
         >
-          {list.map(x => (
-            <div style={{ position : 'relative' }}>
+          {list.map((x) => (
+            <div
+              key={x.namespace + x.shortname}
+              style={{ position : 'relative' }}
+            >
               <RepoModelFile
                 key={x.namespace}
                 file={x}

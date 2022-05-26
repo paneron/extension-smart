@@ -52,7 +52,7 @@ const Chart: React.FC<{
           strokeWidth   : 2.8,
           strokeLinecap : 'round',
         }}
-        stroke-dasharray={`${reading}, 100`}
+        strokeDasharray={`${reading}, 100`}
         d={path}
       />
       <text

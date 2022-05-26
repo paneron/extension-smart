@@ -61,8 +61,8 @@ const ReferenceEditPage: React.FC<{
       }
       if (failed.length > 0) {
         alert(
-          'The following clauses cannot be added because their IDs already exist: ' +
-            failed.join(', ')
+          'The following clauses cannot be added because ' +
+          `their IDs already exist: ${failed.join(', ')}`
         );
         return false;
       }
@@ -116,10 +116,12 @@ const ReferenceEditItemPage: React.FC<{
   return (
     <FormGroup>
       <p>
-        You may insert multiple clauses at once. Seperate the cluase by ",". IDs
-        of the references will be automatically generated according to the
-        clause numbers. For example, clause 4.1.1 with ID "ref" will become
-        "ref4-1-1".
+        You may insert multiple clauses at once.
+        Seperate the cluase by &quot;,&quot;.
+        IDs of the references will be automatically generated according to the
+        clause numbers.
+        For example, clause 4.1.1 with ID &quot;ref&quot; will become
+        &quot;ref4-1-1&quot;.
       </p>
       <NormalTextField
         text="Reference ID"

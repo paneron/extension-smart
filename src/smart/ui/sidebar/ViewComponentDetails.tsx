@@ -40,29 +40,31 @@ import {
 import { DescribeDC, DescribeRegistry } from '../common/description/data';
 import { DescribeProcess } from '../common/description/process';
 
+interface Props {
+  node: EditorNode;
+  getRefById: (id: string) => MMELReference | null;
+  getRegistryById: (id: string) => EditorRegistry | null;
+  getDCById: (id: string) => EditorDataClass | null;
+  getProvisionById: (id: string) => MMELProvision | null;
+  getNoteById: (id: string) => MMELNote | null;
+  getOutgoingEdgesById: (id: string) => MMELEdge[];
+  getRoleById: (id: string) => MMELRole | null;
+  CustomAttribute?: React.FC<{
+    att: MMELDataAttribute;
+    getRefById?: (id: string) => MMELReference | null;
+    dcid: string;
+  }>;
+  CustomProvision?: React.FC<{
+    provision: MMELProvision;
+    getRefById?: (id: string) => MMELReference | null;
+  }>;
+}
+
 const NODE_DETAIL_VIEWS: Record<
   SelectableNodeTypes,
-  React.FC<{
-    node: EditorNode;
-    getRefById: (id: string) => MMELReference | null;
-    getRegistryById: (id: string) => EditorRegistry | null;
-    getDCById: (id: string) => EditorDataClass | null;
-    getProvisionById: (id: string) => MMELProvision | null;
-    getNoteById: (id: string) => MMELNote | null;
-    getOutgoingEdgesById: (id: string) => MMELEdge[];
-    getRoleById: (id: string) => MMELRole | null;
-    CustomAttribute?: React.FC<{
-      att: MMELDataAttribute;
-      getRefById?: (id: string) => MMELReference | null;
-      dcid: string;
-    }>;
-    CustomProvision?: React.FC<{
-      provision: MMELProvision;
-      getRefById?: (id: string) => MMELReference | null;
-    }>;
-  }>
+  React.FC<Props>
 > = {
-  [DataType.DATACLASS] : ({ node, getRefById, CustomAttribute }) =>
+  [DataType.DATACLASS] : ({ node, getRefById, CustomAttribute }: Props) =>
     isEditorDataClass(node) ? (
       <DescribeDC
         dc={node as EditorDataClass}
@@ -72,7 +74,7 @@ const NODE_DETAIL_VIEWS: Record<
     ) : (
       <></>
     ),
-  [DataType.REGISTRY] : ({ node, getRefById, getDCById, CustomAttribute }) =>
+  [DataType.REGISTRY] : ({ node, getRefById, getDCById, CustomAttribute }: Props) =>
     isEditorRegistry(node) ? (
       <DescribeRegistry
         reg={node}
@@ -85,17 +87,17 @@ const NODE_DETAIL_VIEWS: Record<
     ),
   [DataType.STARTEVENT] : () => <DescribeStart />,
   [DataType.ENDEVENT]   : () => <DescribeEnd />,
-  [DataType.TIMEREVENT] : ({ node }) =>
+  [DataType.TIMEREVENT] : ({ node }: Props) =>
     isEditorTimerEvent(node) ? <DescribeTimer timer={node} /> : <></>,
-  [DataType.SIGNALCATCHEVENT] : ({ node }) =>
+  [DataType.SIGNALCATCHEVENT] : ({ node }: Props) =>
     isEditorSignalEvent(node) ? <DescribeSignalCatch scEvent={node} /> : <></>,
-  [DataType.EGATE] : ({ node, getOutgoingEdgesById }) =>
+  [DataType.EGATE] : ({ node, getOutgoingEdgesById }: Props) =>
     isEditorEgate(node) ? (
       <DescribeEGate egate={node} getOutgoingEdgesById={getOutgoingEdgesById} />
     ) : (
       <></>
     ),
-  [DataType.APPROVAL] : ({ node, getRefById, getRegistryById, getRoleById }) =>
+  [DataType.APPROVAL] : ({ node, getRefById, getRegistryById, getRoleById }: Props) =>
     isEditorApproval(node) ? (
       <DescribeApproval
         app={node}
@@ -113,7 +115,7 @@ const NODE_DETAIL_VIEWS: Record<
     getNoteById,
     getRoleById,
     CustomProvision,
-  }) =>
+  }: Props) =>
     isEditorProcess(node) ? (
       <DescribeProcess
         process={node}

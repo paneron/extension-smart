@@ -26,9 +26,7 @@ import QuickEditRegistry from '../quickedit/registry';
 import QuickEditSignalEvent from '../quickedit/signalevent';
 import QuickEditTimer from '../quickedit/timer';
 
-const NODE_EDIT_VIEWS: Record<
-  QuickEditableNodeTypes,
-  React.FC<{
+interface Props {
     node: EditorNode;
     model: EditorModel;
     act: (x: EditorAction) => void;
@@ -38,45 +36,51 @@ const NODE_EDIT_VIEWS: Record<
     setSelectedNode: (id: string) => void;
     setUndoListener: (x: (() => void) | undefined) => void;
     clearRedo: () => void;
-  }>
+}
+
+const NODE_EDIT_VIEWS: Record<
+  QuickEditableNodeTypes,
+  React.FC<Props>
 > = {
-  [DataType.ENDEVENT] : props => (
+  [DataType.ENDEVENT] : (props: Props) => (
     <QuickEditEnd {...props} end={props.node as EditorEndEvent} />
   ),
-  [DataType.TIMEREVENT] : props => (
+  [DataType.TIMEREVENT] : (props: Props) => (
     <QuickEditTimer {...props} timer={props.node as EditorTimerEvent} />
   ),
-  [DataType.SIGNALCATCHEVENT] : props => (
+  [DataType.SIGNALCATCHEVENT] : (props: Props) => (
     <QuickEditSignalEvent {...props} event={props.node as EditorSignalEvent} />
   ),
-  [DataType.EGATE] : props => (
+  [DataType.EGATE] : (props: Props) => (
     <QuickEditEGate {...props} egate={props.node as EditorEGate} />
   ),
-  [DataType.APPROVAL] : props => (
+  [DataType.APPROVAL] : (props: Props) => (
     <QuickEditApproval {...props} approval={props.node as EditorApproval} />
   ),
-  [DataType.PROCESS] : props => (
+  [DataType.PROCESS] : (props: Props) => (
     <QuickEditProcess {...props} process={props.node as EditorProcess} />
   ),
-  [DataType.REGISTRY] : props => (
+  [DataType.REGISTRY] : (props: Props) => (
     <QuickEditRegistry {...props} registry={props.node as EditorRegistry} />
   ),
-  [DataType.DATACLASS] : props => (
+  [DataType.DATACLASS] : (props: Props) => (
     <QuickEditDataClass {...props} dataclass={props.node as EditorDataClass} />
   ),
 };
 
-const QuickEdit: React.FC<{
-  node: EditorNode;
-  model: EditorModel;
-  act: (x: EditorAction) => void;
-  setDialog: DialogSetterInterface;
-  page: EditorSubprocess;
-  provision?: RefTextSelection;
-  setSelectedNode: (id: string) => void;
-  setUndoListener: (x: (() => void) | undefined) => void;
-  clearRedo: () => void;
-}> = function (props) {
+interface QuickEditProps {
+    node: EditorNode;
+    model: EditorModel;
+    act: (x: EditorAction) => void;
+    setDialog: DialogSetterInterface;
+    page: EditorSubprocess;
+    provision?: RefTextSelection;
+    setSelectedNode: (id: string) => void;
+    setUndoListener: (x: (() => void) | undefined) => void;
+    clearRedo: () => void;
+}
+
+const QuickEdit: React.FC<QuickEditProps> = function (props) {
   const { node } = props;
   const Edit = NODE_EDIT_VIEWS[node.datatype as QuickEditableNodeTypes];
 

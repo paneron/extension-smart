@@ -117,17 +117,19 @@ export const SignalCatchShape: React.FC<{ color?: string }> = function ({
   );
 };
 
+interface Props {
+  content: string;
+  pid: string;
+  styleClass?: SerializedStyles;
+  setMapping?: (fromid: string, toid: string) => void;
+  uiref?: RefObject<HTMLDivElement>;
+}
+
 export const ProcessBox: Record<
   ModelType,
-  React.FC<{
-    content: string;
-    pid: string;
-    styleClass?: SerializedStyles;
-    setMapping?: (fromid: string, toid: string) => void;
-    uiref?: RefObject<HTMLDivElement>;
-  }>
+  React.FC<Props>
 > = {
-  [ModelType.EDITREF] : ({ content, pid, styleClass }) => (
+  [ModelType.EDITREF] : ({ content, pid, styleClass }: Props) => (
     <MGDProcessBox
       styleClass={styleClass}
       draggable
@@ -136,10 +138,10 @@ export const ProcessBox: Record<
       {content}
     </MGDProcessBox>
   ),
-  [ModelType.EDIT] : ({ content, styleClass }) => (
+  [ModelType.EDIT] : ({ content, styleClass }: Props) => (
     <MGDProcessBox styleClass={styleClass}>{content}</MGDProcessBox>
   ),
-  [ModelType.IMP] : ({ content, pid, styleClass, uiref }) => {
+  [ModelType.IMP] : ({ content, pid, styleClass, uiref }: Props) => {
     return (
       <MGDProcessBox
         uiref={uiref}
@@ -157,7 +159,7 @@ export const ProcessBox: Record<
     styleClass,
     setMapping = () => {},
     uiref,
-  }) => (
+  }: Props) => (
     <MGDProcessBox
       uiref={uiref}
       styleClass={styleClass}

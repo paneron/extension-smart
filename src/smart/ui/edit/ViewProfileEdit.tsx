@@ -202,11 +202,13 @@ const DefaultValues: Record<InputableVarType, string> = {
   [VarType.TABLEITEM] : '',
 };
 
+interface Props { value: string; onChange: (x: string) => void }
+
 const Inputs: Record<
   InputableVarType,
-  React.FC<{ value: string; onChange: (x: string) => void }>
+  React.FC<Props>
 > = {
-  [VarType.BOOLEAN] : ({ value, onChange }) => (
+  [VarType.BOOLEAN] : ({ value, onChange }: Props) => (
     <NormalComboBox
       text="Default value"
       options={['true', 'false']}
@@ -216,7 +218,7 @@ const Inputs: Record<
       fill
     />
   ),
-  [VarType.DATA] : ({ value, onChange }) => (
+  [VarType.DATA] : ({ value, onChange }: Props) => (
     <InputGroup
       placeholder="Default value"
       value={value}
@@ -224,7 +226,7 @@ const Inputs: Record<
       fill
     />
   ),
-  [VarType.LISTDATA] : ({ value, onChange }) => (
+  [VarType.LISTDATA] : ({ value, onChange }: Props) => (
     <InputGroup
       placeholder="Default values (seperate by ,)"
       value={value}
@@ -232,7 +234,7 @@ const Inputs: Record<
       fill
     />
   ),
-  [VarType.TEXT] : ({ value, onChange }) => (
+  [VarType.TEXT] : ({ value, onChange }: Props) => (
     <InputGroup
       placeholder="Default value"
       value={value}
@@ -240,7 +242,7 @@ const Inputs: Record<
       fill
     />
   ),
-  [VarType.TABLEITEM] : ({ value, onChange }) => (
+  [VarType.TABLEITEM] : ({ value, onChange }: Props) => (
     <InputGroup
       placeholder="Default value"
       value={value}

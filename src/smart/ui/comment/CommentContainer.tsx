@@ -18,6 +18,7 @@ const CommentContainer: React.FC<{
     <div style={popoverPanelContainer}>
       {comments.map(c => (
         <CommentEntry
+          key={c.id}
           comment={c}
           addComment={addComment}
           deleteComment={deleteComment}

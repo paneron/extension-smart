@@ -149,30 +149,32 @@ function getName(node: EditorNode): string {
   return node.id;
 }
 
-const NODE_SIMULATION_SUMMARY: Record<
-  MainFlowNodeTypes,
-  React.FC<{
+interface SimulationProps {
     node: EditorNode;
     getProvisionById: (id: string) => MMELProvision | null;
     getRoleById: (id: string) => MMELRole | null;
     getNoteById: (id: string) => MMELNote | null;
-  }>
+}
+
+const NODE_SIMULATION_SUMMARY: Record<
+  MainFlowNodeTypes,
+  React.FC<SimulationProps>
 > = {
   [DataType.STARTEVENT] : () => <DescribeStart />,
   [DataType.ENDEVENT]   : () => <DescribeEnd />,
-  [DataType.TIMEREVENT] : ({ node }) =>
+  [DataType.TIMEREVENT] : ({ node }: SimulationProps) =>
     isEditorTimerEvent(node) ? <DescribeTimer timer={node} /> : <></>,
-  [DataType.SIGNALCATCHEVENT] : ({ node }) =>
+  [DataType.SIGNALCATCHEVENT] : ({ node }: SimulationProps) =>
     isEditorSignalEvent(node) ? <DescribeSignalCatch scEvent={node} /> : <></>,
-  [DataType.EGATE] : ({ node }) =>
+  [DataType.EGATE] : ({ node }: SimulationProps) =>
     isEditorEgate(node) ? <DescribeEGate egate={node} /> : <></>,
-  [DataType.APPROVAL] : ({ node, getRoleById }) =>
+  [DataType.APPROVAL] : ({ node, getRoleById }: SimulationProps) =>
     isEditorApproval(node) ? (
       <DescribeApproval app={node} getRoleById={getRoleById} />
     ) : (
       <></>
     ),
-  [DataType.PROCESS] : ({ node, getProvisionById, getRoleById, getNoteById }) =>
+  [DataType.PROCESS] : ({ node, getProvisionById, getRoleById, getNoteById }: SimulationProps) =>
     isEditorProcess(node) ? (
       <DescribeProcess
         process={node}

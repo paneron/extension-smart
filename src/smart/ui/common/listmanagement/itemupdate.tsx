@@ -4,7 +4,7 @@ import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
 import { IUpdateInterface } from '../fields';
 
-const ItemUpdatePane = <T extends Object>(props: IUpdateInterface<T>) => {
+const ItemUpdatePane = <T extends Record<string, unknown>>(props: IUpdateInterface<T>) => {
   const {
     Content,
     object,

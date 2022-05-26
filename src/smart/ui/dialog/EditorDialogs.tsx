@@ -64,7 +64,7 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.DELETECONFIRM] : {
     title      : 'Confirmation',
     fullscreen : false,
-    Panel      : ({ onDelete, done, msg }) =>
+    Panel      : ({ onDelete, done, msg }: EditorDialogInterface) =>
       onDelete ? (
         <ConfirmDialog callback={onDelete} done={done} msg={msg} />
       ) : (
@@ -74,7 +74,7 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITPROCESS] : {
     title      : 'Edit Process',
     fullscreen : true,
-    Panel      : props => (
+    Panel      : (props: EditorDialogInterface) => (
       <EditProcessPage
         {...props}
         closeDialog={props.done}
@@ -85,7 +85,7 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITAPPROVAL] : {
     title      : 'Edit Approval',
     fullscreen : true,
-    Panel      : props => (
+    Panel      : (props: EditorDialogInterface) => (
       <EditApprovalPage
         {...props}
         closeDialog={props.done}
@@ -96,7 +96,7 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITEGATE] : {
     title      : 'Edit Gateway',
     fullscreen : true,
-    Panel      : props => (
+    Panel      : (props: EditorDialogInterface) => (
       <EditEGatePage
         {...props}
         closeDialog={props.done}
@@ -108,7 +108,7 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITTIMER] : {
     title      : 'Edit Timer',
     fullscreen : true,
-    Panel      : props => (
+    Panel      : (props: EditorDialogInterface) => (
       <EditTimerPage
         {...props}
         timer={props.model.elements[props.msg] as EditorTimerEvent}
@@ -119,7 +119,7 @@ export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.EDITSIGNAL] : {
     title      : 'Edit Signal Catch Event',
     fullscreen : true,
-    Panel      : props => (
+    Panel      : (props: EditorDialogInterface) => (
       <EditSignalEventPage
         {...props}
         event={props.model.elements[props.msg] as EditorSignalEvent}

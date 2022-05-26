@@ -33,13 +33,15 @@ const RoleSelectFilter: ItemPredicate<MMELRole> = function (query, item) {
   return item.name.toLowerCase().includes(query.toLowerCase());
 };
 
-const RoleSelector: React.FC<{
+interface Props {
   activeItem: MMELRole | null;
   items: MMELRole[];
   onItemSelect: (x: MMELRole | null) => void;
   label: string;
-}> = function (props) {
-  const { activeItem, onItemSelect, label } = props;
+}
+
+const RoleSelector: React.FC<Props> = function (props) {
+  const { activeItem, onItemSelect, label }: Props = props;
 
   const RoleListRender: ItemListRenderer<MMELRole> = function (props) {
     const { filteredItems, itemsParentRef, renderItem } = props;
