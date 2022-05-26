@@ -153,7 +153,8 @@ const ModelMapper: React.FC<{
         const doc = data as MMELDocument;
         if (doc && doc.version !== DOCVERSION) {
           alert(
-            `Warning: Document version not matched\nDocument version of the file:${doc.version}`
+            `Warning: Document version does not match ${DOCVERSION}\n` +
+            `Document version of the file: ${doc.version}`
           );
           doc.version = DOCVERSION;
         }
