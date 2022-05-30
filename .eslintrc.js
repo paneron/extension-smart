@@ -137,6 +137,9 @@ module.exports = {
   "settings" : {
     react : {
       version : "detect"
+    },
+    "import/resolver" : {
+      typescript : {}
     }
   },
   "rules" : rules,
