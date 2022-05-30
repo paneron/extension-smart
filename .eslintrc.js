@@ -134,6 +134,11 @@ module.exports = {
   "parserOptions" : {
     project : "./tsconfig.json",
   },
+  "settings" : {
+    react : {
+      version : "detect"
+    }
+  },
   "rules" : rules,
   overrides : [
     {
