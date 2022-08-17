@@ -1907,13 +1907,10 @@
   resolved "https://registry.yarnpkg.com/@riboseinc/paneron-extension-glossarist/-/paneron-extension-glossarist-1.0.0-dev9.tgz#20696e5aa9689a61a544fbad55e402e5c1ea0891"
   integrity sha512-rLa98Sr4jO519uYgPIXC2jfJ5CzEkIZ7roUJQQB7cmOdfaFR0mVchYHeZVWn0A5L6Q6oUFj4lmcPlsKuQsAw2A==
 
-"@riboseinc/paneron-extension-kit@2.0.0-dev9":
-  version "2.0.0-dev9"
-  resolved "https://registry.yarnpkg.com/@riboseinc/paneron-extension-kit/-/paneron-extension-kit-2.0.0-dev9.tgz#b0a4547ea69f2fdc029fb102b4e7ba0cf5bdd5da"
-  integrity sha512-don6nvyUevNGoDj9isMwheNoHazJ4PiphtnSptU+biTtXyMnC9sAbMAgTYdG5jbLcwFvGIC4VbIkU2HdyrNxFQ==
-  dependencies:
-    "@types/semver" "^7.3.4"
-    semver "^7.3.2"
+"@riboseinc/paneron-extension-kit@^2.0.0-alpha24":
+  version "2.0.0-alpha24"
+  resolved "https://registry.yarnpkg.com/@riboseinc/paneron-extension-kit/-/paneron-extension-kit-2.0.0-alpha24.tgz#1fb6f05fd8fc70cd6dbbc24fb4cf8b19afc6adc1"
+  integrity sha512-cJTvgur1W7sgO/MGYZCutZ6S2keP15tyQSi6XI47ZJaiPSEV/IWkEHy78D7j/aO4VQkIlVpWG0A+kYdbzBApRw==
 
 "@sinclair/typebox@^0.23.3":
   version "0.23.5"
@@ -2111,11 +2108,6 @@
   version "0.16.2"
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
   integrity sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==
-
-"@types/semver@^7.3.4":
-  version "7.3.12"
-  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.12.tgz#920447fdd78d76b19de0438b7f60df3c4a80bf1c"
-  integrity sha512-WwA1MW0++RfXmCr12xeYOOC5baSC9mSb0ZqCquFzKhcoF4TvHu5MKOuXsncgZcpVFhB1pXd5hZmM0ryAoCp12A==
 
 "@types/stack-utils@^2.0.0":
   version "2.0.1"
@@ -5159,7 +5151,7 @@ semver@7.0.0:
   resolved "https://registry.npmjs.org/semver/-/semver-7.0.0.tgz"
   integrity sha512-+GB6zVA9LWh6zovYQLALHwv5rb2PHGlJi3lfiqIHxR0uuwCgefcOJc59v9fv1w8GbStwxuuqqAjI9NMAOOgq1A==
 
-semver@7.x, semver@^7.3.2, semver@^7.3.7:
+semver@7.x, semver@^7.3.7:
   version "7.3.7"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.7.tgz#12c5b649afdbf9049707796e22a4028814ce523f"
   integrity sha512-QlYTucUYOews+WeEujDoEGziz4K6c47V/Bd+LjSSYcA94p+DmINdf7ncaUinThfvZyu13lN9OY1XDxt8C0Tw0g==
