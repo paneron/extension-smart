@@ -116,6 +116,7 @@ var rules = {
     },
   ],
   'no-empty-function' : 'off',
+  'react/prop-types' : 'off',
   '@typescript-eslint/no-empty-function' : 'off',
 };
 
