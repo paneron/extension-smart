@@ -118,6 +118,7 @@ var rules = {
   'no-empty-function' : 'off',
   'react/prop-types' : 'off',
   '@typescript-eslint/no-empty-function' : 'off',
+  '@typescript-eslint/no-non-null-asserted-nullish-coalescing' : 'warn',
 };
 
 module.exports = {
@@ -128,7 +129,7 @@ module.exports = {
   "extends" : [
     'eslint:recommended',
     'plugin:react/recommended',
-    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/strict',
     // "plugin:prettier/recommended",
   ],
   "parser"        : "@typescript-eslint/parser",
