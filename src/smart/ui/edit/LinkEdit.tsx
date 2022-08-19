@@ -6,9 +6,9 @@ import {
   MMELLink,
 } from '../../serialize/interface/supportinterface';
 import { NormalComboBox, NormalTextField } from '../common/fields';
-import { IObject } from '../common/listmanagement/listPopoverItem';
+import { IMMELObject } from '../common/listmanagement/listPopoverItem';
 
-export function matchLinkFilter(x: IObject, filter: string): boolean {
+export function matchLinkFilter(x: IMMELObject, filter: string): boolean {
   const link = x as MMELLink;
   return filter === '' || link.title.toLowerCase().includes(filter);
 }

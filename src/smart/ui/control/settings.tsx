@@ -106,11 +106,41 @@ const tabs: Record<SETTINGPAGE, TabProps> = {
   },
 };
 
+function isTabProps(stuff: TabProps): stuff is TabProps {
+  return true;
+}
+
+
 const BasicSettingPane: React.FC<{
   model: EditorModel;
   act: (x: EditorAction) => void;
 }> = ({ model, act }) => {
   const [page, setPage] = useState<SETTINGPAGE>(SETTINGPAGE.METAPAGE);
+
+  const tabElements: JSX.Element[] = [];
+  for (const key of typeof tabs) {
+    const props: TabProps = tabs[key as SETTINGPAGE];
+    if (isTabProps(props)) {
+      tabElements.push(
+        <Tab
+          key={key}
+          id={key}
+          title={
+            <span
+              css={[
+                mgd_tabs__item,
+                key === page
+                  ? mgd_tabs__item__selected
+                  : mgd_tabs__item__unselected
+              ]}
+            >
+              <label css={mgd_label}> {props.title} </label>
+            </span>
+          }
+          panel={<props.Panel model={model} act={act} />}
+        />);
+    }
+  }
 
   return (
     <MGDDisplayPane>
@@ -120,28 +150,10 @@ const BasicSettingPane: React.FC<{
         selectedTabId={page}
         animate={false}
       >
-        {Object.entries(tabs).map(([key, props]: [string, TabProps]) => (
-          <Tab
-            key={key}
-            id={key}
-            title={
-              <span
-                css={[
-                  mgd_tabs__item,
-                  key === page
-                    ? mgd_tabs__item__selected
-                    : mgd_tabs__item__unselected,
-                ]}
-              >
-                <label css={mgd_label}> {props.title} </label>
-              </span>
-            }
-            panel={<props.Panel model={model} act={act} />}
-          />
-        ))}
+        {tabElements}
       </Tabs>
     </MGDDisplayPane>
   );
-};
+}
 
 export default BasicSettingPane;

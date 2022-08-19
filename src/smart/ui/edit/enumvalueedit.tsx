@@ -6,7 +6,7 @@ import { MMELEnumValue } from '../../serialize/interface/datainterface';
 import { createEnumValue } from '../../utils/EditorFactory';
 import { NormalTextField } from '../common/fields';
 import ListWithPopoverItem, {
-  IObject,
+  IMMELObject,
 } from '../common/listmanagement/listPopoverItem';
 
 const EnumValueEditPage: React.FC<{
@@ -14,7 +14,7 @@ const EnumValueEditPage: React.FC<{
   model: EditorModel;
   setValues: (x: Record<string, MMELEnumValue>) => void;
 }> = ({ values, model, setValues }) => {
-  function matchFilter(x: IObject, filter: string) {
+  function matchFilter(x: IMMELObject, filter: string) {
     return filter === '' || x.id.toLowerCase().includes(filter);
   }
 

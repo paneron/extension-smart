@@ -9,9 +9,9 @@ import {
   NormalComboBox,
   NormalTextField,
 } from '../common/fields';
-import { IObject } from '../common/listmanagement/listPopoverItem';
+import { IMMELObject } from '../common/listmanagement/listPopoverItem';
 
-export function matchProvisionFilter(x: IObject, filter: string): boolean {
+export function matchProvisionFilter(x: IMMELObject, filter: string): boolean {
   const provision = x as MMELProvision;
   return filter === '' || provision.condition.toLowerCase().includes(filter);
 }

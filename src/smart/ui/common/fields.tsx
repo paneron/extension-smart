@@ -119,20 +119,20 @@ export interface IUpdateInterface<T> {
   isVisible: boolean;
   Content: React.FC<{
     object: T;
+    setObject: (obj: T) => void;
     model?: EditorModel;
     table?: MMELTable;
-    setObject: (obj: T) => void;
     oldid: string;
   }>;
   object: T;
+  setObject: (obj: T) => void;
   model?: EditorModel;
   table?: MMELTable;
-  setObject: (obj: T) => void;
+  oldid: string;
   updateButtonLabel: string;
   updateButtonIcon: IconName;
   updateClicked: () => void;
   cancelClicked: () => void;
-  oldid: string;
 }
 
 export const NumberTextField: React.FC<INumField> = f => {

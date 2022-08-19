@@ -12,9 +12,9 @@ import {
   NormalComboBox,
   NormalTextField,
 } from '../common/fields';
-import { IObject } from '../common/listmanagement/listPopoverItem';
+import { IMMELObject } from '../common/listmanagement/listPopoverItem';
 
-export function matchNoteFilter(x: IObject, filter: string): boolean {
+export function matchNoteFilter(x: IMMELObject, filter: string): boolean {
   const note = x as MMELNote;
   return filter === '' || note.message.toLowerCase().includes(filter);
 }

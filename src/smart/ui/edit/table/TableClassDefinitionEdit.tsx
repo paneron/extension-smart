@@ -9,7 +9,7 @@ import {
 } from '../../common/fields';
 import ListManagePage from '../../common/listmanagement/listmanagement';
 
-type TableClassAttribute = {
+export type TableClassAttribute = {
   id: string;
   title: string;
   domain: string;

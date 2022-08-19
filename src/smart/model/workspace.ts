@@ -2,24 +2,25 @@
  * It is the data model of how data instances are stored and associated to the model
  */
 
+import { IObject } from '../ui/common/listmanagement/listPopoverItem';
 import { WSVERSION } from '../utils/constants';
 import { JSONContext, JSONContextType } from '../utils/repo/io';
 
-export interface SMARTDocument {
-  id: number;
+export interface SMARTDocument extends IObject {
   name: string;
-  attributes: Record<string, string>; // according to the definition of the data registry
+  // according to the definition of the data registry
+  attributes: Record<string, string>;
 }
 
 // docs[random number document id]
-export interface SMARTDocumentStore {
-  id: string; // id of data registry
-  docs: Record<number, SMARTDocument>;
+export interface SMARTDocumentStore extends IObject {
+  // id: string; // id of data registry
+  docs: Record<number, SMARTDocument | undefined>;
 }
 
 // store[registry id]
-export interface SMARTModelStore {
-  id: string; // namespace of the model
+export interface SMARTModelStore extends IObject {
+  // id: string; // namespace of the model
   store: Record<string, SMARTDocumentStore>;
 }
 

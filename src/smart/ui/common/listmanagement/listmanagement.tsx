@@ -6,6 +6,7 @@ import {
 } from '../fields';
 import ItemUpdatePane from './itemupdate';
 import ListViewPane from './listview';
+import { IObject } from '../../common/listmanagement/listPopoverItem';
 
 export enum ListManagePageType {
   VIEW = 'view',
@@ -13,7 +14,7 @@ export enum ListManagePageType {
   UPDATE = 'update',
 }
 
-const ListManagePage = <T extends Record<string, unknown>>(props: IManageHandler<T>) => {
+const ListManagePage = <T extends IObject | undefined>(props: IManageHandler<T>) => {
   const {
     filterName,
     itemName,

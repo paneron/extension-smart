@@ -3,8 +3,9 @@ import React from 'react';
 import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
 import { IUpdateInterface } from '../fields';
+import { IObject } from '../../common/listmanagement/listPopoverItem';
 
-const ItemUpdatePane = <T extends Record<string, unknown>>(props: IUpdateInterface<T>) => {
+const ItemUpdatePane = <T extends IObject | undefined>(props: IUpdateInterface<T>) => {
   const {
     Content,
     object,

@@ -3,13 +3,13 @@ import React from 'react';
 import { EditorModel } from '../../model/editormodel';
 import { measurementValidCheck } from '../../utils/measurement/BasicFunctions';
 import { ReferenceSelector } from '../common/fields';
-import { IObject } from '../common/listmanagement/listPopoverItem';
+import { IMMELObject } from '../common/listmanagement/listPopoverItem';
 
-export interface IMeasure extends IObject {
+export type IMeasure = IMMELObject & {
   measure: string;
 }
 
-export function matchMeasurementFilter(x: IObject, filter: string): boolean {
+export function matchMeasurementFilter(x: IMMELObject, filter: string): boolean {
   const m = x as IMeasure;
   return filter === '' || m.measure.toLowerCase().includes(filter);
 }

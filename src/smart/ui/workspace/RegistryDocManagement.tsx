@@ -10,6 +10,8 @@ import ListManagePage from '../common/listmanagement/listmanagement';
 import { SMARTDocument, SMARTDocumentStore } from '../../model/workspace';
 import DocumentEdit, { DocumentEditInterface } from './DocumentEditor';
 
+import { isNotUndefined } from '../../../lib/typeHelpers';
+
 const RegistryDocManagement: React.FC<{
   model: EditorModel;
   store: SMARTDocumentStore;
@@ -19,7 +21,7 @@ const RegistryDocManagement: React.FC<{
   workspace: Record<string, SMARTDocumentStore>;
 }> = function ({ model, store, regid, setStore, onBack, workspace }) {
   const initObj: DocumentEditInterface = {
-    id         : 0,
+    id         : '0',
     name       : 'New item',
     attributes : {},
     regid      : regid,
@@ -31,6 +33,7 @@ const RegistryDocManagement: React.FC<{
 
   function getDocListItems(filter: string): IListItem[] {
     return Object.values(store.docs)
+      .filter(isNotUndefined)
       .filter(x => matchFilter(x, filter))
       .map(x => ({ id : `${x.id}`, text : x.name }))
       .sort(itemSorterByText);
@@ -46,7 +49,7 @@ const RegistryDocManagement: React.FC<{
 
   function addDoc(doc: SMARTDocument): boolean {
     const id = genNewID(store.docs);
-    doc.id = id;
+    doc.id = '' + id;
     store.docs[id] = doc;
     setStore({ ...store });
     return true;
@@ -61,7 +64,12 @@ const RegistryDocManagement: React.FC<{
 
   function getDocById(sid: string): DocumentEditInterface {
     const id = parseInt(sid);
-    return { ...store.docs[id], regid } ?? { ...initObj };
+    const doc = store.docs[id];
+    if (isNotUndefined(doc)) {
+      return { ...doc, regid };
+    } else {
+      return { ...initObj };
+    }
   }
 
   const backButton: IAdditionalListButton | undefined =
@@ -105,7 +113,7 @@ const RegistryDocManagement: React.FC<{
   return <ListManagePage {...reghandler} />;
 };
 
-function genNewID(record: Record<number, SMARTDocument>): number {
+function genNewID(record: Record<number, SMARTDocument | undefined>): number {
   let id = 0;
   do {
     id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);

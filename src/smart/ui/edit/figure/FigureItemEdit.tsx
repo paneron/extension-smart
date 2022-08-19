@@ -15,7 +15,7 @@ const FigItemEditPage: React.FC<{
   object: MMELFigure;
   setObject: (obj: MMELFigure) => void;
 }> = ({ object: fig, setObject: setFig }) => {
-  const { requestFileFromFilesystem, useDecodedBlob, getBlob } =
+  const { requestFileFromFilesystem, getBlob } =
     useContext(DatasetContext);
 
   function loadImg() {
@@ -31,7 +31,8 @@ const FigItemEditPage: React.FC<{
         requestFileFromFilesystem,
         type           : FILE_TYPE.VIDEO,
         postProcessing : async function (x) {
-          if (getBlob && useDecodedBlob) {
+          // if (getBlob && useDecodedBlob) { // eslint: Will always return true
+          if (getBlob) {
             const blob = await getBlob(x);
             const base64 = Buffer.from(blob).toString('base64');
             setFig({ ...fig, data : base64 });

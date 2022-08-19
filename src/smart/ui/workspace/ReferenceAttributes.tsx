@@ -2,6 +2,8 @@ import React from 'react';
 import { SMARTDocumentStore } from '../../model/workspace';
 import { ReferenceSelector } from '../common/fields';
 
+import { isNotUndefined } from '../../../lib/typeHelpers';
+
 const ReferenceAttributes: React.FC<{
   value: string;
   title: string;
@@ -9,7 +11,9 @@ const ReferenceAttributes: React.FC<{
   store: SMARTDocumentStore;
   regtitle: string;
 }> = function ({ value, title, onChange, store, regtitle }) {
-  const options: string[] = Object.values(store.docs).map(d => d.name);
+  const options: string[] = Object.values(store.docs)
+    .filter(isNotUndefined)
+    .map(d => d.name);
 
   function update(x: number) {
     onChange(options[x]);

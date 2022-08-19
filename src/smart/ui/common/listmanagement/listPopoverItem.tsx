@@ -15,9 +15,11 @@ import { IListItem, IUpdateInterface, IViewListInterface } from '../fields';
 import ItemUpdatePane from './itemupdate';
 import ListViewPane from './listview';
 
-export type IObject = MMELObject & {
+export interface IObject {
   id: string;
-};
+}
+
+export type IMMELObject = MMELObject & IObject;
 
 export type ListSorter = 'number' | 'id' | 'text';
 
@@ -38,9 +40,9 @@ export interface PopListInterface<T> {
   getListItem?: (x: T) => IListItem;
   Content: React.FC<{
     object: T;
+    setObject: (obj: T) => void;
     model?: EditorModel;
     table?: MMELTable;
-    setObject: (obj: T) => void;
   }>;
   label: string;
   size?: number;
@@ -48,14 +50,14 @@ export interface PopListInterface<T> {
   sort?: ListSorter;
 }
 
-function defaultGetListItem(x: IObject): IListItem {
+function defaultGetListItem(x: IMMELObject): IListItem {
   return {
     id   : x.id,
     text : x.id,
   };
 }
 
-const ListWithPopoverItem = <T extends IObject>(props: PopListInterface<T>) => {
+const ListWithPopoverItem = <T extends IMMELObject>(props: PopListInterface<T>) => {
   const {
     items,
     setItems,

@@ -53,9 +53,9 @@ function getInitProvisions(
 ): Record<string, MMELProvision> {
   const initProvision: Record<string, MMELProvision> = {};
   for (const p of process.provision) {
-    if (model.provisions[p]) {
-      initProvision[p] = model.provisions[p];
-    }
+    // if (model.provisions[p]) { // eslint says it's always truthy
+    initProvision[p] = model.provisions[p];
+    // }
   }
   return initProvision;
 }
@@ -66,9 +66,9 @@ function getInitNotes(
 ): Record<string, MMELNote> {
   const initNotes: Record<string, MMELNote> = {};
   for (const n of process.notes) {
-    if (model.notes[n]) {
-      initNotes[n] = model.notes[n];
-    }
+    // if (model.notes[n]) { // eslint says it's always truthy
+    initNotes[n] = model.notes[n];
+    // }
   }
   return initNotes;
 }
@@ -79,9 +79,9 @@ function getInitLinks(
 ): Record<string, MMELLink> {
   const initLinks: Record<string, MMELLink> = {};
   for (const n of process.links) {
-    if (model.links[n]) {
-      initLinks[n] = model.links[n];
-    }
+    // if (model.links[n]) { // eslint says it's always truthy
+    initLinks[n] = model.links[n];
+    // }
   }
   return initLinks;
 }
@@ -491,7 +491,7 @@ const FullVersionEdit: React.FC<
   } = props;
 
   useEffect(() => {
-    setUndoListener(() => closeDialog && closeDialog());
+    setUndoListener(() => closeDialog?.());
     return () => {
       setUndoListener(undefined);
     };
