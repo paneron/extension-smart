@@ -1,4 +1,4 @@
-name: test
+name: build
 
 on:
   push:
@@ -14,7 +14,7 @@ on:
       - '**.nix'
       - 'flake.lock'
       - '.github/workflows/*.yml'
-      - '!.github/workflows/test.yml'
+      - '!.github/workflows/build.yml'
   pull_request:
     paths-ignore:
       - '/*.sh'
@@ -28,8 +28,8 @@ on:
       - 'flake.lock'
 
 jobs:
-  test:
-    name: Test
+  build:
+    name: Build
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -52,6 +52,8 @@ jobs:
 
       - run: yarn install
 
-      - run: yarn lint
+      - if: matrix.os == 'windows-latest'
+        run: yarn buildwin
 
-      - run: yarn test
+      - if: matrix.os != 'windows-latest'
+        run: yarn build

@@ -2,7 +2,16 @@
 
 ifdef::env-github[]
 image:https://github.com/paneron/extension-hls/actions/workflows/test.yml/badge.svg[
+  "Test Status",
+  link="https://github.com/paneron/extension-hls/actions"]
+image:https://github.com/paneron/extension-hls/actions/workflows/build.yml/badge.svg[
   "Build Status",
+  link="https://github.com/paneron/extension-hls/actions"]
+image:https://github.com/paneron/extension-hls/actions/workflows/audit.yml/badge.svg[
+  "Audit Status",
+  link="https://github.com/paneron/extension-hls/actions"]
+image:https://github.com/paneron/extension-hls/actions/workflows/release.yml/badge.svg[
+  "Release Status",
   link="https://github.com/paneron/extension-hls/actions"]
 image:https://img.shields.io/github/v/release/paneron/extension-hls?display_name=tag&include_prereleases&sort=semver[
   GitHub release (latest SemVer including pre-releases),
