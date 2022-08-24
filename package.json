@@ -21,6 +21,7 @@
     "lint": "eslint src/ --ext .ts,.tsx",
     "clean": "rimraf compiled/* dist/*",
     "test": "jest",
+    "test:watch": "jest --watch",
     "fix": "yarn run lint -- --fix"
   },
   "files": [
