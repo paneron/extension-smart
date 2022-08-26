@@ -1,35 +1,27 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "strict": true,
-    "noUnusedLocals": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noImplicitAny": true,
     "sourceMap": true,
     "inlineSources": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
-    "lib": [
-      "ES2021",
-      "DOM"
-    ],
     "newLine": "lf",
     "declaration": true,
     "jsx": "react",
-    "outDir": "compiled"
+    "outDir": "compiled",
+    "allowJs": false
   },
-  "include": [
-    "src",
-    "spec"
-  ],
   "exclude": [
+    "node_modules",
     "dist",
     "compiled",
-    "backup",
-    "*.js"
-  ]
+    "backup"
+  ],
+  "ts-node": {
+    "files": true
+  }
 }
