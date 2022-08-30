@@ -183,8 +183,7 @@ export const ProcessComponent: FC<NodeProps> = function ({ data }) {
           </Tooltip2>
         </div>
       )}
-      {callback.hasMapping !== undefined &&
-        callback.hasMapping(process.id) &&
+      { callback.hasMapping?.(process.id) &&
         callback.MappingList !== undefined && (
         <ViewMappingbutton
           modelType={callback.modelType}
