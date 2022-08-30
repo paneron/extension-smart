@@ -6,6 +6,7 @@
     "strict": true,
     "sourceMap": true,
     "inlineSources": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
