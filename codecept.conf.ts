@@ -10,7 +10,8 @@ setHeadlessWhen(process.env.HEADLESS);
 setCommonPlugins();
 
 export const config = {
-  tests   : './*_test.ts',
+  // tests   : '**/__tests__/**/*.[jt]s?(x), **/?(*.)+(spec|test).[tj]s?(x)',
+  tests   : './e2e_tests/**/*_test.[tj]s?(x)',
   output  : './test_outputs',
   helpers : {
     Playwright : {
