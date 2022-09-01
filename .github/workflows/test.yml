@@ -39,9 +39,15 @@ jobs:
         node: ['14.x', '16.x', '18.x']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
+
+      - uses: actions/checkout@v3
+        with:
+          repository: 'https://github.com/paneron/paneron'
+          fetch-depth: 1
+          ref: '1ab232b008ba9709c9a80512c0eceaeb525515bf'
 
       - uses: actions/setup-node@v2
         id: setup-node
