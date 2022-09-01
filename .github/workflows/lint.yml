@@ -1,4 +1,4 @@
-name: test
+name: lint
 
 on:
   push:
@@ -14,7 +14,7 @@ on:
       - '**.nix'
       - 'flake.lock'
       - '.github/workflows/*.yml'
-      - '!.github/workflows/test.yml'
+      - '!.github/workflows/lint.yml'
   pull_request:
     paths-ignore:
       - '/*.sh'
@@ -28,28 +28,21 @@ on:
       - 'flake.lock'
 
 jobs:
-  test:
-    name: Test
-    runs-on: ${{ matrix.os }}
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        node: ['14.x', '16.x', '18.x']
+        node: ['18.x']
 
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
-      - uses: actions/checkout@v3
-        with:
-          repository: 'https://github.com/paneron/paneron'
-          fetch-depth: 1
-          ref: '1ab232b008ba9709c9a80512c0eceaeb525515bf'
-
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         id: setup-node
         with:
           node-version: ${{ matrix.node }}
@@ -58,7 +51,4 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-
-      - run: yarn test
-
-      - run: yarn run test:e2e
+      - run: yarn lint
