@@ -15,7 +15,7 @@ export const config = {
   output  : './test_outputs',
   helpers : {
     Playwright : {
-      url     : 'http://localhost',
+      url     : './paneron/dist/main/main.js',
       show    : true,
       browser : 'electron'
     }
