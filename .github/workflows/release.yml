@@ -29,7 +29,7 @@ jobs:
           yarn version --new-version ${{ github.event.inputs.next_version }}
           git push
 
-      - run: yarn install
+      - run: yarn install --frozen-lockfile
 
       - run: yarn lint
 
