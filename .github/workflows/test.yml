@@ -36,7 +36,7 @@ jobs:
       - uses: GuillaumeFalourd/setup-rsync@v1
         if: matrix.os == 'windows-latest'
 
-      - name: Cache
+      - name: Restore cache
         id: build_cache
         uses: actions/cache@v3
         with:
@@ -46,8 +46,16 @@ jobs:
       - name: Restore cache to working directory
         shell: bash
         run: |
+          echo ls -la ${{ env.CACHE_DIR }}/
+          ls -la ${{ env.CACHE_DIR }}/
+          echo ls -la ${{ env.CACHE_DIR }}/*
+          ls -la ${{ env.CACHE_DIR }}/*
           for i in dist; do \
             rsync -a ${{ env.CACHE_DIR }}/"$i" "$i"; \
           done
+          echo ls -la .
+          ls -la .
+          echo ls -la dist
+          ls -la dist
 
       - run: yarn test
