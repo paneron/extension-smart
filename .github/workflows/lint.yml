@@ -1,35 +1,12 @@
 name: lint
 
 on:
-  push:
-    branches: [ main ]
-    paths-ignore:
-      - '/*.sh'
-      - '/.*'
-      - '/_*'
-      - '/vcpkg.txt'
-      - 'docs/**'
-      - '**.adoc'
-      - '**.md'
-      - '**.nix'
-      - 'flake.lock'
-      - '.github/workflows/*.yml'
-      - '!.github/workflows/lint.yml'
-  pull_request:
-    paths-ignore:
-      - '/*.sh'
-      - '/.*'
-      - '/_*'
-      - '/vcpkg.txt'
-      - 'docs/**'
-      - '**.adoc'
-      - '**.md'
-      - '**.nix'
-      - 'flake.lock'
+  workflow_call:
+  workflow_dispatch:
 
 jobs:
   lint:
-    name: Lint
+    name: Lint on NodeJS ${{ matrix.node }}
     runs-on: ubuntu-latest
 
     strategy:

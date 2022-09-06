@@ -1,31 +1,11 @@
 name: build
 
 on:
-  push:
-    branches: [ main ]
-    paths-ignore:
-      - '/*.sh'
-      - '/.*'
-      - '/_*'
-      - '/vcpkg.txt'
-      - 'docs/**'
-      - '**.adoc'
-      - '**.md'
-      - '**.nix'
-      - 'flake.lock'
-      - '.github/workflows/*.yml'
-      - '!.github/workflows/build.yml'
-  pull_request:
-    paths-ignore:
-      - '/*.sh'
-      - '/.*'
-      - '/_*'
-      - '/vcpkg.txt'
-      - 'docs/**'
-      - '**.adoc'
-      - '**.md'
-      - '**.nix'
-      - 'flake.lock'
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  CACHE_DIR: installs
 
 jobs:
   build:
@@ -39,11 +19,18 @@ jobs:
         node: ['14.x', '16.x', '18.x']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-node@v2
+      - name: Restore cache
+        id: build_cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHE_DIR }}
+          key: ${{ github.workflow }}-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('.github/workflows/**') }}
+
+      - uses: actions/setup-node@v3
         id: setup-node
         with:
           node-version: ${{ matrix.node }}
@@ -52,8 +39,29 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      - if: matrix.os == 'windows-latest'
-        run: yarn buildwin
+      - name: Build cache on ${{ matrix.os }}
+        if: steps.build_cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          if [[ "${{ matrix.os }}" == windows* ]]; then \
+            yarn buildwin; \
+          else \
+            yarn build; \
+          fi
 
-      - if: matrix.os != 'windows-latest'
-        run: yarn build
+      # For rsync support in Windows
+      - uses: GuillaumeFalourd/setup-rsync@v1
+        if: matrix.os == 'windows-latest'
+
+      - name: Save built artefacts to cache
+        if: steps.build_cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          # Due to GitHub's stupid cp, need to use rsync instead.
+          for i in dist; do \
+            rsync -a "$i" ${{ env.CACHE_DIR }}; \
+          done
+          echo ls -la ${{ env.CACHE_DIR }}
+          ls -la ${{ env.CACHE_DIR }}
+          echo ls -la ${{ env.CACHE_DIR }}/*
+          ls -la ${{ env.CACHE_DIR }}/*

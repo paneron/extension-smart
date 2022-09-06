@@ -1,31 +1,11 @@
 name: test
 
 on:
-  push:
-    branches: [ main ]
-    paths-ignore:
-      - '/*.sh'
-      - '/.*'
-      - '/_*'
-      - '/vcpkg.txt'
-      - 'docs/**'
-      - '**.adoc'
-      - '**.md'
-      - '**.nix'
-      - 'flake.lock'
-      - '.github/workflows/*.yml'
-      - '!.github/workflows/test.yml'
-  pull_request:
-    paths-ignore:
-      - '/*.sh'
-      - '/.*'
-      - '/_*'
-      - '/vcpkg.txt'
-      - 'docs/**'
-      - '**.adoc'
-      - '**.md'
-      - '**.nix'
-      - 'flake.lock'
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  CACHE_DIR: installs
 
 jobs:
   test:
@@ -43,12 +23,6 @@ jobs:
         with:
           fetch-depth: 1
 
-      - uses: actions/checkout@v3
-        with:
-          repository: 'https://github.com/paneron/paneron'
-          fetch-depth: 1
-          ref: '1ab232b008ba9709c9a80512c0eceaeb525515bf'
-
       - uses: actions/setup-node@v2
         id: setup-node
         with:
@@ -58,7 +32,22 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
+      # For rsync support in Windows
+      - uses: GuillaumeFalourd/setup-rsync@v1
+        if: matrix.os == 'windows-latest'
+
+      - name: Cache
+        id: build_cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHE_DIR }}
+          key: ${{ github.workflow }}-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('.github/workflows/**') }}
+
+      - name: Restore cache to working directory
+        shell: bash
+        run: |
+          for i in dist; do \
+            rsync -a ${{ env.CACHE_DIR }}/"$i" "$i"; \
+          done
 
       - run: yarn test
-
-      - run: yarn run test:e2e
