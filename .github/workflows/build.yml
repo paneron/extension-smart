@@ -38,6 +38,7 @@ jobs:
           cache-dependency-path: yarn.lock
 
       - run: yarn install --frozen-lockfile
+        if: steps.build_cache.outputs.cache-hit != 'true'
 
       - name: Build cache on ${{ matrix.os }}
         if: steps.build_cache.outputs.cache-hit != 'true'
@@ -51,7 +52,7 @@ jobs:
 
       # For rsync support in Windows
       - uses: GuillaumeFalourd/setup-rsync@v1
-        if: matrix.os == 'windows-latest'
+        if: startsWith(matrix.os, 'windows') && steps.build_cache.outputs.cache-hit != 'true'
 
       - name: Save built artefacts to cache
         if: steps.build_cache.outputs.cache-hit != 'true'
