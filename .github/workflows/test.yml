@@ -41,7 +41,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_DIR }}
-          key: ${{ github.workflow }}-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('.github/workflows/**') }}
+          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', 'tsconfig*.json', 'yarn.lock', '.github/workflows/build.yml') }}
 
       - name: Restore cache to working directory
         shell: bash
