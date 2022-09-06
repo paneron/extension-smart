@@ -54,8 +54,13 @@ jobs:
         shell: bash
         run: |
           pushd ${{ env.CACHE_DIR }}/paneron
-          yarn install
+          # Work around node js 17+ OpenSSL
+          if [[ ${{ matrix.node }} = 18* ]]; then \
+            export NODE_OPTIONS=--openssl-legacy-provider; \
+          fi
+          yarn install --frozen-lockfile
           yarn compile
+          unset NODE_OPTIONS # Unset otherwise GitHub action for Restore Cache would complain about "--openssl-legacy-provider is not allowed in NODE_OPTIONS"
           popd
 
       - run: yarn install --frozen-lockfile
