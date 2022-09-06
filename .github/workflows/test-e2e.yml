@@ -38,7 +38,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_DIR }}
-          key: ${{ github.workflow }}-${{ runner.os }}-${{ matrix.node }}-${{ matrix.paneron_ref }}-${{ hashFiles('.github/workflows/**') }}
+          key: build-${{ runner.os }}-${{ matrix.node }}-${{ matrix.paneron_ref }}-${{ hashFiles('.github/workflows/test-e2e.yml') }}
 
       - name: Check out Paneron repo
         uses: actions/checkout@v3
@@ -80,7 +80,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_DIR }}
-          key: ${{ github.workflow }}-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('.github/workflows/**') }}
+          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', 'tsconfig*.json', 'yarn.lock', '.github/workflows/build.yml') }}
 
       - name: Restore cache to working directory
         shell: bash
