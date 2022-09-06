@@ -60,6 +60,12 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
+      # For issue 'electron.launch: Process failed to launch'
+      # @see https://github.com/microsoft/playwright/issues/11932
+      - if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get install -y xvfb
+
       # For rsync support in Windows
       - uses: GuillaumeFalourd/setup-rsync@v1
         if: matrix.os == 'windows-latest'
@@ -87,3 +93,7 @@ jobs:
           ls -la dist
 
       - run: yarn run test:e2e
+        if: matrix.os != 'ubuntu-latest'
+
+      - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn run test:e2e
+        if: matrix.os == 'ubuntu-latest'
