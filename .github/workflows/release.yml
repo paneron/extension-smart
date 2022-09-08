@@ -54,9 +54,22 @@ jobs:
       - name: Restore cache to working directory
         shell: bash
         run: |
+          echo ls -la ${{ env.CACHE_DIR }}/
+          ls -la ${{ env.CACHE_DIR }}/
+          echo ls -la ${{ env.CACHE_DIR }}/*
+          ls -la ${{ env.CACHE_DIR }}/*
+          echo ls -la .
+          ls -la .
           for i in dist; do \
+            echo rsync -a ${{ env.CACHE_DIR }}/"$i" "$i"; \
             rsync -a ${{ env.CACHE_DIR }}/"$i" "$i"; \
           done
+          echo ls -la .
+          ls -la .
+          echo ls -la dist/
+          ls -la dist/
+          echo ls -la dist/*
+          ls -la dist/*
 
       - name: Create a new version
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.next_version != 'skip'
