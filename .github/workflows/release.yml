@@ -69,8 +69,8 @@ jobs:
           echo ls -la .
           ls -la .
           for i in dist; do \
-            echo rsync -a ${{ env.CACHE_DIR }}/"$i" "$i"; \
-            rsync -a ${{ env.CACHE_DIR }}/"$i" "$i"; \
+            echo rsync -a ${{ env.CACHE_DIR }}/"$i"/ "$i"; \
+            rsync -a ${{ env.CACHE_DIR }}/"$i"/ "$i"; \
           done
           echo ls -la .
           ls -la .
