@@ -2,11 +2,16 @@
 const { setHeadlessWhen, setCommonPlugins } = require('@codeceptjs/configure');
 const { bootstrap } = require('./codeceptjs_presettings.ts');
 
-// turn on headless mode when running with HEADLESS=true environment variable
-// HEADLESS=true npx codecept run
+/**
+ * Turn on headless mode when running with HEADLESS=true environment variable
+ *   $ HEADLESS=true npx codecept run
+ */
 setHeadlessWhen(process.env.HEADLESS);
 
-// enable all common plugins https://github.com/codeceptjs/configure#setcommonplugins
+/**
+ * Enable all common plugins:
+ * https://github.com/codeceptjs/configure#setcommonplugins
+ */
 setCommonPlugins();
 
 export const config = {
