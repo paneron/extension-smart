@@ -87,10 +87,23 @@ lint-fix:
 clean:
 	$(NPM) run clean
 
+.PHONY: test-all
+## Run all tests
+test-all: test test-e2e
+
 .PHONY: test
 ## Run tests
 test:
 	$(NPM) run test
+
+./paneron/dist/main/main.js:
+	git clone https://github.com/paneron/paneron
+	cd paneron && yarn install && yarn compile
+
+.PHONY: test-e2e
+## Run end-to-end tests
+test-e2e: ./paneron/dist/main/main.js
+	$(NPM) run test:e2e
 
 .PHONY: audit
 ## Run security audit for npm packages
