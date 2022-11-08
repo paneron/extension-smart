@@ -16,7 +16,11 @@
   },
   "dist_dir": "dist",
   "scripts": {
-    "build": "yarn run clean; mkdirp compiled ${npm_package_dist_dir} && tsc -p tsconfig.build.json && babel compiled --out-dir ${npm_package_dist_dir} && cp package.json ${npm_package_dist_dir}/ && rsync -a --include '*/' --include '*.d.ts' --include '*.js.map' --exclude '*' compiled/ ${npm_package_dist_dir}/",
+    "clean:build": "yarn run clean; yarn run build",
+    "diagnose": "tsc --diagnostics",
+    "typecheck": "tsc --noEmit",
+    "build:decl": "tsc --emitDeclarationOnly",
+    "build": "mkdirp compiled ${npm_package_dist_dir} && tsc -p tsconfig.build.json && babel compiled --out-dir ${npm_package_dist_dir} && cp package.json ${npm_package_dist_dir}/ && rsync -a --include '*/' --include '*.d.ts' --include '*.js.map' --exclude '*' compiled/ ${npm_package_dist_dir}/",
     "buildwin": "yarn run clean & mkdirp compiled %npm_package_dist_dir% & tsc -p tsconfig.build.json & xcopy /e /y compiled %npm_package_dist_dir% > nul & babel compiled --out-dir %npm_package_dist_dir% & copy package.json %npm_package_dist_dir% & md \"%appdata%\\Paneron\\plugins\\@riboseinc\\paneron-extension-hls\" & xcopy /e /y dist \"%appdata%\\Paneron\\plugins\\@riboseinc\\paneron-extension-hls\" > nul",
     "lint": "eslint src/ --ext .ts,.tsx",
     "clean": "rimraf compiled/* dist/*",
