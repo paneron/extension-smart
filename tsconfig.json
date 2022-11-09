@@ -4,8 +4,6 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "strict": true,
-    "sourceMap": true,
-    "inlineSources": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
@@ -13,7 +11,7 @@
     "newLine": "lf",
     "declaration": true,
     "jsx": "react",
-    "outDir": "compiled",
+    "outDir": "dist",
     "allowJs": false
   },
   "exclude": [
