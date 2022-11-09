@@ -46,13 +46,13 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ matrix.os }}" == windows* ]]; then \
-            yarn buildwin; \
+            yarn build-dist:win; \
           else \
-            yarn build; \
+            yarn build-dist; \
           fi
 
       # For rsync support in Windows
-      - uses: GuillaumeFalourd/setup-rsync@v1
+      - uses: GuillaumeFalourd/setup-rsync@v1.1
         if: startsWith(matrix.os, 'windows') && steps.build_cache.outputs.cache-hit != 'true'
 
       - name: Save built artefacts to cache

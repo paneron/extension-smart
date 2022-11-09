@@ -72,7 +72,7 @@ jobs:
           sudo apt-get install -y xvfb
 
       # For rsync support in Windows
-      - uses: GuillaumeFalourd/setup-rsync@v1
+      - uses: GuillaumeFalourd/setup-rsync@v1.1
         if: matrix.os == 'windows-latest'
 
       - name: Restore cache
