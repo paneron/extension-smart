@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json.schemastore.org/swcrc",
+  "module": {
+    "type": "commonjs"
+  },
+  "jsc": {
+    "externalHelpers": false,
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true,
+      "decorators": true
+    }
+  }
+}
