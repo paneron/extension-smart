@@ -99,6 +99,7 @@ export default {
   //   "node"
   // ],
 
+  extensionsToTreatAsEsm : ['.ts', '.tsx'],
   // A map from regular expressions to module names or to arrays of module
   // names that allow to stub out resources with a single module
   // moduleNameMapper: {},
@@ -182,6 +183,11 @@ export default {
   // testPathIgnorePatterns: [
   //   "/node_modules/"
   // ],
+  testPathIgnorePatterns : [
+    '/node_modules/',
+    '/dist/',
+    '/paneron/',
+  ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],
