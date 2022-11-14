@@ -63,6 +63,7 @@
     "@blueprintjs/icons": "4.10.1",
     "@blueprintjs/popover2": "1.10.1",
     "@blueprintjs/select": "^4.8.11",
+    "@emotion/eslint-plugin": "^11.10.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@react-three/drei": "^9.40.0",

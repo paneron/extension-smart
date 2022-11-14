@@ -117,10 +117,15 @@ var rules = {
   ],
   'no-empty-function' : 'off',
   'react/prop-types' : 'off',
+  'react/no-unknown-property' : ['error', { ignore : ['css'] }],
   '@typescript-eslint/no-empty-function' : 'off',
   '@typescript-eslint/no-non-null-asserted-nullish-coalescing' : 'warn',
   'no-unused-vars' : 'off',
-  '@typescript-eslint/no-unused-vars' : 'warn'
+  '@typescript-eslint/no-unused-vars' : 'warn',
+  '@emotion/jsx-import' : 'error',
+  '@emotion/no-vanilla' : 'error',
+  '@emotion/import-from-emotion' : 'error',
+  '@emotion/styled-import' : 'error',
 };
 
 module.exports = {
@@ -154,7 +159,7 @@ module.exports = {
     },
     {
       "files"   : ["spec/**"],
-      "plugins" : ["jest"],
+      "plugins" : ["jest", "@emotion"],
       "extends" : ["plugin:jest/recommended", "plugin:jest/style"],
       "rules"   : {
         "jest/prefer-expect-assertions" : "off",
