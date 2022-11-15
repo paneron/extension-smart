@@ -42,11 +42,36 @@ jobs:
           fetch-depth: 1
 
       - uses: actions/setup-node@v3
+        id: setup-node
         with:
           node-version: ${{ matrix.node }}
           registry-url: 'https://registry.npmjs.org'
 
-      - run: yarn install --frozen-lockfile
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+
+      # See: https:
+        # //github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/.npmrc', '**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
       # For rsync support in Windows
       - uses: GuillaumeFalourd/setup-rsync@v1.1
@@ -57,7 +82,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_DIR }}
-          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', 'tsconfig*.json', 'yarn.lock', '.github/workflows/build.yml') }}
+          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}
 
       - name: Restore cache to working directory
         shell: bash
@@ -83,11 +108,11 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.next_version != 'skip'
         shell: bash
         run: |
-          yarn version --new-version ${{ github.event.inputs.next_version }}
+          pnpm version --new-version ${{ github.event.inputs.next_version }}
           git push
 
       - name: Publish to npm
         run: |
-          yarn publish dist --access public
+          pnpm publish dist --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PANERON_CI_NPM_TOKEN }}

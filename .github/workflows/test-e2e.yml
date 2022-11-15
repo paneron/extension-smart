@@ -30,8 +30,28 @@ jobs:
         id: setup-node
         with:
           node-version: ${{ matrix.node }}
-          cache: yarn
-          cache-dependency-path: yarn.lock
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+
+      # See: https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/.npmrc', '**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Restore Paneron cache
         id: paneron_build_cache
@@ -58,12 +78,16 @@ jobs:
           if [[ ${{ matrix.node }} = 18* ]]; then \
             export NODE_OPTIONS=--openssl-legacy-provider; \
           fi
+          # NOTE: Switch to pnpm when Paneron switches to pnpm.
+          # pnpm install --frozen-lockfile --strict-peer-dependencies
+          # pnpm run compile
           yarn install --frozen-lockfile
           yarn compile
           unset NODE_OPTIONS # Unset otherwise GitHub action for Restore Cache would complain about "--openssl-legacy-provider is not allowed in NODE_OPTIONS"
           popd
 
-      - run: yarn install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
       # For issue 'electron.launch: Process failed to launch'
       # @see https://github.com/microsoft/playwright/issues/11932
@@ -76,11 +100,10 @@ jobs:
         if: matrix.os == 'windows-latest'
 
       - name: Restore cache
-        id: build_cache
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_DIR }}
-          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', 'tsconfig*.json', 'yarn.lock', '.github/workflows/build.yml') }}
+          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}
 
       - name: Restore cache to working directory
         shell: bash
@@ -97,8 +120,8 @@ jobs:
           echo ls -la dist
           ls -la dist
 
-      - run: yarn run test:e2e
+      - run: pnpm run test:e2e
         if: matrix.os != 'ubuntu-latest'
 
-      - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn run test:e2e
+      - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- pnpm run test:e2e
         if: matrix.os == 'ubuntu-latest'

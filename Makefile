@@ -56,7 +56,7 @@ show-help:
 	| more $(shell test $(shell uname) == Darwin && echo '--no-init --raw-control-chars')
 
 
-NPM := yarn
+NPM := pnpm
 
 .PHONY: all
 ## Install build dependencies and build assets using Dev environment
@@ -98,6 +98,7 @@ test:
 
 ./paneron/dist/main/main.js:
 	git clone https://github.com/paneron/paneron
+	git checkout 1ab232b008ba9709c9a80512c0eceaeb525515bf
 	cd paneron && yarn install && yarn compile
 
 .PHONY: test-e2e

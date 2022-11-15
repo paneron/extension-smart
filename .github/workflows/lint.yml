@@ -19,13 +19,30 @@ jobs:
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-node@v3
-        id: setup-node
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
         with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
-          cache-dependency-path: yarn.lock
+          version: 7
+          run_install: false
 
-      - run: yarn install --frozen-lockfile
+      # See: https:
+        # //github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
-      - run: yarn lint
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/.npmrc', '**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --strict-peer-dependencies
+
+      - run: pnpm run lint
