@@ -28,32 +28,56 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_DIR }}
-          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', 'tsconfig*.json', 'yarn.lock', '.github/workflows/build.yml') }}
+          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}
 
       - uses: actions/setup-node@v3
         if: steps.build_cache.outputs.cache-hit != 'true'
         id: setup-node
         with:
           node-version: ${{ matrix.node }}
-          cache: yarn
-          cache-dependency-path: yarn.lock
 
-      - run: yarn install --frozen-lockfile
+      - uses: pnpm/action-setup@v2
         if: steps.build_cache.outputs.cache-hit != 'true'
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+
+        # See: https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
+      - name: Get pnpm store directory
+        if: steps.build_cache.outputs.cache-hit != 'true'
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        if: steps.build_cache.outputs.cache-hit != 'true'
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/.npmrc', '**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        if: steps.build_cache.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile --strict-peer-dependencies
+
+      # For rsync support in Windows
+      - uses: GuillaumeFalourd/setup-rsync@v1.1
+        if: startsWith(matrix.os, 'windows') && steps.build_cache.outputs.cache-hit != 'true'
 
       - name: Build cache on ${{ matrix.os }}
         if: steps.build_cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
           if [[ "${{ matrix.os }}" == windows* ]]; then \
-            yarn build-dist:win; \
+            pnpm run build-dist:win; \
           else \
-            yarn build-dist; \
+            pnpm run build-dist; \
           fi
-
-      # For rsync support in Windows
-      - uses: GuillaumeFalourd/setup-rsync@v1.1
-        if: startsWith(matrix.os, 'windows') && steps.build_cache.outputs.cache-hit != 'true'
 
       - name: Save built artefacts to cache
         if: steps.build_cache.outputs.cache-hit != 'true'
