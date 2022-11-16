@@ -113,6 +113,6 @@ jobs:
 
       - name: Publish to npm
         run: |
-          pnpm publish dist --access public
+          pnpm publish dist --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PANERON_CI_NPM_TOKEN }}
