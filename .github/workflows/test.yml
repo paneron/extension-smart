@@ -6,6 +6,7 @@ on:
 
 env:
   CACHE_DIR: installs
+  CACHE_TEST_DIR: cache-test
 
 jobs:
   test:
@@ -23,12 +24,21 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Restore test cache
+        id: test_cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHE_TEST_DIR }}
+          key: tests-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml', '.github/workflows/test.yml') }}
+
       - uses: actions/setup-node@v3
+        if: steps.test_cache.outputs.cache-hit != 'true'
         id: setup-node
         with:
           node-version: ${{ matrix.node }}
 
       - uses: pnpm/action-setup@v2
+        if: steps.test_cache.outputs.cache-hit != 'true'
         name: Install pnpm
         id: pnpm-install
         with:
@@ -37,12 +47,14 @@ jobs:
 
       # See: https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
       - name: Get pnpm store directory
+        if: steps.test_cache.outputs.cache-hit != 'true'
         id: pnpm-cache
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@v3
+        if: steps.test_cache.outputs.cache-hit != 'true'
         name: Setup pnpm cache
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
@@ -51,19 +63,22 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
+        if: steps.test_cache.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
       # For rsync support in Windows
       - uses: GuillaumeFalourd/setup-rsync@v1.1
-        if: matrix.os == 'windows-latest'
+        if: ${{ startsWith(runner.os, 'windows') && steps.test_cache.outputs.cache-hit != 'true' }}
 
-      - name: Restore cache
+      - name: Restore build cache
+        if: steps.test_cache.outputs.cache-hit != 'true'
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_DIR }}
           key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}
 
-      - name: Restore cache to working directory
+      - name: Restore build cache to working directory
+        if: steps.test_cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
           echo ls -la ${{ env.CACHE_DIR }}/
@@ -78,4 +93,8 @@ jobs:
           echo ls -la dist
           ls -la dist
 
-      - run: pnpm run test
+      - if: steps.test_cache.outputs.cache-hit != 'true'
+        run: |
+          pnpm run test
+          mkdir -p ${{ env.CACHE_TEST_DIR }}
+          touch ${{ env.CACHE_TEST_DIR }}/pass
