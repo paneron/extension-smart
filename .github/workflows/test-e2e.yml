@@ -6,6 +6,7 @@ on:
 
 env:
   CACHE_DIR: installs
+  CACHE_TEST_DIR: cache-test-e2e
 
 jobs:
   test-e2e:
@@ -25,13 +26,22 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Restore test cache
+        id: test_cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHE_TEST_DIR }}
+          key: tests-e2e-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('e2e_tests/**', 'src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml', '.github/workflows/test-e2e.yml') }}
+
       - name: Set up Node JS
+        if: steps.test_cache.outputs.cache-hit != 'true'
         uses: actions/setup-node@v3
         id: setup-node
         with:
           node-version: ${{ matrix.node }}
 
       - uses: pnpm/action-setup@v2
+        if: steps.test_cache.outputs.cache-hit != 'true'
         name: Install pnpm
         id: pnpm-install
         with:
@@ -40,12 +50,14 @@ jobs:
 
       # See: https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
       - name: Get pnpm store directory
+        if: steps.test_cache.outputs.cache-hit != 'true'
         id: pnpm-cache
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@v3
+        if: steps.test_cache.outputs.cache-hit != 'true'
         name: Setup pnpm cache
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
@@ -54,6 +66,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Restore Paneron cache
+        if: steps.test_cache.outputs.cache-hit != 'true'
         id: paneron_build_cache
         uses: actions/cache@v3
         with:
@@ -62,7 +75,7 @@ jobs:
 
       - name: Check out Paneron repo
         uses: actions/checkout@v3
-        if: steps.paneron_build_cache.outputs.cache-hit != 'true'
+        if: ${{ steps.paneron_build_cache.outputs.cache-hit != 'true' && steps.test_cache.outputs.cache-hit != 'true' }}
         with:
           repository: 'paneron/paneron'
           fetch-depth: 1
@@ -70,7 +83,7 @@ jobs:
           ref: ${{ matrix.paneron_ref }}
 
       - name: Build Paneron cache
-        if: steps.paneron_build_cache.outputs.cache-hit != 'true'
+        if: ${{ steps.paneron_build_cache.outputs.cache-hit != 'true' && steps.test_cache.outputs.cache-hit != 'true' }}
         shell: bash
         run: |
           pushd ${{ env.CACHE_DIR }}/paneron
@@ -87,25 +100,28 @@ jobs:
           popd
 
       - name: Install dependencies
+        if: steps.test_cache.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
       # For issue 'electron.launch: Process failed to launch'
       # @see https://github.com/microsoft/playwright/issues/11932
-      - if: matrix.os == 'ubuntu-latest'
+      - if: ${{ steps.test_cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'linux') }}
         run: |
           sudo apt-get install -y xvfb
 
       # For rsync support in Windows
       - uses: GuillaumeFalourd/setup-rsync@v1.1
-        if: matrix.os == 'windows-latest'
+        if: ${{ startsWith(runner.os, 'windows') && steps.test_cache.outputs.cache-hit != 'true' }}
 
-      - name: Restore cache
+      - name: Restore build cache
+        if: steps.test_cache.outputs.cache-hit != 'true'
         uses: actions/cache@v2
         with:
           path: ${{ env.CACHE_DIR }}
           key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}
 
       - name: Restore cache to working directory
+        if: steps.test_cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
           echo ls -la ${{ env.CACHE_DIR }}/
@@ -120,8 +136,14 @@ jobs:
           echo ls -la dist
           ls -la dist
 
-      - run: pnpm run test:e2e
-        if: matrix.os != 'ubuntu-latest'
+      - if: ${{ steps.test_cache.outputs.cache-hit != 'true' && ! startsWith(runner.os, 'linux') }}
+        run: |
+          pnpm run test:e2e
+          mkdir -p ${{ env.CACHE_TEST_DIR }}
+          touch ${{ env.CACHE_TEST_DIR }}/pass
 
-      - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- pnpm run test:e2e
-        if: matrix.os == 'ubuntu-latest'
+      - if: ${{ steps.test_cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'linux') }}
+        run: |
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- pnpm run test:e2e
+          mkdir -p ${{ env.CACHE_TEST_DIR }}
+          touch ${{ env.CACHE_TEST_DIR }}/pass

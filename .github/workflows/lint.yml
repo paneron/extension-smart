@@ -4,6 +4,9 @@ on:
   workflow_call:
   workflow_dispatch:
 
+env:
+  CACHE_TEST_DIR: cache-lint
+
 jobs:
   lint:
     name: Lint on NodeJS ${{ matrix.node }}
@@ -19,7 +22,15 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Restore test cache
+        id: test_cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHE_TEST_DIR }}
+          key: lint-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('**/*eslintrc*', '**/.*eslintrc*', 'src/**', '**/pnpm-lock.yaml') }}
+
       - uses: pnpm/action-setup@v2
+        if: steps.test_cache.outputs.cache-hit != 'true'
         name: Install pnpm
         id: pnpm-install
         with:
@@ -29,12 +40,14 @@ jobs:
       # See: https:
         # //github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
       - name: Get pnpm store directory
+        if: steps.test_cache.outputs.cache-hit != 'true'
         id: pnpm-cache
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@v3
+        if: steps.test_cache.outputs.cache-hit != 'true'
         name: Setup pnpm cache
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
@@ -43,6 +56,11 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
+        if: steps.test_cache.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
-      - run: pnpm run lint
+      - if: steps.test_cache.outputs.cache-hit != 'true'
+        run: |
+          pnpm run lint
+          mkdir -p ${{ env.CACHE_TEST_DIR }}
+          touch ${{ env.CACHE_TEST_DIR }}/pass
