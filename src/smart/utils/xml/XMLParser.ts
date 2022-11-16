@@ -95,6 +95,7 @@ function parseTokens(token: XMLToken[], pos: number, elm: XMLElement): number {
   throw new Error('Unexpected end of tokens');
 }
 
+// TODO: use an XML parser?
 function parseStartTagContents(t: string): XMLElement {
   const parts = t.split(/\s+/);
   if (parts.length > 0) {
@@ -104,15 +105,13 @@ function parseStartTagContents(t: string): XMLElement {
       // image content is ignored at the moment
       parts.splice(0, 1);
       for (const x of parts) {
-        const part = x.split('=');
-        if (part.length > 2) {
-          throw new Error(
-            `Parse error. Too many = for an attribute declaration: ${x}`
-          );
-        } else if (part.length === 2) {
-          elm.attributes[part[0]] = part[1].substring(1, part[1].length - 1);
-        } else if (part.length === 1) {
-          elm.attributes[part[0]] = '';
+        const eqlParts = x.split('=');
+        if (eqlParts.length > 2) {
+          elm.attributes[eqlParts[0]] = eqlParts.slice(1).join('=').slice(1, -1);
+        } else if (eqlParts.length === 2) {
+          elm.attributes[eqlParts[0]] = eqlParts[1].substring(1, eqlParts[1].length - 1);
+        } else if (eqlParts.length === 1) {
+          elm.attributes[eqlParts[0]] = '';
         } else {
           throw new Error(`Empty attribute is not filtered. ${x}`);
         }
