@@ -108,6 +108,9 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.next_version != 'skip' }}
         shell: bash
         run: |
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+
           pnpm version --new-version ${{ github.event.inputs.next_version }}
           git push
 
