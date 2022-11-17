@@ -24,12 +24,18 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Calculate a fragment of cache key
+        id: cache-key
+        run: |
+          echo "fragment=$(< package.json command grep '"test"' | command sha256sum | command head -c8)" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Restore test cache
         id: test_cache
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_TEST_DIR }}
-          key: tests-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml', '.github/workflows/test.yml') }}
+          key: tests-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml', '.github/workflows/test.yml') }}-${{ steps.cache-key.outputs.fragment }}
 
       - uses: actions/setup-node@v3
         if: steps.test_cache.outputs.cache-hit != 'true'

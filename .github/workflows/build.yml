@@ -23,12 +23,18 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Restore cache
+      - name: Calculate a fragment of cache key
+        id: cache-key
+        run: |
+          echo "fragment=$(< package.json command grep '"version"\|"name"\|"files"\|"main"\|"build' | command sha256sum | command head -c8)" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Restore build cache
         id: build_cache
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_DIR }}
-          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}
+          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}-${{ steps.cache-key.outputs.fragment }}
 
       - uses: actions/setup-node@v3
         if: steps.build_cache.outputs.cache-hit != 'true'

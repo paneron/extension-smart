@@ -26,12 +26,18 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Calculate a fragment of cache key
+        id: cache-key
+        run: |
+          echo "fragment=$(< package.json command grep '"test:e2e"' | command sha256sum | command head -c8)" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Restore test cache
         id: test_cache
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_TEST_DIR }}
-          key: tests-e2e-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('e2e_tests/**', 'src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml', '.github/workflows/test-e2e.yml') }}
+          key: tests-e2e-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('e2e_tests/**', 'src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml', '.github/workflows/test-e2e.yml') }}-${{ steps.cache-key.outputs.fragment }}
 
       - name: Set up Node JS
         if: steps.test_cache.outputs.cache-hit != 'true'
