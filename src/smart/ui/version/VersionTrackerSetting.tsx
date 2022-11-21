@@ -7,7 +7,7 @@ import { ModelWrapper } from '../../model/modelwrapper';
 import { FunModel } from '../../model/States';
 import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
 import { handleModelOpen } from '../../utils/IOFunctions';
-import { buildModelLinks } from '../../utils/ModelFunctions';
+import { buildModelLinks, Logger } from '../../utils/ModelFunctions';
 import {
   computeDiff,
   getDiffViewProps,
@@ -34,9 +34,9 @@ const VersionTrackerSettingPane: React.FC<{
   function setModelWrapper(m: ModelWrapper) {
     const newmeta = m.model.meta;
     if (newmeta.namespace !== meta.namespace) {
-      alert('Namespaces of the model for comparison do not match.');
+      Logger.error('Namespaces of the model for comparison do not match.');
     } else if (newmeta.edition === meta.edition) {
-      alert(
+      Logger.error(
         'Edition of the model for comparison is the same as the base model.'
       );
     } else {

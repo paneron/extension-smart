@@ -13,6 +13,9 @@ const MainExtension: React.FC<Record<never, never>> = function () {
   const [index, setIndex] = useState<RepoIndex | undefined>(undefined);
 
   Logger.log = logger.log;
+  Logger.error = logger.error;
+  Logger.debug = logger.debug;
+
   FocusStyleManager.onlyShowFocusOnTabs();
 
   const indexFile = useObjectData({ objectPaths : [repoIndexPath]});

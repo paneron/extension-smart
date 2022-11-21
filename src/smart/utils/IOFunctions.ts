@@ -109,7 +109,7 @@ function parseModel(props: {
   try {
     const model = textToMMEL(data);
     if (model.version !== MODELVERSION) {
-      alert(
+      Logger.error(
         `Warning: Model versions do not match.\nModel version of file: ${model.version}.\nExpected: ${MODELVERSION}.`
       );
       model.version = MODELVERSION;
@@ -186,7 +186,7 @@ export function handleWSOpen(props: {
       postProcessing : data => {
         const ws = JSON.parse(data) as SMARTWorkspace;
         if (ws.version !== WSVERSION) {
-          alert(
+          Logger.error(
             `Warning: Workspace versions do not match.\nWorkspace version of file: ${ws.version}.\nExpected: ${WSVERSION}.`
           );
           ws.version = WSVERSION;
@@ -213,7 +213,7 @@ export function handleMappingOpen(props: {
       postProcessing : data => {
         const mp = JSON.parse(data) as MapProfile;
         if (mp.version !== MAPVERSION) {
-          alert(
+          Logger.error(
             `Warning: Mapping versions do not match.\nMapping version of file: ${mp.version}.\nExpected: ${MAPVERSION}.`
           );
           mp.version = MAPVERSION;

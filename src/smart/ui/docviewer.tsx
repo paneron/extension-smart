@@ -8,6 +8,7 @@ import { MMELDocument } from '../model/document';
 import { LoadingScreen } from './common/Loading';
 import React from 'react';
 import { DOCVERSION } from '../utils/constants';
+import { Logger } from '../utils/ModelFunctions';
 
 const DocumentViewer: React.FC<{
   isVisible: boolean;
@@ -22,7 +23,7 @@ const DocumentViewer: React.FC<{
   });
   const doc = repoModelFile.value.data[repoPath] as MMELDocument;
   if (doc && doc.version !== DOCVERSION) {
-    alert(
+    Logger.error(
       `Warning: Document versions do not match.\nDocument version of file: ${doc.version}.\nExpected: ${DOCVERSION}.`
     );
     doc.version = DOCVERSION;

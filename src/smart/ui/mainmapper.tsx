@@ -58,7 +58,7 @@ import { multi_model_container } from '../../css/layout';
 import { vertical_line } from '../../css/components';
 import { findPageContainingElement } from '../utils/SearchFunctions';
 import { getDocumentMetaById } from '../utils/DocumentFunctions';
-import { getNamespace } from '../utils/ModelFunctions';
+import { getNamespace, Logger } from '../utils/ModelFunctions';
 import {
   COMMITMSG,
   getPathByNS,
@@ -152,7 +152,7 @@ const ModelMapper: React.FC<{
       } else {
         const doc = data as MMELDocument;
         if (doc && doc.version !== DOCVERSION) {
-          alert(
+          Logger.error(
             `Warning: Document versions do not match.\nDocument version of file: ${doc.version}.\nExpected: ${DOCVERSION}.`
           );
           doc.version = DOCVERSION;

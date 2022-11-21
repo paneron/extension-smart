@@ -20,7 +20,7 @@ import {
 import { MMELRepo, RepoIndex } from '../../model/repo';
 import { createNewSMARTWorkspace, SMARTWorkspace } from '../../model/workspace';
 import { MAPVERSION } from '../../utils/constants';
-import { getNamespace } from '../../utils/ModelFunctions';
+import { getNamespace, Logger } from '../../utils/ModelFunctions';
 import {
   getPathByNS,
   JSONContext,
@@ -96,7 +96,7 @@ const RepoItemLoadingView: React.FC<{
       if (mapData) {
         const mapPro = mapData as MapProfile;
         if (mapPro.version !== MAPVERSION) {
-          alert(
+          Logger.error(
             `Warning: Mapping versions do not match.\nMapping version of file: ${mapPro.version}.\nExpected: ${MAPVERSION}.`
           );
           mapPro.version = MAPVERSION;

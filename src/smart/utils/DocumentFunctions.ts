@@ -3,6 +3,7 @@ import { DocMapIndex, MMELDocument } from '../model/document';
 import { MappingType } from '../model/mapmodel';
 import { DOCVERSION } from './constants';
 import { createNewMMELDocument } from './EditorFactory';
+import { Logger } from './ModelFunctions';
 
 function addMetaField(doc: MMELDocument, id: string, value: string) {
   if (id === 'namespace') {
@@ -165,7 +166,7 @@ export function textToDoc(data: string): MMELDocument {
     }
   }
   if (doc.version !== DOCVERSION) {
-    alert(
+    Logger.error(
       `Warning: Document versions do not match.\nDocument version of file: ${doc.version}.\nExpected: ${DOCVERSION}.`
     );
     doc.version = DOCVERSION;

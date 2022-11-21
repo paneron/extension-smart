@@ -29,6 +29,7 @@ import TableEditPage from '../edit/table/TableEdit';
 import TermsEditPage from '../edit/TermEdit';
 import ViewProfileEditPage from '../edit/ViewProfileEdit';
 import { EditorAction } from '../../model/editor/state';
+import { Logger } from '../../utils/ModelFunctions';
 
 export enum SETTINGPAGE {
   METAPAGE = 'meta',
