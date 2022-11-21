@@ -119,7 +119,7 @@ const BasicSettingPane: React.FC<{
   const [page, setPage] = useState<SETTINGPAGE>(SETTINGPAGE.METAPAGE);
 
   const tabElements: JSX.Element[] = [];
-  for (const key of typeof tabs) {
+  for (const key of Object.keys(tabs)) {
     const props: TabProps = tabs[key as SETTINGPAGE];
     if (isTabProps(props)) {
       tabElements.push(
