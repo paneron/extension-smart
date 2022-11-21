@@ -80,7 +80,7 @@ export function MMELToSerializable(m: MMELModel): MMELJSON {
 export function JSONToMMEL(m: MMELJSON): MMELModel {
   if (m.version !== MODELVERSION) {
     alert(
-      `Warning: Model version of ${m.meta?.namespace} not matched\nModel version of the file:${m.version}`
+      `Warning: Model versions do not match.\nModel version of file: ${m.version}.\nExpected: ${MODELVERSION}.`
     );
     m.version = MODELVERSION;
   }

@@ -110,7 +110,7 @@ function parseModel(props: {
     const model = textToMMEL(data);
     if (model.version !== MODELVERSION) {
       alert(
-        `Warning: Model version not matched\nModel version of the file:${model.version}`
+        `Warning: Model versions do not match.\nModel version of file: ${model.version}.\nExpected: ${MODELVERSION}.`
       );
       model.version = MODELVERSION;
     }
@@ -187,7 +187,7 @@ export function handleWSOpen(props: {
         const ws = JSON.parse(data) as SMARTWorkspace;
         if (ws.version !== WSVERSION) {
           alert(
-            `Warning: Workspace version not matched\nWorkspace version of the file:${ws.version}`
+            `Warning: Workspace versions do not match.\nWorkspace version of file: ${ws.version}.\nExpected: ${WSVERSION}.`
           );
           ws.version = WSVERSION;
         }
@@ -214,7 +214,7 @@ export function handleMappingOpen(props: {
         const mp = JSON.parse(data) as MapProfile;
         if (mp.version !== MAPVERSION) {
           alert(
-            `Warning: Mapping version not matched\nMapping version of the file:${mp.version}`
+            `Warning: Mapping versions do not match.\nMapping version of file: ${mp.version}.\nExpected: ${MAPVERSION}.`
           );
           mp.version = MAPVERSION;
         }

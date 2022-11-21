@@ -97,7 +97,7 @@ const RepoItemLoadingView: React.FC<{
         const mapPro = mapData as MapProfile;
         if (mapPro.version !== MAPVERSION) {
           alert(
-            `Warning: Mapping version not matched\nMapping version of the file:${mapPro.version}`
+            `Warning: Mapping versions do not match.\nMapping version of file: ${mapPro.version}.\nExpected: ${MAPVERSION}.`
           );
           mapPro.version = MAPVERSION;
         }

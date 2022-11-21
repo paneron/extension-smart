@@ -34,10 +34,10 @@ const VersionTrackerSettingPane: React.FC<{
   function setModelWrapper(m: ModelWrapper) {
     const newmeta = m.model.meta;
     if (newmeta.namespace !== meta.namespace) {
-      alert('Namespace of the model for comparison not matched');
+      alert('Namespaces of the model for comparison do not match.');
     } else if (newmeta.edition === meta.edition) {
       alert(
-        'Edition of the model for comparison is the same as the base model'
+        'Edition of the model for comparison is the same as the base model.'
       );
     } else {
       if (viewCompare) {

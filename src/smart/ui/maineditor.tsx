@@ -242,7 +242,7 @@ const ModelEditor: React.FC<{
         const doc = data as MMELDocument;
         if (doc && doc.version !== DOCVERSION) {
           alert(
-            `Warning: Document version not matched\nDocument version of the file:${doc.version}`
+            `Warning: Document versions do not match.\nDocument version of file: ${doc.version}.\nExpected: ${DOCVERSION}.`
           );
           doc.version = DOCVERSION;
         }
