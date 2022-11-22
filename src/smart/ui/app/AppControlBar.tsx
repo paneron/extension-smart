@@ -4,7 +4,6 @@
 
 import { Classes, Colors, ControlGroup } from '@blueprintjs/core';
 import React from 'react';
-import { BSI_WHITE_TEXT } from '../../../resources/BSI_logo';
 
 const AppControlBar: React.FC<{
   children: React.ReactNode;
@@ -40,7 +39,6 @@ const AppControlBar: React.FC<{
           borderRadius   : '0 !important',
           letterSpacing  : '-0.05em',
         }}
-        dangerouslySetInnerHTML={{ __html : BSI_WHITE_TEXT }}
       />
       {children}
     </ControlGroup>
