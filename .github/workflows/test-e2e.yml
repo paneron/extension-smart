@@ -142,14 +142,14 @@ jobs:
           echo ls -la dist
           ls -la dist
 
-      - if: ${{ steps.test_cache.outputs.cache-hit != 'true' && ! startsWith(runner.os, 'linux') }}
-        run: |
-          pnpm run test:e2e
-          mkdir -p ${{ env.CACHE_TEST_DIR }}
-          touch ${{ env.CACHE_TEST_DIR }}/pass
+      - if: ${{ steps.test_cache.outputs.cache-hit != 'true' }}
+        uses: GabrielBB/xvfb-action@v1.6
+        with:
+          run: pnpm run test:e2e
+          # working-directory: ./ #optional
+          options: "-screen 0 1280x960x24"
 
-      - if: ${{ steps.test_cache.outputs.cache-hit != 'true' && startsWith(runner.os, 'linux') }}
+      - if: ${{ steps.test_cache.outputs.cache-hit != 'true' }}
         run: |
-          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- pnpm run test:e2e
           mkdir -p ${{ env.CACHE_TEST_DIR }}
           touch ${{ env.CACHE_TEST_DIR }}/pass
