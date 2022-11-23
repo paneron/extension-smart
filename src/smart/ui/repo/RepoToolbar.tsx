@@ -92,7 +92,7 @@ const RepoToolbar: React.FC<{
       >
         <Button>Translate</Button>
       </Popover2>
-      <Button onClick={showVersion}>Version</Button>
+      {/* <Button onClick={showVersion}>Version</Button> */}
       <Dialog
         isOpen={isAI}
         canEscapeKeyClose={false}
