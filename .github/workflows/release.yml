@@ -119,3 +119,7 @@ jobs:
           pnpm publish dist --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PANERON_CI_NPM_TOKEN }}
+
+  update-website:
+    needs: [publish]
+    uses: paneron/extensions.paneron.org/.github/workflows/deploy-master.yml@6e48b3662d4e611a7795764b7cab9a31cd0cda13
