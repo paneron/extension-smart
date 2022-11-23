@@ -16,7 +16,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [macos-latest, windows-latest] # XXX: Skipping Linux since e2e tests show tooling problems (#96)
         node: ['14.x', '16.x', '18.x']
         paneron_ref: ['1ab232b008ba9709c9a80512c0eceaeb525515bf']
 
