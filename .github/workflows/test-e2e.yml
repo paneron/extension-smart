@@ -7,6 +7,7 @@ on:
 env:
   CACHE_DIR: installs
   CACHE_TEST_DIR: cache-test-e2e
+  MAIN_PACKAGE_PATH: packages/legacy
 
 jobs:
   test-e2e:
@@ -27,10 +28,21 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Calculate build-cache key
+        # Because the exact same hashFiles invocation produces different
+        # results down the file
+        id: build-cache-key
+        run: |
+          if command -v shasum; then sum() { shasum -a 256 "$@"; } ; else sum() { sha256sum "$@"; }; fi
+          fragment=$(< package.json command grep 'version"\|"name"\|"files"\|"main"\|"build' | sum | command head -c8)
+          echo "key=build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('packages/**/src/**', '**/.npmrc', '**/tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}-${fragment}" | tee -a $GITHUB_OUTPUT
+        shell: bash
+
       - name: Calculate a fragment of cache key
         id: cache-key
         run: |
-          echo "fragment=$(< package.json command grep '"test:e2e"' | command sha256sum | command head -c8)" >> $GITHUB_OUTPUT
+          if command -v shasum; then sum() { shasum -a 256 "$@"; } ; else sum() { sha256sum "$@"; }; fi
+          echo "fragment=$(< package.json command grep '"test:e2e"' | sum | command head -c8)" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Restore test cache
@@ -38,7 +50,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_TEST_DIR }}
-          key: tests-e2e-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('e2e_tests/**', 'src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml', '.github/workflows/test-e2e.yml') }}-${{ steps.cache-key.outputs.fragment }}
+          key: tests-e2e-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('e2e_tests/**', 'packages/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml', '.github/workflows/test-e2e.yml') }}-${{ steps.cache-key.outputs.fragment }}
 
       - name: Set up Node JS
         if: steps.test_cache.outputs.cache-hit != 'true'
@@ -122,12 +134,12 @@ jobs:
 
       - name: Restore build cache
         if: steps.test_cache.outputs.cache-hit != 'true'
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_DIR }}
-          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}
+          key: ${{ steps.build-cache-key.outputs.key }}
 
-      - name: Restore cache to working directory
+      - name: Restore build cache to working directory
         if: steps.test_cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
@@ -136,17 +148,18 @@ jobs:
           echo ls -la ${{ env.CACHE_DIR }}/*
           ls -la ${{ env.CACHE_DIR }}/*
           for i in dist; do \
-            rsync -a ${{ env.CACHE_DIR }}/"$i" "$i"; \
+            echo rsync -a ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}/$i" "${MAIN_PACKAGE_PATH}/$i"; \
+            rsync -a ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}/$i" "${MAIN_PACKAGE_PATH}/$i"; \
           done
           echo ls -la .
           ls -la .
-          echo ls -la dist
-          ls -la dist
+          echo ls -la "${MAIN_PACKAGE_PATH}"/dist
+          ls -la "${MAIN_PACKAGE_PATH}"/dist
 
       - if: ${{ steps.test_cache.outputs.cache-hit != 'true' }}
         uses: GabrielBB/xvfb-action@v1.6
         with:
-          run: pnpm run test:e2e
+          run: pnpm run -r test:e2e
           # working-directory: ./ #optional
           options: "-screen 0 1280x960x24"
 

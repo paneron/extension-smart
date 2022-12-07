@@ -6,6 +6,7 @@ on:
 
 env:
   CACHE_DIR: installs
+  MAIN_PACKAGE_PATH: packages/legacy
 
 jobs:
   build:
@@ -23,10 +24,14 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Calculate a fragment of cache key
-        id: cache-key
+      - name: Calculate build-cache key
+        # Because the exact same hashFiles invocation produces different
+        # results down the file
+        id: build-cache-key
         run: |
-          echo "fragment=$(< package.json command grep '"version"\|"name"\|"files"\|"main"\|"build' | command sha256sum | command head -c8)" >> $GITHUB_OUTPUT
+          if command -v shasum; then sum() { shasum -a 256 "$@"; } ; else sum() { sha256sum "$@"; }; fi
+          fragment=$(< package.json command grep 'version"\|"name"\|"files"\|"main"\|"build' | sum | command head -c8)
+          echo "key=build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('packages/**/src/**', '**/.npmrc', '**/tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}-${fragment}" | tee -a $GITHUB_OUTPUT
         shell: bash
 
       - name: Restore build cache
@@ -34,7 +39,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_DIR }}
-          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}-${{ steps.cache-key.outputs.fragment }}
+          key: ${{ steps.build-cache-key.outputs.key }}
 
       - uses: actions/setup-node@v3
         if: steps.build_cache.outputs.cache-hit != 'true'
@@ -79,11 +84,7 @@ jobs:
         if: steps.build_cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
-          if [[ "${{ runner.os }}" == Windows ]]; then \
-            pnpm run build-dist:win; \
-          else \
-            pnpm run build-dist; \
-          fi
+          pnpm run -r build-dist
 
       - name: Save built artefacts to cache
         if: steps.build_cache.outputs.cache-hit != 'true'
@@ -91,9 +92,12 @@ jobs:
         run: |
           # Due to GitHub's stupid cp, need to use rsync instead.
           for i in dist; do \
-            rsync -a "$i" ${{ env.CACHE_DIR }}; \
+            mkdir -p ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}" ; \
+            ls -la "${MAIN_PACKAGE_PATH}/$i"; \
+            echo rsync -a "${MAIN_PACKAGE_PATH}/$i" ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}/$i"; \
+            rsync -a "${MAIN_PACKAGE_PATH}/$i" ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}/$i"; \
           done
           echo ls -la ${{ env.CACHE_DIR }}
           ls -la ${{ env.CACHE_DIR }}
-          echo ls -la ${{ env.CACHE_DIR }}/*
-          ls -la ${{ env.CACHE_DIR }}/*
+          echo ls -la ${{ env.CACHE_DIR }}/**
+          ls -la ${{ env.CACHE_DIR }}/**

@@ -21,6 +21,7 @@ on:
 
 env:
   CACHE_DIR: installs
+  MAIN_PACKAGE_PATH: packages/legacy
 
 jobs:
   tests:
@@ -82,7 +83,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_DIR }}
-          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('src/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}
+          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('packages/**', '**/.npmrc', '**/tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}
 
       - name: Restore cache to working directory
         shell: bash
@@ -94,15 +95,15 @@ jobs:
           echo ls -la .
           ls -la .
           for i in dist; do \
-            echo rsync -a ${{ env.CACHE_DIR }}/"$i"/ "$i"; \
-            rsync -a ${{ env.CACHE_DIR }}/"$i"/ "$i"; \
+            echo rsync -a ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}/$i" "${MAIN_PACKAGE_PATH}/$i"; \
+            rsync -a ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}/$i" "${MAIN_PACKAGE_PATH}/$i"; \
           done
           echo ls -la .
           ls -la .
-          echo ls -la dist/
-          ls -la dist/
-          echo ls -la dist/*
-          ls -la dist/*
+          echo ls -la "${MAIN_PACKAGE_PATH}"/dist
+          ls -la "${MAIN_PACKAGE_PATH}"/dist
+          echo ls -la "${MAIN_PACKAGE_PATH}"/dist/*
+          ls -la "${MAIN_PACKAGE_PATH}"/dist/*
 
       - name: Create a new version
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.next_version != 'skip' }}
@@ -111,11 +112,13 @@ jobs:
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
+          cd "${MAIN_PACKAGE_PATH}"
           pnpm version --new-version ${{ github.event.inputs.next_version }}
           git push
 
       - name: Publish to npm
         run: |
+          cd "${MAIN_PACKAGE_PATH}"
           pnpm publish dist --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PANERON_CI_NPM_TOKEN }}
