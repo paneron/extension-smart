@@ -109,7 +109,7 @@ test:
 .PHONY: test-e2e
 ## Run end-to-end tests
 test-e2e: ./paneron/dist/main/main.js
-	$(NPM) run test:e2e
+	$(NPM) run -r test:e2e
 
 .PHONY: audit
 ## Run security audit for npm packages
