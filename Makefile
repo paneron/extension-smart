@@ -72,6 +72,11 @@ prep:
 build:
 	$(NPM) run build
 
+.PHONY: dev
+## Start dev mode
+dev:
+	$(NPM) run dev
+
 .PHONY: lint
 ## Lint source files
 lint:
