@@ -1,3 +1,5 @@
+var path = require('path');
+
 var rules = {
   'quotes' : [
     'warn',
@@ -141,7 +143,7 @@ module.exports = {
   ],
   "parser"        : "@typescript-eslint/parser",
   "parserOptions" : {
-    project : "./tsconfig.json",
+    project : path.join(__dirname, "tsconfig.json"),
   },
   "settings" : {
     react : {
