@@ -3,7 +3,7 @@ import { EditorApproval, EditorRegistry } from '../../../model/editormodel';
 import {
   MMELReference,
   MMELRole,
-} from '../../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { ApprovalRecordList, ReferenceList } from './ComponentList';
 import {
   ActorDescription,

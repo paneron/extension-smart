@@ -84,7 +84,7 @@ jobs:
         if: steps.build_cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
-          pnpm run -r build-dist
+          pnpm run -r dist
 
       - name: Save built artefacts to cache
         if: steps.build_cache.outputs.cache-hit != 'true'

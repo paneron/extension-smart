@@ -3,7 +3,7 @@ import {
   BINARY_TYPE,
   BINARY_TYPES,
   MMELFigure,
-} from '../../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { NormalComboBox, NormalTextField } from '../../common/fields';
 import { useContext } from 'react';
 import { FILE_TYPE, handleFileOpen } from '../../../utils/IOFunctions';

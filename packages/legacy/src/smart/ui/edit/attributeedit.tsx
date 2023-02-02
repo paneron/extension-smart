@@ -6,7 +6,7 @@ import {
   isEditorDataClass,
   isEditorRegistry,
 } from '../../model/editormodel';
-import { MMELDataAttribute } from '../../serialize/interface/datainterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   getReferenceDCTypeName,
   referenceSorter,

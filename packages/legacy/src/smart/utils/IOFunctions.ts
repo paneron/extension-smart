@@ -4,7 +4,7 @@ import { EditorModel } from '../model/editormodel';
 import { MapProfile } from '../model/mapmodel';
 import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
 import { SMARTWorkspace } from '../model/workspace';
-import { textToMMEL } from '../serialize/MMEL';
+import { textToMMEL } from '@paneron/libmmel';
 import {
   LoggerInterface,
   MAPVERSION,

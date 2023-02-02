@@ -1,6 +1,6 @@
 import React from 'react';
 import { EditorModel } from '../../../model/editormodel';
-import { MMELFigure } from '../../../serialize/interface/supportinterface';
+import { MMELFigure } from '@paneron/libmmel/interface/supportinterface';
 import { checkId, defaultItemSorter } from '../../../utils/ModelFunctions';
 import { createFig } from '../../../utils/EditorFactory';
 import { IListItem, IManageHandler } from '../../common/fields';

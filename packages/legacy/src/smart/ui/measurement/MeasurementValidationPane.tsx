@@ -9,7 +9,7 @@ import {
   MMELVariable,
   MMELView,
   VarType,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { measureTest } from '../../utils/measurement/Checker';
 import updateMeasurementView from './MeasurementResultFormatter';
 import updateParaView from './ParameterizedViewFormatter';

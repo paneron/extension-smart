@@ -5,7 +5,7 @@ import {
   ItemRenderer,
   Select,
 } from '@blueprintjs/select';
-import { MMELRole } from '../../../serialize/interface/supportinterface';
+import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
 import React from 'react';
 
 const RoleSelect = Select.ofType<MMELRole>();

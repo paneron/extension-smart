@@ -1,5 +1,5 @@
 import React from 'react';
-import { MMELEnum } from '../../serialize/interface/datainterface';
+import { MMELEnum } from '@paneron/libmmel/interface/datainterface';
 import { NormalComboBox } from '../common/fields';
 
 const EnumAttribute: React.FC<{

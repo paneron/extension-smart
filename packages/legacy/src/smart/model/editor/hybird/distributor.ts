@@ -7,13 +7,13 @@
  * A3. If an undo is needed, execute the 'compiled' actions appended to the undo action
  */
 
-import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
+import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   MMELLink,
   MMELNote,
   MMELProvision,
   MMELReference,
-} from '../../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import {
   EditorDataClass,
   EditorEGate,

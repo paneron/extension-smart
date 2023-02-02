@@ -1,9 +1,5 @@
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "composite": true,
-    "isolatedModules": true
-  },
   "include": [
     "src"
   ],
@@ -12,5 +8,10 @@
     "src/*.test.*",
     "spec/**/*.ts",
     "test/**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "../libmmel"
+    }
   ]
 }

@@ -18,8 +18,8 @@ import {
 } from '../model/editormodel';
 import { createModelHistory, HistoryItem } from '../model/history';
 import { LegendInterface } from '../model/States';
-import { DataType } from '../serialize/interface/baseinterface';
-import { isRegistry } from '../serialize/util/validation';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
+import { isRegistry } from '@paneron/libmmel/util/validation';
 import { SearchableNodeTypes } from './constants';
 import { isSearchableNodeTypes } from './typecheckings';
 

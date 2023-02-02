@@ -11,7 +11,7 @@ import {
   EditorSubprocess,
   EditorTimerEvent,
 } from '../model/editormodel';
-import { DataType } from '../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { capitalizeString, findUniqueID, trydefaultID } from './ModelFunctions';
 import { NewComponentTypes } from './constants';
 import {

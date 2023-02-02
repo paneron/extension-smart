@@ -1,4 +1,4 @@
-import { MMELComment } from '../../../serialize/interface/supportinterface';
+import { MMELComment } from '@paneron/libmmel/interface/supportinterface';
 import { EditorNode, EditorProcess } from '../../editormodel';
 import { UndoReducerInterface } from '../interface';
 import { ModelAction } from '../model';

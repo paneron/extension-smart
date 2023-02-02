@@ -8,7 +8,7 @@ import {
   EditorModel,
   EditorSubprocess,
 } from '../../model/editormodel';
-import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
+import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   checkId,
   getModelAllMeasures,

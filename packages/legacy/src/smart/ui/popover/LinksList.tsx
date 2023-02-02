@@ -1,7 +1,7 @@
 import { Intent, Menu, MenuItem } from '@blueprintjs/core';
 import React from 'react';
 import { MMELRepo, RepoIndex } from '../../model/repo';
-import { MMELLink } from '../../serialize/interface/supportinterface';
+import { MMELLink } from '@paneron/libmmel/interface/supportinterface';
 
 const LinksList: React.FC<{
   links: Set<string>;

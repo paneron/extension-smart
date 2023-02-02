@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { MMELProvision } from '../../../serialize/interface/supportinterface';
+import { MMELProvision } from '@paneron/libmmel/interface/supportinterface';
 import { refProvisionReplace } from '../../../utils/handler/cascadeModelHandler';
 import { UndoReducerInterface } from '../interface';
 

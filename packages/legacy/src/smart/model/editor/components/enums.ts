@@ -1,4 +1,4 @@
-import { MMELEnum } from '../../../serialize/interface/datainterface';
+import { MMELEnum } from '@paneron/libmmel/interface/datainterface';
 import { EditorNode, isEditorDataClass } from '../../editormodel';
 import { UndoReducerInterface } from '../interface';
 import { ModelAction } from '../model';

@@ -1,13 +1,13 @@
-import { DataType } from '../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELDataAttribute,
   MMELEnum,
   MMELEnumValue,
-} from '../serialize/interface/datainterface';
+} from '@paneron/libmmel/interface/datainterface';
 import {
   MMELEdge,
   MMELSubprocessComponent,
-} from '../serialize/interface/flowcontrolinterface';
+} from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   MMELFigure,
   MMELMetadata,
@@ -21,7 +21,7 @@ import {
   MMELVariable,
   MMELView,
   VarType,
-} from '../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import {
   EditorApproval,
   EditorDataClass,

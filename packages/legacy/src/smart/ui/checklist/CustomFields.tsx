@@ -2,11 +2,11 @@ import { Checkbox } from '@blueprintjs/core';
 import React from 'react';
 import { mgdLabel } from '../../../css/form';
 import { ChecklistPackage, getCheckListId } from '../../model/checklist';
-import { MMELDataAttribute } from '../../serialize/interface/datainterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   MMELProvision,
   MMELReference,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { DescribeProvision } from '../common/description/ComponentDescription';
 import { DescribeAttribute } from '../common/description/data';
 import ChecklistAttribute from './AttributeField';

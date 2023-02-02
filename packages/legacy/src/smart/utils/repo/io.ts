@@ -18,21 +18,21 @@ import {
   JSONRegistry,
   MMELJSON,
 } from '../../model/json';
-import { DataType, MMELNode } from '../../serialize/interface/baseinterface';
+import { DataType, MMELNode } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELDataAttribute,
   MMELDataClass,
-} from '../../serialize/interface/datainterface';
-import { MMELModel } from '../../serialize/interface/model';
+} from '@paneron/libmmel/interface/datainterface';
+import { MMELModel } from '@paneron/libmmel/interface/model';
 import {
   MMELApproval,
   MMELProcess,
-} from '../../serialize/interface/processinterface';
+} from '@paneron/libmmel/interface/processinterface';
 import {
   MMELComment,
   MMELNote,
   MMELProvision,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { MODELVERSION } from '../constants';
 import { createMetaData } from '../EditorFactory';
 import * as Logger from '../../../lib/logger';

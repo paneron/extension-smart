@@ -3,6 +3,9 @@
 /dist
 .vs
 
+*.d.ts
+*.d.ts.map
+
 .pnpm-store/
 
 # Created by https://www.toptal.com/developers/gitignore/api/osx,vim,linux,emacs,eclipse,windows,textmate,webstorm,sublimetext,intellij+all,visualstudiocode,node,yarn

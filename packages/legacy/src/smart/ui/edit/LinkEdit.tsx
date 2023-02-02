@@ -4,7 +4,7 @@ import {
   LINK_TYPE,
   LINK_TYPES,
   MMELLink,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { NormalComboBox, NormalTextField } from '../common/fields';
 import { IMMELObject } from '../common/listmanagement/listPopoverItem';
 

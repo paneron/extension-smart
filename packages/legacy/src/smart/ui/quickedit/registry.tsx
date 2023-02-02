@@ -12,8 +12,8 @@ import {
   EditorRegistry,
 } from '../../model/editormodel';
 import { RefTextSelection } from '../../model/selectionImport';
-import { MMELDataAttribute } from '../../serialize/interface/datainterface';
-import { MMELReference } from '../../serialize/interface/supportinterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import { DescriptionItem } from '../common/description/fields';
 import { NormalTextField } from '../common/fields';
 import { EditPageButtons } from '../edit/commons';

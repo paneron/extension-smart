@@ -3,7 +3,9 @@
  * Not much error handling is implemented as the MMEL file structure is assumed to be correct.
  */
 
-import { isSpace } from '../../utils/ModelFunctions';
+function isSpace(x: string): boolean {
+  return /\s/.test(x);
+}
 
 /**
  *  Convert text to an array of tokens

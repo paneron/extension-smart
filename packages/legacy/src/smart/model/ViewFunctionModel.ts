@@ -1,12 +1,16 @@
 import { SerializedStyles } from '@emotion/react';
 import React from 'react';
-import { MMELDataAttribute } from '../serialize/interface/datainterface';
+import { textToMMEL } from '@paneron/libmmel';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   MMELProvision,
   MMELReference,
-} from '../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { EditorNode } from './editormodel';
 import { LegendInterface } from './States';
+
+
+console.log(textToMMEL);
 
 /**
  * For model viewer. The common interface for different functions.

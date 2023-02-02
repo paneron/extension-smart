@@ -84,12 +84,12 @@ import {
   getHighlightedSVGColorById,
   SearchResultStyles,
 } from '../utils/SearchFunctions';
-import { MMELRole } from '../serialize/interface/supportinterface';
+import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
 import ModelReferenceView from './editreference/ModelReferenceView';
 import DocumentReferenceView from './editreference/DocumentReferenceView';
 import { RefTextSelection } from '../model/selectionImport';
 import ImportFromSelectionButton from './popover/ImportFromSelectionButton';
-import { DataType } from '../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import EditorEditMenu from './menu/EditorEditMenu';
 import {
   COMMITMSG,

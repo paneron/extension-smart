@@ -1,6 +1,6 @@
 import { EditorNode, isEditorDataClass } from '../model/editormodel';
-import { DataType } from '../serialize/interface/baseinterface';
-import { MMELEnum } from '../serialize/interface/datainterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
+import { MMELEnum } from '@paneron/libmmel/interface/datainterface';
 import {
   BASICTYPES,
   DATATYPE,

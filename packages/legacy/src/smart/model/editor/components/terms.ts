@@ -1,4 +1,4 @@
-import { MMELTerm } from '../../../serialize/interface/supportinterface';
+import { MMELTerm } from '@paneron/libmmel/interface/supportinterface';
 import { UndoReducerInterface } from '../interface';
 import { ItemAction, useItems } from './itemTemplate';
 

@@ -8,10 +8,10 @@ import {
   MMELNote,
   MMELProvision,
   MMELReference,
-} from '../../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { EdgeList, ReferenceList } from './ComponentList';
 import { DescriptionItem, NonEmptyFieldDescription } from './fields';
-import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
+import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import MGDLabel from '../../../MGDComponents/MGDLabel';
 
 export const DescribeStart: React.FC = function () {

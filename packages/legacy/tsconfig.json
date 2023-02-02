@@ -25,6 +25,9 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
+      "@": ["src/plugin"],
+      "@/*": ["src/*"],
+      "@paneron/libmmel/*": ["../libmmel/src/*"]
     }
   },
   "include": [

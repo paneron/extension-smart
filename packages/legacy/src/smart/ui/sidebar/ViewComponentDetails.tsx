@@ -19,15 +19,15 @@ import {
   isEditorSignalEvent,
   isEditorTimerEvent,
 } from '../../model/editormodel';
-import { DataType } from '../../serialize/interface/baseinterface';
-import { MMELDataAttribute } from '../../serialize/interface/datainterface';
-import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { SelectableNodeTypes } from '../../utils/constants';
 import { DescribeApproval } from '../common/description/approval';
 import {

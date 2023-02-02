@@ -1,4 +1,4 @@
-import { MMELTable } from '../../../serialize/interface/supportinterface';
+import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 import { EditorNode, isEditorProcess } from '../../editormodel';
 import { UndoReducerInterface } from '../interface';
 import { ModelAction } from '../model';

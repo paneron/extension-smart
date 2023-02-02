@@ -1,7 +1,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
-import { MMELTable } from '../../../serialize/interface/supportinterface';
+import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 import {
   IListItem,
   IManageHandler,

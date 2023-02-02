@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { MMELLink } from '../../../serialize/interface/supportinterface';
+import { MMELLink } from '@paneron/libmmel/interface/supportinterface';
 import { UndoReducerInterface } from '../interface';
 
 interface RefCascadeAction {

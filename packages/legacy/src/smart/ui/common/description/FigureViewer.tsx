@@ -1,5 +1,5 @@
 import React from 'react';
-import { MMELFigure } from '../../../serialize/interface/supportinterface';
+import { MMELFigure } from '@paneron/libmmel/interface/supportinterface';
 import { DescriptionItem } from './fields';
 import MultimediaView from './Multimedia';
 

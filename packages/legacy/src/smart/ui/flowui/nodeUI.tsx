@@ -39,7 +39,7 @@ import NodeIDField from './NodeIDField';
 import {
   MMELFigure,
   MMELTable,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import NonTextReferenceList from '../popover/NonTextReferenceList';
 import TableViewer from '../common/description/TableViewer';
 import FigureViewer from '../common/description/FigureViewer';

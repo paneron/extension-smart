@@ -1,7 +1,7 @@
 import React from 'react';
 import { ModelAction } from '../../model/editor/model';
 import { EditorApproval, EditorModel } from '../../model/editormodel';
-import { DataType } from '../../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { EditAction } from '../../utils/constants';
 import { DialogSetterInterface } from '../dialog/EditorDialogs';
 import EditApprovalPage from '../edit/approvaledit';

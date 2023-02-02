@@ -1,4 +1,4 @@
-import { DataType } from '../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { DeletableNodeTypes } from './constants';
 
 export const DeleteConfirmMessgae: Record<DeletableNodeTypes, string> = {

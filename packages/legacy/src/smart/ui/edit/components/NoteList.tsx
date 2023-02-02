@@ -3,13 +3,13 @@ import React from 'react';
 import { useMemo } from 'react';
 import { EditorModel } from '../../../model/editormodel';
 import { RefTextSelection } from '../../../model/selectionImport';
-import { DataType } from '../../../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELNote,
   MMELReference,
   NOTE_TYPE,
   NOTE_TYPES,
-} from '../../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { createNote } from '../../../utils/EditorFactory';
 import {
   findUniqueID,

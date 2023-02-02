@@ -1,7 +1,7 @@
 import React from 'react';
 import { EditorDataClass, EditorModel } from '../../model/editormodel';
 import { SMARTDocumentStore } from '../../model/workspace';
-import { MMELDataAttribute } from '../../serialize/interface/datainterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   getModelAllRolesWithEmpty,
   getRegistryReference,

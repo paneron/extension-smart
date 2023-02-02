@@ -2,7 +2,7 @@
   "name": "@paneron/extension-hls",
   "version": "1.0.0-dev23",
   "description": "Paneron extension for SMART model editing",
-  "main": "plugin.js",
+  "main": "dist/plugin.js",
   "repository": "https://github.com/paneron/extension-hls",
   "author": {
     "name": "Ribose Inc.",
@@ -27,7 +27,7 @@
     "inject": "run-script-os",
     "inject:mac": "mkdirp $HOME/'Library/Application Support'/Paneron/plugins/${npm_package_name}; rsync -a ${npm_package_dist_dir}/ $HOME/'Library/Application Support'/Paneron/plugins/${npm_package_name}/",
     "inject:win32": "mkdirp \"%appdata%\\Paneron\\plugins\\@paneron\\extension-hls\" && xcopy /e /y %npm_package_dist_dir% \"%appdata%\\Paneron\\plugins\\@paneron\\extension-hls\" > nul",
-    "build-dist": "concurrently npm:build npm:build:decl",
+    "dist": "concurrently npm:build npm:build:decl",
     "build-inject": "pnpm run build && pnpm run inject",
     "build-typecheck": "concurrently npm:build npm:typecheck",
     "clean-build": "pnpm run clean; pnpm run build",
@@ -50,13 +50,7 @@
     "fix": "pnpm run lint --fix"
   },
   "files": [
-    "README.adoc",
-    "*.js",
-    "*.js.map",
-    "*.d.ts",
-    "**/*.js",
-    "**/*.js.map",
-    "**/*.d.ts"
+    "/dist"
   ],
   "resolutions": {
     "@types/react": "16.14.34",
@@ -70,6 +64,7 @@
     "@emotion/eslint-plugin": "^11.10.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@paneron/libmmel": "workspace:*",
     "@react-three/drei": "^7.27.5",
     "@react-three/fiber": "^7.0.29",
     "@riboseinc/paneron-extension-glossarist": "^2.0.7",

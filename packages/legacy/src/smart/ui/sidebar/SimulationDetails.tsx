@@ -9,15 +9,15 @@ import {
   isEditorTimerEvent,
 } from '../../model/editormodel';
 import React from 'react';
-import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
+import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import { Button, Text } from '@blueprintjs/core';
 import { MainFlowNodeTypes } from '../../utils/constants';
-import { DataType } from '../../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELNote,
   MMELProvision,
   MMELRole,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import {
   DescribeEGate,
   DescribeEnd,

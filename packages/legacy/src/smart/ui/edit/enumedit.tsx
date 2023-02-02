@@ -1,7 +1,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
-import { MMELEnum } from '../../serialize/interface/datainterface';
+import { MMELEnum } from '@paneron/libmmel/interface/datainterface';
 import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
 import { createEnum } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';

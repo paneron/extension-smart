@@ -49,8 +49,8 @@ import ChecklistConfigPane from './checklist/CheckListConfigPane';
 import {
   MMELProvision,
   MMELReference,
-} from '../serialize/interface/supportinterface';
-import { MMELDataAttribute } from '../serialize/interface/datainterface';
+} from '@paneron/libmmel/interface/supportinterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import SimulationPane from './sidebar/SimulationPane';
 import RegistrySummary from './summary/RegistrySummary';
 import ProvisionSettings from './summary/ProvisionSettings';

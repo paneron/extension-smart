@@ -6,14 +6,14 @@ import {
   EditorProcess,
   EditorRegistry,
 } from '../../model/editormodel';
-import { DataType } from '../../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELLink,
   MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import {
   checkId,
   getModelAllRegs,

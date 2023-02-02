@@ -2,7 +2,7 @@ import { Button } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { useMemo } from 'react';
-import { MMELTable } from '../../../serialize/interface/supportinterface';
+import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 import MMELTableRow from './TableRow';
 
 const EditTableView: React.FC<{

@@ -3,11 +3,11 @@ import React from 'react';
 import { useMemo } from 'react';
 import { EditorModel } from '../../../model/editormodel';
 import { RefTextSelection } from '../../../model/selectionImport';
-import { DataType } from '../../../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELProvision,
   MMELReference,
-} from '../../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { MODAILITYOPTIONS, ModalityType } from '../../../utils/constants';
 import { createProvision } from '../../../utils/EditorFactory';
 import {

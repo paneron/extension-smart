@@ -1,5 +1,5 @@
 import { MTreeNode } from '../../model/Measurement';
-import { isSpace } from '../ModelFunctions';
+import { isSpace } from '../parser_helpers';
 import {
   createMTreeNodeWithOperator,
   createMTreeNodeWithValue,

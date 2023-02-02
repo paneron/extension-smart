@@ -4,7 +4,7 @@ import {
   BINARY_TYPE,
   MMELFigure,
   MMELTable,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { isMMELTable } from '../../model/editormodel';
 
 const titles: Record<BINARY_TYPE, string> = {

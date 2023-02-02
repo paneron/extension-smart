@@ -14,7 +14,7 @@ import {
   EditorTimerEvent,
 } from '../../model/editormodel';
 import { RefTextSelection } from '../../model/selectionImport';
-import { DataType } from '../../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { QuickEditableNodeTypes } from '../../utils/constants';
 import { DialogSetterInterface } from '../dialog/EditorDialogs';
 import QuickEditApproval from '../quickedit/approval';

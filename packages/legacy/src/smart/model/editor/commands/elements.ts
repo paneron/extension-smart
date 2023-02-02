@@ -2,13 +2,13 @@
  * This file centralizes the commands related to node elements
  */
 
-import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
+import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   MMELLink,
   MMELNote,
   MMELProvision,
   MMELReference,
-} from '../../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import {
   EditorEGate,
   EditorModel,

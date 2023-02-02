@@ -1,4 +1,4 @@
-import { MMELFigure } from '../../../serialize/interface/supportinterface';
+import { MMELFigure } from '@paneron/libmmel/interface/supportinterface';
 import { EditorNode, isEditorProcess } from '../../editormodel';
 import { UndoReducerInterface } from '../interface';
 import { ModelAction } from '../model';

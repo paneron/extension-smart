@@ -2,7 +2,7 @@
  * This file centralizes the commands related to roles
  */
 
-import { MMELRole } from '../../../serialize/interface/supportinterface';
+import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
 import { ModelAction } from '../model';
 
 /**

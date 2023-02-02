@@ -1,5 +1,5 @@
 import React from 'react';
-import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
+import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import { NormalTextField } from '../../common/fields';
 
 const EdgeQuickEdit: React.FC<{

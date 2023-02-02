@@ -1,5 +1,5 @@
-import { DataType } from '../serialize/interface/baseinterface';
-import { MMELComment } from '../serialize/interface/supportinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
+import { MMELComment } from '@paneron/libmmel/interface/supportinterface';
 import { findUniqueID } from './ModelFunctions';
 
 export interface CommentInstance {

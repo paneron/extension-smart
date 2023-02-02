@@ -1,6 +1,6 @@
-import { DataType } from '../../../../serialize/interface/baseinterface';
-import { MMELSubprocess } from '../../../../serialize/interface/flowcontrolinterface';
-import { isRegistry } from '../../../../serialize/util/validation';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
+import { MMELSubprocess } from '@paneron/libmmel/interface/flowcontrolinterface';
+import { isRegistry } from '@paneron/libmmel/util/validation';
 import { createRegistry } from '../../../../utils/EditorFactory';
 import {
   fillRDCS,

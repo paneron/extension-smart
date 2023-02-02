@@ -24,7 +24,7 @@ import { EditPageButtons } from './commons';
 import {
   MMELReference,
   MMELRole,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { DescriptionItem } from '../common/description/fields';
 import RoleSelector from './components/RoleSelector';
 import RegistrySelector from './components/RegistrySelector';

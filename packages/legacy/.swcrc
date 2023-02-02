@@ -5,6 +5,12 @@
   },
   "jsc": {
     "externalHelpers": false,
+    "paths": {
+      "@paneron/*": [
+        "../*/src"
+      ]
+    },
+    "baseUrl": ".",
     "parser": {
       "syntax": "typescript",
       "tsx": true,

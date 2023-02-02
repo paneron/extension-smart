@@ -1,12 +1,12 @@
 import React from 'react';
 import { EditorRegistry } from '../../../model/editormodel';
-import { MMELDataAttribute } from '../../../serialize/interface/datainterface';
-import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   MMELNote,
   MMELProvision,
   MMELReference,
-} from '../../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { toRefSummary } from '../../../utils/ModelFunctions';
 import {
   DescribeEdge,

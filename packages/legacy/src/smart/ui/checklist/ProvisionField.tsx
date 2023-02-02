@@ -4,7 +4,7 @@ import React from 'react';
 import {
   MMELProvision,
   MMELReference,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { ReferenceList } from '../common/description/ComponentList';
 import { NonEmptyFieldDescription } from '../common/description/fields';
 import { CLDescriptionItem } from './CustomFields';

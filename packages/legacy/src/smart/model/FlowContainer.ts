@@ -5,7 +5,7 @@
  */
 
 import { XYPosition } from 'react-flow-renderer';
-import { MMELEdge } from '../serialize/interface/flowcontrolinterface';
+import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   EditorModel,
   EditorNode,
@@ -20,7 +20,7 @@ import {
   MMELLink,
   MMELRole,
   MMELTable,
-} from '../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { SerializedStyles } from '@emotion/react';
 import React from 'react';
 import { MMELRepo, RepoIndex } from './repo';

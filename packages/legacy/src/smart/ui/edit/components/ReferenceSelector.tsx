@@ -6,7 +6,7 @@ import {
   MultiSelect,
 } from '@blueprintjs/select';
 import React from 'react';
-import { MMELReference } from '../../../serialize/interface/supportinterface';
+import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import { toRefSummary } from '../../../utils/ModelFunctions';
 
 const ReferenceMultiSelect = MultiSelect.ofType<MMELReference>();

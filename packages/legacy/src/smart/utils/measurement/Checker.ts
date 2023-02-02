@@ -14,8 +14,8 @@ import {
   MTestReport,
 } from '../../model/Measurement';
 import { LegendInterface } from '../../model/States';
-import { MMELEdge } from '../../serialize/interface/flowcontrolinterface';
-import { MMELTable, VarType } from '../../serialize/interface/supportinterface';
+import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
+import { MMELTable, VarType } from '@paneron/libmmel/interface/supportinterface';
 import { buildEdgeConnections } from '../ModelFunctions';
 import { evaluateCondition, resolveMTNode } from './Evaluator';
 import { parseMeasurement } from './Parser';

@@ -1,4 +1,4 @@
-import { MMELEdge } from '../../../serialize/interface/flowcontrolinterface';
+import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import { EditorModel, isEditorEgate } from '../../editormodel';
 import { ModelAction } from '../model';
 import { HyEditAction } from './distributor';

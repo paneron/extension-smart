@@ -12,7 +12,7 @@ import {
   EditableNodeTypes,
   EditAction,
 } from '../../utils/constants';
-import { DataType } from '../../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import EditProcessPage from '../edit/processedit';
 import EditApprovalPage from '../edit/approvaledit';
 import EditEGatePage from '../edit/egateedit';

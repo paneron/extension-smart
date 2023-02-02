@@ -8,7 +8,7 @@ import {
 } from '@blueprintjs/core';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
-import { MMELView, VarType } from '../../serialize/interface/supportinterface';
+import { MMELView, VarType } from '@paneron/libmmel/interface/supportinterface';
 import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
 import { createView } from '../../utils/EditorFactory';
 import {

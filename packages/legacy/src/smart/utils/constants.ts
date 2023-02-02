@@ -1,7 +1,7 @@
 import { OpenFileDialogProps } from '@riboseinc/paneron-extension-kit/types/dialogs';
 import { ObjectDataset } from '@riboseinc/paneron-extension-kit/types/objects';
-import { DataType } from '../serialize/interface/baseinterface';
-import { VarType } from '../serialize/interface/supportinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
+import { VarType } from '@paneron/libmmel/interface/supportinterface';
 
 export const WSVERSION = 'v1.0.0-dev1';
 export const MAPVERSION = 'v1.0.0-dev1';

@@ -2,7 +2,7 @@ import { useReducer } from 'react';
 import {
   MMELEdge,
   MMELSubprocess,
-} from '../../../serialize/interface/flowcontrolinterface';
+} from '@paneron/libmmel/interface/flowcontrolinterface';
 import { createSubprocessComponent } from '../../../utils/EditorFactory';
 import {
   dataPageReplace,

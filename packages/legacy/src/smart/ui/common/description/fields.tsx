@@ -2,7 +2,7 @@ import React from 'react';
 import { mgdLabel } from '../../../../css/form';
 import { HistoryAction } from '../../../model/editor/history';
 import { HistoryItem } from '../../../model/history';
-import { MMELRole } from '../../../serialize/interface/supportinterface';
+import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
 
 interface Breadcrumb {
   label: JSX.Element;

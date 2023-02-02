@@ -47,7 +47,6 @@ import {
   toViewProfile as toViewProfileModel,
 } from './util/serailizeformater';
 import { validateModel } from './util/validation';
-import { MODELVERSION } from '../utils/constants';
 
 /**
  * the function to convert text to MMEL
@@ -61,12 +60,12 @@ export function textToMMEL(x: string): MMELModel {
 /**
  * the function to convert MMEL to text
  */
-export function MMELToText(model: MMELModel): string {
+export function MMELToText(model: MMELModel, modelVersion: string = 'undefined'): string {
   let out = '';
   if (model.root !== '') {
     out += 'root ' + model.root + '\n\n';
   }
-  out += 'version "' + MODELVERSION + '"\n\n';
+  out += 'version "' + modelVersion + '"\n\n';
   out += toMetaDataModel(model.meta) + '\n';
   for (const r in model.roles) {
     out += toRoleModel(model.roles[r]) + '\n';

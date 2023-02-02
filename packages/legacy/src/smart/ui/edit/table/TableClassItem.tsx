@@ -1,6 +1,6 @@
 import React from 'react';
-import { DataType } from '../../../serialize/interface/baseinterface';
-import { MMELTable } from '../../../serialize/interface/supportinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
+import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 import { NormalComboBox, NormalTextField } from '../../common/fields';
 
 export interface TableRowClass {

@@ -1,4 +1,4 @@
-import { MMELSubprocess } from '../../../../serialize/interface/flowcontrolinterface';
+import { MMELSubprocess } from '@paneron/libmmel/interface/flowcontrolinterface';
 import { fillRDCS } from '../../../../utils/ModelFunctions';
 import {
   EditorDataClass,

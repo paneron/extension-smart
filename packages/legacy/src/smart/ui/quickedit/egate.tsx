@@ -5,7 +5,7 @@ import {
   EditorModel,
   EditorSubprocess,
 } from '../../model/editormodel';
-import { DataType } from '../../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { EditAction } from '../../utils/constants';
 import { DialogSetterInterface } from '../dialog/EditorDialogs';
 import EditEGatePage from '../edit/egateedit';

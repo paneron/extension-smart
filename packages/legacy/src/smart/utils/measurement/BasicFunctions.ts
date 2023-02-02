@@ -1,5 +1,5 @@
 import { MTreeNode } from '../../model/Measurement';
-import { MMELVariable } from '../../serialize/interface/supportinterface';
+import { MMELVariable } from '@paneron/libmmel/interface/supportinterface';
 import {
   MBinaryOperators,
   MBinOperatorTypes,

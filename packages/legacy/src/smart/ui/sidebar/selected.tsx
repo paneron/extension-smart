@@ -12,11 +12,11 @@ import {
 } from '../../utils/constants';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import { Describe } from './ViewComponentDetails';
-import { MMELDataAttribute } from '../../serialize/interface/datainterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   MMELProvision,
   MMELReference,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import QuickEdit from './QuickEditComponents';
 import { RefTextSelection } from '../../model/selectionImport';
 import { Dialog } from '@blueprintjs/core';

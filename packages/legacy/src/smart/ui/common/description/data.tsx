@@ -1,7 +1,7 @@
 import React from 'react';
 import { EditorDataClass, EditorRegistry } from '../../../model/editormodel';
-import { MMELDataAttribute } from '../../../serialize/interface/datainterface';
-import { MMELReference } from '../../../serialize/interface/supportinterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import { AttributeList, ReferenceList } from './ComponentList';
 import { DescriptionItem, NonEmptyFieldDescription } from './fields';
 

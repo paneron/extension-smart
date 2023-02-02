@@ -5,7 +5,7 @@ import {
   MMELProvision,
   MMELReference,
   MMELRole,
-} from '../../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { ActorDescription, DescriptionItem } from './fields';
 import { MeasurementList, NotesList, ProvisionList } from './ComponentList';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { useMemo } from 'react';
 import { EditorModel } from '../../../model/editormodel';
 import { VarInputInterface } from '../../../model/Measurement';
-import { MMELVariable } from '../../../serialize/interface/supportinterface';
+import { MMELVariable } from '@paneron/libmmel/interface/supportinterface';
 import { NormalTextField, NormalComboBox } from '../../common/fields';
 
 function calOptions(

@@ -1,4 +1,4 @@
-import { MMELRole } from '../../../serialize/interface/supportinterface';
+import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
 import { RoleAttribute } from '../../../utils/handler/cascadeModelHandler';
 import {
   EditorNode,

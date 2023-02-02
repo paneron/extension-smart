@@ -9,12 +9,12 @@ import {
   createEditorModelWrapper,
   ModelWrapper,
 } from '../../model/modelwrapper';
-import { DataType } from '../../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELLink,
   MMELNote,
   MMELTextSection,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { detectModality } from '../../ui/edit/components/ProvisionList';
 import {
   createEdge,

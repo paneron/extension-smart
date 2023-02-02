@@ -5,7 +5,7 @@ import {
   MMELNote,
   NOTE_TYPE,
   NOTE_TYPES,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { getModelAllRefs } from '../../utils/ModelFunctions';
 import {
   MultiReferenceSelector,

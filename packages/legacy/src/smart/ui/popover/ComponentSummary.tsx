@@ -13,7 +13,7 @@ import {
   EditorTimerEvent,
   getEditorDataClassById,
 } from '../../model/editormodel';
-import { DataType } from '../../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { DescribableNodeTypes } from '../../utils/constants';
 import { DescribeDC, DescribeRegistry } from '../common/description/data';
 import ApprovalSummary from './components/ApprovalSummary';

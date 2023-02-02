@@ -1,7 +1,7 @@
 import React from 'react';
 import { CSSROOTVARIABLES } from '../../../css/root.css';
 import { InputableVarType, VarInputInterface } from '../../model/Measurement';
-import { VarType } from '../../serialize/interface/supportinterface';
+import { VarType } from '@paneron/libmmel/interface/supportinterface';
 import BooleanMeasureEdit from './fields/boolean';
 import TableComboBox from './fields/TableComboBox';
 import TextMeasureEdit from './fields/text';

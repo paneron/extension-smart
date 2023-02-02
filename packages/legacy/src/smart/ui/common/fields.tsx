@@ -21,7 +21,7 @@ import {
   shame__mystery_container,
   shame__mystery_container__column,
 } from '../../../css/shame';
-import { MMELTable } from '../../serialize/interface/supportinterface';
+import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 
 export interface IAdditionalListButton {
   text: string;

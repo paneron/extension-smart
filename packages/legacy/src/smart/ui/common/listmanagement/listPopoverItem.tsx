@@ -2,8 +2,8 @@ import { Dialog } from '@blueprintjs/core';
 import React, { useState } from 'react';
 import { dialogLayout } from '../../../../css/layout';
 import { EditorModel } from '../../../model/editormodel';
-import { MMELObject } from '../../../serialize/interface/baseinterface';
-import { MMELTable } from '../../../serialize/interface/supportinterface';
+import { MMELObject } from '@paneron/libmmel/interface/baseinterface';
+import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 import {
   checkId,
   defaultItemSorter,

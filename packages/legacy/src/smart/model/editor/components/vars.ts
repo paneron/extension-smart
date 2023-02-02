@@ -1,4 +1,4 @@
-import { MMELVariable } from '../../../serialize/interface/supportinterface';
+import { MMELVariable } from '@paneron/libmmel/interface/supportinterface';
 import { UndoReducerInterface } from '../interface';
 import { ModelAction } from '../model';
 import { ItemAction, useItems } from './itemTemplate';

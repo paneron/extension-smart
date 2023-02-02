@@ -7,16 +7,20 @@ import {
   isEditorDataClass,
   isEditorRegistry,
 } from '../model/editormodel';
-import { MMELObject } from '../serialize/interface/baseinterface';
+
+// test
+import { textToMMEL } from '@paneron/libmmel';
+
+import { MMELObject } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELEdge,
   MMELSubprocess,
-} from '../serialize/interface/flowcontrolinterface';
+} from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   MMELMetadata,
   MMELReference,
   MMELRole,
-} from '../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { IListItem } from '../ui/common/fields';
 
 const TypeReferenceHead = 'reference(';

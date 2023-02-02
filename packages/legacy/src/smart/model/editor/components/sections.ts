@@ -1,4 +1,4 @@
-import { MMELTextSection } from '../../../serialize/interface/supportinterface';
+import { MMELTextSection } from '@paneron/libmmel/interface/supportinterface';
 import { UndoReducerInterface } from '../interface';
 import { ItemAction, useItems } from './itemTemplate';
 

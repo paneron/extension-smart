@@ -1,4 +1,4 @@
-import { MMELView } from '../../../serialize/interface/supportinterface';
+import { MMELView } from '@paneron/libmmel/interface/supportinterface';
 import { UndoReducerInterface } from '../interface';
 import { ModelAction } from '../model';
 import { ItemAction, useItems } from './itemTemplate';

@@ -2,7 +2,7 @@ import React from 'react';
 import { NodeProps } from 'react-flow-renderer';
 import { HistoryItem, PageHistory } from './history';
 import { ModelWrapper } from './modelwrapper';
-import { DataType } from '../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { DataLinkEdge, NormalEdge, SelfLoopEdge } from '../ui/flowui/edgeUI';
 import {
   ApprovalComponent,

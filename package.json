@@ -2,7 +2,6 @@
   "name": "@paneron/smartytrams",
   "version": "0.0.1",
   "description": "MMEL, SMART, etc.",
-  "main": "plugin.js",
   "repository": "https://github.com/paneron/extension-hls",
   "author": {
     "name": "Ribose Inc.",
@@ -13,9 +12,11 @@
     "build": "pnpm run -r build",
     "clean": "pnpm run -r clean",
     "dev": "pnpm run -r dev",
+    "dist": "pnpm run -r dist",
     "fix": "pnpm run -r fix",
     "lint": "pnpm run -r lint",
-    "test": "pnpm run -r test"
+    "test": "pnpm run -r test",
+    "typecheck": "pnpm run -r typecheck"
   },
   "resolutions": {},
   "dependencies": {

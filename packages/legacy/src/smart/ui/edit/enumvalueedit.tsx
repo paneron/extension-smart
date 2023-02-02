@@ -2,7 +2,7 @@ import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { EditorModel } from '../../model/editormodel';
-import { MMELEnumValue } from '../../serialize/interface/datainterface';
+import { MMELEnumValue } from '@paneron/libmmel/interface/datainterface';
 import { createEnumValue } from '../../utils/EditorFactory';
 import { NormalTextField } from '../common/fields';
 import ListWithPopoverItem, {

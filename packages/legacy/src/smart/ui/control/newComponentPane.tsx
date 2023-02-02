@@ -3,7 +3,7 @@ import { mgdLabel } from '../../../css/form';
 import MGDComponentBar from '../../MGDComponents/MGDComponentBar';
 import MGDContainer from '../../MGDComponents/MGDContainer';
 import MGDProcessBox from '../../MGDComponents/MGDProcessBox';
-import { DataType } from '../../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   DragAndDropNewFormatType,
   NewComponentTypes,

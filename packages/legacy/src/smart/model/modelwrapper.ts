@@ -8,8 +8,8 @@
  */
 
 import { Elements } from 'react-flow-renderer';
-import { MMELNode } from '../serialize/interface/baseinterface';
-import { MMELModel } from '../serialize/interface/model';
+import { MMELNode } from '@paneron/libmmel/interface/baseinterface';
+import { MMELModel } from '@paneron/libmmel/interface/model';
 import {
   EditorDataClass,
   EditorModel,
@@ -26,12 +26,12 @@ import {
   MMELEdge,
   MMELSubprocess,
   MMELSubprocessComponent,
-} from '../serialize/interface/flowcontrolinterface';
+} from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   isDataClass,
   isProcess,
   isStartEvent,
-} from '../serialize/util/validation';
+} from '@paneron/libmmel/util/validation';
 import {
   createDataLinkContainer,
   createEdgeContainer,

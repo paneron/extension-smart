@@ -12,12 +12,12 @@ import {
   isEditorDataClass,
   isEditorProcess,
 } from '../../model/editormodel';
-import { DataType } from '../../serialize/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELNote,
   MMELProvision,
-} from '../../serialize/interface/supportinterface';
-import { isApproval } from '../../serialize/util/validation';
+} from '@paneron/libmmel/interface/supportinterface';
+import { isApproval } from '@paneron/libmmel/util/validation';
 import { setReplace } from '../ModelFunctions';
 
 export type RoleAttribute = 'actor' | 'approver';

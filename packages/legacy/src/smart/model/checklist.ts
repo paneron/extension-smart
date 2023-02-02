@@ -2,9 +2,9 @@
  * The data model for checklist
  */
 
-import { MMELProvision } from '../serialize/interface/supportinterface';
-import { MMELDataAttribute } from '../serialize/interface/datainterface';
-import { ModalityType } from '../utils/constants';
+import { MMELProvision } from '@paneron/libmmel/interface/supportinterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import { ModalityType } from '@/smart/utils/constants';
 import {
   EditorApproval,
   EditorDataClass,

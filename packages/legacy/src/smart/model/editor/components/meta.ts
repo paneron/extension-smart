@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { MMELMetadata } from '../../../serialize/interface/supportinterface';
+import { MMELMetadata } from '@paneron/libmmel/interface/supportinterface';
 import { UndoReducerInterface } from '../interface';
 
 interface EditAction {

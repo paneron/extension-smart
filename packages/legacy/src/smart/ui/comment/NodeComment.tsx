@@ -1,7 +1,7 @@
 import { Button } from '@blueprintjs/core';
 import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
-import { MMELComment } from '../../serialize/interface/supportinterface';
+import { MMELComment } from '@paneron/libmmel/interface/supportinterface';
 import { CommentInstance, materialComments } from '../../utils/Comments';
 import CommentContainer from './CommentContainer';
 

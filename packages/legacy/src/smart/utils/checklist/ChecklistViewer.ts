@@ -4,11 +4,11 @@ import { flow_node__highlighed } from '../../../css/visual';
 import { ChecklistPackage } from '../../model/checklist';
 import { EditorModel } from '../../model/editormodel';
 import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
-import { MMELDataAttribute } from '../../serialize/interface/datainterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   MMELProvision,
   MMELReference,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import CheckListAddon from '../../ui/checklist/CheckListAddon';
 
 const okcolor = 'lightgreen';

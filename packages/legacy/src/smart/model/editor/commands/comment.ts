@@ -2,7 +2,7 @@
  * This file centralizes the commands generated related to comment components
  */
 
-import { MMELComment } from '../../../serialize/interface/supportinterface';
+import { MMELComment } from '@paneron/libmmel/interface/supportinterface';
 import { ModelAction } from '../model';
 
 /**

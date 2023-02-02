@@ -1,7 +1,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { EditorAction } from '../../model/editor/state';
-import { MMELMetadata } from '../../serialize/interface/supportinterface';
+import { MMELMetadata } from '@paneron/libmmel/interface/supportinterface';
 import { DescriptionItem } from '../common/description/fields';
 import { NormalTextField } from '../common/fields';
 

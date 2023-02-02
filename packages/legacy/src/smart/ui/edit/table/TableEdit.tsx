@@ -1,6 +1,6 @@
 import React from 'react';
 import { EditorModel } from '../../../model/editormodel';
-import { MMELTable } from '../../../serialize/interface/supportinterface';
+import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 import { checkId, defaultItemSorter } from '../../../utils/ModelFunctions';
 import { createTable } from '../../../utils/EditorFactory';
 import { IListItem, IManageHandler } from '../../common/fields';

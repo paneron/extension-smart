@@ -5,7 +5,7 @@ import { EditorModel } from '../../model/editormodel';
 import {
   MMELVariable,
   VarType,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
 import { MEASUREMENTTYPES } from '../../utils/constants';
 import { createVariable } from '../../utils/EditorFactory';

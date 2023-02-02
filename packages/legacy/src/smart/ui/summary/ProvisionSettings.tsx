@@ -12,7 +12,7 @@ import {
   MMELProvision,
   MMELReference,
   MMELRole,
-} from '../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { MODAILITYOPTIONS, ModalityType } from '../../utils/constants';
 import { clauseSorter } from '../../utils/ModelFunctions';
 import { NormalComboBox } from '../common/fields';

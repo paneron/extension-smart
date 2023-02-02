@@ -6,7 +6,7 @@ import {
   MMELVariable,
   MMELView,
   VarType,
-} from '../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { EditorModel } from './editormodel';
 
 export interface MTreeNode {

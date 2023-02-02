@@ -9,12 +9,12 @@ import {
   isEditorProcess,
   isEditorRegistry,
 } from '../model/editormodel';
-import { DataType } from '../serialize/interface/baseinterface';
-import { MMELDataAttribute } from '../serialize/interface/datainterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   MMELEdge,
   MMELSubprocessComponent,
-} from '../serialize/interface/flowcontrolinterface';
+} from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   MMELFigure,
   MMELLink,
@@ -24,7 +24,7 @@ import {
   MMELRole,
   MMELTable,
   MMELVariable,
-} from '../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import {
   trydefaultID,
   getRegistryReference,

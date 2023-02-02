@@ -2,7 +2,7 @@
  * This file centralizes the commands generated related to registry and data class
  */
 
-import { MMELReference } from '../../../serialize/interface/supportinterface';
+import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import { EditorDataClass } from '../../editormodel';
 import { RegistryCombined } from '../components/element/registry';
 import { ModelAction } from '../model';

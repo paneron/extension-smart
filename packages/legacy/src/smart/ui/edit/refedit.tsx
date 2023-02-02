@@ -1,7 +1,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
-import { MMELReference } from '../../serialize/interface/supportinterface';
+import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import {
   checkId,
   referenceSorter,

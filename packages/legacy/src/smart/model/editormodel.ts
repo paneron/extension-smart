@@ -7,27 +7,27 @@ import {
   DataType,
   MMELNode,
   MMELObject,
-} from '../serialize/interface/baseinterface';
+} from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELDataAttribute,
   MMELDataClass,
   MMELEnum,
   MMELRegistry,
-} from '../serialize/interface/datainterface';
+} from '@paneron/libmmel/interface/datainterface';
 import {
   MMELEndEvent,
   MMELSignalCatchEvent,
   MMELStartEvent,
   MMELTimerEvent,
-} from '../serialize/interface/eventinterface';
+} from '@paneron/libmmel/interface/eventinterface';
 import {
   MMELEGate,
   MMELSubprocess,
-} from '../serialize/interface/flowcontrolinterface';
+} from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   MMELApproval,
   MMELProcess,
-} from '../serialize/interface/processinterface';
+} from '@paneron/libmmel/interface/processinterface';
 import {
   MMELComment,
   MMELFigure,
@@ -42,7 +42,7 @@ import {
   MMELTextSection,
   MMELVariable,
   MMELView,
-} from '../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import {
   isApproval,
   isDataClass,
@@ -54,7 +54,7 @@ import {
   isSignalEvent,
   isStartEvent,
   isTimerEvent,
-} from '../serialize/util/validation';
+} from '@paneron/libmmel/util/validation';
 
 export enum ModelType {
   EDIT = 'edit',

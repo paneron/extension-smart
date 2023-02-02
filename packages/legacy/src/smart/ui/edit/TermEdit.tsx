@@ -2,7 +2,7 @@ import { FormGroup } from '@blueprintjs/core';
 // import { LocalizedConceptForm } from '@riboseinc/paneron-extension-glossarist/classes/localizedConcept/LocalizedConceptForm';
 import React from 'react';
 import { EditorModel } from '../../model/editormodel';
-import { MMELTerm } from '../../serialize/interface/supportinterface';
+import { MMELTerm } from '@paneron/libmmel/interface/supportinterface';
 import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
 import { createTerm } from '../../utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '../common/fields';

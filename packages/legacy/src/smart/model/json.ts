@@ -6,9 +6,9 @@
  * So, there is a need to convert the JSON model to MMEL model (and vice versa)
  */
 
-import { DataType, MMELNode } from '../serialize/interface/baseinterface';
-import { MMELEnum } from '../serialize/interface/datainterface';
-import { MMELSubprocess } from '../serialize/interface/flowcontrolinterface';
+import { DataType, MMELNode } from '@paneron/libmmel/interface/baseinterface';
+import { MMELEnum } from '@paneron/libmmel/interface/datainterface';
+import { MMELSubprocess } from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   MMELFigure,
   MMELLink,
@@ -21,7 +21,7 @@ import {
   MMELVariable,
   MMELView,
   NOTE_TYPE,
-} from '../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { JSONContextType } from '../utils/repo/io';
 
 export interface MMELJSON {

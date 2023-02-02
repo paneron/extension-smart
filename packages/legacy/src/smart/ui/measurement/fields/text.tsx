@@ -3,7 +3,7 @@ import { VarInputInterface } from '../../../model/Measurement';
 import {
   MMELVariable,
   VarType,
-} from '../../../serialize/interface/supportinterface';
+} from '@paneron/libmmel/interface/supportinterface';
 import { NormalTextField } from '../../common/fields';
 
 function getDesc(v: MMELVariable) {

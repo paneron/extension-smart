@@ -2,7 +2,7 @@
  * This file centralizes the commands related to reference
  */
 
-import { MMELReference } from '../../../serialize/interface/supportinterface';
+import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import { ModelAction } from '../model';
 
 /**

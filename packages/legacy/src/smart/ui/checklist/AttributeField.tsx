@@ -1,6 +1,6 @@
 import React from 'react';
-import { MMELDataAttribute } from '../../serialize/interface/datainterface';
-import { MMELReference } from '../../serialize/interface/supportinterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import { ReferenceList } from '../common/description/ComponentList';
 import { NonEmptyFieldDescription } from '../common/description/fields';
 import { CLDescriptionItem } from './CustomFields';

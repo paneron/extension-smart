@@ -7,9 +7,9 @@ import {
   isEditorRegistry,
 } from '../../../model/editormodel';
 import { RefTextSelection } from '../../../model/selectionImport';
-import { DataType } from '../../../serialize/interface/baseinterface';
-import { MMELDataAttribute } from '../../../serialize/interface/datainterface';
-import { MMELReference } from '../../../serialize/interface/supportinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import { DATATYPE, MODAILITYOPTIONS } from '../../../utils/constants';
 import { createDataAttribute } from '../../../utils/EditorFactory';
 import {
