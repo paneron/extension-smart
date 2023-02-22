@@ -35,7 +35,7 @@ jobs:
         run: |
           if command -v shasum; then sum() { shasum -a 256 "$@"; } ; else sum() { sha256sum "$@"; }; fi
           fragment=$(< package.json command grep 'version"\|"name"\|"files"\|"main"\|"build' | sum | command head -c8)
-          echo "key=build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('packages/**/src/**', '**/.npmrc', '**/tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}-${fragment}" | tee -a $GITHUB_OUTPUT
+          echo "key=build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('packages/**/src/**', '**/.swcrc', '**/.npmrc', '**/tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}-${fragment}" | tee -a $GITHUB_OUTPUT
         shell: bash
 
       - name: Calculate a fragment of cache key
@@ -50,7 +50,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_TEST_DIR }}
-          key: tests-e2e-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('e2e_tests/**', 'packages/**', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml', '.github/workflows/test-e2e.yml') }}-${{ steps.cache-key.outputs.fragment }}
+          key: tests-e2e-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('e2e_tests/**', 'packages/**', '**/.swcrc', '**/.npmrc', 'tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml', '.github/workflows/test-e2e.yml') }}-${{ steps.cache-key.outputs.fragment }}
 
       - name: Set up Node JS
         if: steps.test_cache.outputs.cache-hit != 'true'

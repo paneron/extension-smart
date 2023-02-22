@@ -31,7 +31,7 @@ jobs:
         run: |
           if command -v shasum; then sum() { shasum -a 256 "$@"; } ; else sum() { sha256sum "$@"; }; fi
           fragment=$(< package.json command grep 'version"\|"name"\|"files"\|"main"\|"build' | sum | command head -c8)
-          echo "key=build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('packages/**/src/**', '**/.npmrc', '**/tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}-${fragment}" | tee -a $GITHUB_OUTPUT
+          echo "key=build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('packages/**/src/**', '**/.swcrc', '**/.npmrc', '**/tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}-${fragment}" | tee -a $GITHUB_OUTPUT
         shell: bash
 
       - name: Restore build cache
