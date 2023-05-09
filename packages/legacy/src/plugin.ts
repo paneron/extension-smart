@@ -4,7 +4,7 @@ import 'electron';
 export default makeExtension({
   mainView               : () => import('./Main'),
   name                   : 'SMART',
-  requiredHostAppVersion : '^1.0.0-beta18',
+  requiredHostAppVersion : '^2.0.5',
   datasetMigrations      : {},
   datasetInitializer     : () => import('./migrations/initial'),
 });
