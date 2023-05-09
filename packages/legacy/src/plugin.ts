@@ -1,5 +1,4 @@
 import { makeExtension } from '@riboseinc/paneron-extension-kit';
-import 'electron';
 
 export default makeExtension({
   mainView               : () => import('./Main'),
