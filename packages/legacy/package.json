@@ -81,8 +81,6 @@
     "@typescript-eslint/parser": "^5.42.1",
     "codeceptjs": "^3.3.6",
     "concurrently": "^7.5.0",
-    "electron": "^21.2.3",
-    "electron-log": "^4.4.8",
     "eslint": "^8.27.0",
     "eslint-import-resolver-typescript": "^3.5.2",
     "eslint-plugin-jest": "^27.1.5",
