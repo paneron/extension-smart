@@ -65,7 +65,7 @@ all: prep build
 .PHONY: prep
 ## Install build dependencies
 prep:
-	$(NPM)
+	$(NPM) install
 
 .PHONY: build
 ## Build assets
