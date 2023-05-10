@@ -20,7 +20,8 @@ import {
 import { MMELRepo, RepoIndex } from '../../model/repo';
 import { createNewSMARTWorkspace, SMARTWorkspace } from '../../model/workspace';
 import { MAPVERSION } from '../../utils/constants';
-import { getNamespace, Logger } from '../../utils/ModelFunctions';
+import { getNamespace } from '../../utils/ModelFunctions';
+import * as Logger from '../../../lib/logger';
 import {
   getPathByNS,
   JSONContext,

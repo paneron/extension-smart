@@ -7,7 +7,8 @@ import { ModelWrapper } from '../../model/modelwrapper';
 import { FunModel } from '../../model/States';
 import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
 import { handleModelOpen } from '../../utils/IOFunctions';
-import { buildModelLinks, Logger } from '../../utils/ModelFunctions';
+import { buildModelLinks } from '../../utils/ModelFunctions';
+import * as Logger from '../../../lib/logger';
 import {
   computeDiff,
   getDiffViewProps,

@@ -76,7 +76,8 @@ import {
   react_flow_container_layout,
   sidebar_layout,
 } from '../../css/layout';
-import { checkId, genDCIdByRegId, Logger } from '../utils/ModelFunctions';
+import { checkId, genDCIdByRegId } from '../utils/ModelFunctions';
+import * as Logger from '../../lib/logger';
 import LegendPane from './common/description/LegendPane';
 import {
   getHighlightedStyleById,

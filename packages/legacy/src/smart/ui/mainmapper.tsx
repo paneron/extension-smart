@@ -58,7 +58,8 @@ import { multi_model_container } from '../../css/layout';
 import { vertical_line } from '../../css/components';
 import { findPageContainingElement } from '../utils/SearchFunctions';
 import { getDocumentMetaById } from '../utils/DocumentFunctions';
-import { getNamespace, Logger } from '../utils/ModelFunctions';
+import { getNamespace } from '../utils/ModelFunctions';
+import * as Logger from '../../lib/logger';
 import {
   COMMITMSG,
   getPathByNS,

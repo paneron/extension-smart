@@ -30,8 +30,8 @@ import {
   getRegistryReference,
   getReferenceDCTypeName,
   findUniqueID,
-  Logger,
 } from './ModelFunctions';
+import * as Logger from '../../lib/logger';
 
 export type NewImportItems = {
   elements: Record<string, EditorNode>;

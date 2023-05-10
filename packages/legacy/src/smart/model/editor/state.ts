@@ -1,5 +1,5 @@
 import { useReducer, useState } from 'react';
-import { Logger } from '../../utils/ModelFunctions';
+import * as Logger from '../../../lib/logger';
 import { addToLog, ChangeLog } from '../changelog';
 import { EditorState } from '../States';
 import { HistoryAction, useHistory } from './history';

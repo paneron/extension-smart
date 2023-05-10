@@ -22,13 +22,6 @@ import { IListItem } from '../ui/common/fields';
 const TypeReferenceHead = 'reference(';
 const TypeReferenceTail = ')';
 
-// temp class for debug, global console logger
-export class Logger {
-  static log: (...args: unknown[]) => void;
-  static error: (...args: unknown[]) => void;
-  static debug: (...args: unknown[]) => void;
-}
-
 export function isSpace(x: string): boolean {
   return /\s/.test(x);
 }

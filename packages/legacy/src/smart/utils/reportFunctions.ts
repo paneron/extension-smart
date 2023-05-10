@@ -3,7 +3,8 @@ import {
   isEditorApproval,
   isEditorProcess,
 } from '../model/editormodel';
-import { getNamespace, Logger, referenceSorter } from './ModelFunctions';
+import { getNamespace, referenceSorter } from './ModelFunctions';
+import * as Logger from '../../lib/logger';
 import { MapProfile } from '../model/mapmodel';
 import { Liquid } from 'liquidjs';
 import { MMELToSerializable } from './repo/io';

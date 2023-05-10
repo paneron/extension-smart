@@ -1,4 +1,4 @@
-import { Logger } from '../../utils/ModelFunctions';
+import * as Logger from '../../../lib/logger';
 import { EditorModel } from '../editormodel';
 import { cascadeCheckDCs } from './components/element/dc';
 import { cascadeCheckRegs } from './components/element/registry';
