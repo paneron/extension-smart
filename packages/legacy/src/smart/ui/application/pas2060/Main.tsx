@@ -36,7 +36,7 @@ import {
 import { Popover2 } from '@blueprintjs/popover2';
 import { ViewFunctionInterface } from '../../../model/ViewFunctionModel';
 import React from 'react';
-import { Logger } from '../../../utils/ModelFunctions';
+import * as Logger from '../../../../lib/logger';
 
 const Application2060: React.FC<{
   model: EditorModel;

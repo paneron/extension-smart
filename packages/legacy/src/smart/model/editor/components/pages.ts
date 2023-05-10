@@ -8,7 +8,8 @@ import {
   dataPageReplace,
   elmPageReplace,
 } from '../../../utils/handler/cascadeModelHandler';
-import { Logger, updatePageElement } from '../../../utils/ModelFunctions';
+import { updatePageElement } from '../../../utils/ModelFunctions';
+import * as Logger from '../../../../lib/logger';
 import {
   EditorNode,
   EditorSubprocess,

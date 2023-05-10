@@ -5,16 +5,11 @@ import { useContext, useMemo, useState } from 'react';
 import RepositoryView from './smart/ui/app/RepoView';
 import { RepoIndex, repoIndexPath } from './smart/model/repo';
 import { LoadingScreen } from './smart/ui/common/Loading';
-import { Logger } from './smart/utils/ModelFunctions';
 import { createEmptyIndex } from './smart/utils/repo/CommonFunctions';
 
 const MainExtension: React.FC<Record<never, never>> = function () {
-  const { logger, useObjectData } = useContext(DatasetContext);
+  const { useObjectData } = useContext(DatasetContext);
   const [index, setIndex] = useState<RepoIndex | undefined>(undefined);
-
-  Logger.log = logger.log;
-  Logger.error = logger.error;
-  Logger.debug = logger.debug;
 
   FocusStyleManager.onlyShowFocusOnTabs();
 

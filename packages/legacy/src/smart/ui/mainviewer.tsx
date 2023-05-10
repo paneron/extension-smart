@@ -43,7 +43,8 @@ import MeasureCheckPane from './measurement/MeasurementValidationPane';
 import { ViewFunctionInterface } from '../model/ViewFunctionModel';
 import LegendPane from './common/description/LegendPane';
 import { loadPlugin } from './application/plugin';
-import { getNamespace, Logger } from '../utils/ModelFunctions';
+import { getNamespace } from '../utils/ModelFunctions';
+import * as Logger from '../../lib/logger';
 import ChecklistConfigPane from './checklist/CheckListConfigPane';
 import {
   MMELProvision,

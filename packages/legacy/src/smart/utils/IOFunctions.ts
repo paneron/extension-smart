@@ -13,7 +13,7 @@ import {
   WSVERSION,
 } from './constants';
 import { textToDoc } from './DocumentFunctions';
-import { Logger } from './ModelFunctions';
+import * as Logger from '../../lib/logger';
 import { bsiToDocument } from './xml/BSIXML';
 import { xmlToDocument } from './xml/XMLDocumentFunctions';
 

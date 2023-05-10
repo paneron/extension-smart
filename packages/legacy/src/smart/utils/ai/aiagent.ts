@@ -28,7 +28,7 @@ import {
   createTerm,
 } from '../EditorFactory';
 import { createNewPage } from '../ModelAddComponentHandler';
-import { Logger } from '../ModelFunctions';
+import * as Logger from '../../../lib/logger';
 
 type Sections = Record<string, Section>;
 type NoteType = MMELNote['type'];

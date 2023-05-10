@@ -40,7 +40,8 @@ import {
   getEditorNodeCallBack,
   NodeCallBack,
 } from './FlowContainer';
-import { fillRDCS, Logger } from '../utils/ModelFunctions';
+import { fillRDCS } from '../utils/ModelFunctions';
+import * as Logger from '../../lib/logger';
 import {
   getMappedList,
   getRefNodeStyle,

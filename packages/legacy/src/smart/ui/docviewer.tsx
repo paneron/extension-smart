@@ -8,7 +8,7 @@ import { MMELDocument } from '../model/document';
 import { LoadingScreen } from './common/Loading';
 import React from 'react';
 import { DOCVERSION } from '../utils/constants';
-import { Logger } from '../utils/ModelFunctions';
+import * as Logger from '../../lib/logger';
 
 const DocumentViewer: React.FC<{
   isVisible: boolean;

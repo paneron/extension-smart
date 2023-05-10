@@ -11,7 +11,7 @@ import {
 } from '../../../model/modelwrapper';
 import { MMELRepo, RepoIndex } from '../../../model/repo';
 import { repoAutoMapExplore, repoMapAI } from '../../../utils/map/AutoMap';
-import { Logger } from '../../../utils/ModelFunctions';
+import * as Logger from '../../../../lib/logger';
 import {
   getAllRepoMaps,
   getAllRepoModels,

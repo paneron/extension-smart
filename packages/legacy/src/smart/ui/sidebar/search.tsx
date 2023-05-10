@@ -6,7 +6,7 @@ import MGDLabel from '../../MGDComponents/MGDLabel';
 import MGDSidebar from '../../MGDComponents/MGDSidebar';
 import { EditorModel } from '../../model/editormodel';
 import { HistoryItem } from '../../model/history';
-import { Logger } from '../../utils/ModelFunctions';
+import * as Logger from '../../../lib/logger';
 import {
   findComponent,
   SearchComponentRecord,

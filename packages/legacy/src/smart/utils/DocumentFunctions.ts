@@ -3,7 +3,7 @@ import { DocMapIndex, MMELDocument } from '../model/document';
 import { MappingType } from '../model/mapmodel';
 import { DOCVERSION } from './constants';
 import { createNewMMELDocument } from './EditorFactory';
-import { Logger } from './ModelFunctions';
+import * as Logger from '../../lib/logger';
 
 function addMetaField(doc: MMELDocument, id: string, value: string) {
   if (id === 'namespace') {

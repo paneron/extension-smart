@@ -35,7 +35,7 @@ import {
 } from '../../serialize/interface/supportinterface';
 import { MODELVERSION } from '../constants';
 import { createMetaData } from '../EditorFactory';
-import { Logger } from '../ModelFunctions';
+import * as Logger from '../../../lib/logger';
 
 export enum RepoFileType {
   MODEL = 'model',

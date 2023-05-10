@@ -11,7 +11,7 @@ import {
   STNode,
   STRelation,
 } from '../../model/SemanticTriple';
-import { Logger } from '../ModelFunctions';
+import * as Logger from '../../../lib/logger';
 
 const nlpServer = 'http://localhost:9000';
 const width = 180;

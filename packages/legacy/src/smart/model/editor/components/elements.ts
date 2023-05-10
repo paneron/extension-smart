@@ -9,7 +9,7 @@ import {
   tableReplace,
   figReplace,
 } from '../../../utils/handler/cascadeModelHandler';
-import { Logger } from '../../../utils/ModelFunctions';
+import * as Logger from '../../../../lib/logger';
 import {
   EditorNode,
   isEditorDataClass,

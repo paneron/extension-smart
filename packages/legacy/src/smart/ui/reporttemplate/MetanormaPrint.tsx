@@ -3,7 +3,7 @@ import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext } from 'react';
 import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
 import { FILE_TYPE, saveToFileSystem } from '../../utils/IOFunctions';
-import { Logger } from '../../utils/ModelFunctions';
+import * as Logger from '../../../lib/logger';
 
 const MetanormaPrint: React.FC<{
   report: string;
