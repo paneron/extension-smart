@@ -35,25 +35,25 @@ import {
   compileProcessRemovePage,
 } from './process';
 
-type EGateEditAction = {
+interface EGateEditAction {
   task: 'egate-edit';
   id: string;
   page: string;
   update: EditorEGate;
   edges: MMELEdge[];
-};
+}
 
-type ProcessAddPageAction = {
+interface ProcessAddPageAction {
   task: 'process-add-page';
   id: string; // process ID
-};
+}
 
-type ProcessRemovePageAction = {
+interface ProcessRemovePageAction {
   task: 'process-remove-page';
   id: string; // process ID
-};
+}
 
-type ProcessEditAction = {
+interface ProcessEditAction {
   task: 'process-edit';
   id: string;
   process: EditorProcess;
@@ -62,56 +62,56 @@ type ProcessEditAction = {
   links: MMELLink[];
   newRefs: MMELReference[];
   delRefs: string[];
-};
+}
 
-type ProcessDeleteAction = {
+interface ProcessDeleteAction {
   task: 'process-delete';
   id: string;
   page: string;
-};
+}
 
-type ReverseProcessDeleteAction = {
+interface ReverseProcessDeleteAction {
   task: 'process-delete-reverse';
   id: string;
   page: string;
-};
+}
 
-type ProcessBringInAction = {
+interface ProcessBringInAction {
   task: 'process-bringin';
   id: string;
   page: string;
-};
+}
 
-type ProcessBringOutAction = {
+interface ProcessBringOutAction {
   task: 'process-bringout';
   id: string;
   page: string;
-};
+}
 
-type RegistryImportReference = {
+interface RegistryImportReference {
   task: 'registry-import-ref';
   id: string;
   value: RegistryCombined;
   newRefs: MMELReference[];
   delRefs: string[];
-};
+}
 
-type DCImportReference = {
+interface DCImportReference {
   task: 'dc-import-ref';
   id: string;
   value: EditorDataClass;
   newRefs: MMELReference[];
   delRefs: string[];
-};
+}
 
-type ElmImportReference = {
+interface ElmImportReference {
   task: 'elm-import';
   id: string;
   ref: EditorModel;
   x: number;
   y: number;
   page: string;
-};
+}
 
 type EXPORT_ACTION =
   | EGateEditAction

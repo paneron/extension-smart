@@ -48,10 +48,10 @@ export function newEdgeCommand(
   return action;
 }
 
-type DragStartRecord = {
+interface DragStartRecord {
   x: number;
   y: number;
-};
+}
 
 /**
  * The element is moved on the page

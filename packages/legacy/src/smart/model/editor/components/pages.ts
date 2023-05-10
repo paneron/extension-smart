@@ -21,79 +21,79 @@ import {
 import { UndoReducerInterface } from '../interface';
 import { ModelAction } from '../model';
 
-type RegCascadeAction = {
+interface RegCascadeAction {
   subtask: 'data';
   from: string | undefined; // remove from
   to: string | undefined; // add to
   ids: [string, number, number][];
-};
+}
 
-type ElmCascadeAction = {
+interface ElmCascadeAction {
   subtask: 'element';
   from: string | undefined; // remove from
   to: string | undefined; // add to
   ids: [string, number, number][];
-};
+}
 
 type CascadeAction = (RegCascadeAction | ElmCascadeAction) & {
   task: 'cascade';
 };
 
-type NewElementAction = {
+interface NewElementAction {
   task: 'new-element';
   value: EditorNode;
   page: string;
   x: number;
   y: number;
-};
+}
 
-type DeleteElementAction = {
+interface DeleteElementAction {
   task: 'delete-element';
   value: EditorNode;
   page: string;
-};
+}
 
-type AddChildAction = {
+interface AddChildAction {
   task: 'add-child';
   ids: [string, number, number][];
   page: string;
-};
+}
 
-type RemoveChildAction = {
+interface RemoveChildAction {
   task: 'remove-child';
   ids: string[];
   page: string;
-};
+}
 
-type NewEdgeAction = {
+interface NewEdgeAction {
   task: 'new-edge';
   value: MMELEdge[];
   page: string;
-};
+}
 
-type DeleteEdgeAction = {
+interface DeleteEdgeAction {
   task: 'delete-edge';
   value: string[];
   page: string;
-};
+}
 
-type EditEdgeAction = {
+interface EditEdgeAction {
   task: 'edit-edge';
   value: MMELEdge[];
   page: string;
-};
+}
 
-type NewPageAction = {
+interface NewPageAction {
   task: 'new-page';
   value: EditorSubprocess[];
-};
+}
 
-type DeletePageAction = {
+interface DeletePageAction {
   task: 'delete-page';
   value: string[];
-};
+}
 
-type MoveAction = {
+interface MoveAction {
   task: 'move';
   node: string;
   page: string;
@@ -102,14 +102,14 @@ type MoveAction = {
   y: number;
   fromx: number;
   fromy: number;
-};
+}
 
-type ReplaceElmIdAction = {
+interface ReplaceElmIdAction {
   task: 'replace-id';
   page: string;
   id: string;
   value: string;
-};
+}
 
 type EXPORT_ACTION =
   | CascadeAction
@@ -130,10 +130,10 @@ export type PageAction = EXPORT_ACTION & {
   cascade?: ModelAction[];
 };
 
-type InitAction = {
+interface InitAction {
   act: 'init';
   value: Record<string, EditorSubprocess>;
-};
+}
 
 type OwnAction = PageAction | InitAction;
 

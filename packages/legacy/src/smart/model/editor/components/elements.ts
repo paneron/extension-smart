@@ -27,70 +27,70 @@ import {
 } from './element/registry';
 import { ItemAction } from './itemTemplate';
 
-type RoleCascadeAction = {
+interface RoleCascadeAction {
   subtask: 'process-role';
   role: string;
   ids: [string, RoleAttribute[]][]; // [process or approval ID, attribute name];
-};
+}
 
-type RefCascadeAction = {
+interface RefCascadeAction {
   subtask: 'process-ref';
   from: string | undefined; // remove from
   to: string | undefined; // add to
   ids: [string, string[]][];
-};
+}
 
-type RegCascadeAction = {
+interface RegCascadeAction {
   subtask: 'process-reg';
   from: string | undefined; // remove from
   to: string | undefined; // add to
   ids: DataCascadeIDs[];
-};
+}
 
-type DCCascadeAction = {
+interface DCCascadeAction {
   subtask: 'process-dc';
   from: string | undefined; // remove from
   to: string | undefined; // add to
   ids: DataCascadeDCID[];
-};
+}
 
-type EnumCascadeAction = {
+interface EnumCascadeAction {
   subtask: 'process-enum';
   datatype: string;
   ids: [string, string[]][]; // dcid, attribute ids
-};
+}
 
-type TableCascadeAction = {
+interface TableCascadeAction {
   subtask: 'process-table';
   from: string | undefined; // remove from
   to: string | undefined; // add to
   ids: string[]; // Process id
-};
+}
 
-type FigCascadeAction = {
+interface FigCascadeAction {
   subtask: 'process-figure';
   from: string | undefined; // remove from
   to: string | undefined; // add to
   ids: string[]; // Process id
-};
+}
 
-type DataCascadeProcessID = {
+interface DataCascadeProcessID {
   id: string;
   type: 'process';
   attributes: ('input' | 'output')[];
-};
+}
 
-type DataCascadeOtherID = {
+interface DataCascadeOtherID {
   id: string;
   type: 'other';
-};
+}
 
-export type DataCascadeDCID = {
+export interface DataCascadeDCID {
   id: string;
   type: 'dc';
   attributes: [string, string][]; // attribute id, new type
   rdcs: [string, string][]; // [oldid, newid]. Empty ==> no delete / add
-};
+}
 
 export type DataCascadeIDs =
   | DataCascadeProcessID
@@ -119,10 +119,10 @@ export type ElmAction = EXPORT_ACTION & {
   cascade?: ModelAction[];
 };
 
-type InitAction = {
+interface InitAction {
   act: 'init';
   value: Record<string, EditorNode>;
-};
+}
 
 type OwnAction = ElmAction | InitAction;
 

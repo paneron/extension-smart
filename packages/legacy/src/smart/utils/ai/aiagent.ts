@@ -32,18 +32,18 @@ import * as Logger from '../../../lib/logger';
 
 type Sections = Record<string, Section>;
 type NoteType = MMELNote['type'];
-type RoleItem = {
+interface RoleItem {
   id: string;
   title: string;
   count: number;
-};
+}
 
-type Section = {
+interface Section {
   cnumber: number;
   clause: string;
   secs: Sections;
   data: string[];
-};
+}
 
 function processDoc(doc: MMELDocument): Sections {
   const result: Sections = {};

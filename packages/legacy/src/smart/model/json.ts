@@ -24,7 +24,7 @@ import {
 } from '../serialize/interface/supportinterface';
 import { JSONContextType } from '../utils/repo/io';
 
-export type MMELJSON = {
+export interface MMELJSON {
   '@context': JSONContextType;
   '@type': 'MMEL_SMART';
   meta?: MMELMetadata;
@@ -45,25 +45,25 @@ export type MMELJSON = {
   comments?: Record<string, JSONComment>;
   root?: string;
   version?: string;
-};
+}
 
-export type JSONProvision = {
+export interface JSONProvision {
   id: string;
   modality: string;
   condition: string;
   ref: string[];
   datatype: DataType.PROVISION;
-};
+}
 
-export type JSONNote = {
+export interface JSONNote {
   id: string;
   type: NOTE_TYPE;
   message: string;
   ref: string[];
   datatype: DataType.NOTE;
-};
+}
 
-export type JSONComment = {
+export interface JSONComment {
   id: string;
   username: string;
   message: string;
@@ -71,9 +71,9 @@ export type JSONComment = {
   resolved: boolean;
   timestamp: string;
   datatype: DataType.COMMENT;
-};
+}
 
-export type JSONProcess = {
+export interface JSONProcess {
   id: string;
   name: string;
   modality: string;
@@ -89,9 +89,9 @@ export type JSONProcess = {
   page: string;
   measure: string[];
   datatype: DataType.PROCESS;
-};
+}
 
-export type JSONDataAttribute = {
+export interface JSONDataAttribute {
   id: string;
   type: string;
   modality: string;
@@ -99,22 +99,22 @@ export type JSONDataAttribute = {
   definition: string;
   ref: string[];
   datatype: DataType.DATAATTRIBUTE;
-};
+}
 
-export type JSONDataclass = {
+export interface JSONDataclass {
   id: string;
   attributes: Record<string, JSONDataAttribute>;
   datatype: DataType.DATACLASS;
-};
+}
 
-export type JSONRegistry = {
+export interface JSONRegistry {
   id: string;
   title: string;
   data: string;
   datatype: DataType.REGISTRY;
-};
+}
 
-export type JSONApproval = {
+export interface JSONApproval {
   id: string;
   name: string;
   modality: string;
@@ -123,7 +123,7 @@ export type JSONApproval = {
   records: string[];
   ref: string[];
   datatype: DataType.APPROVAL;
-};
+}
 
 export function isJSONProcess(x: MMELNode): x is JSONProcess {
   return x.datatype === DataType.PROCESS;

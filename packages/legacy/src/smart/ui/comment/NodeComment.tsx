@@ -21,7 +21,7 @@ const NodeComment: React.FC<{
   const comments = [...cids]
     .map(x => materialComments(x, getCommentById))
     .filter(x => x)
-    .map(x => x as CommentInstance);
+    .map(x => x!);
   const hasUnresolved = comments.reduce((b, x) => b || !x.resolved, false);
   return (
     <div

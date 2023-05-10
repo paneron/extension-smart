@@ -5,10 +5,10 @@
 import { ModelAction } from './editor/model';
 import { EditorModel } from './editormodel';
 
-type CommandEvent = {
+interface CommandEvent {
   type: 'command';
   command: ModelAction;
-};
+}
 
 export type ChangeLogEvent = CommandEvent & {
   user: string;

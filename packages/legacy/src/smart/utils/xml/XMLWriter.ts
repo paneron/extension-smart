@@ -1,6 +1,4 @@
-interface Obj<T> {
-  [key: string | number | symbol]: T;
-}
+type Obj<T> = Record<string | number | symbol, T>;
 
 type Ob = Obj<unknown | string> | object;
 
@@ -33,7 +31,7 @@ function objectToXML(obj: Ob): string {
   return out;
 }
 
-function getXMLElementFromArray(tag: string, array: Array<Ob>): string {
+function getXMLElementFromArray(tag: string, array: Ob[]): string {
   let out = '';
   for (const y of array) {
     let content: string;

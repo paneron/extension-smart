@@ -3,18 +3,18 @@ import { MMELNote } from '../../../serialize/interface/supportinterface';
 import { refNotesReplace } from '../../../utils/handler/cascadeModelHandler';
 import { UndoReducerInterface } from '../interface';
 
-type RefCascadeAction = {
+interface RefCascadeAction {
   subtask: 'process-ref';
   from: string | undefined; // remove from
   to: string | undefined; // add to
   ids: string[];
-};
+}
 
-type ReplaceNotesAction = {
+interface ReplaceNotesAction {
   task: 'replace';
   from: string[]; // remove from
   to: MMELNote[]; // add to
-};
+}
 
 type CascadeAction = RefCascadeAction & { task: 'cascade' };
 
@@ -22,10 +22,10 @@ type EXPORT_ACTION = CascadeAction | ReplaceNotesAction;
 
 export type NotesAction = EXPORT_ACTION & { act: 'notes' };
 
-type InitAction = {
+interface InitAction {
   act: 'init';
   value: Record<string, MMELNote>;
-};
+}
 
 type OwnAction = NotesAction | InitAction;
 

@@ -74,7 +74,7 @@ export interface IRefSelectField {
   update: (x: number) => void;
 }
 
-export type IManageHandler<T> = {
+export interface IManageHandler<T> {
   filterName: string;
   itemName: string;
   Content: React.FC<{
@@ -93,14 +93,14 @@ export type IManageHandler<T> = {
   updateItem: (oldid: string, obj: T) => boolean;
   getObjById: (id: string) => T;
   buttons?: IAdditionalListButton[];
-};
+}
 
 export interface IViewListInterface {
   isVisible: boolean;
   filterName: string;
   itemName: string;
   getItems: (filter: string) => IListItem[];
-  removeItems?: (ids: Array<string>) => void;
+  removeItems?: (ids: string[]) => void;
   moveUp?: (x: string) => void;
   moveDown?: (x: string) => void;
   addClicked?: () => void;
@@ -171,7 +171,7 @@ export const NormalTextField: React.FC<IField> = f => {
 };
 
 export const NumericComboBox: React.FC<{
-  options: Array<number>;
+  options: number[];
   value: number;
   onChange: (x: number) => void;
 }> = function ({ options, value, onChange }) {

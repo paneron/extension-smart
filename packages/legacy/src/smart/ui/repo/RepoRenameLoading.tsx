@@ -9,10 +9,10 @@ import { getAllObjectPaths } from '../../utils/repo/CommonFunctions';
 import { COMMITMSG, getPathByNS, RepoFileType } from '../../utils/repo/io';
 import { LoadingIcon } from '../common/Loading';
 
-export type RepoRenameAction = {
+export interface RepoRenameAction {
   old: string;
   update: string;
-};
+}
 
 const RepoRenameLoading: React.FC<{
   action: RepoRenameAction;

@@ -4,48 +4,48 @@
 
 import { Node } from 'react-flow-renderer';
 
-export type STNode = {
+export interface STNode {
   data: string;
   relationship: STRelation[];
-};
+}
 
-export type STRelation = {
+export interface STRelation {
   relationship: string;
   connect: string;
-};
+}
 
 export const RDFVersion = '0.0.1';
 
-export type ProvisionRDF = {
+export interface ProvisionRDF {
   // roots[provision.id]
   roots: Record<string, string[]>;
   nodes: Record<string, STNode>;
   version: typeof RDFVersion;
-};
+}
 
-export type NLPJSON = {
+export interface NLPJSON {
   sentences: NLPItem[];
-};
+}
 
-export type NLPItem = {
+export interface NLPItem {
   enhancedPlusPlusDependencies: NLPDependency[];
   tokens: NLPToken[];
-};
+}
 
-export type NLPDependency = {
+export interface NLPDependency {
   dep: string;
   dependent: number;
   governor: number;
-};
+}
 
-export type NLPToken = {
+export interface NLPToken {
   word: string;
   lemma: string;
-};
+}
 
-export type NLPTreeNode = {
+export interface NLPTreeNode {
   data: Node;
   childs: NLPTreeNode[];
   width?: number;
   checked?: true;
-};
+}

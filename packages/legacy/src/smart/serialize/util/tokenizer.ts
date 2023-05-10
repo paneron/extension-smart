@@ -83,9 +83,9 @@ export function MMELremovePackage(x: string): string {
 /**
  * It is specifically used for parsing attribute definitions
  */
-export function MMELtokenizeAttributes(x: string): Array<string> {
+export function MMELtokenizeAttributes(x: string): string[] {
   x = MMELremovePackage(x);
-  const set: Array<string> = [];
+  const set: string[] = [];
   let t = '';
   let i = 0;
   while (i < x.length) {

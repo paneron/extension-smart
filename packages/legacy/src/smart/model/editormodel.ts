@@ -81,9 +81,9 @@ export type EditorEGate = MMELEGate & EditorNode;
 export type EditorApproval = MMELApproval & EditorNode;
 export type EditorProcess = MMELProcess & EditorNode & MultiPageElm;
 
-type MultiPageElm = {
+interface MultiPageElm {
   pages: Set<string>;
-};
+}
 
 export interface EditorNodeChild extends EditorBaseObjectType {
   uiref?: RefObject<HTMLDivElement>;

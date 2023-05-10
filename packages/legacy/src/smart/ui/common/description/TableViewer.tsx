@@ -24,10 +24,10 @@ const TableViewer: React.FC<{
   );
 };
 
-type CellInfo = {
+interface CellInfo {
   data: string;
   span: number;
-};
+}
 
 const RowViewer: React.FC<{
   row: string[];

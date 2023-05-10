@@ -3,11 +3,11 @@ import { DataType } from '../../../serialize/interface/baseinterface';
 import { MMELTable } from '../../../serialize/interface/supportinterface';
 import { NormalComboBox, NormalTextField } from '../../common/fields';
 
-export type TableRowClass = {
+export interface TableRowClass {
   id: string;
   datatype: DataType;
   data: string[];
-};
+}
 
 const TableClassItemEdit: React.FC<{
   object: TableRowClass;

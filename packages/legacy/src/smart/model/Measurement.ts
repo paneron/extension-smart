@@ -24,14 +24,14 @@ export type InputableVarType = Exclude<
   typeof VarType.DERIVED | VarType.TABLE
 >;
 
-export type VarInputInterface = {
+export interface VarInputInterface {
   model: EditorModel;
   variable: MMELVariable;
   value?: string;
   values: Record<string, string>;
   profile: MMELView | undefined;
   onChange: (v: string) => void;
-};
+}
 
 export enum MeasureRType {
   OK = 'ok',
