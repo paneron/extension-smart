@@ -20,11 +20,11 @@ import DocTemplatePane from '../reporttemplate/doctemplatepane';
 
 type MapperDialogMode = 'mapping' | 'report' | 'automap' | 'repomap';
 
-type MapperDiagConfig = {
+interface MapperDiagConfig {
   title: string;
   content: React.ReactNode;
   onClose: () => void;
-};
+}
 
 const MapperDialog: React.FC<{
   editMappingProps: EditMPropsInterface;

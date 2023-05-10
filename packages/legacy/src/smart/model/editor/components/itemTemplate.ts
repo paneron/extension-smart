@@ -1,35 +1,35 @@
 import { useReducer } from 'react';
 import { UndoReducerInterface } from '../interface';
 
-type EditAction<T> = {
+interface EditAction<T> {
   task: 'edit';
   id: string;
   value: T;
-};
+}
 
-type AddAction<T> = {
+interface AddAction<T> {
   task: 'add';
   value: T[];
-};
+}
 
-type DeleteAction = {
+interface DeleteAction {
   task: 'delete';
   value: string[];
-};
+}
 
-type CoreComponent = {
+interface CoreComponent {
   id: string;
-};
+}
 
 type EXPORT_ACTION<T> = EditAction<T> | AddAction<T> | DeleteAction;
 export type ItemAction<T, L extends string> = EXPORT_ACTION<T> & {
   act: L;
 };
 
-type InitAction<T> = {
+interface InitAction<T> {
   task: 'init';
   value: Record<string, T>;
-};
+}
 
 type OwnAction<T> = EditAction<T> | AddAction<T> | InitAction<T> | DeleteAction;
 

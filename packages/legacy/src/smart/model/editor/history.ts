@@ -9,34 +9,34 @@ import { UndoReducerInterface } from './interface';
 /**
  * Drill down more levels
  */
-type PushAction = {
+interface PushAction {
   act: 'push';
   value: HistoryItem[];
-};
+}
 
 /**
  * Drill up some levels. Number of levels is defined by the 'value' propery
  */
-type PopAction = {
+interface PopAction {
   act: 'pop';
   value: number;
-};
+}
 
 /**
  * Replace the current page history by the given one
  */
-type ReplaceAction = {
+interface ReplaceAction {
   act: 'replace';
   value: HistoryItem[];
-};
+}
 
 /**
  * Initialize the page history
  */
-type InitAction = {
+interface InitAction {
   act: 'init';
   value: HistoryItem[];
-};
+}
 
 export type HistoryAction = (PushAction | PopAction | ReplaceAction) & {
   type: 'history';

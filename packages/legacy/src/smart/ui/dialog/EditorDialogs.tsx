@@ -42,7 +42,7 @@ export interface EditorDiagPackage {
   msg: string;
 }
 
-export type EditorDialogInterface = {
+export interface EditorDialogInterface {
   model: EditorModel;
   page: string;
   act: (x: EditorAction) => void;
@@ -52,13 +52,13 @@ export type EditorDialogInterface = {
   setSelectedNode: (id: string) => void;
   setUndoListener: (x: (() => void) | undefined) => void;
   clearRedo: () => void;
-};
+}
 
-export type EditorDiagProps = {
+export interface EditorDiagProps {
   title: string;
   Panel: React.FC<EditorDialogInterface>;
   fullscreen: boolean;
-};
+}
 
 export const EditorDiag: Record<EditorDiagTypes, EditorDiagProps> = {
   [EditorDiagTypes.DELETECONFIRM] : {

@@ -8,10 +8,10 @@ import { ModelAction, useModel } from './model';
 
 export type EditorAction = ModelAction | HistoryAction;
 
-export type UndoListAction = {
+export interface UndoListAction {
   act: 'push' | 'pop' | 'new' | 'post';
   value?: EditorAction;
-};
+}
 
 function listReducer(list: EditorAction[], action: UndoListAction) {
   const { act, value } = action;

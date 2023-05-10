@@ -13,7 +13,7 @@ export function parseEndEvent(id: string, data: string): MMELEndEvent {
     datatype : DataType.ENDEVENT,
   };
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     if (t.length > 0) {
       throw new Error(
         'Parsing error: end_event. ID ' + id + ': Expecting empty body'
@@ -34,7 +34,7 @@ export function parseSignalCatchEvent(
   };
 
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
@@ -69,7 +69,7 @@ export function parseStartEvent(id: string, data: string): MMELStartEvent {
   };
 
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     if (t.length > 0) {
       throw new Error(
         'Parsing error: start_event. ID ' + id + ': Expecting empty body'
@@ -88,7 +88,7 @@ export function parseTimerEvent(id: string, data: string): MMELTimerEvent {
   };
 
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];

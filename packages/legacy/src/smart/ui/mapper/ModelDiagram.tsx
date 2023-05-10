@@ -171,7 +171,7 @@ const ModelDiagram: React.FC<{
   }
 
   function setMapping(fromid: string, toid: string) {
-    logger?.log(`Update mapping from ${fromid} to ${toid}`);
+    logger.log(`Update mapping from ${fromid} to ${toid}`);
     if (mapSet.mappings[fromid] === undefined) {
       mapSet.mappings[fromid] = {};
     }

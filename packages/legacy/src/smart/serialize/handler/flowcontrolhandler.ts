@@ -17,7 +17,7 @@ export function parseEdge(id: string, data: string): MMELEdge {
     condition   : '',
   };
 
-  const t: Array<string> = MMELtokenizePackage(data);
+  const t: string[] = MMELtokenizePackage(data);
   let i = 0;
   while (i < t.length) {
     const command: string = t[i++];
@@ -60,7 +60,7 @@ export function parseSubprocess(id: string, data: string): MMELSubprocess {
   };
 
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
@@ -93,7 +93,7 @@ export function parseSubprocess(id: string, data: string): MMELSubprocess {
 }
 
 function readElements(sub: MMELSubprocess, data: string) {
-  const t: Array<string> = MMELtokenizePackage(data);
+  const t: string[] = MMELtokenizePackage(data);
   let i = 0;
   while (i < t.length) {
     const name: string = t[i++];
@@ -110,7 +110,7 @@ function readElements(sub: MMELSubprocess, data: string) {
 }
 
 function readData(sub: MMELSubprocess, data: string) {
-  const t: Array<string> = MMELtokenizePackage(data);
+  const t: string[] = MMELtokenizePackage(data);
   let i = 0;
   while (i < t.length) {
     const name: string = t[i++];
@@ -127,7 +127,7 @@ function readData(sub: MMELSubprocess, data: string) {
 }
 
 function readEdges(sub: MMELSubprocess, data: string) {
-  const t: Array<string> = MMELtokenizePackage(data);
+  const t: string[] = MMELtokenizePackage(data);
   let i = 0;
   while (i < t.length) {
     const id: string = t[i++];
@@ -153,7 +153,7 @@ export function parseSubprocessComponent(
     datatype : DataType.SUBPROCESSCOMPONENT,
   };
 
-  const t: Array<string> = MMELtokenizePackage(data);
+  const t: string[] = MMELtokenizePackage(data);
   let i = 0;
   while (i < t.length) {
     const command: string = t[i++];
@@ -186,7 +186,7 @@ export function parseEGate(id: string, data: string): MMELEGate {
     label    : '',
   };
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];

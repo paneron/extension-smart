@@ -95,16 +95,16 @@ function createNode(
   };
 }
 
-type VisitRecord = {
+interface VisitRecord {
   from: string;
   path: string;
-};
+}
 type VisitedMap = Record<string, Record<string, VisitRecord>>;
 type MapOption = Record<string, boolean>;
-type UNode = {
+interface UNode {
   ns: string;
   id: string;
-};
+}
 
 function initialVisit(
   map: MapProfile,

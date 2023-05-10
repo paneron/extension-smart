@@ -2,18 +2,18 @@ import { useReducer } from 'react';
 import { MMELLink } from '../../../serialize/interface/supportinterface';
 import { UndoReducerInterface } from '../interface';
 
-type RefCascadeAction = {
+interface RefCascadeAction {
   subtask: 'process-ref';
   from: string | undefined; // remove from
   to: string | undefined; // add to
   ids: string[];
-};
+}
 
-type ReplaceLinksAction = {
+interface ReplaceLinksAction {
   task: 'replace';
   from: string[]; // remove from
   to: MMELLink[]; // add to
-};
+}
 
 type CascadeAction = RefCascadeAction & { task: 'cascade' };
 
@@ -21,10 +21,10 @@ type EXPORT_ACTION = CascadeAction | ReplaceLinksAction;
 
 export type LinkAction = EXPORT_ACTION & { act: 'link' };
 
-type InitAction = {
+interface InitAction {
   act: 'init';
   value: Record<string, MMELLink>;
-};
+}
 
 type OwnAction = LinkAction | InitAction;
 

@@ -33,7 +33,7 @@ import {
 } from './ModelFunctions';
 import * as Logger from '../../lib/logger';
 
-export type NewImportItems = {
+export interface NewImportItems {
   elements: Record<string, EditorNode>;
   pages: Record<string, EditorSubprocess>;
   provisions: Record<string, MMELProvision>;
@@ -44,7 +44,7 @@ export type NewImportItems = {
   refs: Record<string, MMELReference>;
   notes: Record<string, MMELNote>;
   links: Record<string, MMELLink>;
-};
+}
 
 export function addProcessIfNotFound(
   model: EditorModel,

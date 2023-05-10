@@ -172,7 +172,7 @@ function detectType(text: string): NOTE_TYPE {
   }));
   const t = text.toLowerCase().trim();
   for (const m of options) {
-    if (t.substring(0, m.lowerCaseText.length) === m.lowerCaseText) {
+    if (t.startsWith(m.lowerCaseText)) {
       return m.type;
     }
   }

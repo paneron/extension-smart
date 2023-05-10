@@ -2,14 +2,14 @@ import { DataType } from '../serialize/interface/baseinterface';
 import { MMELComment } from '../serialize/interface/supportinterface';
 import { findUniqueID } from './ModelFunctions';
 
-export type CommentInstance = {
+export interface CommentInstance {
   id: string;
   username: string;
   message: string;
   timestamp: string;
   feedback: CommentInstance[];
   resolved: boolean;
-};
+}
 
 export function createNewComment(
   comments: Record<string, MMELComment>,
@@ -42,7 +42,7 @@ export function materialComments(
       feedback  : [...com.feedback]
         .map(x => materialComments(x, getCommentById))
         .filter(x => x)
-        .map(x => x as CommentInstance),
+        .map(x => x!),
     };
     return ci;
   } else {

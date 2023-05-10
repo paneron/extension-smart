@@ -138,7 +138,7 @@ function parseModel(input: string): MMELModel {
     version    : '',
   };
 
-  const token: Array<string> = MMELtokenize(input);
+  const token: string[] = MMELtokenize(input);
   let i = 0;
   while (i < token.length) {
     const command: string = token[i++];

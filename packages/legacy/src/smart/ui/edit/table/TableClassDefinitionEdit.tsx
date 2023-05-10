@@ -9,11 +9,11 @@ import {
 } from '../../common/fields';
 import ListManagePage from '../../common/listmanagement/listmanagement';
 
-export type TableClassAttribute = {
+export interface TableClassAttribute {
   id: string;
   title: string;
   domain: string;
-};
+}
 
 const initObj: TableClassAttribute = {
   id     : '',

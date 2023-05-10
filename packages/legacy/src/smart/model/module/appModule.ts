@@ -58,20 +58,20 @@ export type NeutralModuleConfig = BaseConfig & {
   >;
 };
 
-type BaseViewProps = {
+interface BaseViewProps {
   isVisible: boolean;
   className?: string;
   repo?: MMELRepo;
-};
+}
 
 /**
  * The common configuration of Module functions of the app
  */
-type BaseConfig = {
+interface BaseConfig {
   title: string;
   description: string;
   icon: IconName;
-};
+}
 export type ModuleType = ModuleConfiguration['type'];
 export type ModuleConfiguration =
   | ModelModuleConfig

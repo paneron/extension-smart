@@ -4,10 +4,10 @@ import { HistoryAction } from '../../../model/editor/history';
 import { HistoryItem } from '../../../model/history';
 import { MMELRole } from '../../../serialize/interface/supportinterface';
 
-type Breadcrumb = {
+interface Breadcrumb {
   label: JSX.Element;
   onNavigate: () => void;
-};
+}
 
 export const DescriptionItem: React.FC<{
   label?: string;

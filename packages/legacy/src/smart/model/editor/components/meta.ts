@@ -2,18 +2,18 @@ import { useReducer } from 'react';
 import { MMELMetadata } from '../../../serialize/interface/supportinterface';
 import { UndoReducerInterface } from '../interface';
 
-type EditAction = {
+interface EditAction {
   property: keyof MMELMetadata;
   value: string;
-};
+}
 
 type EXPORT_ACTION = EditAction;
 export type MetaAction = EXPORT_ACTION & { act: 'meta' };
 
-type InitAction = {
+interface InitAction {
   act: 'init';
   value: MMELMetadata;
-};
+}
 
 type OwnAction = MetaAction | InitAction;
 

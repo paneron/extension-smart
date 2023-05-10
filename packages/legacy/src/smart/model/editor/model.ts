@@ -33,10 +33,10 @@ import { NotesAction, useNotes } from './components/notes';
 import { MODELVERSION } from '../../utils/constants';
 import { LinkAction, useLinks } from './components/links';
 
-type InitModelAction = {
+interface InitModelAction {
   act: 'initModel';
   value: EditorModel;
-};
+}
 
 type ALLACTION =
   | ElmAction
@@ -58,12 +58,12 @@ type ALLACTION =
   | HyEditAction
   | InitModelAction;
 
-type ValidateAction = {
+interface ValidateAction {
   act: 'validate-page';
   refAction: ModelAction;
   cascade?: ModelAction[];
   page: string;
-};
+}
 
 type OwnAction = ValidateAction;
 

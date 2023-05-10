@@ -36,7 +36,7 @@ export function parseMetaData(x: string): MMELMetadata {
     datatype  : DataType.METADATA,
   };
   if (x !== '') {
-    const t: Array<string> = MMELtokenizePackage(x);
+    const t: string[] = MMELtokenizePackage(x);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
@@ -78,7 +78,7 @@ export function parseProvision(id: string, data: string): MMELProvision {
   };
 
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
@@ -113,7 +113,7 @@ export function parseReference(id: string, data: string): MMELReference {
   };
 
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
@@ -151,7 +151,7 @@ export function parseRole(id: string, data: string): MMELRole {
     name     : '',
     datatype : DataType.ROLE,
   };
-  const t: Array<string> = MMELtokenizePackage(data);
+  const t: string[] = MMELtokenizePackage(data);
   let i = 0;
   while (i < t.length) {
     const command: string = t[i++];
@@ -182,7 +182,7 @@ export function parseVariable(id: string, data: string): MMELVariable {
   };
 
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];

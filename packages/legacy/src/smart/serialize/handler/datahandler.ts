@@ -39,7 +39,7 @@ export function parseDataAttribute(
   }
   attribute.id = basic.trim();
   if (details !== '') {
-    const t: Array<string> = MMELtokenizePackage(details);
+    const t: string[] = MMELtokenizePackage(details);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
@@ -79,7 +79,7 @@ export function parseDataClass(id: string, data: string): MMELDataClass {
   };
 
   if (data !== '') {
-    const t: Array<string> = MMELtokenizeAttributes(data);
+    const t: string[] = MMELtokenizeAttributes(data);
     let i = 0;
     while (i < t.length) {
       const basic: string = t[i++];
@@ -104,7 +104,7 @@ export function parseEnumValue(id: string, data: string): MMELEnumValue {
     datatype : DataType.ENUMVALUE,
   };
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
@@ -139,7 +139,7 @@ export function parseEnum(id: string, data: string): MMELEnum {
     datatype : DataType.ENUM,
   };
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const vid: string = t[i++];
@@ -169,7 +169,7 @@ export function parseRegistry(id: string, data: string): MMELRegistry {
   };
 
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];

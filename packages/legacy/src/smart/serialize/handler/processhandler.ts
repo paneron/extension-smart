@@ -19,7 +19,7 @@ export function parseApproval(id: string, data: string): MMELApproval {
   };
 
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
@@ -74,7 +74,7 @@ export function parseProcess(id: string, data: string): MMELProcess {
   };
 
   if (data !== '') {
-    const t: Array<string> = MMELtokenizePackage(data);
+    const t: string[] = MMELtokenizePackage(data);
     let i = 0;
     while (i < t.length) {
       const command: string = t[i++];
