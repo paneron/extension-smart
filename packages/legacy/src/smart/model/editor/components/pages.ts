@@ -65,13 +65,13 @@ interface RemoveChildAction {
   page: string;
 }
 
-interface NewEdgeAction {
+export interface NewEdgeAction {
   task: 'new-edge';
   value: MMELEdge[];
   page: string;
 }
 
-interface DeleteEdgeAction {
+export interface DeleteEdgeAction {
   task: 'delete-edge';
   value: string[];
   page: string;
@@ -93,7 +93,7 @@ interface DeletePageAction {
   value: string[];
 }
 
-interface MoveAction {
+export interface MoveAction {
   task: 'move';
   node: string;
   page: string;
