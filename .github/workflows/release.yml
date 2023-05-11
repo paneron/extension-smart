@@ -124,6 +124,7 @@ jobs:
 
           cd "${MAIN_PACKAGE_PATH}"
           pnpm version --new-version ${{ github.event.inputs.next_version }}
+          git add -u
           git push
 
       - name: Publish to npm
