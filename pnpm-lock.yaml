@@ -19,8 +19,8 @@ importers:
       '@emotion/styled': ^11.10.5
       '@react-three/drei': ^7.27.5
       '@react-three/fiber': ^7.0.29
-      '@riboseinc/paneron-extension-glossarist': 1.0.0-dev9
-      '@riboseinc/paneron-extension-kit': ^2.0.0-alpha24
+      '@riboseinc/paneron-extension-glossarist': ^2.0.7
+      '@riboseinc/paneron-extension-kit': ^2.0.7
       '@swc/cli': ^0.1.57
       '@swc/core': ^1.3.14
       '@swc/jest': ^0.2.23
@@ -70,8 +70,8 @@ importers:
       '@emotion/styled': 11.10.5_4ymlbz3p7h3llzyoropsh3n2ga
       '@react-three/drei': 7.27.5_7eq4zbl7ibf43xntuua3yvs5bu
       '@react-three/fiber': 7.0.29_aohtj6amagesn2i2c4a7jffqmu
-      '@riboseinc/paneron-extension-glossarist': 1.0.0-dev9
-      '@riboseinc/paneron-extension-kit': 2.0.0-alpha24_m7khp2i62jhjhod5a4ozfn5rma
+      '@riboseinc/paneron-extension-glossarist': 2.0.7
+      '@riboseinc/paneron-extension-kit': 2.0.7_oxwob3rn6cg5fehx5lxdil2ygy
       '@swc/cli': 0.1.57_@swc+core@1.3.14
       '@swc/core': 1.3.14
       '@swc/jest': 0.2.23_@swc+core@1.3.14
@@ -1247,8 +1247,18 @@ packages:
       zustand: 3.7.2_react@16.14.0
     dev: true
 
-  /@riboseinc/paneron-extension-glossarist/1.0.0-dev9:
-    resolution: {integrity: sha512-rLa98Sr4jO519uYgPIXC2jfJ5CzEkIZ7roUJQQB7cmOdfaFR0mVchYHeZVWn0A5L6Q6oUFj4lmcPlsKuQsAw2A==}
+  /@riboseinc/isogit-lfs/0.1.6_u2ltkfr42zvmxh3qjzj366je7e:
+    resolution: {integrity: sha512-LX/FQZTUXIrAR+loZFWHYND5g41KTrS5yZukqDvMgQK3nOnkeLAwtcrb3Lysjg2VwNXQN3KSVD6UeuGr1FlnxA==}
+    peerDependencies:
+      '@aws-crypto/sha256-universal': ^2.0.0
+      isomorphic-git: ^1.7.8
+    dependencies:
+      '@aws-crypto/sha256-universal': 2.0.2
+      isomorphic-git: 1.23.0
+    dev: true
+
+  /@riboseinc/paneron-extension-glossarist/2.0.7:
+    resolution: {integrity: sha512-mj/HTmXG5J7h5OQIWQT1wbljkb0PWcuBn13QOraaTo9WAjFl5vv2wG+R5Tm9sP6PGMEFjYt4jq8LEe7M1Zczow==}
     dev: true
 
   /@riboseinc/paneron-extension-kit/2.0.0-alpha24_m7khp2i62jhjhod5a4ozfn5rma:
