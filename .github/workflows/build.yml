@@ -94,8 +94,8 @@ jobs:
           for i in dist; do \
             mkdir -p ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}" ; \
             ls -la "${MAIN_PACKAGE_PATH}/$i"; \
-            echo rsync -a "${MAIN_PACKAGE_PATH}/$i" ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}/$i"; \
-            rsync -a "${MAIN_PACKAGE_PATH}/$i" ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}/$i"; \
+            echo rsync -a "${MAIN_PACKAGE_PATH}/$i" ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}/"; \
+            rsync -a "${MAIN_PACKAGE_PATH}/$i" ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}/"; \
           done
           echo ls -la ${{ env.CACHE_DIR }}
           ls -la ${{ env.CACHE_DIR }}
