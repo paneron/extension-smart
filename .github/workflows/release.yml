@@ -125,7 +125,10 @@ jobs:
           cd "${MAIN_PACKAGE_PATH}"
           pnpm version --new-version ${{ github.event.inputs.next_version }}
           git add -u
-          git push
+          git commit -m "chore: Release ${{ github.event.inputs.next_version }}"
+          git tag -a "${{ github.event.inputs.next_version }}" -mBump
+          # Push commit along with tag
+          git push origin --tags :
 
       - name: Publish to npm
         run: |
