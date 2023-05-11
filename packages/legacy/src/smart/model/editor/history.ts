@@ -9,7 +9,7 @@ import { UndoReducerInterface } from './interface';
 /**
  * Drill down more levels
  */
-interface PushAction {
+export interface PushAction {
   act: 'push';
   value: HistoryItem[];
 }
@@ -17,7 +17,7 @@ interface PushAction {
 /**
  * Drill up some levels. Number of levels is defined by the 'value' propery
  */
-interface PopAction {
+export interface PopAction {
   act: 'pop';
   value: number;
 }
@@ -25,7 +25,7 @@ interface PopAction {
 /**
  * Replace the current page history by the given one
  */
-interface ReplaceAction {
+export interface ReplaceAction {
   act: 'replace';
   value: HistoryItem[];
 }

@@ -1,18 +1,18 @@
 import { useReducer } from 'react';
 import { UndoReducerInterface } from '../interface';
 
-interface EditAction<T> {
+export interface EditAction<T> {
   task: 'edit';
   id: string;
   value: T;
 }
 
-interface AddAction<T> {
+export interface AddAction<T> {
   task: 'add';
   value: T[];
 }
 
-interface DeleteAction {
+export interface DeleteAction {
   task: 'delete';
   value: string[];
 }

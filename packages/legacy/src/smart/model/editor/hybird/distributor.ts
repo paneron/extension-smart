@@ -35,7 +35,7 @@ import {
   compileProcessRemovePage,
 } from './process';
 
-interface EGateEditAction {
+export interface EGateEditAction {
   task: 'egate-edit';
   id: string;
   page: string;
@@ -43,17 +43,17 @@ interface EGateEditAction {
   edges: MMELEdge[];
 }
 
-interface ProcessAddPageAction {
+export interface ProcessAddPageAction {
   task: 'process-add-page';
   id: string; // process ID
 }
 
-interface ProcessRemovePageAction {
+export interface ProcessRemovePageAction {
   task: 'process-remove-page';
   id: string; // process ID
 }
 
-interface ProcessEditAction {
+export interface ProcessEditAction {
   task: 'process-edit';
   id: string;
   process: EditorProcess;
@@ -82,13 +82,13 @@ interface ProcessBringInAction {
   page: string;
 }
 
-interface ProcessBringOutAction {
+export interface ProcessBringOutAction {
   task: 'process-bringout';
   id: string;
   page: string;
 }
 
-interface RegistryImportReference {
+export interface RegistryImportReference {
   task: 'registry-import-ref';
   id: string;
   value: RegistryCombined;
@@ -96,7 +96,7 @@ interface RegistryImportReference {
   delRefs: string[];
 }
 
-interface DCImportReference {
+export interface DCImportReference {
   task: 'dc-import-ref';
   id: string;
   value: EditorDataClass;
@@ -104,7 +104,7 @@ interface DCImportReference {
   delRefs: string[];
 }
 
-interface ElmImportReference {
+export interface ElmImportReference {
   task: 'elm-import';
   id: string;
   ref: EditorModel;
