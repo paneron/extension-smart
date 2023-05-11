@@ -133,10 +133,8 @@ jobs:
       - name: Publish to npm
         run: |
           cd "${MAIN_PACKAGE_PATH}"
-          # debug
-          cat package.json
-          git status
-          git log --oneline
+          diff -u {,dist/}package.json | \
+            cp {,dist/}package.json
           pnpm publish dist --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PANERON_CI_NPM_TOKEN }}
