@@ -42,6 +42,16 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Calculate build-cache key
+        # Because the exact same hashFiles invocation produces different
+        # results down the file
+        id: build-cache-key
+        run: |
+          if command -v shasum; then sum() { shasum -a 256 "$@"; } ; else sum() { sha256sum "$@"; }; fi
+          fragment=$(< package.json command grep 'version"\|"name"\|"files"\|"main"\|"build' | sum | command head -c8)
+          echo "key=build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('packages/**/src/**', '**/.npmrc', '**/tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}-${fragment}" | tee -a $GITHUB_OUTPUT
+        shell: bash
+
       - uses: actions/setup-node@v3
         id: setup-node
         with:
@@ -83,7 +93,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_DIR }}
-          key: build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('packages/**', '**/.npmrc', '**/tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}
+          key: ${{ steps.build-cache-key.outputs.key }}
 
       - name: Restore cache to working directory
         shell: bash
