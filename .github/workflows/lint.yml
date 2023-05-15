@@ -33,7 +33,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_TEST_DIR }}
-          key: lint-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('**/*eslintrc*', '**/.*eslintrc*', 'packages/**', '**/pnpm-lock.yaml') }}-${{ steps.cache-key.outputs.fragment }}
+          key: lint-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('**/*eslintrc*', '**/.*eslintrc*', '**/src/**', '**/pnpm-lock.yaml') }}-${{ steps.cache-key.outputs.fragment }}
 
       - uses: pnpm/action-setup@v2
         if: steps.test_cache.outputs.cache-hit != 'true'

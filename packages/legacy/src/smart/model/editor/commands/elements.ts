@@ -48,7 +48,7 @@ export function editEGateCommand(
   page: string,
   update: EditorEGate,
   edges: MMELEdge[]
-) {
+): ModelAction {
   const action: ModelAction = {
     type : 'model',
     act  : 'hybird',
@@ -65,7 +65,7 @@ export function editEGateCommand(
  * Add a subprocess page to the process
  * @param id The Process ID
  */
-export function createSubprocessCommand(id: string) {
+export function createSubprocessCommand(id: string): ModelAction {
   const action: ModelAction = {
     type : 'model',
     act  : 'hybird',
@@ -79,7 +79,7 @@ export function createSubprocessCommand(id: string) {
  * Remove the subprocess page from the process
  * @param id The Process ID
  */
-export function deleteSubprocessCommand(id: string) {
+export function deleteSubprocessCommand(id: string): ModelAction {
   const action: ModelAction = {
     type : 'model',
     act  : 'hybird',
@@ -94,7 +94,7 @@ export function deleteSubprocessCommand(id: string) {
  * @param id The process ID
  * @param page The page where the process is removed
  */
-export function bringoutProcessCommand(id: string, page: string) {
+export function bringoutProcessCommand(id: string, page: string): ModelAction {
   const action: ModelAction = {
     type : 'model',
     act  : 'hybird',
@@ -121,7 +121,7 @@ export function editProcessCommand(
   notes: MMELNote[],
   links: MMELLink[],
   refs: MMELReference[]
-) {
+): ModelAction {
   const newProcess: EditorProcess = {
     ...process,
     provision : new Set(provisions.map(x => x.id)),

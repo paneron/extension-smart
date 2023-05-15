@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "esnext",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "incremental": true,
+    "experimentalDecorators": true,
+    "allowJs": false,
+    "jsx": "react",
+    "newLine": "lf"
+  },
+  "exclude": [
+    "node_modules",
+    "backup",
+    "compiled",
+    "dist"
+  ]
+}

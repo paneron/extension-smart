@@ -4,7 +4,35 @@
  * https://jestjs.io/docs/configuration
  */
 
-export default {
+import { pathsToModuleNameMapper } from 'ts-jest';
+import { compilerOptions } from './tsconfig.json';
+
+import type { JestConfigWithTsJest } from 'ts-jest';
+
+const _pathsToModuleName: Record<string, string | string[]> = pathsToModuleNameMapper(
+  compilerOptions.paths,
+  // { prefix : '<rootDir>/' },
+) ?? {};
+
+const pathsToModuleName: Record<string, string | string[]> = {} as Record<string, string | string[]>;
+
+function isString(v : string | string[]): v is string {
+  return !Array.isArray(v);
+}
+
+const transformPathsForJest = (rhs : string ) : string => {
+  return rhs.replace(/^\.\//, '<rootDir>/../');
+}
+
+Object.entries(_pathsToModuleName).forEach(([key, value]) => {
+  const newValue = isString(value) ?
+    transformPathsForJest(value) :
+    value.map(transformPathsForJest);
+
+  pathsToModuleName[key] = newValue;
+})
+
+const jestConfig: JestConfigWithTsJest = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -30,9 +58,9 @@ export default {
   coverageDirectory : 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
-  // coveragePathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  coveragePathIgnorePatterns : [
+    '/dist/'
+  ],
 
   // Indicates which provider should be used to instrument code for coverage
   // coverageProvider: "babel",
@@ -103,10 +131,13 @@ export default {
   // A map from regular expressions to module names or to arrays of module
   // names that allow to stub out resources with a single module
   // moduleNameMapper: {},
+  moduleNameMapper       : pathsToModuleName,
 
   // An array of regexp pattern strings, matched against all module paths
   // before considered 'visible' to the module loader
-  // modulePathIgnorePatterns: [],
+  modulePathIgnorePatterns : [
+    '/dist/',
+  ],
 
   // Activates notifications for test results
   // notify: false,
@@ -140,9 +171,11 @@ export default {
   // rootDir: undefined,
 
   // A list of paths to directories that Jest should use to search for files in
-  // roots: [
-  //   "<rootDir>"
-  // ],
+  roots : [
+    '<rootDir>'
+  ],
+
+  modulePaths : [compilerOptions.baseUrl], // <-- This will be set to 'baseUrl' value
 
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
@@ -186,7 +219,7 @@ export default {
   testPathIgnorePatterns : [
     '/node_modules/',
     '/dist/',
-    '/paneron/',
+    '/paneron-for-tests/',
   ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
@@ -203,7 +236,7 @@ export default {
 
   // Use @swc/jest to support nodejs 14.x:
   transform : {
-    '^.+\\.(t|j)sx?$' : ['@swc/jest'],
+    '^.+\\.(t|j)sx?$' : ['@swc/jest', {}],
   },
 
   // An array of regexp pattern strings that are matched against all source
@@ -227,3 +260,5 @@ export default {
   // Whether to use watchman for file crawling
   // watchman: true,
 };
+
+export default jestConfig;

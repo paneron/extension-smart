@@ -13,7 +13,7 @@ import { ModelAction } from '../model';
  * @param page The page ID
  * @param id The edge ID
  */
-export function removeEdgeCommand(page: string, id: string) {
+export function removeEdgeCommand(page: string, id: string): ModelAction {
   const action: ModelAction = {
     type  : 'model',
     act   : 'pages',
@@ -34,7 +34,7 @@ export function newEdgeCommand(
   page: EditorSubprocess,
   source: string,
   target: string
-) {
+): ModelAction {
   const newEdge = createEdge(findUniqueID('Edge', page.edges));
   newEdge.from = source;
   newEdge.to = target;
@@ -65,7 +65,7 @@ export function dragCommand(
   model: EditorModel,
   flowNode: Node,
   ds: DragStartRecord
-) {
+): ModelAction {
   const action: ModelAction = {
     type     : 'model',
     act      : 'pages',

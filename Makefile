@@ -1,3 +1,5 @@
+PANERON_TEST_DIR_NAME := paneron-for-tests
+
 # https://gist.github.com/klmr/575726c7e05d8780505a
 # Inspired by
 # <http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html>
@@ -101,15 +103,15 @@ test-all: test test-e2e
 test:
 	$(NPM) run test
 
-./paneron/dist/main/main.js:
-	git clone https://github.com/paneron/paneron
+./$(PANERON_TEST_DIR_NAME)/dist/main/main.js:
+	git clone https://github.com/paneron/paneron "$(PANERON_TEST_DIR_NAME)"
 	git checkout 1ab232b008ba9709c9a80512c0eceaeb525515bf
 	cd paneron && yarn install && yarn compile
 
 .PHONY: test-e2e
 ## Run end-to-end tests
-test-e2e: ./paneron/dist/main/main.js
 	$(NPM) run -r test:e2e
+test-e2e: ./$(PANERON_TEST_DIR_NAME)/dist/main/main.js
 
 .PHONY: audit
 ## Run security audit for npm packages

@@ -19,7 +19,7 @@ export function importElmCommand(
   x: number,
   y: number,
   page: string
-) {
+): ModelAction {
   const action: ModelAction = {
     type : 'model',
     act  : 'hybird',

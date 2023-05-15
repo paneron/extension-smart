@@ -14,8 +14,24 @@
     "declarationMap": true,
     "jsx": "react",
     "outDir": "dist",
-    "allowJs": false
+    "typeRoots": [
+      "../../src/@types",
+      "./node_modules/@types"
+    ],
+    "composite": true,
+    "module": "esnext",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+    }
   },
+  "include": [
+    "**.json",
+    "*.ts",
+    "src"
+  ],
   "exclude": [
     "node_modules",
     "dist",
@@ -23,6 +39,10 @@
     "backup"
   ],
   "ts-node": {
+    "swc": true,
+    "compilerOptions": {
+      "module": "CommonJS"
+    },
     "files": true
   }
 }

@@ -64,7 +64,7 @@ export function editImportRegistryCommand(
   id: string,
   value: RegistryCombined,
   refs: MMELReference[]
-) {
+): ModelAction {
   const action: ModelAction = {
     type    : 'model',
     act     : 'hybird',
@@ -135,7 +135,7 @@ export function editImportDCCommand(
   id: string,
   value: EditorDataClass,
   refs: MMELReference[]
-) {
+): ModelAction {
   const action: ModelAction = {
     type    : 'model',
     act     : 'hybird',
