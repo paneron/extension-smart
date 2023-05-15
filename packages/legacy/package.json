@@ -34,7 +34,7 @@
     "clean-build-inject": "pnpm run clean; pnpm run build-inject",
     "clean-build-typecheck-inject": "pnpm run clean-build-typecheck && pnpm run inject",
     "lint": "eslint src/ --ext .ts,.tsx",
-    "clean": "rimraf dist/*",
+    "clean": "rimraf dist/* *.tsbuildinfo",
     "test:e2e": "codeceptjs run",
     "test:e2e:def": "codeceptjs def",
     "test:unit": "jest",
