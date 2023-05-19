@@ -75,8 +75,8 @@ const NLPMain: React.FC<{
       title="Item metadata"
       blocks={[
         {
-          key     : 'NLP-control',
-          title   : 'Control panel',
+          key   : 'NLP-control',
+          title : 'Control panel',
           content :
             repo && mw ? (
               <RDFControlPane repo={repo} mw={mw} rdf={rdf} />

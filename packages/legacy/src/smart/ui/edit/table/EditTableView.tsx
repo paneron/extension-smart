@@ -68,7 +68,7 @@ const EditTableView: React.FC<{
         {emptyRow.map(
           (_, index) =>
             table.columns > 1 && (
-              <td style={{ textAlign : 'center' }}>
+              <td key={index} style={{ textAlign : 'center' }}>
                 <Tooltip2 content="Remove column">
                   <Button
                     intent="danger"

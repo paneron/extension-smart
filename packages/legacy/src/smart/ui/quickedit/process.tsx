@@ -51,8 +51,8 @@ const QuickEditProcess: React.FC<{
 
   const functionProps = {
     onFullEditClick,
-    onDeleteClick           : process.pages.size > 1 ? undefined : onDeleteClick,
-    onSubprocessClick       : process.page === '' ? onSubprocessClick : undefined,
+    onDeleteClick     : process.pages.size > 1 ? undefined : onDeleteClick,
+    onSubprocessClick : process.page === '' ? onSubprocessClick : undefined,
     onSubprocessRemoveClick :
       process.page !== '' ? onSubprocessRemoveClick : undefined,
     onBringoutClick : process.pages.size > 1 ? onBringoutClick : undefined,

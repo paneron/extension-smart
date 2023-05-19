@@ -362,7 +362,7 @@ export function getMapperReactFlowElementsFrom(
   const destinationList = getMappedList(mapSet);
   const callback = getEditorNodeCallBack({
     type,
-    model             : mw.model,
+    model : mw.model,
     onProcessClick,
     setMapping,
     getStyleClassById :
