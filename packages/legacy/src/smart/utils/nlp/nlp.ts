@@ -1,6 +1,6 @@
 import { ArrowHeadType, Edge, Elements, Node } from 'react-flow-renderer';
-import { isEditorProcess } from '../../model/editormodel';
-import { ModelWrapper } from '../../model/modelwrapper';
+import { isEditorProcess } from '@/smart/model/editormodel';
+import { ModelWrapper } from '@/smart/model/modelwrapper';
 import {
   NLPItem,
   NLPJSON,
@@ -11,7 +11,7 @@ import {
   STNode,
   STRelation,
 } from '../../model/SemanticTriple';
-import * as Logger from '../../../lib/logger';
+import * as Logger from '@/lib/logger';
 
 const nlpServer = 'http://localhost:9000';
 const width = 180;

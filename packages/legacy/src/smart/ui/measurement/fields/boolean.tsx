@@ -1,6 +1,6 @@
 import { Switch } from '@blueprintjs/core';
 import React from 'react';
-import { VarInputInterface } from '../../../model/Measurement';
+import { VarInputInterface } from '@/smart/model/Measurement';
 
 const BooleanMeasureEdit: React.FC<VarInputInterface> = function ({
   variable,

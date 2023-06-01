@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { mgdHeading } from '../../css/form';
+import { mgdHeading } from '@/css/form';
 
 interface OwnProps {
   children: React.ReactNode;

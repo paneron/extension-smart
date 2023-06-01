@@ -1,6 +1,6 @@
 import { BreadcrumbProps, Breadcrumbs } from '@blueprintjs/core';
 import React from 'react';
-import { RepoHistory } from '../../../model/history';
+import { RepoHistory } from '@/smart/model/history';
 
 const RepoBreadcrumb: React.FC<{
   repoHis: RepoHistory;

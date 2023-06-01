@@ -1,6 +1,6 @@
 import { Menu, MenuItem } from '@blueprintjs/core';
 import React from 'react';
-import MenuButton from './MenuButton';
+import MenuButton from '@/smart/ui/menu/MenuButton';
 
 const DocEditImportMenu: React.FC<{
   open: () => void;

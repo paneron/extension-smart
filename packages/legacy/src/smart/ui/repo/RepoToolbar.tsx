@@ -1,22 +1,22 @@
 import { Button, ControlGroup, Dialog } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import React, { useState } from 'react';
-import { MMELDocument } from '../../model/document';
+import { MMELDocument } from '@/smart/model/document';
 import {
   createEditorModelWrapper,
   ModelWrapper,
 } from '../../model/modelwrapper';
-import { MMELRepo, RepoIndex, RepoItemType } from '../../model/repo';
+import { MMELRepo, RepoIndex, RepoItemType } from '@/smart/model/repo';
 import {
   EXTENSIONVERSION,
   MODELVERSION,
   PANERONVERSION,
 } from '../../utils/constants';
-import { createNewEditorModel } from '../../utils/EditorFactory';
-import AskIDForSaveMenu from '../popover/AskIDForSaveMenu';
-import RepoAIMenu from './RepoAIMenu';
-import RepoImportMenu from './RepoImportMenu';
-import RepoItemSelector from './RepoItemSelector';
+import { createNewEditorModel } from '@/smart/utils/EditorFactory';
+import AskIDForSaveMenu from '@/smart/ui/popover/AskIDForSaveMenu';
+import RepoAIMenu from '@/smart/ui/repo/RepoAIMenu';
+import RepoImportMenu from '@/smart/ui/repo/RepoImportMenu';
+import RepoItemSelector from '@/smart/ui/repo/RepoItemSelector';
 
 const RepoToolbar: React.FC<{
   addMW: (m: ModelWrapper, type: RepoItemType) => void;

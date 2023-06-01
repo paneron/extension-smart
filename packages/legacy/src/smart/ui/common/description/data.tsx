@@ -1,9 +1,9 @@
 import React from 'react';
-import { EditorDataClass, EditorRegistry } from '../../../model/editormodel';
+import { EditorDataClass, EditorRegistry } from '@/smart/model/editormodel';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
-import { AttributeList, ReferenceList } from './ComponentList';
-import { DescriptionItem, NonEmptyFieldDescription } from './fields';
+import { AttributeList, ReferenceList } from '@/smart/ui/common/description/ComponentList';
+import { DescriptionItem, NonEmptyFieldDescription } from '@/smart/ui/common/description/fields';
 
 export const DescribeRegistry: React.FC<{
   reg: EditorRegistry;

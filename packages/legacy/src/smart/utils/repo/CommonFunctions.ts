@@ -6,8 +6,8 @@ import {
   RepoItems,
   RepoRefItem,
 } from '../../model/repo';
-import { LegendInterface } from '../../model/States';
-import { getPathByNS, RepoFileType } from './io';
+import { LegendInterface } from '@/smart/model/States';
+import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
 
 export type RepoNodeType = 'own' | 'repo' | 'outside';
 

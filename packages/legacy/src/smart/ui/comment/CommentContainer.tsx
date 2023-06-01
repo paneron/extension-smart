@@ -1,8 +1,8 @@
 import React from 'react';
-import { popoverPanelContainer } from '../../../css/layout';
-import { CommentInstance } from '../../utils/Comments';
-import CommentEntry from './CommentEntry';
-import CommentField from './CommentField';
+import { popoverPanelContainer } from '@/css/layout';
+import { CommentInstance } from '@/smart/utils/Comments';
+import CommentEntry from '@/smart/ui/comment/CommentEntry';
+import CommentField from '@/smart/ui/comment/CommentField';
 
 const CommentContainer: React.FC<{
   comments: CommentInstance[];

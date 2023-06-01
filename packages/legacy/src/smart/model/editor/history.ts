@@ -3,8 +3,8 @@
  */
 
 import { useReducer } from 'react';
-import { HistoryItem } from '../history';
-import { UndoReducerInterface } from './interface';
+import { HistoryItem } from '@/smart/model/history';
+import { UndoReducerInterface } from '@/smart/model/editor/interface';
 
 /**
  * Drill down more levels

@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { Button, Dialog, FormGroup } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
-import { NormalTextField } from '../common/fields';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { FILE_TYPE, saveToFileSystem } from '../../utils/IOFunctions';
-import MetanormaPrint from './MetanormaPrint';
+import MGDButtonGroup from '@/smart/MGDComponents/MGDButtonGroup';
+import { NormalTextField } from '@/smart/ui/common/fields';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { FILE_TYPE, saveToFileSystem } from '@/smart/utils/IOFunctions';
+import MetanormaPrint from '@/smart/ui/reporttemplate/MetanormaPrint';
 
 const ReportGen: React.FC<{
   report: string;

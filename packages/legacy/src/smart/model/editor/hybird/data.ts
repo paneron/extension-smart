@@ -5,9 +5,9 @@ import {
   isEditorDataClass,
   isEditorRegistry,
 } from '../../editormodel';
-import { RegistryCombined } from '../components/element/registry';
-import { ModelAction } from '../model';
-import { HyEditAction } from './distributor';
+import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
+import { ModelAction } from '@/smart/model/editor/model';
+import { HyEditAction } from '@/smart/model/editor/hybird/distributor';
 
 type RegistryImportRefHybird = HyEditAction & { task: 'registry-import-ref' };
 type DCImportRefHybird = HyEditAction & { task: 'dc-import-ref' };

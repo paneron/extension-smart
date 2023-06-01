@@ -1,17 +1,17 @@
 import { Button, Checkbox, Text } from '@blueprintjs/core';
 import React from 'react';
 import { useEffect, useState } from 'react';
-import MGDLabel from '../../MGDComponents/MGDLabel';
-import MGDSidebar from '../../MGDComponents/MGDSidebar';
+import MGDLabel from '@/smart/MGDComponents/MGDLabel';
+import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
 import {
   ChecklistCallback,
   ChecklistPackage,
   ChecklistResult,
   ChecklistSetting,
 } from '../../model/checklist';
-import { EditorModel } from '../../model/editormodel';
-import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
-import { updateResult } from '../../utils/checklist/ChecklistCalculator';
+import { EditorModel } from '@/smart/model/editormodel';
+import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import { updateResult } from '@/smart/utils/checklist/ChecklistCalculator';
 import {
   calEdgeAnimated,
   calEdgeColor,
@@ -21,9 +21,9 @@ import {
   calculateTaskList,
   initResult,
 } from '../../utils/checklist/CheckllistInitializer';
-import { MODAILITYOPTIONS, ModalityType } from '../../utils/constants';
-import CircleGraph from '../dashboard/CircleGraph';
-import { CustomCLAttribute, CustomCLProvision } from './CustomFields';
+import { MODAILITYOPTIONS, ModalityType } from '@/smart/utils/constants';
+import CircleGraph from '@/smart/ui/dashboard/CircleGraph';
+import { CustomCLAttribute, CustomCLProvision } from '@/smart/ui/checklist/CustomFields';
 
 const ModalityText: Record<ModalityType, string> = {
   ''       : 'Not specified (empty)',

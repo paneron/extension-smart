@@ -1,4 +1,4 @@
-import { DataType } from '../interface/baseinterface';
+import { DataType } from '@/interface/baseinterface';
 import {
   MMELDataAttribute,
   MMELDataClass,

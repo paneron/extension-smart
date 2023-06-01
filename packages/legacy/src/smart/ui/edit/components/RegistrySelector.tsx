@@ -6,7 +6,7 @@ import {
   MultiSelect,
 } from '@blueprintjs/select';
 import React from 'react';
-import { EditorRegistry } from '../../../model/editormodel';
+import { EditorRegistry } from '@/smart/model/editormodel';
 
 const RegistryMultiSelect = MultiSelect.ofType<EditorRegistry>();
 

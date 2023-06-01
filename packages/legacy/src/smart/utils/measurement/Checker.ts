@@ -13,12 +13,12 @@ import {
   MeasureRType,
   MTestReport,
 } from '../../model/Measurement';
-import { LegendInterface } from '../../model/States';
+import { LegendInterface } from '@/smart/model/States';
 import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import { MMELTable, VarType } from '@paneron/libmmel/interface/supportinterface';
-import { buildEdgeConnections } from '../ModelFunctions';
-import { evaluateCondition, resolveMTNode } from './Evaluator';
-import { parseMeasurement } from './Parser';
+import { buildEdgeConnections } from '@/smart/utils/ModelFunctions';
+import { evaluateCondition, resolveMTNode } from '@/smart/utils/measurement/Evaluator';
+import { parseMeasurement } from '@/smart/utils/measurement/Parser';
 
 export const MeasureResultStyles: Record<MeasureRType, LegendInterface> = {
   [MeasureRType.OK]           : { label : 'OK: Test passed', color : 'lightgreen' },

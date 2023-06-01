@@ -1,11 +1,11 @@
 import { Dialog } from '@blueprintjs/core';
 import React from 'react';
-import { dialogLayout } from '../../../css/layout';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { EditorModel } from '../../model/editormodel';
-import { SMARTDocumentStore, SMARTModelStore } from '../../model/workspace';
-import RegistryDocManagement from '../workspace/RegistryDocManagement';
-import WorkspaceRegistryList from '../workspace/RegistryList';
+import { dialogLayout } from '@/css/layout';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { EditorModel } from '@/smart/model/editormodel';
+import { SMARTDocumentStore, SMARTModelStore } from '@/smart/model/workspace';
+import RegistryDocManagement from '@/smart/ui/workspace/RegistryDocManagement';
+import WorkspaceRegistryList from '@/smart/ui/workspace/RegistryList';
 
 export interface WorkspaceDiagPackage {
   regid: string;

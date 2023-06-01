@@ -7,7 +7,7 @@
 /** @jsxFrag React.Fragment */
 
 import { css } from '@emotion/react';
-import { CSSROOTVARIABLES } from './root.css';
+import { CSSROOTVARIABLES } from '@/css/root.css';
 
 export const mgd_process_box = css`
   font-weight: ${CSSROOTVARIABLES['--font-weight--regular']};

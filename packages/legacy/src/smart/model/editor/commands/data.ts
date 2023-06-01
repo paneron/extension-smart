@@ -3,9 +3,9 @@
  */
 
 import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
-import { EditorDataClass } from '../../editormodel';
-import { RegistryCombined } from '../components/element/registry';
-import { ModelAction } from '../model';
+import { EditorDataClass } from '@/smart/model/editormodel';
+import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
+import { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * Delete the registries from the model

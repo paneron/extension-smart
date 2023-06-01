@@ -1,6 +1,6 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
 import {
   EditorModel,
   isEditorDataClass,
@@ -11,16 +11,16 @@ import {
   getReferenceDCTypeName,
   referenceSorter,
 } from '../../utils/ModelFunctions';
-import { DATATYPE, MODAILITYOPTIONS } from '../../utils/constants';
-import { createDataAttribute } from '../../utils/EditorFactory';
+import { DATATYPE, MODAILITYOPTIONS } from '@/smart/utils/constants';
+import { createDataAttribute } from '@/smart/utils/EditorFactory';
 import {
   MultiReferenceSelector,
   NormalComboBox,
   NormalTextField,
   ReferenceSelector,
 } from '../common/fields';
-import ListWithPopoverItem from '../common/listmanagement/listPopoverItem';
-import { CardinalityField } from './components/CardinalityEdit';
+import ListWithPopoverItem from '@/smart/ui/common/listmanagement/listPopoverItem';
+import { CardinalityField } from '@/smart/ui/edit/components/CardinalityEdit';
 
 const AttributeEditPage: React.FC<{
   attributes: Record<string, MMELDataAttribute>;

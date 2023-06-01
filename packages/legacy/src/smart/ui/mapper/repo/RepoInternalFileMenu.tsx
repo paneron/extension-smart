@@ -1,6 +1,6 @@
 import { Menu, MenuItem } from '@blueprintjs/core';
 import React from 'react';
-import { RepoItemType } from '../../../model/repo';
+import { RepoItemType } from '@/smart/model/repo';
 
 const RepoInternalFileMenu: React.FC<{
   setType: (x: RepoItemType) => void;

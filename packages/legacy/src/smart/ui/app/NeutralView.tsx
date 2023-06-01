@@ -10,7 +10,7 @@ import {
   ModuleName,
   MODULE_CONFIGURATION,
 } from '../../model/module/appModule';
-import { MMELRepo, RepoIndex } from '../../model/repo';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
 
 /**
  * The displayed UI when nothing is open.

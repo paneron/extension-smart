@@ -1,17 +1,17 @@
 import { Button, InputGroup } from '@blueprintjs/core';
 import React, { useMemo, useState } from 'react';
-import { searchResultEntryRow } from '../../../css/shame';
-import MGDContainer from '../../MGDComponents/MGDContainer';
-import MGDLabel from '../../MGDComponents/MGDLabel';
-import MGDSidebar from '../../MGDComponents/MGDSidebar';
-import { EditorModel } from '../../model/editormodel';
-import { HistoryItem } from '../../model/history';
-import * as Logger from '../../../lib/logger';
+import { searchResultEntryRow } from '@/css/shame';
+import MGDContainer from '@/smart/MGDComponents/MGDContainer';
+import MGDLabel from '@/smart/MGDComponents/MGDLabel';
+import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
+import { EditorModel } from '@/smart/model/editormodel';
+import { HistoryItem } from '@/smart/model/history';
+import * as Logger from '@/lib/logger';
 import {
   findComponent,
   SearchComponentRecord,
 } from '../../utils/SearchFunctions';
-import { NumericComboBox } from '../common/fields';
+import { NumericComboBox } from '@/smart/ui/common/fields';
 
 const RECORD_PER_PAGE = 10;
 

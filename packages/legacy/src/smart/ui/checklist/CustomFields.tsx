@@ -1,16 +1,16 @@
 import { Checkbox } from '@blueprintjs/core';
 import React from 'react';
-import { mgdLabel } from '../../../css/form';
-import { ChecklistPackage, getCheckListId } from '../../model/checklist';
+import { mgdLabel } from '@/css/form';
+import { ChecklistPackage, getCheckListId } from '@/smart/model/checklist';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import { DescribeProvision } from '../common/description/ComponentDescription';
-import { DescribeAttribute } from '../common/description/data';
-import ChecklistAttribute from './AttributeField';
-import ChecklistProvision from './ProvisionField';
+import { DescribeProvision } from '@/smart/ui/common/description/ComponentDescription';
+import { DescribeAttribute } from '@/smart/ui/common/description/data';
+import ChecklistAttribute from '@/smart/ui/checklist/AttributeField';
+import ChecklistProvision from '@/smart/ui/checklist/ProvisionField';
 
 export const CustomCLAttribute: React.FC<{
   att: MMELDataAttribute;

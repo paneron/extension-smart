@@ -1,10 +1,10 @@
 import React from 'react';
-import { CSSROOTVARIABLES } from '../../../css/root.css';
-import { InputableVarType, VarInputInterface } from '../../model/Measurement';
+import { CSSROOTVARIABLES } from '@/css/root.css';
+import { InputableVarType, VarInputInterface } from '@/smart/model/Measurement';
 import { VarType } from '@paneron/libmmel/interface/supportinterface';
-import BooleanMeasureEdit from './fields/boolean';
-import TableComboBox from './fields/TableComboBox';
-import TextMeasureEdit from './fields/text';
+import BooleanMeasureEdit from '@/smart/ui/measurement/fields/boolean';
+import TableComboBox from '@/smart/ui/measurement/fields/TableComboBox';
+import TextMeasureEdit from '@/smart/ui/measurement/fields/text';
 
 const VarInputs: Record<InputableVarType, React.FC<VarInputInterface>> = {
   [VarType.BOOLEAN]   : BooleanMeasureEdit,

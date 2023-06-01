@@ -1,11 +1,11 @@
-import { DataType } from '../interface/baseinterface';
+import { DataType } from '@/interface/baseinterface';
 import {
   MMELEdge,
   MMELEGate,
   MMELSubprocess,
   MMELSubprocessComponent,
 } from '../interface/flowcontrolinterface';
-import { MMELremovePackage, MMELtokenizePackage } from '../util/tokenizer';
+import { MMELremovePackage, MMELtokenizePackage } from '@/util/tokenizer';
 
 export function parseEdge(id: string, data: string): MMELEdge {
   const edge: MMELEdge = {

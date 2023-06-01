@@ -1,9 +1,9 @@
 import React from 'react';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
-import { ReferenceList } from '../common/description/ComponentList';
-import { NonEmptyFieldDescription } from '../common/description/fields';
-import { CLDescriptionItem } from './CustomFields';
+import { ReferenceList } from '@/smart/ui/common/description/ComponentList';
+import { NonEmptyFieldDescription } from '@/smart/ui/common/description/fields';
+import { CLDescriptionItem } from '@/smart/ui/checklist/CustomFields';
 
 const ChecklistAttribute: React.FC<{
   att: MMELDataAttribute;

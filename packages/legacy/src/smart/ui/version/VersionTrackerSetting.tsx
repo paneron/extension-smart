@@ -1,20 +1,20 @@
 import { Button, Switch, Text } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import MGDSidebar from '../../MGDComponents/MGDSidebar';
-import { PageHistory } from '../../model/history';
-import { ModelWrapper } from '../../model/modelwrapper';
-import { FunModel } from '../../model/States';
-import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
-import { handleModelOpen } from '../../utils/IOFunctions';
-import { buildModelLinks } from '../../utils/ModelFunctions';
-import * as Logger from '../../../lib/logger';
+import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
+import { PageHistory } from '@/smart/model/history';
+import { ModelWrapper } from '@/smart/model/modelwrapper';
+import { FunModel } from '@/smart/model/States';
+import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import { handleModelOpen } from '@/smart/utils/IOFunctions';
+import { buildModelLinks } from '@/smart/utils/ModelFunctions';
+import * as Logger from '@/lib/logger';
 import {
   computeDiff,
   getDiffViewProps,
   getHistroyFromRefModel,
 } from '../../utils/VersionTracker';
-import { DescriptionItem } from '../common/description/fields';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
 
 const VersionTrackerSettingPane: React.FC<{
   mw: ModelWrapper;

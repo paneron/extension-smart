@@ -9,7 +9,7 @@ import {
   isEditorRegistry,
   isMMELTable,
 } from '../../model/editormodel';
-import { NodeCallBack } from '../../model/FlowContainer';
+import { NodeCallBack } from '@/smart/model/FlowContainer';
 import {
   DatacubeShape,
   EgateShape,
@@ -30,22 +30,22 @@ import {
   shameLabelShort,
   tooltipLabel,
 } from '../../../css/shame';
-import { flownodeTopLeftButtonLayout } from '../../../css/layout';
-import PopoverWrapper from '../popover/PopoverWrapper';
-import ViewMappingbutton from '../mapper/viewmapbutton';
-import ViewWorkspaceButton from '../workspace/ViewDataWorkspaceButton';
+import { flownodeTopLeftButtonLayout } from '@/css/layout';
+import PopoverWrapper from '@/smart/ui/popover/PopoverWrapper';
+import ViewMappingbutton from '@/smart/ui/mapper/viewmapbutton';
+import ViewWorkspaceButton from '@/smart/ui/workspace/ViewDataWorkspaceButton';
 import { Button, Classes, Dialog, Icon } from '@blueprintjs/core';
-import NodeIDField from './NodeIDField';
+import NodeIDField from '@/smart/ui/flowui/NodeIDField';
 import {
   MMELFigure,
   MMELTable,
 } from '@paneron/libmmel/interface/supportinterface';
-import NonTextReferenceList from '../popover/NonTextReferenceList';
-import TableViewer from '../common/description/TableViewer';
-import FigureViewer from '../common/description/FigureViewer';
-import LinksList from '../popover/LinksList';
-import { handleCSS } from '../../../css/visual';
-import NodeComment from '../comment/NodeComment';
+import NonTextReferenceList from '@/smart/ui/popover/NonTextReferenceList';
+import TableViewer from '@/smart/ui/common/description/TableViewer';
+import FigureViewer from '@/smart/ui/common/description/FigureViewer';
+import LinksList from '@/smart/ui/popover/LinksList';
+import { handleCSS } from '@/css/visual';
+import NodeComment from '@/smart/ui/comment/NodeComment';
 
 export const Datacube: FC<NodeProps> = function ({ data }) {
   const node = data as EditorNode;

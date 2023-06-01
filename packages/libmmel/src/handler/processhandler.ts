@@ -1,5 +1,5 @@
-import { DataType } from '../interface/baseinterface';
-import { MMELApproval, MMELProcess } from '../interface/processinterface';
+import { DataType } from '@/interface/baseinterface';
+import { MMELApproval, MMELProcess } from '@/interface/processinterface';
 import {
   MMELremovePackage,
   MMELtokenizePackage,

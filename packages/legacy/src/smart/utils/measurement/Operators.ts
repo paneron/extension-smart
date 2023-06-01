@@ -3,8 +3,8 @@ import {
   EnviromentVariables,
   MTreeNode,
 } from '../../model/Measurement';
-import { createMTreeNodeWithValue } from './BasicFunctions';
-import { getListFromNode, getValueFromNode } from './Evaluator';
+import { createMTreeNodeWithValue } from '@/smart/utils/measurement/BasicFunctions';
+import { getListFromNode, getValueFromNode } from '@/smart/utils/measurement/Evaluator';
 
 export type BinaryOperator = (
   a: MTreeNode,

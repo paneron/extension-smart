@@ -1,13 +1,13 @@
 import React from 'react';
-import { EditorProcess } from '../../../model/editormodel';
+import { EditorProcess } from '@/smart/model/editormodel';
 import {
   MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
 } from '@paneron/libmmel/interface/supportinterface';
-import { ActorDescription, DescriptionItem } from './fields';
-import { MeasurementList, NotesList, ProvisionList } from './ComponentList';
+import { ActorDescription, DescriptionItem } from '@/smart/ui/common/description/fields';
+import { MeasurementList, NotesList, ProvisionList } from '@/smart/ui/common/description/ComponentList';
 
 export const DescribeProcess: React.FC<{
   process: EditorProcess;

@@ -1,4 +1,4 @@
-import { MMELNode } from '../interface/baseinterface';
+import { MMELNode } from '@/interface/baseinterface';
 import {
   MMELDataAttribute,
   MMELDataClass,
@@ -18,7 +18,7 @@ import {
   MMELSubprocess,
   MMELSubprocessComponent,
 } from '../interface/flowcontrolinterface';
-import { MMELApproval, MMELProcess } from '../interface/processinterface';
+import { MMELApproval, MMELProcess } from '@/interface/processinterface';
 import {
   MMELComment,
   MMELFigure,

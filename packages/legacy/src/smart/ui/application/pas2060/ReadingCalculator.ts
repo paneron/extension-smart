@@ -1,7 +1,7 @@
-import { EditorModel } from '../../../model/editormodel';
-import { EnviromentValues } from '../../../model/Measurement';
-import { checkModelMeasurement } from '../../../utils/measurement/Checker';
-import { EmissionSource, ReadingRecord, SensorReading } from './model';
+import { EditorModel } from '@/smart/model/editormodel';
+import { EnviromentValues } from '@/smart/model/Measurement';
+import { checkModelMeasurement } from '@/smart/utils/measurement/Checker';
+import { EmissionSource, ReadingRecord, SensorReading } from '@/smart/ui/application/pas2060/model';
 
 export function propagateReadings(
   readings: SensorReading[],

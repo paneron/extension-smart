@@ -1,8 +1,8 @@
 import React from 'react';
-import { mgdLabel } from '../../../css/form';
-import MGDComponentBar from '../../MGDComponents/MGDComponentBar';
-import MGDContainer from '../../MGDComponents/MGDContainer';
-import MGDProcessBox from '../../MGDComponents/MGDProcessBox';
+import { mgdLabel } from '@/css/form';
+import MGDComponentBar from '@/smart/MGDComponents/MGDComponentBar';
+import MGDContainer from '@/smart/MGDComponents/MGDContainer';
+import MGDProcessBox from '@/smart/MGDComponents/MGDProcessBox';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   DragAndDropNewFormatType,

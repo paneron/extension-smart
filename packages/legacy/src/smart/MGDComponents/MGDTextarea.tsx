@@ -6,7 +6,7 @@
 
 import { TextArea } from '@blueprintjs/core';
 import React, { ChangeEvent } from 'react';
-import { mgdTextarea } from '../../css/form';
+import { mgdTextarea } from '@/css/form';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

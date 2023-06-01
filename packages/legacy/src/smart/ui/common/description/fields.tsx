@@ -1,7 +1,7 @@
 import React from 'react';
-import { mgdLabel } from '../../../../css/form';
-import { HistoryAction } from '../../../model/editor/history';
-import { HistoryItem } from '../../../model/history';
+import { mgdLabel } from '@/css/form';
+import { HistoryAction } from '@/smart/model/editor/history';
+import { HistoryItem } from '@/smart/model/history';
 import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
 
 interface Breadcrumb {

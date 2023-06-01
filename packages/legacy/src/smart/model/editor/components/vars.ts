@@ -1,7 +1,7 @@
 import { MMELVariable } from '@paneron/libmmel/interface/supportinterface';
-import { UndoReducerInterface } from '../interface';
-import { ModelAction } from '../model';
-import { ItemAction, useItems } from './itemTemplate';
+import { UndoReducerInterface } from '@/smart/model/editor/interface';
+import { ModelAction } from '@/smart/model/editor/model';
+import { ItemAction, useItems } from '@/smart/model/editor/components/itemTemplate';
 
 type command = 'vars';
 type ownType = MMELVariable;

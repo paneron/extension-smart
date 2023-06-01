@@ -1,10 +1,10 @@
 import { useReducer, useState } from 'react';
-import * as Logger from '../../../lib/logger';
-import { addToLog, ChangeLog } from '../changelog';
-import { EditorState } from '../States';
-import { HistoryAction, useHistory } from './history';
-import { UndoManagerInterface } from './interface';
-import { ModelAction, useModel } from './model';
+import * as Logger from '@/lib/logger';
+import { addToLog, ChangeLog } from '@/smart/model/changelog';
+import { EditorState } from '@/smart/model/States';
+import { HistoryAction, useHistory } from '@/smart/model/editor/history';
+import { UndoManagerInterface } from '@/smart/model/editor/interface';
+import { ModelAction, useModel } from '@/smart/model/editor/model';
 
 export type EditorAction = ModelAction | HistoryAction;
 

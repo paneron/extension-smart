@@ -1,6 +1,6 @@
 import { Text } from '@blueprintjs/core';
 import React from 'react';
-import { CSSROOTVARIABLES } from '../../../css/root.css';
+import { CSSROOTVARIABLES } from '@/css/root.css';
 
 const NodeIDField: React.FC<{ nodeid: string; wide?: boolean }> = function ({
   nodeid,

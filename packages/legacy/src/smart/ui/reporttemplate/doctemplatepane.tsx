@@ -1,19 +1,19 @@
 import { Dialog, FormGroup } from '@blueprintjs/core';
 import React, { useState } from 'react';
-import { dialogLayout } from '../../../css/layout';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { EditorModel } from '../../model/editormodel';
-import { checkId, defaultItemSorter } from '../../utils/ModelFunctions';
+import { dialogLayout } from '@/css/layout';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { EditorModel } from '@/smart/model/editormodel';
+import { checkId, defaultItemSorter } from '@/smart/utils/ModelFunctions';
 import {
   IAdditionalListButton,
   IListItem,
   IManageHandler,
   NormalTextField,
 } from '../common/fields';
-import ListManagePage from '../common/listmanagement/listmanagement';
-import { MappingDoc, MapProfile } from '../../model/mapmodel';
-import { genReport } from '../../utils/reportFunctions';
-import ReportGen from './reportgen';
+import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
+import { MappingDoc, MapProfile } from '@/smart/model/mapmodel';
+import { genReport } from '@/smart/utils/reportFunctions';
+import ReportGen from '@/smart/ui/reporttemplate/reportgen';
 
 const DocTemplatePane: React.FC<{
   mapProfile: MapProfile;

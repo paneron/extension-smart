@@ -1,5 +1,5 @@
-import { DataType } from '../interface/baseinterface';
-import { MMELremovePackage, MMELtokenizePackage } from '../util/tokenizer';
+import { DataType } from '@/interface/baseinterface';
+import { MMELremovePackage, MMELtokenizePackage } from '@/util/tokenizer';
 import {
   MMELEndEvent,
   MMELSignalCatchEvent,

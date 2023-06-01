@@ -1,9 +1,9 @@
 import { Button } from '@blueprintjs/core';
 import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import React, { useState } from 'react';
-import { flownodeTopRightButtonLayout } from '../../../css/layout';
-import { ModelType } from '../../model/editormodel';
-import { MapViewButtonToolTip } from '../../utils/map/MappingCalculator';
+import { flownodeTopRightButtonLayout } from '@/css/layout';
+import { ModelType } from '@/smart/model/editormodel';
+import { MapViewButtonToolTip } from '@/smart/utils/map/MappingCalculator';
 
 interface MouseState {
   isHover: boolean;

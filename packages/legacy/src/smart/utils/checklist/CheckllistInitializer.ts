@@ -23,8 +23,8 @@ import {
   isEditorProcess,
   isEditorRegistry,
 } from '../../model/editormodel';
-import { ModalityType } from '../constants';
-import { calculateReach, calInitEGates } from './ChecklistCalculator';
+import { ModalityType } from '@/smart/utils/constants';
+import { calculateReach, calInitEGates } from '@/smart/utils/checklist/ChecklistCalculator';
 
 export function calculateTaskList(
   model: EditorModel,

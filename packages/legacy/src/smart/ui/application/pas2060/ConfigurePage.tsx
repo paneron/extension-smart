@@ -9,16 +9,16 @@ import { Tooltip2 } from '@blueprintjs/popover2';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React from 'react';
 import { useContext } from 'react';
-import MGDContainer from '../../../MGDComponents/MGDContainer';
-import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
-import BuildingMap from './BuildingMap';
-import { obtainData } from './DataFeeder';
+import MGDContainer from '@/smart/MGDComponents/MGDContainer';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import BuildingMap from '@/smart/ui/application/pas2060/BuildingMap';
+import { obtainData } from '@/smart/ui/application/pas2060/DataFeeder';
 import {
   Application2060Setting,
   EmissionSource,
   fixedlocalhost,
 } from './model';
-import { propagateReadings } from './ReadingCalculator';
+import { propagateReadings } from '@/smart/ui/application/pas2060/ReadingCalculator';
 
 const ApplicationConfigurePage: React.FC<{
   onClose: () => void;

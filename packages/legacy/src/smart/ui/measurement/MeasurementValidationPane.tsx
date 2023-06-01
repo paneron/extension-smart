@@ -1,20 +1,20 @@
 import { Text, FormGroup, IToastProps, Button } from '@blueprintjs/core';
 import React from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import MGDSidebar from '../../MGDComponents/MGDSidebar';
-import { EditorModel } from '../../model/editormodel';
-import { MeasureResult } from '../../model/Measurement';
-import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
+import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
+import { EditorModel } from '@/smart/model/editormodel';
+import { MeasureResult } from '@/smart/model/Measurement';
+import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import {
   MMELVariable,
   MMELView,
   VarType,
 } from '@paneron/libmmel/interface/supportinterface';
-import { measureTest } from '../../utils/measurement/Checker';
-import updateMeasurementView from './MeasurementResultFormatter';
-import updateParaView from './ParameterizedViewFormatter';
-import VariableSettingItem from './VariableSettingItem';
-import ProfileControl from './ViewProfileControl';
+import { measureTest } from '@/smart/utils/measurement/Checker';
+import updateMeasurementView from '@/smart/ui/measurement/MeasurementResultFormatter';
+import updateParaView from '@/smart/ui/measurement/ParameterizedViewFormatter';
+import VariableSettingItem from '@/smart/ui/measurement/VariableSettingItem';
+import ProfileControl from '@/smart/ui/measurement/ViewProfileControl';
 
 function simpleFilter(v: MMELVariable): boolean {
   return (

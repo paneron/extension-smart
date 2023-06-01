@@ -5,14 +5,14 @@ import { jsx } from '@emotion/react';
 
 import { Button, Dialog, TextArea } from '@blueprintjs/core';
 import React from 'react';
-import { dialog_layout, dialog_layout__full } from '../../../css/layout';
-import { ChangeLog, ChangeLogEvent } from '../../model/changelog';
-import { ModelAction } from '../../model/editor/model';
-import { CommentAction } from '../../model/editor/components/comment';
+import { dialog_layout, dialog_layout__full } from '@/css/layout';
+import { ChangeLog, ChangeLogEvent } from '@/smart/model/changelog';
+import { ModelAction } from '@/smart/model/editor/model';
+import { CommentAction } from '@/smart/model/editor/components/comment';
 import { Popover2 } from '@blueprintjs/popover2';
-import { ElmAction } from '../../model/editor/components/elements';
-import { HyEditAction } from '../../model/editor/hybird/distributor';
-import { PageAction } from '../../model/editor/components/pages';
+import { ElmAction } from '@/smart/model/editor/components/elements';
+import { HyEditAction } from '@/smart/model/editor/hybird/distributor';
+import { PageAction } from '@/smart/model/editor/components/pages';
 
 const ChangeLogDialog: React.FC<{
   log: ChangeLog;

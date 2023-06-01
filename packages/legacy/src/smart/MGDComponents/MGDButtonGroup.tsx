@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { mgdButtonGroup } from '../../css/MGDButtonGroup';
+import { mgdButtonGroup } from '@/css/MGDButtonGroup';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

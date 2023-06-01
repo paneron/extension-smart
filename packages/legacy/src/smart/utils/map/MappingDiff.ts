@@ -1,18 +1,18 @@
 import { SerializedStyles } from '@emotion/react';
 import { Edge, Elements, Node, Position } from 'react-flow-renderer';
-import { map_style_diff__coverage } from '../../../css/visual';
-import { MappingType, MapProfile } from '../../model/mapmodel';
-import { MMELRepo, RepoIndex } from '../../model/repo';
-import { LegendInterface } from '../../model/States';
-import { createNodeContent } from '../../ui/mapper/repo/RepoMapNode';
-import { calculateDocumentMapping } from '../DocumentFunctions';
+import { map_style_diff__coverage } from '@/css/visual';
+import { MappingType, MapProfile } from '@/smart/model/mapmodel';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { LegendInterface } from '@/smart/model/States';
+import { createNodeContent } from '@/smart/ui/mapper/repo/RepoMapNode';
+import { calculateDocumentMapping } from '@/smart/utils/DocumentFunctions';
 import {
   createEdge,
   getRepoItemDesc,
   RepoDiffLegend,
   RepoNodeDiffType,
 } from '../repo/CommonFunctions';
-import { getPathByNS, RepoFileType } from '../repo/io';
+import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
 import {
   MapCoverType,
   MapDiffEdgeResult,

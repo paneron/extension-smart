@@ -12,8 +12,8 @@ import {
   react_flow_container_layout,
   sidebar_layout,
 } from '../../../css/layout';
-import { MGDButtonType } from '../../../css/MGDButton';
-import MGDButton from '../../MGDComponents/MGDButton';
+import { MGDButtonType } from '@/css/MGDButton';
+import MGDButton from '@/smart/MGDComponents/MGDButton';
 import {
   addToHistory,
   createPageHistory,
@@ -27,19 +27,19 @@ import {
   getEditorReferenceFlowElementsFrom,
   ModelWrapper,
 } from '../../model/modelwrapper';
-import { MMELRepo, RepoIndex } from '../../model/repo';
-import { EdgeTypes, NodeTypes } from '../../model/States';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { EdgeTypes, NodeTypes } from '@/smart/model/States';
 import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,
   SearchResultStyles,
 } from '../../utils/SearchFunctions';
-import LegendPane from '../common/description/LegendPane';
-import { DataVisibilityButton, IdVisibleButton } from '../control/buttons';
-import RepoBreadcrumb from '../common/description/RepoBreadcrumb';
-import { SelectedNodeDescription } from '../sidebar/selected';
-import { EditorModel } from '../../model/editormodel';
-import SearchComponentPane from '../sidebar/search';
+import LegendPane from '@/smart/ui/common/description/LegendPane';
+import { DataVisibilityButton, IdVisibleButton } from '@/smart/ui/control/buttons';
+import RepoBreadcrumb from '@/smart/ui/common/description/RepoBreadcrumb';
+import { SelectedNodeDescription } from '@/smart/ui/sidebar/selected';
+import { EditorModel } from '@/smart/model/editormodel';
+import SearchComponentPane from '@/smart/ui/sidebar/search';
 
 const ModelReferenceView: React.FC<{
   className?: string;

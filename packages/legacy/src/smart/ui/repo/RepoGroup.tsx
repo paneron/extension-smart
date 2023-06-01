@@ -1,9 +1,9 @@
 import { IToastProps } from '@blueprintjs/core';
 import React from 'react';
-import { reactFlowContainerLayout } from '../../../css/layout';
-import { MMELRepo, RepoIndex, RepoItems, RepoItemType } from '../../model/repo';
-import RepoChangeNSButton from './RepoChangeNSButton';
-import RepoModelFile from './RepoItem';
+import { reactFlowContainerLayout } from '@/css/layout';
+import { MMELRepo, RepoIndex, RepoItems, RepoItemType } from '@/smart/model/repo';
+import RepoChangeNSButton from '@/smart/ui/repo/RepoChangeNSButton';
+import RepoModelFile from '@/smart/ui/repo/RepoItem';
 
 const RepoGroup: React.FC<{
   legend: string;

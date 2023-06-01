@@ -1,7 +1,7 @@
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import React, { useState } from 'react';
-import { popoverPanelContainer } from '../../../css/layout';
-import { NormalTextField } from '../common/fields';
+import { popoverPanelContainer } from '@/css/layout';
+import { NormalTextField } from '@/smart/ui/common/fields';
 
 const AskForComment: React.FC<{
   onSubmit: (msg: string) => void;

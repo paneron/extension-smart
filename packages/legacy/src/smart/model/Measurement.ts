@@ -7,7 +7,7 @@ import {
   MMELView,
   VarType,
 } from '@paneron/libmmel/interface/supportinterface';
-import { EditorModel } from './editormodel';
+import { EditorModel } from '@/smart/model/editormodel';
 
 export interface MTreeNode {
   action: string; // if data is a value, action = ''

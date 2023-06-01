@@ -1,7 +1,7 @@
 import React from 'react';
 import { MMELFigure } from '@paneron/libmmel/interface/supportinterface';
-import { DescriptionItem } from './fields';
-import MultimediaView from './Multimedia';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
+import MultimediaView from '@/smart/ui/common/description/Multimedia';
 
 const FigureViewer: React.FC<{
   fig: MMELFigure;

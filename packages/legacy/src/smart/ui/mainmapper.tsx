@@ -10,7 +10,7 @@ import React, {
   useState,
 } from 'react';
 
-import ModelDiagram from './mapper/ModelDiagram';
+import ModelDiagram from '@/smart/ui/mapper/ModelDiagram';
 import {
   EditorModel,
   EditorSubprocess,
@@ -34,16 +34,16 @@ import {
   IToastProps,
   Toaster,
 } from '@blueprintjs/core';
-import MapperFileMenu from './menu/MapperFileMenu';
-import { createPageHistory, PageHistory } from '../model/history';
+import MapperFileMenu from '@/smart/ui/menu/MapperFileMenu';
+import { createPageHistory, PageHistory } from '@/smart/model/history';
 import {
   isModelWrapper,
   MapperSelectedInterface,
   MapperState,
   MapperViewOption,
 } from '../model/States';
-import { createNewEditorModel } from '../utils/EditorFactory';
-import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
+import { createNewEditorModel } from '@/smart/utils/EditorFactory';
+import { createEditorModelWrapper, ModelWrapper } from '@/smart/model/modelwrapper';
 import {
   calculateMapping,
   filterMappings,
@@ -51,15 +51,15 @@ import {
   MapDiffEdgeResult,
   mergeMapProfiles,
 } from '../utils/map/MappingCalculator';
-import MappingCanvus from './mapper/MappingsCanvus';
-import MapperOptionMenu from './menu/mapperOptionMenu';
-import { EditMPropsInterface } from './dialog/dialogs';
-import { multi_model_container } from '../../css/layout';
-import { vertical_line } from '../../css/components';
-import { findPageContainingElement } from '../utils/SearchFunctions';
-import { getDocumentMetaById } from '../utils/DocumentFunctions';
-import { getNamespace } from '../utils/ModelFunctions';
-import * as Logger from '../../lib/logger';
+import MappingCanvus from '@/smart/ui/mapper/MappingsCanvus';
+import MapperOptionMenu from '@/smart/ui/menu/mapperOptionMenu';
+import { EditMPropsInterface } from '@/smart/ui/dialog/dialogs';
+import { multi_model_container } from '@/css/layout';
+import { vertical_line } from '@/css/components';
+import { findPageContainingElement } from '@/smart/utils/SearchFunctions';
+import { getDocumentMetaById } from '@/smart/utils/DocumentFunctions';
+import { getNamespace } from '@/smart/utils/ModelFunctions';
+import * as Logger from '@/lib/logger';
 import {
   COMMITMSG,
   getPathByNS,
@@ -68,16 +68,16 @@ import {
   RepoFileType,
 } from '../utils/repo/io';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { MMELJSON } from '../model/json';
-import { MMELRepo, RepoIndex } from '../model/repo';
-import RepoMapMainView from './mapper/repo/RepoMapMainView';
-import { LoadingContainer } from './common/Loading';
-import { MMELDocument } from '../model/document';
-import MapperCompareMenu from './menu/MapperCompareMenu';
-import MapperDialog from './popover/MapperDialog';
-import { calEdgeDiff } from '../utils/map/MappingDiff';
-import { DOCVERSION, MAPVERSION } from '../utils/constants';
-import MenuButton from './menu/MenuButton';
+import { MMELJSON } from '@/smart/model/json';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import RepoMapMainView from '@/smart/ui/mapper/repo/RepoMapMainView';
+import { LoadingContainer } from '@/smart/ui/common/Loading';
+import { MMELDocument } from '@/smart/model/document';
+import MapperCompareMenu from '@/smart/ui/menu/MapperCompareMenu';
+import MapperDialog from '@/smart/ui/popover/MapperDialog';
+import { calEdgeDiff } from '@/smart/utils/map/MappingDiff';
+import { DOCVERSION, MAPVERSION } from '@/smart/utils/constants';
+import MenuButton from '@/smart/ui/menu/MenuButton';
 
 const initModel = createNewEditorModel();
 const initModelWrapper = createEditorModelWrapper(initModel);

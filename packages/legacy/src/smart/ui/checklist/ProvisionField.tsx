@@ -5,10 +5,10 @@ import {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import { ReferenceList } from '../common/description/ComponentList';
-import { NonEmptyFieldDescription } from '../common/description/fields';
-import { CLDescriptionItem } from './CustomFields';
-import ProgressSetter from './ProgressSetter';
+import { ReferenceList } from '@/smart/ui/common/description/ComponentList';
+import { NonEmptyFieldDescription } from '@/smart/ui/common/description/fields';
+import { CLDescriptionItem } from '@/smart/ui/checklist/CustomFields';
+import ProgressSetter from '@/smart/ui/checklist/ProgressSetter';
 
 const ChecklistProvision: React.FC<{
   provision: MMELProvision;

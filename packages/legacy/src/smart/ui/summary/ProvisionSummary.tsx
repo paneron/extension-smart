@@ -1,11 +1,11 @@
 import { Button, ButtonGroup, Text } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext } from 'react';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { FILE_TYPE, saveToFileSystem } from '../../utils/IOFunctions';
-import { clauseSorter } from '../../utils/ModelFunctions';
-import translateObjectToXML from '../../utils/xml/XMLWriter';
-import type { ClauseSummary } from './ProvisionSettings';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { FILE_TYPE, saveToFileSystem } from '@/smart/utils/IOFunctions';
+import { clauseSorter } from '@/smart/utils/ModelFunctions';
+import translateObjectToXML from '@/smart/utils/xml/XMLWriter';
+import type { ClauseSummary } from '@/smart/ui/summary/ProvisionSettings';
 
 const ProvisionSummary: React.FC<{
   result: Record<string, Record<string, ClauseSummary>>;

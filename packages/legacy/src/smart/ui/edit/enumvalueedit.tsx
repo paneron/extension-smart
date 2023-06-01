@@ -1,10 +1,10 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { EditorModel } from '../../model/editormodel';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { EditorModel } from '@/smart/model/editormodel';
 import { MMELEnumValue } from '@paneron/libmmel/interface/datainterface';
-import { createEnumValue } from '../../utils/EditorFactory';
-import { NormalTextField } from '../common/fields';
+import { createEnumValue } from '@/smart/utils/EditorFactory';
+import { NormalTextField } from '@/smart/ui/common/fields';
 import ListWithPopoverItem, {
   IMMELObject,
 } from '../common/listmanagement/listPopoverItem';

@@ -1,6 +1,6 @@
 import React from 'react';
-import { MMELDocument } from '../../model/document';
-import SectionEdit from './SectionEdit';
+import { MMELDocument } from '@/smart/model/document';
+import SectionEdit from '@/smart/ui/doc/SectionEdit';
 
 const SMARTDocumentEdit: React.FC<{
   doc: MMELDocument;

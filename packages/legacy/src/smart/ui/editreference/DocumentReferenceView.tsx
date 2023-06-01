@@ -1,9 +1,9 @@
 import { ControlGroup } from '@blueprintjs/core';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useEffect } from 'react';
-import { MMELDocument } from '../../model/document';
-import { RefTextSelection } from '../../model/selectionImport';
-import SMARTDocumentView from '../mapper/document/DocumentView';
+import { MMELDocument } from '@/smart/model/document';
+import { RefTextSelection } from '@/smart/model/selectionImport';
+import SMARTDocumentView from '@/smart/ui/mapper/document/DocumentView';
 
 const DocumentReferenceView: React.FC<{
   className?: string;

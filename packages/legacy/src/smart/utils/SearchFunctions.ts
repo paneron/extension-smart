@@ -1,5 +1,5 @@
 import { SerializedStyles } from '@emotion/react';
-import { search_style__highlight } from '../../css/visual';
+import { search_style__highlight } from '@/css/visual';
 import {
   EditorApproval,
   EditorDataClass,
@@ -16,12 +16,12 @@ import {
   isEditorProcess,
   isEditorRegistry,
 } from '../model/editormodel';
-import { createModelHistory, HistoryItem } from '../model/history';
-import { LegendInterface } from '../model/States';
+import { createModelHistory, HistoryItem } from '@/smart/model/history';
+import { LegendInterface } from '@/smart/model/States';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { isRegistry } from '@paneron/libmmel/util/validation';
-import { SearchableNodeTypes } from './constants';
-import { isSearchableNodeTypes } from './typecheckings';
+import { SearchableNodeTypes } from '@/smart/utils/constants';
+import { isSearchableNodeTypes } from '@/smart/utils/typecheckings';
 
 type SearchResultType = 'Process' | 'Approval' | 'Data' | 'Event' | 'Gateway';
 

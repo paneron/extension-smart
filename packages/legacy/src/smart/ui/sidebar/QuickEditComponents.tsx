@@ -1,5 +1,5 @@
 import React from 'react';
-import { EditorAction } from '../../model/editor/state';
+import { EditorAction } from '@/smart/model/editor/state';
 import {
   EditorApproval,
   EditorDataClass,
@@ -13,18 +13,18 @@ import {
   EditorSubprocess,
   EditorTimerEvent,
 } from '../../model/editormodel';
-import { RefTextSelection } from '../../model/selectionImport';
+import { RefTextSelection } from '@/smart/model/selectionImport';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { QuickEditableNodeTypes } from '../../utils/constants';
-import { DialogSetterInterface } from '../dialog/EditorDialogs';
-import QuickEditApproval from '../quickedit/approval';
-import QuickEditDataClass from '../quickedit/dataclass';
-import QuickEditEGate from '../quickedit/egate';
-import QuickEditEnd from '../quickedit/end';
-import QuickEditProcess from '../quickedit/process';
-import QuickEditRegistry from '../quickedit/registry';
-import QuickEditSignalEvent from '../quickedit/signalevent';
-import QuickEditTimer from '../quickedit/timer';
+import { QuickEditableNodeTypes } from '@/smart/utils/constants';
+import { DialogSetterInterface } from '@/smart/ui/dialog/EditorDialogs';
+import QuickEditApproval from '@/smart/ui/quickedit/approval';
+import QuickEditDataClass from '@/smart/ui/quickedit/dataclass';
+import QuickEditEGate from '@/smart/ui/quickedit/egate';
+import QuickEditEnd from '@/smart/ui/quickedit/end';
+import QuickEditProcess from '@/smart/ui/quickedit/process';
+import QuickEditRegistry from '@/smart/ui/quickedit/registry';
+import QuickEditSignalEvent from '@/smart/ui/quickedit/signalevent';
+import QuickEditTimer from '@/smart/ui/quickedit/timer';
 
 interface Props {
     node: EditorNode;

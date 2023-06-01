@@ -2,8 +2,8 @@ import { Button, Card, Icon, InputGroup, Text } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { CSSProperties, useState } from 'react';
-import { MMELRepo, RepoIndex, RepoItems, RepoItemType } from '../../model/repo';
-import { LoadingContainer } from '../common/Loading';
+import { MMELRepo, RepoIndex, RepoItems, RepoItemType } from '@/smart/model/repo';
+import { LoadingContainer } from '@/smart/ui/common/Loading';
 
 function matchFilter(item: RepoItems, filter: string) {
   return (

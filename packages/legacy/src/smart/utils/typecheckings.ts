@@ -1,4 +1,4 @@
-import { EditorNode, isEditorDataClass } from '../model/editormodel';
+import { EditorNode, isEditorDataClass } from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { MMELEnum } from '@paneron/libmmel/interface/datainterface';
 import {

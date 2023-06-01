@@ -11,13 +11,13 @@ import {
   dialogLayout,
   dialogLayoutFull,
 } from '../../../../css/layout';
-import MGDContainer from '../../../MGDComponents/MGDContainer';
-import MGDHeading from '../../../MGDComponents/MGDHeading';
-import MGDSidebar from '../../../MGDComponents/MGDSidebar';
-import { EditorModel } from '../../../model/editormodel';
-import Chart from './Chart';
-import ApplicationConfigurePage from './ConfigurePage';
-import ApplicationLogPage from './LogPage';
+import MGDContainer from '@/smart/MGDComponents/MGDContainer';
+import MGDHeading from '@/smart/MGDComponents/MGDHeading';
+import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
+import { EditorModel } from '@/smart/model/editormodel';
+import Chart from '@/smart/ui/application/pas2060/Chart';
+import ApplicationConfigurePage from '@/smart/ui/application/pas2060/ConfigurePage';
+import ApplicationLogPage from '@/smart/ui/application/pas2060/LogPage';
 import {
   Application2060Setting,
   colors2060,
@@ -27,16 +27,16 @@ import {
   ReadingRecord,
 } from './model';
 import { setInterval, clearInterval } from 'timers';
-import { obtainData } from './DataFeeder';
+import { obtainData } from '@/smart/ui/application/pas2060/DataFeeder';
 import {
   makeRecord,
   propagateReadings,
   testMeasurement2060,
 } from './ReadingCalculator';
 import { Popover2 } from '@blueprintjs/popover2';
-import { ViewFunctionInterface } from '../../../model/ViewFunctionModel';
+import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import React from 'react';
-import * as Logger from '../../../../lib/logger';
+import * as Logger from '@/lib/logger';
 
 const Application2060: React.FC<{
   model: EditorModel;

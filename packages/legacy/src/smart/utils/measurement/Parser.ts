@@ -1,5 +1,5 @@
-import { MTreeNode } from '../../model/Measurement';
-import { isSpace } from '../parser_helpers';
+import { MTreeNode } from '@/smart/model/Measurement';
+import { isSpace } from '@/smart/utils/parser_helpers';
 import {
   createMTreeNodeWithOperator,
   createMTreeNodeWithValue,
@@ -7,7 +7,7 @@ import {
   isBinaryOperator,
   isListOperator,
 } from './BasicFunctions';
-import { MComparators, MComparatorTypes } from './Operators';
+import { MComparators, MComparatorTypes } from '@/smart/utils/measurement/Operators';
 
 export interface MToken {
   text: string;

@@ -1,14 +1,14 @@
 import React from 'react';
-import { ModelAction } from '../../model/editor/model';
+import { ModelAction } from '@/smart/model/editor/model';
 import {
   EditorEGate,
   EditorModel,
   EditorSubprocess,
 } from '../../model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { EditAction } from '../../utils/constants';
-import { DialogSetterInterface } from '../dialog/EditorDialogs';
-import EditEGatePage from '../edit/egateedit';
+import { EditAction } from '@/smart/utils/constants';
+import { DialogSetterInterface } from '@/smart/ui/dialog/EditorDialogs';
+import EditEGatePage from '@/smart/ui/edit/egateedit';
 
 const QuickEditEGate: React.FC<{
   egate: EditorEGate;

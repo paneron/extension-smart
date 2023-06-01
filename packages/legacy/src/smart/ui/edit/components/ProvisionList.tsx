@@ -1,23 +1,23 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { useMemo } from 'react';
-import { EditorModel } from '../../../model/editormodel';
-import { RefTextSelection } from '../../../model/selectionImport';
+import { EditorModel } from '@/smart/model/editormodel';
+import { RefTextSelection } from '@/smart/model/selectionImport';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import { MODAILITYOPTIONS, ModalityType } from '../../../utils/constants';
-import { createProvision } from '../../../utils/EditorFactory';
+import { MODAILITYOPTIONS, ModalityType } from '@/smart/utils/constants';
+import { createProvision } from '@/smart/utils/EditorFactory';
 import {
   findUniqueID,
   getModelAllRefs,
   trydefaultID,
 } from '../../../utils/ModelFunctions';
-import { findExistingRef } from '../../../utils/ModelImport';
-import { NormalComboBox, NormalTextField } from '../../common/fields';
-import SimpleReferenceSelector from './ReferenceSelector';
+import { findExistingRef } from '@/smart/utils/ModelImport';
+import { NormalComboBox, NormalTextField } from '@/smart/ui/common/fields';
+import SimpleReferenceSelector from '@/smart/ui/edit/components/ReferenceSelector';
 
 const ProvisionListQuickEdit: React.FC<{
   provisions: Record<string, MMELProvision>;

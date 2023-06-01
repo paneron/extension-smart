@@ -2,7 +2,7 @@ import { Button } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { useState } from 'react';
-import AskForComment from './AskForComment';
+import AskForComment from '@/smart/ui/comment/AskForComment';
 
 const CommentField: React.FC<{
   title: string;

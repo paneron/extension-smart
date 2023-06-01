@@ -22,7 +22,7 @@ import {
   MMELView,
   NOTE_TYPE,
 } from '@paneron/libmmel/interface/supportinterface';
-import { JSONContextType } from '../utils/repo/io';
+import { JSONContextType } from '@/smart/utils/repo/io';
 
 export interface MMELJSON {
   '@context': JSONContextType;

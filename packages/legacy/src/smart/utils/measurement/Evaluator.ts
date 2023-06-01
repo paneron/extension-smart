@@ -4,9 +4,9 @@ import {
   MTestReport,
   MTreeNode,
 } from '../../model/Measurement';
-import { isBinaryOperator, isListOperator } from './BasicFunctions';
-import { MBOperators, MComparison, MLOperators } from './Operators';
-import { parseCondition } from './Parser';
+import { isBinaryOperator, isListOperator } from '@/smart/utils/measurement/BasicFunctions';
+import { MBOperators, MComparison, MLOperators } from '@/smart/utils/measurement/Operators';
+import { parseCondition } from '@/smart/utils/measurement/Parser';
 
 export function getFinalValueFromNode(a: MTreeNode): string | number {
   if (Array.isArray(a.value)) {

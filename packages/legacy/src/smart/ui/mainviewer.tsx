@@ -27,43 +27,43 @@ import {
   popPage,
   RepoHistory,
 } from '../model/history';
-import { EdgeTypes, FunModel, NodeTypes, ViewerOption } from '../model/States';
-import MGDButton from '../MGDComponents/MGDButton';
-import { MGDButtonType } from '../../css/MGDButton';
-import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
-import { DataVisibilityButton, IdVisibleButton } from './control/buttons';
+import { EdgeTypes, FunModel, NodeTypes, ViewerOption } from '@/smart/model/States';
+import MGDButton from '@/smart/MGDComponents/MGDButton';
+import { MGDButtonType } from '@/css/MGDButton';
+import { react_flow_container_layout, sidebar_layout } from '@/css/layout';
+import { DataVisibilityButton, IdVisibleButton } from '@/smart/ui/control/buttons';
 
 import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,
 } from '../utils/SearchFunctions';
 import { SidebarBlockConfig } from '@riboseinc/paneron-extension-kit/widgets/Sidebar/Block';
-import ViewToolMenu from './menu/ViewToolMenu';
-import MeasureCheckPane from './measurement/MeasurementValidationPane';
-import { ViewFunctionInterface } from '../model/ViewFunctionModel';
-import LegendPane from './common/description/LegendPane';
-import { loadPlugin } from './application/plugin';
-import { getNamespace } from '../utils/ModelFunctions';
-import * as Logger from '../../lib/logger';
-import ChecklistConfigPane from './checklist/CheckListConfigPane';
+import ViewToolMenu from '@/smart/ui/menu/ViewToolMenu';
+import MeasureCheckPane from '@/smart/ui/measurement/MeasurementValidationPane';
+import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import LegendPane from '@/smart/ui/common/description/LegendPane';
+import { loadPlugin } from '@/smart/ui/application/plugin';
+import { getNamespace } from '@/smart/utils/ModelFunctions';
+import * as Logger from '@/lib/logger';
+import ChecklistConfigPane from '@/smart/ui/checklist/CheckListConfigPane';
 import {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
-import SimulationPane from './sidebar/SimulationPane';
-import RegistrySummary from './summary/RegistrySummary';
-import ProvisionSettings from './summary/ProvisionSettings';
-import VersionTrackerSettingPane from './version/VersionTrackerSetting';
-import { MMELRepo, RepoIndex } from '../model/repo';
-import RepoBreadcrumb from './common/description/RepoBreadcrumb';
-import ViewOptionMenu from './menu/ViewOptionMenu';
-import MenuButton from './menu/MenuButton';
-import { EditorModel } from '../model/editormodel';
-import { HistoryAction, useHistory } from '../model/editor/history';
-import { getBreadcrumbs } from './common/description/fields';
-import { SelectedNodeDescription } from './sidebar/selected';
-import SearchComponentPane from './sidebar/search';
+import SimulationPane from '@/smart/ui/sidebar/SimulationPane';
+import RegistrySummary from '@/smart/ui/summary/RegistrySummary';
+import ProvisionSettings from '@/smart/ui/summary/ProvisionSettings';
+import VersionTrackerSettingPane from '@/smart/ui/version/VersionTrackerSetting';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import RepoBreadcrumb from '@/smart/ui/common/description/RepoBreadcrumb';
+import ViewOptionMenu from '@/smart/ui/menu/ViewOptionMenu';
+import MenuButton from '@/smart/ui/menu/MenuButton';
+import { EditorModel } from '@/smart/model/editormodel';
+import { HistoryAction, useHistory } from '@/smart/model/editor/history';
+import { getBreadcrumbs } from '@/smart/ui/common/description/fields';
+import { SelectedNodeDescription } from '@/smart/ui/sidebar/selected';
+import SearchComponentPane from '@/smart/ui/sidebar/search';
 
 export enum FunctionPage {
   Simulation = 'simulation',

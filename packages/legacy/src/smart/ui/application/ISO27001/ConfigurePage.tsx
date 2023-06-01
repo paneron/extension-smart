@@ -9,10 +9,10 @@ import {
   Text,
 } from '@blueprintjs/core';
 import React from 'react';
-import MGDContainer from '../../../MGDComponents/MGDContainer';
-import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
-import { obtainData } from './DataFeeder';
-import { Application27001Setting, fixedlocalhost } from './model';
+import MGDContainer from '@/smart/MGDComponents/MGDContainer';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { obtainData } from '@/smart/ui/application/ISO27001/DataFeeder';
+import { Application27001Setting, fixedlocalhost } from '@/smart/ui/application/ISO27001/model';
 
 const Application27001ConfigurePage: React.FC<{
   onClose: () => void;

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { NormalTextField } from '../common/fields';
-import { MappingMeta } from '../../model/mapmodel';
+import { NormalTextField } from '@/smart/ui/common/fields';
+import { MappingMeta } from '@/smart/model/mapmodel';
 import { Button, FormGroup } from '@blueprintjs/core';
-import { EditPageButtons } from './commons';
-import { mgdLabel } from '../../../css/form';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { wrapperContainer } from '../../../css/layout';
+import { EditPageButtons } from '@/smart/ui/edit/commons';
+import { mgdLabel } from '@/css/form';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { wrapperContainer } from '@/css/layout';
 
 export interface EditElmInfo {
   id: string;

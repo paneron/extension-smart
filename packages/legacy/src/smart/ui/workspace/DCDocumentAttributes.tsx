@@ -1,17 +1,17 @@
 import React from 'react';
-import { EditorDataClass, EditorModel } from '../../model/editormodel';
-import { SMARTDocumentStore } from '../../model/workspace';
+import { EditorDataClass, EditorModel } from '@/smart/model/editormodel';
+import { SMARTDocumentStore } from '@/smart/model/workspace';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   getModelAllRolesWithEmpty,
   getRegistryReference,
 } from '../../utils/ModelFunctions';
-import { isBasicType, isDCClass, isEnum } from '../../utils/typecheckings';
-import { NormalTextField } from '../common/fields';
-import BasicTypeAttribute from './BasicTypeAttribute';
-import { DocumentEditInterface } from './DocumentEditor';
-import EnumAttribute from './EnumAttribute';
-import ReferenceAttributes from './ReferenceAttributes';
+import { isBasicType, isDCClass, isEnum } from '@/smart/utils/typecheckings';
+import { NormalTextField } from '@/smart/ui/common/fields';
+import BasicTypeAttribute from '@/smart/ui/workspace/BasicTypeAttribute';
+import { DocumentEditInterface } from '@/smart/ui/workspace/DocumentEditor';
+import EnumAttribute from '@/smart/ui/workspace/EnumAttribute';
+import ReferenceAttributes from '@/smart/ui/workspace/ReferenceAttributes';
 
 interface DCDocumentAttributesProps {
   dc: EditorDataClass;

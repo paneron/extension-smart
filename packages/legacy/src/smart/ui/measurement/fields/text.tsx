@@ -1,10 +1,10 @@
 import React from 'react';
-import { VarInputInterface } from '../../../model/Measurement';
+import { VarInputInterface } from '@/smart/model/Measurement';
 import {
   MMELVariable,
   VarType,
 } from '@paneron/libmmel/interface/supportinterface';
-import { NormalTextField } from '../../common/fields';
+import { NormalTextField } from '@/smart/ui/common/fields';
 
 function getDesc(v: MMELVariable) {
   return (

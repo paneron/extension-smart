@@ -1,14 +1,14 @@
 import { Button, ButtonGroup, Dialog } from '@blueprintjs/core';
 import React, { useState } from 'react';
 import { useMemo } from 'react';
-import { dialogLayout } from '../../../../css/layout';
+import { dialogLayout } from '@/css/layout';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
-import { IListItem } from '../../common/fields';
-import ListWithPopoverItem from '../../common/listmanagement/listPopoverItem';
-import ClassItemDisplayEdit from './ClassItemDisplayEdit';
-import TableClassDefinitionEdit from './TableClassDefinitionEdit';
-import TableClassItemEdit, { TableRowClass } from './TableClassItem';
+import { IListItem } from '@/smart/ui/common/fields';
+import ListWithPopoverItem from '@/smart/ui/common/listmanagement/listPopoverItem';
+import ClassItemDisplayEdit from '@/smart/ui/edit/table/ClassItemDisplayEdit';
+import TableClassDefinitionEdit from '@/smart/ui/edit/table/TableClassDefinitionEdit';
+import TableClassItemEdit, { TableRowClass } from '@/smart/ui/edit/table/TableClassItem';
 
 type DialogType = 'class' | 'display';
 

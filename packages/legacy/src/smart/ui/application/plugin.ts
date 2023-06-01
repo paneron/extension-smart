@@ -1,8 +1,8 @@
 import { IToastProps } from '@blueprintjs/core';
-import { EditorModel } from '../../model/editormodel';
-import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
-import Application27001 from './ISO27001/Main';
-import Application2060 from './pas2060/Main';
+import { EditorModel } from '@/smart/model/editormodel';
+import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import Application27001 from '@/smart/ui/application/ISO27001/Main';
+import Application2060 from '@/smart/ui/application/pas2060/Main';
 
 export interface PluginInterface {
   model: EditorModel;

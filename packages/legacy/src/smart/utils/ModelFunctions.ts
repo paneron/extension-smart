@@ -21,7 +21,7 @@ import {
   MMELReference,
   MMELRole,
 } from '@paneron/libmmel/interface/supportinterface';
-import { IListItem } from '../ui/common/fields';
+import { IListItem } from '@/smart/ui/common/fields';
 
 const TypeReferenceHead = 'reference(';
 const TypeReferenceTail = ')';

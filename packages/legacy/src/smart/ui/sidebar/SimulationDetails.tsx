@@ -11,7 +11,7 @@ import {
 import React from 'react';
 import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import { Button, Text } from '@blueprintjs/core';
-import { MainFlowNodeTypes } from '../../utils/constants';
+import { MainFlowNodeTypes } from '@/smart/utils/constants';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELNote,
@@ -25,9 +25,9 @@ import {
   DescribeStart,
   DescribeTimer,
 } from '../common/description/ComponentDescription';
-import { DescribeProcess } from '../common/description/process';
-import { PageHistory } from '../../model/history';
-import { DescribeApproval } from '../common/description/approval';
+import { DescribeProcess } from '@/smart/ui/common/description/process';
+import { PageHistory } from '@/smart/model/history';
+import { DescribeApproval } from '@/smart/ui/common/description/approval';
 
 const SimulationDetails: React.FC<{
   location: string;

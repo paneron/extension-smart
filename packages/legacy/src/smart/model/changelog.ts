@@ -2,8 +2,8 @@
  * The data model for change log and some utility functions for the change log
  */
 
-import { ModelAction } from './editor/model';
-import { EditorModel } from './editormodel';
+import { ModelAction } from '@/smart/model/editor/model';
+import { EditorModel } from '@/smart/model/editormodel';
 
 interface CommandEvent {
   type: 'command';

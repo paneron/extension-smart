@@ -1,6 +1,6 @@
 import React from 'react';
-import { EditorEGate } from '../../../model/editormodel';
-import { DescriptionItem } from '../../common/description/fields';
+import { EditorEGate } from '@/smart/model/editormodel';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
 
 const EGateSummary: React.FC<{
   egate: EditorEGate;

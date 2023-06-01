@@ -1,6 +1,6 @@
 import React from 'react';
-import { DocMapIndex, DocSection, DocStatement } from '../../../model/document';
-import ParagraphView from './ParagraphView';
+import { DocMapIndex, DocSection, DocStatement } from '@/smart/model/document';
+import ParagraphView from '@/smart/ui/mapper/document/ParagraphView';
 
 const SectionView: React.FC<{
   sec: DocSection;

@@ -1,11 +1,11 @@
 import { ControlGroup, Dialog } from '@blueprintjs/core';
 import React, { useState } from 'react';
-import { dialogLayout } from '../../../css/layout';
-import { MMELDocument } from '../../model/document';
-import DocImport from '../doc/DocImport';
-import DocSettings from '../doc/DocSettings';
-import DocEditFileMenu from './DocEditFileMenu';
-import DocEditImportMenu from './DocEditImportMenu';
+import { dialogLayout } from '@/css/layout';
+import { MMELDocument } from '@/smart/model/document';
+import DocImport from '@/smart/ui/doc/DocImport';
+import DocSettings from '@/smart/ui/doc/DocSettings';
+import DocEditFileMenu from '@/smart/ui/menu/DocEditFileMenu';
+import DocEditImportMenu from '@/smart/ui/menu/DocEditImportMenu';
 
 type DiagMode = 'setting' | 'import';
 

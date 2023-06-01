@@ -4,8 +4,8 @@ import {
   MapDiffType,
   MapDiffValues,
 } from '../../utils/map/MappingCalculator';
-import { mgdCanvas } from '../../../css/layout';
-import { LegendInterface } from '../../model/States';
+import { mgdCanvas } from '@/css/layout';
+import { LegendInterface } from '@/smart/model/States';
 
 export const MapDiffStyles: Record<MapDiffType, LegendInterface> = {
   'new'    : { label : 'New mapping', color : 'green' },

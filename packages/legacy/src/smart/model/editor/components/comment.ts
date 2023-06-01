@@ -1,8 +1,8 @@
 import { MMELComment } from '@paneron/libmmel/interface/supportinterface';
-import { EditorNode, EditorProcess } from '../../editormodel';
-import { UndoReducerInterface } from '../interface';
-import { ModelAction } from '../model';
-import { ItemAction, useItems } from './itemTemplate';
+import { EditorNode, EditorProcess } from '@/smart/model/editormodel';
+import { UndoReducerInterface } from '@/smart/model/editor/interface';
+import { ModelAction } from '@/smart/model/editor/model';
+import { ItemAction, useItems } from '@/smart/model/editor/components/itemTemplate';
 
 type command = 'comment';
 type ownType = MMELComment;

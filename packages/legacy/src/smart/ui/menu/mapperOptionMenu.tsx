@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconName, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
-import { MapperViewOption } from '../../model/States';
+import { MapperViewOption } from '@/smart/model/States';
 
 const MapperOptionMenu: React.FC<{
   viewOption: MapperViewOption;

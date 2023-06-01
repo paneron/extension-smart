@@ -1,16 +1,16 @@
 import React from 'react';
-import { EditorModel } from '../../model/editormodel';
-import { itemSorterByText } from '../../utils/ModelFunctions';
+import { EditorModel } from '@/smart/model/editormodel';
+import { itemSorterByText } from '@/smart/utils/ModelFunctions';
 import {
   IAdditionalListButton,
   IListItem,
   IManageHandler,
 } from '../common/fields';
-import ListManagePage from '../common/listmanagement/listmanagement';
-import { SMARTDocument, SMARTDocumentStore } from '../../model/workspace';
-import DocumentEdit, { DocumentEditInterface } from './DocumentEditor';
+import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
+import { SMARTDocument, SMARTDocumentStore } from '@/smart/model/workspace';
+import DocumentEdit, { DocumentEditInterface } from '@/smart/ui/workspace/DocumentEditor';
 
-import { isNotUndefined } from '../../../lib/typeHelpers';
+import { isNotUndefined } from '@/lib/typeHelpers';
 
 const RegistryDocManagement: React.FC<{
   model: EditorModel;

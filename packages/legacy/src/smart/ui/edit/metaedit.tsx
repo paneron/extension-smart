@@ -1,9 +1,9 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import { EditorAction } from '../../model/editor/state';
+import { EditorAction } from '@/smart/model/editor/state';
 import { MMELMetadata } from '@paneron/libmmel/interface/supportinterface';
-import { DescriptionItem } from '../common/description/fields';
-import { NormalTextField } from '../common/fields';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
+import { NormalTextField } from '@/smart/ui/common/fields';
 
 const MetaEditPage: React.FC<{
   meta: MMELMetadata;

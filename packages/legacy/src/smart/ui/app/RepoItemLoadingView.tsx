@@ -6,29 +6,29 @@ import { jsx } from '@emotion/react';
 import { css } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useMemo, useState } from 'react';
-import { ChangeLog, createChangeLog } from '../../model/changelog';
-import { EditorModel } from '../../model/editormodel';
-import { RepoHistory } from '../../model/history';
-import { MMELJSON } from '../../model/json';
-import { indexModel, MapProfile } from '../../model/mapmodel';
-import { MMELToEditorModel } from '../../model/modelwrapper';
+import { ChangeLog, createChangeLog } from '@/smart/model/changelog';
+import { EditorModel } from '@/smart/model/editormodel';
+import { RepoHistory } from '@/smart/model/history';
+import { MMELJSON } from '@/smart/model/json';
+import { indexModel, MapProfile } from '@/smart/model/mapmodel';
+import { MMELToEditorModel } from '@/smart/model/modelwrapper';
 import {
   ModuleList,
   ModuleName,
   MODULE_CONFIGURATION,
 } from '../../model/module/appModule';
-import { MMELRepo, RepoIndex } from '../../model/repo';
-import { createNewSMARTWorkspace, SMARTWorkspace } from '../../model/workspace';
-import { MAPVERSION } from '../../utils/constants';
-import { getNamespace } from '../../utils/ModelFunctions';
-import * as Logger from '../../../lib/logger';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { createNewSMARTWorkspace, SMARTWorkspace } from '@/smart/model/workspace';
+import { MAPVERSION } from '@/smart/utils/constants';
+import { getNamespace } from '@/smart/utils/ModelFunctions';
+import * as Logger from '@/lib/logger';
 import {
   getPathByNS,
   JSONContext,
   JSONToMMEL,
   RepoFileType,
 } from '../../utils/repo/io';
-import { LoadingScreen } from '../common/Loading';
+import { LoadingScreen } from '@/smart/ui/common/Loading';
 
 /**
  * When an item (model / document) is open, its contents are loaded first here.

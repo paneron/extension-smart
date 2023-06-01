@@ -2,8 +2,8 @@ import { Button } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { useState } from 'react';
-import { DocStatement } from '../../../model/document';
-import { DragAndDropMappingType } from '../../../utils/constants';
+import { DocStatement } from '@/smart/model/document';
+import { DragAndDropMappingType } from '@/smart/utils/constants';
 
 const StatementView: React.FC<{
   statement: DocStatement;

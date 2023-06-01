@@ -1,12 +1,12 @@
 import { Button } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useMemo } from 'react';
-import { MapProfile } from '../../../model/mapmodel';
-import { MMELRepo, RepoIndex } from '../../../model/repo';
-import { MapperViewOption } from '../../../model/States';
-import { getAllRepoMaps } from '../../../utils/repo/CommonFunctions';
-import { LoadingIcon } from '../../common/Loading';
-import RepoMapDiagram from './RepoMapDiagram';
+import { MapProfile } from '@/smart/model/mapmodel';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { MapperViewOption } from '@/smart/model/States';
+import { getAllRepoMaps } from '@/smart/utils/repo/CommonFunctions';
+import { LoadingIcon } from '@/smart/ui/common/Loading';
+import RepoMapDiagram from '@/smart/ui/mapper/repo/RepoMapDiagram';
 
 const RepoMapMainView: React.FC<{
   isVisible: boolean;

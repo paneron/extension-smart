@@ -11,7 +11,7 @@ import {
   createPageHistory,
   PageHistory,
 } from '../../model/history';
-import { LegendInterface } from '../../model/States';
+import { LegendInterface } from '@/smart/model/States';
 
 export enum SearchHighlightType {
   SELECTED = 'selected',

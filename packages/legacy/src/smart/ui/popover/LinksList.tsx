@@ -1,6 +1,6 @@
 import { Intent, Menu, MenuItem } from '@blueprintjs/core';
 import React from 'react';
-import { MMELRepo, RepoIndex } from '../../model/repo';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import { MMELLink } from '@paneron/libmmel/interface/supportinterface';
 
 const LinksList: React.FC<{

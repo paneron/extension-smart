@@ -1,6 +1,6 @@
 import React from 'react';
-import { EditorApproval } from '../../../model/editormodel';
-import { DescriptionItem } from '../../common/description/fields';
+import { EditorApproval } from '@/smart/model/editormodel';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
 
 const ApprovalSummary: React.FC<{
   approval: EditorApproval;

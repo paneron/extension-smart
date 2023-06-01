@@ -9,10 +9,10 @@ import {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import { EdgeList, ReferenceList } from './ComponentList';
-import { DescriptionItem, NonEmptyFieldDescription } from './fields';
+import { EdgeList, ReferenceList } from '@/smart/ui/common/description/ComponentList';
+import { DescriptionItem, NonEmptyFieldDescription } from '@/smart/ui/common/description/fields';
 import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
-import MGDLabel from '../../../MGDComponents/MGDLabel';
+import MGDLabel from '@/smart/MGDComponents/MGDLabel';
 
 export const DescribeStart: React.FC = function () {
   return <span> Start event </span>;

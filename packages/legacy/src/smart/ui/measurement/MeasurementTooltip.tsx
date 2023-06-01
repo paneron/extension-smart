@@ -1,14 +1,14 @@
 import React from 'react';
-import { popoverPanelContainer } from '../../../css/layout';
-import MGDHeading from '../../MGDComponents/MGDHeading';
-import MGDLabel from '../../MGDComponents/MGDLabel';
+import { popoverPanelContainer } from '@/css/layout';
+import MGDHeading from '@/smart/MGDComponents/MGDHeading';
+import MGDLabel from '@/smart/MGDComponents/MGDLabel';
 import {
   MeasureResult,
   MeasureRType,
   MTestItem,
   MTestReport,
 } from '../../model/Measurement';
-import { DescriptionItem } from '../common/description/fields';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
 
 const MeasurementTooltip: React.FC<{
   id: string;

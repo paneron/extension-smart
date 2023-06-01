@@ -4,8 +4,8 @@ import {
   RDFVersion,
   STNode,
 } from '../../model/SemanticTriple';
-import * as Logger from '../../../lib/logger';
-import { converQuestionRDF, parseText } from './nlp';
+import * as Logger from '@/lib/logger';
+import { converQuestionRDF, parseText } from '@/smart/utils/nlp/nlp';
 
 const QuestionWords = [
   'what',

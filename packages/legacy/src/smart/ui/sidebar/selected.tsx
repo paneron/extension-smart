@@ -4,32 +4,32 @@
 import { jsx } from '@emotion/react';
 import React, { useMemo, useState } from 'react';
 import { useStoreActions, useStoreState } from 'react-flow-renderer';
-import { EditorModel, isEditorStartEvent } from '../../model/editormodel';
+import { EditorModel, isEditorStartEvent } from '@/smart/model/editormodel';
 import {
   DeletableNodeTypes,
   EditableNodeTypes,
   EditAction,
 } from '../../utils/constants';
-import MGDSidebar from '../../MGDComponents/MGDSidebar';
-import { Describe } from './ViewComponentDetails';
+import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
+import { Describe } from '@/smart/ui/sidebar/ViewComponentDetails';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import QuickEdit from './QuickEditComponents';
-import { RefTextSelection } from '../../model/selectionImport';
+import QuickEdit from '@/smart/ui/sidebar/QuickEditComponents';
+import { RefTextSelection } from '@/smart/model/selectionImport';
 import { Dialog } from '@blueprintjs/core';
-import { dialog_layout, dialog_layout__full } from '../../../css/layout';
-import { EditorAction } from '../../model/editor/state';
+import { dialog_layout, dialog_layout__full } from '@/css/layout';
+import { EditorAction } from '@/smart/model/editor/state';
 import {
   EditNodeType,
   EditorDiag,
   EditorDiagPackage,
   EditorDiagTypes,
 } from '../dialog/EditorDialogs';
-import { DeleteConfirmMessgae } from '../../utils/ModelRemoveComponentHandler';
-import { deleteNodeAction } from '../../model/editor/commands/elements';
+import { DeleteConfirmMessgae } from '@/smart/utils/ModelRemoveComponentHandler';
+import { deleteNodeAction } from '@/smart/model/editor/commands/elements';
 
 export const SelectedNodeDescription: React.FC<{
   model: EditorModel;

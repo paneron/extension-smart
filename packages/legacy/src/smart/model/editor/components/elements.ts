@@ -9,23 +9,23 @@ import {
   tableReplace,
   figReplace,
 } from '../../../utils/handler/cascadeModelHandler';
-import * as Logger from '../../../../lib/logger';
+import * as Logger from '@/lib/logger';
 import {
   EditorNode,
   isEditorDataClass,
   isEditorRegistry,
 } from '../../editormodel';
-import { UndoReducerInterface } from '../interface';
-import { ModelAction } from '../model';
-import { addCommonElms, delCommonElms, editCommonElms } from './element/common';
-import { addDC, editDC } from './element/dc';
+import { UndoReducerInterface } from '@/smart/model/editor/interface';
+import { ModelAction } from '@/smart/model/editor/model';
+import { addCommonElms, delCommonElms, editCommonElms } from '@/smart/model/editor/components/element/common';
+import { addDC, editDC } from '@/smart/model/editor/components/element/dc';
 import {
   addRegistry,
   delRegistry,
   editRegistry,
   RegistryCombined,
 } from './element/registry';
-import { ItemAction } from './itemTemplate';
+import { ItemAction } from '@/smart/model/editor/components/itemTemplate';
 
 interface RoleCascadeAction {
   subtask: 'process-role';

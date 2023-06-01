@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactFlow, { Elements, ReactFlowProvider } from 'react-flow-renderer';
-import { RepoLegend } from '../../../../utils/repo/CommonFunctions';
-import LegendPane from '../../../common/description/LegendPane';
-import RepoEdge from '../../../flowui/RepoEdge';
+import { RepoLegend } from '@/smart/utils/repo/CommonFunctions';
+import LegendPane from '@/smart/ui/common/description/LegendPane';
+import RepoEdge from '@/smart/ui/flowui/RepoEdge';
 
 const RepoAutoMapView: React.FC<{
   fnodes: Elements;

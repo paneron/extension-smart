@@ -1,7 +1,7 @@
 import { Button, Text } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
-import { NormalTextField } from '../../common/fields';
+import { NormalTextField } from '@/smart/ui/common/fields';
 
 const MMELTableRow: React.FC<{
   row: string[];

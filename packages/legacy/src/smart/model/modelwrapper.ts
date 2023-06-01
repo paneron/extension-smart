@@ -40,19 +40,19 @@ import {
   getEditorNodeCallBack,
   NodeCallBack,
 } from './FlowContainer';
-import { fillRDCS } from '../utils/ModelFunctions';
-import * as Logger from '../../lib/logger';
+import { fillRDCS } from '@/smart/utils/ModelFunctions';
+import * as Logger from '@/lib/logger';
 import {
   getMappedList,
   getRefNodeStyle,
   getSourceStyleById,
   MapResultType,
 } from '../utils/map/MappingCalculator';
-import { MapSet } from './mapmodel';
+import { MapSet } from '@/smart/model/mapmodel';
 import React from 'react';
 import { SerializedStyles } from '@emotion/react';
-import { MMELRepo, RepoIndex } from './repo';
-import { EditorViewOption } from './States';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { EditorViewOption } from '@/smart/model/States';
 
 /**
  * The wrapper contains the model and which page it is viewing

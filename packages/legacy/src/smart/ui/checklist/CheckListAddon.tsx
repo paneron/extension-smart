@@ -6,7 +6,7 @@ import {
   flowPercentageLabel,
   flowProgressLabel,
 } from '../../../css/visual';
-import { ChecklistPackage } from '../../model/checklist';
+import { ChecklistPackage } from '@/smart/model/checklist';
 import {
   EditorNode,
   isEditorEgate,

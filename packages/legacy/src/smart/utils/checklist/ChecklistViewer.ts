@@ -1,15 +1,15 @@
 import React from 'react';
-import { CSSROOTVARIABLES } from '../../../css/root.css';
-import { flow_node__highlighed } from '../../../css/visual';
-import { ChecklistPackage } from '../../model/checklist';
-import { EditorModel } from '../../model/editormodel';
-import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
+import { CSSROOTVARIABLES } from '@/css/root.css';
+import { flow_node__highlighed } from '@/css/visual';
+import { ChecklistPackage } from '@/smart/model/checklist';
+import { EditorModel } from '@/smart/model/editormodel';
+import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import CheckListAddon from '../../ui/checklist/CheckListAddon';
+import CheckListAddon from '@/smart/ui/checklist/CheckListAddon';
 
 const okcolor = 'lightgreen';
 const normalcolor = CSSROOTVARIABLES['--plain-node-color'];

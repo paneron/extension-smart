@@ -8,27 +8,27 @@
 import { jsx } from '@emotion/react';
 import { Tab, Tabs } from '@blueprintjs/core';
 import React, { useState } from 'react';
-import { mgd_label } from '../../../css/form';
+import { mgd_label } from '@/css/form';
 import {
   mgd_tabs__item,
   mgd_tabs__item__selected,
   mgd_tabs__item__unselected,
 } from '../../../css/MGDTabs';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { EditorModel } from '../../model/editormodel';
-import DataClassEditPage from '../edit/dataclassedit';
-import EnumEditPage from '../edit/enumedit';
-import FigureEditPage from '../edit/figure/FigureEdit';
-import MeasurementEditPage from '../edit/measurementedit';
-import MetaEditPage from '../edit/metaedit';
-import ReferenceEditPage from '../edit/refedit';
-import RegistryEditPage from '../edit/registryedit';
-import RoleEditPage from '../edit/roleedit';
-import SectionEditPage from '../edit/SectionEditPage';
-import TableEditPage from '../edit/table/TableEdit';
-import TermsEditPage from '../edit/TermEdit';
-import ViewProfileEditPage from '../edit/ViewProfileEdit';
-import { EditorAction } from '../../model/editor/state';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { EditorModel } from '@/smart/model/editormodel';
+import DataClassEditPage from '@/smart/ui/edit/dataclassedit';
+import EnumEditPage from '@/smart/ui/edit/enumedit';
+import FigureEditPage from '@/smart/ui/edit/figure/FigureEdit';
+import MeasurementEditPage from '@/smart/ui/edit/measurementedit';
+import MetaEditPage from '@/smart/ui/edit/metaedit';
+import ReferenceEditPage from '@/smart/ui/edit/refedit';
+import RegistryEditPage from '@/smart/ui/edit/registryedit';
+import RoleEditPage from '@/smart/ui/edit/roleedit';
+import SectionEditPage from '@/smart/ui/edit/SectionEditPage';
+import TableEditPage from '@/smart/ui/edit/table/TableEdit';
+import TermsEditPage from '@/smart/ui/edit/TermEdit';
+import ViewProfileEditPage from '@/smart/ui/edit/ViewProfileEdit';
+import { EditorAction } from '@/smart/model/editor/state';
 
 export enum SETTINGPAGE {
   METAPAGE = 'meta',

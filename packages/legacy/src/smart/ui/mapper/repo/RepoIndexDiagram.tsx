@@ -1,12 +1,12 @@
 import React from 'react';
 import { useMemo } from 'react';
 import ReactFlow from 'react-flow-renderer';
-import { ModelWrapper } from '../../../model/modelwrapper';
-import { MMELRepo, RepoIndex } from '../../../model/repo';
-import { RepoLegend } from '../../../utils/repo/CommonFunctions';
-import { repoLinkExploreNode } from '../../../utils/repo/LinkAnalysis';
-import LegendPane from '../../common/description/LegendPane';
-import RepoEdge from '../../flowui/RepoEdge';
+import { ModelWrapper } from '@/smart/model/modelwrapper';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { RepoLegend } from '@/smart/utils/repo/CommonFunctions';
+import { repoLinkExploreNode } from '@/smart/utils/repo/LinkAnalysis';
+import LegendPane from '@/smart/ui/common/description/LegendPane';
+import RepoEdge from '@/smart/ui/flowui/RepoEdge';
 
 const RepoIndexDiagram: React.FC<{
   index: RepoIndex;

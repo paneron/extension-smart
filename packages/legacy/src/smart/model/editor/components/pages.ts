@@ -3,13 +3,13 @@ import {
   MMELEdge,
   MMELSubprocess,
 } from '@paneron/libmmel/interface/flowcontrolinterface';
-import { createSubprocessComponent } from '../../../utils/EditorFactory';
+import { createSubprocessComponent } from '@/smart/utils/EditorFactory';
 import {
   dataPageReplace,
   elmPageReplace,
 } from '../../../utils/handler/cascadeModelHandler';
-import { updatePageElement } from '../../../utils/ModelFunctions';
-import * as Logger from '../../../../lib/logger';
+import { updatePageElement } from '@/smart/utils/ModelFunctions';
+import * as Logger from '@/lib/logger';
 import {
   EditorNode,
   EditorSubprocess,
@@ -18,8 +18,8 @@ import {
   isEditorProcess,
   isEditorRegistry,
 } from '../../editormodel';
-import { UndoReducerInterface } from '../interface';
-import { ModelAction } from '../model';
+import { UndoReducerInterface } from '@/smart/model/editor/interface';
+import { ModelAction } from '@/smart/model/editor/model';
 
 interface RegCascadeAction {
   subtask: 'data';

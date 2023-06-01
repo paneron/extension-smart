@@ -4,7 +4,7 @@ import {
   DocParagraph,
   DocStatement,
 } from '../../../model/document';
-import StatementView from './StatementView';
+import StatementView from '@/smart/ui/mapper/document/StatementView';
 
 const ParagraphView: React.FC<{
   para: DocParagraph;

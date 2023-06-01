@@ -6,7 +6,7 @@ import {
   Select,
 } from '@blueprintjs/select';
 import React from 'react';
-import { AttributeType } from './AttributeList';
+import { AttributeType } from '@/smart/ui/edit/components/AttributeList';
 
 const DataTypeSelect = Select.ofType<AttributeType>();
 

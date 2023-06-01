@@ -2,7 +2,7 @@
  * Perform basic validation on the parsed model
  */
 
-import { DataType, MMELNode, MMELObject } from '../interface/baseinterface';
+import { DataType, MMELNode, MMELObject } from '@/interface/baseinterface';
 import {
   MMELDataAttribute,
   MMELDataClass,
@@ -20,8 +20,8 @@ import {
   MMELSubprocess,
   MMELSubprocessComponent,
 } from '../interface/flowcontrolinterface';
-import { MMELModel } from '../interface/model';
-import { MMELApproval, MMELProcess } from '../interface/processinterface';
+import { MMELModel } from '@/interface/model';
+import { MMELApproval, MMELProcess } from '@/interface/processinterface';
 import {
   MMELProvision,
   MMELReference,

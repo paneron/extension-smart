@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
 import { MMELLink } from '@paneron/libmmel/interface/supportinterface';
-import { UndoReducerInterface } from '../interface';
+import { UndoReducerInterface } from '@/smart/model/editor/interface';
 
 interface RefCascadeAction {
   subtask: 'process-ref';

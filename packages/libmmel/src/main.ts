@@ -13,9 +13,9 @@ import {
   parseVariable,
   parseView,
 } from './handler/supporthandler';
-import { MMELModel } from './interface/model';
-import { MMELremovePackage, MMELtokenize } from './util/tokenizer';
-import { parseApproval, parseProcess } from './handler/processhandler';
+import { MMELModel } from '@/interface/model';
+import { MMELremovePackage, MMELtokenize } from '@/util/tokenizer';
+import { parseApproval, parseProcess } from '@/handler/processhandler';
 import {
   parseDataClass,
   parseEnum,
@@ -27,7 +27,7 @@ import {
   parseStartEvent,
   parseTimerEvent,
 } from './handler/eventhandler';
-import { parseEGate, parseSubprocess } from './handler/flowcontrolhandler';
+import { parseEGate, parseSubprocess } from '@/handler/flowcontrolhandler';
 import {
   toCommentModel,
   toEnumModel,
@@ -46,7 +46,7 @@ import {
   toVariableModel,
   toViewProfile as toViewProfileModel,
 } from './util/serailizeformater';
-import { validateModel } from './util/validation';
+import { validateModel } from '@/util/validation';
 
 /**
  * the function to convert text to MMEL

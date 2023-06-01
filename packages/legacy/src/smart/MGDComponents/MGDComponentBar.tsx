@@ -4,7 +4,7 @@
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import React from 'react';
-import { mgdComponentBar } from '../../css/MGDComponentBar';
+import { mgdComponentBar } from '@/css/MGDComponentBar';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

@@ -9,8 +9,8 @@ import {
   NumericInput,
 } from '@blueprintjs/core';
 import React, { RefObject, useState } from 'react';
-import { EditorModel } from '../../model/editormodel';
-import MGDTextarea from '../../MGDComponents/MGDTextarea';
+import { EditorModel } from '@/smart/model/editormodel';
+import MGDTextarea from '@/smart/MGDComponents/MGDTextarea';
 import {
   mgd_input,
   mgd_label,

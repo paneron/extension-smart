@@ -9,7 +9,7 @@
 
 import { css } from '@emotion/react';
 import { CSSProperties } from 'react';
-import { CSSROOTVARIABLES } from './root.css';
+import { CSSROOTVARIABLES } from '@/css/root.css';
 
 export const shameLabel: CSSProperties = {
   fontWeight : CSSROOTVARIABLES.fontWeightRegular,

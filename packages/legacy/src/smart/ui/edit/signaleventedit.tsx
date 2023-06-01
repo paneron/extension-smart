@@ -1,18 +1,18 @@
 import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { editElmCommand } from '../../model/editor/commands/elements';
-import { ModelAction } from '../../model/editor/model';
-import { EditorModel, EditorSignalEvent } from '../../model/editormodel';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { editElmCommand } from '@/smart/model/editor/commands/elements';
+import { ModelAction } from '@/smart/model/editor/model';
+import { EditorModel, EditorSignalEvent } from '@/smart/model/editormodel';
 import {
   checkId,
   getModelAllSignals,
   removeSpace,
 } from '../../utils/ModelFunctions';
-import { DescriptionItem } from '../common/description/fields';
-import { NormalTextField, ReferenceSelector } from '../common/fields';
-import PopoverChangeIDButton from '../popover/PopoverChangeIDButton';
-import { EditPageButtons } from './commons';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
+import { NormalTextField, ReferenceSelector } from '@/smart/ui/common/fields';
+import PopoverChangeIDButton from '@/smart/ui/popover/PopoverChangeIDButton';
+import { EditPageButtons } from '@/smart/ui/edit/commons';
 
 interface CommonSignalEditProps {
   onUpdateClick: () => void;

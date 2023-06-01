@@ -1,12 +1,12 @@
 import { Button, FormGroup, Text } from '@blueprintjs/core';
 import React, { useState } from 'react';
 import { ReactFlowProvider } from 'react-flow-renderer';
-import MGDSidebar from '../../MGDComponents/MGDSidebar';
-import { ProvisionRDF } from '../../model/SemanticTriple';
-import { askRDF } from '../../utils/nlp/query';
-import { NormalTextField } from '../common/fields';
-import { LoadingContainer } from '../common/Loading';
-import RDFDiagram from './RDFDiagram';
+import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
+import { ProvisionRDF } from '@/smart/model/SemanticTriple';
+import { askRDF } from '@/smart/utils/nlp/query';
+import { NormalTextField } from '@/smart/ui/common/fields';
+import { LoadingContainer } from '@/smart/ui/common/Loading';
+import RDFDiagram from '@/smart/ui/nlp/RDFDiagram';
 
 const RDFQueryPane: React.FC<{
   rdf?: ProvisionRDF;

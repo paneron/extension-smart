@@ -2,7 +2,7 @@
   "name": "@paneron/extension-hls",
   "version": "1.0.0-dev23",
   "description": "Paneron extension for SMART model editing",
-  "main": "dist/plugin.js",
+  "main": "plugin.js",
   "repository": "https://github.com/paneron/extension-hls",
   "author": {
     "name": "Ribose Inc.",

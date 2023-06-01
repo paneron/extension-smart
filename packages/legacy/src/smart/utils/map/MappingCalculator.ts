@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { CSSROOTVARIABLES } from '../../../css/root.css';
+import { CSSROOTVARIABLES } from '@/css/root.css';
 import {
   map_style_diff__source,
   map_style__coverage,
@@ -14,8 +14,8 @@ import {
   isEditorProcess,
   ModelType,
 } from '../../model/editormodel';
-import { PageHistory } from '../../model/history';
-import { LegendInterface, MapperSelectedInterface } from '../../model/States';
+import { PageHistory } from '@/smart/model/history';
+import { LegendInterface, MapperSelectedInterface } from '@/smart/model/States';
 import {
   MappingDoc,
   MappingMeta,
@@ -24,9 +24,9 @@ import {
   MapSet,
 } from '../../model/mapmodel';
 import { SerializedStyles } from '@emotion/react';
-import { DocStatement, MMELDocument } from '../../model/document';
-import { getNamespace } from '../ModelFunctions';
-import { getMapDiffStyleById } from './MappingDiff';
+import { DocStatement, MMELDocument } from '@/smart/model/document';
+import { getNamespace } from '@/smart/utils/ModelFunctions';
+import { getMapDiffStyleById } from '@/smart/utils/map/MappingDiff';
 
 export enum MapCoverType {
   FULL = 'full',

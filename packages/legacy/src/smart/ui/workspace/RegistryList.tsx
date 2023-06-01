@@ -4,13 +4,13 @@ import {
   EditorRegistry,
   isEditorRegistry,
 } from '../../model/editormodel';
-import { defaultItemSorter } from '../../utils/ModelFunctions';
+import { defaultItemSorter } from '@/smart/utils/ModelFunctions';
 import {
   IAdditionalListButton,
   IListItem,
   IViewListInterface,
 } from '../common/fields';
-import ListViewPane from '../common/listmanagement/listview';
+import ListViewPane from '@/smart/ui/common/listmanagement/listview';
 
 const WorkspaceRegistryList: React.FC<{
   model: EditorModel;

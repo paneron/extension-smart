@@ -2,8 +2,8 @@
  * This file centralizes the commands related to page change
  */
 
-import { HistoryItem } from '../../history';
-import { HistoryAction } from '../history';
+import { HistoryItem } from '@/smart/model/history';
+import { HistoryAction } from '@/smart/model/editor/history';
 
 /**
  * Go to a new page (subprocess) of a process on the current page

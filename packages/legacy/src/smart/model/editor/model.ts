@@ -1,37 +1,37 @@
-import * as Logger from '../../../lib/logger';
-import { EditorModel } from '../editormodel';
-import { cascadeCheckDCs } from './components/element/dc';
-import { cascadeCheckRegs } from './components/element/registry';
-import { ElmAction, useElements } from './components/elements';
-import { cascadeCheckEnum, EnumAction, useEnums } from './components/enums';
-import { MetaAction, useMeta } from './components/meta';
+import * as Logger from '@/lib/logger';
+import { EditorModel } from '@/smart/model/editormodel';
+import { cascadeCheckDCs } from '@/smart/model/editor/components/element/dc';
+import { cascadeCheckRegs } from '@/smart/model/editor/components/element/registry';
+import { ElmAction, useElements } from '@/smart/model/editor/components/elements';
+import { cascadeCheckEnum, EnumAction, useEnums } from '@/smart/model/editor/components/enums';
+import { MetaAction, useMeta } from '@/smart/model/editor/components/meta';
 import {
   cascadeCheckPages,
   explorePageDataNodes,
   PageAction,
   usePages,
 } from './components/pages';
-import { useView, ViewAction } from './components/view';
-import { ProvisionAction, useProvisions } from './components/provision';
-import { cascadeCheckRefs, RefAction, useRefs } from './components/ref';
-import { RoleAction, useRoles, cascadeCheckRole } from './components/roles';
-import { SectionAction, useSections } from './components/sections';
-import { TermsAction, useTerms } from './components/terms';
-import { useVars, VarAction } from './components/vars';
-import { cascadeCheckTable, TableAction, useTable } from './components/table';
-import { cascadeCheckFigure, FigAction, useFigure } from './components/figure';
-import { UndoReducerModelInterface } from './interface';
+import { useView, ViewAction } from '@/smart/model/editor/components/view';
+import { ProvisionAction, useProvisions } from '@/smart/model/editor/components/provision';
+import { cascadeCheckRefs, RefAction, useRefs } from '@/smart/model/editor/components/ref';
+import { RoleAction, useRoles, cascadeCheckRole } from '@/smart/model/editor/components/roles';
+import { SectionAction, useSections } from '@/smart/model/editor/components/sections';
+import { TermsAction, useTerms } from '@/smart/model/editor/components/terms';
+import { useVars, VarAction } from '@/smart/model/editor/components/vars';
+import { cascadeCheckTable, TableAction, useTable } from '@/smart/model/editor/components/table';
+import { cascadeCheckFigure, FigAction, useFigure } from '@/smart/model/editor/components/figure';
+import { UndoReducerModelInterface } from '@/smart/model/editor/interface';
 import {
   cascadeCheckComment,
   CommentAction,
   useComment,
 } from './components/comment';
 import { useMemo } from 'react';
-import { cascadeCheckElm } from './components/element/common';
-import { compileHybird, HyEditAction } from './hybird/distributor';
-import { NotesAction, useNotes } from './components/notes';
-import { MODELVERSION } from '../../utils/constants';
-import { LinkAction, useLinks } from './components/links';
+import { cascadeCheckElm } from '@/smart/model/editor/components/element/common';
+import { compileHybird, HyEditAction } from '@/smart/model/editor/hybird/distributor';
+import { NotesAction, useNotes } from '@/smart/model/editor/components/notes';
+import { MODELVERSION } from '@/smart/utils/constants';
+import { LinkAction, useLinks } from '@/smart/model/editor/components/links';
 
 interface InitModelAction {
   act: 'initModel';

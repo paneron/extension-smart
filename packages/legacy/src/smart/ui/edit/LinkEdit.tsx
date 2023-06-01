@@ -5,8 +5,8 @@ import {
   LINK_TYPES,
   MMELLink,
 } from '@paneron/libmmel/interface/supportinterface';
-import { NormalComboBox, NormalTextField } from '../common/fields';
-import { IMMELObject } from '../common/listmanagement/listPopoverItem';
+import { NormalComboBox, NormalTextField } from '@/smart/ui/common/fields';
+import { IMMELObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
 
 export function matchLinkFilter(x: IMMELObject, filter: string): boolean {
   const link = x as MMELLink;

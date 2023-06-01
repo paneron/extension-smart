@@ -7,7 +7,7 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx, SerializedStyles } from '@emotion/react';
-import { mgd_process_box } from '../../css/MGDProcessBox';
+import { mgd_process_box } from '@/css/MGDProcessBox';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

@@ -6,9 +6,9 @@ import {
   handleDocumentOpen,
   handleModelOpen,
 } from '../../utils/IOFunctions';
-import { ReferenceContent } from '../../model/States';
-import { indexModel } from '../../model/mapmodel';
-import { RepoItemType } from '../../model/repo';
+import { ReferenceContent } from '@/smart/model/States';
+import { indexModel } from '@/smart/model/mapmodel';
+import { RepoItemType } from '@/smart/model/repo';
 
 const EditorReferenceMenu: React.FC<{
   setReference: (x: ReferenceContent | undefined) => void;

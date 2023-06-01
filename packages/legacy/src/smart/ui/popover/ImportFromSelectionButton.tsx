@@ -1,7 +1,7 @@
 import { Button, IconName } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import React from 'react';
-import AskIDForSaveMenu from './AskIDForSaveMenu';
+import AskIDForSaveMenu from '@/smart/ui/popover/AskIDForSaveMenu';
 
 const ImportFromSelectionButton: React.FC<{
   title: string;

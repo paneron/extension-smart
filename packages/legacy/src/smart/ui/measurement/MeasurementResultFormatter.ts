@@ -1,8 +1,8 @@
-import { flow_node__highlighed, no_highlight } from '../../../css/visual';
-import { MeasureResult } from '../../model/Measurement';
-import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
-import { MeasureResultStyles } from '../../utils/measurement/Checker';
-import MeasurementTooltip from './MeasurementTooltip';
+import { flow_node__highlighed, no_highlight } from '@/css/visual';
+import { MeasureResult } from '@/smart/model/Measurement';
+import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import { MeasureResultStyles } from '@/smart/utils/measurement/Checker';
+import MeasurementTooltip from '@/smart/ui/measurement/MeasurementTooltip';
 
 export default function updateMeasurementView(
   result: MeasureResult,

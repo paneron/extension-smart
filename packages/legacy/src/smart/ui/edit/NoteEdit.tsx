@@ -1,18 +1,18 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import { EditorModel } from '../../model/editormodel';
+import { EditorModel } from '@/smart/model/editormodel';
 import {
   MMELNote,
   NOTE_TYPE,
   NOTE_TYPES,
 } from '@paneron/libmmel/interface/supportinterface';
-import { getModelAllRefs } from '../../utils/ModelFunctions';
+import { getModelAllRefs } from '@/smart/utils/ModelFunctions';
 import {
   MultiReferenceSelector,
   NormalComboBox,
   NormalTextField,
 } from '../common/fields';
-import { IMMELObject } from '../common/listmanagement/listPopoverItem';
+import { IMMELObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
 
 export function matchNoteFilter(x: IMMELObject, filter: string): boolean {
   const note = x as MMELNote;

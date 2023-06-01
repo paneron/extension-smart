@@ -3,7 +3,7 @@ import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { useMemo } from 'react';
 import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
-import MMELTableRow from './TableRow';
+import MMELTableRow from '@/smart/ui/edit/table/TableRow';
 
 const EditTableView: React.FC<{
   table: MMELTable;

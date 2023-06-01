@@ -1,7 +1,7 @@
 import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
-import { EditorModel, isEditorEgate } from '../../editormodel';
-import { ModelAction } from '../model';
-import { HyEditAction } from './distributor';
+import { EditorModel, isEditorEgate } from '@/smart/model/editormodel';
+import { ModelAction } from '@/smart/model/editor/model';
+import { HyEditAction } from '@/smart/model/editor/hybird/distributor';
 
 type EgateHybird = HyEditAction & { task: 'egate-edit' };
 

@@ -4,9 +4,9 @@ import {
   IUpdateInterface,
   IViewListInterface,
 } from '../fields';
-import ItemUpdatePane from './itemupdate';
-import ListViewPane from './listview';
-import { IObject } from '../../common/listmanagement/listPopoverItem';
+import ItemUpdatePane from '@/smart/ui/common/listmanagement/itemupdate';
+import ListViewPane from '@/smart/ui/common/listmanagement/listview';
+import { IObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
 
 export enum ListManagePageType {
   VIEW = 'view',

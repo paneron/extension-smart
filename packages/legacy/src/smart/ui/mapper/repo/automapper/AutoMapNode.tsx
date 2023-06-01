@@ -1,7 +1,7 @@
 import { Checkbox, Text } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
-import { RepoItems } from '../../../../model/repo';
+import { RepoItems } from '@/smart/model/repo';
 
 export function createAutoMapNode(
   label: string,

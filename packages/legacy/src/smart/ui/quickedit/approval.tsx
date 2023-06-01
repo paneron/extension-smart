@@ -1,10 +1,10 @@
 import React from 'react';
-import { ModelAction } from '../../model/editor/model';
-import { EditorApproval, EditorModel } from '../../model/editormodel';
+import { ModelAction } from '@/smart/model/editor/model';
+import { EditorApproval, EditorModel } from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { EditAction } from '../../utils/constants';
-import { DialogSetterInterface } from '../dialog/EditorDialogs';
-import EditApprovalPage from '../edit/approvaledit';
+import { EditAction } from '@/smart/utils/constants';
+import { DialogSetterInterface } from '@/smart/ui/dialog/EditorDialogs';
+import EditApprovalPage from '@/smart/ui/edit/approvaledit';
 
 const QuickEditApproval: React.FC<{
   approval: EditorApproval;

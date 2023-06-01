@@ -1,9 +1,9 @@
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useState } from 'react';
-import { MMELDocument } from '../model/document';
-import { createNewMMELDocument } from '../utils/EditorFactory';
-import SMARTDocumentEdit from './doc/SMARTDocumentEdit';
-import DocEditToolbar from './menu/DocEditToolbar';
+import { MMELDocument } from '@/smart/model/document';
+import { createNewMMELDocument } from '@/smart/utils/EditorFactory';
+import SMARTDocumentEdit from '@/smart/ui/doc/SMARTDocumentEdit';
+import DocEditToolbar from '@/smart/ui/menu/DocEditToolbar';
 
 const DocumentEdit: React.FC<{
   isVisible: boolean;

@@ -1,4 +1,4 @@
-import { MTreeNode } from '../../model/Measurement';
+import { MTreeNode } from '@/smart/model/Measurement';
 import { MMELVariable } from '@paneron/libmmel/interface/supportinterface';
 import {
   MBinaryOperators,

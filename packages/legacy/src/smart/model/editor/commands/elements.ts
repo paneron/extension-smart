@@ -16,7 +16,7 @@ import {
   EditorProcess,
   isEditorProcess,
 } from '../../editormodel';
-import { ModelAction } from '../model';
+import { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * Edit the node elements. It can include gateway, approval, process, timer / signal events.

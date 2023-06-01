@@ -1,7 +1,7 @@
-import { EditorModel } from '../../../model/editormodel';
-import { EnviromentValues } from '../../../model/Measurement';
-import { checkModelMeasurement } from '../../../utils/measurement/Checker';
-import { Log27001Record, StreamReading } from './model';
+import { EditorModel } from '@/smart/model/editormodel';
+import { EnviromentValues } from '@/smart/model/Measurement';
+import { checkModelMeasurement } from '@/smart/utils/measurement/Checker';
+import { Log27001Record, StreamReading } from '@/smart/ui/application/ISO27001/model';
 
 export function testMeasurement27001(
   model: EditorModel,

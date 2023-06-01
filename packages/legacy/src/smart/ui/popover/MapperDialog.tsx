@@ -1,22 +1,22 @@
 import { Dialog, IToastProps } from '@blueprintjs/core';
 import React from 'react';
-import { dialogLayout } from '../../../css/layout';
-import { EditorApproval, EditorProcess } from '../../model/editormodel';
-import { MappingMeta, MapProfile } from '../../model/mapmodel';
-import { ModelWrapper } from '../../model/modelwrapper';
-import { MMELRepo, RepoIndex } from '../../model/repo';
+import { dialogLayout } from '@/css/layout';
+import { EditorApproval, EditorProcess } from '@/smart/model/editormodel';
+import { MappingMeta, MapProfile } from '@/smart/model/mapmodel';
+import { ModelWrapper } from '@/smart/model/modelwrapper';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import {
   isModelWrapper,
   MapperViewOption,
   ReferenceContent,
 } from '../../model/States';
-import { getDocumentMetaById } from '../../utils/DocumentFunctions';
-import { getNamespace } from '../../utils/ModelFunctions';
-import { EditMPropsInterface } from '../dialog/dialogs';
-import MappingEditPage from '../edit/mappingedit';
-import AutoMapper from '../mapper/AutoMapper';
-import RepoAutoMapper from '../mapper/repo/RepoAutoMapper';
-import DocTemplatePane from '../reporttemplate/doctemplatepane';
+import { getDocumentMetaById } from '@/smart/utils/DocumentFunctions';
+import { getNamespace } from '@/smart/utils/ModelFunctions';
+import { EditMPropsInterface } from '@/smart/ui/dialog/dialogs';
+import MappingEditPage from '@/smart/ui/edit/mappingedit';
+import AutoMapper from '@/smart/ui/mapper/AutoMapper';
+import RepoAutoMapper from '@/smart/ui/mapper/repo/RepoAutoMapper';
+import DocTemplatePane from '@/smart/ui/reporttemplate/doctemplatepane';
 
 type MapperDialogMode = 'mapping' | 'report' | 'automap' | 'repomap';
 

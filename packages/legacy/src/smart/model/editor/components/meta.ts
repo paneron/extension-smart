@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
 import { MMELMetadata } from '@paneron/libmmel/interface/supportinterface';
-import { UndoReducerInterface } from '../interface';
+import { UndoReducerInterface } from '@/smart/model/editor/interface';
 
 interface EditAction {
   property: keyof MMELMetadata;

@@ -1,6 +1,6 @@
 import { Button, ButtonGroup, FormGroup, Tab, Tabs } from '@blueprintjs/core';
 import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
-import { NormalTextField } from '../../common/fields';
+import { NormalTextField } from '@/smart/ui/common/fields';
 import { useContext, useState } from 'react';
 import {
   FILE_TYPE,
@@ -8,8 +8,8 @@ import {
   saveToFileSystem,
 } from '../../../utils/IOFunctions';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import EditTableView from './EditTableView';
-import EditClassView from './EditClassView';
+import EditTableView from '@/smart/ui/edit/table/EditTableView';
+import EditClassView from '@/smart/ui/edit/table/EditClassView';
 import React from 'react';
 
 type TabType = 'table' | 'class';

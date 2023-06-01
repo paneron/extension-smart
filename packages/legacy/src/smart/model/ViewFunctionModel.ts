@@ -6,8 +6,8 @@ import {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import { EditorNode } from './editormodel';
-import { LegendInterface } from './States';
+import { EditorNode } from '@/smart/model/editormodel';
+import { LegendInterface } from '@/smart/model/States';
 
 
 console.log(textToMMEL);

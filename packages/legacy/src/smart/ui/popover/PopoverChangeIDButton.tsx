@@ -2,7 +2,7 @@ import { Button } from '@blueprintjs/core';
 import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { useState } from 'react';
-import AskIDForSaveMenu from './AskIDForSaveMenu';
+import AskIDForSaveMenu from '@/smart/ui/popover/AskIDForSaveMenu';
 
 const PopoverChangeIDButton: React.FC<{
   initValue: string;

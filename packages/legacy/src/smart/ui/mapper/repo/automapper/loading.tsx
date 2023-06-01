@@ -1,5 +1,5 @@
 import React from 'react';
-import { LoadingContainer } from '../../../common/Loading';
+import { LoadingContainer } from '@/smart/ui/common/Loading';
 
 const RepoLoading: React.FC<{
   isLoading: boolean;

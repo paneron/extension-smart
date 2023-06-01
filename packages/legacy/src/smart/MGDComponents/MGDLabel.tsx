@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { mgdLabel } from '../../css/form';
+import { mgdLabel } from '@/css/form';
 
 interface OwnProps {
   children: React.ReactNode;

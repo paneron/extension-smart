@@ -1,11 +1,11 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import MGDLabel from '../../../MGDComponents/MGDLabel';
+import MGDLabel from '@/smart/MGDComponents/MGDLabel';
 import {
   cardinalityToString,
   parseCardinality,
 } from '../../../utils/ModelFunctions';
-import { NormalComboBox } from '../../common/fields';
+import { NormalComboBox } from '@/smart/ui/common/fields';
 
 export const CardinalityField: React.FC<{
   value: string;

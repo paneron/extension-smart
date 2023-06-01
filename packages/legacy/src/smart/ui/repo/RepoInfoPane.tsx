@@ -1,8 +1,8 @@
 import React from 'react';
-import { MMELRepo, RepoIndex } from '../../model/repo';
-import { getRepoItemDesc } from '../../utils/repo/CommonFunctions';
-import { DescriptionItem } from '../common/description/fields';
-import RepoCloseButton from './RepoCloseButton';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { getRepoItemDesc } from '@/smart/utils/repo/CommonFunctions';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
+import RepoCloseButton from '@/smart/ui/repo/RepoCloseButton';
 
 const RepoInfoPane: React.FC<{
   repo?: MMELRepo;

@@ -6,22 +6,22 @@ import {
   isEditorDataClass,
   isEditorRegistry,
 } from '../../../model/editormodel';
-import { RefTextSelection } from '../../../model/selectionImport';
+import { RefTextSelection } from '@/smart/model/selectionImport';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
-import { DATATYPE, MODAILITYOPTIONS } from '../../../utils/constants';
-import { createDataAttribute } from '../../../utils/EditorFactory';
+import { DATATYPE, MODAILITYOPTIONS } from '@/smart/utils/constants';
+import { createDataAttribute } from '@/smart/utils/EditorFactory';
 import {
   findUniqueID,
   getModelAllRefs,
   getReferenceDCTypeName,
   trydefaultID,
 } from '../../../utils/ModelFunctions';
-import { findExistingRef } from '../../../utils/ModelImport';
-import { NormalComboBox, NormalTextField } from '../../common/fields';
-import DataTypeSelector from './DataTypeSelector';
-import SimpleReferenceSelector from './ReferenceSelector';
+import { findExistingRef } from '@/smart/utils/ModelImport';
+import { NormalComboBox, NormalTextField } from '@/smart/ui/common/fields';
+import DataTypeSelector from '@/smart/ui/edit/components/DataTypeSelector';
+import SimpleReferenceSelector from '@/smart/ui/edit/components/ReferenceSelector';
 
 export interface AttributeType {
   id: string;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
-import { NormalComboBox, NormalTextField } from '../../common/fields';
+import { NormalComboBox, NormalTextField } from '@/smart/ui/common/fields';
 
 export interface TableRowClass {
   id: string;

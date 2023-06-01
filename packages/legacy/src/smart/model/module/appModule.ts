@@ -4,21 +4,21 @@
 
 import { IconName } from '@blueprintjs/core';
 import React from 'react';
-import DocumentViewer from '../../ui/docviewer';
-import EditWrapper from '../../ui/editFunctions/EditWrapper';
-import LinkAnalysis from '../../ui/LinkAnalysis';
-import DocumentEdit from '../../ui/maindocedit';
-import ModelMapper from '../../ui/mainmapper';
-import ModelViewer from '../../ui/mainviewer';
-import ModelWorkspace from '../../ui/modelWorkspace';
-import NLPMain from '../../ui/nlp/NLPMain';
-import RepoViewer from '../../ui/repo/RepoViewer';
-import { ChangeLog } from '../changelog';
-import { EditorModel } from '../editormodel';
-import { RepoHistory } from '../history';
-import { MapProfile } from '../mapmodel';
-import { MMELRepo, RepoIndex, RepoItemType } from '../repo';
-import { SMARTWorkspace } from '../workspace';
+import DocumentViewer from '@/smart/ui/docviewer';
+import EditWrapper from '@/smart/ui/editFunctions/EditWrapper';
+import LinkAnalysis from '@/smart/ui/LinkAnalysis';
+import DocumentEdit from '@/smart/ui/maindocedit';
+import ModelMapper from '@/smart/ui/mainmapper';
+import ModelViewer from '@/smart/ui/mainviewer';
+import ModelWorkspace from '@/smart/ui/modelWorkspace';
+import NLPMain from '@/smart/ui/nlp/NLPMain';
+import RepoViewer from '@/smart/ui/repo/RepoViewer';
+import { ChangeLog } from '@/smart/model/changelog';
+import { EditorModel } from '@/smart/model/editormodel';
+import { RepoHistory } from '@/smart/model/history';
+import { MapProfile } from '@/smart/model/mapmodel';
+import { MMELRepo, RepoIndex, RepoItemType } from '@/smart/model/repo';
+import { SMARTWorkspace } from '@/smart/model/workspace';
 
 export type ModelModuleConfig = BaseConfig & {
   type: 'model';

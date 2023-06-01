@@ -3,10 +3,10 @@
  */
 
 import { Node } from 'react-flow-renderer';
-import { createEdge } from '../../../utils/EditorFactory';
-import { findUniqueID } from '../../../utils/ModelFunctions';
-import { EditorModel, EditorSubprocess, isEditorData } from '../../editormodel';
-import { ModelAction } from '../model';
+import { createEdge } from '@/smart/utils/EditorFactory';
+import { findUniqueID } from '@/smart/utils/ModelFunctions';
+import { EditorModel, EditorSubprocess, isEditorData } from '@/smart/model/editormodel';
+import { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * Remove an edge of a subprocess (page)

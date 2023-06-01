@@ -3,7 +3,7 @@
  */
 
 import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
-import { ModelAction } from '../model';
+import { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * Delete references

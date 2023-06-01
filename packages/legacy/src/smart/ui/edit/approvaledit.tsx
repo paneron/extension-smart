@@ -1,6 +1,6 @@
 import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useMemo, useState } from 'react';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
 import {
   EditorApproval,
   EditorModel,
@@ -13,25 +13,25 @@ import {
   getModelAllRoles,
   removeSpace,
 } from '../../utils/ModelFunctions';
-import { MODAILITYOPTIONS } from '../../utils/constants';
+import { MODAILITYOPTIONS } from '@/smart/utils/constants';
 import {
   MultiReferenceSelector,
   NormalComboBox,
   NormalTextField,
   ReferenceSelector,
 } from '../common/fields';
-import { EditPageButtons } from './commons';
+import { EditPageButtons } from '@/smart/ui/edit/commons';
 import {
   MMELReference,
   MMELRole,
 } from '@paneron/libmmel/interface/supportinterface';
-import { DescriptionItem } from '../common/description/fields';
-import RoleSelector from './components/RoleSelector';
-import RegistrySelector from './components/RegistrySelector';
-import SimpleReferenceSelector from './components/ReferenceSelector';
-import { ModelAction } from '../../model/editor/model';
-import PopoverChangeIDButton from '../popover/PopoverChangeIDButton';
-import { editElmCommand } from '../../model/editor/commands/elements';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
+import RoleSelector from '@/smart/ui/edit/components/RoleSelector';
+import RegistrySelector from '@/smart/ui/edit/components/RegistrySelector';
+import SimpleReferenceSelector from '@/smart/ui/edit/components/ReferenceSelector';
+import { ModelAction } from '@/smart/model/editor/model';
+import PopoverChangeIDButton from '@/smart/ui/popover/PopoverChangeIDButton';
+import { editElmCommand } from '@/smart/model/editor/commands/elements';
 
 interface CommonApprovalEditProps {
   onUpdateClick: () => void;

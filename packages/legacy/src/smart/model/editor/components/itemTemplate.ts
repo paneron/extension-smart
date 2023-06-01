@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { UndoReducerInterface } from '../interface';
+import { UndoReducerInterface } from '@/smart/model/editor/interface';
 
 export interface EditAction<T> {
   task: 'edit';

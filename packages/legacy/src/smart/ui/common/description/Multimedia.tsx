@@ -1,7 +1,7 @@
 import { Text } from '@blueprintjs/core';
 import React, { CSSProperties } from 'react';
 import { BINARY_TYPE } from '@paneron/libmmel/interface/supportinterface';
-// import ThreeD from '../../edit/figure/ThreeD';
+// import ThreeD from '@/smart/ui/edit/figure/ThreeD';
 
 const MultimediaView: React.FC<{
   type: BINARY_TYPE;

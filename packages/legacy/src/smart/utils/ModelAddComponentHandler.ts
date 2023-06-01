@@ -12,8 +12,8 @@ import {
   EditorTimerEvent,
 } from '../model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { capitalizeString, findUniqueID, trydefaultID } from './ModelFunctions';
-import { NewComponentTypes } from './constants';
+import { capitalizeString, findUniqueID, trydefaultID } from '@/smart/utils/ModelFunctions';
+import { NewComponentTypes } from '@/smart/utils/constants';
 import {
   createApproval,
   createEGate,
@@ -25,8 +25,8 @@ import {
   createSubprocessComponent,
   createTimerEvent,
 } from './EditorFactory';
-import { HistoryItem } from '../model/history';
-import { ModelAction } from '../model/editor/model';
+import { HistoryItem } from '@/smart/model/history';
+import { ModelAction } from '@/smart/model/editor/model';
 
 type Elements = Record<string, EditorNode>;
 

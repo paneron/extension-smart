@@ -1,4 +1,4 @@
-import { MMELDocument } from '../../model/document';
+import { MMELDocument } from '@/smart/model/document';
 import {
   EditorModel,
   EditorProcess,
@@ -15,7 +15,7 @@ import {
   MMELNote,
   MMELTextSection,
 } from '@paneron/libmmel/interface/supportinterface';
-import { detectModality } from '../../ui/edit/components/ProvisionList';
+import { detectModality } from '@/smart/ui/edit/components/ProvisionList';
 import {
   createEdge,
   createNewEditorModel,
@@ -27,8 +27,8 @@ import {
   createSubprocessComponent,
   createTerm,
 } from '../EditorFactory';
-import { createNewPage } from '../ModelAddComponentHandler';
-import * as Logger from '../../../lib/logger';
+import { createNewPage } from '@/smart/utils/ModelAddComponentHandler';
+import * as Logger from '@/lib/logger';
 
 type Sections = Record<string, Section>;
 type NoteType = MMELNote['type'];

@@ -1,12 +1,12 @@
 import React from 'react';
-import { EditorModel } from '../../../model/editormodel';
+import { EditorModel } from '@/smart/model/editormodel';
 import { MMELFigure } from '@paneron/libmmel/interface/supportinterface';
-import { checkId, defaultItemSorter } from '../../../utils/ModelFunctions';
-import { createFig } from '../../../utils/EditorFactory';
-import { IListItem, IManageHandler } from '../../common/fields';
-import ListManagePage from '../../common/listmanagement/listmanagement';
-import FigItemEditPage from './FigureItemEdit';
-import { ModelAction } from '../../../model/editor/model';
+import { checkId, defaultItemSorter } from '@/smart/utils/ModelFunctions';
+import { createFig } from '@/smart/utils/EditorFactory';
+import { IListItem, IManageHandler } from '@/smart/ui/common/fields';
+import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
+import FigItemEditPage from '@/smart/ui/edit/figure/FigureItemEdit';
+import { ModelAction } from '@/smart/model/editor/model';
 
 const FigureEditPage: React.FC<{
   model: EditorModel;

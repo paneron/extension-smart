@@ -4,7 +4,7 @@
  */
 
 import { CSSProperties } from 'react';
-import { CSSROOTVARIABLES } from './root.css';
+import { CSSROOTVARIABLES } from '@/css/root.css';
 
 export const mgdComponentBar: CSSProperties = {
   backgroundColor : CSSROOTVARIABLES['--colour--bsi-light-teal'],

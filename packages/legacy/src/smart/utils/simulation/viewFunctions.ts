@@ -1,7 +1,7 @@
-import { CSSROOTVARIABLES } from '../../../css/root.css';
-import { flow_node__highlighed } from '../../../css/visual';
-import { SimulationState } from '../../model/simulation';
-import { ViewFunctionInterface } from '../../model/ViewFunctionModel';
+import { CSSROOTVARIABLES } from '@/css/root.css';
+import { flow_node__highlighed } from '@/css/visual';
+import { SimulationState } from '@/smart/model/simulation';
+import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 
 const selectedcolor = 'lightyellow';
 const normalcolor = CSSROOTVARIABLES['--plain-node-color'];

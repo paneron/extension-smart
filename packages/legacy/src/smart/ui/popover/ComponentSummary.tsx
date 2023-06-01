@@ -1,5 +1,5 @@
 import React from 'react';
-import { popoverPanelContainer } from '../../../css/layout';
+import { popoverPanelContainer } from '@/css/layout';
 
 import {
   EditorApproval,
@@ -14,12 +14,12 @@ import {
   getEditorDataClassById,
 } from '../../model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { DescribableNodeTypes } from '../../utils/constants';
-import { DescribeDC, DescribeRegistry } from '../common/description/data';
-import ApprovalSummary from './components/ApprovalSummary';
-import EGateSummary from './components/EGateSummary';
-import { SignalSummary, TimerSummary } from './components/EventSummary';
-import ProcessSummary from './components/ProcessSummary';
+import { DescribableNodeTypes } from '@/smart/utils/constants';
+import { DescribeDC, DescribeRegistry } from '@/smart/ui/common/description/data';
+import ApprovalSummary from '@/smart/ui/popover/components/ApprovalSummary';
+import EGateSummary from '@/smart/ui/popover/components/EGateSummary';
+import { SignalSummary, TimerSummary } from '@/smart/ui/popover/components/EventSummary';
+import ProcessSummary from '@/smart/ui/popover/components/ProcessSummary';
 
 const ComponentSummary: React.FC<{
   id: string;

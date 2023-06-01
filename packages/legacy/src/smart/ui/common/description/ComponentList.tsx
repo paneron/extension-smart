@@ -1,5 +1,5 @@
 import React from 'react';
-import { EditorRegistry } from '../../../model/editormodel';
+import { EditorRegistry } from '@/smart/model/editormodel';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
@@ -7,13 +7,13 @@ import {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import { toRefSummary } from '../../../utils/ModelFunctions';
+import { toRefSummary } from '@/smart/utils/ModelFunctions';
 import {
   DescribeEdge,
   DescribeNote,
   DescribeProvision,
 } from './ComponentDescription';
-import { DescribeAttribute } from './data';
+import { DescribeAttribute } from '@/smart/ui/common/description/data';
 
 export const ApprovalRecordList: React.FC<{
   regs: EditorRegistry[];

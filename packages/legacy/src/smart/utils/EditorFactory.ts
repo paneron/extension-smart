@@ -35,8 +35,8 @@ import {
   EditorSubprocess,
   EditorTimerEvent,
 } from '../model/editormodel';
-import { DOCVERSION, MODELVERSION } from './constants';
-import { MMELDocument } from '../model/document';
+import { DOCVERSION, MODELVERSION } from '@/smart/utils/constants';
+import { MMELDocument } from '@/smart/model/document';
 
 export function createNewEditorModel(): EditorModel {
   const start = createStartEvent('Start1');

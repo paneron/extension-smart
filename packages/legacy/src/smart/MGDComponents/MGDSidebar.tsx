@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { mgdSidebar } from '../../css/MGDSidebar';
+import { mgdSidebar } from '@/css/MGDSidebar';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

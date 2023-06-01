@@ -4,12 +4,12 @@ import {
   BINARY_TYPES,
   MMELFigure,
 } from '@paneron/libmmel/interface/supportinterface';
-import { NormalComboBox, NormalTextField } from '../../common/fields';
+import { NormalComboBox, NormalTextField } from '@/smart/ui/common/fields';
 import { useContext } from 'react';
-import { FILE_TYPE, handleFileOpen } from '../../../utils/IOFunctions';
+import { FILE_TYPE, handleFileOpen } from '@/smart/utils/IOFunctions';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React from 'react';
-import MultimediaView from '../../common/description/Multimedia';
+import MultimediaView from '@/smart/ui/common/description/Multimedia';
 
 const FigItemEditPage: React.FC<{
   object: MMELFigure;

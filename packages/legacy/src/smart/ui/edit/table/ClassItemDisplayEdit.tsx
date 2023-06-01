@@ -1,9 +1,9 @@
 import { Button } from '@blueprintjs/core';
 import React, { useState } from 'react';
-import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
-import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
+import MGDButtonGroup from '@/smart/MGDComponents/MGDButtonGroup';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
 import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
-import { ReferenceSelector } from '../../common/fields';
+import { ReferenceSelector } from '@/smart/ui/common/fields';
 
 const ClassItemDisplayEdit: React.FC<{
   table: MMELTable;

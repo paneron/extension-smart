@@ -3,7 +3,7 @@
  */
 
 import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
-import { ModelAction } from '../model';
+import { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * Add role

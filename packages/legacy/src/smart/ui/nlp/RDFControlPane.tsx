@@ -1,14 +1,14 @@
 import { Button, Text } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useState } from 'react';
-import MGDSidebar from '../../MGDComponents/MGDSidebar';
-import { ModelWrapper } from '../../model/modelwrapper';
-import { MMELRepo } from '../../model/repo';
-import { ProvisionRDF } from '../../model/SemanticTriple';
-import { computeRDF } from '../../utils/nlp/nlp';
-import { COMMITMSG, getPathByNS, RepoFileType } from '../../utils/repo/io';
-import { DescriptionItem } from '../common/description/fields';
-import { LoadingScreen } from '../common/Loading';
+import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
+import { ModelWrapper } from '@/smart/model/modelwrapper';
+import { MMELRepo } from '@/smart/model/repo';
+import { ProvisionRDF } from '@/smart/model/SemanticTriple';
+import { computeRDF } from '@/smart/utils/nlp/nlp';
+import { COMMITMSG, getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
+import { LoadingScreen } from '@/smart/ui/common/Loading';
 
 const RDFControlPane: React.FC<{
   repo: MMELRepo;

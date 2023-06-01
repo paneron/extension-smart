@@ -1,9 +1,9 @@
 import React from 'react';
-import { DocMapIndex, MMELDocument } from '../model/document';
-import { MappingType } from '../model/mapmodel';
-import { DOCVERSION } from './constants';
-import { createNewMMELDocument } from './EditorFactory';
-import * as Logger from '../../lib/logger';
+import { DocMapIndex, MMELDocument } from '@/smart/model/document';
+import { MappingType } from '@/smart/model/mapmodel';
+import { DOCVERSION } from '@/smart/utils/constants';
+import { createNewMMELDocument } from '@/smart/utils/EditorFactory';
+import * as Logger from '@/lib/logger';
 
 function addMetaField(doc: MMELDocument, id: string, value: string) {
   if (id === 'namespace') {

@@ -1,7 +1,7 @@
 import { Button, ControlGroup, NumericInput } from '@blueprintjs/core';
 import React from 'react';
 import { useState } from 'react';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
 
 const ProgressSetter: React.FC<{
   initial: number;

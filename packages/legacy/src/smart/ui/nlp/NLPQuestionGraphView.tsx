@@ -1,7 +1,7 @@
 import { Button } from '@blueprintjs/core';
 import React from 'react';
-import { ProvisionRDF } from '../../model/SemanticTriple';
-import RDFDiagram from './RDFDiagram';
+import { ProvisionRDF } from '@/smart/model/SemanticTriple';
+import RDFDiagram from '@/smart/ui/nlp/RDFDiagram';
 
 const NLPQuestionGraphView: React.FC<{
   isVisible: boolean;

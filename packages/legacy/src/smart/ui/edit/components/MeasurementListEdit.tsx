@@ -1,6 +1,6 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import { NormalTextField } from '../../common/fields';
+import { NormalTextField } from '@/smart/ui/common/fields';
 
 const MeasureListQuickEdit: React.FC<{
   measurements: string[];

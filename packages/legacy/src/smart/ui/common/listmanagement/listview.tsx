@@ -11,9 +11,9 @@ import {
   mgd_select,
   mgd_select__restrained,
 } from '../../../../css/form';
-import { u__display__block, u__display__none } from '../../../../css/utility';
-import MGDButtonGroup from '../../../MGDComponents/MGDButtonGroup';
-import { IViewListInterface } from '../fields';
+import { u__display__block, u__display__none } from '@/css/utility';
+import MGDButtonGroup from '@/smart/MGDComponents/MGDButtonGroup';
+import { IViewListInterface } from '@/smart/ui/common/fields';
 
 const ListViewPane: React.FC<IViewListInterface> = ({
   filterName,

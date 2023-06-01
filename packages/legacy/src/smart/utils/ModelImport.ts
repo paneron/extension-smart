@@ -31,7 +31,7 @@ import {
   getReferenceDCTypeName,
   findUniqueID,
 } from './ModelFunctions';
-import * as Logger from '../../lib/logger';
+import * as Logger from '@/lib/logger';
 
 export interface NewImportItems {
   elements: Record<string, EditorNode>;

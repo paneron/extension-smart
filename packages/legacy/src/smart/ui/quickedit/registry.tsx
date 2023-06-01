@@ -4,19 +4,19 @@ import {
   editImportRegistryCommand,
   editRegistryCommand,
 } from '../../model/editor/commands/data';
-import { RegistryCombined } from '../../model/editor/components/element/registry';
-import { ModelAction } from '../../model/editor/model';
+import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
+import { ModelAction } from '@/smart/model/editor/model';
 import {
   EditorDataClass,
   EditorModel,
   EditorRegistry,
 } from '../../model/editormodel';
-import { RefTextSelection } from '../../model/selectionImport';
+import { RefTextSelection } from '@/smart/model/selectionImport';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
-import { DescriptionItem } from '../common/description/fields';
-import { NormalTextField } from '../common/fields';
-import { EditPageButtons } from '../edit/commons';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
+import { NormalTextField } from '@/smart/ui/common/fields';
+import { EditPageButtons } from '@/smart/ui/edit/commons';
 import AttributeListQuickEdit, {
   findAllAttributeTypes,
 } from '../edit/components/AttributeList';

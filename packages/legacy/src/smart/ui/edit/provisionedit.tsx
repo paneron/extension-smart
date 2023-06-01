@@ -1,15 +1,15 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import { EditorModel } from '../../model/editormodel';
+import { EditorModel } from '@/smart/model/editormodel';
 import { MMELProvision } from '@paneron/libmmel/interface/supportinterface';
-import { getModelAllRefs } from '../../utils/ModelFunctions';
-import { MODAILITYOPTIONS } from '../../utils/constants';
+import { getModelAllRefs } from '@/smart/utils/ModelFunctions';
+import { MODAILITYOPTIONS } from '@/smart/utils/constants';
 import {
   MultiReferenceSelector,
   NormalComboBox,
   NormalTextField,
 } from '../common/fields';
-import { IMMELObject } from '../common/listmanagement/listPopoverItem';
+import { IMMELObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
 
 export function matchProvisionFilter(x: IMMELObject, filter: string): boolean {
   const provision = x as MMELProvision;

@@ -11,25 +11,25 @@ import {
   dialogLayout,
   dialogLayoutFull,
 } from '../../../../css/layout';
-import MGDContainer from '../../../MGDComponents/MGDContainer';
-import MGDHeading from '../../../MGDComponents/MGDHeading';
-import MGDSidebar from '../../../MGDComponents/MGDSidebar';
-import { EditorModel } from '../../../model/editormodel';
-import Chart27001 from './Chart';
-import Application27001ConfigurePage from './ConfigurePage';
-import Application27001LogPage from './LogPage';
+import MGDContainer from '@/smart/MGDComponents/MGDContainer';
+import MGDHeading from '@/smart/MGDComponents/MGDHeading';
+import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
+import { EditorModel } from '@/smart/model/editormodel';
+import Chart27001 from '@/smart/ui/application/ISO27001/Chart';
+import Application27001ConfigurePage from '@/smart/ui/application/ISO27001/ConfigurePage';
+import Application27001LogPage from '@/smart/ui/application/ISO27001/LogPage';
 import { setInterval, clearInterval } from 'timers';
-import { obtainData } from './DataFeeder';
-import { testMeasurement27001 } from './ReadingCalculator';
+import { obtainData } from '@/smart/ui/application/ISO27001/DataFeeder';
+import { testMeasurement27001 } from '@/smart/ui/application/ISO27001/ReadingCalculator';
 import { Popover2 } from '@blueprintjs/popover2';
-import { ViewFunctionInterface } from '../../../model/ViewFunctionModel';
+import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import {
   Application27001Setting,
   Dialog27001Interface,
   fixedlocalhost,
   Log27001,
 } from './model';
-import LineChart27001 from './LineChart';
+import LineChart27001 from '@/smart/ui/application/ISO27001/LineChart';
 import React from 'react';
 
 const Application27001: React.FC<{

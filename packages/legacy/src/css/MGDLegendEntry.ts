@@ -4,7 +4,7 @@
  */
 
 import { CSSProperties } from 'react';
-import { CSSROOTVARIABLES } from './root.css';
+import { CSSROOTVARIABLES } from '@/css/root.css';
 
 export const mgdLegendEntry: CSSProperties = {
   display        : 'flex',

@@ -1,13 +1,13 @@
 import { Edge, Elements, Node, Position } from 'react-flow-renderer';
-import { ModelWrapper } from '../../model/modelwrapper';
-import { MMELRepo, RepoIndex } from '../../model/repo';
-import { createNodeContent } from '../../ui/mapper/repo/RepoMapNode';
+import { ModelWrapper } from '@/smart/model/modelwrapper';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { createNodeContent } from '@/smart/ui/mapper/repo/RepoMapNode';
 import {
   getRepoItemDesc,
   RepoLegend,
   RepoNodeType,
 } from '../repo/CommonFunctions';
-import { getPathByNS, RepoFileType } from './io';
+import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
 
 type Nodes = Record<string, Node>;
 type Edges = Record<string, Edge>;

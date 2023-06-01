@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconName, Menu, MenuItem } from '@blueprintjs/core';
-import { FunctionPage, FuntionNames } from '../mainviewer';
+import { FunctionPage, FuntionNames } from '@/smart/ui/mainviewer';
 
 const ViewToolMenu: React.FC<{
   funPage: FunctionPage;

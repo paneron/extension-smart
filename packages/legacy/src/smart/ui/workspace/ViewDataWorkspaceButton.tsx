@@ -1,7 +1,7 @@
 import { Button } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
-import { flownodeTopRightButtonLayout } from '../../../css/layout';
+import { flownodeTopRightButtonLayout } from '@/css/layout';
 
 const ViewWorkspaceButton: React.FC<{
   onClick: () => void;

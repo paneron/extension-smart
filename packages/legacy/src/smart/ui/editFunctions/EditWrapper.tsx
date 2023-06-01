@@ -7,14 +7,14 @@ import {
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext } from 'react';
 import { useState } from 'react';
-import { addToLog, ChangeLog } from '../../model/changelog';
-import { EditorAction, useEditorState } from '../../model/editor/state';
-import { EditorModel, isEditorProcess } from '../../model/editormodel';
-import { createModelHistory } from '../../model/history';
-import { MMELRepo, RepoIndex } from '../../model/repo';
-import { EditorState } from '../../model/States';
-import { addExisingProcessToPage } from '../../utils/ModelAddComponentHandler';
-import ModelEditor from '../maineditor';
+import { addToLog, ChangeLog } from '@/smart/model/changelog';
+import { EditorAction, useEditorState } from '@/smart/model/editor/state';
+import { EditorModel, isEditorProcess } from '@/smart/model/editormodel';
+import { createModelHistory } from '@/smart/model/history';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { EditorState } from '@/smart/model/States';
+import { addExisingProcessToPage } from '@/smart/utils/ModelAddComponentHandler';
+import ModelEditor from '@/smart/ui/maineditor';
 
 const EditWrapper: React.FC<{
   isVisible: boolean;

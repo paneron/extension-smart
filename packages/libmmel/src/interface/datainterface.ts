@@ -1,4 +1,4 @@
-import { DataType, MMELNode, MMELObject } from './baseinterface';
+import { DataType, MMELNode, MMELObject } from '@/interface/baseinterface';
 
 // data structure for data attribute
 export interface MMELDataAttribute extends MMELObject {

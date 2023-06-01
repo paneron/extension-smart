@@ -1,13 +1,13 @@
 import React from 'react';
-import { mgdLabel } from '../../../css/form';
-import { popoverPanelContainer } from '../../../css/layout';
-import { ModelType } from '../../model/editormodel';
-import { MappingType } from '../../model/mapmodel';
+import { mgdLabel } from '@/css/form';
+import { popoverPanelContainer } from '@/css/layout';
+import { ModelType } from '@/smart/model/editormodel';
+import { MappingType } from '@/smart/model/mapmodel';
 import {
   findImpMapPartners,
   findRefMapPartners,
 } from '../../utils/map/MappingCalculator';
-import { EditMappingButton, MapPartnerNavigateButton } from '../common/buttons';
+import { EditMappingButton, MapPartnerNavigateButton } from '@/smart/ui/common/buttons';
 
 const MappingPartyList: React.FC<{
   id: string;

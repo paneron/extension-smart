@@ -4,7 +4,7 @@
  */
 
 import { css } from '@emotion/react';
-import { CSSROOTVARIABLES } from './root.css';
+import { CSSROOTVARIABLES } from '@/css/root.css';
 
 export const vertical_line = css`
   border-left: 2px solid ${CSSROOTVARIABLES['--colour--black']};

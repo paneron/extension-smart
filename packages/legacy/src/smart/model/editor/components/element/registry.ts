@@ -1,7 +1,7 @@
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { MMELSubprocess } from '@paneron/libmmel/interface/flowcontrolinterface';
 import { isRegistry } from '@paneron/libmmel/util/validation';
-import { createRegistry } from '../../../../utils/EditorFactory';
+import { createRegistry } from '@/smart/utils/EditorFactory';
 import {
   fillRDCS,
   genDCIdByRegId,
@@ -16,8 +16,8 @@ import {
   isEditorProcess,
   isEditorRegistry,
 } from '../../../editormodel';
-import { ModelAction } from '../../model';
-import { ElmAction, DataCascadeIDs } from '../elements';
+import { ModelAction } from '@/smart/model/editor/model';
+import { ElmAction, DataCascadeIDs } from '@/smart/model/editor/components/elements';
 
 export type RegistryCombined = EditorDataClass & {
   title: string;

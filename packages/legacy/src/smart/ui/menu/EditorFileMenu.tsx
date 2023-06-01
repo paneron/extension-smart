@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { MMELToText } from '@paneron/libmmel';
-import { FILE_TYPE, saveToFileSystem } from '../../utils/IOFunctions';
-import { EditorModel } from '../../model/editormodel';
+import { FILE_TYPE, saveToFileSystem } from '@/smart/utils/IOFunctions';
+import { EditorModel } from '@/smart/model/editormodel';
 
 const EditorFileMenu: React.FC<{
   model: EditorModel;

@@ -8,8 +8,8 @@ import {
   getBezierPath,
   Position,
 } from 'react-flow-renderer';
-import { CSSROOTVARIABLES } from '../../../css/root.css';
-import { DataLinkNodeData, EdgePackage } from '../../model/FlowContainer';
+import { CSSROOTVARIABLES } from '@/css/root.css';
+import { DataLinkNodeData, EdgePackage } from '@/smart/model/FlowContainer';
 
 const SandyBrown = CSSROOTVARIABLES['--colour--sandy-brown'];
 const Black = CSSROOTVARIABLES['--colour--black'];

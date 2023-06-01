@@ -1,7 +1,7 @@
 import { Dialog } from '@blueprintjs/core';
 import React, { useState } from 'react';
-import { dialogLayout } from '../../../../css/layout';
-import { EditorModel } from '../../../model/editormodel';
+import { dialogLayout } from '@/css/layout';
+import { EditorModel } from '@/smart/model/editormodel';
 import { MMELObject } from '@paneron/libmmel/interface/baseinterface';
 import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 import {
@@ -11,9 +11,9 @@ import {
   findUniqueID,
   itemSorterByText,
 } from '../../../utils/ModelFunctions';
-import { IListItem, IUpdateInterface, IViewListInterface } from '../fields';
-import ItemUpdatePane from './itemupdate';
-import ListViewPane from './listview';
+import { IListItem, IUpdateInterface, IViewListInterface } from '@/smart/ui/common/fields';
+import ItemUpdatePane from '@/smart/ui/common/listmanagement/itemupdate';
+import ListViewPane from '@/smart/ui/common/listmanagement/listview';
 
 export interface IObject {
   id: string;

@@ -5,7 +5,7 @@ import {
   MMELFigure,
   MMELTable,
 } from '@paneron/libmmel/interface/supportinterface';
-import { isMMELTable } from '../../model/editormodel';
+import { isMMELTable } from '@/smart/model/editormodel';
 
 const titles: Record<BINARY_TYPE, string> = {
   'fig'   : 'Figure',

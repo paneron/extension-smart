@@ -28,8 +28,8 @@ import {
   MMELReference,
   MMELRole,
 } from '@paneron/libmmel/interface/supportinterface';
-import { SelectableNodeTypes } from '../../utils/constants';
-import { DescribeApproval } from '../common/description/approval';
+import { SelectableNodeTypes } from '@/smart/utils/constants';
+import { DescribeApproval } from '@/smart/ui/common/description/approval';
 import {
   DescribeEGate,
   DescribeEnd,
@@ -37,8 +37,8 @@ import {
   DescribeStart,
   DescribeTimer,
 } from '../common/description/ComponentDescription';
-import { DescribeDC, DescribeRegistry } from '../common/description/data';
-import { DescribeProcess } from '../common/description/process';
+import { DescribeDC, DescribeRegistry } from '@/smart/ui/common/description/data';
+import { DescribeProcess } from '@/smart/ui/common/description/process';
 
 interface Props {
   node: EditorNode;

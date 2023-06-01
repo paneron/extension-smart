@@ -5,11 +5,11 @@
  */
 
 import React from 'react';
-import { getRootName } from '../utils/ModelFunctions';
-import { HistoryAction } from './editor/history';
-import { EditorModel } from './editormodel';
-import { ModelWrapper } from './modelwrapper';
-import { MMELRepo } from './repo';
+import { getRootName } from '@/smart/utils/ModelFunctions';
+import { HistoryAction } from '@/smart/model/editor/history';
+import { EditorModel } from '@/smart/model/editormodel';
+import { ModelWrapper } from '@/smart/model/modelwrapper';
+import { MMELRepo } from '@/smart/model/repo';
 
 interface Breadcrumb {
   label: JSX.Element;

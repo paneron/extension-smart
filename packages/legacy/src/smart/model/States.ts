@@ -1,9 +1,9 @@
 import React from 'react';
 import { NodeProps } from 'react-flow-renderer';
-import { HistoryItem, PageHistory } from './history';
-import { ModelWrapper } from './modelwrapper';
+import { HistoryItem, PageHistory } from '@/smart/model/history';
+import { ModelWrapper } from '@/smart/model/modelwrapper';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { DataLinkEdge, NormalEdge, SelfLoopEdge } from '../ui/flowui/edgeUI';
+import { DataLinkEdge, NormalEdge, SelfLoopEdge } from '@/smart/ui/flowui/edgeUI';
 import {
   ApprovalComponent,
   Datacube,
@@ -14,8 +14,8 @@ import {
   StartComponent,
   TimerComponent,
 } from '../ui/flowui/nodeUI';
-import { EditorModel, ModelType } from './editormodel';
-import { MMELDocument } from './document';
+import { EditorModel, ModelType } from '@/smart/model/editormodel';
+import { MMELDocument } from '@/smart/model/document';
 
 export interface FunModel {
   mw: ModelWrapper;

@@ -1,8 +1,8 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { editEGateCommand } from '../../model/editor/commands/elements';
-import { ModelAction } from '../../model/editor/model';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { editEGateCommand } from '@/smart/model/editor/commands/elements';
+import { ModelAction } from '@/smart/model/editor/model';
 import {
   EditorEGate,
   EditorModel,
@@ -14,11 +14,11 @@ import {
   getModelAllMeasures,
   removeSpace,
 } from '../../utils/ModelFunctions';
-import { DescriptionItem } from '../common/description/fields';
-import { NormalTextField, ReferenceSelector } from '../common/fields';
-import PopoverChangeIDButton from '../popover/PopoverChangeIDButton';
-import { EditPageButtons } from './commons';
-import EdgeQuickEdit from './components/EdgeListEdit';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
+import { NormalTextField, ReferenceSelector } from '@/smart/ui/common/fields';
+import PopoverChangeIDButton from '@/smart/ui/popover/PopoverChangeIDButton';
+import { EditPageButtons } from '@/smart/ui/edit/commons';
+import EdgeQuickEdit from '@/smart/ui/edit/components/EdgeListEdit';
 
 interface CommonEGateEditProps {
   onUpdateClick: () => void;

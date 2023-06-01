@@ -13,13 +13,13 @@ import {
   EditAction,
 } from '../../utils/constants';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import EditProcessPage from '../edit/processedit';
-import EditApprovalPage from '../edit/approvaledit';
-import EditEGatePage from '../edit/egateedit';
-import EditTimerPage from '../edit/timeredit';
-import EditSignalEventPage from '../edit/signaleventedit';
-import { EditorAction } from '../../model/editor/state';
-import { ConfirmDialog } from './confirmdialog';
+import EditProcessPage from '@/smart/ui/edit/processedit';
+import EditApprovalPage from '@/smart/ui/edit/approvaledit';
+import EditEGatePage from '@/smart/ui/edit/egateedit';
+import EditTimerPage from '@/smart/ui/edit/timeredit';
+import EditSignalEventPage from '@/smart/ui/edit/signaleventedit';
+import { EditorAction } from '@/smart/model/editor/state';
+import { ConfirmDialog } from '@/smart/ui/dialog/confirmdialog';
 
 export type DialogSetterInterface = (
   nodeType: EditableNodeTypes | DeletableNodeTypes,

@@ -1,9 +1,9 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React, { useState } from 'react';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { MMELDocument } from '../../model/document';
-import { plainToDoc } from '../../utils/DocumentFunctions';
-import { NormalTextField } from '../common/fields';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { MMELDocument } from '@/smart/model/document';
+import { plainToDoc } from '@/smart/utils/DocumentFunctions';
+import { NormalTextField } from '@/smart/ui/common/fields';
 
 const DocImport: React.FC<{
   setDoc: (x: MMELDocument) => void;

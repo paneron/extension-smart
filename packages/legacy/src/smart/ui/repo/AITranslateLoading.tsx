@@ -2,12 +2,12 @@ import { IToastProps } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React from 'react';
 import { useContext, useMemo } from 'react';
-import { MMELDocument } from '../../model/document';
-import { ModelWrapper } from '../../model/modelwrapper';
-import { MMELRepo } from '../../model/repo';
-import { aiTranslate } from '../../utils/ai/aiagent';
-import { getPathByNS, RepoFileType } from '../../utils/repo/io';
-import { LoadingIcon } from '../common/Loading';
+import { MMELDocument } from '@/smart/model/document';
+import { ModelWrapper } from '@/smart/model/modelwrapper';
+import { MMELRepo } from '@/smart/model/repo';
+import { aiTranslate } from '@/smart/utils/ai/aiagent';
+import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
+import { LoadingIcon } from '@/smart/ui/common/Loading';
 
 const AITranslateLoading: React.FC<{
   source: MMELRepo;

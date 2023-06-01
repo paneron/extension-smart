@@ -7,20 +7,20 @@ import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { ReactFlowProvider } from 'react-flow-renderer';
-import { sidebar_layout } from '../../../css/layout';
-import { MMELJSON } from '../../model/json';
+import { sidebar_layout } from '@/css/layout';
+import { MMELJSON } from '@/smart/model/json';
 import {
   createEditorModelWrapper,
   ModelWrapper,
 } from '../../model/modelwrapper';
-import { MMELRepo } from '../../model/repo';
-import { ProvisionRDF, RDFVersion } from '../../model/SemanticTriple';
-import { buildModelLinks } from '../../utils/ModelFunctions';
-import { getPathByNS, JSONToMMEL, RepoFileType } from '../../utils/repo/io';
-import { LoadingScreen } from '../common/Loading';
-import RDFControlPane from './RDFControlPane';
-import RDFDiagram from './RDFDiagram';
-import RDFQueryPane from './RDFQueryPane';
+import { MMELRepo } from '@/smart/model/repo';
+import { ProvisionRDF, RDFVersion } from '@/smart/model/SemanticTriple';
+import { buildModelLinks } from '@/smart/utils/ModelFunctions';
+import { getPathByNS, JSONToMMEL, RepoFileType } from '@/smart/utils/repo/io';
+import { LoadingScreen } from '@/smart/ui/common/Loading';
+import RDFControlPane from '@/smart/ui/nlp/RDFControlPane';
+import RDFDiagram from '@/smart/ui/nlp/RDFDiagram';
+import RDFQueryPane from '@/smart/ui/nlp/RDFQueryPane';
 
 const NLPMain: React.FC<{
   isVisible: boolean;

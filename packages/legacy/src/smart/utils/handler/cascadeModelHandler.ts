@@ -18,7 +18,7 @@ import {
   MMELProvision,
 } from '@paneron/libmmel/interface/supportinterface';
 import { isApproval } from '@paneron/libmmel/util/validation';
-import { setReplace } from '../ModelFunctions';
+import { setReplace } from '@/smart/utils/ModelFunctions';
 
 export type RoleAttribute = 'actor' | 'approver';
 

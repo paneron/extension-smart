@@ -1,8 +1,8 @@
 import { Button, Checkbox, Dialog, Text } from '@blueprintjs/core';
 import React, { useEffect } from 'react';
 import { useMemo, useState } from 'react';
-import { dialogLayout, dialogLayoutFull } from '../../../css/layout';
-import MGDSidebar from '../../MGDComponents/MGDSidebar';
+import { dialogLayout, dialogLayoutFull } from '@/css/layout';
+import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
 import {
   EditorModel,
   EditorProcess,
@@ -13,10 +13,10 @@ import {
   MMELReference,
   MMELRole,
 } from '@paneron/libmmel/interface/supportinterface';
-import { MODAILITYOPTIONS, ModalityType } from '../../utils/constants';
-import { clauseSorter } from '../../utils/ModelFunctions';
-import { NormalComboBox } from '../common/fields';
-import ProvisionSummary from './ProvisionSummary';
+import { MODAILITYOPTIONS, ModalityType } from '@/smart/utils/constants';
+import { clauseSorter } from '@/smart/utils/ModelFunctions';
+import { NormalComboBox } from '@/smart/ui/common/fields';
+import ProvisionSummary from '@/smart/ui/summary/ProvisionSummary';
 
 export interface ClauseSummary {
   title: string;

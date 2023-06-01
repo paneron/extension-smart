@@ -3,9 +3,9 @@ import {
   addProcessIfNotFound,
   NewImportItems,
 } from '../../../utils/ModelImport';
-import { EditorModel, isEditorProcess } from '../../editormodel';
-import { ModelAction } from '../model';
-import { HyEditAction } from './distributor';
+import { EditorModel, isEditorProcess } from '@/smart/model/editormodel';
+import { ModelAction } from '@/smart/model/editor/model';
+import { HyEditAction } from '@/smart/model/editor/hybird/distributor';
 
 type ProcessImportHybird = HyEditAction & { task: 'elm-import' };
 

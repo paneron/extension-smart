@@ -7,10 +7,10 @@ import ReactFlow, {
   OnLoadParams,
   ReactFlowProvider,
 } from 'react-flow-renderer';
-import { reactFlowContainerLayout } from '../../../css/layout';
-import { MGDButtonType } from '../../../css/MGDButton';
-import MGDButton from '../../MGDComponents/MGDButton';
-import { EditorModel, ModelType } from '../../model/editormodel';
+import { reactFlowContainerLayout } from '@/css/layout';
+import { MGDButtonType } from '@/css/MGDButton';
+import MGDButton from '@/smart/MGDComponents/MGDButton';
+import { EditorModel, ModelType } from '@/smart/model/editormodel';
 import {
   addToHistory,
   createPageHistory,
@@ -30,7 +30,7 @@ import {
   MapperViewOption,
   NodeTypes,
 } from '../../model/States';
-import ComponentSummary from '../popover/ComponentSummary';
+import ComponentSummary from '@/smart/ui/popover/ComponentSummary';
 import {
   buildHistoryMap,
   indexModel,
@@ -44,16 +44,16 @@ import {
   MappingSourceStyles,
   MapResultType,
 } from '../../utils/map/MappingCalculator';
-import LegendPane from '../common/description/LegendPane';
-import MappingPartyList from './mappartylist';
-import { handleModelOpen } from '../../utils/IOFunctions';
-import { MMELDocument } from '../../model/document';
-import SMARTDocumentView from './document/DocumentView';
+import LegendPane from '@/smart/ui/common/description/LegendPane';
+import MappingPartyList from '@/smart/ui/mapper/mappartylist';
+import { handleModelOpen } from '@/smart/utils/IOFunctions';
+import { MMELDocument } from '@/smart/model/document';
+import SMARTDocumentView from '@/smart/ui/mapper/document/DocumentView';
 import { Popover2 } from '@blueprintjs/popover2';
-import MapperDocumentMenu from '../menu/MapperDocumentMenu';
-import RepoMapRefMenus from './repo/RepoMapRefMenu';
-import { MMELRepo, RepoIndex } from '../../model/repo';
-import { MapDiffStyles } from './MappingsCanvus';
+import MapperDocumentMenu from '@/smart/ui/menu/MapperDocumentMenu';
+import RepoMapRefMenus from '@/smart/ui/mapper/repo/RepoMapRefMenu';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { MapDiffStyles } from '@/smart/ui/mapper/MappingsCanvus';
 import {
   MappingDiffResultStyles,
   MappingDiffSourceStyles,

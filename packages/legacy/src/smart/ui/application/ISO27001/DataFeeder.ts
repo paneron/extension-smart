@@ -1,4 +1,4 @@
-import { fixedlocalhost, SettingRange, StreamReading } from './model';
+import { fixedlocalhost, SettingRange, StreamReading } from '@/smart/ui/application/ISO27001/model';
 
 export function obtainData(url: string, time = 0): StreamReading {
   if (url === fixedlocalhost && time !== undefined) {

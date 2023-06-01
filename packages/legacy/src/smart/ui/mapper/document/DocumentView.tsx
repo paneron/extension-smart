@@ -1,9 +1,9 @@
 import React from 'react';
 import { useMemo } from 'react';
-import { MMELDocument } from '../../../model/document';
-import { MapSet } from '../../../model/mapmodel';
-import { calculateDocumentMapping } from '../../../utils/DocumentFunctions';
-import SectionView from './SectionView';
+import { MMELDocument } from '@/smart/model/document';
+import { MapSet } from '@/smart/model/mapmodel';
+import { calculateDocumentMapping } from '@/smart/utils/DocumentFunctions';
+import SectionView from '@/smart/ui/mapper/document/SectionView';
 
 const SMARTDocumentView: React.FC<{
   mmelDoc: MMELDocument;

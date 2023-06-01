@@ -13,7 +13,7 @@ import {
   isEditorData,
   ModelType,
 } from './editormodel';
-import { MMELtoFlowEntries } from './States';
+import { MMELtoFlowEntries } from '@/smart/model/States';
 import {
   MMELComment,
   MMELFigure,
@@ -23,7 +23,7 @@ import {
 } from '@paneron/libmmel/interface/supportinterface';
 import { SerializedStyles } from '@emotion/react';
 import React from 'react';
-import { MMELRepo, RepoIndex } from './repo';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
 
 export interface EdgeContainer {
   id: string;

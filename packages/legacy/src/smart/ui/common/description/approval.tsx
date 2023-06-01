@@ -1,10 +1,10 @@
 import React from 'react';
-import { EditorApproval, EditorRegistry } from '../../../model/editormodel';
+import { EditorApproval, EditorRegistry } from '@/smart/model/editormodel';
 import {
   MMELReference,
   MMELRole,
 } from '@paneron/libmmel/interface/supportinterface';
-import { ApprovalRecordList, ReferenceList } from './ComponentList';
+import { ApprovalRecordList, ReferenceList } from '@/smart/ui/common/description/ComponentList';
 import {
   ActorDescription,
   DescriptionItem,

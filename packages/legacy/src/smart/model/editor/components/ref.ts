@@ -3,10 +3,10 @@ import {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import { EditorNode, isEditorDataClass } from '../../editormodel';
-import { UndoReducerInterface } from '../interface';
-import { ModelAction } from '../model';
-import { ItemAction, useItems } from './itemTemplate';
+import { EditorNode, isEditorDataClass } from '@/smart/model/editormodel';
+import { UndoReducerInterface } from '@/smart/model/editor/interface';
+import { ModelAction } from '@/smart/model/editor/model';
+import { ItemAction, useItems } from '@/smart/model/editor/components/itemTemplate';
 
 type command = 'refs';
 type ownType = MMELReference;

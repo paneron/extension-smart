@@ -5,7 +5,7 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 import React from 'react';
-import { mgdContainer } from '../../css/MGDContainer';
+import { mgdContainer } from '@/css/MGDContainer';
 
 interface OwnProps {
   children: React.ReactNode;

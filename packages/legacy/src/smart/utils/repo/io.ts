@@ -33,9 +33,9 @@ import {
   MMELNote,
   MMELProvision,
 } from '@paneron/libmmel/interface/supportinterface';
-import { MODELVERSION } from '../constants';
-import { createMetaData } from '../EditorFactory';
-import * as Logger from '../../../lib/logger';
+import { MODELVERSION } from '@/smart/utils/constants';
+import { createMetaData } from '@/smart/utils/EditorFactory';
+import * as Logger from '@/lib/logger';
 
 export enum RepoFileType {
   MODEL = 'model',

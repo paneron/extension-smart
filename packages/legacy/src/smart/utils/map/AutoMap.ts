@@ -1,10 +1,10 @@
 import { Edge, Node, Position } from 'react-flow-renderer';
-import { EditorModel, isEditorProcess } from '../../model/editormodel';
-import { MapProfile } from '../../model/mapmodel';
-import { ModelWrapper } from '../../model/modelwrapper';
-import { MMELRepo, RepoIndex } from '../../model/repo';
-import { createEdge, RepoLegend, RepoNodeType } from '../repo/CommonFunctions';
-import { getPathByNS, RepoFileType } from '../repo/io';
+import { EditorModel, isEditorProcess } from '@/smart/model/editormodel';
+import { MapProfile } from '@/smart/model/mapmodel';
+import { ModelWrapper } from '@/smart/model/modelwrapper';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { createEdge, RepoLegend, RepoNodeType } from '@/smart/utils/repo/CommonFunctions';
+import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
 
 type Maps = Record<string, MapProfile>;
 type Nodes = Record<string, Node>;

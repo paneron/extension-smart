@@ -1,5 +1,5 @@
 import React from 'react';
-import { flow_node__highlighed, no_highlight } from '../../css/visual';
+import { flow_node__highlighed, no_highlight } from '@/css/visual';
 import {
   EditorApproval,
   EditorDataClass,
@@ -18,13 +18,13 @@ import {
   isEditorSignalEvent,
   isEditorTimerEvent,
 } from '../model/editormodel';
-import { HistoryItem, PageHistory } from '../model/history';
-import { ModelWrapper } from '../model/modelwrapper';
-import { LegendInterface } from '../model/States';
-import { VersionState, VersionStatus } from '../model/versioncompare';
-import { ViewFunctionInterface } from '../model/ViewFunctionModel';
-import VersionDiffLogView from '../ui/version/VersionDiffLogView';
-import { getRootName } from './ModelFunctions';
+import { HistoryItem, PageHistory } from '@/smart/model/history';
+import { ModelWrapper } from '@/smart/model/modelwrapper';
+import { LegendInterface } from '@/smart/model/States';
+import { VersionState, VersionStatus } from '@/smart/model/versioncompare';
+import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import VersionDiffLogView from '@/smart/ui/version/VersionDiffLogView';
+import { getRootName } from '@/smart/utils/ModelFunctions';
 
 const ComparisonResultStyles: Record<VersionStatus, LegendInterface> = {
   'same'   : { label : 'Identical', color : 'lightblue' },

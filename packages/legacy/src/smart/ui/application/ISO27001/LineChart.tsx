@@ -1,5 +1,5 @@
 import React from 'react';
-import MGDLabel from '../../../MGDComponents/MGDLabel';
+import MGDLabel from '@/smart/MGDComponents/MGDLabel';
 
 const LineChart27001: React.FC<{
   values: number[];

@@ -1,7 +1,7 @@
 import { Text } from '@blueprintjs/core';
 import React from 'react';
-import { popoverPanelContainer } from '../../../css/layout';
-import { VersionState } from '../../model/versioncompare';
+import { popoverPanelContainer } from '@/css/layout';
+import { VersionState } from '@/smart/model/versioncompare';
 
 const VersionDiffLogView: React.FC<{
   id: string;

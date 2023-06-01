@@ -1,17 +1,17 @@
 import React from 'react';
 import { useMemo } from 'react';
 import ReactFlow, { ReactFlowProvider } from 'react-flow-renderer';
-import { MapProfile } from '../../../model/mapmodel';
-import { MMELRepo, RepoIndex } from '../../../model/repo';
-import { MapperViewOption } from '../../../model/States';
-import { repoMapDiffNode } from '../../../utils/map/MappingDiff';
-import { repoMapExploreNode } from '../../../utils/map/RepoMap';
+import { MapProfile } from '@/smart/model/mapmodel';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { MapperViewOption } from '@/smart/model/States';
+import { repoMapDiffNode } from '@/smart/utils/map/MappingDiff';
+import { repoMapExploreNode } from '@/smart/utils/map/RepoMap';
 import {
   RepoDiffLegend,
   RepoLegend,
 } from '../../../utils/repo/CommonFunctions';
-import LegendPane from '../../common/description/LegendPane';
-import RepoEdge from '../../flowui/RepoEdge';
+import LegendPane from '@/smart/ui/common/description/LegendPane';
+import RepoEdge from '@/smart/ui/flowui/RepoEdge';
 
 const RepoMapDiagram: React.FC<{
   index: RepoIndex;

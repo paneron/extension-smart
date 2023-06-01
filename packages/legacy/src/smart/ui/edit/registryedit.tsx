@@ -11,12 +11,12 @@ import {
   defaultItemSorter,
   genDCIdByRegId,
 } from '../../utils/ModelFunctions';
-import { createDataClass } from '../../utils/EditorFactory';
-import { IListItem, IManageHandler, NormalTextField } from '../common/fields';
-import ListManagePage from '../common/listmanagement/listmanagement';
-import AttributeEditPage from './attributeedit';
-import { ModelAction } from '../../model/editor/model';
-import { RegistryCombined } from '../../model/editor/components/element/registry';
+import { createDataClass } from '@/smart/utils/EditorFactory';
+import { IListItem, IManageHandler, NormalTextField } from '@/smart/ui/common/fields';
+import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
+import AttributeEditPage from '@/smart/ui/edit/attributeedit';
+import { ModelAction } from '@/smart/model/editor/model';
+import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
 import {
   addRegistryCommand,
   delRegistryCommand,

@@ -1,8 +1,8 @@
 import React from 'react';
-import { SMARTDocumentStore } from '../../model/workspace';
-import { ReferenceSelector } from '../common/fields';
+import { SMARTDocumentStore } from '@/smart/model/workspace';
+import { ReferenceSelector } from '@/smart/ui/common/fields';
 
-import { isNotUndefined } from '../../../lib/typeHelpers';
+import { isNotUndefined } from '@/lib/typeHelpers';
 
 const ReferenceAttributes: React.FC<{
   value: string;

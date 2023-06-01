@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { Menu, MenuItem } from '@blueprintjs/core';
-import { FILE_TYPE, handleMappingOpen } from '../../utils/IOFunctions';
+import { FILE_TYPE, handleMappingOpen } from '@/smart/utils/IOFunctions';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { MapProfile } from '../../model/mapmodel';
+import { MapProfile } from '@/smart/model/mapmodel';
 
 const MapperCompareMenu: React.FC<{
   opponent: MapProfile | undefined;

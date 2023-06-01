@@ -1,6 +1,6 @@
-import { MMELRepo, RepoIndex } from '../model/repo';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
-import RepoIndexMainView from './mapper/repo/RepoIndexMainView';
+import RepoIndexMainView from '@/smart/ui/mapper/repo/RepoIndexMainView';
 import React from 'react';
 
 const LinkAnalysis: React.FC<{

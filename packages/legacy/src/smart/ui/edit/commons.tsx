@@ -1,6 +1,6 @@
 import { Button } from '@blueprintjs/core';
 import React from 'react';
-import MGDButtonGroup from '../../MGDComponents/MGDButtonGroup';
+import MGDButtonGroup from '@/smart/MGDComponents/MGDButtonGroup';
 import {
   AddSubprocessButton,
   BringOutButton,

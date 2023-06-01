@@ -3,11 +3,11 @@ import {
   isEditorApproval,
   isEditorProcess,
 } from '../model/editormodel';
-import { getNamespace, referenceSorter } from './ModelFunctions';
-import * as Logger from '../../lib/logger';
-import { MapProfile } from '../model/mapmodel';
+import { getNamespace, referenceSorter } from '@/smart/utils/ModelFunctions';
+import * as Logger from '@/lib/logger';
+import { MapProfile } from '@/smart/model/mapmodel';
 import { Liquid } from 'liquidjs';
-import { MMELToSerializable } from './repo/io';
+import { MMELToSerializable } from '@/smart/utils/repo/io';
 
 export function genReport(
   text: string,

@@ -4,13 +4,13 @@ import {
   editDCCommand,
   editImportDCCommand,
 } from '../../model/editor/commands/data';
-import { ModelAction } from '../../model/editor/model';
-import { EditorDataClass, EditorModel } from '../../model/editormodel';
-import { RefTextSelection } from '../../model/selectionImport';
+import { ModelAction } from '@/smart/model/editor/model';
+import { EditorDataClass, EditorModel } from '@/smart/model/editormodel';
+import { RefTextSelection } from '@/smart/model/selectionImport';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
-import { DescriptionItem } from '../common/description/fields';
-import { EditPageButtons } from '../edit/commons';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
+import { EditPageButtons } from '@/smart/ui/edit/commons';
 import AttributeListQuickEdit, {
   findAllAttributeTypes,
 } from '../edit/components/AttributeList';

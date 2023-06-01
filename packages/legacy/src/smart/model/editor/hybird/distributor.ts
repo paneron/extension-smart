@@ -20,11 +20,11 @@ import {
   EditorModel,
   EditorProcess,
 } from '../../editormodel';
-import { RegistryCombined } from '../components/element/registry';
-import { ModelAction } from '../model';
-import { compileDCRefImport, compileRegistryRefImport } from './data';
-import { compileEGateEdit } from './egateedit';
-import { compileProcessImport } from './import';
+import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
+import { ModelAction } from '@/smart/model/editor/model';
+import { compileDCRefImport, compileRegistryRefImport } from '@/smart/model/editor/hybird/data';
+import { compileEGateEdit } from '@/smart/model/editor/hybird/egateedit';
+import { compileProcessImport } from '@/smart/model/editor/hybird/import';
 import {
   compileProcessAddPage,
   compileProcessBringin,

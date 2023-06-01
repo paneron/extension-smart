@@ -1,14 +1,14 @@
-import { MMELRepo } from '../model/repo';
+import { MMELRepo } from '@/smart/model/repo';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
-import SMARTDocumentView from './mapper/document/DocumentView';
+import SMARTDocumentView from '@/smart/ui/mapper/document/DocumentView';
 import { useContext } from 'react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { getPathByNS, RepoFileType } from '../utils/repo/io';
-import { MMELDocument } from '../model/document';
-import { LoadingScreen } from './common/Loading';
+import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
+import { MMELDocument } from '@/smart/model/document';
+import { LoadingScreen } from '@/smart/ui/common/Loading';
 import React from 'react';
-import { DOCVERSION } from '../utils/constants';
-import * as Logger from '../../lib/logger';
+import { DOCVERSION } from '@/smart/utils/constants';
+import * as Logger from '@/lib/logger';
 
 const DocumentViewer: React.FC<{
   isVisible: boolean;

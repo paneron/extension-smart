@@ -1,6 +1,6 @@
 import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
 import {
   EditorModel,
   EditorProcess,
@@ -20,32 +20,32 @@ import {
   getModelAllRoles,
   removeSpace,
 } from '../../utils/ModelFunctions';
-import { createNote, createProvision } from '../../utils/EditorFactory';
+import { createNote, createProvision } from '@/smart/utils/EditorFactory';
 import {
   MultiReferenceSelector,
   NormalTextField,
   ReferenceSelector,
 } from '../common/fields';
-import ListWithPopoverItem from '../common/listmanagement/listPopoverItem';
-import { EditPageButtons } from './commons';
+import ListWithPopoverItem from '@/smart/ui/common/listmanagement/listPopoverItem';
+import { EditPageButtons } from '@/smart/ui/edit/commons';
 import {
   IMeasure,
   matchMeasurementFilter,
   MeasurementItem,
 } from './measurementExpressionEdit';
-import { matchProvisionFilter, ProvisonItem } from './provisionedit';
-import RoleSelector from './components/RoleSelector';
-import { DescriptionItem } from '../common/description/fields';
-import RegistrySelector from './components/RegistrySelector';
-import ProvisionListQuickEdit from './components/ProvisionList';
-import MeasureListQuickEdit from './components/MeasurementListEdit';
-import { RefTextSelection } from '../../model/selectionImport';
-import { matchNoteFilter, NoteItem } from './NoteEdit';
-import NoteListQuickEdit from './components/NoteList';
-import { LinkItem, matchLinkFilter } from './LinkEdit';
-import { ModelAction } from '../../model/editor/model';
-import PopoverChangeIDButton from '../popover/PopoverChangeIDButton';
-import { editProcessCommand } from '../../model/editor/commands/elements';
+import { matchProvisionFilter, ProvisonItem } from '@/smart/ui/edit/provisionedit';
+import RoleSelector from '@/smart/ui/edit/components/RoleSelector';
+import { DescriptionItem } from '@/smart/ui/common/description/fields';
+import RegistrySelector from '@/smart/ui/edit/components/RegistrySelector';
+import ProvisionListQuickEdit from '@/smart/ui/edit/components/ProvisionList';
+import MeasureListQuickEdit from '@/smart/ui/edit/components/MeasurementListEdit';
+import { RefTextSelection } from '@/smart/model/selectionImport';
+import { matchNoteFilter, NoteItem } from '@/smart/ui/edit/NoteEdit';
+import NoteListQuickEdit from '@/smart/ui/edit/components/NoteList';
+import { LinkItem, matchLinkFilter } from '@/smart/ui/edit/LinkEdit';
+import { ModelAction } from '@/smart/model/editor/model';
+import PopoverChangeIDButton from '@/smart/ui/popover/PopoverChangeIDButton';
+import { editProcessCommand } from '@/smart/model/editor/commands/elements';
 
 function getInitProvisions(
   model: EditorModel,

@@ -1,10 +1,10 @@
 import { Button, Dialog } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import React, { useState } from 'react';
-import { MMELRepo, RepoIndex, RepoItemType } from '../../model/repo';
-import { ReferenceContent } from '../../model/States';
-import RepoItemSelector from '../repo/RepoItemSelector';
-import EditorReferenceMenu from './EditorReferenceMenu';
+import { MMELRepo, RepoIndex, RepoItemType } from '@/smart/model/repo';
+import { ReferenceContent } from '@/smart/model/States';
+import RepoItemSelector from '@/smart/ui/repo/RepoItemSelector';
+import EditorReferenceMenu from '@/smart/ui/menu/EditorReferenceMenu';
 
 const EditorReferenceMenuButton: React.FC<{
   setReference: (x: ReferenceContent | undefined) => void;

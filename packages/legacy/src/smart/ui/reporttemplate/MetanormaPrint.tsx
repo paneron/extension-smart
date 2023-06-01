@@ -1,9 +1,9 @@
 import { Button } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext } from 'react';
-import MGDDisplayPane from '../../MGDComponents/MGDDisplayPane';
-import { FILE_TYPE, saveToFileSystem } from '../../utils/IOFunctions';
-import * as Logger from '../../../lib/logger';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { FILE_TYPE, saveToFileSystem } from '@/smart/utils/IOFunctions';
+import * as Logger from '@/lib/logger';
 
 const MetanormaPrint: React.FC<{
   report: string;

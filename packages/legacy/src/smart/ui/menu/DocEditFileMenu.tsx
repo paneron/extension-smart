@@ -1,15 +1,15 @@
 import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext } from 'react';
-import { MMELDocument } from '../../model/document';
-import { docToText } from '../../utils/DocumentFunctions';
-import { createNewMMELDocument } from '../../utils/EditorFactory';
+import { MMELDocument } from '@/smart/model/document';
+import { docToText } from '@/smart/utils/DocumentFunctions';
+import { createNewMMELDocument } from '@/smart/utils/EditorFactory';
 import {
   FILE_TYPE,
   handleDocumentOpen,
   saveToFileSystem,
 } from '../../utils/IOFunctions';
-import MenuButton from './MenuButton';
+import MenuButton from '@/smart/ui/menu/MenuButton';
 
 const DocEditFileMenu: React.FC<{
   doc: MMELDocument;

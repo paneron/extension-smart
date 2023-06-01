@@ -1,4 +1,4 @@
-import { DataType, MMELObject } from './baseinterface';
+import { DataType, MMELObject } from '@/interface/baseinterface';
 
 export enum VarType {
   DATA = 'NUMERIC',

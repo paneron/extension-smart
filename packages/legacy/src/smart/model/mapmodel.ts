@@ -3,9 +3,9 @@
  */
 
 import React from 'react';
-import { MAPVERSION } from '../utils/constants';
-import { buildModelLinks } from '../utils/ModelFunctions';
-import { JSONContext, JSONContextType } from '../utils/repo/io';
+import { MAPVERSION } from '@/smart/utils/constants';
+import { buildModelLinks } from '@/smart/utils/ModelFunctions';
+import { JSONContext, JSONContextType } from '@/smart/utils/repo/io';
 import {
   EditorModel,
   EditorNode,
@@ -20,7 +20,7 @@ import {
   createPageHistory,
   PageHistory,
 } from './history';
-import { ModelWrapper } from './modelwrapper';
+import { ModelWrapper } from '@/smart/model/modelwrapper';
 
 export interface MappingDoc {
   id: string;

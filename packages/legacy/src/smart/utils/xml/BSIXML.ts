@@ -1,8 +1,8 @@
 import React from 'react';
-import { DocSection, DocStatement, MMELDocument } from '../../model/document';
-import { XMLElement } from '../../model/xmlelement';
-import { DOCVERSION } from '../constants';
-import { elementToString, isXMLElement, parseXML } from './XMLParser';
+import { DocSection, DocStatement, MMELDocument } from '@/smart/model/document';
+import { XMLElement } from '@/smart/model/xmlelement';
+import { DOCVERSION } from '@/smart/utils/constants';
+import { elementToString, isXMLElement, parseXML } from '@/smart/utils/xml/XMLParser';
 
 function getElementValue(xml: XMLElement, name: string): string {
   const array = xml.xmlChild[name];

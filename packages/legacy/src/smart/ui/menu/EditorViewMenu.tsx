@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconName, Menu, MenuItem } from '@blueprintjs/core';
-import { EditorViewOption } from '../../model/States';
+import { EditorViewOption } from '@/smart/model/States';
 
 const items: (keyof EditorViewOption)[] = [
   'dvisible',

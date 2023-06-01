@@ -5,7 +5,7 @@
 
 import { css } from '@emotion/react';
 import { CSSProperties } from 'react';
-import { CSSROOTVARIABLES } from './root.css';
+import { CSSROOTVARIABLES } from '@/css/root.css';
 
 const normal_font_style = css`
   font-weight: ${CSSROOTVARIABLES['--font-weight--regular']};

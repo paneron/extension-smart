@@ -16,27 +16,27 @@ import {
   getActionReactFlowElementsFrom,
   ModelWrapper,
 } from '../model/modelwrapper';
-import { createModelHistory, HistoryItem } from '../model/history';
-import { EdgeTypes, NodeTypes } from '../model/States';
-import { DataVisibilityButton, IdVisibleButton } from './control/buttons';
-import { react_flow_container_layout, sidebar_layout } from '../../css/layout';
-import LegendPane from './common/description/LegendPane';
+import { createModelHistory, HistoryItem } from '@/smart/model/history';
+import { EdgeTypes, NodeTypes } from '@/smart/model/States';
+import { DataVisibilityButton, IdVisibleButton } from '@/smart/ui/control/buttons';
+import { react_flow_container_layout, sidebar_layout } from '@/css/layout';
+import LegendPane from '@/smart/ui/common/description/LegendPane';
 import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,
   SearchResultStyles,
 } from '../utils/SearchFunctions';
-import { SMARTModelStore, SMARTWorkspace } from '../model/workspace';
-import WorkspaceFileMenu from './menu/WorkspaceFileMenu';
-import { WorkspaceDiagPackage, WorkspaceDialog } from './dialog/WorkspaceDiag';
-import { getNamespace } from '../utils/ModelFunctions';
-import { COMMITMSG, getPathByNS, RepoFileType } from '../utils/repo/io';
-import { MMELRepo, RepoIndex } from '../model/repo';
-import { EditorModel } from '../model/editormodel';
-import { HistoryAction, useHistory } from '../model/editor/history';
-import { getBreadcrumbs } from './common/description/fields';
-import { SelectedNodeDescription } from './sidebar/selected';
-import SearchComponentPane from './sidebar/search';
+import { SMARTModelStore, SMARTWorkspace } from '@/smart/model/workspace';
+import WorkspaceFileMenu from '@/smart/ui/menu/WorkspaceFileMenu';
+import { WorkspaceDiagPackage, WorkspaceDialog } from '@/smart/ui/dialog/WorkspaceDiag';
+import { getNamespace } from '@/smart/utils/ModelFunctions';
+import { COMMITMSG, getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { EditorModel } from '@/smart/model/editormodel';
+import { HistoryAction, useHistory } from '@/smart/model/editor/history';
+import { getBreadcrumbs } from '@/smart/ui/common/description/fields';
+import { SelectedNodeDescription } from '@/smart/ui/sidebar/selected';
+import SearchComponentPane from '@/smart/ui/sidebar/search';
 
 const ModelWorkspace: React.FC<{
   isVisible: boolean;

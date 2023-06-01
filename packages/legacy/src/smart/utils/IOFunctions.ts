@@ -1,9 +1,9 @@
 import { SaveFileDialogProps } from '@riboseinc/paneron-extension-kit/types/dialogs';
-import { MMELDocument } from '../model/document';
-import { EditorModel } from '../model/editormodel';
-import { MapProfile } from '../model/mapmodel';
-import { createEditorModelWrapper, ModelWrapper } from '../model/modelwrapper';
-import { SMARTWorkspace } from '../model/workspace';
+import { MMELDocument } from '@/smart/model/document';
+import { EditorModel } from '@/smart/model/editormodel';
+import { MapProfile } from '@/smart/model/mapmodel';
+import { createEditorModelWrapper, ModelWrapper } from '@/smart/model/modelwrapper';
+import { SMARTWorkspace } from '@/smart/model/workspace';
 import { textToMMEL } from '@paneron/libmmel';
 import {
   LoggerInterface,
@@ -12,10 +12,10 @@ import {
   OpenFileInterface,
   WSVERSION,
 } from './constants';
-import { textToDoc } from './DocumentFunctions';
-import * as Logger from '../../lib/logger';
-import { bsiToDocument } from './xml/BSIXML';
-import { xmlToDocument } from './xml/XMLDocumentFunctions';
+import { textToDoc } from '@/smart/utils/DocumentFunctions';
+import * as Logger from '@/lib/logger';
+import { bsiToDocument } from '@/smart/utils/xml/BSIXML';
+import { xmlToDocument } from '@/smart/utils/xml/XMLDocumentFunctions';
 
 export interface FileTypeDescriptionInterface {
   filtername: string;

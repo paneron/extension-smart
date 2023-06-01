@@ -2,26 +2,26 @@ import { Button, ButtonGroup } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useMemo, useState } from 'react';
 import { Edge, Elements, Node } from 'react-flow-renderer';
-import MGDDisplayPane from '../../../MGDComponents/MGDDisplayPane';
-import { MMELJSON } from '../../../model/json';
-import { MapProfile } from '../../../model/mapmodel';
+import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import { MMELJSON } from '@/smart/model/json';
+import { MapProfile } from '@/smart/model/mapmodel';
 import {
   createEditorModelWrapper,
   ModelWrapper,
 } from '../../../model/modelwrapper';
-import { MMELRepo, RepoIndex } from '../../../model/repo';
-import { repoAutoMapExplore, repoMapAI } from '../../../utils/map/AutoMap';
-import * as Logger from '../../../../lib/logger';
+import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { repoAutoMapExplore, repoMapAI } from '@/smart/utils/map/AutoMap';
+import * as Logger from '@/lib/logger';
 import {
   getAllRepoMaps,
   getAllRepoModels,
   getRepoItemDesc,
 } from '../../../utils/repo/CommonFunctions';
-import { JSONToMMEL } from '../../../utils/repo/io';
-import { createAutoMapNode } from './automapper/AutoMapNode';
-import AutoMapLoading from './automapper/calculating';
-import RepoLoading from './automapper/loading';
-import RepoAutoMapView from './automapper/mapview';
+import { JSONToMMEL } from '@/smart/utils/repo/io';
+import { createAutoMapNode } from '@/smart/ui/mapper/repo/automapper/AutoMapNode';
+import AutoMapLoading from '@/smart/ui/mapper/repo/automapper/calculating';
+import RepoLoading from '@/smart/ui/mapper/repo/automapper/loading';
+import RepoAutoMapView from '@/smart/ui/mapper/repo/automapper/mapview';
 
 type Status = 'initial' | 'run' | 'done';
 
