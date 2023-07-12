@@ -1,15 +1,10 @@
-import { DatasetMigrationFunction } from '@riboseinc/paneron-extension-kit/types/migrations';
+import type { MigrationInfo } from '@riboseinc/paneron-extension-kit/types/migrations';
 
-/**
- * Initialize data for the plugin.
- * Used by Paneron plugin.
- */
+const initialMigration: MigrationInfo = {
+  versionAfter : '1.0.0',
+  migrator     : async function* initialHLSMigration () {
+    yield {};
+  },
+}
 
-const initializeDataset: DatasetMigrationFunction = async () => {
-  return {
-    versionAfter    : '1.0.0-dev6',
-    bufferChangeset : {},
-  };
-};
-
-export default initializeDataset;
+export default initialMigration;
