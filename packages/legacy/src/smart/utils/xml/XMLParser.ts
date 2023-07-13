@@ -79,7 +79,7 @@ function parseTokens(token: XMLToken[], pos: number, elm: XMLElement): number {
     } else if (t.type === XMLTokenType.ENDTAG) {
       const name = t.data.substring(2, t.data.length - 1);
       if (name !== elm.tag) {
-        throw new Error(`End tag does not match start tag ${elm.tag} ${t}`);
+        throw new Error(`End tag does not match start tag: ${name} instead of ${elm.tag}`);
       }
       return pos;
     } else if (t.type === XMLTokenType.TEXT) {
