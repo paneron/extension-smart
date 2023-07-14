@@ -133,6 +133,7 @@ var rules = {
 module.exports = {
   root      : true,
   "env"   : {
+    // "jest/globals" : true,
   },
   "extends" : [
     'eslint:recommended',
@@ -140,7 +141,6 @@ module.exports = {
     'plugin:@typescript-eslint/strict',
     // "plugin:prettier/recommended",
   ],
-  "plugins": ["@emotion"],
   "parser"        : "@typescript-eslint/parser",
   "parserOptions" : {
     project : path.join(__dirname, "tsconfig.json"),
@@ -155,6 +155,18 @@ module.exports = {
   },
   "rules" : rules,
   overrides : [
+    {
+      files : ["*.js"],
+      rules : rules,
+    },
+    {
+      "files"   : ["spec/**"],
+      "plugins" : ["jest", "@emotion"],
+      "extends" : ["plugin:jest/recommended", "plugin:jest/style"],
+      "rules"   : {
+        "jest/prefer-expect-assertions" : "off",
+      },
+    },
   ],
   rules : rules,
 };
