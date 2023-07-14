@@ -7,19 +7,19 @@ import {
   MMELDataAttribute,
   MMELDataClass,
   MMELRegistry,
-} from '../interface/datainterface';
+} from '@/interface/datainterface';
 import {
   MMELEndEvent,
   MMELSignalCatchEvent,
   MMELStartEvent,
   MMELTimerEvent,
-} from '../interface/eventinterface';
+} from '@/interface/eventinterface';
 import {
   MMELEdge,
   MMELEGate,
   MMELSubprocess,
   MMELSubprocessComponent,
-} from '../interface/flowcontrolinterface';
+} from '@/interface/flowcontrolinterface';
 import { MMELModel } from '@/interface/model';
 import { MMELApproval, MMELProcess } from '@/interface/processinterface';
 import {
@@ -28,7 +28,7 @@ import {
   MMELRole,
   MMELVariable,
   MMELView,
-} from '../interface/supportinterface';
+} from '@/interface/supportinterface';
 
 function validateAttribute(
   attribute: MMELDataAttribute,

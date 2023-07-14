@@ -37,12 +37,12 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
   createEditorModelWrapper,
   getEditorReactFlowElementsFrom,
-} from '../model/modelwrapper';
+} from '@/smart/model/modelwrapper';
 import {
   getBreadcrumbsActions,
   HistoryItem,
   RepoHistory,
-} from '../model/history';
+} from '@/smart/model/history';
 import {
   EdgeTypes,
   EditorState,
@@ -50,21 +50,21 @@ import {
   isModelWrapper,
   NodeTypes,
   ReferenceContent,
-} from '../model/States';
+} from '@/smart/model/States';
 import { EditorDataClass } from '@/smart/model/editormodel';
 import EditorFileMenu from '@/smart/ui/menu/EditorFileMenu';
 import {
   DataVisibilityButton,
   EdgeEditButton,
   IdVisibleButton,
-} from './control/buttons';
+} from '@/smart/ui/control/buttons';
 import NewComponentPane from '@/smart/ui/control/newComponentPane';
 import {
   DOCVERSION,
   DragAndDropImportRefType,
   DragAndDropNewFormatType,
   NewComponentTypes,
-} from '../utils/constants';
+} from '@/smart/utils/constants';
 import { getAddComponentAction } from '@/smart/utils/ModelAddComponentHandler';
 import { EdgePackage } from '@/smart/model/FlowContainer';
 import MGDButton from '@/smart/MGDComponents/MGDButton';
@@ -75,7 +75,7 @@ import {
   multi_model_container,
   react_flow_container_layout,
   sidebar_layout,
-} from '../../css/layout';
+} from '@/css/layout';
 import { checkId, genDCIdByRegId } from '@/smart/utils/ModelFunctions';
 import * as Logger from '@/lib/logger';
 import LegendPane from '@/smart/ui/common/description/LegendPane';
@@ -83,7 +83,7 @@ import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,
   SearchResultStyles,
-} from '../utils/SearchFunctions';
+} from '@/smart/utils/SearchFunctions';
 import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
 import ModelReferenceView from '@/smart/ui/editreference/ModelReferenceView';
 import DocumentReferenceView from '@/smart/ui/editreference/DocumentReferenceView';
@@ -97,7 +97,7 @@ import {
   JSONToMMEL,
   MMELToSerializable,
   RepoFileType,
-} from '../utils/repo/io';
+} from '@/smart/utils/repo/io';
 import { MMELJSON } from '@/smart/model/json';
 import { MMELRepo, RepoIndex, repoIndexPath } from '@/smart/model/repo';
 import { setValueToIndex } from '@/smart/utils/repo/CommonFunctions';
@@ -112,17 +112,17 @@ import {
   addCommentCommand,
   deleteCommentCommand,
   resolveCommentCommand,
-} from '../model/editor/commands/comment';
+} from '@/smart/model/editor/commands/comment';
 import {
   drillUpCommand,
   pageChangeCommand,
   replaceHisCommand,
-} from '../model/editor/commands/history';
+} from '@/smart/model/editor/commands/history';
 import {
   dragCommand,
   newEdgeCommand,
   removeEdgeCommand,
-} from '../model/editor/commands/page';
+} from '@/smart/model/editor/commands/page';
 import SearchComponentPane from '@/smart/ui/sidebar/search';
 import { SelectedNodeDescription } from '@/smart/ui/sidebar/selected';
 import BasicSettingPane from '@/smart/ui/control/settings';

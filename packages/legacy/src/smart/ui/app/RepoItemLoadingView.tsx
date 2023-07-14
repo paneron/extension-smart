@@ -16,7 +16,7 @@ import {
   ModuleList,
   ModuleName,
   MODULE_CONFIGURATION,
-} from '../../model/module/appModule';
+} from '@/smart/model/module/appModule';
 import { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import { createNewSMARTWorkspace, SMARTWorkspace } from '@/smart/model/workspace';
 import { MAPVERSION } from '@/smart/utils/constants';
@@ -27,7 +27,7 @@ import {
   JSONContext,
   JSONToMMEL,
   RepoFileType,
-} from '../../utils/repo/io';
+} from '@/smart/utils/repo/io';
 import { LoadingScreen } from '@/smart/ui/common/Loading';
 
 /**

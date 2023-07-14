@@ -21,7 +21,7 @@ import {
   isEditorProcess,
   isEditorRegistry,
   ModelType,
-} from './editormodel';
+} from '@/smart/model/editormodel';
 import {
   MMELEdge,
   MMELSubprocess,
@@ -39,7 +39,7 @@ import {
   EdgeContainer,
   getEditorNodeCallBack,
   NodeCallBack,
-} from './FlowContainer';
+} from '@/smart/model/FlowContainer';
 import { fillRDCS } from '@/smart/utils/ModelFunctions';
 import * as Logger from '@/lib/logger';
 import {
@@ -47,7 +47,7 @@ import {
   getRefNodeStyle,
   getSourceStyleById,
   MapResultType,
-} from '../utils/map/MappingCalculator';
+} from '@/smart/utils/map/MappingCalculator';
 import { MapSet } from '@/smart/model/mapmodel';
 import React from 'react';
 import { SerializedStyles } from '@emotion/react';

@@ -8,7 +8,7 @@ import {
   EditorSignalEvent,
   isEditorRegistry,
   isMMELTable,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { NodeCallBack } from '@/smart/model/FlowContainer';
 import {
   DatacubeShape,
@@ -18,7 +18,7 @@ import {
   SignalCatchShape,
   StartShape,
   TimerShape,
-} from './shapes';
+} from '@/smart/ui/flowui/shapes';
 import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 
@@ -29,7 +29,7 @@ import {
   shameLabelNudge,
   shameLabelShort,
   tooltipLabel,
-} from '../../../css/shame';
+} from '@/css/shame';
 import { flownodeTopLeftButtonLayout } from '@/css/layout';
 import PopoverWrapper from '@/smart/ui/popover/PopoverWrapper';
 import ViewMappingbutton from '@/smart/ui/mapper/viewmapbutton';

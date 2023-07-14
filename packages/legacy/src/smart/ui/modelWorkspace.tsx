@@ -15,7 +15,7 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
   getActionReactFlowElementsFrom,
   ModelWrapper,
-} from '../model/modelwrapper';
+} from '@/smart/model/modelwrapper';
 import { createModelHistory, HistoryItem } from '@/smart/model/history';
 import { EdgeTypes, NodeTypes } from '@/smart/model/States';
 import { DataVisibilityButton, IdVisibleButton } from '@/smart/ui/control/buttons';
@@ -25,7 +25,7 @@ import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,
   SearchResultStyles,
-} from '../utils/SearchFunctions';
+} from '@/smart/utils/SearchFunctions';
 import { SMARTModelStore, SMARTWorkspace } from '@/smart/model/workspace';
 import WorkspaceFileMenu from '@/smart/ui/menu/WorkspaceFileMenu';
 import { WorkspaceDiagPackage, WorkspaceDialog } from '@/smart/ui/dialog/WorkspaceDiag';

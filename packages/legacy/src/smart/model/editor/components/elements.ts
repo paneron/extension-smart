@@ -8,13 +8,13 @@ import {
   typeEnumReplace,
   tableReplace,
   figReplace,
-} from '../../../utils/handler/cascadeModelHandler';
+} from '@/smart/utils/handler/cascadeModelHandler';
 import * as Logger from '@/lib/logger';
 import {
   EditorNode,
   isEditorDataClass,
   isEditorRegistry,
-} from '../../editormodel';
+} from '@/smart/model/editormodel';
 import { UndoReducerInterface } from '@/smart/model/editor/interface';
 import { ModelAction } from '@/smart/model/editor/model';
 import { addCommonElms, delCommonElms, editCommonElms } from '@/smart/model/editor/components/element/common';
@@ -24,7 +24,7 @@ import {
   delRegistry,
   editRegistry,
   RegistryCombined,
-} from './element/registry';
+} from '@/smart/model/editor/components/element/registry';
 import { ItemAction } from '@/smart/model/editor/components/itemTemplate';
 
 interface RoleCascadeAction {

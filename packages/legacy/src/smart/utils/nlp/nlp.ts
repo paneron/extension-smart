@@ -10,7 +10,7 @@ import {
   RDFVersion,
   STNode,
   STRelation,
-} from '../../model/SemanticTriple';
+} from '@/smart/model/SemanticTriple';
 import * as Logger from '@/lib/logger';
 
 const nlpServer = 'http://localhost:9000';

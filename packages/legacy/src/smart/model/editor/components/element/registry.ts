@@ -7,7 +7,7 @@ import {
   genDCIdByRegId,
   getReferenceDCTypeName,
   setReplace,
-} from '../../../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import {
   EditorDataClass,
   EditorNode,
@@ -15,7 +15,7 @@ import {
   isEditorDataClass,
   isEditorProcess,
   isEditorRegistry,
-} from '../../../editormodel';
+} from '@/smart/model/editormodel';
 import { ModelAction } from '@/smart/model/editor/model';
 import { ElmAction, DataCascadeIDs } from '@/smart/model/editor/components/elements';
 

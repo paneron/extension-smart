@@ -7,13 +7,13 @@ import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   DragAndDropNewFormatType,
   NewComponentTypes,
-} from '../../utils/constants';
+} from '@/smart/utils/constants';
 import {
   EgateShape,
   EndShape,
   SignalCatchShape,
   TimerShape,
-} from '../flowui/shapes';
+} from '@/smart/ui/flowui/shapes';
 
 /**
  * It is the UI shown on the sidebar for adding new elements to the diagram

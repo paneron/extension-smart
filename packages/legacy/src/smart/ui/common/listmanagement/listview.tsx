@@ -10,7 +10,7 @@ import {
   mgd_label,
   mgd_select,
   mgd_select__restrained,
-} from '../../../../css/form';
+} from '@/css/form';
 import { u__display__block, u__display__none } from '@/css/utility';
 import MGDButtonGroup from '@/smart/MGDComponents/MGDButtonGroup';
 import { IViewListInterface } from '@/smart/ui/common/fields';

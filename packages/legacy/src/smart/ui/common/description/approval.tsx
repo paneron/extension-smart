@@ -9,7 +9,7 @@ import {
   ActorDescription,
   DescriptionItem,
   NonEmptyFieldDescription,
-} from './fields';
+} from '@/smart/ui/common/description/fields';
 
 export const DescribeApproval: React.FC<{
   app: EditorApproval;

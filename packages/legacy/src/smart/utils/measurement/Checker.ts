@@ -5,14 +5,14 @@ import {
   EditorSubprocess,
   isEditorEgate,
   isEditorProcess,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import {
   EnviromentValues,
   EnviromentVariables,
   MeasureResult,
   MeasureRType,
   MTestReport,
-} from '../../model/Measurement';
+} from '@/smart/model/Measurement';
 import { LegendInterface } from '@/smart/model/States';
 import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import { MMELTable, VarType } from '@paneron/libmmel/interface/supportinterface';

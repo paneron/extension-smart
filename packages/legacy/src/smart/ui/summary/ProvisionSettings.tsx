@@ -7,7 +7,7 @@ import {
   EditorModel,
   EditorProcess,
   isEditorProcess,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import {
   MMELProvision,
   MMELReference,

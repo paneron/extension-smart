@@ -13,7 +13,7 @@ import {
   computeDiff,
   getDiffViewProps,
   getHistroyFromRefModel,
-} from '../../utils/VersionTracker';
+} from '@/smart/utils/VersionTracker';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
 
 const VersionTrackerSettingPane: React.FC<{

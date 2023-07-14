@@ -4,7 +4,7 @@ import MGDLabel from '@/smart/MGDComponents/MGDLabel';
 import {
   cardinalityToString,
   parseCardinality,
-} from '../../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import { NormalComboBox } from '@/smart/ui/common/fields';
 
 export const CardinalityField: React.FC<{

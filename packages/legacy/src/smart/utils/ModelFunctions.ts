@@ -6,7 +6,7 @@ import {
   EditorSubprocess,
   isEditorDataClass,
   isEditorRegistry,
-} from '../model/editormodel';
+} from '@/smart/model/editormodel';
 
 // test
 import { textToMMEL } from '@paneron/libmmel';

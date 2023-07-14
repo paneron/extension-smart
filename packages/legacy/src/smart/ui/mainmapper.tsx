@@ -16,7 +16,7 @@ import {
   EditorSubprocess,
   getEditorNodeInfoById,
   ModelType,
-} from '../model/editormodel';
+} from '@/smart/model/editormodel';
 import {
   buildHistoryMap,
   createNewMapSet,
@@ -24,7 +24,7 @@ import {
   indexModel,
   MapProfile,
   MapSet,
-} from '../model/mapmodel';
+} from '@/smart/model/mapmodel';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
   Button,
@@ -41,7 +41,7 @@ import {
   MapperSelectedInterface,
   MapperState,
   MapperViewOption,
-} from '../model/States';
+} from '@/smart/model/States';
 import { createNewEditorModel } from '@/smart/utils/EditorFactory';
 import { createEditorModelWrapper, ModelWrapper } from '@/smart/model/modelwrapper';
 import {
@@ -50,7 +50,7 @@ import {
   filterMappingsForDocument,
   MapDiffEdgeResult,
   mergeMapProfiles,
-} from '../utils/map/MappingCalculator';
+} from '@/smart/utils/map/MappingCalculator';
 import MappingCanvus from '@/smart/ui/mapper/MappingsCanvus';
 import MapperOptionMenu from '@/smart/ui/menu/mapperOptionMenu';
 import { EditMPropsInterface } from '@/smart/ui/dialog/dialogs';
@@ -66,7 +66,7 @@ import {
   JSONContext,
   JSONToMMEL,
   RepoFileType,
-} from '../utils/repo/io';
+} from '@/smart/utils/repo/io';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { MMELJSON } from '@/smart/model/json';
 import { MMELRepo, RepoIndex } from '@/smart/model/repo';

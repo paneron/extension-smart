@@ -4,7 +4,7 @@ import {
   EditorDataClass,
   EditorModel,
   isEditorDataClass,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { checkId, defaultItemSorter } from '@/smart/utils/ModelFunctions';
 import { createDataClass } from '@/smart/utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '@/smart/ui/common/fields';
@@ -15,7 +15,7 @@ import {
   addDCCommand,
   delDCCommand,
   editDCCommand,
-} from '../../model/editor/commands/data';
+} from '@/smart/model/editor/commands/data';
 
 const initObj = createDataClass('');
 

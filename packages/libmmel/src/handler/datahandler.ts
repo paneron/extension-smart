@@ -5,13 +5,13 @@ import {
   MMELEnum,
   MMELEnumValue,
   MMELRegistry,
-} from '../interface/datainterface';
+} from '@/interface/datainterface';
 import {
   MMELremovePackage,
   MMELtokenizeAttributes,
   MMELtokenizePackage,
   MMELtokenizeSet,
-} from '../util/tokenizer';
+} from '@/util/tokenizer';
 
 export function parseDataAttribute(
   basic: string,

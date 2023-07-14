@@ -3,7 +3,7 @@ import {
   IManageHandler,
   IUpdateInterface,
   IViewListInterface,
-} from '../fields';
+} from '@/smart/ui/common/fields';
 import ItemUpdatePane from '@/smart/ui/common/listmanagement/itemupdate';
 import ListViewPane from '@/smart/ui/common/listmanagement/listview';
 import { IObject } from '@/smart/ui/common/listmanagement/listPopoverItem';

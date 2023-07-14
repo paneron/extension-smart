@@ -8,7 +8,7 @@ import {
   checkId,
   getModelAllSignals,
   removeSpace,
-} from '../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
 import { NormalTextField, ReferenceSelector } from '@/smart/ui/common/fields';
 import PopoverChangeIDButton from '@/smart/ui/popover/PopoverChangeIDButton';

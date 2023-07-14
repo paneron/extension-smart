@@ -10,7 +10,7 @@ import {
   applicationDialogLayout,
   dialogLayout,
   dialogLayoutFull,
-} from '../../../../css/layout';
+} from '@/css/layout';
 import MGDContainer from '@/smart/MGDComponents/MGDContainer';
 import MGDHeading from '@/smart/MGDComponents/MGDHeading';
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
@@ -25,14 +25,14 @@ import {
   fixedlocalhost,
   Log2060,
   ReadingRecord,
-} from './model';
+} from '@/smart/ui/application/pas2060/model';
 import { setInterval, clearInterval } from 'timers';
 import { obtainData } from '@/smart/ui/application/pas2060/DataFeeder';
 import {
   makeRecord,
   propagateReadings,
   testMeasurement2060,
-} from './ReadingCalculator';
+} from '@/smart/ui/application/pas2060/ReadingCalculator';
 import { Popover2 } from '@blueprintjs/popover2';
 import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import React from 'react';

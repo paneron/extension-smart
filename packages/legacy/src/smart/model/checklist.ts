@@ -12,7 +12,7 @@ import {
   EditorProcess,
   EditorRegistry,
   isMMELDataAttribute,
-} from './editormodel';
+} from '@/smart/model/editormodel';
 
 export type ChecklistSetting = Record<ModalityType, boolean>;
 

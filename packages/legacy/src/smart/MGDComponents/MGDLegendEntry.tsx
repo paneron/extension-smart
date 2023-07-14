@@ -10,7 +10,7 @@ import {
   mgdLegendEntryDescription,
   mgdLegendEntrySample,
   mgdLineLegendSample,
-} from '../../css/MGDLegendEntry';
+} from '@/css/MGDLegendEntry';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

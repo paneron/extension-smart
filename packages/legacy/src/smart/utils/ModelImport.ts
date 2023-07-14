@@ -8,7 +8,7 @@ import {
   isEditorDataClass,
   isEditorProcess,
   isEditorRegistry,
-} from '../model/editormodel';
+} from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
@@ -30,7 +30,7 @@ import {
   getRegistryReference,
   getReferenceDCTypeName,
   findUniqueID,
-} from './ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import * as Logger from '@/lib/logger';
 
 export interface NewImportItems {

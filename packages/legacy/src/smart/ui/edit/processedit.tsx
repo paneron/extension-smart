@@ -5,7 +5,7 @@ import {
   EditorModel,
   EditorProcess,
   EditorRegistry,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELLink,
@@ -19,20 +19,20 @@ import {
   getModelAllRegs,
   getModelAllRoles,
   removeSpace,
-} from '../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import { createNote, createProvision } from '@/smart/utils/EditorFactory';
 import {
   MultiReferenceSelector,
   NormalTextField,
   ReferenceSelector,
-} from '../common/fields';
+} from '@/smart/ui/common/fields';
 import ListWithPopoverItem from '@/smart/ui/common/listmanagement/listPopoverItem';
 import { EditPageButtons } from '@/smart/ui/edit/commons';
 import {
   IMeasure,
   matchMeasurementFilter,
   MeasurementItem,
-} from './measurementExpressionEdit';
+} from '@/smart/ui/edit/measurementExpressionEdit';
 import { matchProvisionFilter, ProvisonItem } from '@/smart/ui/edit/provisionedit';
 import RoleSelector from '@/smart/ui/edit/components/RoleSelector';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';

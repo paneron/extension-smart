@@ -3,7 +3,7 @@ import {
   EnviromentVariables,
   MTestReport,
   MTreeNode,
-} from '../../model/Measurement';
+} from '@/smart/model/Measurement';
 import { isBinaryOperator, isListOperator } from '@/smart/utils/measurement/BasicFunctions';
 import { MBOperators, MComparison, MLOperators } from '@/smart/utils/measurement/Operators';
 import { parseCondition } from '@/smart/utils/measurement/Parser';

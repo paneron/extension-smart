@@ -10,7 +10,7 @@ import {
   defaultItemSorterAsNum,
   findUniqueID,
   itemSorterByText,
-} from '../../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import { IListItem, IUpdateInterface, IViewListInterface } from '@/smart/ui/common/fields';
 import ItemUpdatePane from '@/smart/ui/common/listmanagement/itemupdate';
 import ListViewPane from '@/smart/ui/common/listmanagement/listview';

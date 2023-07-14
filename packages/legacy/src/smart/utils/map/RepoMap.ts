@@ -7,7 +7,7 @@ import {
   getRepoItemDesc,
   RepoLegend,
   RepoNodeType,
-} from '../repo/CommonFunctions';
+} from '@/smart/utils/repo/CommonFunctions';
 import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
 
 type Maps = Record<string, MapProfile>;

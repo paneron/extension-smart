@@ -3,7 +3,7 @@ import {
   DocMapIndex,
   DocParagraph,
   DocStatement,
-} from '../../../model/document';
+} from '@/smart/model/document';
 import StatementView from '@/smart/ui/mapper/document/StatementView';
 
 const ParagraphView: React.FC<{

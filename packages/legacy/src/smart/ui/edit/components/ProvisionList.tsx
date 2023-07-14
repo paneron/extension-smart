@@ -14,7 +14,7 @@ import {
   findUniqueID,
   getModelAllRefs,
   trydefaultID,
-} from '../../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import { findExistingRef } from '@/smart/utils/ModelImport';
 import { NormalComboBox, NormalTextField } from '@/smart/ui/common/fields';
 import SimpleReferenceSelector from '@/smart/ui/edit/components/ReferenceSelector';

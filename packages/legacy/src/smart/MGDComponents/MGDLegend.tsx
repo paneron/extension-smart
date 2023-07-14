@@ -9,7 +9,7 @@ import {
   mgdLegendLeft,
   mgdLegendNormal,
   mgdLegendRight,
-} from '../../css/MGDLegend';
+} from '@/css/MGDLegend';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

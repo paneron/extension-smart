@@ -11,7 +11,7 @@ import {
   addRoleCommand,
   deleteRoleCommand,
   editRoleCommand,
-} from '../../model/editor/commands/role';
+} from '@/smart/model/editor/commands/role';
 
 const RoleEditPage: React.FC<{
   model: EditorModel;

@@ -16,7 +16,7 @@ import {
   IManageHandler,
   NormalComboBox,
   NormalTextField,
-} from '../common/fields';
+} from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
 import { InputableVarType } from '@/smart/model/Measurement';
 import { ModelAction } from '@/smart/model/editor/model';

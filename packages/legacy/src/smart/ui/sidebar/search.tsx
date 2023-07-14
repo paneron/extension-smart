@@ -10,7 +10,7 @@ import * as Logger from '@/lib/logger';
 import {
   findComponent,
   SearchComponentRecord,
-} from '../../utils/SearchFunctions';
+} from '@/smart/utils/SearchFunctions';
 import { NumericComboBox } from '@/smart/ui/common/fields';
 
 const RECORD_PER_PAGE = 10;

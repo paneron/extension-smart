@@ -6,7 +6,7 @@ import {
   FILE_TYPE,
   handleFileOpen,
   saveToFileSystem,
-} from '../../../utils/IOFunctions';
+} from '@/smart/utils/IOFunctions';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import EditTableView from '@/smart/ui/edit/table/EditTableView';
 import EditClassView from '@/smart/ui/edit/table/EditClassView';

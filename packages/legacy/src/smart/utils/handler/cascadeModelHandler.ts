@@ -1,7 +1,7 @@
 import {
   DataCascadeDCID,
   DataCascadeIDs,
-} from '../../model/editor/components/elements';
+} from '@/smart/model/editor/components/elements';
 import {
   EditorApproval,
   EditorDataClass,
@@ -11,7 +11,7 @@ import {
   isEditorApproval,
   isEditorDataClass,
   isEditorProcess,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELNote,

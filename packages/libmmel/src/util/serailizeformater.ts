@@ -5,19 +5,19 @@ import {
   MMELEnum,
   MMELEnumValue,
   MMELRegistry,
-} from '../interface/datainterface';
+} from '@/interface/datainterface';
 import {
   MMELEndEvent,
   MMELSignalCatchEvent,
   MMELStartEvent,
   MMELTimerEvent,
-} from '../interface/eventinterface';
+} from '@/interface/eventinterface';
 import {
   MMELEdge,
   MMELEGate,
   MMELSubprocess,
   MMELSubprocessComponent,
-} from '../interface/flowcontrolinterface';
+} from '@/interface/flowcontrolinterface';
 import { MMELApproval, MMELProcess } from '@/interface/processinterface';
 import {
   MMELComment,
@@ -34,7 +34,7 @@ import {
   MMELVariable,
   MMELVarSetting,
   MMELView,
-} from '../interface/supportinterface';
+} from '@/interface/supportinterface';
 import {
   isApproval,
   isDataClass,
@@ -45,7 +45,7 @@ import {
   isSignalEvent,
   isStartEvent,
   isTimerEvent,
-} from './validation';
+} from '@/util/validation';
 
 /**
  * Convert the model to text

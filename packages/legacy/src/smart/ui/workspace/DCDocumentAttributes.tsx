@@ -5,7 +5,7 @@ import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   getModelAllRolesWithEmpty,
   getRegistryReference,
-} from '../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import { isBasicType, isDCClass, isEnum } from '@/smart/utils/typecheckings';
 import { NormalTextField } from '@/smart/ui/common/fields';
 import BasicTypeAttribute from '@/smart/ui/workspace/BasicTypeAttribute';

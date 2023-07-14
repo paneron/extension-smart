@@ -5,7 +5,7 @@ import {
   MBinOperatorTypes,
   MListOperators,
   MListOperatorTypes,
-} from './Operators';
+} from '@/smart/utils/measurement/Operators';
 
 export function measurementValidCheck(
   def: string,

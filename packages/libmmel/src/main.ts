@@ -12,7 +12,7 @@ import {
   parseTerm,
   parseVariable,
   parseView,
-} from './handler/supporthandler';
+} from '@/handler/supporthandler';
 import { MMELModel } from '@/interface/model';
 import { MMELremovePackage, MMELtokenize } from '@/util/tokenizer';
 import { parseApproval, parseProcess } from '@/handler/processhandler';
@@ -20,13 +20,13 @@ import {
   parseDataClass,
   parseEnum,
   parseRegistry,
-} from './handler/datahandler';
+} from '@/handler/datahandler';
 import {
   parseEndEvent,
   parseSignalCatchEvent,
   parseStartEvent,
   parseTimerEvent,
-} from './handler/eventhandler';
+} from '@/handler/eventhandler';
 import { parseEGate, parseSubprocess } from '@/handler/flowcontrolhandler';
 import {
   toCommentModel,
@@ -45,7 +45,7 @@ import {
   toTermsModel,
   toVariableModel,
   toViewProfile as toViewProfileModel,
-} from './util/serailizeformater';
+} from '@/util/serailizeformater';
 import { validateModel } from '@/util/validation';
 
 /**

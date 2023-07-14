@@ -4,7 +4,7 @@ import {
   EditorDataClass,
   EditorNode,
   isEditorDataClass,
-} from '../../../editormodel';
+} from '@/smart/model/editormodel';
 import { ModelAction } from '@/smart/model/editor/model';
 import { ElmAction, DataCascadeDCID } from '@/smart/model/editor/components/elements';
 

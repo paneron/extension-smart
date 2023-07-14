@@ -9,7 +9,7 @@ import { repoMapExploreNode } from '@/smart/utils/map/RepoMap';
 import {
   RepoDiffLegend,
   RepoLegend,
-} from '../../../utils/repo/CommonFunctions';
+} from '@/smart/utils/repo/CommonFunctions';
 import LegendPane from '@/smart/ui/common/description/LegendPane';
 import RepoEdge from '@/smart/ui/flowui/RepoEdge';
 

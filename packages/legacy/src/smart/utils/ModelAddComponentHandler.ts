@@ -10,7 +10,7 @@ import {
   EditorStartEvent,
   EditorSubprocess,
   EditorTimerEvent,
-} from '../model/editormodel';
+} from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { capitalizeString, findUniqueID, trydefaultID } from '@/smart/utils/ModelFunctions';
 import { NewComponentTypes } from '@/smart/utils/constants';
@@ -24,7 +24,7 @@ import {
   createSubprocess,
   createSubprocessComponent,
   createTimerEvent,
-} from './EditorFactory';
+} from '@/smart/utils/EditorFactory';
 import { HistoryItem } from '@/smart/model/history';
 import { ModelAction } from '@/smart/model/editor/model';
 

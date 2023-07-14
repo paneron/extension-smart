@@ -4,13 +4,13 @@ import {
   EditorSubprocess,
   isEditorApproval,
   isEditorProcess,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import {
   addToHistory,
   cloneHistory,
   createPageHistory,
   PageHistory,
-} from '../../model/history';
+} from '@/smart/model/history';
 import { LegendInterface } from '@/smart/model/States';
 
 export enum SearchHighlightType {

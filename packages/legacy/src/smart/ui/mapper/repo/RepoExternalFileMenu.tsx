@@ -9,7 +9,7 @@ import {
   FILE_TYPE,
   handleDocumentOpen,
   handleModelOpen,
-} from '../../../utils/IOFunctions';
+} from '@/smart/utils/IOFunctions';
 
 const RepoExternalFileMenu: React.FC<{
   setDocument: (x: MMELDocument) => void;

@@ -5,7 +5,7 @@ import {
   FILE_TYPE,
   handleDocumentOpen,
   handleModelOpen,
-} from '../../utils/IOFunctions';
+} from '@/smart/utils/IOFunctions';
 import { ReferenceContent } from '@/smart/model/States';
 import { indexModel } from '@/smart/model/mapmodel';
 import { RepoItemType } from '@/smart/model/repo';

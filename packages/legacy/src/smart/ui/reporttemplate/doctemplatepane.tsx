@@ -9,7 +9,7 @@ import {
   IListItem,
   IManageHandler,
   NormalTextField,
-} from '../common/fields';
+} from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
 import { MappingDoc, MapProfile } from '@/smart/model/mapmodel';
 import { genReport } from '@/smart/utils/reportFunctions';

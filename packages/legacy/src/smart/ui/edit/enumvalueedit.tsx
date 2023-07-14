@@ -7,7 +7,7 @@ import { createEnumValue } from '@/smart/utils/EditorFactory';
 import { NormalTextField } from '@/smart/ui/common/fields';
 import ListWithPopoverItem, {
   IMMELObject,
-} from '../common/listmanagement/listPopoverItem';
+} from '@/smart/ui/common/listmanagement/listPopoverItem';
 
 const EnumValueEditPage: React.FC<{
   values: Record<string, MMELEnumValue>;

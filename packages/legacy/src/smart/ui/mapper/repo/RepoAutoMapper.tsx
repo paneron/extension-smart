@@ -8,7 +8,7 @@ import { MapProfile } from '@/smart/model/mapmodel';
 import {
   createEditorModelWrapper,
   ModelWrapper,
-} from '../../../model/modelwrapper';
+} from '@/smart/model/modelwrapper';
 import { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import { repoAutoMapExplore, repoMapAI } from '@/smart/utils/map/AutoMap';
 import * as Logger from '@/lib/logger';
@@ -16,7 +16,7 @@ import {
   getAllRepoMaps,
   getAllRepoModels,
   getRepoItemDesc,
-} from '../../../utils/repo/CommonFunctions';
+} from '@/smart/utils/repo/CommonFunctions';
 import { JSONToMMEL } from '@/smart/utils/repo/io';
 import { createAutoMapNode } from '@/smart/ui/mapper/repo/automapper/AutoMapNode';
 import AutoMapLoading from '@/smart/ui/mapper/repo/automapper/calculating';

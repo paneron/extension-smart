@@ -13,13 +13,13 @@ import {
   isEditorApproval,
   isEditorProcess,
   ModelType,
-} from './editormodel';
+} from '@/smart/model/editormodel';
 import {
   addToHistory,
   cloneHistory,
   createPageHistory,
   PageHistory,
-} from './history';
+} from '@/smart/model/history';
 import { ModelWrapper } from '@/smart/model/modelwrapper';
 
 export interface MappingDoc {

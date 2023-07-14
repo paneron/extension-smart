@@ -6,7 +6,7 @@ import {
   DATATYPE,
   searchableNodeDataTypes,
   SearchableNodeTypes,
-} from './constants';
+} from '@/smart/utils/constants';
 
 export function isSearchableNodeTypes(x: DataType): x is SearchableNodeTypes {
   for (const type of searchableNodeDataTypes) {

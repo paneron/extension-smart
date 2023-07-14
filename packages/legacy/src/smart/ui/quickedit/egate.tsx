@@ -4,7 +4,7 @@ import {
   EditorEGate,
   EditorModel,
   EditorSubprocess,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { EditAction } from '@/smart/utils/constants';
 import { DialogSetterInterface } from '@/smart/ui/dialog/EditorDialogs';

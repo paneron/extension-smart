@@ -10,7 +10,7 @@ import {
   explorePageDataNodes,
   PageAction,
   usePages,
-} from './components/pages';
+} from '@/smart/model/editor/components/pages';
 import { useView, ViewAction } from '@/smart/model/editor/components/view';
 import { ProvisionAction, useProvisions } from '@/smart/model/editor/components/provision';
 import { cascadeCheckRefs, RefAction, useRefs } from '@/smart/model/editor/components/ref';
@@ -25,7 +25,7 @@ import {
   cascadeCheckComment,
   CommentAction,
   useComment,
-} from './components/comment';
+} from '@/smart/model/editor/components/comment';
 import { useMemo } from 'react';
 import { cascadeCheckElm } from '@/smart/model/editor/components/element/common';
 import { compileHybird, HyEditAction } from '@/smart/model/editor/hybird/distributor';

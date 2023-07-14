@@ -7,13 +7,13 @@ import {
   EditorEGate,
   EditorModel,
   EditorSubprocess,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   checkId,
   getModelAllMeasures,
   removeSpace,
-} from '../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
 import { NormalTextField, ReferenceSelector } from '@/smart/ui/common/fields';
 import PopoverChangeIDButton from '@/smart/ui/popover/PopoverChangeIDButton';

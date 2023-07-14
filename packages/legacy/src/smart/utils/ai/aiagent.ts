@@ -4,11 +4,11 @@ import {
   EditorProcess,
   EditorSubprocess,
   isEditorProcess,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import {
   createEditorModelWrapper,
   ModelWrapper,
-} from '../../model/modelwrapper';
+} from '@/smart/model/modelwrapper';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELLink,
@@ -26,7 +26,7 @@ import {
   createRole,
   createSubprocessComponent,
   createTerm,
-} from '../EditorFactory';
+} from '@/smart/utils/EditorFactory';
 import { createNewPage } from '@/smart/utils/ModelAddComponentHandler';
 import * as Logger from '@/lib/logger';
 

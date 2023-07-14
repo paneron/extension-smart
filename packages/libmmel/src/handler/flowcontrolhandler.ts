@@ -4,7 +4,7 @@ import {
   MMELEGate,
   MMELSubprocess,
   MMELSubprocessComponent,
-} from '../interface/flowcontrolinterface';
+} from '@/interface/flowcontrolinterface';
 import { MMELremovePackage, MMELtokenizePackage } from '@/util/tokenizer';
 
 export function parseEdge(id: string, data: string): MMELEdge {

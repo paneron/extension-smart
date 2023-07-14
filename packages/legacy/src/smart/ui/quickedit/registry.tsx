@@ -3,14 +3,14 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   editImportRegistryCommand,
   editRegistryCommand,
-} from '../../model/editor/commands/data';
+} from '@/smart/model/editor/commands/data';
 import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
 import { ModelAction } from '@/smart/model/editor/model';
 import {
   EditorDataClass,
   EditorModel,
   EditorRegistry,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { RefTextSelection } from '@/smart/model/selectionImport';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
@@ -19,7 +19,7 @@ import { NormalTextField } from '@/smart/ui/common/fields';
 import { EditPageButtons } from '@/smart/ui/edit/commons';
 import AttributeListQuickEdit, {
   findAllAttributeTypes,
-} from '../edit/components/AttributeList';
+} from '@/smart/ui/edit/components/AttributeList';
 
 const QuickEditRegistry: React.FC<{
   registry: EditorRegistry;

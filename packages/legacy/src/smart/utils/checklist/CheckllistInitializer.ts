@@ -8,7 +8,7 @@ import {
   EGatePath,
   EGatePathTaskList,
   getCheckListId,
-} from '../../model/checklist';
+} from '@/smart/model/checklist';
 import {
   EditorApproval,
   EditorEGate,
@@ -22,7 +22,7 @@ import {
   isEditorEgate,
   isEditorProcess,
   isEditorRegistry,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { ModalityType } from '@/smart/utils/constants';
 import { calculateReach, calInitEGates } from '@/smart/utils/checklist/ChecklistCalculator';
 

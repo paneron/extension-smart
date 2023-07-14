@@ -5,12 +5,12 @@ import {
   EditorModel,
   isEditorDataClass,
   isEditorRegistry,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   getReferenceDCTypeName,
   referenceSorter,
-} from '../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import { DATATYPE, MODAILITYOPTIONS } from '@/smart/utils/constants';
 import { createDataAttribute } from '@/smart/utils/EditorFactory';
 import {
@@ -18,7 +18,7 @@ import {
   NormalComboBox,
   NormalTextField,
   ReferenceSelector,
-} from '../common/fields';
+} from '@/smart/ui/common/fields';
 import ListWithPopoverItem from '@/smart/ui/common/listmanagement/listPopoverItem';
 import { CardinalityField } from '@/smart/ui/edit/components/CardinalityEdit';
 

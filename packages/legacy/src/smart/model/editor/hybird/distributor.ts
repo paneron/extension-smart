@@ -19,7 +19,7 @@ import {
   EditorEGate,
   EditorModel,
   EditorProcess,
-} from '../../editormodel';
+} from '@/smart/model/editormodel';
 import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
 import { ModelAction } from '@/smart/model/editor/model';
 import { compileDCRefImport, compileRegistryRefImport } from '@/smart/model/editor/hybird/data';
@@ -33,7 +33,7 @@ import {
   compileProcessDeleteReverse,
   compileProcessEdit,
   compileProcessRemovePage,
-} from './process';
+} from '@/smart/model/editor/hybird/process';
 
 export interface EGateEditAction {
   task: 'egate-edit';

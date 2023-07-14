@@ -8,7 +8,7 @@ import {
   MultiReferenceSelector,
   NormalComboBox,
   NormalTextField,
-} from '../common/fields';
+} from '@/smart/ui/common/fields';
 import { IMMELObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
 
 export function matchProvisionFilter(x: IMMELObject, filter: string): boolean {

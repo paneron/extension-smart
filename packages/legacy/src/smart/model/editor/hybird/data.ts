@@ -4,7 +4,7 @@ import {
   EditorRegistry,
   isEditorDataClass,
   isEditorRegistry,
-} from '../../editormodel';
+} from '@/smart/model/editormodel';
 import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
 import { ModelAction } from '@/smart/model/editor/model';
 import { HyEditAction } from '@/smart/model/editor/hybird/distributor';

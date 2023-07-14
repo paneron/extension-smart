@@ -8,7 +8,7 @@ import {
   ChecklistPackage,
   ChecklistResult,
   ChecklistSetting,
-} from '../../model/checklist';
+} from '@/smart/model/checklist';
 import { EditorModel } from '@/smart/model/editormodel';
 import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import { updateResult } from '@/smart/utils/checklist/ChecklistCalculator';
@@ -16,11 +16,11 @@ import {
   calEdgeAnimated,
   calEdgeColor,
   getCheckListView,
-} from '../../utils/checklist/ChecklistViewer';
+} from '@/smart/utils/checklist/ChecklistViewer';
 import {
   calculateTaskList,
   initResult,
-} from '../../utils/checklist/CheckllistInitializer';
+} from '@/smart/utils/checklist/CheckllistInitializer';
 import { MODAILITYOPTIONS, ModalityType } from '@/smart/utils/constants';
 import CircleGraph from '@/smart/ui/dashboard/CircleGraph';
 import { CustomCLAttribute, CustomCLProvision } from '@/smart/ui/checklist/CustomFields';

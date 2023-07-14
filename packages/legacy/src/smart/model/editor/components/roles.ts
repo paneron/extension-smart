@@ -4,7 +4,7 @@ import {
   EditorNode,
   isEditorApproval,
   isEditorProcess,
-} from '../../editormodel';
+} from '@/smart/model/editormodel';
 import { UndoReducerInterface } from '@/smart/model/editor/interface';
 import { ModelAction } from '@/smart/model/editor/model';
 import { ItemAction, useItems } from '@/smart/model/editor/components/itemTemplate';

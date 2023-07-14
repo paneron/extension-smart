@@ -13,7 +13,7 @@ import {
   SignalCatchComponent,
   StartComponent,
   TimerComponent,
-} from '../ui/flowui/nodeUI';
+} from '@/smart/ui/flowui/nodeUI';
 import { EditorModel, ModelType } from '@/smart/model/editormodel';
 import { MMELDocument } from '@/smart/model/document';
 

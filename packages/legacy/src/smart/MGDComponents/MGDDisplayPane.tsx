@@ -7,7 +7,7 @@ import React from 'react';
 import {
   application2060DisplayPane,
   mgdDisplayPane,
-} from '../../css/MGDDisplayPane';
+} from '@/css/MGDDisplayPane';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

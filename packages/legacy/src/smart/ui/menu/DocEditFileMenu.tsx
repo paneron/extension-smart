@@ -8,7 +8,7 @@ import {
   FILE_TYPE,
   handleDocumentOpen,
   saveToFileSystem,
-} from '../../utils/IOFunctions';
+} from '@/smart/utils/IOFunctions';
 import MenuButton from '@/smart/ui/menu/MenuButton';
 
 const DocEditFileMenu: React.FC<{

@@ -6,7 +6,7 @@ import {
   FILE_TYPE,
   handleDocumentOpen,
   handleModelOpen,
-} from '../../utils/IOFunctions';
+} from '@/smart/utils/IOFunctions';
 import { MMELDocument } from '@/smart/model/document';
 import React from 'react';
 

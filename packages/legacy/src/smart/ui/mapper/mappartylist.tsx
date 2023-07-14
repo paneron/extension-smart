@@ -6,7 +6,7 @@ import { MappingType } from '@/smart/model/mapmodel';
 import {
   findImpMapPartners,
   findRefMapPartners,
-} from '../../utils/map/MappingCalculator';
+} from '@/smart/utils/map/MappingCalculator';
 import { EditMappingButton, MapPartnerNavigateButton } from '@/smart/ui/common/buttons';
 
 const MappingPartyList: React.FC<{

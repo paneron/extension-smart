@@ -15,7 +15,7 @@ import {
   MMELTextSection,
   MMELVariable,
   MMELView,
-} from './supportinterface';
+} from '@/interface/supportinterface';
 
 export interface MMELModel {
   meta: MMELMetadata;

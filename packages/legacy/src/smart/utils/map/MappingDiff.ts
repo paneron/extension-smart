@@ -11,14 +11,14 @@ import {
   getRepoItemDesc,
   RepoDiffLegend,
   RepoNodeDiffType,
-} from '../repo/CommonFunctions';
+} from '@/smart/utils/repo/CommonFunctions';
 import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
 import {
   MapCoverType,
   MapDiffEdgeResult,
   MapEdgeResult,
   MapResultType,
-} from './MappingCalculator';
+} from '@/smart/utils/map/MappingCalculator';
 
 export const MapDiffSourceValues = [
   'new',

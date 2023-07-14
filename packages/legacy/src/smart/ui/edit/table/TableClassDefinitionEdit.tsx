@@ -6,7 +6,7 @@ import {
   IListItem,
   IManageHandler,
   NormalTextField,
-} from '../../common/fields';
+} from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
 
 export interface TableClassAttribute {

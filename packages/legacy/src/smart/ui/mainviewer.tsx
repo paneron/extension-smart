@@ -18,7 +18,7 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import {
   getViewerReactFlowElementsFrom,
   ModelWrapper,
-} from '../model/modelwrapper';
+} from '@/smart/model/modelwrapper';
 import {
   addToHistory,
   createModelHistory,
@@ -26,7 +26,7 @@ import {
   PageHistory,
   popPage,
   RepoHistory,
-} from '../model/history';
+} from '@/smart/model/history';
 import { EdgeTypes, FunModel, NodeTypes, ViewerOption } from '@/smart/model/States';
 import MGDButton from '@/smart/MGDComponents/MGDButton';
 import { MGDButtonType } from '@/css/MGDButton';
@@ -36,7 +36,7 @@ import { DataVisibilityButton, IdVisibleButton } from '@/smart/ui/control/button
 import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,
-} from '../utils/SearchFunctions';
+} from '@/smart/utils/SearchFunctions';
 import { SidebarBlockConfig } from '@riboseinc/paneron-extension-kit/widgets/Sidebar/Block';
 import ViewToolMenu from '@/smart/ui/menu/ViewToolMenu';
 import MeasureCheckPane from '@/smart/ui/measurement/MeasurementValidationPane';

@@ -2,7 +2,7 @@ import {
   EnviromentValues,
   EnviromentVariables,
   MTreeNode,
-} from '../../model/Measurement';
+} from '@/smart/model/Measurement';
 import { createMTreeNodeWithValue } from '@/smart/utils/measurement/BasicFunctions';
 import { getListFromNode, getValueFromNode } from '@/smart/utils/measurement/Evaluator';
 

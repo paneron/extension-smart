@@ -9,7 +9,7 @@ import {
   isModelWrapper,
   MapperViewOption,
   ReferenceContent,
-} from '../../model/States';
+} from '@/smart/model/States';
 import { getDocumentMetaById } from '@/smart/utils/DocumentFunctions';
 import { getNamespace } from '@/smart/utils/ModelFunctions';
 import { EditMPropsInterface } from '@/smart/ui/dialog/dialogs';

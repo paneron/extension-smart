@@ -4,7 +4,7 @@ import { MMELJSON } from '@/smart/model/json';
 import {
   createEditorModelWrapper,
   ModelWrapper,
-} from '../../../model/modelwrapper';
+} from '@/smart/model/modelwrapper';
 import { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import { getAllRepoModels } from '@/smart/utils/repo/CommonFunctions';
 import { JSONToMMEL } from '@/smart/utils/repo/io';

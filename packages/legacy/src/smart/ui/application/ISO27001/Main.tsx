@@ -10,7 +10,7 @@ import {
   applicationDialogLayout,
   dialogLayout,
   dialogLayoutFull,
-} from '../../../../css/layout';
+} from '@/css/layout';
 import MGDContainer from '@/smart/MGDComponents/MGDContainer';
 import MGDHeading from '@/smart/MGDComponents/MGDHeading';
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
@@ -28,7 +28,7 @@ import {
   Dialog27001Interface,
   fixedlocalhost,
   Log27001,
-} from './model';
+} from '@/smart/ui/application/ISO27001/model';
 import LineChart27001 from '@/smart/ui/application/ISO27001/LineChart';
 import React from 'react';
 

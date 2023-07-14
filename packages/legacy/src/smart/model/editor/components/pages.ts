@@ -7,7 +7,7 @@ import { createSubprocessComponent } from '@/smart/utils/EditorFactory';
 import {
   dataPageReplace,
   elmPageReplace,
-} from '../../../utils/handler/cascadeModelHandler';
+} from '@/smart/utils/handler/cascadeModelHandler';
 import { updatePageElement } from '@/smart/utils/ModelFunctions';
 import * as Logger from '@/lib/logger';
 import {
@@ -17,7 +17,7 @@ import {
   isEditorDataClass,
   isEditorProcess,
   isEditorRegistry,
-} from '../../editormodel';
+} from '@/smart/model/editormodel';
 import { UndoReducerInterface } from '@/smart/model/editor/interface';
 import { ModelAction } from '@/smart/model/editor/model';
 

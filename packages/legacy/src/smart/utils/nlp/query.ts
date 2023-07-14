@@ -3,7 +3,7 @@ import {
   ProvisionRDF,
   RDFVersion,
   STNode,
-} from '../../model/SemanticTriple';
+} from '@/smart/model/SemanticTriple';
 import * as Logger from '@/lib/logger';
 import { converQuestionRDF, parseText } from '@/smart/utils/nlp/nlp';
 

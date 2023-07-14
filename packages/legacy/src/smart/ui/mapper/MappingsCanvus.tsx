@@ -3,7 +3,7 @@ import {
   MapDiffEdgeResult,
   MapDiffType,
   MapDiffValues,
-} from '../../utils/map/MappingCalculator';
+} from '@/smart/utils/map/MappingCalculator';
 import { mgdCanvas } from '@/css/layout';
 import { LegendInterface } from '@/smart/model/States';
 

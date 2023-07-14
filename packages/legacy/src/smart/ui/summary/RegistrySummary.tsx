@@ -10,7 +10,7 @@ import { PageHistory } from '@/smart/model/history';
 import {
   computeRegistrySummary,
   RegSummarySearchRecord,
-} from '../../utils/summary/RegistrySummary';
+} from '@/smart/utils/summary/RegistrySummary';
 import { NormalComboBox, NumericComboBox } from '@/smart/ui/common/fields';
 
 const RECORD_PER_PAGE = 10;

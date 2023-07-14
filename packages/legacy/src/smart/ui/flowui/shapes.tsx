@@ -7,7 +7,7 @@ import { ModelType } from '@/smart/model/editormodel';
 import {
   DragAndDropImportRefType,
   DragAndDropMappingType,
-} from '../../utils/constants';
+} from '@/smart/utils/constants';
 
 export const DatacubeShape: React.FC<{ color?: string }> = function ({
   color = 'none',

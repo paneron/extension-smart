@@ -12,7 +12,7 @@ import {
   getEditorRoleById,
   isEditorData,
   ModelType,
-} from './editormodel';
+} from '@/smart/model/editormodel';
 import { MMELtoFlowEntries } from '@/smart/model/States';
 import {
   MMELComment,

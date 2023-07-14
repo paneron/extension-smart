@@ -12,7 +12,7 @@ import {
   DescribeEdge,
   DescribeNote,
   DescribeProvision,
-} from './ComponentDescription';
+} from '@/smart/ui/common/description/ComponentDescription';
 import { DescribeAttribute } from '@/smart/ui/common/description/data';
 
 export const ApprovalRecordList: React.FC<{

@@ -6,7 +6,7 @@ import {
   createMTreeNodeWithVariable,
   isBinaryOperator,
   isListOperator,
-} from './BasicFunctions';
+} from '@/smart/utils/measurement/BasicFunctions';
 import { MComparators, MComparatorTypes } from '@/smart/utils/measurement/Operators';
 
 export interface MToken {

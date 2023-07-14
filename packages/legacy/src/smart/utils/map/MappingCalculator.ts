@@ -4,7 +4,7 @@ import {
   map_style_diff__source,
   map_style__coverage,
   map_style__source,
-} from '../../../css/visual';
+} from '@/css/visual';
 import {
   EditorModel,
   EditorNode,
@@ -13,7 +13,7 @@ import {
   isEditorEgate,
   isEditorProcess,
   ModelType,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { PageHistory } from '@/smart/model/history';
 import { LegendInterface, MapperSelectedInterface } from '@/smart/model/States';
 import {
@@ -22,7 +22,7 @@ import {
   MappingType,
   MapProfile,
   MapSet,
-} from '../../model/mapmodel';
+} from '@/smart/model/mapmodel';
 import { SerializedStyles } from '@emotion/react';
 import { DocStatement, MMELDocument } from '@/smart/model/document';
 import { getNamespace } from '@/smart/utils/ModelFunctions';

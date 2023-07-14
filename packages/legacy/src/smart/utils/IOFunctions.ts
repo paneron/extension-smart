@@ -11,7 +11,7 @@ import {
   MODELVERSION,
   OpenFileInterface,
   WSVERSION,
-} from './constants';
+} from '@/smart/utils/constants';
 import { textToDoc } from '@/smart/utils/DocumentFunctions';
 import * as Logger from '@/lib/logger';
 import { bsiToDocument } from '@/smart/utils/xml/BSIXML';

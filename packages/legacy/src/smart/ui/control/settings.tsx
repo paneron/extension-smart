@@ -13,7 +13,7 @@ import {
   mgd_tabs__item,
   mgd_tabs__item__selected,
   mgd_tabs__item__unselected,
-} from '../../../css/MGDTabs';
+} from '@/css/MGDTabs';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
 import { EditorModel } from '@/smart/model/editormodel';
 import DataClassEditPage from '@/smart/ui/edit/dataclassedit';

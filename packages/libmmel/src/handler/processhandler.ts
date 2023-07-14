@@ -4,7 +4,7 @@ import {
   MMELremovePackage,
   MMELtokenizePackage,
   MMELtokenizeSet,
-} from '../util/tokenizer';
+} from '@/util/tokenizer';
 
 export function parseApproval(id: string, data: string): MMELApproval {
   const app: MMELApproval = {

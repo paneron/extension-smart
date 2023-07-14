@@ -7,13 +7,13 @@ import {
   EMPTYTYPE,
   ROLETYPE,
   STRINGTYPE,
-} from '../../utils/constants';
+} from '@/smart/utils/constants';
 import {
   DataTimeTextField,
   NormalComboBox,
   NormalTextField,
   ReferenceSelector,
-} from '../common/fields';
+} from '@/smart/ui/common/fields';
 
 const StringFieldEdit: React.FC<{
   value: string;

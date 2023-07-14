@@ -5,7 +5,7 @@ import {
   EditorDataClass,
   EditorModel,
   isEditorRegistry,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { SMARTDocument, SMARTDocumentStore } from '@/smart/model/workspace';
 import DCDocumentAttributes from '@/smart/ui/workspace/DCDocumentAttributes';
 

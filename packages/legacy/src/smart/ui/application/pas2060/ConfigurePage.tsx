@@ -17,7 +17,7 @@ import {
   Application2060Setting,
   EmissionSource,
   fixedlocalhost,
-} from './model';
+} from '@/smart/ui/application/pas2060/model';
 import { propagateReadings } from '@/smart/ui/application/pas2060/ReadingCalculator';
 
 const ApplicationConfigurePage: React.FC<{

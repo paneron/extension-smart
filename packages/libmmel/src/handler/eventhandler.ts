@@ -5,7 +5,7 @@ import {
   MMELSignalCatchEvent,
   MMELStartEvent,
   MMELTimerEvent,
-} from '../interface/eventinterface';
+} from '@/interface/eventinterface';
 
 export function parseEndEvent(id: string, data: string): MMELEndEvent {
   const end: MMELEndEvent = {

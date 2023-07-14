@@ -9,7 +9,7 @@ import {
   DeletableNodeTypes,
   EditableNodeTypes,
   EditAction,
-} from '../../utils/constants';
+} from '@/smart/utils/constants';
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
 import { Describe } from '@/smart/ui/sidebar/ViewComponentDetails';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
@@ -27,7 +27,7 @@ import {
   EditorDiag,
   EditorDiagPackage,
   EditorDiagTypes,
-} from '../dialog/EditorDialogs';
+} from '@/smart/ui/dialog/EditorDialogs';
 import { DeleteConfirmMessgae } from '@/smart/utils/ModelRemoveComponentHandler';
 import { deleteNodeAction } from '@/smart/model/editor/commands/elements';
 

@@ -10,17 +10,17 @@ import {
   MappingResultStyles,
   MappingSourceStyles,
   MapSourceType,
-} from '../smart/utils/map/MappingCalculator';
+} from '@/smart/utils/map/MappingCalculator';
 import {
   MapDiffCoverType,
   MapDiffSourceType,
   MappingDiffResultStyles,
   MappingDiffSourceStyles,
-} from '../smart/utils/map/MappingDiff';
+} from '@/smart/utils/map/MappingDiff';
 import {
   SearchHighlightType,
   SearchResultStyles,
-} from '../smart/utils/SearchFunctions';
+} from '@/smart/utils/SearchFunctions';
 
 export const handleCSS: CSSProperties = {
   borderRadius : '5px!important',

@@ -6,7 +6,7 @@ import {
   FILE_TYPE,
   handleMappingOpen,
   saveToFileSystem,
-} from '../../utils/IOFunctions';
+} from '@/smart/utils/IOFunctions';
 import { MMELRepo } from '@/smart/model/repo';
 
 const MapperFileMenu: React.FC<{

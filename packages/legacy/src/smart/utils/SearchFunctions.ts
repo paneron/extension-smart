@@ -15,7 +15,7 @@ import {
   isEditorDataClass,
   isEditorProcess,
   isEditorRegistry,
-} from '../model/editormodel';
+} from '@/smart/model/editormodel';
 import { createModelHistory, HistoryItem } from '@/smart/model/history';
 import { LegendInterface } from '@/smart/model/States';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';

@@ -2,7 +2,7 @@ import React from 'react';
 import {
   EditorSignalEvent,
   EditorTimerEvent,
-} from '../../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
 
 export const TimerSummary: React.FC<{

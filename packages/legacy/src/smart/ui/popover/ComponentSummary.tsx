@@ -12,7 +12,7 @@ import {
   EditorSignalEvent,
   EditorTimerEvent,
   getEditorDataClassById,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { DescribableNodeTypes } from '@/smart/utils/constants';
 import { DescribeDC, DescribeRegistry } from '@/smart/ui/common/description/data';

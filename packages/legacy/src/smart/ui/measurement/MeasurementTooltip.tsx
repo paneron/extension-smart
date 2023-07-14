@@ -7,7 +7,7 @@ import {
   MeasureRType,
   MTestItem,
   MTestReport,
-} from '../../model/Measurement';
+} from '@/smart/model/Measurement';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
 
 const MeasurementTooltip: React.FC<{

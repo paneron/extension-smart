@@ -5,13 +5,13 @@ import { MMELDocument } from '@/smart/model/document';
 import {
   createEditorModelWrapper,
   ModelWrapper,
-} from '../../model/modelwrapper';
+} from '@/smart/model/modelwrapper';
 import { MMELRepo, RepoIndex, RepoItemType } from '@/smart/model/repo';
 import {
   EXTENSIONVERSION,
   MODELVERSION,
   PANERONVERSION,
-} from '../../utils/constants';
+} from '@/smart/utils/constants';
 import { createNewEditorModel } from '@/smart/utils/EditorFactory';
 import AskIDForSaveMenu from '@/smart/ui/popover/AskIDForSaveMenu';
 import RepoAIMenu from '@/smart/ui/repo/RepoAIMenu';

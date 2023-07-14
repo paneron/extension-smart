@@ -5,14 +5,14 @@ import {
   flowProgressLabelWithButton,
   flowPercentageLabel,
   flowProgressLabel,
-} from '../../../css/visual';
+} from '@/css/visual';
 import { ChecklistPackage } from '@/smart/model/checklist';
 import {
   EditorNode,
   isEditorEgate,
   isEditorProcess,
   isEditorRegistry,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 
 const CheckListAddon: React.FC<{
   element: EditorNode;

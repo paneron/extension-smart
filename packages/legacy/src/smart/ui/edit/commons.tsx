@@ -7,7 +7,7 @@ import {
   EditButton,
   RemoveButton,
   RemoveSubprocessButton,
-} from '../common/buttons';
+} from '@/smart/ui/common/buttons';
 
 export const EditPageButtons: React.FC<{
   onUpdateClick?: () => void;

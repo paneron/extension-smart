@@ -5,7 +5,7 @@ import {
   EditorModel,
   isEditorDataClass,
   isEditorRegistry,
-} from '../../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { RefTextSelection } from '@/smart/model/selectionImport';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
@@ -17,7 +17,7 @@ import {
   getModelAllRefs,
   getReferenceDCTypeName,
   trydefaultID,
-} from '../../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import { findExistingRef } from '@/smart/utils/ModelImport';
 import { NormalComboBox, NormalTextField } from '@/smart/ui/common/fields';
 import DataTypeSelector from '@/smart/ui/edit/components/DataTypeSelector';

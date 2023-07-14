@@ -16,11 +16,11 @@ import {
   mgd_label,
   mgd_select,
   mgd_select__constrained,
-} from '../../../css/form';
+} from '@/css/form';
 import {
   shame__mystery_container,
   shame__mystery_container__column,
-} from '../../../css/shame';
+} from '@/css/shame';
 import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 
 export interface IAdditionalListButton {

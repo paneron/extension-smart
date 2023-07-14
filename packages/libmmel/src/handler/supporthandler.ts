@@ -18,12 +18,12 @@ import {
   MMELView,
   NOTE_TYPE,
   VarType,
-} from '../interface/supportinterface';
+} from '@/interface/supportinterface';
 import {
   MMELremovePackage,
   MMELtokenizePackage,
   MMELtokenizeSet,
-} from '../util/tokenizer';
+} from '@/util/tokenizer';
 
 export function parseMetaData(x: string): MMELMetadata {
   const meta: MMELMetadata = {

@@ -6,7 +6,7 @@ import {
   checkId,
   referenceSorter,
   toRefSummary,
-} from '../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import { createReference } from '@/smart/utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
@@ -15,7 +15,7 @@ import {
   addRefCommand,
   delRefCommand,
   editRefCommand,
-} from '../../model/editor/commands/reference';
+} from '@/smart/model/editor/commands/reference';
 
 const ReferenceEditPage: React.FC<{
   model: EditorModel;

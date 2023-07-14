@@ -9,7 +9,7 @@ import {
   ModuleList,
   ModuleName,
   MODULE_CONFIGURATION,
-} from '../../model/module/appModule';
+} from '@/smart/model/module/appModule';
 import { MMELRepo, RepoIndex } from '@/smart/model/repo';
 
 /**

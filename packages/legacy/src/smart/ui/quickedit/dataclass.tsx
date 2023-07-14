@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   editDCCommand,
   editImportDCCommand,
-} from '../../model/editor/commands/data';
+} from '@/smart/model/editor/commands/data';
 import { ModelAction } from '@/smart/model/editor/model';
 import { EditorDataClass, EditorModel } from '@/smart/model/editormodel';
 import { RefTextSelection } from '@/smart/model/selectionImport';
@@ -13,7 +13,7 @@ import { DescriptionItem } from '@/smart/ui/common/description/fields';
 import { EditPageButtons } from '@/smart/ui/edit/commons';
 import AttributeListQuickEdit, {
   findAllAttributeTypes,
-} from '../edit/components/AttributeList';
+} from '@/smart/ui/edit/components/AttributeList';
 
 const QuickEditDataClass: React.FC<{
   dataclass: EditorDataClass;

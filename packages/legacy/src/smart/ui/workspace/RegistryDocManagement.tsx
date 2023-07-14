@@ -5,7 +5,7 @@ import {
   IAdditionalListButton,
   IListItem,
   IManageHandler,
-} from '../common/fields';
+} from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
 import { SMARTDocument, SMARTDocumentStore } from '@/smart/model/workspace';
 import DocumentEdit, { DocumentEditInterface } from '@/smart/ui/workspace/DocumentEditor';

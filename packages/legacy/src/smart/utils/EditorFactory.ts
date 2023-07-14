@@ -34,7 +34,7 @@ import {
   EditorStartEvent,
   EditorSubprocess,
   EditorTimerEvent,
-} from '../model/editormodel';
+} from '@/smart/model/editormodel';
 import { DOCVERSION, MODELVERSION } from '@/smart/utils/constants';
 import { MMELDocument } from '@/smart/model/document';
 

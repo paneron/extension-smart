@@ -6,12 +6,12 @@ import {
   EditorProcess,
   EditorSignalEvent,
   EditorTimerEvent,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import {
   DeletableNodeTypes,
   EditableNodeTypes,
   EditAction,
-} from '../../utils/constants';
+} from '@/smart/utils/constants';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import EditProcessPage from '@/smart/ui/edit/processedit';
 import EditApprovalPage from '@/smart/ui/edit/approvaledit';

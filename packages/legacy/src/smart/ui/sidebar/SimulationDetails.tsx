@@ -7,7 +7,7 @@ import {
   isEditorProcess,
   isEditorSignalEvent,
   isEditorTimerEvent,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import React from 'react';
 import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import { Button, Text } from '@blueprintjs/core';
@@ -24,7 +24,7 @@ import {
   DescribeSignalCatch,
   DescribeStart,
   DescribeTimer,
-} from '../common/description/ComponentDescription';
+} from '@/smart/ui/common/description/ComponentDescription';
 import { DescribeProcess } from '@/smart/ui/common/description/process';
 import { PageHistory } from '@/smart/model/history';
 import { DescribeApproval } from '@/smart/ui/common/description/approval';

@@ -3,13 +3,13 @@ import {
   bringoutProcessCommand,
   createSubprocessCommand,
   deleteSubprocessCommand,
-} from '../../model/editor/commands/elements';
+} from '@/smart/model/editor/commands/elements';
 import { ModelAction } from '@/smart/model/editor/model';
 import {
   EditorModel,
   EditorProcess,
   EditorSubprocess,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { RefTextSelection } from '@/smart/model/selectionImport';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { EditAction } from '@/smart/utils/constants';

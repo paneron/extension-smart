@@ -11,7 +11,7 @@ import ReactFlow, { Controls, ReactFlowProvider } from 'react-flow-renderer';
 import {
   react_flow_container_layout,
   sidebar_layout,
-} from '../../../css/layout';
+} from '@/css/layout';
 import { MGDButtonType } from '@/css/MGDButton';
 import MGDButton from '@/smart/MGDComponents/MGDButton';
 import {
@@ -22,18 +22,18 @@ import {
   PageHistory,
   popPage,
   RepoHistory,
-} from '../../model/history';
+} from '@/smart/model/history';
 import {
   getEditorReferenceFlowElementsFrom,
   ModelWrapper,
-} from '../../model/modelwrapper';
+} from '@/smart/model/modelwrapper';
 import { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import { EdgeTypes, NodeTypes } from '@/smart/model/States';
 import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,
   SearchResultStyles,
-} from '../../utils/SearchFunctions';
+} from '@/smart/utils/SearchFunctions';
 import LegendPane from '@/smart/ui/common/description/LegendPane';
 import { DataVisibilityButton, IdVisibleButton } from '@/smart/ui/control/buttons';
 import RepoBreadcrumb from '@/smart/ui/common/description/RepoBreadcrumb';

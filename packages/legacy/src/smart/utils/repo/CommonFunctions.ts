@@ -5,7 +5,7 @@ import {
   RepoIndex,
   RepoItems,
   RepoRefItem,
-} from '../../model/repo';
+} from '@/smart/model/repo';
 import { LegendInterface } from '@/smart/model/States';
 import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
 

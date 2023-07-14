@@ -5,21 +5,21 @@ import {
   EditorApproval,
   EditorModel,
   EditorRegistry,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import {
   checkId,
   getModelAllRefs,
   getModelAllRegs,
   getModelAllRoles,
   removeSpace,
-} from '../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import { MODAILITYOPTIONS } from '@/smart/utils/constants';
 import {
   MultiReferenceSelector,
   NormalComboBox,
   NormalTextField,
   ReferenceSelector,
-} from '../common/fields';
+} from '@/smart/ui/common/fields';
 import { EditPageButtons } from '@/smart/ui/edit/commons';
 import {
   MMELReference,

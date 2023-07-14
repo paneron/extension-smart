@@ -17,11 +17,11 @@ import {
   getBreadcrumbs,
   PageHistory,
   popPage,
-} from '../../model/history';
+} from '@/smart/model/history';
 import {
   getMapperReactFlowElementsFrom,
   ModelWrapper,
-} from '../../model/modelwrapper';
+} from '@/smart/model/modelwrapper';
 import {
   EdgeTypes,
   isModelWrapper,
@@ -29,7 +29,7 @@ import {
   MapperState,
   MapperViewOption,
   NodeTypes,
-} from '../../model/States';
+} from '@/smart/model/States';
 import ComponentSummary from '@/smart/ui/popover/ComponentSummary';
 import {
   buildHistoryMap,
@@ -37,13 +37,13 @@ import {
   MapperModelLabel,
   MapperModelType,
   MapSet,
-} from '../../model/mapmodel';
+} from '@/smart/model/mapmodel';
 import {
   isParentMapFullCovered,
   MappingResultStyles,
   MappingSourceStyles,
   MapResultType,
-} from '../../utils/map/MappingCalculator';
+} from '@/smart/utils/map/MappingCalculator';
 import LegendPane from '@/smart/ui/common/description/LegendPane';
 import MappingPartyList from '@/smart/ui/mapper/mappartylist';
 import { handleModelOpen } from '@/smart/utils/IOFunctions';
@@ -57,7 +57,7 @@ import { MapDiffStyles } from '@/smart/ui/mapper/MappingsCanvus';
 import {
   MappingDiffResultStyles,
   MappingDiffSourceStyles,
-} from '../../utils/map/MappingDiff';
+} from '@/smart/utils/map/MappingDiff';
 
 const ModelDiagram: React.FC<{
   className?: string;

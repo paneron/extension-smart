@@ -15,7 +15,7 @@ import {
   EditorNode,
   EditorProcess,
   isEditorProcess,
-} from '../../editormodel';
+} from '@/smart/model/editormodel';
 import { ModelAction } from '@/smart/model/editor/model';
 
 /**

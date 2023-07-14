@@ -3,7 +3,7 @@ import {
   XMLNodeContent,
   XMLToken,
   XMLTokenType,
-} from '../../model/xmlelement';
+} from '@/smart/model/xmlelement';
 
 export function parseXML(data: string): XMLElement {
   data = removeComments(data);

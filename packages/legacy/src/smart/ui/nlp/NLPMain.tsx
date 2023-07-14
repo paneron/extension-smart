@@ -12,7 +12,7 @@ import { MMELJSON } from '@/smart/model/json';
 import {
   createEditorModelWrapper,
   ModelWrapper,
-} from '../../model/modelwrapper';
+} from '@/smart/model/modelwrapper';
 import { MMELRepo } from '@/smart/model/repo';
 import { ProvisionRDF, RDFVersion } from '@/smart/model/SemanticTriple';
 import { buildModelLinks } from '@/smart/utils/ModelFunctions';

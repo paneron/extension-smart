@@ -2,7 +2,7 @@ import {
   EditorModel,
   isEditorApproval,
   isEditorProcess,
-} from '../model/editormodel';
+} from '@/smart/model/editormodel';
 import { getNamespace, referenceSorter } from '@/smart/utils/ModelFunctions';
 import * as Logger from '@/lib/logger';
 import { MapProfile } from '@/smart/model/mapmodel';

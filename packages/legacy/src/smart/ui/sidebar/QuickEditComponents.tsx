@@ -12,7 +12,7 @@ import {
   EditorSignalEvent,
   EditorSubprocess,
   EditorTimerEvent,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { RefTextSelection } from '@/smart/model/selectionImport';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { QuickEditableNodeTypes } from '@/smart/utils/constants';

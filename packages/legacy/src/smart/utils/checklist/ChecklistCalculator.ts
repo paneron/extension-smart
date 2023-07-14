@@ -2,14 +2,14 @@ import {
   ChecklistResult,
   ChecklistTaskList,
   EGatePathTaskList,
-} from '../../model/checklist';
+} from '@/smart/model/checklist';
 import {
   EditorModel,
   EditorSubprocess,
   isEditorApproval,
   isEditorEgate,
   isEditorProcess,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 
 export function updateResult(
   result: ChecklistResult,

@@ -18,7 +18,7 @@ import {
   isEditorRegistry,
   isEditorSignalEvent,
   isEditorTimerEvent,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
@@ -36,7 +36,7 @@ import {
   DescribeSignalCatch,
   DescribeStart,
   DescribeTimer,
-} from '../common/description/ComponentDescription';
+} from '@/smart/ui/common/description/ComponentDescription';
 import { DescribeDC, DescribeRegistry } from '@/smart/ui/common/description/data';
 import { DescribeProcess } from '@/smart/ui/common/description/process';
 

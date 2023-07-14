@@ -3,7 +3,7 @@ import {
   EditorEGate,
   EditorSignalEvent,
   EditorTimerEvent,
-} from '../../../model/editormodel';
+} from '@/smart/model/editormodel';
 import {
   MMELNote,
   MMELProvision,

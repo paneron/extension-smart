@@ -3,7 +3,7 @@ import {
   isMMELDataClass,
   isMMELProcess,
   isMMELRegistry,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import {
   isJSONApproval,
   isJSONDataClass,
@@ -17,7 +17,7 @@ import {
   JSONProvision,
   JSONRegistry,
   MMELJSON,
-} from '../../model/json';
+} from '@/smart/model/json';
 import { DataType, MMELNode } from '@paneron/libmmel/interface/baseinterface';
 import {
   MMELDataAttribute,

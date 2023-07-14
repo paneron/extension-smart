@@ -2,7 +2,7 @@ import {
   addComponentIfNotFound,
   addProcessIfNotFound,
   NewImportItems,
-} from '../../../utils/ModelImport';
+} from '@/smart/utils/ModelImport';
 import { EditorModel, isEditorProcess } from '@/smart/model/editormodel';
 import { ModelAction } from '@/smart/model/editor/model';
 import { HyEditAction } from '@/smart/model/editor/hybird/distributor';

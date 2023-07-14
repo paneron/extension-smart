@@ -17,7 +17,7 @@ import {
   isEditorRegistry,
   isEditorSignalEvent,
   isEditorTimerEvent,
-} from '../model/editormodel';
+} from '@/smart/model/editormodel';
 import { HistoryItem, PageHistory } from '@/smart/model/history';
 import { ModelWrapper } from '@/smart/model/modelwrapper';
 import { LegendInterface } from '@/smart/model/States';

@@ -5,12 +5,12 @@ import {
   EditorRegistry,
   isEditorDataClass,
   isEditorRegistry,
-} from '../../model/editormodel';
+} from '@/smart/model/editormodel';
 import {
   checkId,
   defaultItemSorter,
   genDCIdByRegId,
-} from '../../utils/ModelFunctions';
+} from '@/smart/utils/ModelFunctions';
 import { createDataClass } from '@/smart/utils/EditorFactory';
 import { IListItem, IManageHandler, NormalTextField } from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
@@ -21,7 +21,7 @@ import {
   addRegistryCommand,
   delRegistryCommand,
   editRegistryCommand,
-} from '../../model/editor/commands/data';
+} from '@/smart/model/editor/commands/data';
 
 const initObj: RegistryCombined = { ...createDataClass(''), title : '' };
 

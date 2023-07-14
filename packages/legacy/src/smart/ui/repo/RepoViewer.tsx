@@ -9,13 +9,13 @@ import {
   repoIndexPath,
   RepoItems,
   RepoItemType,
-} from '../../model/repo';
+} from '@/smart/model/repo';
 import {
   COMMITMSG,
   getPathByNS,
   MMELToSerializable,
   RepoFileType,
-} from '../../utils/repo/io';
+} from '@/smart/utils/repo/io';
 import RepoInfoPane from '@/smart/ui/repo/RepoInfoPane';
 import { EditorModel } from '@/smart/model/editormodel';
 import { createNewSMARTWorkspace } from '@/smart/model/workspace';
