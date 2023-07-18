@@ -18,6 +18,8 @@
     "backup"
   ],
   "ts-node": {
+    "transpileOnly": true,
+    "require": [ "typescript-transform-paths/register" ],
     "files": true
   }
 }
