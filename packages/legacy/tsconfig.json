@@ -1,29 +1,6 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "strict": true,
-    "incremental": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "newLine": "lf",
-    "declaration": true,
-    "declarationMap": true,
-    "jsx": "react",
-    "outDir": "dist",
-    "typeRoots": [
-      "../../src/@types",
-      "./node_modules/@types"
-    ],
-    "composite": true,
-    "module": "esnext",
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "baseUrl": ".",
     "paths": {
       "@": ["src/plugin"],
       "@/*": ["src/*"],

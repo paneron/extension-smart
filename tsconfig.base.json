@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "composite": true,
-    "target": "esnext",
-    "module": "commonjs",
+    "target": "es2017",
+    "module": "esnext",
     "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,
@@ -16,7 +16,14 @@
     "experimentalDecorators": true,
     "allowJs": false,
     "jsx": "react",
-    "newLine": "lf"
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "newLine": "lf",
+    "typeRoots": [
+      "../../src/@types",
+      "./node_modules/@types"
+    ]
   },
   "exclude": [
     "node_modules",
