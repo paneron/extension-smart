@@ -2,7 +2,7 @@
   "compilerOptions": {
     "composite": true,
     "target": "es2017",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,
@@ -16,14 +16,11 @@
     "experimentalDecorators": true,
     "allowJs": false,
     "jsx": "react",
-    "outDir": "dist",
-    "rootDir": "src",
-    "baseUrl": ".",
-    "newLine": "lf",
-    "typeRoots": [
-      "../../src/@types",
-      "./node_modules/@types"
+    "lib": [
+      "esnext",
+      "dom"
     ],
+    "newLine": "lf",
     // Note: To transform paths for both the output .js and .d.ts files, you need both of the below entries
     "plugins": [
       // Transform paths in output .js files
