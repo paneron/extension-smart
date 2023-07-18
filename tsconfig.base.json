@@ -35,5 +35,10 @@
     "backup",
     "compiled",
     "dist"
-  ]
+  ],
+  "ts-node": {
+    "swc": true,
+    "require": ["tsconfig-paths/register", "typescript-transform-paths/register"],
+    "files": true
+  }
 }

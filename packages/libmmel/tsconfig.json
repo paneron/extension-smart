@@ -23,10 +23,5 @@
     "dist",
     "compiled",
     "backup"
-  ],
-  "ts-node": {
-    "swc": true,
-    "require": ["tsconfig-paths/register"],
-    "files": true
-  }
+  ]
 }
