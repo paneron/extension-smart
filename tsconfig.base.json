@@ -31,12 +31,6 @@
       { "transform": "typescript-transform-paths", "afterDeclarations": true }
     ]
   },
-  "exclude": [
-    "node_modules",
-    "backup",
-    "compiled",
-    "dist"
-  ],
   "ts-node": {
     "swc": true,
     "require": ["tsconfig-paths/register", "typescript-transform-paths/register"],
