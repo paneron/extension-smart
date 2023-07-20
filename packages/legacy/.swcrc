@@ -6,8 +6,14 @@
   "jsc": {
     "externalHelpers": false,
     "paths": {
-      "@paneron/*": [
-        "../*/src"
+      "@": [
+        "src/plugin"
+      ],
+      "@/*": [
+        "src/*"
+      ],
+      "@paneron/libmmel/*": [
+        "../libmmel/src/*"
       ]
     },
     "baseUrl": ".",

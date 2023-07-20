@@ -5,6 +5,14 @@
   },
   "jsc": {
     "externalHelpers": false,
+    "paths": {
+      "@": [
+        "src/main"
+      ],
+      "@/*": [
+        "src/*"
+      ]
+    },
     "parser": {
       "syntax": "typescript",
       "tsx": true,
