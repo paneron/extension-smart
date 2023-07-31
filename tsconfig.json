@@ -1,23 +1,24 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "target": "esnext",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "declaration": true,
-    "declarationMap": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "incremental": true,
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "allowJs": false,
-    "jsx": "react",
-    "newLine": "lf"
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@": ["src/plugin"],
+      "@/*": ["src/*"]
+    }
   },
-  "files": []
+  "files": [],
+  "include": [
+    "**.json",
+    "*.ts",
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "compiled",
+    "backup"
+  ]
 }

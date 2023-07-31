@@ -7,12 +7,13 @@
     "externalHelpers": false,
     "paths": {
       "@": [
-        "src/main"
+        "src/plugin"
       ],
       "@/*": [
         "src/*"
       ]
     },
+    "baseUrl": ".",
     "parser": {
       "syntax": "typescript",
       "tsx": true,

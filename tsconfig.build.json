@@ -8,10 +8,5 @@
     "src/*.test.*",
     "spec/**/*.ts",
     "test/**/*.ts"
-  ],
-  "references": [
-    {
-      "path": "../libmmel"
-    }
   ]
 }

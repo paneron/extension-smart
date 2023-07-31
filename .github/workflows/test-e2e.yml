@@ -160,7 +160,7 @@ jobs:
       - if: ${{ steps.test_cache.outputs.cache-hit != 'true' }}
         uses: GabrielBB/xvfb-action@v1.6
         with:
-          run: pnpm run -r test:e2e
+          run: pnpm run test:e2e
           # working-directory: ./ #optional
           options: "-screen 0 1280x960x24"
 
