@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 overrides:
   '@types/react': 17.0.53
   react: 16.14.0
@@ -30,8 +34,8 @@ importers:
         specifier: ^11.11.0
         version: 11.11.0(@emotion/react@11.11.1)(@types/react@17.0.53)(react@16.14.0)
       '@paneron/libmmel':
-        specifier: ^0.0.0
-        version: 0.0.0
+        specifier: 0.0.1-dev.5
+        version: 0.0.1-dev.5
       '@react-three/drei':
         specifier: ^7.27.5
         version: 7.27.5(@react-three/fiber@7.0.29)(react-dom@16.14.0)(react@16.14.0)(three@0.146.0)
@@ -1625,8 +1629,8 @@ packages:
       fastq: 1.11.1
     dev: true
 
-  /@paneron/libmmel@0.0.0:
-    resolution: {integrity: sha512-ZmzGodoQBm+qfJkEwN5QnsTZNHWVOxQTQeHEb+84C3WO3L30u6QuRzI1Hj+HeuqyZ9KiC6c5RD6BDtUJpWQ0Vw==}
+  /@paneron/libmmel@0.0.1-dev.5:
+    resolution: {integrity: sha512-pPzLvbhQpztIHVBv8ciI0giwA7G23ZKgrfvKRVgTCl3vNcraNL8djW66rYhn8864vOwRzxRxuRMBSTBcCbVmCA==}
     requiresBuild: true
     dev: true
 
@@ -3016,6 +3020,7 @@ packages:
 
   /boolean@3.2.0:
     resolution: {integrity: sha512-d0II/GO9uf9lfUHH2BQsjxzRJZBdsjgsBiW4BvhWk/3qoKwQFjIDVN19PfX8F2D/r9PCMTtLWjYVCFrpeYUzsw==}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -3685,6 +3690,7 @@ packages:
 
   /detect-node@2.1.0:
     resolution: {integrity: sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -3876,6 +3882,7 @@ packages:
 
   /es6-error@4.1.1:
     resolution: {integrity: sha512-Um/+FxMr9CISWh0bi5Zv0iOD+4cFh5qLeks1qhAopKVAJw3drgKbKySikp7wGhDL0HPeaja0P5ULZrxLkniUVg==}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -4670,6 +4677,7 @@ packages:
   /globalthis@1.0.3:
     resolution: {integrity: sha512-sFdI5LyBiNTHjRd7cGPWapiHWMOXKyuBNX/cWJ3NfzrZQVa8GI/8cofCl74AOVqq9W5kNmguTIzJ/1s2gyI9wA==}
     engines: {node: '>= 0.4'}
+    requiresBuild: true
     dependencies:
       define-properties: 1.1.4
     dev: true
@@ -5633,6 +5641,7 @@ packages:
 
   /json-stringify-safe@5.0.1:
     resolution: {integrity: sha512-ZClg6AaYvamvYEE82d3Iyd3vSSIjQ+odgjaTzRuO3s7toCdFKczob2i0zCh7JE8kWn17yvAWhUVxvqGwUalsRA==}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -5832,6 +5841,7 @@ packages:
   /matcher@3.0.0:
     resolution: {integrity: sha512-OkeDaAZ/bQCxeFAozM55PKcKU0yJMPGifLwV4Qgjitu+5MoAfSQN4lsLJeXZ1b8w0x+/Emda6MZgXS1jvsapng==}
     engines: {node: '>=10'}
+    requiresBuild: true
     dependencies:
       escape-string-regexp: 4.0.0
     dev: true
@@ -6852,6 +6862,7 @@ packages:
   /roarr@2.15.4:
     resolution: {integrity: sha512-CHhPh+UNHD2GTXNYhPWLnU8ONHdI+5DI+4EYIAOaiD63rHeYlZvyh8P+in5999TTSFgUYuKUAjzRI4mdh/p+2A==}
     engines: {node: '>=8.0'}
+    requiresBuild: true
     dependencies:
       boolean: 3.2.0
       detect-node: 2.1.0
@@ -6923,6 +6934,7 @@ packages:
 
   /semver-compare@1.0.0:
     resolution: {integrity: sha512-YM3/ITh2MJ5MtzaM429anh+x2jiLVjqILF4m4oyQB18W7Ggea7BfqdH/wGMK7dDiMghv/6WG7znWMwUDzJiXow==}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -6967,6 +6979,7 @@ packages:
   /serialize-error@7.0.1:
     resolution: {integrity: sha512-8I8TjW5KMOKsZQTvoxjuSIa7foAwPWGOts+6o7sgjz41/qMD9VQHEDxi6PBvK2l0MXUmqZyNpUK+T2tQaaElvw==}
     engines: {node: '>=10'}
+    requiresBuild: true
     dependencies:
       type-fest: 0.13.1
     dev: true
@@ -7592,6 +7605,7 @@ packages:
   /type-fest@0.13.1:
     resolution: {integrity: sha512-34R7HTnG0XIJcBSn5XhDd7nNFPRcXYRZrBB2O2jdKqYODldSzBAqzsWoZYYvduky73toYS/ESqxPvkDf/F0XMg==}
     engines: {node: '>=10'}
+    requiresBuild: true
     dev: true
     optional: true
 

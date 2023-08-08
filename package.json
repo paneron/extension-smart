@@ -67,7 +67,7 @@
     "@emotion/eslint-plugin": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@paneron/libmmel": "^0.0.0",
+    "@paneron/libmmel": "0.0.1-dev.5",
     "@react-three/drei": "^7.27.5",
     "@react-three/fiber": "^7.0.29",
     "@riboseinc/paneron-extension-glossarist": "^2.0.11",
