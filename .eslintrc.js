@@ -153,11 +153,38 @@ module.exports = {
       typescript : {}
     }
   },
-  "rules" : rules,
   overrides : [
     {
       files : ["*.js"],
       rules : rules,
+    },
+    {
+      files : ["*.ts"],
+      rules : rules,
+    },
+    {
+      extends : [],
+      parser : null,
+      parserOptions : {},
+      settings : {},
+      files : ["*.js"],
+      rules : rules,
+    },
+    {
+      "files"   : ["*.json", "*.json5", "*.jsonc"],
+      parser: "jsonc-eslint-parser",
+      parserOptions : {},
+      extends: [
+        // add more generic rulesets here, such as:
+        // 'eslint:recommended',
+        // "plugin:jsonc/recommended-with-jsonc",
+      ],
+      "rules"   : {
+        "key-spacing" : "off",
+        "max-len" : "off",
+        "quote-props" : ["error", "always"],
+        "quotes" : ["error", "double"],
+      },
     },
     {
       "files"   : ["spec/**"],
