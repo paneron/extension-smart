@@ -20,8 +20,7 @@ on:
       #   default: 'false'
 
 env:
-  CACHE_DIR: installs
-  MAIN_PACKAGE_PATH: packages/legacy
+  CACHE_DIR: dist
 
 jobs:
   tests:
@@ -34,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['16.x']
+        node: [18]
       fail-fast: false
 
     steps:
@@ -47,9 +46,7 @@ jobs:
         # results down the file
         id: build-cache-key
         run: |
-          if command -v shasum; then sum() { shasum -a 256 "$@"; } ; else sum() { sha256sum "$@"; }; fi
-          fragment=$(< package.json command grep 'version"\|"name"\|"files"\|"main"\|"build' | sum | command head -c8)
-          echo "key=build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('**/src/**', '**/.swcrc', '**/.npmrc', '**/tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}-${fragment}" | tee -a $GITHUB_OUTPUT
+          echo "key=build-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('package.json', '**/src/**', '**/.swcrc', '**/.npmrc', '**/tsconfig*.json', '**/pnpm-lock.yaml', '.github/workflows/build.yml') }}" | tee -a $GITHUB_OUTPUT
         shell: bash
 
       - uses: actions/setup-node@v3
@@ -62,7 +59,7 @@ jobs:
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 7
+          version: 8
           run_install: false
 
       # See: https:
@@ -95,44 +92,24 @@ jobs:
           path: ${{ env.CACHE_DIR }}
           key: ${{ steps.build-cache-key.outputs.key }}
 
-      - name: Restore cache to working directory
-        shell: bash
-        run: |
-          echo ls -la ${{ env.CACHE_DIR }}/
-          ls -la ${{ env.CACHE_DIR }}/
-          echo ls -la ${{ env.CACHE_DIR }}/*
-          ls -la ${{ env.CACHE_DIR }}/*
-          echo ls -la .
-          ls -la .
-          for i in dist; do \
-            echo rsync -a ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}/$i" "${MAIN_PACKAGE_PATH}/"; \
-            rsync -a ${{ env.CACHE_DIR }}/"${MAIN_PACKAGE_PATH}/$i" "${MAIN_PACKAGE_PATH}/"; \
-          done
-          echo ls -la .
-          ls -la .
-          echo ls -la "${MAIN_PACKAGE_PATH}"/dist
-          ls -la "${MAIN_PACKAGE_PATH}"/dist
-          echo ls -la "${MAIN_PACKAGE_PATH}"/dist/*
-          ls -la "${MAIN_PACKAGE_PATH}"/dist/*
-
       - name: Create a new version
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.next_version != 'skip' }}
+        if: ${{ github.event_name == 'workflow_call' || github.event_name == 'workflow_dispatch' && github.event.inputs.next_version != 'skip' }}
         shell: bash
         run: |
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
-          cd "${MAIN_PACKAGE_PATH}"
-          pnpm version --new-version ${{ github.event.inputs.next_version }}
-          git add -u
-          git commit -m "chore: Release ${{ github.event.inputs.next_version }}"
-          git tag -a "${{ github.event.inputs.next_version }}" -mBump
+          # cd to where project package.json is
+          # pnpm version \
+          #   --new-version ${{ github.event.inputs.next_version }} \
+          #   --message "chore: Release ${{ github.event.inputs.next_version }}"
+          pnpm bump-version ${{ github.event.inputs.next_version }}
+
           # Push commit along with tag
           git push origin --tags :
 
       - name: Publish to npm
         run: |
-          cd "${MAIN_PACKAGE_PATH}"
           diff -u {,dist/}package.json | \
             cp {,dist/}package.json
           pnpm publish dist --access public --no-git-checks
