@@ -49,6 +49,13 @@
   ],
   "main": "plugin.js",
   "types": "plugin.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/*"
+      ]
+    }
+  },
   "resolutions": {
     "@types/react": "17.0.53",
     "react": "16.14.0"
