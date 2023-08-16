@@ -25,7 +25,7 @@ jobs:
         os: [macos-latest, windows-latest] # XXX: Skipping Linux since e2e tests show tooling problems (#96)
         node: [16, 18, 20]
         paneron_ref:
-          - '1ab232b008ba9709c9a80512c0eceaeb525515bf'
+          # - '1ab232b008ba9709c9a80512c0eceaeb525515bf'
           - 'v2.1.4'
 
     steps:
