@@ -1,7 +1,11 @@
+test_outputs/
 /paneron
 /compiled
 /dist
 .vs
+
+*.d.ts
+*.d.ts.map
 
 .pnpm-store/
 

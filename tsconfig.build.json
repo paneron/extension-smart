@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "removeComments": true
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "paneron/",
+    "src/*.test.*",
+    "spec/**/*.ts",
+    "test/**/*.ts"
+  ]
+}

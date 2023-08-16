@@ -1,0 +1,186 @@
+/** @jsx jsx */
+/** @jsxFrag React.Fragment */
+
+import { jsx } from '@emotion/react';
+import React, { useMemo, useState } from 'react';
+import { useStoreActions, useStoreState } from 'react-flow-renderer';
+import { EditorModel, isEditorStartEvent } from '@/smart/model/editormodel';
+import {
+  DeletableNodeTypes,
+  EditableNodeTypes,
+  EditAction,
+} from '@/smart/utils/constants';
+import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
+import { Describe } from '@/smart/ui/sidebar/ViewComponentDetails';
+import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import {
+  MMELProvision,
+  MMELReference,
+} from '@paneron/libmmel/interface/supportinterface';
+import QuickEdit from '@/smart/ui/sidebar/QuickEditComponents';
+import { RefTextSelection } from '@/smart/model/selectionImport';
+import { Dialog } from '@blueprintjs/core';
+import { dialog_layout, dialog_layout__full } from '@/css/layout';
+import { EditorAction } from '@/smart/model/editor/state';
+import {
+  EditNodeType,
+  EditorDiag,
+  EditorDiagPackage,
+  EditorDiagTypes,
+} from '@/smart/ui/dialog/EditorDialogs';
+import { DeleteConfirmMessgae } from '@/smart/utils/ModelRemoveComponentHandler';
+import { deleteNodeAction } from '@/smart/model/editor/commands/elements';
+
+export const SelectedNodeDescription: React.FC<{
+  model: EditorModel;
+  page: string;
+  CustomAttribute?: React.FC<{
+    att: MMELDataAttribute;
+    getRefById?: (id: string) => MMELReference | null;
+    dcid: string;
+  }>;
+  CustomProvision?: React.FC<{
+    provision: MMELProvision;
+    getRefById?: (id: string) => MMELReference | null;
+  }>;
+  act?: (x: EditorAction) => void;
+  provision?: RefTextSelection;
+  onSelect?: (id: string | undefined) => void;
+  setUndoListener?: (x: (() => void) | undefined) => void;
+  clearRedo?: () => void;
+}> = function ({
+  model,
+  page,
+  CustomAttribute,
+  CustomProvision,
+  act,
+  provision,
+  onSelect,
+  setUndoListener,
+  clearRedo,
+}) {
+  const flowSelect = useStoreState(store => store.selectedElements);
+  const [selectedPage, setSelectedPage] = useState<string | undefined>(
+    undefined
+  );
+  const [selected, setSelected] = useState<string | undefined>(undefined);
+  const [dialogPack, setDialogPack] = useState<EditorDiagPackage | undefined>(
+    undefined
+  );
+
+  const setSelectedElements = useStoreActions(a => a.setSelectedElements);
+
+  function setSelectedNodeId(id: string) {
+    setSelectedElements([{ id, position : { x : 0, y : 0 }}]);
+  }
+
+  const current = model.pages[page];
+
+  function deselect() {
+    setSelected(undefined);
+    if (onSelect) {
+      onSelect(undefined);
+    }
+  }
+
+  function setDiag(
+    nodeType: EditableNodeTypes | DeletableNodeTypes,
+    action: EditAction,
+    id: string
+  ) {
+    if (act) {
+      if (action === EditAction.EDIT) {
+        setDialogPack({
+          type : EditNodeType[nodeType as EditableNodeTypes],
+          msg  : id,
+        });
+      } else if (action === EditAction.DELETE) {
+        setDialogPack({
+          type     : EditorDiagTypes.DELETECONFIRM,
+          onDelete : () => {
+            const action = deleteNodeAction(model, page, id);
+            act(action);
+          },
+          msg : DeleteConfirmMessgae[nodeType],
+        });
+      }
+    }
+  }
+
+  useMemo(() => {
+    if (flowSelect && flowSelect.length > 0) {
+      const s = flowSelect[0];
+      if (current.childs[s.id] || current.data[s.id]) {
+        setSelected(s.id);
+        setSelectedPage(page);
+        if (onSelect) {
+          onSelect(s.id);
+        }
+      }
+    } else {
+      deselect();
+    }
+  }, [flowSelect]);
+
+  if (selected && selectedPage) {
+    if (page !== selectedPage) {
+      deselect();
+    }
+  }
+
+  const elm = selected ? model.elements[selected] : undefined;
+  const diagProps = dialogPack ? EditorDiag[dialogPack.type] : undefined;
+
+  return (
+    <MGDSidebar>
+      {diagProps && dialogPack && act && setUndoListener && clearRedo && (
+        <Dialog
+          isOpen={dialogPack !== undefined}
+          title={diagProps.title}
+          css={diagProps.fullscreen ? [dialog_layout, dialog_layout__full] : ''}
+          onClose={() => setDialogPack(undefined)}
+          canEscapeKeyClose={false}
+          canOutsideClickClose={false}
+        >
+          <diagProps.Panel
+            act={act}
+            model={model}
+            page={page}
+            onDelete={dialogPack.onDelete}
+            done={() => setDialogPack(undefined)}
+            msg={dialogPack.msg}
+            setSelectedNode={setSelectedNodeId}
+            setUndoListener={setUndoListener}
+            clearRedo={clearRedo}
+          />
+        </Dialog>
+      )}
+      {elm ? (
+        act && !isEditorStartEvent(elm) && setUndoListener && clearRedo ? (
+          <QuickEdit
+            key={jsx.length}
+            node={elm}
+            setDialog={setDiag}
+            page={model.pages[page]}
+            model={model}
+            act={act}
+            provision={provision}
+            setSelectedNode={setSelectedNodeId}
+            setUndoListener={setUndoListener}
+            clearRedo={clearRedo}
+          />
+        ) : (
+          <Describe
+            node={elm}
+            model={model}
+            page={model.pages[page]}
+            CustomAttribute={CustomAttribute}
+            CustomProvision={CustomProvision}
+          />
+        )
+      ) : (
+        'Nothing is selected'
+      )}
+    </MGDSidebar>
+  );
+};

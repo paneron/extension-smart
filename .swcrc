@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json.schemastore.org/swcrc",
+  "module": {
+    "type": "commonjs"
+  },
+  "minify": true,
+  "jsc": {
+    "externalHelpers": false,
+    "minify": {
+      "compress": false,
+      "format": {
+        "comments": "some"
+      }
+    },
+    "paths": {
+      "@": [
+        "src/plugin"
+      ],
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "baseUrl": ".",
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true,
+      "decorators": true
+    }
+  }
+}
