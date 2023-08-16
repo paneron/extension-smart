@@ -15,7 +15,7 @@ on:
       - '**.nix'
       - 'flake.lock'
       - '.github/workflows/*.yml'
-      - '!.github/workflows/tests.yml'
+      - '!.github/workflows/build-and-test.yml'
       - '!.github/workflows/lint.yml'
       - '!.github/workflows/build.yml'
       - '!.github/workflows/test.yml'

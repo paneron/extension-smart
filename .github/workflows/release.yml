@@ -26,7 +26,7 @@ jobs:
   tests:
     # XXX: does not skip for some reason
     # if: github.events.inputs.skip_tests != 'true'
-    uses: ./.github/workflows/tests.yml
+    uses: ./.github/workflows/build-and-test.yml
 
   publish:
     needs: [tests]

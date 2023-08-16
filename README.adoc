@@ -1,12 +1,9 @@
 = Paneron extension for MMEL models
 
 ifdef::env-github[]
-image:https://github.com/paneron/extension-hls/actions/workflows/test.yml/badge.svg[
-  "Test Status",
-  link="https://github.com/paneron/extension-hls/actions/workflows/test.yml"]
-image:https://github.com/paneron/extension-hls/actions/workflows/build.yml/badge.svg[
-  "Build Status",
-  link="https://github.com/paneron/extension-hls/actions/workflows/build.yml"]
+image:https://github.com/paneron/extension-hls/actions/workflows/build-and-test.yml/badge.svg[
+  "Build / Test",
+  link="https://github.com/paneron/extension-hls/actions/workflows/build-and-test.yml"]
 image:https://github.com/paneron/extension-hls/actions/workflows/audit.yml/badge.svg[
   "Audit Status",
   link="https://github.com/paneron/extension-hls/actions/workflows/audit.yml"]
