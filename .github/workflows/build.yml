@@ -82,3 +82,9 @@ jobs:
         shell: bash
         run: |
           pnpm run dist
+
+      - name: Test build artifacts sanity
+        if: steps.build_cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          pnpm run test:dist

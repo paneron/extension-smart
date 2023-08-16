@@ -38,6 +38,7 @@
     "test:unit": "jest",
     "test:unit:watch": "jest --watch",
     "test": "concurrently npm:test:unit npm:test:e2e",
+    "test:dist": "./scripts/test-dist",
     "test:watch": "concurrently npm:test:unit:watch #npm:test:e2e:watch",
     "lint-typecheck": "concurrently npm:lint npm:typecheck",
     "bump": "pnpm version --message \"chore: Release v%s\n\nCommand used: pnpm bump %s\" --new-version ",
