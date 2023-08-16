@@ -37,6 +37,7 @@ ensure_files_exist() {
 ensure_paths_resolved() {
   local bad_files=()
   local files_processed=0
+  local bad_lines=()
 
   while read -r file
   do
@@ -45,6 +46,7 @@ ensure_paths_resolved() {
     if grep -q '@/' "$file"
     then
       bad_files+=("$file")
+      bad_lines+=("$(grep '@/' "$file")")
     fi
   done < <(find ./dist -type f -name '*.js' -o -name '*.ts')
 
@@ -55,6 +57,12 @@ ensure_paths_resolved() {
     for file in "${bad_files[@]}"
     do
       >&2 echo "  $file"
+    done
+
+    >&2 echo "error: ❌ The following lines contain unresolved aliases."
+    for line in "${bad_lines[@]}"
+    do
+      >&2 echo "$line"
     done
 
     return 1
