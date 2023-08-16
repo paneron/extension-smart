@@ -40,6 +40,8 @@
     "test": "concurrently npm:test:unit npm:test:e2e",
     "test:watch": "concurrently npm:test:unit:watch #npm:test:e2e:watch",
     "lint-typecheck": "concurrently npm:lint npm:typecheck",
+    "bump": "pnpm version --message \"chore: Release v%s\n\nCommand used: pnpm bump %s\" --new-version ",
+    "bump:dev": "pnpm version --new-version prerelease --preid dev --message \"chore: Release v%s\n\nCommand used: pnpm bump:dev\"",
     "fix": "pnpm run lint --fix"
   },
   "files": [
