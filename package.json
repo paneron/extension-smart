@@ -45,7 +45,7 @@
     "fix": "pnpm run lint --fix"
   },
   "files": [
-    "/dist"
+    "dist"
   ],
   "main": "plugin.js",
   "types": "plugin.d.ts",
