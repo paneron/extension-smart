@@ -128,6 +128,8 @@ var rules = {
   '@emotion/no-vanilla' : 'error',
   '@emotion/import-from-emotion' : 'error',
   '@emotion/styled-import' : 'error',
+  'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
+  'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
 };
 
 module.exports = {
@@ -155,11 +157,10 @@ module.exports = {
   },
   overrides : [
     {
-      files : ["*.js"],
-      rules : rules,
-    },
-    {
-      files : ["*.ts"],
+      files : ["*.ts", "*.tsx"],
+      plugins: [
+        "react-hooks",
+      ],
       rules : rules,
     },
     {
