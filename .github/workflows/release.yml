@@ -110,7 +110,7 @@ jobs:
 
       - name: Publish to npm
         run: |
-          diff -u {,dist/}package.json | \
+          diff -u {,dist/}package.json || \
             cp {,dist/}package.json
           pnpm publish dist --access public --no-git-checks
         env:
