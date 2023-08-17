@@ -59,7 +59,7 @@
   },
   "resolutions": {
     "@types/react": "17.0.53",
-    "react": "16.14.0"
+    "react": "17.0.2"
   },
   "devDependencies": {
     "@blueprintjs/core": "~4.17.8",
@@ -102,8 +102,8 @@
     "mkdirp": "^3.0.1",
     "playwright": "^1.33.0",
     "prop-types": "^15.8.1",
-    "react": "16.14.0",
-    "react-dom": "^16.14.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-flow-renderer": "~9.6.4",
     "react-mathjax2": "^0.0.2",
     "regenerator-runtime": "^0.13.11",
