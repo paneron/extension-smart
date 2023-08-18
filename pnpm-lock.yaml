@@ -37,8 +37,8 @@ importers:
         specifier: ^11.11.0
         version: 11.11.0(@emotion/react@11.11.1)(@types/react@17.0.53)(react@17.0.2)
       '@paneron/libmmel':
-        specifier: ^0.0.1
-        version: 0.0.1
+        specifier: ^0.1.3
+        version: 0.1.3
       '@react-three/drei':
         specifier: ^7.27.5
         version: 7.27.5(@react-three/fiber@7.0.29)(react-dom@17.0.2)(react@17.0.2)(three@0.146.0)
@@ -1821,9 +1821,8 @@ packages:
       fastq: 1.11.1
     dev: true
 
-  /@paneron/libmmel@0.0.1:
-    resolution: {integrity: sha512-gjJOBZE7iiyHKbtN4qizabKBtKqKIueh3byaVnHlwN9reRPYqz1Tv71QbiCZyTV30t4eqZTR3NC333dFRVFzyA==}
-    requiresBuild: true
+  /@paneron/libmmel@0.1.3:
+    resolution: {integrity: sha512-BmpcuqowAj4DubcPZ76xqi70xOiJtIMs/XakgvM3lpQWaeFj0avRpGJX1Lcag2R/FZnWlxm1AwYVsnE9FfVfVA==}
     dev: true
 
   /@pkgjs/parseargs@0.11.0:
