@@ -11,7 +11,7 @@
     "title": "SMART",
     "iconURL": "https://www.glossarist.org/SymbolLoupe.png",
     "featured": true,
-    "requiredHostAppVersion": "^2.0.0"
+    "requiredHostAppVersion": "^2.2.0"
   },
   "src_dir": "src",
   "dist_dir": "dist",
