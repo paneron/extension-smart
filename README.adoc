@@ -1,6 +1,10 @@
 = Paneron extension for MMEL models
 
 ifdef::env-github[]
+image:https://img.shields.io/github/v/release/paneron/extension-hls?display_name=tag&include_prereleases&sort=semver[
+  GitHub release (latest SemVer including pre-releases),
+  link="https://www.npmjs.com/package/@paneron/extension-hls"
+]
 image:https://github.com/paneron/extension-hls/actions/workflows/build-and-test.yml/badge.svg[
   "Build / Test",
   link="https://github.com/paneron/extension-hls/actions/workflows/build-and-test.yml"]
@@ -10,10 +14,6 @@ image:https://github.com/paneron/extension-hls/actions/workflows/audit.yml/badge
 image:https://github.com/paneron/extension-hls/actions/workflows/release.yml/badge.svg[
   "Release Status",
   link="https://github.com/paneron/extension-hls/actions/workflows/release.yml"]
-image:https://img.shields.io/github/v/release/paneron/extension-hls?display_name=tag&include_prereleases&sort=semver[
-  GitHub release (latest SemVer including pre-releases),
-  link="https://www.npmjs.com/package/@paneron/extension-hls"
-]
 endif::[]
 
 == Roadmap
