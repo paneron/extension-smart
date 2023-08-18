@@ -3,7 +3,6 @@
 import { jsx } from '@emotion/react';
 import { FocusStyleManager, HotkeysProvider } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import React from 'react';
 import { useContext, useMemo, useState } from 'react';
 import RepositoryView from '@/smart/ui/app/RepoView';
 import type { RepoIndex } from '@/smart/model/repo';

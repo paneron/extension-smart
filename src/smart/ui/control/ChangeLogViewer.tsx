@@ -4,7 +4,6 @@
 import { jsx } from '@emotion/react';
 
 import { Button, Dialog, TextArea } from '@blueprintjs/core';
-import React from 'react';
 import { dialog_layout, dialog_layout__full } from '@/css/layout';
 import type { ChangeLog, ChangeLogEvent } from '@/smart/model/changelog';
 import type { ModelAction } from '@/smart/model/editor/model';

@@ -17,7 +17,6 @@ import {
   mgdButtonSize,
   mgd_button_type,
 } from '@/css/MGDButton';
-import React from 'react';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
