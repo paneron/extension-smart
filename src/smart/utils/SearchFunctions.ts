@@ -1,6 +1,6 @@
-import { SerializedStyles } from '@emotion/react';
+import type { SerializedStyles } from '@emotion/react';
 import { search_style__highlight } from '@/css/visual';
-import {
+import type {
   EditorApproval,
   EditorDataClass,
   EditorEGate,
@@ -10,17 +10,19 @@ import {
   EditorRegistry,
   EditorSignalEvent,
   EditorSubprocess,
-  EditorTimerEvent,
+  EditorTimerEvent } from '@/smart/model/editormodel';
+import {
   isEditorApproval,
   isEditorDataClass,
   isEditorProcess,
   isEditorRegistry,
 } from '@/smart/model/editormodel';
-import { createModelHistory, HistoryItem } from '@/smart/model/history';
-import { LegendInterface } from '@/smart/model/States';
+import type { HistoryItem } from '@/smart/model/history';
+import { createModelHistory } from '@/smart/model/history';
+import type { LegendInterface } from '@/smart/model/States';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { isRegistry } from '@paneron/libmmel/util/validation';
-import { SearchableNodeTypes } from '@/smart/utils/constants';
+import type { SearchableNodeTypes } from '@/smart/utils/constants';
 import { isSearchableNodeTypes } from '@/smart/utils/typecheckings';
 
 type SearchResultType = 'Process' | 'Approval' | 'Data' | 'Event' | 'Gateway';

@@ -1,13 +1,14 @@
-import {
+import type {
   EditorDataClass,
   EditorModel,
-  EditorRegistry,
+  EditorRegistry } from '@/smart/model/editormodel';
+import {
   isEditorDataClass,
   isEditorRegistry,
 } from '@/smart/model/editormodel';
-import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
-import { ModelAction } from '@/smart/model/editor/model';
-import { HyEditAction } from '@/smart/model/editor/hybird/distributor';
+import type { RegistryCombined } from '@/smart/model/editor/components/element/registry';
+import type { ModelAction } from '@/smart/model/editor/model';
+import type { HyEditAction } from '@/smart/model/editor/hybird/distributor';
 
 type RegistryImportRefHybird = HyEditAction & { task: 'registry-import-ref' };
 type DCImportRefHybird = HyEditAction & { task: 'dc-import-ref' };

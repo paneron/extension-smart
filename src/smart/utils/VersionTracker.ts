@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 import { flow_node__highlighed, no_highlight } from '@/css/visual';
-import {
+import type {
   EditorApproval,
   EditorDataClass,
   EditorEGate,
@@ -9,7 +9,8 @@ import {
   EditorRegistry,
   EditorSignalEvent,
   EditorSubprocess,
-  EditorTimerEvent,
+  EditorTimerEvent } from '@/smart/model/editormodel';
+import {
   isEditorApproval,
   isEditorDataClass,
   isEditorEgate,
@@ -18,11 +19,11 @@ import {
   isEditorSignalEvent,
   isEditorTimerEvent,
 } from '@/smart/model/editormodel';
-import { HistoryItem, PageHistory } from '@/smart/model/history';
-import { ModelWrapper } from '@/smart/model/modelwrapper';
-import { LegendInterface } from '@/smart/model/States';
-import { VersionState, VersionStatus } from '@/smart/model/versioncompare';
-import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import type { HistoryItem, PageHistory } from '@/smart/model/history';
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
+import type { LegendInterface } from '@/smart/model/States';
+import type { VersionState, VersionStatus } from '@/smart/model/versioncompare';
+import type { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import VersionDiffLogView from '@/smart/ui/version/VersionDiffLogView';
 import { getRootName } from '@/smart/utils/ModelFunctions';
 

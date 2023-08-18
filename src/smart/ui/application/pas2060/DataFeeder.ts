@@ -1,4 +1,5 @@
-import { fixedlocalhost, SensorReading } from '@/smart/ui/application/pas2060/model';
+import type { SensorReading } from '@/smart/ui/application/pas2060/model';
+import { fixedlocalhost } from '@/smart/ui/application/pas2060/model';
 
 export function obtainData(url: string): SensorReading[] {
   if (url === fixedlocalhost) {

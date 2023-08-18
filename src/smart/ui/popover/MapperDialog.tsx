@@ -1,18 +1,20 @@
-import { Dialog, IToastProps } from '@blueprintjs/core';
+import type { IToastProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core';
 import React from 'react';
 import { dialogLayout } from '@/css/layout';
-import { EditorApproval, EditorProcess } from '@/smart/model/editormodel';
-import { MappingMeta, MapProfile } from '@/smart/model/mapmodel';
-import { ModelWrapper } from '@/smart/model/modelwrapper';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
-import {
-  isModelWrapper,
+import type { EditorApproval, EditorProcess } from '@/smart/model/editormodel';
+import type { MappingMeta, MapProfile } from '@/smart/model/mapmodel';
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type {
   MapperViewOption,
-  ReferenceContent,
+  ReferenceContent } from '@/smart/model/States';
+import {
+  isModelWrapper
 } from '@/smart/model/States';
 import { getDocumentMetaById } from '@/smart/utils/DocumentFunctions';
 import { getNamespace } from '@/smart/utils/ModelFunctions';
-import { EditMPropsInterface } from '@/smart/ui/dialog/dialogs';
+import type { EditMPropsInterface } from '@/smart/ui/dialog/dialogs';
 import MappingEditPage from '@/smart/ui/edit/mappingedit';
 import AutoMapper from '@/smart/ui/mapper/AutoMapper';
 import RepoAutoMapper from '@/smart/ui/mapper/repo/RepoAutoMapper';

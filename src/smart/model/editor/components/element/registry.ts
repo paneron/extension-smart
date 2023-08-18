@@ -1,5 +1,5 @@
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { MMELSubprocess } from '@paneron/libmmel/interface/flowcontrolinterface';
+import type { MMELSubprocess } from '@paneron/libmmel/interface/flowcontrolinterface';
 import { isRegistry } from '@paneron/libmmel/util/validation';
 import { createRegistry } from '@/smart/utils/EditorFactory';
 import {
@@ -8,16 +8,17 @@ import {
   getReferenceDCTypeName,
   setReplace,
 } from '@/smart/utils/ModelFunctions';
-import {
+import type {
   EditorDataClass,
-  EditorNode,
+  EditorNode } from '@/smart/model/editormodel';
+import {
   isEditorApproval,
   isEditorDataClass,
   isEditorProcess,
   isEditorRegistry,
 } from '@/smart/model/editormodel';
-import { ModelAction } from '@/smart/model/editor/model';
-import { ElmAction, DataCascadeIDs } from '@/smart/model/editor/components/elements';
+import type { ModelAction } from '@/smart/model/editor/model';
+import type { ElmAction, DataCascadeIDs } from '@/smart/model/editor/components/elements';
 
 export type RegistryCombined = EditorDataClass & {
   title: string;

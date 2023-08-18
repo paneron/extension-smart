@@ -1,5 +1,5 @@
 import React from 'react';
-import { DocParagraph, DocStatement } from '@/smart/model/document';
+import type { DocParagraph, DocStatement } from '@/smart/model/document';
 import StatementEdit from '@/smart/ui/doc/StatementEdit';
 
 const ParagraphEdit: React.FC<{

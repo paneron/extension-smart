@@ -1,6 +1,6 @@
-import { IToastProps } from '@blueprintjs/core';
-import { EditorModel } from '@/smart/model/editormodel';
-import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import type { IToastProps } from '@blueprintjs/core';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import Application27001 from '@/smart/ui/application/ISO27001/Main';
 import Application2060 from '@/smart/ui/application/pas2060/Main';
 

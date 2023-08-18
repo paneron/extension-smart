@@ -1,6 +1,7 @@
 import React from 'react';
-import { IconName, Menu, MenuItem } from '@blueprintjs/core';
-import { ViewerOption } from '@/smart/model/States';
+import type { IconName } from '@blueprintjs/core';
+import { Menu, MenuItem } from '@blueprintjs/core';
+import type { ViewerOption } from '@/smart/model/States';
 
 const items: (keyof ViewerOption)[] = [
   'dvisible',

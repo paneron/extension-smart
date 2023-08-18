@@ -1,19 +1,20 @@
-import {
+import type {
   DataCascadeDCID,
   DataCascadeIDs,
 } from '@/smart/model/editor/components/elements';
-import {
+import type {
   EditorApproval,
   EditorDataClass,
   EditorNode,
   EditorProcess,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorApproval,
   isEditorDataClass,
   isEditorProcess,
 } from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import {
+import type {
   MMELNote,
   MMELProvision,
 } from '@paneron/libmmel/interface/supportinterface';

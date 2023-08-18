@@ -2,11 +2,12 @@
  * This file centralizes the commands related to page (subprocess)
  */
 
-import { Node } from 'react-flow-renderer';
+import type { Node } from 'react-flow-renderer';
 import { createEdge } from '@/smart/utils/EditorFactory';
 import { findUniqueID } from '@/smart/utils/ModelFunctions';
-import { EditorModel, EditorSubprocess, isEditorData } from '@/smart/model/editormodel';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { EditorModel, EditorSubprocess } from '@/smart/model/editormodel';
+import { isEditorData } from '@/smart/model/editormodel';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * Remove an edge of a subprocess (page)

@@ -4,7 +4,7 @@
  */
 
 import { css } from '@emotion/react';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 import { CSSROOTVARIABLES } from '@/css/root.css';
 
 export const flownode_top_left_button_layout = css`

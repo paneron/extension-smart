@@ -4,16 +4,16 @@ import {
   createSubprocessCommand,
   deleteSubprocessCommand,
 } from '@/smart/model/editor/commands/elements';
-import { ModelAction } from '@/smart/model/editor/model';
-import {
+import type { ModelAction } from '@/smart/model/editor/model';
+import type {
   EditorModel,
   EditorProcess,
   EditorSubprocess,
 } from '@/smart/model/editormodel';
-import { RefTextSelection } from '@/smart/model/selectionImport';
+import type { RefTextSelection } from '@/smart/model/selectionImport';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { EditAction } from '@/smart/utils/constants';
-import { DialogSetterInterface } from '@/smart/ui/dialog/EditorDialogs';
+import type { DialogSetterInterface } from '@/smart/ui/dialog/EditorDialogs';
 import EditProcessPage from '@/smart/ui/edit/processedit';
 
 const QuickEditProcess: React.FC<{

@@ -1,4 +1,4 @@
-import { MeasureResult } from '@/smart/model/Measurement';
+import type { MeasureResult } from '@/smart/model/Measurement';
 
 export interface Application2060Setting {
   source: string;

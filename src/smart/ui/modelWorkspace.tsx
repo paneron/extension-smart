@@ -6,17 +6,20 @@ import React, { useContext, useMemo, useState } from 'react';
 
 import ReactFlow, { Controls, ReactFlowProvider } from 'react-flow-renderer';
 
-import { HotkeysTarget2, IToaster, Toaster } from '@blueprintjs/core';
+import type { IToaster } from '@blueprintjs/core';
+import { HotkeysTarget2, Toaster } from '@blueprintjs/core';
 
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
+import type {
+  ModelWrapper } from '@/smart/model/modelwrapper';
 import {
-  getActionReactFlowElementsFrom,
-  ModelWrapper,
+  getActionReactFlowElementsFrom
 } from '@/smart/model/modelwrapper';
-import { createModelHistory, HistoryItem } from '@/smart/model/history';
+import type { HistoryItem } from '@/smart/model/history';
+import { createModelHistory } from '@/smart/model/history';
 import { EdgeTypes, NodeTypes } from '@/smart/model/States';
 import { DataVisibilityButton, IdVisibleButton } from '@/smart/ui/control/buttons';
 import { react_flow_container_layout, sidebar_layout } from '@/css/layout';
@@ -26,14 +29,16 @@ import {
   getHighlightedSVGColorById,
   SearchResultStyles,
 } from '@/smart/utils/SearchFunctions';
-import { SMARTModelStore, SMARTWorkspace } from '@/smart/model/workspace';
+import type { SMARTModelStore, SMARTWorkspace } from '@/smart/model/workspace';
 import WorkspaceFileMenu from '@/smart/ui/menu/WorkspaceFileMenu';
-import { WorkspaceDiagPackage, WorkspaceDialog } from '@/smart/ui/dialog/WorkspaceDiag';
+import type { WorkspaceDiagPackage } from '@/smart/ui/dialog/WorkspaceDiag';
+import { WorkspaceDialog } from '@/smart/ui/dialog/WorkspaceDiag';
 import { getNamespace } from '@/smart/utils/ModelFunctions';
 import { COMMITMSG, getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
-import { EditorModel } from '@/smart/model/editormodel';
-import { HistoryAction, useHistory } from '@/smart/model/editor/history';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { HistoryAction } from '@/smart/model/editor/history';
+import { useHistory } from '@/smart/model/editor/history';
 import { getBreadcrumbs } from '@/smart/ui/common/description/fields';
 import { SelectedNodeDescription } from '@/smart/ui/sidebar/selected';
 import SearchComponentPane from '@/smart/ui/sidebar/search';

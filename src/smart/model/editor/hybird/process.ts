@@ -1,7 +1,8 @@
 import { createNewPage } from '@/smart/utils/ModelAddComponentHandler';
-import { EditorModel, EditorProcess, isEditorProcess } from '@/smart/model/editormodel';
-import { ModelAction } from '@/smart/model/editor/model';
-import { HyEditAction } from '@/smart/model/editor/hybird/distributor';
+import type { EditorModel, EditorProcess } from '@/smart/model/editormodel';
+import { isEditorProcess } from '@/smart/model/editormodel';
+import type { ModelAction } from '@/smart/model/editor/model';
+import type { HyEditAction } from '@/smart/model/editor/hybird/distributor';
 
 type ProcessAddPageHybird = HyEditAction & { task: 'process-add-page' };
 type ProcessRemovePageHybird = HyEditAction & { task: 'process-remove-page' };

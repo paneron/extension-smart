@@ -7,21 +7,21 @@
  * A3. If an undo is needed, execute the 'compiled' actions appended to the undo action
  */
 
-import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
-import {
+import type { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
+import type {
   MMELLink,
   MMELNote,
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import {
+import type {
   EditorDataClass,
   EditorEGate,
   EditorModel,
   EditorProcess,
 } from '@/smart/model/editormodel';
-import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { RegistryCombined } from '@/smart/model/editor/components/element/registry';
+import type { ModelAction } from '@/smart/model/editor/model';
 import { compileDCRefImport, compileRegistryRefImport } from '@/smart/model/editor/hybird/data';
 import { compileEGateEdit } from '@/smart/model/editor/hybird/egateedit';
 import { compileProcessImport } from '@/smart/model/editor/hybird/import';

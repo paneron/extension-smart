@@ -1,6 +1,6 @@
 import React from 'react';
-import { EditorProcess } from '@/smart/model/editormodel';
-import {
+import type { EditorProcess } from '@/smart/model/editormodel';
+import type {
   MMELNote,
   MMELProvision,
   MMELReference,

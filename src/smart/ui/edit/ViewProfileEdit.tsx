@@ -7,19 +7,21 @@ import {
   Switch,
 } from '@blueprintjs/core';
 import React from 'react';
-import { EditorModel } from '@/smart/model/editormodel';
-import { MMELView, VarType } from '@paneron/libmmel/interface/supportinterface';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { MMELView } from '@paneron/libmmel/interface/supportinterface';
+import { VarType } from '@paneron/libmmel/interface/supportinterface';
 import { checkId, defaultItemSorter } from '@/smart/utils/ModelFunctions';
 import { createView } from '@/smart/utils/EditorFactory';
-import {
+import type {
   IListItem,
-  IManageHandler,
+  IManageHandler } from '@/smart/ui/common/fields';
+import {
   NormalComboBox,
   NormalTextField,
 } from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
-import { InputableVarType } from '@/smart/model/Measurement';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { InputableVarType } from '@/smart/model/Measurement';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 const ViewProfileEditPage: React.FC<{
   model: EditorModel;

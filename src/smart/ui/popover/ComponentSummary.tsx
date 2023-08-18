@@ -1,7 +1,7 @@
 import React from 'react';
 import { popoverPanelContainer } from '@/css/layout';
 
-import {
+import type {
   EditorApproval,
   EditorDataClass,
   EditorEGate,
@@ -10,11 +10,12 @@ import {
   EditorProcess,
   EditorRegistry,
   EditorSignalEvent,
-  EditorTimerEvent,
+  EditorTimerEvent } from '@/smart/model/editormodel';
+import {
   getEditorDataClassById,
 } from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { DescribableNodeTypes } from '@/smart/utils/constants';
+import type { DescribableNodeTypes } from '@/smart/utils/constants';
 import { DescribeDC, DescribeRegistry } from '@/smart/ui/common/description/data';
 import ApprovalSummary from '@/smart/ui/popover/components/ApprovalSummary';
 import EGateSummary from '@/smart/ui/popover/components/EGateSummary';

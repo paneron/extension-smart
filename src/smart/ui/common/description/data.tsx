@@ -1,7 +1,7 @@
 import React from 'react';
-import { EditorDataClass, EditorRegistry } from '@/smart/model/editormodel';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
-import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
+import type { EditorDataClass, EditorRegistry } from '@/smart/model/editormodel';
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import { AttributeList, ReferenceList } from '@/smart/ui/common/description/ComponentList';
 import { DescriptionItem, NonEmptyFieldDescription } from '@/smart/ui/common/description/fields';
 

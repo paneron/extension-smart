@@ -1,6 +1,6 @@
 import React from 'react';
-import { EditorAction } from '@/smart/model/editor/state';
-import {
+import type { EditorAction } from '@/smart/model/editor/state';
+import type {
   EditorApproval,
   EditorDataClass,
   EditorEGate,
@@ -13,10 +13,10 @@ import {
   EditorSubprocess,
   EditorTimerEvent,
 } from '@/smart/model/editormodel';
-import { RefTextSelection } from '@/smart/model/selectionImport';
+import type { RefTextSelection } from '@/smart/model/selectionImport';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { QuickEditableNodeTypes } from '@/smart/utils/constants';
-import { DialogSetterInterface } from '@/smart/ui/dialog/EditorDialogs';
+import type { QuickEditableNodeTypes } from '@/smart/utils/constants';
+import type { DialogSetterInterface } from '@/smart/ui/dialog/EditorDialogs';
 import QuickEditApproval from '@/smart/ui/quickedit/approval';
 import QuickEditDataClass from '@/smart/ui/quickedit/dataclass';
 import QuickEditEGate from '@/smart/ui/quickedit/egate';

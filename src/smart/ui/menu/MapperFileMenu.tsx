@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
 import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { createMapProfile, MapProfile } from '@/smart/model/mapmodel';
+import type { MapProfile } from '@/smart/model/mapmodel';
+import { createMapProfile } from '@/smart/model/mapmodel';
 import {
   FILE_TYPE,
   handleMappingOpen,
   saveToFileSystem,
 } from '@/smart/utils/IOFunctions';
-import { MMELRepo } from '@/smart/model/repo';
+import type { MMELRepo } from '@/smart/model/repo';
 
 const MapperFileMenu: React.FC<{
   mapProfile: MapProfile;

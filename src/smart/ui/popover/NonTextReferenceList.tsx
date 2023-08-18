@@ -1,6 +1,6 @@
 import { Menu, MenuItem } from '@blueprintjs/core';
 import React from 'react';
-import {
+import type {
   BINARY_TYPE,
   MMELFigure,
   MMELTable,

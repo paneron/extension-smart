@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ReactFlow from 'react-flow-renderer';
 import { reactFlowContainerLayout } from '@/css/layout';
-import { ProvisionRDF } from '@/smart/model/SemanticTriple';
+import type { ProvisionRDF } from '@/smart/model/SemanticTriple';
 import { getElementsFromRDF } from '@/smart/utils/nlp/nlp';
 
 const RDFDiagram: React.FC<{

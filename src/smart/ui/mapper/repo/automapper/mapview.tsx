@@ -1,5 +1,6 @@
 import React from 'react';
-import ReactFlow, { Elements, ReactFlowProvider } from 'react-flow-renderer';
+import type { Elements } from 'react-flow-renderer';
+import ReactFlow, { ReactFlowProvider } from 'react-flow-renderer';
 import { RepoLegend } from '@/smart/utils/repo/CommonFunctions';
 import LegendPane from '@/smart/ui/common/description/LegendPane';
 import RepoEdge from '@/smart/ui/flowui/RepoEdge';

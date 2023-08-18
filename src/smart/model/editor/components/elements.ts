@@ -1,31 +1,34 @@
 import { useReducer } from 'react';
+import type {
+  RoleAttribute } from '@/smart/utils/handler/cascadeModelHandler';
 import {
   refDCReplace,
   regElmReplace,
   dcElmReplace,
-  RoleAttribute,
   roleReplace,
   typeEnumReplace,
   tableReplace,
   figReplace,
 } from '@/smart/utils/handler/cascadeModelHandler';
 import * as Logger from '@/lib/logger';
+import type {
+  EditorNode } from '@/smart/model/editormodel';
 import {
-  EditorNode,
   isEditorDataClass,
   isEditorRegistry,
 } from '@/smart/model/editormodel';
-import { UndoReducerInterface } from '@/smart/model/editor/interface';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { UndoReducerInterface } from '@/smart/model/editor/interface';
+import type { ModelAction } from '@/smart/model/editor/model';
 import { addCommonElms, delCommonElms, editCommonElms } from '@/smart/model/editor/components/element/common';
 import { addDC, editDC } from '@/smart/model/editor/components/element/dc';
+import type {
+  RegistryCombined } from '@/smart/model/editor/components/element/registry';
 import {
   addRegistry,
   delRegistry,
-  editRegistry,
-  RegistryCombined,
+  editRegistry
 } from '@/smart/model/editor/components/element/registry';
-import { ItemAction } from '@/smart/model/editor/components/itemTemplate';
+import type { ItemAction } from '@/smart/model/editor/components/itemTemplate';
 
 interface RoleCascadeAction {
   subtask: 'process-role';

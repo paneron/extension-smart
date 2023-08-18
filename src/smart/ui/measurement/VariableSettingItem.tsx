@@ -1,6 +1,6 @@
 import React from 'react';
 import { CSSROOTVARIABLES } from '@/css/root.css';
-import { InputableVarType, VarInputInterface } from '@/smart/model/Measurement';
+import type { InputableVarType, VarInputInterface } from '@/smart/model/Measurement';
 import { VarType } from '@paneron/libmmel/interface/supportinterface';
 import BooleanMeasureEdit from '@/smart/ui/measurement/fields/boolean';
 import TableComboBox from '@/smart/ui/measurement/fields/TableComboBox';

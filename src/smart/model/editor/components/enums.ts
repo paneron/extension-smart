@@ -1,8 +1,10 @@
-import { MMELEnum } from '@paneron/libmmel/interface/datainterface';
-import { EditorNode, isEditorDataClass } from '@/smart/model/editormodel';
-import { UndoReducerInterface } from '@/smart/model/editor/interface';
-import { ModelAction } from '@/smart/model/editor/model';
-import { ItemAction, useItems } from '@/smart/model/editor/components/itemTemplate';
+import type { MMELEnum } from '@paneron/libmmel/interface/datainterface';
+import type { EditorNode } from '@/smart/model/editormodel';
+import { isEditorDataClass } from '@/smart/model/editormodel';
+import type { UndoReducerInterface } from '@/smart/model/editor/interface';
+import type { ModelAction } from '@/smart/model/editor/model';
+import type { ItemAction } from '@/smart/model/editor/components/itemTemplate';
+import { useItems } from '@/smart/model/editor/components/itemTemplate';
 
 type command = 'enums';
 type ownType = MMELEnum;

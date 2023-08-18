@@ -1,7 +1,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useMemo, useState } from 'react';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import {
+import type {
   EditorApproval,
   EditorModel,
   EditorRegistry,
@@ -21,7 +21,7 @@ import {
   ReferenceSelector,
 } from '@/smart/ui/common/fields';
 import { EditPageButtons } from '@/smart/ui/edit/commons';
-import {
+import type {
   MMELReference,
   MMELRole,
 } from '@paneron/libmmel/interface/supportinterface';
@@ -29,7 +29,7 @@ import { DescriptionItem } from '@/smart/ui/common/description/fields';
 import RoleSelector from '@/smart/ui/edit/components/RoleSelector';
 import RegistrySelector from '@/smart/ui/edit/components/RegistrySelector';
 import SimpleReferenceSelector from '@/smart/ui/edit/components/ReferenceSelector';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { ModelAction } from '@/smart/model/editor/model';
 import PopoverChangeIDButton from '@/smart/ui/popover/PopoverChangeIDButton';
 import { editElmCommand } from '@/smart/model/editor/commands/elements';
 

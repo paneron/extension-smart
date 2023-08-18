@@ -1,5 +1,5 @@
 import { Button, Text } from '@blueprintjs/core';
-import { RepoItems } from '@/smart/model/repo';
+import type { RepoItems } from '@/smart/model/repo';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 

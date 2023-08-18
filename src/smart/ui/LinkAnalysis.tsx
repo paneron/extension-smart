@@ -1,4 +1,4 @@
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import RepoIndexMainView from '@/smart/ui/mapper/repo/RepoIndexMainView';
 import React from 'react';

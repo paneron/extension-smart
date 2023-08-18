@@ -15,7 +15,7 @@ import {
   mgd_tabs__item__unselected,
 } from '@/css/MGDTabs';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import { EditorModel } from '@/smart/model/editormodel';
+import type { EditorModel } from '@/smart/model/editormodel';
 import DataClassEditPage from '@/smart/ui/edit/dataclassedit';
 import EnumEditPage from '@/smart/ui/edit/enumedit';
 import FigureEditPage from '@/smart/ui/edit/figure/FigureEdit';
@@ -28,7 +28,7 @@ import SectionEditPage from '@/smart/ui/edit/SectionEditPage';
 import TableEditPage from '@/smart/ui/edit/table/TableEdit';
 import TermsEditPage from '@/smart/ui/edit/TermEdit';
 import ViewProfileEditPage from '@/smart/ui/edit/ViewProfileEdit';
-import { EditorAction } from '@/smart/model/editor/state';
+import type { EditorAction } from '@/smart/model/editor/state';
 
 export enum SETTINGPAGE {
   METAPAGE = 'meta',

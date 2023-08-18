@@ -4,26 +4,27 @@
  * This file defines the data structure of this payload
  */
 
-import { XYPosition } from 'react-flow-renderer';
-import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
-import {
+import type { XYPosition } from 'react-flow-renderer';
+import type { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
+import type {
   EditorModel,
   EditorNode,
+  ModelType } from '@/smart/model/editormodel';
+import {
   getEditorRoleById,
-  isEditorData,
-  ModelType,
+  isEditorData
 } from '@/smart/model/editormodel';
 import { MMELtoFlowEntries } from '@/smart/model/States';
-import {
+import type {
   MMELComment,
   MMELFigure,
   MMELLink,
   MMELRole,
   MMELTable,
 } from '@paneron/libmmel/interface/supportinterface';
-import { SerializedStyles } from '@emotion/react';
-import React from 'react';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { SerializedStyles } from '@emotion/react';
+import type React from 'react';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
 
 export interface EdgeContainer {
   id: string;

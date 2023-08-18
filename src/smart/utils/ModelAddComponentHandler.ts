@@ -1,5 +1,5 @@
-import { XYPosition } from 'react-flow-renderer';
-import {
+import type { XYPosition } from 'react-flow-renderer';
+import type {
   EditorApproval,
   EditorEGate,
   EditorEndEvent,
@@ -13,7 +13,7 @@ import {
 } from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { capitalizeString, findUniqueID, trydefaultID } from '@/smart/utils/ModelFunctions';
-import { NewComponentTypes } from '@/smart/utils/constants';
+import type { NewComponentTypes } from '@/smart/utils/constants';
 import {
   createApproval,
   createEGate,
@@ -25,8 +25,8 @@ import {
   createSubprocessComponent,
   createTimerEvent,
 } from '@/smart/utils/EditorFactory';
-import { HistoryItem } from '@/smart/model/history';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { HistoryItem } from '@/smart/model/history';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 type Elements = Record<string, EditorNode>;
 

@@ -4,7 +4,8 @@
 import { Button } from '@blueprintjs/core';
 import { jsx } from '@emotion/react';
 import React from 'react';
-import { RefObject, useState } from 'react';
+import type { RefObject } from 'react';
+import { useState } from 'react';
 import {
   mgd_input,
   mgd_label,
@@ -13,7 +14,7 @@ import {
 } from '@/css/form';
 import { u__display__block, u__display__none } from '@/css/utility';
 import MGDButtonGroup from '@/smart/MGDComponents/MGDButtonGroup';
-import { IViewListInterface } from '@/smart/ui/common/fields';
+import type { IViewListInterface } from '@/smart/ui/common/fields';
 
 const ListViewPane: React.FC<IViewListInterface> = ({
   filterName,

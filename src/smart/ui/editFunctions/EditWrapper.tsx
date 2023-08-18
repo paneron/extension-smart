@@ -1,18 +1,22 @@
-import {
+import type {
   HotkeyConfig,
+  IToaster } from '@blueprintjs/core';
+import {
   HotkeysTarget2,
-  IToaster,
   Toaster,
 } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext } from 'react';
 import { useState } from 'react';
-import { addToLog, ChangeLog } from '@/smart/model/changelog';
-import { EditorAction, useEditorState } from '@/smart/model/editor/state';
-import { EditorModel, isEditorProcess } from '@/smart/model/editormodel';
+import type { ChangeLog } from '@/smart/model/changelog';
+import { addToLog } from '@/smart/model/changelog';
+import type { EditorAction } from '@/smart/model/editor/state';
+import { useEditorState } from '@/smart/model/editor/state';
+import type { EditorModel } from '@/smart/model/editormodel';
+import { isEditorProcess } from '@/smart/model/editormodel';
 import { createModelHistory } from '@/smart/model/history';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
-import { EditorState } from '@/smart/model/States';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { EditorState } from '@/smart/model/States';
 import { addExisingProcessToPage } from '@/smart/utils/ModelAddComponentHandler';
 import ModelEditor from '@/smart/ui/maineditor';
 

@@ -1,15 +1,18 @@
-import { Handle, NodeProps, Position } from 'react-flow-renderer';
-import { FC, useState } from 'react';
-import {
+import type { NodeProps } from 'react-flow-renderer';
+import { Handle, Position } from 'react-flow-renderer';
+import type { FC } from 'react';
+import { useState } from 'react';
+import type {
   EditorApproval,
   EditorEGate,
   EditorNode,
   EditorProcess,
-  EditorSignalEvent,
+  EditorSignalEvent } from '@/smart/model/editormodel';
+import {
   isEditorRegistry,
   isMMELTable,
 } from '@/smart/model/editormodel';
-import { NodeCallBack } from '@/smart/model/FlowContainer';
+import type { NodeCallBack } from '@/smart/model/FlowContainer';
 import {
   DatacubeShape,
   EgateShape,
@@ -36,7 +39,7 @@ import ViewMappingbutton from '@/smart/ui/mapper/viewmapbutton';
 import ViewWorkspaceButton from '@/smart/ui/workspace/ViewDataWorkspaceButton';
 import { Button, Classes, Dialog, Icon } from '@blueprintjs/core';
 import NodeIDField from '@/smart/ui/flowui/NodeIDField';
-import {
+import type {
   MMELFigure,
   MMELTable,
 } from '@paneron/libmmel/interface/supportinterface';

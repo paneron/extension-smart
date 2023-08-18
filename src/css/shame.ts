@@ -8,7 +8,7 @@
  */
 
 import { css } from '@emotion/react';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 import { CSSROOTVARIABLES } from '@/css/root.css';
 
 export const shameLabel: CSSProperties = {

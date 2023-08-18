@@ -8,13 +8,15 @@ import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { ReactFlowProvider } from 'react-flow-renderer';
 import { sidebar_layout } from '@/css/layout';
-import { MMELJSON } from '@/smart/model/json';
+import type { MMELJSON } from '@/smart/model/json';
+import type {
+  ModelWrapper } from '@/smart/model/modelwrapper';
 import {
-  createEditorModelWrapper,
-  ModelWrapper,
+  createEditorModelWrapper
 } from '@/smart/model/modelwrapper';
-import { MMELRepo } from '@/smart/model/repo';
-import { ProvisionRDF, RDFVersion } from '@/smart/model/SemanticTriple';
+import type { MMELRepo } from '@/smart/model/repo';
+import type { ProvisionRDF } from '@/smart/model/SemanticTriple';
+import { RDFVersion } from '@/smart/model/SemanticTriple';
 import { buildModelLinks } from '@/smart/utils/ModelFunctions';
 import { getPathByNS, JSONToMMEL, RepoFileType } from '@/smart/utils/repo/io';
 import { LoadingScreen } from '@/smart/ui/common/Loading';

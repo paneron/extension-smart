@@ -5,29 +5,33 @@ import { jsx } from '@emotion/react';
 import React, { useContext, useMemo, useState } from 'react';
 
 import ReactFlow, { Controls, ReactFlowProvider } from 'react-flow-renderer';
+import type {
+  IToaster,
+  IToastProps } from '@blueprintjs/core';
 import {
   ControlGroup,
-  IToaster,
-  IToastProps,
   Toaster,
 } from '@blueprintjs/core';
 import makeSidebar from '@riboseinc/paneron-extension-kit/widgets/Sidebar';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 
+import type {
+  ModelWrapper } from '@/smart/model/modelwrapper';
 import {
-  getViewerReactFlowElementsFrom,
-  ModelWrapper,
+  getViewerReactFlowElementsFrom
 } from '@/smart/model/modelwrapper';
+import type {
+  HistoryItem,
+  PageHistory,
+  RepoHistory } from '@/smart/model/history';
 import {
   addToHistory,
   createModelHistory,
-  HistoryItem,
-  PageHistory,
-  popPage,
-  RepoHistory,
+  popPage
 } from '@/smart/model/history';
-import { EdgeTypes, FunModel, NodeTypes, ViewerOption } from '@/smart/model/States';
+import type { FunModel, ViewerOption } from '@/smart/model/States';
+import { EdgeTypes, NodeTypes } from '@/smart/model/States';
 import MGDButton from '@/smart/MGDComponents/MGDButton';
 import { MGDButtonType } from '@/css/MGDButton';
 import { react_flow_container_layout, sidebar_layout } from '@/css/layout';
@@ -37,30 +41,31 @@ import {
   getHighlightedStyleById,
   getHighlightedSVGColorById,
 } from '@/smart/utils/SearchFunctions';
-import { SidebarBlockConfig } from '@riboseinc/paneron-extension-kit/widgets/Sidebar/Block';
+import type { SidebarBlockConfig } from '@riboseinc/paneron-extension-kit/widgets/Sidebar/Block';
 import ViewToolMenu from '@/smart/ui/menu/ViewToolMenu';
 import MeasureCheckPane from '@/smart/ui/measurement/MeasurementValidationPane';
-import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import type { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import LegendPane from '@/smart/ui/common/description/LegendPane';
 import { loadPlugin } from '@/smart/ui/application/plugin';
 import { getNamespace } from '@/smart/utils/ModelFunctions';
 import * as Logger from '@/lib/logger';
 import ChecklistConfigPane from '@/smart/ui/checklist/CheckListConfigPane';
-import {
+import type {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import SimulationPane from '@/smart/ui/sidebar/SimulationPane';
 import RegistrySummary from '@/smart/ui/summary/RegistrySummary';
 import ProvisionSettings from '@/smart/ui/summary/ProvisionSettings';
 import VersionTrackerSettingPane from '@/smart/ui/version/VersionTrackerSetting';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import RepoBreadcrumb from '@/smart/ui/common/description/RepoBreadcrumb';
 import ViewOptionMenu from '@/smart/ui/menu/ViewOptionMenu';
 import MenuButton from '@/smart/ui/menu/MenuButton';
-import { EditorModel } from '@/smart/model/editormodel';
-import { HistoryAction, useHistory } from '@/smart/model/editor/history';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { HistoryAction } from '@/smart/model/editor/history';
+import { useHistory } from '@/smart/model/editor/history';
 import { getBreadcrumbs } from '@/smart/ui/common/description/fields';
 import { SelectedNodeDescription } from '@/smart/ui/sidebar/selected';
 import SearchComponentPane from '@/smart/ui/sidebar/search';

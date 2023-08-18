@@ -1,21 +1,22 @@
-import {
+import type {
   EditorDataClass,
   EditorModel,
   EditorNode,
   EditorProcess,
   EditorRegistry,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorDataClass,
   isEditorProcess,
   isEditorRegistry,
 } from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
-import {
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type {
   MMELEdge,
   MMELSubprocessComponent,
 } from '@paneron/libmmel/interface/flowcontrolinterface';
-import {
+import type {
   MMELFigure,
   MMELLink,
   MMELNote,

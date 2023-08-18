@@ -1,8 +1,8 @@
 import React from 'react';
 import { useMemo } from 'react';
-import { EditorModel } from '@/smart/model/editormodel';
-import { VarInputInterface } from '@/smart/model/Measurement';
-import { MMELVariable } from '@paneron/libmmel/interface/supportinterface';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { VarInputInterface } from '@/smart/model/Measurement';
+import type { MMELVariable } from '@paneron/libmmel/interface/supportinterface';
 import { NormalTextField, NormalComboBox } from '@/smart/ui/common/fields';
 
 function calOptions(

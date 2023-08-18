@@ -1,11 +1,12 @@
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useMemo } from 'react';
-import { MMELJSON } from '@/smart/model/json';
+import type { MMELJSON } from '@/smart/model/json';
+import type {
+  ModelWrapper } from '@/smart/model/modelwrapper';
 import {
-  createEditorModelWrapper,
-  ModelWrapper,
+  createEditorModelWrapper
 } from '@/smart/model/modelwrapper';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import { getAllRepoModels } from '@/smart/utils/repo/CommonFunctions';
 import { JSONToMMEL } from '@/smart/utils/repo/io';
 import { LoadingScreen } from '@/smart/ui/common/Loading';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {
+import type {
   EditorApproval,
   EditorEGate,
   EditorModel,
@@ -7,7 +7,7 @@ import {
   EditorSignalEvent,
   EditorTimerEvent,
 } from '@/smart/model/editormodel';
-import {
+import type {
   DeletableNodeTypes,
   EditableNodeTypes,
   EditAction,
@@ -18,7 +18,7 @@ import EditApprovalPage from '@/smart/ui/edit/approvaledit';
 import EditEGatePage from '@/smart/ui/edit/egateedit';
 import EditTimerPage from '@/smart/ui/edit/timeredit';
 import EditSignalEventPage from '@/smart/ui/edit/signaleventedit';
-import { EditorAction } from '@/smart/model/editor/state';
+import type { EditorAction } from '@/smart/model/editor/state';
 import { ConfirmDialog } from '@/smart/ui/dialog/confirmdialog';
 
 export type DialogSetterInterface = (

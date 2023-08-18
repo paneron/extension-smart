@@ -1,11 +1,12 @@
+import type {
+  EditorModel } from '@/smart/model/editormodel';
 import {
-  EditorModel,
   isEditorApproval,
   isEditorProcess,
 } from '@/smart/model/editormodel';
 import { getNamespace, referenceSorter } from '@/smart/utils/ModelFunctions';
 import * as Logger from '@/lib/logger';
-import { MapProfile } from '@/smart/model/mapmodel';
+import type { MapProfile } from '@/smart/model/mapmodel';
 import { Liquid } from 'liquidjs';
 import { MMELToSerializable } from '@/smart/utils/repo/io';
 

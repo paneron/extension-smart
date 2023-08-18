@@ -6,9 +6,10 @@ import {
   flowPercentageLabel,
   flowProgressLabel,
 } from '@/css/visual';
-import { ChecklistPackage } from '@/smart/model/checklist';
+import type { ChecklistPackage } from '@/smart/model/checklist';
+import type {
+  EditorNode } from '@/smart/model/editormodel';
 import {
-  EditorNode,
   isEditorEgate,
   isEditorProcess,
   isEditorRegistry,

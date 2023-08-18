@@ -1,13 +1,15 @@
-import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
-import { RoleAttribute } from '@/smart/utils/handler/cascadeModelHandler';
+import type { MMELRole } from '@paneron/libmmel/interface/supportinterface';
+import type { RoleAttribute } from '@/smart/utils/handler/cascadeModelHandler';
+import type {
+  EditorNode } from '@/smart/model/editormodel';
 import {
-  EditorNode,
   isEditorApproval,
   isEditorProcess,
 } from '@/smart/model/editormodel';
-import { UndoReducerInterface } from '@/smart/model/editor/interface';
-import { ModelAction } from '@/smart/model/editor/model';
-import { ItemAction, useItems } from '@/smart/model/editor/components/itemTemplate';
+import type { UndoReducerInterface } from '@/smart/model/editor/interface';
+import type { ModelAction } from '@/smart/model/editor/model';
+import type { ItemAction } from '@/smart/model/editor/components/itemTemplate';
+import { useItems } from '@/smart/model/editor/components/itemTemplate';
 
 type command = 'roles';
 type ownType = MMELRole;

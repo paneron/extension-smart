@@ -3,17 +3,20 @@
  * They are migrated to TS codes (either CSSProperties or Styled)
  */
 
-import { css, SerializedStyles } from '@emotion/react';
-import { CSSProperties } from 'react';
-import {
+import type { SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
+import type { CSSProperties } from 'react';
+import type {
   MapCoverType,
-  MappingResultStyles,
-  MappingSourceStyles,
-  MapSourceType,
-} from '@/smart/utils/map/MappingCalculator';
+  MapSourceType } from '@/smart/utils/map/MappingCalculator';
 import {
+  MappingResultStyles,
+  MappingSourceStyles
+} from '@/smart/utils/map/MappingCalculator';
+import type {
   MapDiffCoverType,
-  MapDiffSourceType,
+  MapDiffSourceType } from '@/smart/utils/map/MappingDiff';
+import {
   MappingDiffResultStyles,
   MappingDiffSourceStyles,
 } from '@/smart/utils/map/MappingDiff';

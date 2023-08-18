@@ -1,13 +1,14 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import { EditorModel } from '@/smart/model/editormodel';
-import { MMELEnumValue } from '@paneron/libmmel/interface/datainterface';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { MMELEnumValue } from '@paneron/libmmel/interface/datainterface';
 import { createEnumValue } from '@/smart/utils/EditorFactory';
 import { NormalTextField } from '@/smart/ui/common/fields';
-import ListWithPopoverItem, {
+import type {
   IMMELObject,
 } from '@/smart/ui/common/listmanagement/listPopoverItem';
+import ListWithPopoverItem from '@/smart/ui/common/listmanagement/listPopoverItem';
 
 const EnumValueEditPage: React.FC<{
   values: Record<string, MMELEnumValue>;

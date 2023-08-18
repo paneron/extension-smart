@@ -2,8 +2,8 @@
  * This file centralizes the commands related to roles
  */
 
-import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { MMELRole } from '@paneron/libmmel/interface/supportinterface';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * Add role

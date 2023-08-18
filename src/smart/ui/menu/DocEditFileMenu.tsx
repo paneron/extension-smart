@@ -1,7 +1,7 @@
 import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext } from 'react';
-import { MMELDocument } from '@/smart/model/document';
+import type { MMELDocument } from '@/smart/model/document';
 import { docToText } from '@/smart/utils/DocumentFunctions';
 import { createNewMMELDocument } from '@/smart/utils/EditorFactory';
 import {

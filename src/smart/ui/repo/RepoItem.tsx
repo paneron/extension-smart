@@ -1,7 +1,7 @@
 import { Card, Icon, Menu, MenuItem, Text } from '@blueprintjs/core';
 import { ContextMenu2, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
-import { RepoItems } from '@/smart/model/repo';
+import type { RepoItems } from '@/smart/model/repo';
 
 type VF = () => void;
 

@@ -1,11 +1,12 @@
 import React from 'react';
-import {
+import type {
   EditorModel,
-  EditorRegistry,
+  EditorRegistry } from '@/smart/model/editormodel';
+import {
   isEditorRegistry,
 } from '@/smart/model/editormodel';
 import { defaultItemSorter } from '@/smart/utils/ModelFunctions';
-import {
+import type {
   IAdditionalListButton,
   IListItem,
   IViewListInterface,

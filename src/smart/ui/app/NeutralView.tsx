@@ -5,12 +5,13 @@ import { jsx } from '@emotion/react';
 
 import { css } from '@emotion/react';
 import React from 'react';
+import type {
+  ModuleName } from '@/smart/model/module/appModule';
 import {
   ModuleList,
-  ModuleName,
   MODULE_CONFIGURATION,
 } from '@/smart/model/module/appModule';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
 
 /**
  * The displayed UI when nothing is open.

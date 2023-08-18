@@ -6,10 +6,10 @@
 
 import React from 'react';
 import { getRootName } from '@/smart/utils/ModelFunctions';
-import { HistoryAction } from '@/smart/model/editor/history';
-import { EditorModel } from '@/smart/model/editormodel';
-import { ModelWrapper } from '@/smart/model/modelwrapper';
-import { MMELRepo } from '@/smart/model/repo';
+import type { HistoryAction } from '@/smart/model/editor/history';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
+import type { MMELRepo } from '@/smart/model/repo';
 
 interface Breadcrumb {
   label: JSX.Element;

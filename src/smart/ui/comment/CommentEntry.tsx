@@ -1,6 +1,6 @@
 import { Button, ButtonGroup, Switch } from '@blueprintjs/core';
 import React from 'react';
-import { CommentInstance } from '@/smart/utils/Comments';
+import type { CommentInstance } from '@/smart/utils/Comments';
 import CommentField from '@/smart/ui/comment/CommentField';
 
 const CommentEntry: React.FC<{

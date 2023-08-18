@@ -1,6 +1,7 @@
-import { MMELTerm } from '@paneron/libmmel/interface/supportinterface';
-import { UndoReducerInterface } from '@/smart/model/editor/interface';
-import { ItemAction, useItems } from '@/smart/model/editor/components/itemTemplate';
+import type { MMELTerm } from '@paneron/libmmel/interface/supportinterface';
+import type { UndoReducerInterface } from '@/smart/model/editor/interface';
+import type { ItemAction } from '@/smart/model/editor/components/itemTemplate';
+import { useItems } from '@/smart/model/editor/components/itemTemplate';
 
 type command = 'terms';
 type ownType = MMELTerm;

@@ -1,11 +1,13 @@
-import { EditorNode, isEditorDataClass } from '@/smart/model/editormodel';
-import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { MMELEnum } from '@paneron/libmmel/interface/datainterface';
-import {
+import type { EditorNode } from '@/smart/model/editormodel';
+import { isEditorDataClass } from '@/smart/model/editormodel';
+import type { DataType } from '@paneron/libmmel/interface/baseinterface';
+import type { MMELEnum } from '@paneron/libmmel/interface/datainterface';
+import type {
   BASICTYPES,
+  SearchableNodeTypes } from '@/smart/utils/constants';
+import {
   DATATYPE,
-  searchableNodeDataTypes,
-  SearchableNodeTypes,
+  searchableNodeDataTypes
 } from '@/smart/utils/constants';
 
 export function isSearchableNodeTypes(x: DataType): x is SearchableNodeTypes {

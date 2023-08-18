@@ -1,13 +1,15 @@
-import { Text, FormGroup, IToastProps, Button } from '@blueprintjs/core';
+import type { IToastProps } from '@blueprintjs/core';
+import { Text, FormGroup, Button } from '@blueprintjs/core';
 import React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
-import { EditorModel } from '@/smart/model/editormodel';
-import { MeasureResult } from '@/smart/model/Measurement';
-import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
-import {
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { MeasureResult } from '@/smart/model/Measurement';
+import type { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import type {
   MMELVariable,
-  MMELView,
+  MMELView } from '@paneron/libmmel/interface/supportinterface';
+import {
   VarType,
 } from '@paneron/libmmel/interface/supportinterface';
 import { measureTest } from '@/smart/utils/measurement/Checker';

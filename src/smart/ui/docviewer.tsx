@@ -1,10 +1,10 @@
-import { MMELRepo } from '@/smart/model/repo';
+import type { MMELRepo } from '@/smart/model/repo';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import SMARTDocumentView from '@/smart/ui/mapper/document/DocumentView';
 import { useContext } from 'react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
-import { MMELDocument } from '@/smart/model/document';
+import type { MMELDocument } from '@/smart/model/document';
 import { LoadingScreen } from '@/smart/ui/common/Loading';
 import React from 'react';
 import { DOCVERSION } from '@/smart/utils/constants';

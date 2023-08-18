@@ -1,6 +1,6 @@
 import React from 'react';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
-import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import { ReferenceList } from '@/smart/ui/common/description/ComponentList';
 import { NonEmptyFieldDescription } from '@/smart/ui/common/description/fields';
 import { CLDescriptionItem } from '@/smart/ui/checklist/CustomFields';

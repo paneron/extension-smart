@@ -1,6 +1,6 @@
-import { ChangeLog } from '@/smart/model/changelog';
-import { EditorModel } from '@/smart/model/editormodel';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { ChangeLog } from '@/smart/model/changelog';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * For undo / redo, that return the opposite action

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMemo } from 'react';
-import { MMELDocument } from '@/smart/model/document';
-import { MapSet } from '@/smart/model/mapmodel';
+import type { MMELDocument } from '@/smart/model/document';
+import type { MapSet } from '@/smart/model/mapmodel';
 import { calculateDocumentMapping } from '@/smart/utils/DocumentFunctions';
 import SectionView from '@/smart/ui/mapper/document/SectionView';
 

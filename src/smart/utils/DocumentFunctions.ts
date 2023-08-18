@@ -1,6 +1,6 @@
 import React from 'react';
-import { DocMapIndex, MMELDocument } from '@/smart/model/document';
-import { MappingType } from '@/smart/model/mapmodel';
+import type { DocMapIndex, MMELDocument } from '@/smart/model/document';
+import type { MappingType } from '@/smart/model/mapmodel';
 import { DOCVERSION } from '@/smart/utils/constants';
 import { createNewMMELDocument } from '@/smart/utils/EditorFactory';
 import * as Logger from '@/lib/logger';

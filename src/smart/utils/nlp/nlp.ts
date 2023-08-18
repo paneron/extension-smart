@@ -1,15 +1,17 @@
-import { ArrowHeadType, Edge, Elements, Node } from 'react-flow-renderer';
+import type { Edge, Elements, Node } from 'react-flow-renderer';
+import { ArrowHeadType } from 'react-flow-renderer';
 import { isEditorProcess } from '@/smart/model/editormodel';
-import { ModelWrapper } from '@/smart/model/modelwrapper';
-import {
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
+import type {
   NLPItem,
   NLPJSON,
   NLPToken,
   NLPTreeNode,
   ProvisionRDF,
-  RDFVersion,
   STNode,
-  STRelation,
+  STRelation } from '@/smart/model/SemanticTriple';
+import {
+  RDFVersion
 } from '@/smart/model/SemanticTriple';
 import * as Logger from '@/lib/logger';
 

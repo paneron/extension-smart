@@ -1,12 +1,12 @@
 import React from 'react';
-import { EditorModel } from '@/smart/model/editormodel';
-import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 import { checkId, defaultItemSorter } from '@/smart/utils/ModelFunctions';
 import { createTable } from '@/smart/utils/EditorFactory';
-import { IListItem, IManageHandler } from '@/smart/ui/common/fields';
+import type { IListItem, IManageHandler } from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
 import TableItemEditPage from '@/smart/ui/edit/table/TableItemEdit';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 const TableEditPage: React.FC<{
   model: EditorModel;

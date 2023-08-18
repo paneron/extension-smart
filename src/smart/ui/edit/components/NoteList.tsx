@@ -1,13 +1,14 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { useMemo } from 'react';
-import { EditorModel } from '@/smart/model/editormodel';
-import { RefTextSelection } from '@/smart/model/selectionImport';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { RefTextSelection } from '@/smart/model/selectionImport';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import {
+import type {
   MMELNote,
   MMELReference,
-  NOTE_TYPE,
+  NOTE_TYPE } from '@paneron/libmmel/interface/supportinterface';
+import {
   NOTE_TYPES,
 } from '@paneron/libmmel/interface/supportinterface';
 import { createNote } from '@/smart/utils/EditorFactory';

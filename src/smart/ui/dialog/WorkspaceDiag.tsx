@@ -2,8 +2,8 @@ import { Dialog } from '@blueprintjs/core';
 import React from 'react';
 import { dialogLayout } from '@/css/layout';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import { EditorModel } from '@/smart/model/editormodel';
-import { SMARTDocumentStore, SMARTModelStore } from '@/smart/model/workspace';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { SMARTDocumentStore, SMARTModelStore } from '@/smart/model/workspace';
 import RegistryDocManagement from '@/smart/ui/workspace/RegistryDocManagement';
 import WorkspaceRegistryList from '@/smart/ui/workspace/RegistryList';
 

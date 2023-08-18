@@ -1,12 +1,14 @@
-import { Edge, Elements, Node, Position } from 'react-flow-renderer';
-import { MapProfile } from '@/smart/model/mapmodel';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { Edge, Elements, Node } from 'react-flow-renderer';
+import { Position } from 'react-flow-renderer';
+import type { MapProfile } from '@/smart/model/mapmodel';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import { createNodeContent } from '@/smart/ui/mapper/repo/RepoMapNode';
+import type {
+  RepoNodeType } from '@/smart/utils/repo/CommonFunctions';
 import {
   createEdge,
   getRepoItemDesc,
-  RepoLegend,
-  RepoNodeType,
+  RepoLegend
 } from '@/smart/utils/repo/CommonFunctions';
 import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
 

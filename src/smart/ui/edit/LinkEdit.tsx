@@ -1,12 +1,13 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import {
+import type {
   LINK_TYPE,
-  LINK_TYPES,
-  MMELLink,
+  MMELLink } from '@paneron/libmmel/interface/supportinterface';
+import {
+  LINK_TYPES
 } from '@paneron/libmmel/interface/supportinterface';
 import { NormalComboBox, NormalTextField } from '@/smart/ui/common/fields';
-import { IMMELObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
+import type { IMMELObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
 
 export function matchLinkFilter(x: IMMELObject, filter: string): boolean {
   const link = x as MMELLink;

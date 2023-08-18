@@ -2,8 +2,9 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
+import type {
+  RefObject } from 'react';
 import React, {
-  RefObject,
   useContext,
   useEffect,
   useMemo,
@@ -11,49 +12,56 @@ import React, {
 } from 'react';
 
 import ModelDiagram from '@/smart/ui/mapper/ModelDiagram';
-import {
+import type {
   EditorModel,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   getEditorNodeInfoById,
   ModelType,
 } from '@/smart/model/editormodel';
+import type {
+  MapProfile,
+  MapSet } from '@/smart/model/mapmodel';
 import {
   buildHistoryMap,
   createNewMapSet,
   getMappings,
-  indexModel,
-  MapProfile,
-  MapSet,
+  indexModel
 } from '@/smart/model/mapmodel';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
+import type {
+  IToaster,
+  IToastProps } from '@blueprintjs/core';
 import {
   Button,
   ControlGroup,
   HotkeysTarget2,
-  IToaster,
-  IToastProps,
   Toaster,
 } from '@blueprintjs/core';
 import MapperFileMenu from '@/smart/ui/menu/MapperFileMenu';
-import { createPageHistory, PageHistory } from '@/smart/model/history';
-import {
-  isModelWrapper,
+import type { PageHistory } from '@/smart/model/history';
+import { createPageHistory } from '@/smart/model/history';
+import type {
   MapperSelectedInterface,
   MapperState,
-  MapperViewOption,
+  MapperViewOption } from '@/smart/model/States';
+import {
+  isModelWrapper
 } from '@/smart/model/States';
 import { createNewEditorModel } from '@/smart/utils/EditorFactory';
-import { createEditorModelWrapper, ModelWrapper } from '@/smart/model/modelwrapper';
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
+import { createEditorModelWrapper } from '@/smart/model/modelwrapper';
+import type {
+  MapDiffEdgeResult } from '@/smart/utils/map/MappingCalculator';
 import {
   calculateMapping,
   filterMappings,
   filterMappingsForDocument,
-  MapDiffEdgeResult,
   mergeMapProfiles,
 } from '@/smart/utils/map/MappingCalculator';
 import MappingCanvus from '@/smart/ui/mapper/MappingsCanvus';
 import MapperOptionMenu from '@/smart/ui/menu/mapperOptionMenu';
-import { EditMPropsInterface } from '@/smart/ui/dialog/dialogs';
+import type { EditMPropsInterface } from '@/smart/ui/dialog/dialogs';
 import { multi_model_container } from '@/css/layout';
 import { vertical_line } from '@/css/components';
 import { findPageContainingElement } from '@/smart/utils/SearchFunctions';
@@ -68,11 +76,11 @@ import {
   RepoFileType,
 } from '@/smart/utils/repo/io';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { MMELJSON } from '@/smart/model/json';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { MMELJSON } from '@/smart/model/json';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import RepoMapMainView from '@/smart/ui/mapper/repo/RepoMapMainView';
 import { LoadingContainer } from '@/smart/ui/common/Loading';
-import { MMELDocument } from '@/smart/model/document';
+import type { MMELDocument } from '@/smart/model/document';
 import MapperCompareMenu from '@/smart/ui/menu/MapperCompareMenu';
 import MapperDialog from '@/smart/ui/popover/MapperDialog';
 import { calEdgeDiff } from '@/smart/utils/map/MappingDiff';

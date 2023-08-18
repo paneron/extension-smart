@@ -1,13 +1,14 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import { EditorModel } from '@/smart/model/editormodel';
-import { MMELTextSection } from '@paneron/libmmel/interface/supportinterface';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { MMELTextSection } from '@paneron/libmmel/interface/supportinterface';
 import { checkId, defaultItemSorter } from '@/smart/utils/ModelFunctions';
 import { createTextSection } from '@/smart/utils/EditorFactory';
-import { IListItem, IManageHandler, NormalTextField } from '@/smart/ui/common/fields';
+import type { IListItem, IManageHandler } from '@/smart/ui/common/fields';
+import { NormalTextField } from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
-import { EditorAction } from '@/smart/model/editor/state';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { EditorAction } from '@/smart/model/editor/state';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 const SectionEditPage: React.FC<{
   model: EditorModel;

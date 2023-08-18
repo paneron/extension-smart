@@ -1,9 +1,9 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import { EditorModel } from '@/smart/model/editormodel';
+import type { EditorModel } from '@/smart/model/editormodel';
 import { measurementValidCheck } from '@/smart/utils/measurement/BasicFunctions';
 import { ReferenceSelector } from '@/smart/ui/common/fields';
-import { IMMELObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
+import type { IMMELObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
 
 export type IMeasure = IMMELObject & {
   measure: string;

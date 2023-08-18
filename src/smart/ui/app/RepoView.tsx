@@ -1,11 +1,12 @@
 import React from 'react';
 import { useState } from 'react';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
-import { RepoHistory } from '@/smart/model/history';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { RepoHistory } from '@/smart/model/history';
 import AppControlBar from '@/smart/ui/app/AppControlBar';
 import AppUILayout from '@/smart/ui/app/AppUI';
 import ModuleButton from '@/smart/ui/app/ModuleButton';
-import { ModuleList, ModuleName } from '@/smart/model/module/appModule';
+import type { ModuleName } from '@/smart/model/module/appModule';
+import { ModuleList } from '@/smart/model/module/appModule';
 import RepoItemLoadingView from '@/smart/ui/app/RepoItemLoadingView';
 import NeutralView from '@/smart/ui/app/NeutralView';
 

@@ -1,11 +1,13 @@
-import { Button, IToastProps, Text } from '@blueprintjs/core';
+import type { IToastProps } from '@blueprintjs/core';
+import { Button, Text } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React from 'react';
-import { CSSProperties, useContext, useState } from 'react';
+import type { CSSProperties } from 'react';
+import { useContext, useState } from 'react';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
 import MGDHeading from '@/smart/MGDComponents/MGDHeading';
-import { MapProfile } from '@/smart/model/mapmodel';
-import { ModelWrapper } from '@/smart/model/modelwrapper';
+import type { MapProfile } from '@/smart/model/mapmodel';
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
 import { handleMappingOpen, handleModelOpen } from '@/smart/utils/IOFunctions';
 import { mapAI } from '@/smart/utils/map/MappingCalculator';
 import { getNamespace } from '@/smart/utils/ModelFunctions';

@@ -1,9 +1,10 @@
-import {
+import type {
   EditorDataClass,
   EditorModel,
   EditorNode,
   EditorRegistry,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorDataClass,
   isEditorRegistry,
 } from '@/smart/model/editormodel';
@@ -11,17 +12,17 @@ import {
 // test
 import { textToMMEL } from '@paneron/libmmel';
 
-import { MMELObject } from '@paneron/libmmel/interface/baseinterface';
-import {
+import type { MMELObject } from '@paneron/libmmel/interface/baseinterface';
+import type {
   MMELEdge,
   MMELSubprocess,
 } from '@paneron/libmmel/interface/flowcontrolinterface';
-import {
+import type {
   MMELMetadata,
   MMELReference,
   MMELRole,
 } from '@paneron/libmmel/interface/supportinterface';
-import { IListItem } from '@/smart/ui/common/fields';
+import type { IListItem } from '@/smart/ui/common/fields';
 
 const TypeReferenceHead = 'reference(';
 const TypeReferenceTail = ')';

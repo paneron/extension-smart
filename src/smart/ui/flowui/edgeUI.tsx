@@ -1,7 +1,9 @@
-import React, { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
+import React from 'react';
 
+import type {
+  EdgeProps } from 'react-flow-renderer';
 import {
-  EdgeProps,
   EdgeText,
   getEdgeCenter,
   getSmoothStepPath,
@@ -9,7 +11,7 @@ import {
   Position,
 } from 'react-flow-renderer';
 import { CSSROOTVARIABLES } from '@/css/root.css';
-import { DataLinkNodeData, EdgePackage } from '@/smart/model/FlowContainer';
+import type { DataLinkNodeData, EdgePackage } from '@/smart/model/FlowContainer';
 
 const SandyBrown = CSSROOTVARIABLES['--colour--sandy-brown'];
 const Black = CSSROOTVARIABLES['--colour--black'];

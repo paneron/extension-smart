@@ -1,37 +1,54 @@
 import * as Logger from '@/lib/logger';
-import { EditorModel } from '@/smart/model/editormodel';
+import type { EditorModel } from '@/smart/model/editormodel';
 import { cascadeCheckDCs } from '@/smart/model/editor/components/element/dc';
 import { cascadeCheckRegs } from '@/smart/model/editor/components/element/registry';
-import { ElmAction, useElements } from '@/smart/model/editor/components/elements';
-import { cascadeCheckEnum, EnumAction, useEnums } from '@/smart/model/editor/components/enums';
-import { MetaAction, useMeta } from '@/smart/model/editor/components/meta';
+import type { ElmAction } from '@/smart/model/editor/components/elements';
+import { useElements } from '@/smart/model/editor/components/elements';
+import type { EnumAction } from '@/smart/model/editor/components/enums';
+import { cascadeCheckEnum, useEnums } from '@/smart/model/editor/components/enums';
+import type { MetaAction } from '@/smart/model/editor/components/meta';
+import { useMeta } from '@/smart/model/editor/components/meta';
+import type {
+  PageAction } from '@/smart/model/editor/components/pages';
 import {
   cascadeCheckPages,
   explorePageDataNodes,
-  PageAction,
   usePages,
 } from '@/smart/model/editor/components/pages';
-import { useView, ViewAction } from '@/smart/model/editor/components/view';
-import { ProvisionAction, useProvisions } from '@/smart/model/editor/components/provision';
-import { cascadeCheckRefs, RefAction, useRefs } from '@/smart/model/editor/components/ref';
-import { RoleAction, useRoles, cascadeCheckRole } from '@/smart/model/editor/components/roles';
-import { SectionAction, useSections } from '@/smart/model/editor/components/sections';
-import { TermsAction, useTerms } from '@/smart/model/editor/components/terms';
-import { useVars, VarAction } from '@/smart/model/editor/components/vars';
-import { cascadeCheckTable, TableAction, useTable } from '@/smart/model/editor/components/table';
-import { cascadeCheckFigure, FigAction, useFigure } from '@/smart/model/editor/components/figure';
-import { UndoReducerModelInterface } from '@/smart/model/editor/interface';
+import type { ViewAction } from '@/smart/model/editor/components/view';
+import { useView } from '@/smart/model/editor/components/view';
+import type { ProvisionAction } from '@/smart/model/editor/components/provision';
+import { useProvisions } from '@/smart/model/editor/components/provision';
+import type { RefAction } from '@/smart/model/editor/components/ref';
+import { cascadeCheckRefs, useRefs } from '@/smart/model/editor/components/ref';
+import type { RoleAction } from '@/smart/model/editor/components/roles';
+import { useRoles, cascadeCheckRole } from '@/smart/model/editor/components/roles';
+import type { SectionAction } from '@/smart/model/editor/components/sections';
+import { useSections } from '@/smart/model/editor/components/sections';
+import type { TermsAction } from '@/smart/model/editor/components/terms';
+import { useTerms } from '@/smart/model/editor/components/terms';
+import type { VarAction } from '@/smart/model/editor/components/vars';
+import { useVars } from '@/smart/model/editor/components/vars';
+import type { TableAction } from '@/smart/model/editor/components/table';
+import { cascadeCheckTable, useTable } from '@/smart/model/editor/components/table';
+import type { FigAction } from '@/smart/model/editor/components/figure';
+import { cascadeCheckFigure, useFigure } from '@/smart/model/editor/components/figure';
+import type { UndoReducerModelInterface } from '@/smart/model/editor/interface';
+import type {
+  CommentAction } from '@/smart/model/editor/components/comment';
 import {
   cascadeCheckComment,
-  CommentAction,
   useComment,
 } from '@/smart/model/editor/components/comment';
 import { useMemo } from 'react';
 import { cascadeCheckElm } from '@/smart/model/editor/components/element/common';
-import { compileHybird, HyEditAction } from '@/smart/model/editor/hybird/distributor';
-import { NotesAction, useNotes } from '@/smart/model/editor/components/notes';
+import type { HyEditAction } from '@/smart/model/editor/hybird/distributor';
+import { compileHybird } from '@/smart/model/editor/hybird/distributor';
+import type { NotesAction } from '@/smart/model/editor/components/notes';
+import { useNotes } from '@/smart/model/editor/components/notes';
 import { MODELVERSION } from '@/smart/utils/constants';
-import { LinkAction, useLinks } from '@/smart/model/editor/components/links';
+import type { LinkAction } from '@/smart/model/editor/components/links';
+import { useLinks } from '@/smart/model/editor/components/links';
 
 interface InitModelAction {
   act: 'initModel';

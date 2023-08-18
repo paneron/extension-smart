@@ -1,8 +1,9 @@
-import {
+import type {
   NLPJSON,
   ProvisionRDF,
-  RDFVersion,
-  STNode,
+  STNode } from '@/smart/model/SemanticTriple';
+import {
+  RDFVersion
 } from '@/smart/model/SemanticTriple';
 import * as Logger from '@/lib/logger';
 import { converQuestionRDF, parseText } from '@/smart/utils/nlp/nlp';

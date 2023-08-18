@@ -1,14 +1,15 @@
 import { FormGroup } from '@blueprintjs/core';
 // import { LocalizedConceptForm } from '@riboseinc/paneron-extension-glossarist/classes/localizedConcept/LocalizedConceptForm';
 import React from 'react';
-import { EditorModel } from '@/smart/model/editormodel';
-import { MMELTerm } from '@paneron/libmmel/interface/supportinterface';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { MMELTerm } from '@paneron/libmmel/interface/supportinterface';
 import { checkId, defaultItemSorter } from '@/smart/utils/ModelFunctions';
 import { createTerm } from '@/smart/utils/EditorFactory';
-import { IListItem, IManageHandler, NormalTextField } from '@/smart/ui/common/fields';
+import type { IListItem, IManageHandler } from '@/smart/ui/common/fields';
+import { NormalTextField } from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
 import StringListQuickEdit from '@/smart/ui/edit/components/StringListQuickEdit';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 const TermsEditPage: React.FC<{
   model: EditorModel;

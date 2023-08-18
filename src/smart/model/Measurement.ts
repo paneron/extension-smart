@@ -2,12 +2,12 @@
  * Data structure for measurement and variables
  */
 
-import {
+import type {
   MMELVariable,
   MMELView,
   VarType,
 } from '@paneron/libmmel/interface/supportinterface';
-import { EditorModel } from '@/smart/model/editormodel';
+import type { EditorModel } from '@/smart/model/editormodel';
 
 export interface MTreeNode {
   action: string; // if data is a value, action = ''

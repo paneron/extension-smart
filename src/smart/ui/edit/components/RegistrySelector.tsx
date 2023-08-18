@@ -1,12 +1,13 @@
 import { Button, FormGroup, Menu } from '@blueprintjs/core';
-import {
+import type {
   IItemRendererProps,
   ItemListRenderer,
-  ItemPredicate,
+  ItemPredicate } from '@blueprintjs/select';
+import {
   MultiSelect,
 } from '@blueprintjs/select';
 import React from 'react';
-import { EditorRegistry } from '@/smart/model/editormodel';
+import type { EditorRegistry } from '@/smart/model/editormodel';
 
 const RegistryMultiSelect = MultiSelect.ofType<EditorRegistry>();
 

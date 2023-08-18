@@ -1,14 +1,16 @@
-import { InputGroup, IToaster, IToastProps, Toaster } from '@blueprintjs/core';
+import type { IToaster, IToastProps } from '@blueprintjs/core';
+import { InputGroup, Toaster } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import { useContext, useMemo, useState } from 'react';
-import { ModelWrapper } from '@/smart/model/modelwrapper';
-import {
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
+import type {
   MMELRepo,
   RepoIndex,
-  repoIndexPath,
   RepoItems,
-  RepoItemType,
+  RepoItemType } from '@/smart/model/repo';
+import {
+  repoIndexPath
 } from '@/smart/model/repo';
 import {
   COMMITMSG,
@@ -17,17 +19,19 @@ import {
   RepoFileType,
 } from '@/smart/utils/repo/io';
 import RepoInfoPane from '@/smart/ui/repo/RepoInfoPane';
-import { EditorModel } from '@/smart/model/editormodel';
+import type { EditorModel } from '@/smart/model/editormodel';
 import { createNewSMARTWorkspace } from '@/smart/model/workspace';
 import { getNamespace } from '@/smart/utils/ModelFunctions';
 import { groupItems, setValueToIndex } from '@/smart/utils/repo/CommonFunctions';
-import { MMELDocument } from '@/smart/model/document';
+import type { MMELDocument } from '@/smart/model/document';
 import React from 'react';
 import RepoToolbar from '@/smart/ui/repo/RepoToolbar';
 import { createMapProfile } from '@/smart/model/mapmodel';
 import RepoGroup from '@/smart/ui/repo/RepoGroup';
-import { ProvisionRDF, RDFVersion } from '@/smart/model/SemanticTriple';
-import RepoRenameLoading, { RepoRenameAction } from '@/smart/ui/repo/RepoRenameLoading';
+import type { ProvisionRDF } from '@/smart/model/SemanticTriple';
+import { RDFVersion } from '@/smart/model/SemanticTriple';
+import type { RepoRenameAction } from '@/smart/ui/repo/RepoRenameLoading';
+import RepoRenameLoading from '@/smart/ui/repo/RepoRenameLoading';
 import AITranslateLoading from '@/smart/ui/repo/AITranslateLoading';
 import { createChangeLog } from '@/smart/model/changelog';
 

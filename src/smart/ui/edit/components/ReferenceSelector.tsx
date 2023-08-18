@@ -1,12 +1,13 @@
 import { Button, FormGroup, Menu } from '@blueprintjs/core';
-import {
+import type {
   IItemRendererProps,
   ItemListRenderer,
-  ItemPredicate,
+  ItemPredicate } from '@blueprintjs/select';
+import {
   MultiSelect,
 } from '@blueprintjs/select';
 import React from 'react';
-import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
+import type { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import { toRefSummary } from '@/smart/utils/ModelFunctions';
 
 const ReferenceMultiSelect = MultiSelect.ofType<MMELReference>();

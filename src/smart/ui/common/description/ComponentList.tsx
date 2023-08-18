@@ -1,8 +1,8 @@
 import React from 'react';
-import { EditorRegistry } from '@/smart/model/editormodel';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
-import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
-import {
+import type { EditorRegistry } from '@/smart/model/editormodel';
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
+import type {
   MMELNote,
   MMELProvision,
   MMELReference,

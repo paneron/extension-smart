@@ -1,15 +1,16 @@
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useMemo, useState } from 'react';
-import { Edge, Elements, Node } from 'react-flow-renderer';
+import type { Edge, Elements, Node } from 'react-flow-renderer';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import { MMELJSON } from '@/smart/model/json';
-import { MapProfile } from '@/smart/model/mapmodel';
+import type { MMELJSON } from '@/smart/model/json';
+import type { MapProfile } from '@/smart/model/mapmodel';
+import type {
+  ModelWrapper } from '@/smart/model/modelwrapper';
 import {
-  createEditorModelWrapper,
-  ModelWrapper,
+  createEditorModelWrapper
 } from '@/smart/model/modelwrapper';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import { repoAutoMapExplore, repoMapAI } from '@/smart/utils/map/AutoMap';
 import * as Logger from '@/lib/logger';
 import {

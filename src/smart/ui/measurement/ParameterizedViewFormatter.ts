@@ -1,7 +1,7 @@
 import { flow_node__highlighed } from '@/css/visual';
-import { MeasureResult } from '@/smart/model/Measurement';
-import { LegendInterface } from '@/smart/model/States';
-import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import type { MeasureResult } from '@/smart/model/Measurement';
+import type { LegendInterface } from '@/smart/model/States';
+import type { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 
 export default function updateParaView(
   result: MeasureResult,

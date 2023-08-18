@@ -1,9 +1,10 @@
 import { Checkbox } from '@blueprintjs/core';
 import React from 'react';
 import { mgdLabel } from '@/css/form';
-import { ChecklistPackage, getCheckListId } from '@/smart/model/checklist';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
-import {
+import type { ChecklistPackage } from '@/smart/model/checklist';
+import { getCheckListId } from '@/smart/model/checklist';
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';

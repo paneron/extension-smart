@@ -6,10 +6,11 @@
  * So, there is a need to convert the JSON model to MMEL model (and vice versa)
  */
 
-import { DataType, MMELNode } from '@paneron/libmmel/interface/baseinterface';
-import { MMELEnum } from '@paneron/libmmel/interface/datainterface';
-import { MMELSubprocess } from '@paneron/libmmel/interface/flowcontrolinterface';
-import {
+import type { MMELNode } from '@paneron/libmmel/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
+import type { MMELEnum } from '@paneron/libmmel/interface/datainterface';
+import type { MMELSubprocess } from '@paneron/libmmel/interface/flowcontrolinterface';
+import type {
   MMELFigure,
   MMELLink,
   MMELMetadata,
@@ -22,7 +23,7 @@ import {
   MMELView,
   NOTE_TYPE,
 } from '@paneron/libmmel/interface/supportinterface';
-import { JSONContextType } from '@/smart/utils/repo/io';
+import type { JSONContextType } from '@/smart/utils/repo/io';
 
 export interface MMELJSON {
   '@context': JSONContextType;

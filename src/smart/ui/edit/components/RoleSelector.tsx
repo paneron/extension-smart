@@ -1,11 +1,12 @@
 import { Button, ButtonGroup, FormGroup, Menu } from '@blueprintjs/core';
-import {
+import type {
   ItemListRenderer,
   ItemPredicate,
-  ItemRenderer,
+  ItemRenderer } from '@blueprintjs/select';
+import {
   Select,
 } from '@blueprintjs/select';
-import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
+import type { MMELRole } from '@paneron/libmmel/interface/supportinterface';
 import React from 'react';
 
 const RoleSelect = Select.ofType<MMELRole>();

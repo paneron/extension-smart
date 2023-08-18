@@ -7,7 +7,8 @@
 
 import { jsx } from '@emotion/react';
 
-import { Button, IconName } from '@blueprintjs/core';
+import type { IconName } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import {
   mgdButton,
   MGDButtonSize,

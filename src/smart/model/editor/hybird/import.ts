@@ -1,11 +1,13 @@
+import type {
+  NewImportItems } from '@/smart/utils/ModelImport';
 import {
   addComponentIfNotFound,
-  addProcessIfNotFound,
-  NewImportItems,
+  addProcessIfNotFound
 } from '@/smart/utils/ModelImport';
-import { EditorModel, isEditorProcess } from '@/smart/model/editormodel';
-import { ModelAction } from '@/smart/model/editor/model';
-import { HyEditAction } from '@/smart/model/editor/hybird/distributor';
+import type { EditorModel } from '@/smart/model/editormodel';
+import { isEditorProcess } from '@/smart/model/editormodel';
+import type { ModelAction } from '@/smart/model/editor/model';
+import type { HyEditAction } from '@/smart/model/editor/hybird/distributor';
 
 type ProcessImportHybird = HyEditAction & { task: 'elm-import' };
 

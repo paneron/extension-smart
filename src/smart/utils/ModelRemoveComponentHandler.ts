@@ -1,5 +1,5 @@
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { DeletableNodeTypes } from '@/smart/utils/constants';
+import type { DeletableNodeTypes } from '@/smart/utils/constants';
 
 export const DeleteConfirmMessgae: Record<DeletableNodeTypes, string> = {
   [DataType.PROCESS]          : 'Confirm deleting the process?',

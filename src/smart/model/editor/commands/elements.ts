@@ -2,21 +2,22 @@
  * This file centralizes the commands related to node elements
  */
 
-import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
-import {
+import type { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
+import type {
   MMELLink,
   MMELNote,
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import {
+import type {
   EditorEGate,
   EditorModel,
   EditorNode,
-  EditorProcess,
+  EditorProcess } from '@/smart/model/editormodel';
+import {
   isEditorProcess,
 } from '@/smart/model/editormodel';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * Edit the node elements. It can include gateway, approval, process, timer / signal events.

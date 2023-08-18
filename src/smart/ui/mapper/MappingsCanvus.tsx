@@ -1,11 +1,13 @@
-import React, { RefObject } from 'react';
-import {
+import type { RefObject } from 'react';
+import React from 'react';
+import type {
   MapDiffEdgeResult,
-  MapDiffType,
+  MapDiffType } from '@/smart/utils/map/MappingCalculator';
+import {
   MapDiffValues,
 } from '@/smart/utils/map/MappingCalculator';
 import { mgdCanvas } from '@/css/layout';
-import { LegendInterface } from '@/smart/model/States';
+import type { LegendInterface } from '@/smart/model/States';
 
 export const MapDiffStyles: Record<MapDiffType, LegendInterface> = {
   'new'    : { label : 'New mapping', color : 'green' },

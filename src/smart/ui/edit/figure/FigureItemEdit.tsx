@@ -1,8 +1,9 @@
 import { Button, FormGroup, Text } from '@blueprintjs/core';
-import {
+import type {
   BINARY_TYPE,
-  BINARY_TYPES,
-  MMELFigure,
+  MMELFigure } from '@paneron/libmmel/interface/supportinterface';
+import {
+  BINARY_TYPES
 } from '@paneron/libmmel/interface/supportinterface';
 import { NormalComboBox, NormalTextField } from '@/smart/ui/common/fields';
 import { useContext } from 'react';

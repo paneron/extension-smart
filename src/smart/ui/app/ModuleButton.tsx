@@ -1,7 +1,8 @@
 import { Button } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
-import { ModuleName, MODULE_CONFIGURATION } from '@/smart/model/module/appModule';
+import type { ModuleName } from '@/smart/model/module/appModule';
+import { MODULE_CONFIGURATION } from '@/smart/model/module/appModule';
 
 /**
  * The buttons on the leftmost button bar

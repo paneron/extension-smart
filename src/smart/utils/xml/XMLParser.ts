@@ -1,7 +1,8 @@
-import {
+import type {
   XMLElement,
   XMLNodeContent,
-  XMLToken,
+  XMLToken } from '@/smart/model/xmlelement';
+import {
   XMLTokenType,
 } from '@/smart/model/xmlelement';
 

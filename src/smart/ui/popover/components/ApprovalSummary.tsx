@@ -1,5 +1,5 @@
 import React from 'react';
-import { EditorApproval } from '@/smart/model/editormodel';
+import type { EditorApproval } from '@/smart/model/editormodel';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
 
 const ApprovalSummary: React.FC<{

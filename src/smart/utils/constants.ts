@@ -1,5 +1,5 @@
-import { OpenFileDialogProps } from '@riboseinc/paneron-extension-kit/types/dialogs';
-import { ObjectDataset } from '@riboseinc/paneron-extension-kit/types/objects';
+import type { OpenFileDialogProps } from '@riboseinc/paneron-extension-kit/types/dialogs';
+import type { ObjectDataset } from '@riboseinc/paneron-extension-kit/types/objects';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { VarType } from '@paneron/libmmel/interface/supportinterface';
 

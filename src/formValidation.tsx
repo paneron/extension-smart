@@ -1,8 +1,9 @@
 import React from 'react';
-import {
-  FormGroup,
+import type {
   FormGroupProps as IFormGroupProps,
-  Intent,
+  Intent } from '@blueprintjs/core';
+import {
+  FormGroup
 } from '@blueprintjs/core';
 
 export type Validator<T> = (object: T) => ValidationResult<T>;

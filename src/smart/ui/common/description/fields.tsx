@@ -1,8 +1,8 @@
 import React from 'react';
 import { mgdLabel } from '@/css/form';
-import { HistoryAction } from '@/smart/model/editor/history';
-import { HistoryItem } from '@/smart/model/history';
-import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
+import type { HistoryAction } from '@/smart/model/editor/history';
+import type { HistoryItem } from '@/smart/model/history';
+import type { MMELRole } from '@paneron/libmmel/interface/supportinterface';
 
 interface Breadcrumb {
   label: JSX.Element;

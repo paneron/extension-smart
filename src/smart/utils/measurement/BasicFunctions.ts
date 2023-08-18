@@ -1,10 +1,11 @@
-import { MTreeNode } from '@/smart/model/Measurement';
-import { MMELVariable } from '@paneron/libmmel/interface/supportinterface';
+import type { MTreeNode } from '@/smart/model/Measurement';
+import type { MMELVariable } from '@paneron/libmmel/interface/supportinterface';
+import type {
+  MBinOperatorTypes,
+  MListOperatorTypes } from '@/smart/utils/measurement/Operators';
 import {
   MBinaryOperators,
-  MBinOperatorTypes,
-  MListOperators,
-  MListOperatorTypes,
+  MListOperators
 } from '@/smart/utils/measurement/Operators';
 
 export function measurementValidCheck(

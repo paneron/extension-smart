@@ -1,10 +1,11 @@
 import React from 'react';
-import {
+import type {
   EditorDataClass,
   EditorModel,
   EditorNode,
   EditorRegistry,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   getEditorDataClassById,
   getEditorNoteById,
   getEditorProvisionById,
@@ -20,15 +21,15 @@ import {
   isEditorTimerEvent,
 } from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
-import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
-import {
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
+import type {
   MMELNote,
   MMELProvision,
   MMELReference,
   MMELRole,
 } from '@paneron/libmmel/interface/supportinterface';
-import { SelectableNodeTypes } from '@/smart/utils/constants';
+import type { SelectableNodeTypes } from '@/smart/utils/constants';
 import { DescribeApproval } from '@/smart/ui/common/description/approval';
 import {
   DescribeEGate,

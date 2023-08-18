@@ -1,13 +1,13 @@
 import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import { EditorModel, EditorTimerEvent } from '@/smart/model/editormodel';
+import type { EditorModel, EditorTimerEvent } from '@/smart/model/editormodel';
 import { checkId, removeSpace } from '@/smart/utils/ModelFunctions';
 import { TimerType } from '@/smart/utils/constants';
 import { NormalComboBox, NormalTextField } from '@/smart/ui/common/fields';
 import { EditPageButtons } from '@/smart/ui/edit/commons';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { ModelAction } from '@/smart/model/editor/model';
 import PopoverChangeIDButton from '@/smart/ui/popover/PopoverChangeIDButton';
 import { editElmCommand } from '@/smart/model/editor/commands/elements';
 

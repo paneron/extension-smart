@@ -13,9 +13,10 @@ import MGDContainer from '@/smart/MGDComponents/MGDContainer';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
 import BuildingMap from '@/smart/ui/application/pas2060/BuildingMap';
 import { obtainData } from '@/smart/ui/application/pas2060/DataFeeder';
-import {
+import type {
   Application2060Setting,
-  EmissionSource,
+  EmissionSource } from '@/smart/ui/application/pas2060/model';
+import {
   fixedlocalhost,
 } from '@/smart/ui/application/pas2060/model';
 import { propagateReadings } from '@/smart/ui/application/pas2060/ReadingCalculator';

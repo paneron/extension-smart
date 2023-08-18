@@ -1,23 +1,26 @@
-import { SerializedStyles } from '@emotion/react';
-import { Edge, Elements, Node, Position } from 'react-flow-renderer';
+import type { SerializedStyles } from '@emotion/react';
+import type { Edge, Elements, Node } from 'react-flow-renderer';
+import { Position } from 'react-flow-renderer';
 import { map_style_diff__coverage } from '@/css/visual';
-import { MappingType, MapProfile } from '@/smart/model/mapmodel';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
-import { LegendInterface } from '@/smart/model/States';
+import type { MappingType, MapProfile } from '@/smart/model/mapmodel';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { LegendInterface } from '@/smart/model/States';
 import { createNodeContent } from '@/smart/ui/mapper/repo/RepoMapNode';
 import { calculateDocumentMapping } from '@/smart/utils/DocumentFunctions';
+import type {
+  RepoNodeDiffType } from '@/smart/utils/repo/CommonFunctions';
 import {
   createEdge,
   getRepoItemDesc,
-  RepoDiffLegend,
-  RepoNodeDiffType,
+  RepoDiffLegend
 } from '@/smart/utils/repo/CommonFunctions';
 import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
-import {
-  MapCoverType,
+import type {
   MapDiffEdgeResult,
   MapEdgeResult,
-  MapResultType,
+  MapResultType } from '@/smart/utils/map/MappingCalculator';
+import {
+  MapCoverType
 } from '@/smart/utils/map/MappingCalculator';
 
 export const MapDiffSourceValues = [

@@ -2,10 +2,10 @@
  * This file centralizes the commands generated related to registry and data class
  */
 
-import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
-import { EditorDataClass } from '@/smart/model/editormodel';
-import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { MMELReference } from '@paneron/libmmel/interface/supportinterface';
+import type { EditorDataClass } from '@/smart/model/editormodel';
+import type { RegistryCombined } from '@/smart/model/editor/components/element/registry';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * Delete the registries from the model

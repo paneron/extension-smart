@@ -1,14 +1,14 @@
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import {
+import type {
   MMELDataAttribute,
   MMELEnum,
   MMELEnumValue,
 } from '@paneron/libmmel/interface/datainterface';
-import {
+import type {
   MMELEdge,
   MMELSubprocessComponent,
 } from '@paneron/libmmel/interface/flowcontrolinterface';
-import {
+import type {
   MMELFigure,
   MMELMetadata,
   MMELNote,
@@ -19,10 +19,11 @@ import {
   MMELTerm,
   MMELTextSection,
   MMELVariable,
-  MMELView,
+  MMELView } from '@paneron/libmmel/interface/supportinterface';
+import {
   VarType,
 } from '@paneron/libmmel/interface/supportinterface';
-import {
+import type {
   EditorApproval,
   EditorDataClass,
   EditorEGate,
@@ -36,7 +37,7 @@ import {
   EditorTimerEvent,
 } from '@/smart/model/editormodel';
 import { DOCVERSION, MODELVERSION } from '@/smart/utils/constants';
-import { MMELDocument } from '@/smart/model/document';
+import type { MMELDocument } from '@/smart/model/document';
 
 export function createNewEditorModel(): EditorModel {
   const start = createStartEvent('Start1');

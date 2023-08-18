@@ -1,9 +1,10 @@
+import type {
+  IToastProps } from '@blueprintjs/core';
 import {
   Text,
   Button,
   ButtonGroup,
-  Dialog,
-  IToastProps,
+  Dialog
 } from '@blueprintjs/core';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -14,17 +15,18 @@ import {
 import MGDContainer from '@/smart/MGDComponents/MGDContainer';
 import MGDHeading from '@/smart/MGDComponents/MGDHeading';
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
-import { EditorModel } from '@/smart/model/editormodel';
+import type { EditorModel } from '@/smart/model/editormodel';
 import Chart from '@/smart/ui/application/pas2060/Chart';
 import ApplicationConfigurePage from '@/smart/ui/application/pas2060/ConfigurePage';
 import ApplicationLogPage from '@/smart/ui/application/pas2060/LogPage';
-import {
+import type {
   Application2060Setting,
-  colors2060,
   Dialog2060Interface,
-  fixedlocalhost,
   Log2060,
-  ReadingRecord,
+  ReadingRecord } from '@/smart/ui/application/pas2060/model';
+import {
+  colors2060,
+  fixedlocalhost
 } from '@/smart/ui/application/pas2060/model';
 import { setInterval, clearInterval } from 'timers';
 import { obtainData } from '@/smart/ui/application/pas2060/DataFeeder';
@@ -34,7 +36,7 @@ import {
   testMeasurement2060,
 } from '@/smart/ui/application/pas2060/ReadingCalculator';
 import { Popover2 } from '@blueprintjs/popover2';
-import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import type { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import React from 'react';
 import * as Logger from '@/lib/logger';
 

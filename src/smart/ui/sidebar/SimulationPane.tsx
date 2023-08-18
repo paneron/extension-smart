@@ -1,13 +1,14 @@
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
-import { EditorModel, EditorNode } from '@/smart/model/editormodel';
-import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
-import { FlowElement, isNode, useStoreState } from 'react-flow-renderer';
+import type { EditorModel, EditorNode } from '@/smart/model/editormodel';
+import type { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import type { FlowElement } from 'react-flow-renderer';
+import { isNode, useStoreState } from 'react-flow-renderer';
 import { Button, Text } from '@blueprintjs/core';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import SimulationDetails from '@/smart/ui/sidebar/SimulationDetails';
 import { getSimulationView } from '@/smart/utils/simulation/viewFunctions';
-import { PageHistory } from '@/smart/model/history';
+import type { PageHistory } from '@/smart/model/history';
 
 const SimulationPane: React.FC<{
   model: EditorModel;

@@ -1,7 +1,7 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import { MMELDocument } from '@/smart/model/document';
+import type { MMELDocument } from '@/smart/model/document';
 import { NormalTextField } from '@/smart/ui/common/fields';
 
 const DocSettings: React.FC<{

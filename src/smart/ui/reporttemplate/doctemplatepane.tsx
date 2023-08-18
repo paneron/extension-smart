@@ -2,16 +2,17 @@ import { Dialog, FormGroup } from '@blueprintjs/core';
 import React, { useState } from 'react';
 import { dialogLayout } from '@/css/layout';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import { EditorModel } from '@/smart/model/editormodel';
+import type { EditorModel } from '@/smart/model/editormodel';
 import { checkId, defaultItemSorter } from '@/smart/utils/ModelFunctions';
-import {
+import type {
   IAdditionalListButton,
   IListItem,
-  IManageHandler,
+  IManageHandler } from '@/smart/ui/common/fields';
+import {
   NormalTextField,
 } from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
-import { MappingDoc, MapProfile } from '@/smart/model/mapmodel';
+import type { MappingDoc, MapProfile } from '@/smart/model/mapmodel';
 import { genReport } from '@/smart/utils/reportFunctions';
 import ReportGen from '@/smart/ui/reporttemplate/reportgen';
 

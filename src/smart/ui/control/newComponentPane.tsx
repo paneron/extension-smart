@@ -4,9 +4,10 @@ import MGDComponentBar from '@/smart/MGDComponents/MGDComponentBar';
 import MGDContainer from '@/smart/MGDComponents/MGDContainer';
 import MGDProcessBox from '@/smart/MGDComponents/MGDProcessBox';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
+import type {
+  NewComponentTypes } from '@/smart/utils/constants';
 import {
-  DragAndDropNewFormatType,
-  NewComponentTypes,
+  DragAndDropNewFormatType
 } from '@/smart/utils/constants';
 import {
   EgateShape,

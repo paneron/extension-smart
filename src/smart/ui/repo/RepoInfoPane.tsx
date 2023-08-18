@@ -1,5 +1,5 @@
 import React from 'react';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import { getRepoItemDesc } from '@/smart/utils/repo/CommonFunctions';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
 import RepoCloseButton from '@/smart/ui/repo/RepoCloseButton';

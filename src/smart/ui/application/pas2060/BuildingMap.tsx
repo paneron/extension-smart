@@ -1,7 +1,9 @@
-import React, { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
+import React from 'react';
 import { Text } from '@blueprintjs/core';
 import MGDContainer from '@/smart/MGDComponents/MGDContainer';
-import { Application2060Setting, colors2060, EmissionSource } from '@/smart/ui/application/pas2060/model';
+import type { Application2060Setting, EmissionSource } from '@/smart/ui/application/pas2060/model';
+import { colors2060 } from '@/smart/ui/application/pas2060/model';
 import MyMapBackground from '@/smart/ui/application/pas2060/MyMapBackground';
 
 type NumberedEmissionSource = EmissionSource & {

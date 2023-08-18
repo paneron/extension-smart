@@ -4,10 +4,7 @@ import {
   isMMELProcess,
   isMMELRegistry,
 } from '@/smart/model/editormodel';
-import {
-  isJSONApproval,
-  isJSONDataClass,
-  isJSONProcess,
+import type {
   JSONApproval,
   JSONComment,
   JSONDataAttribute,
@@ -16,19 +13,24 @@ import {
   JSONProcess,
   JSONProvision,
   JSONRegistry,
-  MMELJSON,
-} from '@/smart/model/json';
-import { DataType, MMELNode } from '@paneron/libmmel/interface/baseinterface';
+  MMELJSON } from '@/smart/model/json';
 import {
+  isJSONApproval,
+  isJSONDataClass,
+  isJSONProcess
+} from '@/smart/model/json';
+import type { MMELNode } from '@paneron/libmmel/interface/baseinterface';
+import { DataType } from '@paneron/libmmel/interface/baseinterface';
+import type {
   MMELDataAttribute,
   MMELDataClass,
 } from '@paneron/libmmel/interface/datainterface';
-import { MMELModel } from '@paneron/libmmel/interface/model';
-import {
+import type { MMELModel } from '@paneron/libmmel/interface/model';
+import type {
   MMELApproval,
   MMELProcess,
 } from '@paneron/libmmel/interface/processinterface';
-import {
+import type {
   MMELComment,
   MMELNote,
   MMELProvision,

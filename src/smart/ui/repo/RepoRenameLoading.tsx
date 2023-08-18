@@ -1,10 +1,11 @@
-import { IToastProps } from '@blueprintjs/core';
+import type { IToastProps } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { ObjectChangeset } from '@riboseinc/paneron-extension-kit/types/objects';
+import type { ObjectChangeset } from '@riboseinc/paneron-extension-kit/types/objects';
 import React from 'react';
 import { useContext, useMemo } from 'react';
-import { MMELJSON } from '@/smart/model/json';
-import { RepoIndex, repoIndexPath } from '@/smart/model/repo';
+import type { MMELJSON } from '@/smart/model/json';
+import type { RepoIndex } from '@/smart/model/repo';
+import { repoIndexPath } from '@/smart/model/repo';
 import { getAllObjectPaths } from '@/smart/utils/repo/CommonFunctions';
 import { COMMITMSG, getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
 import { LoadingIcon } from '@/smart/ui/common/Loading';

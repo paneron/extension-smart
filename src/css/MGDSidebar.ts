@@ -3,7 +3,7 @@
  * They are migrated to TS codes (either CSSProperties or Styled)
  */
 
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 import { CSSROOTVARIABLES } from '@/css/root.css';
 
 export const mgdSidebar: CSSProperties = {

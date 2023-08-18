@@ -2,8 +2,8 @@
  * This file centralizes the commands generated related to comment components
  */
 
-import { MMELComment } from '@paneron/libmmel/interface/supportinterface';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { MMELComment } from '@paneron/libmmel/interface/supportinterface';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * Add a new comment to the model

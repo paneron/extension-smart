@@ -1,30 +1,31 @@
-import { RefObject } from 'react';
+import type { RefObject } from 'react';
 import { CSSROOTVARIABLES } from '@/css/root.css';
 import {
   map_style_diff__source,
   map_style__coverage,
   map_style__source,
 } from '@/css/visual';
-import {
+import type {
   EditorModel,
   EditorNode,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorApproval,
   isEditorEgate,
   isEditorProcess,
   ModelType,
 } from '@/smart/model/editormodel';
-import { PageHistory } from '@/smart/model/history';
-import { LegendInterface, MapperSelectedInterface } from '@/smart/model/States';
-import {
+import type { PageHistory } from '@/smart/model/history';
+import type { LegendInterface, MapperSelectedInterface } from '@/smart/model/States';
+import type {
   MappingDoc,
   MappingMeta,
   MappingType,
   MapProfile,
   MapSet,
 } from '@/smart/model/mapmodel';
-import { SerializedStyles } from '@emotion/react';
-import { DocStatement, MMELDocument } from '@/smart/model/document';
+import type { SerializedStyles } from '@emotion/react';
+import type { DocStatement, MMELDocument } from '@/smart/model/document';
 import { getNamespace } from '@/smart/utils/ModelFunctions';
 import { getMapDiffStyleById } from '@/smart/utils/map/MappingDiff';
 

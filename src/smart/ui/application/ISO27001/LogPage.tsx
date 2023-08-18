@@ -2,14 +2,15 @@ import { Button, ButtonGroup, HTMLTable } from '@blueprintjs/core';
 import { Classes } from '@blueprintjs/popover2';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React from 'react';
-import { CSSProperties, useContext, useState } from 'react';
+import type { CSSProperties } from 'react';
+import { useContext, useState } from 'react';
 import MGDContainer from '@/smart/MGDComponents/MGDContainer';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import type { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import { FILE_TYPE, saveToFileSystem } from '@/smart/utils/IOFunctions';
 import { NormalComboBox } from '@/smart/ui/common/fields';
 import updateMeasurementView from '@/smart/ui/measurement/MeasurementResultFormatter';
-import { Log27001, Log27001Record } from '@/smart/ui/application/ISO27001/model';
+import type { Log27001, Log27001Record } from '@/smart/ui/application/ISO27001/model';
 
 const options = ['No filter', 'Pass', 'Fail'] as const;
 type ResultType = typeof options[number];

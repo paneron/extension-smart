@@ -2,30 +2,33 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx } from '@emotion/react';
+import type {
+  RefObject } from 'react';
 import React, {
-  RefObject,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
 
+import type {
+  OnLoadParams,
+  Connection,
+  Edge } from 'react-flow-renderer';
 import ReactFlow, {
   Controls,
-  OnLoadParams,
   ReactFlowProvider,
-  isNode,
-  Connection,
-  Edge,
+  isNode
 } from 'react-flow-renderer';
 
+import type {
+  HotkeyConfig,
+  IToaster } from '@blueprintjs/core';
 import {
   Button,
   ControlGroup,
   Dialog,
-  HotkeyConfig,
   HotkeysTarget2,
-  IToaster,
   Toaster,
 } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
@@ -38,20 +41,22 @@ import {
   createEditorModelWrapper,
   getEditorReactFlowElementsFrom,
 } from '@/smart/model/modelwrapper';
-import {
-  getBreadcrumbsActions,
+import type {
   HistoryItem,
-  RepoHistory,
-} from '@/smart/model/history';
+  RepoHistory } from '@/smart/model/history';
 import {
-  EdgeTypes,
+  getBreadcrumbsActions
+} from '@/smart/model/history';
+import type {
   EditorState,
   EditorViewOption,
+  ReferenceContent } from '@/smart/model/States';
+import {
+  EdgeTypes,
   isModelWrapper,
-  NodeTypes,
-  ReferenceContent,
+  NodeTypes
 } from '@/smart/model/States';
-import { EditorDataClass } from '@/smart/model/editormodel';
+import type { EditorDataClass } from '@/smart/model/editormodel';
 import EditorFileMenu from '@/smart/ui/menu/EditorFileMenu';
 import {
   DataVisibilityButton,
@@ -59,14 +64,15 @@ import {
   IdVisibleButton,
 } from '@/smart/ui/control/buttons';
 import NewComponentPane from '@/smart/ui/control/newComponentPane';
+import type {
+  NewComponentTypes } from '@/smart/utils/constants';
 import {
   DOCVERSION,
   DragAndDropImportRefType,
-  DragAndDropNewFormatType,
-  NewComponentTypes,
+  DragAndDropNewFormatType
 } from '@/smart/utils/constants';
 import { getAddComponentAction } from '@/smart/utils/ModelAddComponentHandler';
-import { EdgePackage } from '@/smart/model/FlowContainer';
+import type { EdgePackage } from '@/smart/model/FlowContainer';
 import MGDButton from '@/smart/MGDComponents/MGDButton';
 import { MGDButtonType } from '@/css/MGDButton';
 import {
@@ -84,10 +90,10 @@ import {
   getHighlightedSVGColorById,
   SearchResultStyles,
 } from '@/smart/utils/SearchFunctions';
-import { MMELRole } from '@paneron/libmmel/interface/supportinterface';
+import type { MMELRole } from '@paneron/libmmel/interface/supportinterface';
 import ModelReferenceView from '@/smart/ui/editreference/ModelReferenceView';
 import DocumentReferenceView from '@/smart/ui/editreference/DocumentReferenceView';
-import { RefTextSelection } from '@/smart/model/selectionImport';
+import type { RefTextSelection } from '@/smart/model/selectionImport';
 import ImportFromSelectionButton from '@/smart/ui/popover/ImportFromSelectionButton';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import EditorEditMenu from '@/smart/ui/menu/EditorEditMenu';
@@ -98,16 +104,17 @@ import {
   MMELToSerializable,
   RepoFileType,
 } from '@/smart/utils/repo/io';
-import { MMELJSON } from '@/smart/model/json';
-import { MMELRepo, RepoIndex, repoIndexPath } from '@/smart/model/repo';
+import type { MMELJSON } from '@/smart/model/json';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import { repoIndexPath } from '@/smart/model/repo';
 import { setValueToIndex } from '@/smart/utils/repo/CommonFunctions';
 import EditorReferenceMenuButton from '@/smart/ui/menu/EditorReferenceMenuButton';
 import { indexModel } from '@/smart/model/mapmodel';
-import { MMELDocument } from '@/smart/model/document';
+import type { MMELDocument } from '@/smart/model/document';
 import { LoadingContainer } from '@/smart/ui/common/Loading';
 import { createNewComment } from '@/smart/utils/Comments';
 import EditorViewMenu from '@/smart/ui/menu/EditorViewMenu';
-import { EditorAction } from '@/smart/model/editor/state';
+import type { EditorAction } from '@/smart/model/editor/state';
 import {
   addCommentCommand,
   deleteCommentCommand,
@@ -128,9 +135,9 @@ import { SelectedNodeDescription } from '@/smart/ui/sidebar/selected';
 import BasicSettingPane from '@/smart/ui/control/settings';
 import { addRoleCommand } from '@/smart/model/editor/commands/role';
 import { addRegistryCommand } from '@/smart/model/editor/commands/data';
-import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
+import type { RegistryCombined } from '@/smart/model/editor/components/element/registry';
 import { importElmCommand } from '@/smart/model/editor/commands/import';
-import { ChangeLog } from '@/smart/model/changelog';
+import type { ChangeLog } from '@/smart/model/changelog';
 import ChangeLogDialog from '@/smart/ui/control/ChangeLogViewer';
 
 const ModelEditor: React.FC<{

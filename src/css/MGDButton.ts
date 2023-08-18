@@ -3,8 +3,9 @@
  * They are migrated to TS codes (either CSSProperties or Styled)
  */
 
-import { css, SerializedStyles } from '@emotion/react';
-import { CSSProperties } from 'react';
+import type { SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
+import type { CSSProperties } from 'react';
 import { CSSROOTVARIABLES } from '@/css/root.css';
 
 export const mgdButton: CSSProperties = {

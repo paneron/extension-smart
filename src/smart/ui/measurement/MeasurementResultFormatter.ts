@@ -1,6 +1,6 @@
 import { flow_node__highlighed, no_highlight } from '@/css/visual';
-import { MeasureResult } from '@/smart/model/Measurement';
-import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import type { MeasureResult } from '@/smart/model/Measurement';
+import type { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import { MeasureResultStyles } from '@/smart/utils/measurement/Checker';
 import MeasurementTooltip from '@/smart/ui/measurement/MeasurementTooltip';
 

@@ -2,8 +2,8 @@ import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
 import { editElmCommand } from '@/smart/model/editor/commands/elements';
-import { ModelAction } from '@/smart/model/editor/model';
-import { EditorModel, EditorSignalEvent } from '@/smart/model/editormodel';
+import type { ModelAction } from '@/smart/model/editor/model';
+import type { EditorModel, EditorSignalEvent } from '@/smart/model/editormodel';
 import {
   checkId,
   getModelAllSignals,

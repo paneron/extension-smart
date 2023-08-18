@@ -1,6 +1,6 @@
 import { HTMLTable, Text } from '@blueprintjs/core';
 import React from 'react';
-import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
+import type { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
 
 const TableViewer: React.FC<{

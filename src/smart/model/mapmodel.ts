@@ -5,22 +5,25 @@
 import React from 'react';
 import { MAPVERSION } from '@/smart/utils/constants';
 import { buildModelLinks } from '@/smart/utils/ModelFunctions';
-import { JSONContext, JSONContextType } from '@/smart/utils/repo/io';
-import {
+import type { JSONContextType } from '@/smart/utils/repo/io';
+import { JSONContext } from '@/smart/utils/repo/io';
+import type {
   EditorModel,
   EditorNode,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorApproval,
   isEditorProcess,
   ModelType,
 } from '@/smart/model/editormodel';
+import type {
+  PageHistory } from '@/smart/model/history';
 import {
   addToHistory,
   cloneHistory,
-  createPageHistory,
-  PageHistory,
+  createPageHistory
 } from '@/smart/model/history';
-import { ModelWrapper } from '@/smart/model/modelwrapper';
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
 
 export interface MappingDoc {
   id: string;

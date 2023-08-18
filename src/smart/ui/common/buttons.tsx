@@ -1,4 +1,5 @@
-import { Button, IconName, Intent, PopoverPosition } from '@blueprintjs/core';
+import type { IconName, Intent, PopoverPosition } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { Classes, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 

@@ -7,22 +7,23 @@
  * This legacy design is still used in many places of the codes
  */
 
-import { Elements } from 'react-flow-renderer';
-import { MMELNode } from '@paneron/libmmel/interface/baseinterface';
-import { MMELModel } from '@paneron/libmmel/interface/model';
-import {
+import type { Elements } from 'react-flow-renderer';
+import type { MMELNode } from '@paneron/libmmel/interface/baseinterface';
+import type { MMELModel } from '@paneron/libmmel/interface/model';
+import type {
   EditorDataClass,
   EditorModel,
   EditorNode,
   EditorProcess,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorApproval,
   isEditorDataClass,
   isEditorProcess,
   isEditorRegistry,
   ModelType,
 } from '@/smart/model/editormodel';
-import {
+import type {
   MMELEdge,
   MMELSubprocess,
   MMELSubprocessComponent,
@@ -32,27 +33,29 @@ import {
   isProcess,
   isStartEvent,
 } from '@paneron/libmmel/util/validation';
+import type {
+  EdgeContainer,
+  NodeCallBack } from '@/smart/model/FlowContainer';
 import {
   createDataLinkContainer,
   createEdgeContainer,
   createNodeContainer,
-  EdgeContainer,
-  getEditorNodeCallBack,
-  NodeCallBack,
+  getEditorNodeCallBack
 } from '@/smart/model/FlowContainer';
 import { fillRDCS } from '@/smart/utils/ModelFunctions';
 import * as Logger from '@/lib/logger';
+import type {
+  MapResultType } from '@/smart/utils/map/MappingCalculator';
 import {
   getMappedList,
   getRefNodeStyle,
-  getSourceStyleById,
-  MapResultType,
+  getSourceStyleById
 } from '@/smart/utils/map/MappingCalculator';
-import { MapSet } from '@/smart/model/mapmodel';
-import React from 'react';
-import { SerializedStyles } from '@emotion/react';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
-import { EditorViewOption } from '@/smart/model/States';
+import type { MapSet } from '@/smart/model/mapmodel';
+import type React from 'react';
+import type { SerializedStyles } from '@emotion/react';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { EditorViewOption } from '@/smart/model/States';
 
 /**
  * The wrapper contains the model and which page it is viewing

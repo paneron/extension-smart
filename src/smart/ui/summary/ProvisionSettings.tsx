@@ -3,17 +3,19 @@ import React, { useEffect } from 'react';
 import { useMemo, useState } from 'react';
 import { dialogLayout, dialogLayoutFull } from '@/css/layout';
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
-import {
+import type {
   EditorModel,
-  EditorProcess,
+  EditorProcess } from '@/smart/model/editormodel';
+import {
   isEditorProcess,
 } from '@/smart/model/editormodel';
-import {
+import type {
   MMELProvision,
   MMELReference,
   MMELRole,
 } from '@paneron/libmmel/interface/supportinterface';
-import { MODAILITYOPTIONS, ModalityType } from '@/smart/utils/constants';
+import type { ModalityType } from '@/smart/utils/constants';
+import { MODAILITYOPTIONS } from '@/smart/utils/constants';
 import { clauseSorter } from '@/smart/utils/ModelFunctions';
 import { NormalComboBox } from '@/smart/ui/common/fields';
 import ProvisionSummary from '@/smart/ui/summary/ProvisionSummary';

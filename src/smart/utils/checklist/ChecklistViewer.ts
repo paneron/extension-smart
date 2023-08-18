@@ -1,11 +1,11 @@
-import React from 'react';
+import type React from 'react';
 import { CSSROOTVARIABLES } from '@/css/root.css';
 import { flow_node__highlighed } from '@/css/visual';
-import { ChecklistPackage } from '@/smart/model/checklist';
-import { EditorModel } from '@/smart/model/editormodel';
-import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
-import {
+import type { ChecklistPackage } from '@/smart/model/checklist';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';

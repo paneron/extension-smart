@@ -2,13 +2,13 @@ import { Button, FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useState } from 'react';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
 import { editEGateCommand } from '@/smart/model/editor/commands/elements';
-import { ModelAction } from '@/smart/model/editor/model';
-import {
+import type { ModelAction } from '@/smart/model/editor/model';
+import type {
   EditorEGate,
   EditorModel,
   EditorSubprocess,
 } from '@/smart/model/editormodel';
-import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
+import type { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import {
   checkId,
   getModelAllMeasures,

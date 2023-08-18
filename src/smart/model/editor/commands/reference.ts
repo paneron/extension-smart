@@ -2,8 +2,8 @@
  * This file centralizes the commands related to reference
  */
 
-import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { MMELReference } from '@paneron/libmmel/interface/supportinterface';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * Delete references

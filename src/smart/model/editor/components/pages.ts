@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import {
+import type {
   MMELEdge,
   MMELSubprocess,
 } from '@paneron/libmmel/interface/flowcontrolinterface';
@@ -10,16 +10,17 @@ import {
 } from '@/smart/utils/handler/cascadeModelHandler';
 import { updatePageElement } from '@/smart/utils/ModelFunctions';
 import * as Logger from '@/lib/logger';
-import {
+import type {
   EditorNode,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorApproval,
   isEditorDataClass,
   isEditorProcess,
   isEditorRegistry,
 } from '@/smart/model/editormodel';
-import { UndoReducerInterface } from '@/smart/model/editor/interface';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { UndoReducerInterface } from '@/smart/model/editor/interface';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 interface RegCascadeAction {
   subtask: 'data';

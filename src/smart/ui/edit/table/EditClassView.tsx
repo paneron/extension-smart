@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 import { useMemo } from 'react';
 import { dialogLayout } from '@/css/layout';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
-import { IListItem } from '@/smart/ui/common/fields';
+import type { MMELTable } from '@paneron/libmmel/interface/supportinterface';
+import type { IListItem } from '@/smart/ui/common/fields';
 import ListWithPopoverItem from '@/smart/ui/common/listmanagement/listPopoverItem';
 import ClassItemDisplayEdit from '@/smart/ui/edit/table/ClassItemDisplayEdit';
 import TableClassDefinitionEdit from '@/smart/ui/edit/table/TableClassDefinitionEdit';
-import TableClassItemEdit, { TableRowClass } from '@/smart/ui/edit/table/TableClassItem';
+import type { TableRowClass } from '@/smart/ui/edit/table/TableClassItem';
+import TableClassItemEdit from '@/smart/ui/edit/table/TableClassItem';
 
 type DialogType = 'class' | 'display';
 

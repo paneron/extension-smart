@@ -1,10 +1,11 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
-import {
+import type { MMELTable } from '@paneron/libmmel/interface/supportinterface';
+import type {
   IListItem,
-  IManageHandler,
+  IManageHandler } from '@/smart/ui/common/fields';
+import {
   NormalTextField,
 } from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';

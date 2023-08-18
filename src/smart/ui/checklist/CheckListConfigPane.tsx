@@ -3,14 +3,14 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import MGDLabel from '@/smart/MGDComponents/MGDLabel';
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
-import {
+import type {
   ChecklistCallback,
   ChecklistPackage,
   ChecklistResult,
   ChecklistSetting,
 } from '@/smart/model/checklist';
-import { EditorModel } from '@/smart/model/editormodel';
-import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
 import { updateResult } from '@/smart/utils/checklist/ChecklistCalculator';
 import {
   calEdgeAnimated,
@@ -21,7 +21,8 @@ import {
   calculateTaskList,
   initResult,
 } from '@/smart/utils/checklist/CheckllistInitializer';
-import { MODAILITYOPTIONS, ModalityType } from '@/smart/utils/constants';
+import type { ModalityType } from '@/smart/utils/constants';
+import { MODAILITYOPTIONS } from '@/smart/utils/constants';
 import CircleGraph from '@/smart/ui/dashboard/CircleGraph';
 import { CustomCLAttribute, CustomCLProvision } from '@/smart/ui/checklist/CustomFields';
 

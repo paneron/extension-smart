@@ -1,12 +1,12 @@
-import { Edge } from 'react-flow-renderer';
-import {
+import type { Edge } from 'react-flow-renderer';
+import type {
   RepoDocItem,
   RepoImpItem,
   RepoIndex,
   RepoItems,
   RepoRefItem,
 } from '@/smart/model/repo';
-import { LegendInterface } from '@/smart/model/States';
+import type { LegendInterface } from '@/smart/model/States';
 import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
 
 export type RepoNodeType = 'own' | 'repo' | 'outside';

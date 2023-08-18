@@ -3,7 +3,7 @@ import { Button, ControlGroup, Menu, MenuItem } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import MGDButton from '@/smart/MGDComponents/MGDButton';
 import { MGDButtonType } from '@/css/MGDButton';
-import { WorkspaceDiagPackage } from '@/smart/ui/dialog/WorkspaceDiag';
+import type { WorkspaceDiagPackage } from '@/smart/ui/dialog/WorkspaceDiag';
 
 const WorkspaceFileMenu: React.FC<{
   onRepoSave: () => void;

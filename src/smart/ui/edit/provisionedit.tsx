@@ -1,7 +1,7 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
-import { EditorModel } from '@/smart/model/editormodel';
-import { MMELProvision } from '@paneron/libmmel/interface/supportinterface';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { MMELProvision } from '@paneron/libmmel/interface/supportinterface';
 import { getModelAllRefs } from '@/smart/utils/ModelFunctions';
 import { MODAILITYOPTIONS } from '@/smart/utils/constants';
 import {
@@ -9,7 +9,7 @@ import {
   NormalComboBox,
   NormalTextField,
 } from '@/smart/ui/common/fields';
-import { IMMELObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
+import type { IMMELObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
 
 export function matchProvisionFilter(x: IMMELObject, filter: string): boolean {
   const provision = x as MMELProvision;

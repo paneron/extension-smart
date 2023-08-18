@@ -1,9 +1,12 @@
-import { Edge, Node, Position } from 'react-flow-renderer';
-import { EditorModel, isEditorProcess } from '@/smart/model/editormodel';
-import { MapProfile } from '@/smart/model/mapmodel';
-import { ModelWrapper } from '@/smart/model/modelwrapper';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
-import { createEdge, RepoLegend, RepoNodeType } from '@/smart/utils/repo/CommonFunctions';
+import type { Edge, Node } from 'react-flow-renderer';
+import { Position } from 'react-flow-renderer';
+import type { EditorModel } from '@/smart/model/editormodel';
+import { isEditorProcess } from '@/smart/model/editormodel';
+import type { MapProfile } from '@/smart/model/mapmodel';
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { RepoNodeType } from '@/smart/utils/repo/CommonFunctions';
+import { createEdge, RepoLegend } from '@/smart/utils/repo/CommonFunctions';
 import { getPathByNS, RepoFileType } from '@/smart/utils/repo/io';
 
 type Maps = Record<string, MapProfile>;

@@ -1,15 +1,17 @@
 /** @jsx jsx */
 
 import { jsx } from '@emotion/react';
+import type {
+  IconName } from '@blueprintjs/core';
 import {
   Button,
   FormGroup,
   HTMLSelect,
-  IconName,
   NumericInput,
 } from '@blueprintjs/core';
-import React, { RefObject, useState } from 'react';
-import { EditorModel } from '@/smart/model/editormodel';
+import type { RefObject } from 'react';
+import React, { useState } from 'react';
+import type { EditorModel } from '@/smart/model/editormodel';
 import MGDTextarea from '@/smart/MGDComponents/MGDTextarea';
 import {
   mgd_input,
@@ -21,7 +23,7 @@ import {
   shame__mystery_container,
   shame__mystery_container__column,
 } from '@/css/shame';
-import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
+import type { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 
 export interface IAdditionalListButton {
   text: string;

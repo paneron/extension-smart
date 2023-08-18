@@ -2,11 +2,12 @@ import React from 'react';
 import { popoverPanelContainer } from '@/css/layout';
 import MGDHeading from '@/smart/MGDComponents/MGDHeading';
 import MGDLabel from '@/smart/MGDComponents/MGDLabel';
-import {
+import type {
   MeasureResult,
-  MeasureRType,
   MTestItem,
-  MTestReport,
+  MTestReport } from '@/smart/model/Measurement';
+import {
+  MeasureRType
 } from '@/smart/model/Measurement';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
 

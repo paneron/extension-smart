@@ -1,6 +1,6 @@
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useState } from 'react';
-import { MMELDocument } from '@/smart/model/document';
+import type { MMELDocument } from '@/smart/model/document';
 import { createNewMMELDocument } from '@/smart/utils/EditorFactory';
 import SMARTDocumentEdit from '@/smart/ui/doc/SMARTDocumentEdit';
 import DocEditToolbar from '@/smart/ui/menu/DocEditToolbar';

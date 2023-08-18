@@ -1,6 +1,6 @@
 import React from 'react';
-import { EditorApproval, EditorRegistry } from '@/smart/model/editormodel';
-import {
+import type { EditorApproval, EditorRegistry } from '@/smart/model/editormodel';
+import type {
   MMELReference,
   MMELRole,
 } from '@paneron/libmmel/interface/supportinterface';

@@ -1,13 +1,13 @@
-import { SerializedStyles } from '@emotion/react';
-import React from 'react';
+import type { SerializedStyles } from '@emotion/react';
+import type React from 'react';
 import { textToMMEL } from '@paneron/libmmel';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
-import {
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import { EditorNode } from '@/smart/model/editormodel';
-import { LegendInterface } from '@/smart/model/States';
+import type { EditorNode } from '@/smart/model/editormodel';
+import type { LegendInterface } from '@/smart/model/States';
 
 
 console.log(textToMMEL);

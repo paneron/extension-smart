@@ -2,57 +2,64 @@ import { Button, ControlGroup } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import Workspace from '@riboseinc/paneron-extension-kit/widgets/Workspace';
 import React, { useContext } from 'react';
+import type {
+  OnLoadParams } from 'react-flow-renderer';
 import ReactFlow, {
   Controls,
-  OnLoadParams,
   ReactFlowProvider,
 } from 'react-flow-renderer';
 import { reactFlowContainerLayout } from '@/css/layout';
 import { MGDButtonType } from '@/css/MGDButton';
 import MGDButton from '@/smart/MGDComponents/MGDButton';
-import { EditorModel, ModelType } from '@/smart/model/editormodel';
+import type { EditorModel } from '@/smart/model/editormodel';
+import { ModelType } from '@/smart/model/editormodel';
+import type {
+  PageHistory } from '@/smart/model/history';
 import {
   addToHistory,
   createPageHistory,
   getBreadcrumbs,
-  PageHistory,
   popPage,
 } from '@/smart/model/history';
+import type {
+  ModelWrapper } from '@/smart/model/modelwrapper';
 import {
-  getMapperReactFlowElementsFrom,
-  ModelWrapper,
+  getMapperReactFlowElementsFrom
 } from '@/smart/model/modelwrapper';
+import type {
+  MapperSelectedInterface,
+  MapperState,
+  MapperViewOption } from '@/smart/model/States';
 import {
   EdgeTypes,
   isModelWrapper,
-  MapperSelectedInterface,
-  MapperState,
-  MapperViewOption,
   NodeTypes,
 } from '@/smart/model/States';
 import ComponentSummary from '@/smart/ui/popover/ComponentSummary';
+import type {
+  MapperModelType,
+  MapSet } from '@/smart/model/mapmodel';
 import {
   buildHistoryMap,
   indexModel,
-  MapperModelLabel,
-  MapperModelType,
-  MapSet,
+  MapperModelLabel
 } from '@/smart/model/mapmodel';
+import type {
+  MapResultType } from '@/smart/utils/map/MappingCalculator';
 import {
   isParentMapFullCovered,
   MappingResultStyles,
-  MappingSourceStyles,
-  MapResultType,
+  MappingSourceStyles
 } from '@/smart/utils/map/MappingCalculator';
 import LegendPane from '@/smart/ui/common/description/LegendPane';
 import MappingPartyList from '@/smart/ui/mapper/mappartylist';
 import { handleModelOpen } from '@/smart/utils/IOFunctions';
-import { MMELDocument } from '@/smart/model/document';
+import type { MMELDocument } from '@/smart/model/document';
 import SMARTDocumentView from '@/smart/ui/mapper/document/DocumentView';
 import { Popover2 } from '@blueprintjs/popover2';
 import MapperDocumentMenu from '@/smart/ui/menu/MapperDocumentMenu';
 import RepoMapRefMenus from '@/smart/ui/mapper/repo/RepoMapRefMenu';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import { MapDiffStyles } from '@/smart/ui/mapper/MappingsCanvus';
 import {
   MappingDiffResultStyles,

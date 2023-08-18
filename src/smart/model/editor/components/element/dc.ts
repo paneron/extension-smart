@@ -1,12 +1,13 @@
-import { MMELSubprocess } from '@paneron/libmmel/interface/flowcontrolinterface';
+import type { MMELSubprocess } from '@paneron/libmmel/interface/flowcontrolinterface';
 import { fillRDCS } from '@/smart/utils/ModelFunctions';
-import {
+import type {
   EditorDataClass,
-  EditorNode,
+  EditorNode } from '@/smart/model/editormodel';
+import {
   isEditorDataClass,
 } from '@/smart/model/editormodel';
-import { ModelAction } from '@/smart/model/editor/model';
-import { ElmAction, DataCascadeDCID } from '@/smart/model/editor/components/elements';
+import type { ModelAction } from '@/smart/model/editor/model';
+import type { ElmAction, DataCascadeDCID } from '@/smart/model/editor/components/elements';
 
 /**
  * Add a new data class

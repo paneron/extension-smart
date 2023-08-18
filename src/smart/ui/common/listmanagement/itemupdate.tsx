@@ -2,8 +2,8 @@ import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import MGDButtonGroup from '@/smart/MGDComponents/MGDButtonGroup';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import { IUpdateInterface } from '@/smart/ui/common/fields';
-import { IObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
+import type { IUpdateInterface } from '@/smart/ui/common/fields';
+import type { IObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
 
 const ItemUpdatePane = <T extends IObject | undefined>(props: IUpdateInterface<T>) => {
   const {

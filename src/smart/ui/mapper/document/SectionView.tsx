@@ -1,5 +1,5 @@
 import React from 'react';
-import { DocMapIndex, DocSection, DocStatement } from '@/smart/model/document';
+import type { DocMapIndex, DocSection, DocStatement } from '@/smart/model/document';
 import ParagraphView from '@/smart/ui/mapper/document/ParagraphView';
 
 const SectionView: React.FC<{

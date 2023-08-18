@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Menu, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { FILE_TYPE, handleDocumentOpen } from '@/smart/utils/IOFunctions';
-import { MMELDocument } from '@/smart/model/document';
+import type { MMELDocument } from '@/smart/model/document';
 
 const MapperDocumentMenu: React.FC<{
   setDocument: (x: MMELDocument) => void;

@@ -1,6 +1,6 @@
-import { SerializedStyles } from '@emotion/react';
+import type { SerializedStyles } from '@emotion/react';
 import React from 'react';
-import { RefObject } from 'react';
+import type { RefObject } from 'react';
 import { mgdLabel } from '@/css/form';
 import MGDProcessBox from '@/smart/MGDComponents/MGDProcessBox';
 import { ModelType } from '@/smart/model/editormodel';

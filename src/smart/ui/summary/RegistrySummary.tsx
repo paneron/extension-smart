@@ -5,11 +5,13 @@ import { searchResultEntryRow } from '@/css/shame';
 import MGDContainer from '@/smart/MGDComponents/MGDContainer';
 import MGDLabel from '@/smart/MGDComponents/MGDLabel';
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
-import { EditorModel, isEditorRegistry } from '@/smart/model/editormodel';
-import { PageHistory } from '@/smart/model/history';
+import type { EditorModel } from '@/smart/model/editormodel';
+import { isEditorRegistry } from '@/smart/model/editormodel';
+import type { PageHistory } from '@/smart/model/history';
+import type {
+  RegSummarySearchRecord } from '@/smart/utils/summary/RegistrySummary';
 import {
-  computeRegistrySummary,
-  RegSummarySearchRecord,
+  computeRegistrySummary
 } from '@/smart/utils/summary/RegistrySummary';
 import { NormalComboBox, NumericComboBox } from '@/smart/ui/common/fields';
 

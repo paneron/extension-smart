@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import {
+import type {
   IManageHandler,
   IUpdateInterface,
   IViewListInterface,
 } from '@/smart/ui/common/fields';
 import ItemUpdatePane from '@/smart/ui/common/listmanagement/itemupdate';
 import ListViewPane from '@/smart/ui/common/listmanagement/listview';
-import { IObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
+import type { IObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
 
 export enum ListManagePageType {
   VIEW = 'view',

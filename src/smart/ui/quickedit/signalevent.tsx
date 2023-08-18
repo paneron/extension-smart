@@ -1,9 +1,9 @@
 import React from 'react';
-import { ModelAction } from '@/smart/model/editor/model';
-import { EditorModel, EditorSignalEvent } from '@/smart/model/editormodel';
+import type { ModelAction } from '@/smart/model/editor/model';
+import type { EditorModel, EditorSignalEvent } from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { EditAction } from '@/smart/utils/constants';
-import { DialogSetterInterface } from '@/smart/ui/dialog/EditorDialogs';
+import type { DialogSetterInterface } from '@/smart/ui/dialog/EditorDialogs';
 import EditSignalEventPage from '@/smart/ui/edit/signaleventedit';
 
 const QuickEditSignalEvent: React.FC<{

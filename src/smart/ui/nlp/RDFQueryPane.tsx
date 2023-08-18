@@ -2,7 +2,7 @@ import { Button, FormGroup, Text } from '@blueprintjs/core';
 import React, { useState } from 'react';
 import { ReactFlowProvider } from 'react-flow-renderer';
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
-import { ProvisionRDF } from '@/smart/model/SemanticTriple';
+import type { ProvisionRDF } from '@/smart/model/SemanticTriple';
 import { askRDF } from '@/smart/utils/nlp/query';
 import { NormalTextField } from '@/smart/ui/common/fields';
 import { LoadingContainer } from '@/smart/ui/common/Loading';

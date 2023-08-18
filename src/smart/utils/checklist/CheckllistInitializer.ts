@@ -1,21 +1,23 @@
-import {
-  addInvertedItem,
+import type {
   ChecklistResult,
   ChecklistSetting,
   ChecklistTaskList,
   ChecklistUpdateList,
-  createCLItem,
   EGatePath,
-  EGatePathTaskList,
+  EGatePathTaskList } from '@/smart/model/checklist';
+import {
+  addInvertedItem,
+  createCLItem,
   getCheckListId,
 } from '@/smart/model/checklist';
-import {
+import type {
   EditorApproval,
   EditorEGate,
   EditorModel,
   EditorProcess,
   EditorRegistry,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorApproval,
   isEditorData,
   isEditorDataClass,
@@ -23,7 +25,7 @@ import {
   isEditorProcess,
   isEditorRegistry,
 } from '@/smart/model/editormodel';
-import { ModalityType } from '@/smart/utils/constants';
+import type { ModalityType } from '@/smart/utils/constants';
 import { calculateReach, calInitEGates } from '@/smart/utils/checklist/ChecklistCalculator';
 
 export function calculateTaskList(

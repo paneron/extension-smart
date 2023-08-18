@@ -2,8 +2,8 @@
  * This file centralizes the commands related to import
  */
 
-import { EditorModel } from '@/smart/model/editormodel';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 /**
  * Import an element from another model

@@ -1,9 +1,10 @@
+import type {
+  IToastProps } from '@blueprintjs/core';
 import {
   Text,
   Button,
   ButtonGroup,
-  Dialog,
-  IToastProps,
+  Dialog
 } from '@blueprintjs/core';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -14,7 +15,7 @@ import {
 import MGDContainer from '@/smart/MGDComponents/MGDContainer';
 import MGDHeading from '@/smart/MGDComponents/MGDHeading';
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
-import { EditorModel } from '@/smart/model/editormodel';
+import type { EditorModel } from '@/smart/model/editormodel';
 import Chart27001 from '@/smart/ui/application/ISO27001/Chart';
 import Application27001ConfigurePage from '@/smart/ui/application/ISO27001/ConfigurePage';
 import Application27001LogPage from '@/smart/ui/application/ISO27001/LogPage';
@@ -22,12 +23,13 @@ import { setInterval, clearInterval } from 'timers';
 import { obtainData } from '@/smart/ui/application/ISO27001/DataFeeder';
 import { testMeasurement27001 } from '@/smart/ui/application/ISO27001/ReadingCalculator';
 import { Popover2 } from '@blueprintjs/popover2';
-import { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
-import {
+import type { ViewFunctionInterface } from '@/smart/model/ViewFunctionModel';
+import type {
   Application27001Setting,
   Dialog27001Interface,
-  fixedlocalhost,
-  Log27001,
+  Log27001 } from '@/smart/ui/application/ISO27001/model';
+import {
+  fixedlocalhost
 } from '@/smart/ui/application/ISO27001/model';
 import LineChart27001 from '@/smart/ui/application/ISO27001/LineChart';
 import React from 'react';

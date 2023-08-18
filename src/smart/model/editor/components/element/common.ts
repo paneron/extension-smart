@@ -1,6 +1,6 @@
-import { EditorNode } from '@/smart/model/editormodel';
-import { ModelAction } from '@/smart/model/editor/model';
-import { ElmAction } from '@/smart/model/editor/components/elements';
+import type { EditorNode } from '@/smart/model/editormodel';
+import type { ModelAction } from '@/smart/model/editor/model';
+import type { ElmAction } from '@/smart/model/editor/components/elements';
 
 /**
  * Handle the command to delete elements in the model

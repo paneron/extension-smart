@@ -1,7 +1,8 @@
-import {
+import type {
   EditorModel,
   EditorNode,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorApproval,
   isEditorEgate,
   isEditorProcess,
@@ -9,11 +10,11 @@ import {
   isEditorTimerEvent,
 } from '@/smart/model/editormodel';
 import React from 'react';
-import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
+import type { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import { Button, Text } from '@blueprintjs/core';
-import { MainFlowNodeTypes } from '@/smart/utils/constants';
+import type { MainFlowNodeTypes } from '@/smart/utils/constants';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import {
+import type {
   MMELNote,
   MMELProvision,
   MMELRole,
@@ -26,7 +27,7 @@ import {
   DescribeTimer,
 } from '@/smart/ui/common/description/ComponentDescription';
 import { DescribeProcess } from '@/smart/ui/common/description/process';
-import { PageHistory } from '@/smart/model/history';
+import type { PageHistory } from '@/smart/model/history';
 import { DescribeApproval } from '@/smart/ui/common/description/approval';
 
 const SimulationDetails: React.FC<{

@@ -2,15 +2,16 @@
  * The data model for checklist
  */
 
-import { MMELProvision } from '@paneron/libmmel/interface/supportinterface';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
-import { ModalityType } from '@/smart/utils/constants';
-import {
+import type { MMELProvision } from '@paneron/libmmel/interface/supportinterface';
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type { ModalityType } from '@/smart/utils/constants';
+import type {
   EditorApproval,
   EditorDataClass,
   EditorEGate,
   EditorProcess,
-  EditorRegistry,
+  EditorRegistry } from '@/smart/model/editormodel';
+import {
   isMMELDataAttribute,
 } from '@/smart/model/editormodel';
 

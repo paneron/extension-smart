@@ -1,7 +1,8 @@
 import React from 'react';
-import { VarInputInterface } from '@/smart/model/Measurement';
+import type { VarInputInterface } from '@/smart/model/Measurement';
+import type {
+  MMELVariable } from '@paneron/libmmel/interface/supportinterface';
 import {
-  MMELVariable,
   VarType,
 } from '@paneron/libmmel/interface/supportinterface';
 import { NormalTextField } from '@/smart/ui/common/fields';

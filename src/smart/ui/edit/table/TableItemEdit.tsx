@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, FormGroup, Tab, Tabs } from '@blueprintjs/core';
-import { MMELTable } from '@paneron/libmmel/interface/supportinterface';
+import type { MMELTable } from '@paneron/libmmel/interface/supportinterface';
 import { NormalTextField } from '@/smart/ui/common/fields';
 import { useContext, useState } from 'react';
 import {

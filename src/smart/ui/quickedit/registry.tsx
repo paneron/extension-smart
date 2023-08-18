@@ -4,16 +4,16 @@ import {
   editImportRegistryCommand,
   editRegistryCommand,
 } from '@/smart/model/editor/commands/data';
-import { RegistryCombined } from '@/smart/model/editor/components/element/registry';
-import { ModelAction } from '@/smart/model/editor/model';
-import {
+import type { RegistryCombined } from '@/smart/model/editor/components/element/registry';
+import type { ModelAction } from '@/smart/model/editor/model';
+import type {
   EditorDataClass,
   EditorModel,
   EditorRegistry,
 } from '@/smart/model/editormodel';
-import { RefTextSelection } from '@/smart/model/selectionImport';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
-import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
+import type { RefTextSelection } from '@/smart/model/selectionImport';
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
 import { NormalTextField } from '@/smart/ui/common/fields';
 import { EditPageButtons } from '@/smart/ui/edit/commons';

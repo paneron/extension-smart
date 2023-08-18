@@ -1,12 +1,13 @@
 import { Button, ControlGroup, Dialog } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import React, { useState } from 'react';
-import { MMELDocument } from '@/smart/model/document';
+import type { MMELDocument } from '@/smart/model/document';
+import type {
+  ModelWrapper } from '@/smart/model/modelwrapper';
 import {
-  createEditorModelWrapper,
-  ModelWrapper,
+  createEditorModelWrapper
 } from '@/smart/model/modelwrapper';
-import { MMELRepo, RepoIndex, RepoItemType } from '@/smart/model/repo';
+import type { MMELRepo, RepoIndex, RepoItemType } from '@/smart/model/repo';
 import {
   EXTENSIONVERSION,
   MODELVERSION,

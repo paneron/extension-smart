@@ -1,11 +1,12 @@
-import {
+import type {
   ChecklistResult,
   ChecklistTaskList,
   EGatePathTaskList,
 } from '@/smart/model/checklist';
-import {
+import type {
   EditorModel,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorApproval,
   isEditorEgate,
   isEditorProcess,

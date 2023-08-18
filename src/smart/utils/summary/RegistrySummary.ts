@@ -1,17 +1,19 @@
-import {
+import type {
   EditorModel,
   EditorNode,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorApproval,
   isEditorProcess,
 } from '@/smart/model/editormodel';
+import type {
+  PageHistory } from '@/smart/model/history';
 import {
   addToHistory,
   cloneHistory,
-  createPageHistory,
-  PageHistory,
+  createPageHistory
 } from '@/smart/model/history';
-import { LegendInterface } from '@/smart/model/States';
+import type { LegendInterface } from '@/smart/model/States';
 
 export enum SearchHighlightType {
   SELECTED = 'selected',

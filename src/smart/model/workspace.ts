@@ -2,9 +2,10 @@
  * It is the data model of how data instances are stored and associated to the model
  */
 
-import { IObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
+import type { IObject } from '@/smart/ui/common/listmanagement/listPopoverItem';
 import { WSVERSION } from '@/smart/utils/constants';
-import { JSONContext, JSONContextType } from '@/smart/utils/repo/io';
+import type { JSONContextType } from '@/smart/utils/repo/io';
+import { JSONContext } from '@/smart/utils/repo/io';
 
 export interface SMARTDocument extends IObject {
   name: string;

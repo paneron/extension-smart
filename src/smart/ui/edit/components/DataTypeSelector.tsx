@@ -1,12 +1,13 @@
 import { Button, ButtonGroup, FormGroup, Menu } from '@blueprintjs/core';
-import {
+import type {
   ItemListRenderer,
   ItemPredicate,
-  ItemRenderer,
+  ItemRenderer } from '@blueprintjs/select';
+import {
   Select,
 } from '@blueprintjs/select';
 import React from 'react';
-import { AttributeType } from '@/smart/ui/edit/components/AttributeList';
+import type { AttributeType } from '@/smart/ui/edit/components/AttributeList';
 
 const DataTypeSelect = Select.ofType<AttributeType>();
 

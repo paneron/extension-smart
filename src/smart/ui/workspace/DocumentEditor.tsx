@@ -1,12 +1,13 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import {
+import type {
   EditorDataClass,
-  EditorModel,
+  EditorModel } from '@/smart/model/editormodel';
+import {
   isEditorRegistry,
 } from '@/smart/model/editormodel';
-import { SMARTDocument, SMARTDocumentStore } from '@/smart/model/workspace';
+import type { SMARTDocument, SMARTDocumentStore } from '@/smart/model/workspace';
 import DCDocumentAttributes from '@/smart/ui/workspace/DCDocumentAttributes';
 
 export type DocumentEditInterface = SMARTDocument & { regid: string };

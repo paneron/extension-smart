@@ -1,12 +1,13 @@
 import { FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
+import type {
+  EditorModel } from '@/smart/model/editormodel';
 import {
-  EditorModel,
   isEditorDataClass,
   isEditorRegistry,
 } from '@/smart/model/editormodel';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import {
   getReferenceDCTypeName,
   referenceSorter,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NormalTextField } from '@/smart/ui/common/fields';
-import { MappingMeta } from '@/smart/model/mapmodel';
+import type { MappingMeta } from '@/smart/model/mapmodel';
 import { Button, FormGroup } from '@blueprintjs/core';
 import { EditPageButtons } from '@/smart/ui/edit/commons';
 import { mgdLabel } from '@/css/form';

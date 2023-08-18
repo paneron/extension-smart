@@ -1,6 +1,7 @@
 import React from 'react';
+import type {
+  BASICTYPES } from '@/smart/utils/constants';
 import {
-  BASICTYPES,
   BooleanOptions,
   BOOLEANTYPE,
   DATETIMETYPE,

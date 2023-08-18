@@ -1,15 +1,17 @@
-import { SaveFileDialogProps } from '@riboseinc/paneron-extension-kit/types/dialogs';
-import { MMELDocument } from '@/smart/model/document';
-import { EditorModel } from '@/smart/model/editormodel';
-import { MapProfile } from '@/smart/model/mapmodel';
-import { createEditorModelWrapper, ModelWrapper } from '@/smart/model/modelwrapper';
-import { SMARTWorkspace } from '@/smart/model/workspace';
+import type { SaveFileDialogProps } from '@riboseinc/paneron-extension-kit/types/dialogs';
+import type { MMELDocument } from '@/smart/model/document';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { MapProfile } from '@/smart/model/mapmodel';
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
+import { createEditorModelWrapper } from '@/smart/model/modelwrapper';
+import type { SMARTWorkspace } from '@/smart/model/workspace';
 import { textToMMEL } from '@paneron/libmmel';
-import {
+import type {
   LoggerInterface,
+  OpenFileInterface } from '@/smart/utils/constants';
+import {
   MAPVERSION,
   MODELVERSION,
-  OpenFileInterface,
   WSVERSION,
 } from '@/smart/utils/constants';
 import { textToDoc } from '@/smart/utils/DocumentFunctions';

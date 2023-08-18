@@ -2,10 +2,10 @@ import { Popover2 } from '@blueprintjs/popover2';
 import React, { useState } from 'react';
 import { Button, Dialog } from '@blueprintjs/core';
 import RepoExternalFileMenu from '@/smart/ui/mapper/repo/RepoExternalFileMenu';
-import { MMELDocument } from '@/smart/model/document';
-import { ModelWrapper } from '@/smart/model/modelwrapper';
+import type { MMELDocument } from '@/smart/model/document';
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
 import RepoInternalFileMenu from '@/smart/ui/mapper/repo/RepoInternalFileMenu';
-import { MMELRepo, RepoIndex, RepoItemType } from '@/smart/model/repo';
+import type { MMELRepo, RepoIndex, RepoItemType } from '@/smart/model/repo';
 import RepoItemSelector from '@/smart/ui/repo/RepoItemSelector';
 
 const RepoMapRefMenus: React.FC<{

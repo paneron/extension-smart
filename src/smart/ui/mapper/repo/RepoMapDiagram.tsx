@@ -1,9 +1,9 @@
 import React from 'react';
 import { useMemo } from 'react';
 import ReactFlow, { ReactFlowProvider } from 'react-flow-renderer';
-import { MapProfile } from '@/smart/model/mapmodel';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
-import { MapperViewOption } from '@/smart/model/States';
+import type { MapProfile } from '@/smart/model/mapmodel';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { MapperViewOption } from '@/smart/model/States';
 import { repoMapDiffNode } from '@/smart/utils/map/MappingDiff';
 import { repoMapExploreNode } from '@/smart/utils/map/RepoMap';
 import {

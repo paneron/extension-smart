@@ -3,7 +3,7 @@ import { Classes, Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import MGDContainer from '@/smart/MGDComponents/MGDContainer';
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
-import { MMELView } from '@paneron/libmmel/interface/supportinterface';
+import type { MMELView } from '@paneron/libmmel/interface/supportinterface';
 
 const ProfileControl: React.FC<{
   values: Record<string, string>;

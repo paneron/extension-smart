@@ -1,6 +1,6 @@
 import React from 'react';
 import MGDLabel from '@/smart/MGDComponents/MGDLabel';
-import { Log27001Record, SettingRange } from '@/smart/ui/application/ISO27001/model';
+import type { Log27001Record, SettingRange } from '@/smart/ui/application/ISO27001/model';
 
 const path =
   'M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831';

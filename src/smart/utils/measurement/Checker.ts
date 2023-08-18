@@ -1,21 +1,24 @@
-import { IToastProps } from '@blueprintjs/core';
-import {
+import type { IToastProps } from '@blueprintjs/core';
+import type {
   EditorModel,
   EditorNode,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorEgate,
   isEditorProcess,
 } from '@/smart/model/editormodel';
-import {
+import type {
   EnviromentValues,
   EnviromentVariables,
   MeasureResult,
-  MeasureRType,
-  MTestReport,
+  MTestReport } from '@/smart/model/Measurement';
+import {
+  MeasureRType
 } from '@/smart/model/Measurement';
-import { LegendInterface } from '@/smart/model/States';
-import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
-import { MMELTable, VarType } from '@paneron/libmmel/interface/supportinterface';
+import type { LegendInterface } from '@/smart/model/States';
+import type { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
+import type { MMELTable } from '@paneron/libmmel/interface/supportinterface';
+import { VarType } from '@paneron/libmmel/interface/supportinterface';
 import { buildEdgeConnections } from '@/smart/utils/ModelFunctions';
 import { evaluateCondition, resolveMTNode } from '@/smart/utils/measurement/Evaluator';
 import { parseMeasurement } from '@/smart/utils/measurement/Parser';

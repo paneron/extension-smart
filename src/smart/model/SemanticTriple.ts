@@ -2,7 +2,7 @@
  * Data model for the NLP graph
  */
 
-import { Node } from 'react-flow-renderer';
+import type { Node } from 'react-flow-renderer';
 
 export interface STNode {
   data: string;

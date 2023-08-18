@@ -1,5 +1,5 @@
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import { MMELComment } from '@paneron/libmmel/interface/supportinterface';
+import type { MMELComment } from '@paneron/libmmel/interface/supportinterface';
 import { findUniqueID } from '@/smart/utils/ModelFunctions';
 
 export interface CommentInstance {

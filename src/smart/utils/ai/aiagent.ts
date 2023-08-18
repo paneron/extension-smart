@@ -1,16 +1,18 @@
-import { MMELDocument } from '@/smart/model/document';
-import {
+import type { MMELDocument } from '@/smart/model/document';
+import type {
   EditorModel,
   EditorProcess,
-  EditorSubprocess,
+  EditorSubprocess } from '@/smart/model/editormodel';
+import {
   isEditorProcess,
 } from '@/smart/model/editormodel';
+import type {
+  ModelWrapper } from '@/smart/model/modelwrapper';
 import {
-  createEditorModelWrapper,
-  ModelWrapper,
+  createEditorModelWrapper
 } from '@/smart/model/modelwrapper';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import {
+import type {
   MMELLink,
   MMELNote,
   MMELTextSection,

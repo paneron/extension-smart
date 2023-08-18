@@ -1,5 +1,5 @@
 import React from 'react';
-import { EditorModel, EditorProcess } from '@/smart/model/editormodel';
+import type { EditorModel, EditorProcess } from '@/smart/model/editormodel';
 import { ProvisionList } from '@/smart/ui/common/description/ComponentList';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
 

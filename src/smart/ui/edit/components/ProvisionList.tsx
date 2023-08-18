@@ -1,14 +1,15 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { useMemo } from 'react';
-import { EditorModel } from '@/smart/model/editormodel';
-import { RefTextSelection } from '@/smart/model/selectionImport';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { RefTextSelection } from '@/smart/model/selectionImport';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import {
+import type {
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
-import { MODAILITYOPTIONS, ModalityType } from '@/smart/utils/constants';
+import type { ModalityType } from '@/smart/utils/constants';
+import { MODAILITYOPTIONS } from '@/smart/utils/constants';
 import { createProvision } from '@/smart/utils/EditorFactory';
 import {
   findUniqueID,

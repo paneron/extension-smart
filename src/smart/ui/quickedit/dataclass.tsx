@@ -4,11 +4,11 @@ import {
   editDCCommand,
   editImportDCCommand,
 } from '@/smart/model/editor/commands/data';
-import { ModelAction } from '@/smart/model/editor/model';
-import { EditorDataClass, EditorModel } from '@/smart/model/editormodel';
-import { RefTextSelection } from '@/smart/model/selectionImport';
-import { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
-import { MMELReference } from '@paneron/libmmel/interface/supportinterface';
+import type { ModelAction } from '@/smart/model/editor/model';
+import type { EditorDataClass, EditorModel } from '@/smart/model/editormodel';
+import type { RefTextSelection } from '@/smart/model/selectionImport';
+import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
+import type { MMELReference } from '@paneron/libmmel/interface/supportinterface';
 import { DescriptionItem } from '@/smart/ui/common/description/fields';
 import { EditPageButtons } from '@/smart/ui/edit/commons';
 import AttributeListQuickEdit, {

@@ -1,13 +1,13 @@
 import { FormGroup } from '@blueprintjs/core';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
-import {
+import type {
   EditorModel,
   EditorProcess,
   EditorRegistry,
 } from '@/smart/model/editormodel';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
-import {
+import type {
   MMELLink,
   MMELNote,
   MMELProvision,
@@ -28,8 +28,9 @@ import {
 } from '@/smart/ui/common/fields';
 import ListWithPopoverItem from '@/smart/ui/common/listmanagement/listPopoverItem';
 import { EditPageButtons } from '@/smart/ui/edit/commons';
+import type {
+  IMeasure } from '@/smart/ui/edit/measurementExpressionEdit';
 import {
-  IMeasure,
   matchMeasurementFilter,
   MeasurementItem,
 } from '@/smart/ui/edit/measurementExpressionEdit';
@@ -39,11 +40,11 @@ import { DescriptionItem } from '@/smart/ui/common/description/fields';
 import RegistrySelector from '@/smart/ui/edit/components/RegistrySelector';
 import ProvisionListQuickEdit from '@/smart/ui/edit/components/ProvisionList';
 import MeasureListQuickEdit from '@/smart/ui/edit/components/MeasurementListEdit';
-import { RefTextSelection } from '@/smart/model/selectionImport';
+import type { RefTextSelection } from '@/smart/model/selectionImport';
 import { matchNoteFilter, NoteItem } from '@/smart/ui/edit/NoteEdit';
 import NoteListQuickEdit from '@/smart/ui/edit/components/NoteList';
 import { LinkItem, matchLinkFilter } from '@/smart/ui/edit/LinkEdit';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { ModelAction } from '@/smart/model/editor/model';
 import PopoverChangeIDButton from '@/smart/ui/popover/PopoverChangeIDButton';
 import { editProcessCommand } from '@/smart/model/editor/commands/elements';
 

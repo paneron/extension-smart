@@ -1,10 +1,11 @@
+import type {
+  NumberRange } from '@blueprintjs/core';
 import {
   Button,
   ControlGroup,
   FormGroup,
   InputGroup,
   RangeSlider,
-  NumberRange,
   NumericInput,
   Text,
 } from '@blueprintjs/core';
@@ -12,7 +13,8 @@ import React from 'react';
 import MGDContainer from '@/smart/MGDComponents/MGDContainer';
 import MGDDisplayPane from '@/smart/MGDComponents/MGDDisplayPane';
 import { obtainData } from '@/smart/ui/application/ISO27001/DataFeeder';
-import { Application27001Setting, fixedlocalhost } from '@/smart/ui/application/ISO27001/model';
+import type { Application27001Setting } from '@/smart/ui/application/ISO27001/model';
+import { fixedlocalhost } from '@/smart/ui/application/ISO27001/model';
 
 const Application27001ConfigurePage: React.FC<{
   onClose: () => void;

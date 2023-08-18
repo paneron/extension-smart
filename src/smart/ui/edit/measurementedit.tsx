@@ -1,24 +1,26 @@
 import { Button, FormGroup } from '@blueprintjs/core';
 import React from 'react';
 import { mgdLabel } from '@/css/form';
-import { EditorModel } from '@/smart/model/editormodel';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type {
+  MMELVariable } from '@paneron/libmmel/interface/supportinterface';
 import {
-  MMELVariable,
   VarType,
 } from '@paneron/libmmel/interface/supportinterface';
 import { checkId, defaultItemSorter } from '@/smart/utils/ModelFunctions';
 import { MEASUREMENTTYPES } from '@/smart/utils/constants';
 import { createVariable } from '@/smart/utils/EditorFactory';
-import {
+import type {
   IListItem,
-  IManageHandler,
+  IManageHandler } from '@/smart/ui/common/fields';
+import {
   NormalComboBox,
   NormalTextField,
   ReferenceSelector,
 } from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
 import { measurementValidCheck } from '@/smart/utils/measurement/BasicFunctions';
-import { ModelAction } from '@/smart/model/editor/model';
+import type { ModelAction } from '@/smart/model/editor/model';
 
 const MeasurementEditPage: React.FC<{
   model: EditorModel;

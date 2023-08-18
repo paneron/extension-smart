@@ -6,7 +6,8 @@ import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React from 'react';
 import { useContext, useMemo, useState } from 'react';
 import RepositoryView from '@/smart/ui/app/RepoView';
-import { RepoIndex, repoIndexPath } from '@/smart/model/repo';
+import type { RepoIndex } from '@/smart/model/repo';
+import { repoIndexPath } from '@/smart/model/repo';
 import { LoadingScreen } from '@/smart/ui/common/Loading';
 import { createEmptyIndex } from '@/smart/utils/repo/CommonFunctions';
 

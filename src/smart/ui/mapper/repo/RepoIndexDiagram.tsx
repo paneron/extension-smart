@@ -1,8 +1,8 @@
 import React from 'react';
 import { useMemo } from 'react';
 import ReactFlow from 'react-flow-renderer';
-import { ModelWrapper } from '@/smart/model/modelwrapper';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
 import { RepoLegend } from '@/smart/utils/repo/CommonFunctions';
 import { repoLinkExploreNode } from '@/smart/utils/repo/LinkAnalysis';
 import LegendPane from '@/smart/ui/common/description/LegendPane';

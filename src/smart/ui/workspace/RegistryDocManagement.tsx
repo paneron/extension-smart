@@ -1,14 +1,15 @@
 import React from 'react';
-import { EditorModel } from '@/smart/model/editormodel';
+import type { EditorModel } from '@/smart/model/editormodel';
 import { itemSorterByText } from '@/smart/utils/ModelFunctions';
-import {
+import type {
   IAdditionalListButton,
   IListItem,
   IManageHandler,
 } from '@/smart/ui/common/fields';
 import ListManagePage from '@/smart/ui/common/listmanagement/listmanagement';
-import { SMARTDocument, SMARTDocumentStore } from '@/smart/model/workspace';
-import DocumentEdit, { DocumentEditInterface } from '@/smart/ui/workspace/DocumentEditor';
+import type { SMARTDocument, SMARTDocumentStore } from '@/smart/model/workspace';
+import type { DocumentEditInterface } from '@/smart/ui/workspace/DocumentEditor';
+import DocumentEdit from '@/smart/ui/workspace/DocumentEditor';
 
 import { isNotUndefined } from '@/lib/typeHelpers';
 

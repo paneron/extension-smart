@@ -2,7 +2,7 @@ import React from 'react';
 import { mgdLabel } from '@/css/form';
 import { popoverPanelContainer } from '@/css/layout';
 import { ModelType } from '@/smart/model/editormodel';
-import { MappingType } from '@/smart/model/mapmodel';
+import type { MappingType } from '@/smart/model/mapmodel';
 import {
   findImpMapPartners,
   findRefMapPartners,

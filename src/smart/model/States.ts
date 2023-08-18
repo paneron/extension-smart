@@ -1,7 +1,7 @@
-import React from 'react';
-import { NodeProps } from 'react-flow-renderer';
-import { HistoryItem, PageHistory } from '@/smart/model/history';
-import { ModelWrapper } from '@/smart/model/modelwrapper';
+import type React from 'react';
+import type { NodeProps } from 'react-flow-renderer';
+import type { HistoryItem, PageHistory } from '@/smart/model/history';
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
 import { DataType } from '@paneron/libmmel/interface/baseinterface';
 import { DataLinkEdge, NormalEdge, SelfLoopEdge } from '@/smart/ui/flowui/edgeUI';
 import {
@@ -14,8 +14,8 @@ import {
   StartComponent,
   TimerComponent,
 } from '@/smart/ui/flowui/nodeUI';
-import { EditorModel, ModelType } from '@/smart/model/editormodel';
-import { MMELDocument } from '@/smart/model/document';
+import type { EditorModel, ModelType } from '@/smart/model/editormodel';
+import type { MMELDocument } from '@/smart/model/document';
 
 export interface FunModel {
   mw: ModelWrapper;

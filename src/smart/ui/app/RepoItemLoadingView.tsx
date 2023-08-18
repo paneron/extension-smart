@@ -6,19 +6,23 @@ import { jsx } from '@emotion/react';
 import { css } from '@emotion/react';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import React, { useContext, useMemo, useState } from 'react';
-import { ChangeLog, createChangeLog } from '@/smart/model/changelog';
-import { EditorModel } from '@/smart/model/editormodel';
-import { RepoHistory } from '@/smart/model/history';
-import { MMELJSON } from '@/smart/model/json';
-import { indexModel, MapProfile } from '@/smart/model/mapmodel';
+import type { ChangeLog } from '@/smart/model/changelog';
+import { createChangeLog } from '@/smart/model/changelog';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { RepoHistory } from '@/smart/model/history';
+import type { MMELJSON } from '@/smart/model/json';
+import type { MapProfile } from '@/smart/model/mapmodel';
+import { indexModel } from '@/smart/model/mapmodel';
 import { MMELToEditorModel } from '@/smart/model/modelwrapper';
+import type {
+  ModuleName } from '@/smart/model/module/appModule';
 import {
   ModuleList,
-  ModuleName,
   MODULE_CONFIGURATION,
 } from '@/smart/model/module/appModule';
-import { MMELRepo, RepoIndex } from '@/smart/model/repo';
-import { createNewSMARTWorkspace, SMARTWorkspace } from '@/smart/model/workspace';
+import type { MMELRepo, RepoIndex } from '@/smart/model/repo';
+import type { SMARTWorkspace } from '@/smart/model/workspace';
+import { createNewSMARTWorkspace } from '@/smart/model/workspace';
 import { MAPVERSION } from '@/smart/utils/constants';
 import { getNamespace } from '@/smart/utils/ModelFunctions';
 import * as Logger from '@/lib/logger';

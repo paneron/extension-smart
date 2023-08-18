@@ -2,33 +2,34 @@
  * The internal data strcuture for the model
  */
 
-import { RefObject } from 'react';
-import {
-  DataType,
+import type { RefObject } from 'react';
+import type {
   MMELNode,
-  MMELObject,
-} from '@paneron/libmmel/interface/baseinterface';
+  MMELObject } from '@paneron/libmmel/interface/baseinterface';
 import {
+  DataType
+} from '@paneron/libmmel/interface/baseinterface';
+import type {
   MMELDataAttribute,
   MMELDataClass,
   MMELEnum,
   MMELRegistry,
 } from '@paneron/libmmel/interface/datainterface';
-import {
+import type {
   MMELEndEvent,
   MMELSignalCatchEvent,
   MMELStartEvent,
   MMELTimerEvent,
 } from '@paneron/libmmel/interface/eventinterface';
-import {
+import type {
   MMELEGate,
   MMELSubprocess,
 } from '@paneron/libmmel/interface/flowcontrolinterface';
-import {
+import type {
   MMELApproval,
   MMELProcess,
 } from '@paneron/libmmel/interface/processinterface';
-import {
+import type {
   MMELComment,
   MMELFigure,
   MMELLink,

@@ -1,8 +1,9 @@
-import { Button, IToastProps } from '@blueprintjs/core';
+import type { IToastProps } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { Popover2, Tooltip2 } from '@blueprintjs/popover2';
 import React from 'react';
 import { useState } from 'react';
-import { RepoIndex } from '@/smart/model/repo';
+import type { RepoIndex } from '@/smart/model/repo';
 import AskIDForSaveMenu from '@/smart/ui/popover/AskIDForSaveMenu';
 
 const RepoChangeNSButton: React.FC<{

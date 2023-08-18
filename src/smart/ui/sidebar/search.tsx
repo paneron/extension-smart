@@ -4,12 +4,13 @@ import { searchResultEntryRow } from '@/css/shame';
 import MGDContainer from '@/smart/MGDComponents/MGDContainer';
 import MGDLabel from '@/smart/MGDComponents/MGDLabel';
 import MGDSidebar from '@/smart/MGDComponents/MGDSidebar';
-import { EditorModel } from '@/smart/model/editormodel';
-import { HistoryItem } from '@/smart/model/history';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { HistoryItem } from '@/smart/model/history';
 import * as Logger from '@/lib/logger';
+import type {
+  SearchComponentRecord } from '@/smart/utils/SearchFunctions';
 import {
-  findComponent,
-  SearchComponentRecord,
+  findComponent
 } from '@/smart/utils/SearchFunctions';
 import { NumericComboBox } from '@/smart/ui/common/fields';
 

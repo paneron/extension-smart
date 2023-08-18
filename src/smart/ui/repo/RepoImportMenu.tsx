@@ -1,13 +1,13 @@
 import { Menu, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
 import { useContext } from 'react';
-import { ModelWrapper } from '@/smart/model/modelwrapper';
+import type { ModelWrapper } from '@/smart/model/modelwrapper';
 import {
   FILE_TYPE,
   handleDocumentOpen,
   handleModelOpen,
 } from '@/smart/utils/IOFunctions';
-import { MMELDocument } from '@/smart/model/document';
+import type { MMELDocument } from '@/smart/model/document';
 import React from 'react';
 
 const RepoImportMenu: React.FC<{

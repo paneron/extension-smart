@@ -1,17 +1,17 @@
 import React from 'react';
-import {
+import type {
   EditorEGate,
   EditorSignalEvent,
   EditorTimerEvent,
 } from '@/smart/model/editormodel';
-import {
+import type {
   MMELNote,
   MMELProvision,
   MMELReference,
 } from '@paneron/libmmel/interface/supportinterface';
 import { EdgeList, ReferenceList } from '@/smart/ui/common/description/ComponentList';
 import { DescriptionItem, NonEmptyFieldDescription } from '@/smart/ui/common/description/fields';
-import { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
+import type { MMELEdge } from '@paneron/libmmel/interface/flowcontrolinterface';
 import MGDLabel from '@/smart/MGDComponents/MGDLabel';
 
 export const DescribeStart: React.FC = function () {

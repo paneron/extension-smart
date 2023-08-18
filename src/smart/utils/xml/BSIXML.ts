@@ -1,6 +1,6 @@
 import React from 'react';
-import { DocSection, DocStatement, MMELDocument } from '@/smart/model/document';
-import { XMLElement } from '@/smart/model/xmlelement';
+import type { DocSection, DocStatement, MMELDocument } from '@/smart/model/document';
+import type { XMLElement } from '@/smart/model/xmlelement';
 import { DOCVERSION } from '@/smart/utils/constants';
 import { elementToString, isXMLElement, parseXML } from '@/smart/utils/xml/XMLParser';
 

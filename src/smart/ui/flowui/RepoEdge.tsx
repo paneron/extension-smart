@@ -1,6 +1,7 @@
 import React from 'react';
-import { CSSProperties } from 'react';
-import { EdgeProps, getSmoothStepPath, Position } from 'react-flow-renderer';
+import type { CSSProperties } from 'react';
+import type { EdgeProps } from 'react-flow-renderer';
+import { getSmoothStepPath, Position } from 'react-flow-renderer';
 
 const MARKERWIDTH = 4;
 const MARKERHALFHEIGHT = 3;

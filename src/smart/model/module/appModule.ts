@@ -2,8 +2,8 @@
  * Modules are the high-level functions provided by the app.
  */
 
-import { IconName } from '@blueprintjs/core';
-import React from 'react';
+import type { IconName } from '@blueprintjs/core';
+import type React from 'react';
 import DocumentViewer from '@/smart/ui/docviewer';
 import EditWrapper from '@/smart/ui/editFunctions/EditWrapper';
 import LinkAnalysis from '@/smart/ui/LinkAnalysis';
@@ -13,12 +13,12 @@ import ModelViewer from '@/smart/ui/mainviewer';
 import ModelWorkspace from '@/smart/ui/modelWorkspace';
 import NLPMain from '@/smart/ui/nlp/NLPMain';
 import RepoViewer from '@/smart/ui/repo/RepoViewer';
-import { ChangeLog } from '@/smart/model/changelog';
-import { EditorModel } from '@/smart/model/editormodel';
-import { RepoHistory } from '@/smart/model/history';
-import { MapProfile } from '@/smart/model/mapmodel';
-import { MMELRepo, RepoIndex, RepoItemType } from '@/smart/model/repo';
-import { SMARTWorkspace } from '@/smart/model/workspace';
+import type { ChangeLog } from '@/smart/model/changelog';
+import type { EditorModel } from '@/smart/model/editormodel';
+import type { RepoHistory } from '@/smart/model/history';
+import type { MapProfile } from '@/smart/model/mapmodel';
+import type { MMELRepo, RepoIndex, RepoItemType } from '@/smart/model/repo';
+import type { SMARTWorkspace } from '@/smart/model/workspace';
 
 export type ModelModuleConfig = BaseConfig & {
   type: 'model';
