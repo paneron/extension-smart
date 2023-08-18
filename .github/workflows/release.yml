@@ -81,10 +81,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
-      # For rsync support in Windows
-      - uses: GuillaumeFalourd/setup-rsync@v1.1
-        if: startsWith(runner.os, 'windows')
-
       - name: Restore cache
         id: build_cache
         uses: actions/cache@v3

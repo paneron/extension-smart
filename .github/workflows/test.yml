@@ -77,10 +77,6 @@ jobs:
         if: steps.test_cache.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
-      # For rsync support in Windows
-      - uses: GuillaumeFalourd/setup-rsync@v1.1
-        if: ${{ startsWith(runner.os, 'windows') && steps.test_cache.outputs.cache-hit != 'true' }}
-
       - name: Restore build cache
         if: steps.test_cache.outputs.cache-hit != 'true'
         uses: actions/cache@v3
