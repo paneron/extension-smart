@@ -1,8 +1,8 @@
 {
-  "name": "@paneron/extension-hls",
+  "name": "@paneron/extension-smart",
   "version": "1.0.0-dev23",
   "description": "Paneron extension for SMART model editing",
-  "repository": "https://github.com/paneron/extension-hls",
+  "repository": "https://github.com/paneron/extension-smart",
   "author": {
     "name": "Ribose Inc.",
     "email": "open.source@ribose.com"
