@@ -120,7 +120,15 @@ var rules = {
   'no-empty-function' : 'off',
   'react/prop-types' : 'off',
   'react/no-unknown-property' : ['error', { ignore : ['css'] }],
+  '@typescript-eslint/consistent-type-imports' : [
+    'error',
+    {
+      prefer: 'type-imports',
+      fixStyle: 'separate-type-imports',
+    }
+  ],
   '@typescript-eslint/no-empty-function' : 'off',
+  '@typescript-eslint/no-import-type-side-effects': 'error',
   '@typescript-eslint/no-non-null-asserted-nullish-coalescing' : 'warn',
   'no-unused-vars' : 'off',
   '@typescript-eslint/no-unused-vars' : 'warn',
