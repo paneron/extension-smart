@@ -16,7 +16,7 @@
   "src_dir": "src",
   "dist_dir": "dist",
   "scripts": {
-    "prepare": "ts-patch install -s",
+    "prepare": "ts-patch install -s; husky install",
     "preinstall": "npx only-allow pnpm",
     "diagnose": "tsc --diagnostics",
     "typecheck": "tsc -p tsconfig.build.json --noEmit",
@@ -73,6 +73,10 @@
     "@blueprintjs/popover2": "~1.13.12",
     "@blueprintjs/select": "~4.9.12",
     "@codeceptjs/configure": "^0.10.0",
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
+    "@commitlint/cz-commitlint": "^17.7.1",
+    "@commitlint/types": "^17.4.4",
     "@emotion/eslint-plugin": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -93,6 +97,7 @@
     "@typescript-eslint/parser": "^5.59.6",
     "chokidar": "^3.5.3",
     "codeceptjs": "^3.4.1",
+    "commitizen": "^4.3.0",
     "concurrently": "^8.0.1",
     "electron": "^24.3.0",
     "eslint": "^8.40.0",
@@ -101,6 +106,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "fast-check": "^3.8.2",
+    "husky": "^8.0.3",
     "immer": "^10.0.2",
     "jest": "^29.5.0",
     "liquidjs": "^9.42.1",
@@ -123,6 +129,11 @@
     "tslib": "^2.6.1",
     "typescript": "5.1.6",
     "typescript-transform-paths": "^3.4.6"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
   },
   "license": "MIT"
 }
