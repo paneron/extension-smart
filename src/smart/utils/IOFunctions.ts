@@ -3,9 +3,12 @@ import type { MMELDocument } from '@/smart/model/document';
 import type { EditorModel } from '@/smart/model/editormodel';
 import type { MapProfile } from '@/smart/model/mapmodel';
 import type { ModelWrapper } from '@/smart/model/modelwrapper';
+import { mmelFile } from '@riboseinc/paneron-extension-kit/object-specs/ser-des';
+import { encoder as string2uint8ArrayEncoder } from '@riboseinc/paneron-extension-kit/util';
+import type { MMELModel } from '@paneron/libmmel/interface/model';
+
 import { createEditorModelWrapper } from '@/smart/model/modelwrapper';
 import type { SMARTWorkspace } from '@/smart/model/workspace';
-import { textToMMEL } from '@paneron/libmmel';
 import type {
   LoggerInterface,
   OpenFileInterface } from '@/smart/utils/constants';
@@ -109,7 +112,8 @@ function parseModel(props: {
   const { data, setModelWrapper, logger, indexModel } = props;
   logger?.log('Importing model');
   try {
-    const model = textToMMEL(data);
+    const placeholderPath = '/';
+    const model = mmelFile.deserialize({ placeholderPath : string2uint8ArrayEncoder.encode(data) }, {}) as MMELModel;
     if (model.version !== MODELVERSION) {
       Logger.error(
         `Warning: Model versions do not match.\nModel version of file: ${model.version}.\nExpected: ${MODELVERSION}.`
@@ -301,13 +305,15 @@ export async function saveToFileSystem(props: {
     success: true;
     savedToFileAtPath: string;
   }>;
-  fileData: string;
+  fileData: string | Uint8Array;
   type: FILE_TYPE;
 }): Promise<string> {
   const { getBlob, writeFileToFilesystem, fileData, type } = props;
   if (getBlob && writeFileToFilesystem) {
     const desc = FileTypeDescription[type];
-    const blob = await getBlob(fileData);
+    const blob = (typeof fileData === 'string') ?
+      await getBlob(fileData) :
+      fileData;
     const { savedToFileAtPath } = await writeFileToFilesystem({
       dialogOpts : {
         prompt  : 'Choose location to save',

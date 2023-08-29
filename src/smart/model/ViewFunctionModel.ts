@@ -1,6 +1,5 @@
 import type { SerializedStyles } from '@emotion/react';
 import type React from 'react';
-import { textToMMEL } from '@paneron/libmmel';
 import type { MMELDataAttribute } from '@paneron/libmmel/interface/datainterface';
 import type {
   MMELProvision,
@@ -9,8 +8,6 @@ import type {
 import type { EditorNode } from '@/smart/model/editormodel';
 import type { LegendInterface } from '@/smart/model/States';
 
-
-console.log(textToMMEL);
 
 /**
  * For model viewer. The common interface for different functions.

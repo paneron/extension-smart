@@ -9,9 +9,6 @@ import {
   isEditorRegistry,
 } from '@/smart/model/editormodel';
 
-// test
-import { textToMMEL } from '@paneron/libmmel';
-
 import type { MMELObject } from '@paneron/libmmel/interface/baseinterface';
 import type {
   MMELEdge,

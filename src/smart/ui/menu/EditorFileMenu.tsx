@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { DatasetContext } from '@riboseinc/paneron-extension-kit/context';
-import { MMELToText } from '@paneron/libmmel';
+import { mmelFile } from '@riboseinc/paneron-extension-kit/object-specs/ser-des';
 import { FILE_TYPE, saveToFileSystem } from '@/smart/utils/IOFunctions';
 import type { EditorModel } from '@/smart/model/editormodel';
 
@@ -17,7 +17,8 @@ const EditorFileMenu: React.FC<{
 
   // Export
   async function handleSave() {
-    const fileData = MMELToText(model);
+    const placeHolderPath = '/';
+    const fileData = mmelFile.serialize(model, {})[placeHolderPath];
 
     await saveToFileSystem({
       getBlob,
