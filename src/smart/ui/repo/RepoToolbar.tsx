@@ -8,11 +8,6 @@ import {
   createEditorModelWrapper
 } from '@/smart/model/modelwrapper';
 import type { MMELRepo, RepoIndex, RepoItemType } from '@/smart/model/repo';
-import {
-  EXTENSIONVERSION,
-  MODELVERSION,
-  PANERONVERSION,
-} from '@/smart/utils/constants';
 import { createNewEditorModel } from '@/smart/utils/EditorFactory';
 import AskIDForSaveMenu from '@/smart/ui/popover/AskIDForSaveMenu';
 import RepoAIMenu from '@/smart/ui/repo/RepoAIMenu';
@@ -47,12 +42,6 @@ const RepoToolbar: React.FC<{
     const mw = createEditorModelWrapper(model);
     addMW(mw, 'Imp');
     setIsOpen(false);
-  }
-
-  function showVersion() {
-    alert(
-      `Extension version:\n${EXTENSIONVERSION}\nModel version\n${MODELVERSION}\nTested on Paneron version:\n${PANERONVERSION}`
-    );
   }
 
   return (
@@ -93,7 +82,6 @@ const RepoToolbar: React.FC<{
       >
         <Button>Translate</Button>
       </Popover2>
-      {/* <Button onClick={showVersion}>Version</Button> */}
       <Dialog
         isOpen={isAI}
         canEscapeKeyClose={false}

@@ -7,8 +7,6 @@ export const WSVERSION = 'v1.0.0-dev1';
 export const MAPVERSION = 'v1.0.0-dev1';
 export const DOCVERSION = 'v1.0.0-dev1';
 export const MODELVERSION = 'v1.0.0-dev3';
-export const EXTENSIONVERSION = 'v1.0.0-dev18';
-export const PANERONVERSION = 'v1 beta23';
 
 export const MODALITY = ['MUST', 'SHALL', 'SHOULD', 'CAN', 'MAY'] as const;
 
