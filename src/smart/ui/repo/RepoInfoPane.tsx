@@ -13,7 +13,7 @@ const RepoInfoPane: React.FC<{
   return (
     <div
       style={{
-        margin : 10,
+        margin : 110,
       }}
     >
       <p>

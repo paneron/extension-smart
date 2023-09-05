@@ -4,7 +4,7 @@
     "target": "es2017",
     "module": "commonjs",
     "moduleResolution": "node",
-    "importsNotUsedAsValues": "error",
+    "importsNotUsedAsValues": "preserve",
     "ignoreDeprecations": "5.0",
     "declaration": true,
     "declarationMap": true,
