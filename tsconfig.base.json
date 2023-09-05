@@ -1,27 +1,42 @@
 {
   "compilerOptions": {
     "composite": true,
-    "target": "esnext",
+    "target": "es2017",
     "module": "commonjs",
     "moduleResolution": "node",
+    "importsNotUsedAsValues": "error",
+    "ignoreDeprecations": "5.0",
     "declaration": true,
     "declarationMap": true,
     "isolatedModules": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
     "strict": true,
     "skipLibCheck": true,
     "incremental": true,
     "experimentalDecorators": true,
     "allowJs": false,
     "jsx": "react",
-    "newLine": "lf"
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "newLine": "lf",
+    // Note: To transform paths for both the output .js and .d.ts files, you need both of the below entries
+    "plugins": [
+      // Transform paths in output .js files
+      { "transform": "typescript-transform-paths" },
+
+      // Transform paths in output .d.ts files (Include this line if you output declarations files)
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
+    ]
   },
-  "exclude": [
-    "node_modules",
-    "backup",
-    "compiled",
-    "dist"
-  ]
+  "ts-node": {
+    "swc": true,
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
 }

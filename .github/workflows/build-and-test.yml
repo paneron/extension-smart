@@ -1,0 +1,47 @@
+name: build & test
+
+on:
+  workflow_call:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '/*.sh'
+      - '/.*'
+      - '/_*'
+      - '/vcpkg.txt'
+      - 'docs/**'
+      - '**.adoc'
+      - '**.md'
+      - '**.nix'
+      - 'flake.lock'
+      - '.github/workflows/*.yml'
+      - '!.github/workflows/build-and-test.yml'
+      - '!.github/workflows/lint.yml'
+      - '!.github/workflows/build.yml'
+      - '!.github/workflows/test.yml'
+      - '!.github/workflows/test-e2e.yml'
+  pull_request:
+    paths-ignore:
+      - '/*.sh'
+      - '/.*'
+      - '/_*'
+      - '/vcpkg.txt'
+      - 'docs/**'
+      - '**.adoc'
+      - '**.md'
+      - '**.nix'
+      - 'flake.lock'
+  workflow_dispatch:
+
+jobs:
+  lint:
+    uses: ./.github/workflows/lint.yml
+
+  build:
+    uses: ./.github/workflows/build.yml
+
+  test:
+    uses: ./.github/workflows/test.yml
+
+  test-e2e:
+    uses: ./.github/workflows/test-e2e.yml

@@ -17,13 +17,13 @@ jobs:
       - uses: actions/setup-node@v3
         id: setup-node
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 20
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 7
+          version: 8
           run_install: false
 
       # See: https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time

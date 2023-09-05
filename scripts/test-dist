@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+ensure_files_exist() {
+  # Ensure these files are here:
+  local missing_files=()
+  local files_to_check=(
+    dist/plugin.js
+  )
+
+  for file in "${files_to_check[@]}"
+  do
+    if ! pnpm publish --no-git-checks --dry-run --json | grep -q 'path.*:.*'"$file"
+    then
+      missing_files+=("$file")
+    fi
+  done
+
+  if [[ ${#missing_files[@]} -gt 0 ]]
+  then
+
+    >&2 echo "error: ❌ The following files are missing."
+    for file in "${missing_files[@]}"
+    do
+      >&2 echo "  $file"
+    done
+
+    return 1
+  else
+    >&2 echo "✅ The following files exist:"
+    for file in "${files_to_check[@]}"
+    do
+      >&2 echo "  $file"
+    done
+  fi
+}
+
+ensure_paths_resolved() {
+  local bad_files=()
+  local files_processed=0
+  local bad_lines=()
+
+  while read -r file
+  do
+    # >&2 echo "-> $file"
+    ((files_processed++))
+    if grep -q '@/' "$file"
+    then
+      bad_files+=("$file")
+      bad_lines+=("$(grep '@/' "$file")")
+    fi
+  done < <(find ./dist -type f -name '*.js' -o -name '*.ts')
+
+  if [[ ${#bad_files[@]} -gt 0 ]]
+  then
+
+    >&2 echo "error: ❌ The following files have unresolved aliases."
+    for file in "${bad_files[@]}"
+    do
+      >&2 echo "  $file"
+    done
+
+    >&2 echo "error: ❌ The following lines contain unresolved aliases."
+    for line in "${bad_lines[@]}"
+    do
+      >&2 echo "$line"
+    done
+
+    return 1
+  else
+    >&2 echo "✅ All paths are resolved. ($files_processed files processed)"
+  fi
+}
+
+main() {
+  if ! ( : \
+    && ensure_files_exist \
+    && ensure_paths_resolved \
+  )
+  then
+    >&2 echo "error: 🛑 Aborting due to above errors."
+    return 1
+  else
+    >&2 echo "✅ All tests passed."
+  fi
+}
+
+main "$@"

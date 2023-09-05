@@ -9,38 +9,36 @@ env:
 
 jobs:
   lint:
-    name: Lint on NodeJS ${{ matrix.node }}
+    name: Lint
     runs-on: ubuntu-latest
+
+    concurrency:
+      group: '${{ github.workflow }}-lint-${{ matrix.node }}-${{ github.head_ref || github.ref_name }}'
+      cancel-in-progress: true
 
     strategy:
       fail-fast: false
       matrix:
-        node: ['18.x']
+        node: [20]
 
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
-      - name: Calculate a fragment of cache key
-        id: cache-key
-        run: |
-          echo "fragment=$(< package.json command grep '"lint"' | command sha256sum | command head -c8)" >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: Restore test cache
         id: test_cache
         uses: actions/cache@v3
         with:
           path: ${{ env.CACHE_TEST_DIR }}
-          key: lint-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('**/*eslintrc*', '**/.*eslintrc*', '**/src/**', '**/pnpm-lock.yaml') }}-${{ steps.cache-key.outputs.fragment }}
+          key: lint-${{ runner.os }}-${{ matrix.node }}-${{ hashFiles('package.json', '**/*eslintrc*', '**/.*eslintrc*', '**/src/**', '**/pnpm-lock.yaml') }}
 
       - uses: pnpm/action-setup@v2
         if: steps.test_cache.outputs.cache-hit != 'true'
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 7
+          version: 8
           run_install: false
 
       # See: https:
@@ -67,6 +65,5 @@ jobs:
 
       - if: steps.test_cache.outputs.cache-hit != 'true'
         run: |
-          pnpm run -r lint-typecheck
+          pnpm run lint-typecheck
           mkdir -p ${{ env.CACHE_TEST_DIR }}
-          touch ${{ env.CACHE_TEST_DIR }}/pass

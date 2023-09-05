@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+# HUSKY_DEBUG_LEVEL
+#
+# 0 - quiet
+# 1 - warnings only
+# 2 - logs and warnings only
+# 3 - debug logs, normal logs and warnings
+DEBUG_LEVEL="${HUSKY_DEBUG_LEVEL:-1}"
+
+warn() {
+  ((DEBUG_LEVEL <= 0)) || echo "(warn)[husky/prepare-commit-msg] $*"
+} >&2
+
+log() {
+  ((DEBUG_LEVEL <= 1)) || echo "[husky/prepare-commit-msg] $*"
+} >&2
+
+debug() {
+  ((DEBUG_LEVEL <= 2)) || echo "(debug)[husky/prepare-commit-msg] $*"
+} >&2
+
+print_args() {
+  i=1
+  for arg in "$@"
+  do
+    debug "arg \$$i: $arg == ${!i}"
+    ((++i))
+  done
+}
+
+
+main() {
+  local husky_hook="$(dirname -- "$0")/_/husky.sh"
+  if [[ -r "${husky_hook}" ]]
+  then
+    . "${husky_hook}"
+  else
+    debug "husky hook '${husky_hook}' not found.  Skipping prepare-commit-msg."
+    exit
+  fi
+
+  print_args "$@"
+
+  if [[ -e .git/rebase-merge ]] || [[ -e .git/rebase-apply ]]
+  then
+    debug 'Rebase in progress'
+
+    if [[ -e .git/rebase-merge/interactive ]]
+    then
+      log 'Interactive rebase in progress. Skipping prepare-commit-msg.'
+      exit
+    fi
+  fi
+
+  case "$2" in
+    message)
+      log "Git message given.  Skipping prepare-commit-msg."
+      exit
+      ;;
+    commit)
+      log "Probably amending commit.  Skipping prepare-commit-msg."
+      exit
+      ;;
+  esac
+
+  if exec < /dev/tty
+  then
+    npx cz --hook
+  fi
+}
+
+main "$@"

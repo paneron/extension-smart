@@ -1,24 +1,21 @@
 = Paneron extension for MMEL models
 
 ifdef::env-github[]
-image:https://github.com/paneron/extension-hls/actions/workflows/test.yml/badge.svg[
-  "Test Status",
-  link="https://github.com/paneron/extension-hls/actions/workflows/test.yml"]
-image:https://github.com/paneron/extension-hls/actions/workflows/build.yml/badge.svg[
-  "Build Status",
-  link="https://github.com/paneron/extension-hls/actions/workflows/build.yml"]
-image:https://github.com/paneron/extension-hls/actions/workflows/audit.yml/badge.svg[
-  "Audit Status",
-  link="https://github.com/paneron/extension-hls/actions/workflows/audit.yml"]
-image:https://github.com/paneron/extension-hls/actions/workflows/release.yml/badge.svg[
-  "Release Status",
-  link="https://github.com/paneron/extension-hls/actions/workflows/release.yml"]
-image:https://img.shields.io/github/v/release/paneron/extension-hls?display_name=tag&include_prereleases&sort=semver[
+image:https://img.shields.io/github/v/release/paneron/extension-smart?display_name=tag&include_prereleases&sort=semver[
   GitHub release (latest SemVer including pre-releases),
-  link="https://www.npmjs.com/package/@paneron/extension-hls"
+  link="https://www.npmjs.com/package/@paneron/extension-smart"
 ]
+image:https://github.com/paneron/extension-smart/actions/workflows/build-and-test.yml/badge.svg[
+  "Build / Test",
+  link="https://github.com/paneron/extension-smart/actions/workflows/build-and-test.yml"]
+image:https://github.com/paneron/extension-smart/actions/workflows/audit.yml/badge.svg[
+  "Audit Status",
+  link="https://github.com/paneron/extension-smart/actions/workflows/audit.yml"]
+image:https://github.com/paneron/extension-smart/actions/workflows/release.yml/badge.svg[
+  "Release Status",
+  link="https://github.com/paneron/extension-smart/actions/workflows/release.yml"]
 endif::[]
 
 == Roadmap
 
-Tracked https://github.com/paneron/extension-hls/issues/29[here in #29]
+Tracked https://github.com/paneron/extension-smart/issues/29[here in #29]
